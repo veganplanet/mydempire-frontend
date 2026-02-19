@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MydEmpire – Genesis Phase</title>
+  <meta charset="utf-8">
+</head>
+
+<body style="padding:30px;font-family:Arial;max-width:1100px">
+
+<h1>MydEmpire – Genesis Phase</h1>
+
+<button id="connectBtn">Connect Hive Wallet</button>
+<p id="walletStatus"></p>
+
+<hr>
+
+<h2>📦 Genesis Packs</h2>
+<input type="number" id="packInput" min="1" placeholder="Enter number of packs">
+<button id="buyPackBtn">Purchase</button>
+<button id="openPackBtn">Open 1 Pack</button>
+
+<p id="hivePriceInfo"></p>
+
+<hr>
+
+<h2>🏛 Treasury</h2>
+<div id="treasuryInfo">Loading treasury...</div>
+
+<script>
+
+const backend = "https://mydempire-backend-1.onrender.com";
+
+let currentUser = null;
+let currentHivePriceUSD = 0;
+
+/* ================= PRICE ENGINE ================= */
+
+function getPackPriceUSD(packsSold) {
+  if (packsSold < 500) return 0.50;
+  if (packsSold < 1000) return 0.75;
+  if (packsSold < 1500) return 1.00;
+  if (packsSold < 2500) return 1.25;
+  return 1.50;
+}
+
+async function fetchHivePrice() {
+  try {
+    const res = await fetch(
+      "https://api.coingecko.com/api/v3/simple/price?ids=hive&vs_currencies=usd"
+    );
+    const data = await res.json();
+    currentHivePriceUSD = data.hive.usd;
+    document.getElementById("hivePriceInfo").innerText =
+      "1 HIVE ≈ $" + currentHivePriceUSD.toFixed(4) + " USD";
+  } catch {
+    document.getElementById("hivePriceInfo").innerText =
+      "Live price unavailable";
+  }
+}
+
+fetchHivePrice();
+
+/* ================= WALLET CONNECT ================= */
+
+document.getElementById("connectBtn").onclick = function() {
+
+  if (!window.hive_keychain) {
+    alert("Hive Keychain extension not detected.\nRefresh page once.");
+    return;
+  }
+
+  const username = prompt("Enter your Hive username:");
+  if (!username) return;
+
+  window.hive_keychain.requestSignBuffer(
+    username,
+    "MydEmpire Login",
+    "Posting",
+    function(response) {
+
+      if (response.success) {
+        currentUser = username;
+        document.getElementById("walletStatus").innerText =
+          "Connected as @" + username;
+      } else {
+        alert("Wallet connection rejected");
+      }
+    }
+  );
+};
+
+/* ================= BUY PACK ================= */
+
+document.getElementById("buyPackBtn").onclick = async function() {
+
+  if (!currentUser) return alert("Connect wallet first");
+  if (!currentHivePriceUSD) return alert("Hive price not loaded");
+
+  const packs = parseInt(document.getElementById("packInput").value);
+  if (!packs || packs <= 0) return alert("Invalid pack amount");
+
+  const packsSold = 0; // temporary
+  const packPriceUSD = getPackPriceUSD(packsSold);
+
+  const totalUSD = packPriceUSD * packs;
+  const hiveAmount = (totalUSD / currentHivePriceUSD).toFixed(3);
+
+  const orderRes = await fetch(backend + "/create-order", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      username: currentUser,
+      packs,
+      hive_amount: hiveAmount
+    })
+  });
+
+  const orderData = await orderRes.json();
+
+  window.hive_keychain.requestTransfer(
+    currentUser,
+    "mydempiregain",
+    hiveAmount,
+    "Genesis Pack Purchase",
+    "HIVE",
+    async function(response){
+
+      if (!response.success) {
+        alert("Transfer cancelled");
+        return;
+      }
+
+      const txid = response.result.id;
+
+      const verifyRes = await fetch(backend + "/verify-pack", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+          order_id: orderData.order.id,
+          txid
+        })
+      });
+
+      const verifyData = await verifyRes.json();
+
+      if (verifyData.success) {
+        alert("🎉 Pack minted successfully!");
+      } else {
+        alert("Verification failed");
+      }
+    }
+  );
+};
+
+/* ================= OPEN PACK ================= */
+
+document.getElementById("openPackBtn").onclick = async function() {
+
+  if (!currentUser) return alert("Connect wallet first");
+
+  const res = await fetch(backend + "/open-pack", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ username: currentUser })
+  });
+
+  const data = await res.json();
+
+  if (!data.success) return alert(data.error);
+
+  alert(
+`🎉 You received:
+🏝 Land: ${data.land}
+🏭 Blueprint: ${data.blueprint}
+⚡ EMP Gained: +${data.empDrop}`
+  );
+};
+
+/* ================= LOAD TREASURY ================= */
+
+async function loadTreasury() {
+  try {
+    const res = await fetch(backend + "/treasury");
+    const data = await res.json();
+    document.getElementById("treasuryInfo").innerText =
+      "Treasury: " + data.treasury + " HIVE";
+  } catch {}
+}
+
+loadTreasury();
+
+</script>
+
+</body>
+</html>
