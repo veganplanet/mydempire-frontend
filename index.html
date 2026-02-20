@@ -282,7 +282,96 @@ async function upgradeFactory(factoryId) {
 
   
 </script>
+<hr>
+<h2>⚙ Backend Test Panel (Admin)</h2>
 
+<div>
+  <h3>Build Factory</h3>
+  <input id="bf_username" placeholder="Username">
+  <input id="bf_land" placeholder="Land ID">
+  <input id="bf_blueprint" placeholder="Blueprint ID">
+  <button onclick="buildFactory()">Build</button>
+</div>
+
+<div>
+  <h3>Upgrade Factory</h3>
+  <input id="uf_username" placeholder="Username">
+  <input id="uf_factory" placeholder="Factory ID">
+  <button onclick="upgradeFactory()">Upgrade</button>
+</div>
+
+<div>
+  <h3>Pay Maintenance</h3>
+  <input id="pm_username" placeholder="Username">
+  <input id="pm_factory" placeholder="Factory ID">
+  <button onclick="payMaintenance()">Pay</button>
+</div>
+
+<div>
+  <h3>Check EMP</h3>
+  <input id="emp_username" placeholder="Username">
+  <button onclick="checkEMP()">Check EMP</button>
+</div>
+
+<pre id="responseBox" style="background:#111;color:#0f0;padding:10px;"></pre>
+
+  <script>
+const API = "https://mydempire-backend-1.onrender.com";
+
+function showResponse(data) {
+  document.getElementById("responseBox").textContent =
+    JSON.stringify(data, null, 2);
+}
+
+async function buildFactory() {
+  const username = document.getElementById("bf_username").value;
+  const land_id = document.getElementById("bf_land").value;
+  const blueprint_id = document.getElementById("bf_blueprint").value;
+
+  const res = await fetch(`${API}/build-factory`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, land_id, blueprint_id })
+  });
+
+  showResponse(await res.json());
+}
+
+async function upgradeFactory() {
+  const username = document.getElementById("uf_username").value;
+  const factory_id = document.getElementById("uf_factory").value;
+
+  const res = await fetch(`${API}/upgrade-factory`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, factory_id })
+  });
+
+  showResponse(await res.json());
+}
+
+async function payMaintenance() {
+  const username = document.getElementById("pm_username").value;
+  const factory_id = document.getElementById("pm_factory").value;
+
+  const res = await fetch(`${API}/pay-maintenance`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, factory_id })
+  });
+
+  showResponse(await res.json());
+}
+
+async function checkEMP() {
+  const username = document.getElementById("emp_username").value;
+
+  const res = await fetch(`${API}/emp/${username}`);
+  showResponse(await res.json());
+}
+</script>
+  
 </body>
 </html>
+
 
