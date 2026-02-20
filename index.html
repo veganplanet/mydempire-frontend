@@ -369,9 +369,59 @@ async function checkEMP() {
   const res = await fetch(`${API}/emp/${username}`);
   showResponse(await res.json());
 }
+
+    async function loadEligible() {
+  const username = document.getElementById("bf_username").value;
+
+  if (!username) {
+    alert("Enter username first");
+    return;
+  }
+
+  try {
+    const res = await fetch(`https://mydempire-backend-1.onrender.com/eligible-build/${username}`);
+    const data = await res.json();
+
+    console.log("Eligible response:", data);
+
+    const landSelect = document.getElementById("bf_land");
+    const bpSelect = document.getElementById("bf_blueprint");
+
+    landSelect.innerHTML = "";
+    bpSelect.innerHTML = "";
+
+    if (!data.lands || data.lands.length === 0) {
+      landSelect.innerHTML = "<option>No land slots available</option>";
+    } else {
+      data.lands.forEach(l => {
+        const option = document.createElement("option");
+        option.value = l.id;
+        option.textContent = `Land ${l.id} (${l.tier})`;
+        landSelect.appendChild(option);
+      });
+    }
+
+    if (!data.blueprints || data.blueprints.length === 0) {
+      bpSelect.innerHTML = "<option>No unused blueprints</option>";
+    } else {
+      data.blueprints.forEach(b => {
+        const option = document.createElement("option");
+        option.value = b.id;
+        option.textContent = `Blueprint ${b.id} (${b.tier})`;
+        bpSelect.appendChild(option);
+      });
+    }
+
+  } catch (err) {
+    console.error("Eligible error:", err);
+    alert("Error loading eligible data. Check console.");
+  }
+}
+    
 </script>
   
 </body>
 </html>
+
 
 
