@@ -309,10 +309,18 @@ async function upgradeFactory(factoryId) {
 </div>
 
 <div>
-  <h3>Upgrade Factory</h3>
-  <input id="uf_username" placeholder="Username">
-  <input id="uf_factory" placeholder="Factory ID">
-  <button onclick="upgradeFactory()">Upgrade</button>
+ <h3>Upgrade Factory</h3>
+
+<input id="uf_username" placeholder="Username">
+<button onclick="loadFactories()">Load Factories</button>
+
+<br><br>
+
+<select id="uf_factory" style="padding:6px; margin-right:10px;">
+  <option>Select Factory</option>
+</select>
+
+<button onclick="upgradeFactory()">Upgrade</button>
 </div>
 
 <div>
@@ -432,11 +440,45 @@ async function checkEMP() {
     alert("Error loading eligible data. Check console.");
   }
 }
+
+    async function loadFactories() {
+  const username = document.getElementById("uf_username").value;
+
+  if (!username) {
+    alert("Enter username first");
+    return;
+  }
+
+  const res = await fetch(
+    `https://mydempire-backend-1.onrender.com/user-factories/${username}`
+  );
+
+  const data = await res.json();
+
+  console.log("Factories:", data);
+
+  const factorySelect = document.getElementById("uf_factory");
+  factorySelect.innerHTML = "";
+
+  if (!data.length) {
+    factorySelect.innerHTML = "<option>No factories found</option>";
+    return;
+  }
+
+  data.forEach(f => {
+    const option = document.createElement("option");
+    option.value = f.id;
+    option.textContent =
+      `Factory ${f.id} | Level ${f.level} | ${f.status} | Land ${f.land_tier}`;
+    factorySelect.appendChild(option);
+  });
+}
     
 </script>
   
 </body>
 </html>
+
 
 
 
