@@ -287,10 +287,25 @@ async function upgradeFactory(factoryId) {
 
 <div>
   <h3>Build Factory</h3>
-  <input id="bf_username" placeholder="Username">
-  <input id="bf_land" placeholder="Land ID">
-  <input id="bf_blueprint" placeholder="Blueprint ID">
-  <button onclick="buildFactory()">Build</button>
+
+<input id="bf_username" placeholder="Username">
+<button onclick="loadEligible()">Load Eligible</button>
+
+<br><br>
+
+<label>Land:</label>
+<select id="bf_land" style="padding:6px; margin-right:10px;">
+  <option>Select Land</option>
+</select>
+
+<label>Blueprint:</label>
+<select id="bf_blueprint" style="padding:6px;">
+  <option>Select Blueprint</option>
+</select>
+
+<br><br>
+
+<button onclick="buildFactory()">Build Factory</button>
 </div>
 
 <div>
@@ -422,6 +437,7 @@ async function checkEMP() {
   
 </body>
 </html>
+
 
 
 
