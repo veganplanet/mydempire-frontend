@@ -466,10 +466,12 @@ async function checkEMP() {
   }
 
   data.forEach(f => {
-    const option = document.createElement("option");
-    option.value = f.id;
-    option.textContent =
-      `Factory ${f.id} | Level ${f.level} | ${f.status} | Land ${f.land_tier}`;
+    const parts = f.blueprint_tier.split("_");
+const industry = parts[0];
+const tier = parts[1];
+
+option.textContent =
+  `${industry} ${tier} | Factory Lv ${f.level} | ${f.status}`;
     factorySelect.appendChild(option);
   });
 }
@@ -478,6 +480,7 @@ async function checkEMP() {
   
 </body>
 </html>
+
 
 
 
