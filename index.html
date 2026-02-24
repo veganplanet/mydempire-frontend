@@ -173,13 +173,16 @@ document.getElementById("openPackBtn").onclick = async function() {
 
   if (!data.success) return alert(data.error);
 
-  alert(
-`🎉 You received:
-🏝 Land: ${data.land}
-🏭 Blueprint: ${data.blueprint}
-⚡ EMP Gained: +${data.empDrop}`
-  );
-};
+ const lands = data.drops.map(d => d.land).join(", ");
+const blueprints = data.drops.map(d => d.blueprint).join(", ");
+const emp = data.totalEmp;
+
+alert(
+  `🎉 You received:\n\n` +
+  `🌍 Lands: ${lands}\n` +
+  `🏭 Blueprints: ${blueprints}\n` +
+  `⚡ EMP Gained: +${emp}`
+);
 
 /* ================= LOAD TREASURY ================= */
 
@@ -480,6 +483,7 @@ option.textContent =
   
 </body>
 </html>
+
 
 
 
