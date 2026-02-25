@@ -108,14 +108,7 @@ document.getElementById("buyPackBtn").onclick = async function() {
   const packPriceUSD = getPackPriceUSD(packsSold);
 
   
-  let hiveAmount;
-
-if (GAME_PHASE === "PRE_GENESIS") {
-  hiveAmount = (packs * 3).toFixed(3);
-} else {
-  const totalUSD = packPriceUSD * packs;
-  hiveAmount = (totalUSD / currentHivePriceUSD).toFixed(3);
-}
+ const hiveAmount = (packs * 3).toFixed(3);
 
   const orderRes = await fetch(backend + "/create-order", {
     method: "POST",
@@ -490,6 +483,7 @@ option.textContent =
   
 </body>
 </html>
+
 
 
 
