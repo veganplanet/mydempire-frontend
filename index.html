@@ -32,7 +32,8 @@
 <div id="factoryList"></div>
 
 <script>
-
+const urlParams = new URLSearchParams(window.location.search);
+const orderIdFromUrl = urlParams.get("orderId");
 const backend =
   window.location.hostname === "localhost"
     ? "http://localhost:10000"
@@ -486,6 +487,7 @@ option.textContent =
   
 </body>
 </html>
+
 
 
 
