@@ -103,28 +103,27 @@ document.getElementById("connectBtn").onclick = function() {
 document.getElementById("buyPackBtn").onclick = async function() {
 
   if (!currentUser) return alert("Connect wallet first");
-  if (!currentHivePriceUSD) return alert("Hive price not loaded");
 
   const packs = parseInt(document.getElementById("packInput").value);
   if (!packs || packs <= 0) return alert("Invalid pack amount");
 
-  const packsSold = 0; // temporary
-  const packPriceUSD = getPackPriceUSD(packsSold);
-
-  
- const hiveAmount = (packs * 3).toFixed(3);
+  const hiveAmount = (packs * 3).toFixed(3);
 
   const orderRes = await fetch(backend + "/create-order", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
       username: currentUser,
-      packs,
-      hive_amount: hiveAmount
+      packs
     })
   });
 
   const orderData = await orderRes.json();
+
+  if (!orderRes.ok) {
+    alert(orderData.error || "Order creation failed");
+    return;
+  }
 
   window.hive_keychain.requestTransfer(
     currentUser,
@@ -144,10 +143,10 @@ document.getElementById("buyPackBtn").onclick = async function() {
       const verifyRes = await fetch(backend + "/confirm-payment", {
         method:"POST",
         headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({
-  orderId: parseInt(orderIdFromUrl),
-  txid: txid
-})
+        body: JSON.stringify({
+          orderId: orderData.order.id,
+          txid: txid
+        })
       });
 
       const verifyData = await verifyRes.json();
@@ -155,7 +154,7 @@ document.getElementById("buyPackBtn").onclick = async function() {
       if (verifyData.success) {
         alert("🎉 Pack minted successfully!");
       } else {
-        alert("Verification failed");
+        alert(verifyData.error || "Verification failed");
       }
     }
   );
@@ -487,6 +486,7 @@ option.textContent =
   
 </body>
 </html>
+
 
 
 
