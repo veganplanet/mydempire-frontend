@@ -143,10 +143,10 @@ document.getElementById("buyPackBtn").onclick = async function() {
       const verifyRes = await fetch(backend + "/confirm-payment", {
         method:"POST",
         headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({
-          order_id: orderData.order.id,
-          txid
-        })
+       body: JSON.stringify({
+  orderId: orderId,
+  txid: txid
+})
       });
 
       const verifyData = await verifyRes.json();
@@ -486,6 +486,7 @@ option.textContent =
   
 </body>
 </html>
+
 
 
 
