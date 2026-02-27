@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MydEmpire — Empire Overview</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #050816;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 16px;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .summary-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 14px;
+      color: #9ca3af;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(55,65,81,0.8);
+      font-size: 12px;
+    }
+
+    .relic-strip {
+      margin-bottom: 20px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, rgba(147,197,253,0.16), rgba(55,65,81,0.8));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .lands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .land-card {
+      background: rgba(17,24,39,0.95);
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid rgba(75,85,99,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .land-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .land-name {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .land-sub {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .land-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .factories-toggle {
+      font-size: 12px;
+      cursor: pointer;
+      color: #93c5fd;
+      text-decoration: underline;
+      margin-top: 4px;
+      align-self: flex-start;
+    }
+
+    .factories-list {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(55,65,81,0.9);
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .factory-item {
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(31,41,55,0.9);
+      font-size: 12px;
+    }
+
+    .factory-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .factory-status {
+      font-size: 11px;
+      color: #d1d5db;
+    }
+
+    .pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border: 1px solid rgba(156,163,175,0.8);
+    }
+
+    .pill-active { border-color: #6ee7b7; }
+    .pill-upgrading { border-color: #fbbf24; }
+    .pill-maintenance { border-color: #f97373; }
+
+    .error {
+      margin-top: 10px;
+      color: #fecaca;
+      font-size: 13px;
+    }
+
+    .loading {
+      font-size: 14px;
+      color: #9ca3af;
+      margin-top: 10px;
+    }
+
+    input, button {
+      font-family: inherit;
+    }
+
+    .top-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .username-input {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: rgba(17,24,39,0.9);
+      color: #e5e7eb;
+      font-size: 13px;
+      min-width: 120px;
+    }
+
+    .load-btn {
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(59,130,246,0.9);
+      background: rgba(37,99,235,0.9);
+      color: #e5e7eb;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .load-btn:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div class="top-controls">
+        <div class="title">Empire Overview</div>
+        <div style="flex:1"></div>
+        <input
+          id="usernameInput"
+          class="username-input"
+          placeholder="Hive username"
+        />
+        <button id="loadBtn" class="load-btn">Load Empire</button>
+      </div>
+      <div id="summaryRow" class="summary-row"></div>
+    </div>
+
+    <div id="relicStrip" class="relic-strip" style="display:none;"></div>
+
+    <div id="loading" class="loading" style="display:none;">
+      Loading empire data...
+    </div>
+    <div id="error" class="error" style="display:none;"></div>
+
+    <div id="landsGrid" class="lands-grid"></div>
+  </div>
+
+  <script>
+    // Change this if your backend URL is different (e.g., full https:// URL)
+    const API_BASE = "https://mydempire-backend-1.onrender.com"; // empty = same origin
+
+    const usernameInput = document.getElementById("usernameInput");
+    const loadBtn = document.getElementById("loadBtn");
+    const summaryRow = document.getElementById("summaryRow");
+    const relicStrip = document.getElementById("relicStrip");
+    const landsGrid = document.getElementById("landsGrid");
+    const loadingEl = document.getElementById("loading");
+    const errorEl = document.getElementById("error");
+
+    function formatNumber(num) {
+      if (num === null || num === undefined) return "-";
+      return num.toLocaleString();
+    }
+
+    function formatTimeRemaining(timestamp) {
+      if (!timestamp) return null;
+      const end = new Date(timestamp);
+      const now = new Date();
+      const diffMs = end - now;
+      if (diffMs <= 0) return "done";
+
+      const totalSeconds = Math.floor(diffMs / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+      if (hours <= 0 && minutes <= 0) return "less than 1 min";
+      if (hours === 0) return `${minutes} min`;
+      return `${hours}h ${minutes}m`;
+    }
+
+    function renderEmpire(data) {
+      // Clear previous content
+      summaryRow.innerHTML = "";
+      landsGrid.innerHTML = "";
+      relicStrip.style.display = "none";
+
+      if (!data) return;
+
+      // --- Summary row ------------------------------------
+      const username = data.username || "(unknown)";
+      const baseEP = data.totalBaseEP || 0;
+      const boostedEP = data.totalBoostedEP || baseEP;
+      const relicBoostPercent = data.relicBoostPercent || 0;
+
+      summaryRow.innerHTML = `
+        <span>Player: <strong>${username}</strong></span>
+        <span>Base EP: <strong>${formatNumber(baseEP)}</strong></span>
+        <span>Boosted EP: <strong>${formatNumber(boostedEP)}</strong></span>
+        <span>Relic Boost: <strong>+${relicBoostPercent}%</strong></span>
+      `;
+
+      // --- Relic strip ------------------------------------
+      const relicCount = data.relicCount || 0;
+      const relicCountCounted = data.relicCountCounted || relicCount;
+      const relicBoostCap = data.relicBoostCap || 6;
+
+      const capReached = relicBoostPercent >= relicBoostCap;
+
+      relicStrip.innerHTML = `
+        <div>
+          Relics: <strong>${relicCount}</strong>
+          &nbsp;|&nbsp;
+          Counted for boost: <strong>${relicCountCounted}</strong>
+          &nbsp;|&nbsp;
+          Boost: <strong>+${relicBoostPercent}%</strong> (Cap: +${relicBoostCap}%)
+        </div>
+        <div>
+          ${
+            capReached
+              ? "Boost cap reached ✅"
+              : "More relics can still increase your EP 🪙"
+          }
+        </div>
+      `;
+      relicStrip.style.display = "flex";
+
+      // --- Lands & factories ------------------------------
+      const lands = data.lands || [];
+
+      if (!lands.length) {
+        landsGrid.innerHTML = `<div style="font-size:13px;color:#9ca3af;">No lands found for this player yet.</div>`;
+        return;
+      }
+
+      lands.forEach((land) => {
+        const tier = land.tier ?? "-";
+        const totalLandEP = land.totalLandEP || 0;
+        const factories = land.factories || [];
+        const landName = land.land_name || `Land #${land.land_id}`;
+
+        const landCard = document.createElement("div");
+        landCard.className = "land-card";
+
+        // top header
+        const landHeader = document.createElement("div");
+        landHeader.className = "land-header";
+        landHeader.innerHTML = `
+          <div>
+            <div class="land-name">${landName}</div>
+            <div class="land-sub">Tier ${tier}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:12px;color:#9ca3af;">Land EP</div>
+            <div style="font-weight:600;">${formatNumber(totalLandEP)}</div>
+          </div>
+        `;
+        landCard.appendChild(landHeader);
+
+        // meta row
+        const landMeta = document.createElement("div");
+        landMeta.className = "land-meta";
+        landMeta.innerHTML = `
+          <span>Factories: <strong>${factories.length}</strong></span>
+        `;
+        landCard.appendChild(landMeta);
+
+        // factories toggle
+        const toggle = document.createElement("div");
+        toggle.className = "factories-toggle";
+        toggle.textContent = "Show factories";
+        landCard.appendChild(toggle);
+
+        const factoriesList = document.createElement("div");
+        factoriesList.className = "factories-list";
+
+        factories.forEach((f) => {
+          const item = document.createElement("div");
+          item.className = "factory-item";
+
+          const status = (f.status || "unknown").toLowerCase();
+          let pillClass = "pill";
+          if (status === "active") pillClass += " pill-active";
+          else if (status === "upgrading") pillClass += " pill-upgrading";
+          else if (status === "maintenance") pillClass += " pill-maintenance";
+
+          const timerParts = [];
+          if (status === "upgrading" && f.upgrade_complete_at) {
+            const t = formatTimeRemaining(f.upgrade_complete_at);
+            timerParts.push(`Upgrade: ${t}`);
+          }
+          if (status === "maintenance" && f.maintenance_ends_at) {
+            const t = formatTimeRemaining(f.maintenance_ends_at);
+            timerParts.push(`Maintenance: ${t}`);
+          }
+
+          item.innerHTML = `
+            <div class="factory-row">
+              <div>
+                <div>Factory #${f.factory_id} — Lv ${f.level ?? "-"}</div>
+                <div class="factory-status">
+                  Blueprint Tier: ${f.blueprint_tier ?? "-"}
+                  ${
+                    timerParts.length
+                      ? " • " + timerParts.join(" | ")
+                      : ""
+                  }
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div class="${pillClass}">${status}</div>
+                <div style="font-size:11px;margin-top:4px;">
+                  EP: <strong>${formatNumber(f.factoryEP || 0)}</strong>
+                </div>
+              </div>
+            </div>
+          `;
+
+          factoriesList.appendChild(item);
+        });
+
+        landCard.appendChild(factoriesList);
+
+        toggle.addEventListener("click", () => {
+          const visible = factoriesList.style.display === "flex";
+          factoriesList.style.display = visible ? "none" : "flex";
+          toggle.textContent = visible ? "Show factories" : "Hide factories";
+        });
+
+        landsGrid.appendChild(landCard);
+      });
+    }
+
+    async function loadEmpire() {
+      const username = (usernameInput.value || "").trim();
+
+      if (!username) {
+        errorEl.textContent = "Please enter a Hive username.";
+        errorEl.style.display = "block";
+        return;
+      }
+
+      errorEl.style.display = "none";
+      loadingEl.style.display = "block";
+      landsGrid.innerHTML = "";
+      summaryRow.innerHTML = "";
+      relicStrip.style.display = "none";
+      loadBtn.disabled = true;
+
+      try {
+        const url = `${API_BASE}/player/${encodeURIComponent(username)}/empire-overview`;
+        const res = await fetch(url);
+
+        if (!res.ok) {
+          throw new Error(`Server returned ${res.status}`);
+        }
+
+        const data = await res.json();
+        renderEmpire(data);
+      } catch (err) {
+        console.error(err);
+        errorEl.textContent = "Failed to load empire overview. Check username or backend logs.";
+        errorEl.style.display = "block";
+      } finally {
+        loadingEl.style.display = "none";
+        loadBtn.disabled = false;
+      }
+    }
+
+    loadBtn.addEventListener("click", loadEmpire);
+
+    // Optional: press Enter in the input to load
+    usernameInput.addEventListener("keyup", (e) => {
+      if (e.key === "Enter") {
+        loadEmpire();
+      }
+    });
+  </script>
+</body>
+</html>
