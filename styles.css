@@ -1,0 +1,749 @@
+/* styles.css — MydEmpire Light Theme (Global)
+   Use this for all pages (Home, FAQ, Economy, etc.)
+*/
+
+/* ============== */
+/* Design Tokens  */
+/* ============== */
+
+:root {
+  --bg-main: #f5f7fb;
+  --bg-card: #ffffff;
+  --bg-soft: #f9fafb;
+
+  --border-soft: #e5e7eb;
+  --border-strong: #d1d5db;
+
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --text-soft: #9ca3af;
+
+  --accent-gold: #c9a227;
+  --accent-gold-soft: #f7f2de;
+  --accent-pill: #e5e7eb;
+
+  --max-width: 960px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+/* ============== */
+/* Global Reset   */
+/* ============== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont,
+    'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.7;
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+/* ============== */
+/* Layout Shell   */
+/* ============== */
+
+.page-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-main {
+  flex: 1;
+  padding: 32px 16px 40px;
+}
+
+.page-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+/* ============== */
+/* Header         */
+/* ============== */
+
+.site-header {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.site-header-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: radial-gradient(circle at 30% 0, #fbbf24, #c0841a 55%, #854d0e);
+  border: 1px solid #f9d977;
+}
+
+.brand-text-main {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.brand-text-sub {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-soft);
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.site-nav a {
+  text-decoration: none;
+  font-size: 14px;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.site-nav a:hover {
+  color: var(--text-main);
+  border-color: var(--border-soft);
+  background: var(--bg-soft);
+}
+
+/* ============== */
+/* Page Heading   */
+/* ============== */
+
+.page-title-wrap {
+  margin-bottom: 24px;
+}
+
+.page-eyebrow {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--accent-gold);
+  margin-bottom: 6px;
+}
+
+.page-title {
+  font-size: 32px;
+  margin: 0 0 6px;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  max-width: 640px;
+}
+
+/* ============== */
+/* Cards / Blocks */
+/* ============== */
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-soft);
+  padding: 22px 20px;
+  margin-bottom: 22px;
+}
+
+/* ============== */
+/* FAQ Styling    */
+/* ============== */
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faq-item {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-soft);
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-question-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.faq-question-title span:first-child {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.faq-pill {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-pill);
+  color: var(--text-soft);
+  background: #f9fafb;
+}
+
+.faq-chevron {
+  font-size: 18px;
+  color: var(--text-soft);
+  transform-origin: center;
+  transition: transform 0.15s ease-out, color 0.15s ease-out;
+}
+
+details[open] .faq-chevron {
+  transform: rotate(90deg);
+  color: var(--text-muted);
+}
+
+.faq-body {
+  padding: 0 14px 14px 14px;
+  border-top: 1px solid var(--border-soft);
+  font-size: 18px;
+  color: var(--text-main);
+}
+
+.faq-body p {
+  margin: 10px 0;
+}
+
+.faq-body ul {
+  margin: 8px 0 6px 20px;
+  padding: 0;
+}
+
+/* ============== */
+/* Economic Paper */
+/* ============== */
+
+.section-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-soft);
+  margin-bottom: 4px;
+}
+
+.section-title {
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+
+.section-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.subheading {
+  font-size: 18px;
+  margin: 18px 0 6px;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.table-wrap {
+  margin: 10px 0 16px;
+  overflow-x: auto;
+}
+
+.mde-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.mde-table th,
+.mde-table td {
+  border: 1px solid var(--border-soft);
+  padding: 8px 10px;
+}
+
+.mde-table th {
+  background: var(--accent-gold-soft);
+}
+
+/* ============== */
+/* Footer         */
+/* ============== */
+
+.site-footer {
+  border-top: 1px solid var(--border-soft);
+  background: #ffffff;
+  padding: 14px 16px 18px;
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ============== */
+/* Responsive     */
+/* ============== */
+
+@media (max-width: 640px) {
+  .site-header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-main {
+    padding: 24px 12px 30px;
+  }
+
+  .page-title {
+    font-size: 26px;
+  }
+
+  .card {
+    padding: 18px 14px;
+  }
+}
+/* --------- Accent Enhancement --------- */
+
+.page-title {
+  font-size: 32px;
+  margin: 0 0 8px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.page-eyebrow {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+/* Section Titles (Economic Paper) */
+.section-title {
+  font-size: 24px;
+  margin: 0 0 10px;
+  font-weight: 700;
+  color: #1f2937;
+  border-left: 4px solid var(--accent-gold);
+  padding-left: 10px;
+}
+
+/* Subheadings */
+.subheading {
+  font-size: 18px;
+  margin: 18px 0 6px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Highlight important statements */
+strong {
+  color: #111827;
+}
+
+/* Gold soft background highlight */
+.highlight-gold {
+  background: var(--accent-gold-soft);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+/* styles.css — MydEmpire Light Theme (Shared) */
+
+:root {
+  --bg-main: #f5f7fb;
+  --bg-card: #ffffff;
+  --bg-soft: #f9fafb;
+
+  --border-soft: #e5e7eb;
+  --border-strong: #d1d5db;
+
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --text-soft: #9ca3af;
+
+  --accent-gold: #c9a227;
+  --accent-gold-soft: #f7f2de;
+  --accent-pill: #e5e7eb;
+
+  --max-width: 960px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+/* Global Reset */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont,
+    'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.7;
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+/* Layout */
+
+.page-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-main {
+  flex: 1;
+  padding: 32px 16px 40px;
+}
+
+.page-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+/* Header */
+
+.site-header {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.site-header-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: radial-gradient(circle at 30% 0, #fbbf24, #c0841a 55%, #854d0e);
+  border: 1px solid #f9d977;
+}
+
+.brand-text-main {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.brand-text-sub {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-soft);
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.site-nav a {
+  text-decoration: none;
+  font-size: 14px;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.site-nav a:hover {
+  color: var(--text-main);
+  border-color: var(--border-soft);
+  background: var(--bg-soft);
+}
+
+/* Page Titles */
+
+.page-title-wrap {
+  margin-bottom: 24px;
+}
+
+.page-eyebrow {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--accent-gold);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.page-title {
+  font-size: 32px;
+  margin: 0 0 8px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  max-width: 640px;
+}
+
+/* Cards */
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-soft);
+  padding: 22px 20px;
+  margin-bottom: 22px;
+}
+
+/* FAQ */
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faq-item {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-soft);
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-question-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.faq-question-title span:first-child {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.faq-pill {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-pill);
+  color: var(--text-soft);
+  background: #f9fafb;
+}
+
+.faq-chevron {
+  font-size: 18px;
+  color: var(--text-soft);
+  transform-origin: center;
+  transition: transform 0.15s ease-out, color 0.15s ease-out;
+}
+
+details[open] .faq-chevron {
+  transform: rotate(90deg);
+  color: var(--text-muted);
+}
+
+.faq-body {
+  padding: 0 14px 14px 14px;
+  border-top: 1px solid var(--border-soft);
+  font-size: 16px;
+  color: var(--text-main);
+}
+
+.faq-body p {
+  margin: 10px 0;
+}
+
+.faq-body ul {
+  margin: 8px 0 6px 20px;
+  padding: 0;
+}
+
+/* Economic Paper Sections */
+
+.section-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-soft);
+  margin-bottom: 4px;
+}
+
+.section-title {
+  font-size: 24px;
+  margin: 0 0 10px;
+  font-weight: 700;
+  color: #1f2937;
+  border-left: 4px solid var(--accent-gold);
+  padding-left: 10px;
+}
+
+.section-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.subheading {
+  font-size: 18px;
+  margin: 18px 0 6px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Table */
+
+.table-wrap {
+  margin: 10px 0 16px;
+  overflow-x: auto;
+}
+
+.mde-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.mde-table th,
+.mde-table td {
+  border: 1px solid var(--border-soft);
+  padding: 8px 10px;
+}
+
+.mde-table th {
+  background: var(--accent-gold-soft);
+}
+
+/* Highlight */
+
+strong {
+  color: #111827;
+}
+
+.highlight-gold {
+  background: var(--accent-gold-soft);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+/* Footer */
+
+.site-footer {
+  border-top: 1px solid var(--border-soft);
+  background: #ffffff;
+  padding: 14px 16px 18px;
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Responsive */
+
+@media (max-width: 640px) {
+  .site-header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-main {
+    padding: 24px 12px 30px;
+  }
+
+  .page-title {
+    font-size: 26px;
+  }
+
+  .card {
+    padding: 18px 14px;
+  }
+}
+/* Force FAQ answer text to match main body size */
+.faq-body {
+  font-size: 18px !important;
+}

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MydEmpire – Blueprint Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      /* Level colors (locked) */
+      --b1-color: #b0bec5; /* Steel Grey */
+      --b2-color: #1565c0; /* Deep Blue */
+      --b3-color: #7e57c2; /* Purple */
+      --b4-color: #ff8f00; /* Orange */
+      --b5-color: #ffca28; /* Gold */
+
+      /* Current accent (updated by JS) */
+      --bp-accent: var(--b1-color);
+
+      /* Alignment controls */
+      --inner-top: 13%;
+      --inner-sides: 13%;
+      --inner-bottom: 18%;
+      --badge-bottom: 1%;   /* badge mostly inside frame */
+
+      /* Page theme colors */
+      --page-bg-dark: #020308;
+      --page-text-dark: #e3f2fd;
+      --page-bg-light: #f4f6fb;
+      --page-text-light: #222;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--page-bg-dark);
+      color: var(--page-text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body.light-theme {
+      background: var(--page-bg-light);
+      color: var(--page-text-light);
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .blueprint-wrapper {
+      width: 420px;
+      height: 640px;
+      position: relative;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+    }
+
+    /* FRAME */
+    .bp-frame {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .bp-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.7));
+    }
+
+    /* 🔥 removed radial overlay to kill any color circle */
+    .bp-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      /* very subtle top tint only, not a circle */
+      background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--bp-accent) 25%, transparent) 0%,
+        transparent 40%,
+        transparent 100%
+      );
+      mix-blend-mode: multiply;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* INNER AREA */
+    .bp-inner {
+      position: absolute;
+      top: var(--inner-top);
+      bottom: var(--inner-bottom);
+      left: var(--inner-sides);
+      right: var(--inner-sides);
+      z-index: 1;
+    }
+
+    .bp-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 18px;
+    }
+
+    /* BACKGROUND – linear only, no radial = no circles */
+    .bp-background {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--bp-accent) 35%, #ffffff 65%) 0%,
+        color-mix(in srgb, var(--bp-accent) 15%, #f5f7ff 85%) 35%,
+        #151820 70%,
+        #05070b 100%
+      );
+    }
+
+    .bp-background::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: 18px;
+      background-image:
+        linear-gradient(to right, rgba(80, 120, 180, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(80, 120, 180, 0.08) 1px, transparent 1px);
+      background-size: 22px 22px;
+      opacity: 0.35;
+      mix-blend-mode: soft-light;
+    }
+
+    /* BUILDING */
+    .bp-building {
+      position: absolute;
+      width: 110%;
+      left: 50%;
+      bottom: 22%;
+      transform: translateX(-50%);
+      filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.7));
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .bp-building img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* TITLE */
+    .bp-title {
+      position: absolute;
+      top: 7%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 9px;
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .bp-title span {
+      display: block;
+    }
+
+    .bp-title-main {
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* MATRIX STRIP */
+    .bp-matrix-strip {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      padding: 10px 18px;
+      border-radius: 0 0 18px 18px;
+      background: rgba(3, 10, 20, 0.96);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      column-gap: 48px;
+
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.6);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .bp-matrix-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      text-align: center;
+    }
+
+    .bp-matrix-label {
+      opacity: 0.85;
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    .bp-matrix-value {
+      color: var(--bp-accent);
+      font-weight: 900;
+      font-size: 15px;
+    }
+
+    /* BADGE */
+    .bp-shield-container {
+      position: absolute;
+      left: 50%;
+      bottom: var(--badge-bottom);
+      transform: translateX(-50%);
+      width: 28%;
+      aspect-ratio: 1.05 / 1;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* clean, refined fill – highlight inside, no glow outside */
+    .bp-shield-fill {
+      position: absolute;
+      inset: 18%;
+      border-radius: 60% 60% 80% 80%;
+      background:
+        radial-gradient(
+          circle at 30% 25%,
+          color-mix(in srgb, #ffffff 65%, var(--bp-accent) 35%) 0%,
+          transparent 45%
+        ),
+        linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--bp-accent) 85%, #ffffff 15%) 0%,
+          color-mix(in srgb, var(--bp-accent) 55%, #000000 45%) 100%
+        );
+      box-shadow:
+        0 0 4px rgba(0, 0, 0, 0.9),
+        0 6px 12px rgba(0, 0, 0, 0.9);
+    }
+
+    .bp-shield-frame {
+      position: absolute;
+      inset: 0;
+      filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.8));
+    }
+
+    .bp-shield-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .bp-shield-level {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 22px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow:
+        0 0 6px rgba(0, 0, 0, 0.9),
+        0 0 12px rgba(0, 0, 0, 1);
+    }
+
+    /* CONTROLS */
+    .controls {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      font-size: 12px;
+      opacity: 0.9;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button.level-btn,
+    button.theme-btn {
+      border-radius: 99px;
+      border: 1px solid rgba(144, 202, 249, 0.5);
+      background: rgba(12, 30, 60, 0.9);
+      color: #e3f2fd;
+      padding: 4px 10px;
+      cursor: pointer;
+    }
+
+    body.light-theme button.level-btn,
+    body.light-theme button.theme-btn {
+      background: #ffffff;
+      color: #123;
+      border-color: #c0c8dd;
+    }
+
+    button.level-btn.active {
+      border-color: var(--bp-accent);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--bp-accent) 60%, transparent);
+    }
+
+    button.theme-btn {
+      margin-left: 16px;
+      font-size: 11px;
+      opacity: 0.95;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="panel">
+
+    <div class="blueprint-wrapper">
+
+      <!-- FRAME -->
+      <div class="bp-frame">
+        <img src="assets/blueprint-frame.png" alt="Blueprint frame">
+      </div>
+
+      <!-- INNER CONTENT -->
+      <div class="bp-inner">
+        <div class="bp-card">
+
+          <div class="bp-background"></div>
+
+          <!-- Building -->
+          <div class="bp-building">
+            <img src="assets/pharma-building.png" alt="Pharma factory">
+          </div>
+
+          <!-- Title -->
+          <div class="bp-title">
+            <span>GENESIS BLUEPRINT</span>
+            <span class="bp-title-main">PHARMA FACTORY</span>
+          </div>
+
+          <!-- Matrix strip -->
+          <div class="bp-matrix-strip">
+            <div class="bp-matrix-group">
+              <div class="bp-matrix-label">Industry</div>
+              <div class="bp-matrix-value" id="bp-industry-short">PHARMA</div>
+            </div>
+            <div class="bp-matrix-group">
+              <div class="bp-matrix-label">Base EP / hr</div>
+              <div class="bp-matrix-value" id="bp-ep">+120</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- LEVEL BADGE -->
+      <div class="bp-shield-container">
+        <div class="bp-shield-fill"></div>
+        <div class="bp-shield-frame">
+          <img src="assets/shield-frame.png" alt="Shield">
+        </div>
+        <div class="bp-shield-level" id="bp-shield-text">B1</div>
+      </div>
+
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+      <div>
+        <button class="level-btn active" data-level="1">B1</button>
+        <button class="level-btn" data-level="2">B2</button>
+        <button class="level-btn" data-level="3">B3</button>
+        <button class="level-btn" data-level="4">B4</button>
+        <button class="level-btn" data-level="5">B5</button>
+      </div>
+      <button class="theme-btn" id="theme-toggle">Light theme</button>
+    </div>
+
+  </div>
+
+  <script>
+    const LEVEL_CONFIG = {
+      1: { colorVar: "--b1-color", ep: "+120" },
+      2: { colorVar: "--b2-color", ep: "+180" },
+      3: { colorVar: "--b3-color", ep: "+260" },
+      4: { colorVar: "--b4-color", ep: "+360" },
+      5: { colorVar: "--b5-color", ep: "+500" }
+    };
+
+    function setBlueprintLevel(level) {
+      const cfg = LEVEL_CONFIG[level];
+      if (!cfg) return;
+
+      const root = document.documentElement;
+      const accent = getComputedStyle(root).getPropertyValue(cfg.colorVar).trim();
+
+      // drives background, badge, matrix highlight, frame tint
+      root.style.setProperty("--bp-accent", accent);
+
+      document.getElementById("bp-ep").textContent = cfg.ep;
+      document.getElementById("bp-shield-text").textContent = "B" + level;
+
+      document.querySelectorAll(".level-btn").forEach(btn => {
+        btn.classList.toggle("active", Number(btn.dataset.level) === level);
+      });
+    }
+
+    document.querySelectorAll(".level-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const lvl = Number(btn.dataset.level);
+        setBlueprintLevel(lvl);
+      });
+    });
+
+    // theme toggle
+    const themeToggle = document.getElementById("theme-toggle");
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-theme");
+      const isLight = document.body.classList.contains("light-theme");
+      themeToggle.textContent = isLight ? "Dark theme" : "Light theme";
+    });
+
+    // initial
+    setBlueprintLevel(1);
+  </script>
+</body>
+</html>

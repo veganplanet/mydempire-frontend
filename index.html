@@ -1,488 +1,191 @@
+
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>MydEmpire – Genesis Phase</title>
-  <meta charset="utf-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MydEmpire — Pre Genesis</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    button {
+      padding: 12px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .primary {
+      background: #22c55e;
+      color: black;
+    }
+
+    .danger {
+      background: #ef4444;
+      color: white;
+    }
+
+    input {
+      padding: 10px;
+      width: 80px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .status {
+      margin-top: 20px;
+      min-height: 20px;
+    }
+  </style>
 </head>
+<body>
 
-<body style="padding:30px;font-family:Arial;max-width:1100px">
+  <h1>🏛 MYDEMPIRE</h1>
+  <p>PRE-GENESIS PACK SALE</p>
 
-<h1>MydEmpire – Genesis Phase</h1>
+  <div class="card">
 
-<button id="connectBtn">Connect Hive Wallet</button>
-<p id="walletStatus"></p>
+    <div>
+      <button class="primary" onclick="connectWallet()">Connect Wallet</button>
+      <p id="walletDisplay"></p>
+    </div>
 
-<hr>
+    <hr>
 
-<h2>📦 Genesis Packs</h2>
-<input type="number" id="packInput" min="1" placeholder="Enter number of packs">
-<button id="buyPackBtn">Purchase</button>
-<button id="openPackBtn">Open 1 Pack</button>
+    <div>
+      <p>3 HIVE per pack</p>
+      <input type="number" id="packCount" value="1" min="1" max="10" />
+      <br>
+      <button class="primary" onclick="purchase()">Buy Packs</button>
+    </div>
 
-<p id="hivePriceInfo"></p>
+    <div class="status" id="status"></div>
 
-<hr>
-
-<h2>🏛 Treasury</h2>
-<div id="treasuryInfo">Loading treasury...</div>
-<hr>
-
-<h2>🏭 My Factories</h2>
-<button onclick="loadFactories()">Refresh Factories</button>
-<div id="factoryList"></div>
+  </div>
 
 <script>
 
-const backend = "https://mydempire-backend-1.onrender.com";
+  const backend = "http://localhost:10000";
+  let username = null;
 
-let currentUser = null;
-let currentHivePriceUSD = 0;
-
-/* ================= PRICE ENGINE ================= */
-
-function getPackPriceUSD(packsSold) {
-  if (packsSold < 500) return 0.50;
-  if (packsSold < 1000) return 0.75;
-  if (packsSold < 1500) return 1.00;
-  if (packsSold < 2500) return 1.25;
-  return 1.50;
-}
-
-async function fetchHivePrice() {
-  try {
-    const res = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=hive&vs_currencies=usd"
-    );
-    const data = await res.json();
-    currentHivePriceUSD = data.hive.usd;
-    document.getElementById("hivePriceInfo").innerText =
-      "1 HIVE ≈ $" + currentHivePriceUSD.toFixed(4) + " USD";
-  } catch {
-    document.getElementById("hivePriceInfo").innerText =
-      "Live price unavailable";
-  }
-}
-
-fetchHivePrice();
-
-/* ================= WALLET CONNECT ================= */
-
-document.getElementById("connectBtn").onclick = function() {
-
-  if (!window.hive_keychain) {
-    alert("Hive Keychain extension not detected.\nRefresh page once.");
-    return;
-  }
-
-  const username = prompt("Enter your Hive username:");
-  if (!username) return;
-
-  window.hive_keychain.requestSignBuffer(
-    username,
-    "MydEmpire Login",
-    "Posting",
-    function(response) {
-
-      if (response.success) {
-        currentUser = username;
-        document.getElementById("walletStatus").innerText =
-          "Connected as @" + username;
-      } else {
-        alert("Wallet connection rejected");
-      }
+  // 🔐 Connect Wallet
+  function connectWallet() {
+    if (!window.hive_keychain) {
+      alert("Hive Keychain not installed.");
+      return;
     }
-  );
-};
 
-/* ================= BUY PACK ================= */
+    const user = prompt("Enter your Hive username:");
+    if (!user) return;
 
-document.getElementById("buyPackBtn").onclick = async function() {
+    username = user.trim();
+    document.getElementById("walletDisplay").innerText =
+      "Connected: " + username;
+  }
 
-  if (!currentUser) return alert("Connect wallet first");
-  if (!currentHivePriceUSD) return alert("Hive price not loaded");
-
-  const packs = parseInt(document.getElementById("packInput").value);
-  if (!packs || packs <= 0) return alert("Invalid pack amount");
-
-  const packsSold = 0; // temporary
-  const packPriceUSD = getPackPriceUSD(packsSold);
-
-  const totalUSD = packPriceUSD * packs;
-  const hiveAmount = (totalUSD / currentHivePriceUSD).toFixed(3);
-
-  const orderRes = await fetch(backend + "/create-order", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      username: currentUser,
-      packs,
-      hive_amount: hiveAmount
-    })
-  });
-
-  const orderData = await orderRes.json();
-
-  window.hive_keychain.requestTransfer(
-    currentUser,
-    "mydempiregain",
-    hiveAmount,
-    "Genesis Pack Purchase",
-    "HIVE",
-    async function(response){
-
-      if (!response.success) {
-        alert("Transfer cancelled");
+  // 💰 Purchase Flow
+  async function purchase() {
+    try {
+      if (!username) {
+        alert("Connect wallet first.");
         return;
       }
 
-      const txid = response.result.id;
+      const packs = parseInt(document.getElementById("packCount").value);
 
-      const verifyRes = await fetch(backend + "/verify-pack", {
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({
-          order_id: orderData.order.id,
-          txid
-        })
-      });
-
-      const verifyData = await verifyRes.json();
-
-      if (verifyData.success) {
-        alert("🎉 Pack minted successfully!");
-      } else {
-        alert("Verification failed");
+      if (packs <= 0) {
+        alert("Invalid pack amount.");
+        return;
       }
-    }
-  );
-};
 
-/* ================= OPEN PACK ================= */
+      document.getElementById("status").innerText = "Creating order...";
 
-document.getElementById("openPackBtn").onclick = async function() {
-
-  if (!currentUser) return alert("Connect wallet first");
-
-  const res = await fetch(backend + "/open-pack", {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({ username: currentUser })
-  });
-
-  const data = await res.json();
-
-  if (!data.success) return alert(data.error);
-
-  alert(
-`🎉 You received:
-🏝 Land: ${data.land}
-🏭 Blueprint: ${data.blueprint}
-⚡ EMP Gained: +${data.empDrop}`
-  );
-};
-
-/* ================= LOAD TREASURY ================= */
-
-async function loadTreasury() {
-  try {
-    const res = await fetch(backend + "/treasury");
-    const data = await res.json();
-    document.getElementById("treasuryInfo").innerText =
-      "Treasury: " + data.treasury + " HIVE";
-  } catch {}
-}
-
-loadTreasury();
-async function loadFactories() {
-
-  if (!currentUser) {
-    alert("Connect wallet first");
-    return;
-  }
-
-  const res = await fetch(
-    backend + "/user-factories/" + currentUser
-  );
-
-  const factories = await res.json();
-
-  const container = document.getElementById("factoryList");
-  container.innerHTML = "";
-
-  if (!factories.length) {
-    container.innerHTML = "<p>No factories found</p>";
-    return;
-  }
-
-  factories.forEach(f => {
-
-    const div = document.createElement("div");
-    div.style.border = "1px solid #ccc";
-    div.style.padding = "10px";
-    div.style.marginBottom = "10px";
-
-    let statusText = f.status;
-
-    if (f.status === "building" && f.upgrade_complete_at) {
-      statusText += " (Completes at: " +
-        new Date(f.upgrade_complete_at).toLocaleString() + ")";
-    }
-
-    if (f.status === "upgrading" && f.upgrade_complete_at) {
-      statusText += " (Upgrade completes at: " +
-        new Date(f.upgrade_complete_at).toLocaleString() + ")";
-    }
-
-    div.innerHTML = `
-      <b>Factory #${f.id}</b><br>
-      Land: ${f.land_tier}<br>
-      Blueprint: ${f.blueprint_tier}<br>
-      Level: ${f.level}<br>
-      Status: ${statusText}<br>
-      Active Days: ${f.active_days}
-      <br><br>
-      <button onclick="payMaintenance(${f.id})">Pay Maintenance</button>
-      <button onclick="upgradeFactory(${f.id})">Upgrade</button>
-    `;
-
-    container.appendChild(div);
-  });
-}
-async function payMaintenance(factoryId) {
-
-  const res = await fetch(backend + "/pay-maintenance", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: currentUser,
-      factory_id: factoryId
-    })
-  });
-
-  const data = await res.json();
-  alert(JSON.stringify(data));
-  loadFactories();
-}
-
-async function upgradeFactory(factoryId) {
-
-  const res = await fetch(backend + "/upgrade-factory", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: currentUser,
-      factory_id: factoryId
-    })
-  });
-
-  const data = await res.json();
-  alert(JSON.stringify(data));
-  loadFactories();
-}
-
-  
-</script>
-<hr>
-<h2>⚙ Backend Test Panel (Admin)</h2>
-
-<div>
-  <h3>Build Factory</h3>
-
-<input id="bf_username" placeholder="Username">
-<button onclick="loadEligible()">Load Eligible</button>
-
-<br><br>
-
-<label>Land:</label>
-<select id="bf_land" style="padding:6px; margin-right:10px;">
-  <option>Select Land</option>
-</select>
-
-<label>Blueprint:</label>
-<select id="bf_blueprint" style="padding:6px;">
-  <option>Select Blueprint</option>
-</select>
-
-<br><br>
-
-<button onclick="buildFactory()">Build Factory</button>
-</div>
-
-<div>
- <h3>Upgrade Factory</h3>
-
-<input id="uf_username" placeholder="Username">
-<button onclick="loadFactories()">Load Factories</button>
-
-<br><br>
-
-<select id="uf_factory" style="padding:6px; margin-right:10px;">
-  <option>Select Factory</option>
-</select>
-
-<button onclick="upgradeFactory()">Upgrade</button>
-</div>
-
-<div>
-  <h3>Pay Maintenance</h3>
-  <input id="pm_username" placeholder="Username">
-  <input id="pm_factory" placeholder="Factory ID">
-  <button onclick="payMaintenance()">Pay</button>
-</div>
-
-<div>
-  <h3>Check EMP</h3>
-  <input id="emp_username" placeholder="Username">
-  <button onclick="checkEMP()">Check EMP</button>
-</div>
-
-<pre id="responseBox" style="background:#111;color:#0f0;padding:10px;"></pre>
-
-  <script>
-const API = "https://mydempire-backend-1.onrender.com";
-
-function showResponse(data) {
-  document.getElementById("responseBox").textContent =
-    JSON.stringify(data, null, 2);
-}
-
-async function buildFactory() {
-  const username = document.getElementById("bf_username").value;
-  const land_id = document.getElementById("bf_land").value;
-  const blueprint_id = document.getElementById("bf_blueprint").value;
-
-  const res = await fetch(`${API}/build-factory`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, land_id, blueprint_id })
-  });
-
-  showResponse(await res.json());
-}
-
-async function upgradeFactory() {
-  const username = document.getElementById("uf_username").value;
-  const factory_id = document.getElementById("uf_factory").value;
-
-  const res = await fetch(`${API}/upgrade-factory`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, factory_id })
-  });
-
-  showResponse(await res.json());
-}
-
-async function payMaintenance() {
-  const username = document.getElementById("pm_username").value;
-  const factory_id = document.getElementById("pm_factory").value;
-
-  const res = await fetch(`${API}/pay-maintenance`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, factory_id })
-  });
-
-  showResponse(await res.json());
-}
-
-async function checkEMP() {
-  const username = document.getElementById("emp_username").value;
-
-  const res = await fetch(`${API}/emp/${username}`);
-  showResponse(await res.json());
-}
-
-    async function loadEligible() {
-  const username = document.getElementById("bf_username").value;
-
-  if (!username) {
-    alert("Enter username first");
-    return;
-  }
-
-  try {
-    const res = await fetch(`https://mydempire-backend-1.onrender.com/eligible-build/${username}`);
-    const data = await res.json();
-
-    console.log("Eligible response:", data);
-
-    const landSelect = document.getElementById("bf_land");
-    const bpSelect = document.getElementById("bf_blueprint");
-
-    landSelect.innerHTML = "";
-    bpSelect.innerHTML = "";
-
-    if (!data.lands || data.lands.length === 0) {
-      landSelect.innerHTML = "<option>No land slots available</option>";
-    } else {
-      data.lands.forEach(l => {
-        const option = document.createElement("option");
-        option.value = l.id;
-        option.textContent = `Land ${l.id} (${l.tier})`;
-        landSelect.appendChild(option);
+      const orderRes = await fetch(`${backend}/create-order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, packs })
       });
+
+      const orderData = await orderRes.json();
+
+      if (!orderRes.ok) {
+        showError(orderData.error || "Order creation failed.");
+        return;
+      }
+
+      const orderId = orderData.order.id;
+      const totalAmount = Number(orderData.order.hive_amount);
+
+      document.getElementById("status").innerText =
+        "Waiting for Hive transfer...";
+
+      // ✅ CORRECT TRANSFER FORMAT
+      window.hive_keychain.requestTransfer(
+        username,
+        "mydempiregain",
+        totalAmount.toFixed(3),        // amount only
+        "MydEmpire Pack Purchase",    // memo
+        "HIVE",                       // currency separate
+        async function(response) {
+
+          if (!response.success) {
+            showError("Transfer cancelled.");
+            return;
+          }
+
+          document.getElementById("status").innerText =
+            "Confirming payment...";
+
+          const confirmRes = await fetch(`${backend}/confirm-payment`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              orderId,
+              txid: response.result.id
+            })
+          });
+
+          const confirmData = await confirmRes.json();
+
+          if (!confirmRes.ok) {
+            showError(confirmData.error || "Payment confirmation failed.");
+            return;
+          }
+
+          document.getElementById("status").innerText =
+            "✅ Purchase successful!";
+        }
+      );
+
+    } catch (err) {
+      showError("Unexpected error occurred.");
+      console.error(err);
     }
-
-    if (!data.blueprints || data.blueprints.length === 0) {
-      bpSelect.innerHTML = "<option>No unused blueprints</option>";
-    } else {
-      data.blueprints.forEach(b => {
-        const option = document.createElement("option");
-        option.value = b.id;
-        option.textContent = `Blueprint ${b.id} (${b.tier})`;
-        bpSelect.appendChild(option);
-      });
-    }
-
-  } catch (err) {
-    console.error("Eligible error:", err);
-    alert("Error loading eligible data. Check console.");
-  }
-}
-
-    async function loadFactories() {
-  const username = document.getElementById("uf_username").value;
-
-  if (!username) {
-    alert("Enter username first");
-    return;
   }
 
-  const res = await fetch(
-    `https://mydempire-backend-1.onrender.com/user-factories/${username}`
-  );
-
-  const data = await res.json();
-
-  console.log("Factories:", data);
-
-  const factorySelect = document.getElementById("uf_factory");
-  factorySelect.innerHTML = "";
-
-  if (!data.length) {
-    factorySelect.innerHTML = "<option>No factories found</option>";
-    return;
+  function showError(message) {
+    document.getElementById("status").innerText = "❌ " + message;
   }
 
-  data.forEach(f => {
-    const parts = f.blueprint_tier.split("_");
-const industry = parts[0];
-const tier = parts[1];
-
-option.textContent =
-  `${industry} ${tier} | Factory Lv ${f.level} | ${f.status}`;
-    factorySelect.appendChild(option);
-  });
-}
-    
-</script>
-  
+</script><script src="/js/hive.js"></script>
 </body>
 </html>
-
-
-
-
-
-
