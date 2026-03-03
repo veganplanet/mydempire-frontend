@@ -1343,33 +1343,32 @@ for (const land of empireLands) {
   const landCard = document.createElement("div");
   landCard.className = "land-card";
 
-  // --- tier visuals + labels ---
-  const tierKey = (tier || "").toUpperCase();
-  const borderColor = LAND_TIER_COLORS[tierKey] || "#64748b";      // uses global map
-  const tierName = landTierLabel(tier);                             // your helper
-  const shortLabel =
-    LAND_TIER_SHORT_LABEL[tierKey] || tierName || "Frontier";       // no level repeat
+ // --- tier visuals + labels ---
+const tierKey = (tier || "").toUpperCase();
+const borderColor = LAND_TIER_COLORS[tierKey] || "#64748b"; // uses global map
+const tierName = landTierLabel(tier);                       // your helper
+const shortLabel =
+  LAND_TIER_SHORT_LABEL[tierKey] || tierName || "Frontier"; // no level repeat
 
-  // --- slots & slot pads ---
-  const slotsTotal = totalSlots;
-  const slotsUsed = usedSlots;
+// --- slots & slot pads ---
+const slotsTotal = totalSlots;
+const slotsUsed = usedSlots;
 
-  let slotHTML = "";
-  if (slotsTotal === 1) {
-    slotHTML = `<div class="land-slot center"></div>`;
-  } else if (slotsTotal === 2) {
-    slotHTML = `
-      <div class="land-slot left"></div>
-      <div class="land-slot right"></div>
-    `;
-  } else if (slotsTotal >= 3) {
-    slotHTML = `
-      <div class="land-slot left"></div>
-      <div class="land-slot center"></div>
-      <div class="land-slot right"></div>
-    `;
-  }
-
+let slotHTML = "";
+if (slotsTotal === 1) {
+  slotHTML = `<div class="land-slot center"></div>`;
+} else if (slotsTotal === 2) {
+  slotHTML = `
+    <div class="land-slot left"></div>
+    <div class="land-slot right"></div>
+  `;
+} else if (slotsTotal >= 3) {
+  slotHTML = `
+    <div class="land-slot left"></div>
+    <div class="land-slot center"></div>
+    <div class="land-slot right"></div>
+  `;
+}
   // --- NFT card HTML ---
   landCard.innerHTML = `
     <div class="land-nft-shell" style="border-color:${borderColor};">
