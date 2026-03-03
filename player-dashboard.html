@@ -1352,6 +1352,7 @@ const slotsUsed = usedSlots;
 
 // Build slot pads based on totalSlots
 let slotHTML = "";
+
 if (slotsTotal === 1) {
   slotHTML = `<div class="land-slot center"></div>`;
 } else if (slotsTotal === 2) {
@@ -1366,7 +1367,6 @@ if (slotsTotal === 1) {
     <div class="land-slot right"></div>
   `;
 }
-
     const tierKey = (tier || "").toUpperCase();
     const tierColorMap = {
       L1: "#16a34a", // Frontier
