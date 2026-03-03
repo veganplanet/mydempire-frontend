@@ -1345,7 +1345,7 @@ for (const land of empireLands) {
 
  // --- tier visuals + labels ---
 const landTierKey = (tier || "").toUpperCase();
-const borderColor = LAND_TIER_COLORS[landTierKey] || "#64748b";      // uses global map
+const borderColor = LAND_TIER_COLORS[tier] || "#64748b";
 const tierName = landTierLabel(tier);                                 // your helper
 const shortLabel =
   LAND_TIER_SHORT_LABEL[landTierKey] || tierName || "Frontier";       // no level repeat
