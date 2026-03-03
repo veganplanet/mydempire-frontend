@@ -920,12 +920,19 @@
   </div>
 
   <script>
-    // ===== BASIC CONFIG =====
-    const API_BASE = "http://localhost:10000";
+   // ===== BASIC CONFIG =====
 
-    function apiUrl(path) {
-      return API_BASE + path;
-    }
+const LOCAL_API = "http://localhost:10000";
+const PROD_API  = "https://YOUR-RENDER-URL.onrender.com";
+
+const API_BASE =
+  window.location.hostname === "localhost"
+    ? LOCAL_API
+    : PROD_API;
+
+function apiUrl(path) {
+  return API_BASE + path;
+}
 
     function getPlayerUsername() {
       const params = new URLSearchParams(window.location.search);
