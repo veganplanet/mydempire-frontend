@@ -6,6 +6,97 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
+    /* ==== Land NFT visual (3:4 zoning grid) ==== */
+
+.land-nft-shell {
+  position: relative;
+  border-radius: 22px;
+  border: 5px solid #d1d5db; /* overwritten inline per tier */
+  background: radial-gradient(circle at top, #f8fafc 0%, #e2e8f0 55%, #cbd5e1 100%);
+  aspect-ratio: 3 / 4;     /* 🔥 NFT ratio */
+  overflow: hidden;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
+}
+
+/* Round tier badge (L1 / L2 / L3) */
+.land-badge {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 4px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 15px;
+  color: #ffffff;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+/* Industrial grid surface */
+.land-surface {
+  flex: 1;
+  margin: 68px 22px 60px;
+  background-image:
+    linear-gradient(#cbd5e1 1px, transparent 1px),
+    linear-gradient(90deg, #cbd5e1 1px, transparent 1px);
+  background-size: 22px 22px;
+  border-radius: 12px;
+  position: relative;
+}
+
+/* Slot pads: light brown outlined squares */
+.land-slot {
+  width: 46px;
+  height: 46px;
+  border: 3px solid #c89f6a;          /* light brown */
+  background: rgba(200, 159, 106, 0.08);
+  border-radius: 8px;
+  position: absolute;
+}
+
+/* Positions for 1 / 2 / 3 slots */
+.land-slot.center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.land-slot.left {
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+}
+
+.land-slot.right {
+  top: 50%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+}
+
+/* Bottom strip inside the NFT */
+.land-strip {
+  background: #050b14;
+  color: #ffffff;
+  padding: 8px 14px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.land-strip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
 /* ===== LAND NFT CARDS (GENESIS) ===== */
 
 .land-card {
@@ -1229,29 +1320,62 @@ function apiUrl(path) {
         const usedSlots = factories.length;
         const totalSlots = landSlotCount(tier);
 
-        const landCard = document.createElement("div");
-        landCard.className = "land-card";
+            const landCard = document.createElement("div");
+    landCard.className = "land-card";
 
-        const headerLineClass = landHeaderLineClass(tier);
-        const nftTierClass =
-          tier === "L1" ? "tier-l1" : tier === "L2" ? "tier-l2" : tier === "L3" ? "tier-l3" : "";
+    const tierKey = (tier || "").toUpperCase();
+    const tierColorMap = {
+      L1: "#16a34a", // Frontier
+      L2: "#fbbf24", // Estate
+      L3: "#ef4444", // Industrial Zone
+    };
+    const borderColor = tierColorMap[tierKey] || "#64748b";
 
-        landCard.innerHTML = `
-          <div class="land-header-line ${headerLineClass}"></div>
-          <div class="land-nft-placeholder ${nftTierClass}"></div>
-          <div class="land-header">
-            <div>
-              <div class="land-name">${landTierLabel(tier)}</div>
-              <div class="land-meta">GENESIS Land NFT</div>
-            </div>
-            <div class="land-meta">Slots: ${usedSlots} / ${totalSlots}</div>
+    const tierName = landTierLabel(tier);      // you already have this helper
+    const slotsTotal = totalSlots;
+    const slotsUsed = usedSlots;
+    const slotsFree = Math.max(slotsTotal - slotsUsed, 0);
+
+    // Build slot pads based on totalSlots
+    let slotHTML = "";
+    if (slotsTotal === 1) {
+      slotHTML = `<div class="land-slot center"></div>`;
+    } else if (slotsTotal === 2) {
+      slotHTML = `
+        <div class="land-slot left"></div>
+        <div class="land-slot right"></div>
+      `;
+    } else if (slotsTotal >= 3) {
+      slotHTML = `
+        <div class="land-slot left"></div>
+        <div class="land-slot center"></div>
+        <div class="land-slot right"></div>
+      `;
+    }
+
+    landCard.innerHTML = `
+      <div class="land-nft-shell" style="border-color:${borderColor};">
+        <div class="land-badge" style="background:${borderColor};">
+          ${tierKey || "L?"}
+        </div>
+
+        <div class="land-surface">
+          ${slotHTML}
+        </div>
+
+        <div class="land-strip">
+          <div class="land-strip-row">
+            <span>${tierName} • GENESIS</span>
+            <span>Slots: ${slotsUsed}/${slotsTotal}</span>
           </div>
-          <div class="land-tags">
-            <span class="tag ${landTagClass(tier)}">${tier}</span>
-            <span class="tag">Production land</span>
-          </div>
-        `;
+        </div>
+      </div>
 
+      <div class="land-tags">
+        <span class="tag ${landTagClass(tier)}">${tier}</span>
+        <span class="tag">Production land</span>
+      </div>
+    `;
         const factoriesList = document.createElement("div");
         factoriesList.className = "factories-list";
 
