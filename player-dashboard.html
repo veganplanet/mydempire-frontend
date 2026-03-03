@@ -1287,77 +1287,64 @@ const BP_LEVEL_COLORS = {
 
     grid.innerHTML = "";
 
-    blueprints.forEach((b) => {
-      const card = document.createElement("div");
-      card.className = "factory-card blueprint-card";
+   blueprints.forEach((b) => {
+  const card = document.createElement("div");
+  card.className = "factory-card blueprint-card";
 
-      // --- Industry (may be missing in current API) ---
-      const rawIndustry =
-        (b.industry || b.industry_type || b.industry_code || "").toString();
-      const industryCode = rawIndustry.toUpperCase();
-      const industryName = industryCode || "PHARMA"; // fallback for now
+  // --- Industry (may be missing in current API) ---
+  const rawIndustry =
+    (b.industry || b.industry_type || b.industry_code || "").toString();
+  const industryCode = rawIndustry.toUpperCase();
+  const industryName = industryCode || "PHARMA"; // temporary fallback
 
-      const imgSrc =
-        BP_INDUSTRY_IMAGES[industryCode] || BP_INDUSTRY_IMAGES.PHARMA;
+  const imgSrc =
+    BP_INDUSTRY_IMAGES[industryCode] || BP_INDUSTRY_IMAGES.PHARMA;
 
-      // --- Level: B1/B2/B3/B4/B5 → number + label ---
-      const rawTier = (b.raw_tier || b.level || "").toString(); // e.g. "B4"
-      const levelNumber =
-        parseInt(rawTier.replace(/[^0-9]/g, ""), 10) || 1;       // 4
-      const levelLabel = "B" + levelNumber;                      // "B4"
+  // --- Level: B1/B2/B3/B4/B5 → number + label ---
+  const rawTier = (b.raw_tier || b.level || "").toString(); // e.g. "B4"
+  const levelNumber =
+    parseInt(rawTier.replace(/[^0-9]/g, ""), 10) || 1;       // 4
+  const levelLabel = "B" + levelNumber;                      // "B4"
 
-      const borderColor =
-        BP_LEVEL_COLORS[levelNumber] || "#d1d5db";
+  const borderColor =
+    BP_LEVEL_COLORS[levelNumber] || "#d1d5db";
 
-      // Level multiplier: 1 + 0.25*(level-1)
-      const levelMult = 1 + 0.25 * (levelNumber - 1);
-      let levelMultText = levelMult.toFixed(2).replace(/\.00$/, ""); // "1", "1.25", ...
+  // Level multiplier: 1 + 0.25*(level-1)
+  const levelMult = 1 + 0.25 * (levelNumber - 1);
+  let levelMultText = levelMult.toFixed(2).replace(/\.00$/, ""); // "1", "1.25", ...
 
-      // --- Build HTML: mini full card + metadata ---
-      card.innerHTML = `
-        <div class="bp-mini-card" style="border-color:${borderColor};">
-          <div class="bp-mini-badge" style="background:${borderColor};">
-            ${levelLabel}
-          </div>
+  const eraText = (b.era || "GENESIS").toString().toUpperCase(); // e.g. GENESIS
 
-          <div class="bp-mini-building">
-            <img src="${imgSrc}" alt="${industryName} factory blueprint" />
-          </div>
+  // --- Single full card, no extra text below ---
+  card.innerHTML = `
+    <div class="bp-mini-card" style="border-color:${borderColor};">
+      <div class="bp-mini-badge" style="background:${borderColor};">
+        ${levelLabel}
+      </div>
 
-          <div class="bp-mini-strip">
-            <div class="bp-mini-row">
-              <span class="bp-mini-label">Industry</span>
-              <span class="bp-mini-value" style="color:${borderColor};">
-                ${industryName}
-              </span>
-            </div>
-            <div class="bp-mini-row">
-              <span class="bp-mini-label">Production (EMP/day)</span>
-              <span class="bp-mini-value" style="color:${borderColor};">
-                10 × Land × ${levelMultText}
-              </span>
-            </div>
-          </div>
+      <div class="bp-mini-building">
+        <img src="${imgSrc}" alt="${industryName} factory blueprint" />
+      </div>
+
+      <div class="bp-mini-strip">
+        <div class="bp-mini-row">
+          <span class="bp-mini-label">Industry</span>
+          <span class="bp-mini-value" style="color:${borderColor};">
+            ${industryName} • ${eraText}
+          </span>
         </div>
+        <div class="bp-mini-row">
+          <span class="bp-mini-label">Production (EMP/day)</span>
+          <span class="bp-mini-value" style="color:${borderColor};">
+            10 × Land × ${levelMultText}
+          </span>
+        </div>
+      </div>
+    </div>
+  `;
 
-        <div class="factory-card-header" style="margin-top:6px;">
-          <div class="factory-card-title">
-            ${levelLabel} — ${industryName}
-          </div>
-          <div class="factory-card-meta">
-            NFT #${b.blueprint_id}
-          </div>
-        </div>
-        <div class="factory-card-meta">
-          Tier code: ${b.raw_tier || "-"}
-        </div>
-        <div class="factory-card-meta">
-          Era: ${b.era || "GENESIS"}
-        </div>
-      `;
-
-      grid.appendChild(card);
-    });
+  grid.appendChild(card);
+});
   } catch (err) {
     console.error("Failed to load blueprints:", err);
     grid.innerHTML =
