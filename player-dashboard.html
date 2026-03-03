@@ -1113,6 +1113,12 @@
   </div>
 
   <script>
+const LAND_TIER_SHORT_LABEL = {
+  L1: "Frontier",
+  L2: "Estate",
+  L3: "Industrial Zone",
+};
+    
 // ===== LAND TIER CONFIG =====
 
 const LAND_TIER_COLORS = {
@@ -1337,6 +1343,7 @@ function apiUrl(path) {
             const landCard = document.createElement("div");
     landCard.className = "land-card";
         const tierKey = (tier || "").toUpperCase();
+        const shortLabel = LAND_TIER_SHORT_LABEL[tierKey] || "Frontier";
 const borderColor = LAND_TIER_COLORS[tierKey] || "#64748b";
 const tierName = landTierLabel(tier);
 
@@ -1402,7 +1409,7 @@ if (slotsTotal === 1) {
 
     <div class="land-strip">
       <div class="land-strip-row">
-        <span>${tierName} • GENESIS</span>
+        <span>${shortLabel} • GENESIS</span>
         <span>Slots: ${slotsUsed}/${slotsTotal}</span>
       </div>
     </div>
