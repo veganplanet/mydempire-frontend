@@ -6,64 +6,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    /* ==== Land NFT visual (3:4 zoning grid) ==== */
+   /* ==== Land NFT – refined full-frame 3:4 card ==== */
 
 .land-nft-shell {
   position: relative;
-  border-radius: 22px;
-  border: 5px solid #d1d5db; /* overwritten inline per tier */
-  background: radial-gradient(circle at top, #f8fafc 0%, #e2e8f0 55%, #cbd5e1 100%);
-  aspect-ratio: 3 / 4;     /* 🔥 NFT ratio */
+  border-radius: 26px;
+  border: 6px solid #16a34a; /* overridden inline per tier */
+  background: linear-gradient(
+    180deg,
+    #f8fafc 0%,
+    #eef2f7 45%,
+    #e2e8f0 100%
+  );
+  aspect-ratio: 3 / 4;        /* whole card, incl. strip */
   overflow: hidden;
-  margin-bottom: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
+  box-shadow:
+    0 14px 30px rgba(15, 23, 42, 0.2),
+    inset 0 2px 6px rgba(255, 255, 255, 0.4);
 }
 
-/* Round tier badge (L1 / L2 / L3) */
+/* Badge stays similar, just slightly nicer */
 .land-badge {
   position: absolute;
   top: 18px;
   left: 50%;
   transform: translateX(-50%);
-  width: 52px;
-  height: 52px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   border: 4px solid #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: 15px;
+  font-size: 16px;
   color: #ffffff;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.25),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4);
 }
 
-/* Industrial grid surface */
+/* Industrial surface – fills all space above the strip */
 .land-surface {
-  flex: 1;
-  margin: 68px 22px 60px;
-  background-image:
-    linear-gradient(#cbd5e1 1px, transparent 1px),
-    linear-gradient(90deg, #cbd5e1 1px, transparent 1px);
-  background-size: 22px 22px;
-  border-radius: 12px;
-  position: relative;
+  position: absolute;
+  top: 70px;          /* under badge */
+  left: 24px;
+  right: 24px;
+  bottom: 52px;       /* just above strip */
+  border-radius: 16px;
+  background:
+    linear-gradient(#d8dee9 1px, transparent 1px),
+    linear-gradient(90deg, #d8dee9 1px, transparent 1px),
+    linear-gradient(180deg, #eef2f7 0%, #dfe6ee 100%);
+  background-size: 26px 26px, 26px 26px, 100% 100%;
+  box-shadow:
+    inset 0 6px 12px rgba(15, 23, 42, 0.08),
+    0 4px 10px rgba(15, 23, 42, 0.06);
 }
 
-/* Slot pads: light brown outlined squares */
+/* Bigger, more solid slot pad */
 .land-slot {
-  width: 46px;
-  height: 46px;
-  border: 3px solid #c89f6a;          /* light brown */
-  background: rgba(200, 159, 106, 0.08);
-  border-radius: 8px;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  border: 3px solid #c89f6a;
+  background: linear-gradient(
+    145deg,
+    rgba(200, 159, 106, 0.2),
+    rgba(200, 159, 106, 0.06)
+  );
+  box-shadow:
+    inset 0 3px 6px rgba(0, 0, 0, 0.1),
+    0 6px 14px rgba(0, 0, 0, 0.15);
   position: absolute;
 }
 
-/* Positions for 1 / 2 / 3 slots */
 .land-slot.center {
   top: 50%;
   left: 50%;
@@ -72,21 +89,25 @@
 
 .land-slot.left {
   top: 50%;
-  left: 30%;
+  left: 32%;
   transform: translate(-50%, -50%);
 }
 
 .land-slot.right {
   top: 50%;
-  left: 70%;
+  left: 68%;
   transform: translate(-50%, -50%);
 }
 
-/* Bottom strip inside the NFT */
+/* Strip is stuck to absolute bottom so no extra white gap */
 .land-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;          /* 🔥 truly bottom */
+  padding: 8px 16px 9px;
   background: #050b14;
   color: #ffffff;
-  padding: 8px 14px 9px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
