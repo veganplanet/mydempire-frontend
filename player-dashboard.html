@@ -6,6 +6,269 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
+
+    /* ===== MINI BLUEPRINT CARDS (collection view) ===== */
+
+.blueprint-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The full NFT-style card inside each collection item */
+.bp-mini-card {
+  position: relative;
+  border-radius: 18px;
+  border: 4px solid #d1d5db; /* overwritten per level */
+  background: #fdfdfd;
+  padding: 18px 12px 60px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+}
+
+/* Round level badge (B1–B5) */
+.bp-mini-badge {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 13px;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* Building art */
+.bp-mini-building {
+  margin-top: 30px;
+  filter: drop-shadow(0 6px 12px rgba(15, 23, 42, 0.3));
+}
+
+.bp-mini-building img {
+  width: 100%;
+  display: block;
+}
+
+/* Bottom strip (industry + production formula) */
+.bp-mini-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 6px 10px 8px;
+  background: #050b14;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.bp-mini-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.bp-mini-label {
+  opacity: 0.8;
+}
+
+.bp-mini-value {
+  font-weight: 800;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* ===== Blueprint collection visuals ===== */
+
+.blueprint-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.blueprint-visual {
+  border-radius: 12px;
+  padding: 4px;
+  background: #f9fafb;
+  border: 2px solid #e5e7eb; /* will be overwritten with inline color */
+  overflow: hidden;
+}
+
+.blueprint-visual img {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+}
+
+    /* ===== BLUEPRINT NFT PREVIEW (LOCKED DESIGN) ===== */
+
+:root {
+  /* Level colours (locked) */
+  --b1-color: #b0bec5; /* Steel Grey */
+  --b2-color: #1565c0; /* Deep Blue */
+  --b3-color: #7e57c2; /* Purple */
+  --b4-color: #ff8f00; /* Orange */
+  --b5-color: #ffca28; /* Gold */
+
+  /* Current accent, controlled by JS */
+  --bp-accent: var(--b1-color);
+}
+
+.bp-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.bp-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 380px;         /* 🔹 enough height so card is not "half" */
+  border-radius: 20px;
+  border: 8px solid var(--bp-accent);
+  background: color-mix(in srgb, var(--bp-accent) 10%, #ffffff 90%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+/* Top circle badge (B1/B4 etc.) */
+.bp-badge {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--bp-accent);
+  border: 4px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 20px;
+  color: #ffffff;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  z-index: 3;
+}
+
+/* Factory building art */
+.bp-building {
+  position: absolute;
+  left: 50%;
+  bottom: 90px;      /* 🔹 push up so strip fits below */
+  transform: translateX(-50%);
+  width: 110%;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+}
+
+.bp-building img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Bottom matrix strip */
+.bp-matrix-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 8px 14px 10px;
+  background: #050b14;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+}
+
+.bp-matrix-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.bp-matrix-label {
+  opacity: 0.8;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.bp-matrix-value {
+  color: var(--bp-accent);
+  font-weight: 900;
+  font-size: 13px;
+  text-align: right;
+}
+
+.bp-matrix-formula {
+  color: var(--bp-accent);
+  font-weight: 800;
+  font-size: 12px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Buttons row under card */
+.bp-controls {
+  display: flex;
+  gap: 6px;
+  font-size: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.bp-controls button {
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  padding: 4px 10px;
+  cursor: pointer;
+  background: #ffffff;
+  color: #374151;
+  font-size: 12px;
+}
+
+.bp-controls button.active {
+  border-color: var(--bp-accent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--bp-accent) 50%, transparent);
+}
+
+@media (max-width: 700px) {
+  .bp-card {
+    height: 340px;
+  }
+}
+
+    .blueprint-card.selected {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+}
+
+/* Blueprint level colors */
+--b1-color: #b0bec5; /* Steel Grey */
+--b2-color: #1565c0; /* Deep Blue */
+--b3-color: #7e57c2; /* Purple */
+--b4-color: #ff8f00; /* Orange */
+--b5-color: #ffca28; /* Gold */
+
+--bp-accent: var(--b1-color);
+
     :root {
       --bg-page: #f3f4f8;
       --bg-card: #ffffff;
@@ -590,11 +853,13 @@
     <small>Your current Genesis factory blueprints</small>
   </div>
 
+  
+
+  <!-- Existing textual grid of blueprints -->
   <div id="blueprints-grid" class="factory-grid">
     <p class="status-text">Loading blueprints…</p>
   </div>
 </section>
-
     <!-- ===== TAB: UNDER CONSTRUCTION ===== -->
     <section class="section tab-panel" data-tab-panel="construction">
       <div class="section-header">
@@ -971,7 +1236,24 @@
       }
     }
      
-    async function loadBlueprints() {
+// Small helpers for blueprint visuals
+const BP_INDUSTRY_IMAGES = {
+  PHARMA:      "assets/pharma-building.png",
+  FOOD:        "assets/food-building.png",
+  TEXTILE:     "assets/textile-building.png",
+  CHEMICAL:    "assets/chemical-building.png",
+  SUPERMARKET: "assets/supermarket-building.png",
+};
+
+const BP_LEVEL_COLORS = {
+  1: "#b0bec5", // B1 – Steel Grey
+  2: "#1565c0", // B2 – Deep Blue
+  3: "#7e57c2", // B3 – Purple
+  4: "#ff8f00", // B4 – Orange
+  5: "#ffca28", // B5 – Gold
+};
+
+  async function loadBlueprints() {
   const grid = document.getElementById("blueprints-grid");
   if (!grid) {
     console.warn("blueprints-grid element not found");
@@ -1002,23 +1284,70 @@
 
     blueprints.forEach((b) => {
       const card = document.createElement("div");
-      card.className = "factory-card"; // reuse existing style
+      card.className = "factory-card blueprint-card";
 
-      const parts = [];
-      if (b.industry) parts.push(b.industry);
-      if (b.level) parts.push(b.level);
-      const label = parts.join(" ");
+      // --- Industry (may be missing in current API) ---
+      const rawIndustry =
+        (b.industry || b.industry_type || b.industry_code || "").toString();
+      const industryCode = rawIndustry.toUpperCase();
+      const industryName = industryCode || "PHARMA"; // fallback for now
 
+      const imgSrc =
+        BP_INDUSTRY_IMAGES[industryCode] || BP_INDUSTRY_IMAGES.PHARMA;
+
+      // --- Level: B1/B2/B3/B4/B5 → number + label ---
+      const rawTier = (b.raw_tier || b.level || "").toString(); // e.g. "B4"
+      const levelNumber =
+        parseInt(rawTier.replace(/[^0-9]/g, ""), 10) || 1;       // 4
+      const levelLabel = "B" + levelNumber;                      // "B4"
+
+      const borderColor =
+        BP_LEVEL_COLORS[levelNumber] || "#d1d5db";
+
+      // Level multiplier: 1 + 0.25*(level-1)
+      const levelMult = 1 + 0.25 * (levelNumber - 1);
+      let levelMultText = levelMult.toFixed(2).replace(/\.00$/, ""); // "1", "1.25", ...
+
+      // --- Build HTML: mini full card + metadata ---
       card.innerHTML = `
-        <div class="factory-card-header">
-          <div class="factory-card-title">${label || "Blueprint"}</div>
-          <div class="factory-card-meta">NFT #${b.blueprint_id}</div>
+        <div class="bp-mini-card" style="border-color:${borderColor};">
+          <div class="bp-mini-badge" style="background:${borderColor};">
+            ${levelLabel}
+          </div>
+
+          <div class="bp-mini-building">
+            <img src="${imgSrc}" alt="${industryName} factory blueprint" />
+          </div>
+
+          <div class="bp-mini-strip">
+            <div class="bp-mini-row">
+              <span class="bp-mini-label">Industry</span>
+              <span class="bp-mini-value" style="color:${borderColor};">
+                ${industryName}
+              </span>
+            </div>
+            <div class="bp-mini-row">
+              <span class="bp-mini-label">Production (EMP/day)</span>
+              <span class="bp-mini-value" style="color:${borderColor};">
+                10 × Land × ${levelMultText}
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="factory-card-meta">
-          Genesis industry blueprint
+
+        <div class="factory-card-header" style="margin-top:6px;">
+          <div class="factory-card-title">
+            ${levelLabel} — ${industryName}
+          </div>
+          <div class="factory-card-meta">
+            NFT #${b.blueprint_id}
+          </div>
         </div>
         <div class="factory-card-meta">
           Tier code: ${b.raw_tier || "-"}
+        </div>
+        <div class="factory-card-meta">
+          Era: ${b.era || "GENESIS"}
         </div>
       `;
 
@@ -1067,10 +1396,11 @@
         console.error("Failed to claim all production:", err);
         statusEl.textContent = "Error while claiming production.";
       }
+    
     }
 
     // ===== INIT =====
-    window.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("player-username-raw").textContent = PLAYER_USERNAME;
   document.getElementById("player-username-display").textContent = PLAYER_USERNAME;
 
@@ -1092,6 +1422,8 @@
   const btn = document.getElementById("claim-production-btn");
   if (btn) btn.addEventListener("click", claimAllProduction);
 });
+
   </script>
+  
 </body>
 </html>

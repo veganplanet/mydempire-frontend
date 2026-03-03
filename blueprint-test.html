@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MydEmpire – Simple Blueprint</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      /* Level colours (locked) */
+      --b1-color: #b0bec5; /* Steel Grey */
+      --b2-color: #1565c0; /* Deep Blue */
+      --b3-color: #7e57c2; /* Purple */
+      --b4-color: #ff8f00; /* Orange */
+      --b5-color: #ffca28; /* Gold */
+
+      /* Current accent (updated by JS) */
+      --bp-accent: var(--b1-color);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #ffffff;
+      color: #222;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    /* SIMPLE BLUEPRINT CARD */
+    .bp-card {
+      position: relative;
+      width: 420px;
+      height: 640px;
+      border-radius: 24px;
+      border: 12px solid var(--bp-accent); /* thick frame */
+      background: color-mix(in srgb, var(--bp-accent) 10%, #ffffff 90%);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+
+    /* TOP BADGE (simple circle, fully inside) */
+    .bp-badge {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--bp-accent);
+      border: 4px solid #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 24px;
+      color: #ffffff;
+      text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+      z-index: 3;
+    }
+
+    /* BUILDING – big and near strip */
+    .bp-building {
+      position: absolute;
+      left: 50%;
+      bottom: 95px;          /* move closer/further from strip by changing this */
+      transform: translateX(-50%);
+      width: 110%;           /* change this to 105% / 115% if you want size tweak */
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.5));
+      pointer-events: none;
+    }
+
+    .bp-building img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* BOTTOM STRIP (MATRIX) – now 2 rows */
+    .bp-matrix-strip {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px 18px 12px;
+      background: #050b14;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+    }
+
+    .bp-matrix-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      width: 100%;
+    }
+
+    .bp-matrix-label {
+      opacity: 0.85;
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    .bp-matrix-value {
+      color: var(--bp-accent);
+      font-weight: 900;
+      font-size: 14px;
+      text-align: right;
+    }
+
+    .bp-matrix-formula {
+      color: var(--bp-accent);
+      font-weight: 800;
+      font-size: 13px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* CONTROLS */
+    .controls {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      font-size: 12px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border-radius: 99px;
+      border: 1px solid #ccc;
+      padding: 4px 10px;
+      cursor: pointer;
+      background: #111;
+      color: #fff;
+    }
+
+    button.active {
+      border-color: var(--bp-accent);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--bp-accent) 60%, transparent);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="panel">
+
+    <div class="bp-card">
+      <!-- Badge -->
+      <div class="bp-badge" id="bp-badge-text">B1</div>
+
+      <!-- Building -->
+      <div class="bp-building">
+        <img id="bp-building-img" src="assets/pharma-building.png" alt="Factory" />
+      </div>
+
+      <!-- Matrix strip (2 layers) -->
+      <div class="bp-matrix-strip">
+        <div class="bp-matrix-row">
+          <div class="bp-matrix-label">Industry</div>
+          <div class="bp-matrix-value" id="bp-industry-short">PHARMA</div>
+        </div>
+        <div class="bp-matrix-row">
+          <div class="bp-matrix-label">Production (EMP/day)</div>
+          <div class="bp-matrix-formula" id="bp-production-text">
+            10 × Land × 1.00
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Industry controls -->
+    <div class="controls">
+      <button data-ind="pharma" class="active">Pharma</button>
+      <button data-ind="food">Food</button>
+      <button data-ind="textile">Textile</button>
+      <button data-ind="chemical">Chemical</button>
+      <button data-ind="supermarket">Supermarket</button>
+    </div>
+
+    <!-- Level controls -->
+    <div class="controls">
+      <button data-level="1" class="active">B1</button>
+      <button data-level="2">B2</button>
+      <button data-level="3">B3</button>
+      <button data-level="4">B4</button>
+      <button data-level="5">B5</button>
+    </div>
+
+  </div>
+
+  <script>
+    /* INDUSTRY → image + label */
+    const INDUSTRIES = {
+      pharma:      { name: "PHARMA",      img: "assets/pharma-building.png" },
+      food:        { name: "FOOD",        img: "assets/food-building.png" },
+      textile:     { name: "TEXTILE",     img: "assets/textile-building.png" },
+      chemical:    { name: "CHEMICAL",    img: "assets/chemical-building.png" },
+      supermarket: { name: "SUPERMARKET", img: "assets/supermarket-building.png" }
+    };
+
+    /* LEVEL → colour variable */
+    const LEVEL_COLORS = {
+      1: "--b1-color",
+      2: "--b2-color",
+      3: "--b3-color",
+      4: "--b4-color",
+      5: "--b5-color"
+    };
+
+    let currentIndustry = "pharma";
+    let currentLevel = 1;
+
+    function updateAccent() {
+      const root = document.documentElement;
+      const colorVar = LEVEL_COLORS[currentLevel];
+      const accent = getComputedStyle(root).getPropertyValue(colorVar).trim();
+      root.style.setProperty("--bp-accent", accent);
+    }
+
+    function updateProductionFormula() {
+      // Level multiplier: 1 + 0.25 * (level - 1)
+      const levelMult = 1 + 0.25 * (currentLevel - 1);
+      // Format nicely: 1, 1.25, 1.5, 1.75, 2
+      let levelText = levelMult.toFixed(2);
+      levelText = levelText.replace(/\.00$/, "");  // 1.00 -> 1
+
+      const formula = `10 × Land × ${levelText}`;
+      document.getElementById("bp-production-text").textContent = formula;
+    }
+
+    function setLevel(level) {
+      currentLevel = Number(level);
+      updateAccent();
+      updateProductionFormula();
+
+      document.getElementById("bp-badge-text").textContent = "B" + currentLevel;
+
+      document.querySelectorAll("[data-level]").forEach(btn => {
+        btn.classList.toggle("active", Number(btn.dataset.level) === currentLevel);
+      });
+    }
+
+    function setIndustry(ind) {
+      currentIndustry = ind;
+
+      const data = INDUSTRIES[ind];
+      document.getElementById("bp-industry-short").textContent = data.name;
+      document.getElementById("bp-building-img").src = data.img;
+
+      document.querySelectorAll("[data-ind]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.ind === currentIndustry);
+      });
+    }
+
+    // Wire up buttons
+    document.querySelectorAll("[data-level]").forEach(btn => {
+      btn.addEventListener("click", () => setLevel(btn.dataset.level));
+    });
+
+    document.querySelectorAll("[data-ind]").forEach(btn => {
+      btn.addEventListener("click", () => setIndustry(btn.dataset.ind));
+    });
+
+    // Initial state
+    setIndustry("pharma");
+    setLevel(1);  // also calls updateProductionFormula()
+  </script>
+</body>
+</html>
