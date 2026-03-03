@@ -920,10 +920,11 @@
   </div>
 
   <script>
-   // ===== BASIC CONFIG =====
+// ===== BASIC CONFIG =====
 
 const LOCAL_API = "http://localhost:10000";
-External URL: https://mydempire-backend-1.onrender.com
+const PROD_API  = "https://mydempire-backend-1.onrender.com"; // ← use your real URL here
+
 const API_BASE =
   window.location.hostname === "localhost"
     ? LOCAL_API
@@ -932,7 +933,6 @@ const API_BASE =
 function apiUrl(path) {
   return API_BASE + path;
 }
-
     function getPlayerUsername() {
       const params = new URLSearchParams(window.location.search);
       let fromUrl = params.get("user");
