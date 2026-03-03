@@ -1293,9 +1293,16 @@ const BP_LEVEL_COLORS = {
 
   // --- Industry (may be missing in current API) ---
   const rawIndustry =
-    (b.industry || b.industry_type || b.industry_code || "").toString();
-  const industryCode = rawIndustry.toUpperCase();
-  const industryName = industryCode || "PHARMA"; // temporary fallback
+  (b.industry || b.industry_type || b.industry_code || "").toString();
+let industryCode = rawIndustry.toUpperCase();
+
+// If industry looks like a level code (B1–B5), treat as missing
+if (/^B[1-5]$/i.test(industryCode)) {
+  industryCode = "";
+}
+
+// If still missing, use a safe default for now (PHARMA)
+const industryLabel = industryCode || "PHARMA";
 
   const imgSrc =
     BP_INDUSTRY_IMAGES[industryCode] || BP_INDUSTRY_IMAGES.PHARMA;
