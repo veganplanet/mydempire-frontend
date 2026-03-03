@@ -728,13 +728,6 @@
       border: 1px solid #e5e7eb;
     }
 
-    .land-nft-placeholder {
-      height: 80px;
-      border-radius: 12px;
-      margin-bottom: 8px;
-      background: #e5e7eb;
-    }
-
     .tier-l1 {
       background: linear-gradient(135deg, #bbf7d0, #22c55e);
     }
@@ -1322,6 +1315,29 @@ function apiUrl(path) {
 
             const landCard = document.createElement("div");
     landCard.className = "land-card";
+        const tierKey = (tier || "").toUpperCase();
+const borderColor = LAND_TIER_COLORS[tierKey] || "#64748b";
+const tierName = landTierLabel(tier);
+
+const slotsTotal = totalSlots;
+const slotsUsed = usedSlots;
+
+// Build slot pads based on totalSlots
+let slotHTML = "";
+if (slotsTotal === 1) {
+  slotHTML = `<div class="land-slot center"></div>`;
+} else if (slotsTotal === 2) {
+  slotHTML = `
+    <div class="land-slot left"></div>
+    <div class="land-slot right"></div>
+  `;
+} else if (slotsTotal >= 3) {
+  slotHTML = `
+    <div class="land-slot left"></div>
+    <div class="land-slot center"></div>
+    <div class="land-slot right"></div>
+  `;
+}
 
     const tierKey = (tier || "").toUpperCase();
     const tierColorMap = {
@@ -1353,30 +1369,29 @@ function apiUrl(path) {
       `;
     }
 
-    landCard.innerHTML = `
-      <div class="land-nft-shell" style="border-color:${borderColor};">
-        <div class="land-badge" style="background:${borderColor};">
-          ${tierKey || "L?"}
-        </div>
+   landCard.innerHTML = `
+  <div class="land-nft-shell" style="border-color:${borderColor};">
+    <div class="land-badge" style="background:${borderColor};">
+      ${tierKey || "L?"}
+    </div>
 
-        <div class="land-surface">
-          ${slotHTML}
-        </div>
+    <div class="land-surface">
+      ${slotHTML}
+    </div>
 
-        <div class="land-strip">
-          <div class="land-strip-row">
-            <span>${tierName} • GENESIS</span>
-            <span>Slots: ${slotsUsed}/${slotsTotal}</span>
-          </div>
-        </div>
+    <div class="land-strip">
+      <div class="land-strip-row">
+        <span>${tierName} • GENESIS</span>
+        <span>Slots: ${slotsUsed}/${slotsTotal}</span>
       </div>
+    </div>
+  </div>
 
-      <div class="land-tags">
-        <span class="tag ${landTagClass(tier)}">${tier}</span>
-        <span class="tag">Production land</span>
-      </div>
-    `;
-        const factoriesList = document.createElement("div");
+  <div class="land-tags">
+    <span class="tag ${landTagClass(tier)}">${tier}</span>
+    <span class="tag">PRODUCTION LAND</span>
+  </div>
+`;        const factoriesList = document.createElement("div");
         factoriesList.className = "factories-list";
 
         if (!factories.length) {
@@ -1648,7 +1663,11 @@ window.addEventListener("DOMContentLoaded", async () => {
   const btn = document.getElementById("claim-production-btn");
   if (btn) btn.addEventListener("click", claimAllProduction);
 });
-
+const LAND_TIER_COLORS = {
+  L1: "#16a34a", // Frontier
+  L2: "#fbbf24", // Estate
+  L3: "#ef4444", // Industrial Zone
+};
   </script>
   
 </body>
