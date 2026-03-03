@@ -1334,92 +1334,67 @@ function apiUrl(path) {
         return;
       }
 
-      for (const land of empireLands) {
-        const tier = land.land_tier;
-        const factories = land.factories || [];
-        const usedSlots = factories.length;
-        const totalSlots = landSlotCount(tier);
+for (const land of empireLands) {
+  const tier = land.land_tier;
+  const factories = land.factories || [];
+  const usedSlots = factories.length;
+  const totalSlots = landSlotCount(tier);
 
-            const landCard = document.createElement("div");
-    landCard.className = "land-card";
-        const tierKey = (tier || "").toUpperCase();
-        const shortLabel = LAND_TIER_SHORT_LABEL[tierKey] || "Frontier";
-const borderColor = LAND_TIER_COLORS[tierKey] || "#64748b";
-const tierName = landTierLabel(tier);
+  const landCard = document.createElement("div");
+  landCard.className = "land-card";
 
-const slotsTotal = totalSlots;
-const slotsUsed = usedSlots;
+  // --- tier visuals + labels ---
+  const tierKey = (tier || "").toUpperCase();
+  const borderColor = LAND_TIER_COLORS[tierKey] || "#64748b";      // uses global map
+  const tierName = landTierLabel(tier);                             // your helper
+  const shortLabel =
+    LAND_TIER_SHORT_LABEL[tierKey] || tierName || "Frontier";       // no level repeat
 
-// Build slot pads based on totalSlots
-let slotHTML = "";
+  // --- slots & slot pads ---
+  const slotsTotal = totalSlots;
+  const slotsUsed = usedSlots;
 
-if (slotsTotal === 1) {
-  slotHTML = `<div class="land-slot center"></div>`;
-} else if (slotsTotal === 2) {
-  slotHTML = `
-    <div class="land-slot left"></div>
-    <div class="land-slot right"></div>
-  `;
-} else if (slotsTotal >= 3) {
-  slotHTML = `
-    <div class="land-slot left"></div>
-    <div class="land-slot center"></div>
-    <div class="land-slot right"></div>
-  `;
-}
-    const tierKey = (tier || "").toUpperCase();
-    const tierColorMap = {
-      L1: "#16a34a", // Frontier
-      L2: "#fbbf24", // Estate
-      L3: "#ef4444", // Industrial Zone
-    };
-    const borderColor = tierColorMap[tierKey] || "#64748b";
+  let slotHTML = "";
+  if (slotsTotal === 1) {
+    slotHTML = `<div class="land-slot center"></div>`;
+  } else if (slotsTotal === 2) {
+    slotHTML = `
+      <div class="land-slot left"></div>
+      <div class="land-slot right"></div>
+    `;
+  } else if (slotsTotal >= 3) {
+    slotHTML = `
+      <div class="land-slot left"></div>
+      <div class="land-slot center"></div>
+      <div class="land-slot right"></div>
+    `;
+  }
 
-    const tierName = landTierLabel(tier);      // you already have this helper
-    const slotsTotal = totalSlots;
-    const slotsUsed = usedSlots;
-    const slotsFree = Math.max(slotsTotal - slotsUsed, 0);
+  // --- NFT card HTML ---
+  landCard.innerHTML = `
+    <div class="land-nft-shell" style="border-color:${borderColor};">
+      <div class="land-badge" style="background:${borderColor};">
+        ${tierKey || "L?"}
+      </div>
 
-    // Build slot pads based on totalSlots
-    let slotHTML = "";
-    if (slotsTotal === 1) {
-      slotHTML = `<div class="land-slot center"></div>`;
-    } else if (slotsTotal === 2) {
-      slotHTML = `
-        <div class="land-slot left"></div>
-        <div class="land-slot right"></div>
-      `;
-    } else if (slotsTotal >= 3) {
-      slotHTML = `
-        <div class="land-slot left"></div>
-        <div class="land-slot center"></div>
-        <div class="land-slot right"></div>
-      `;
-    }
+      <div class="land-surface">
+        ${slotHTML}
+      </div>
 
-   landCard.innerHTML = `
-  <div class="land-nft-shell" style="border-color:${borderColor};">
-    <div class="land-badge" style="background:${borderColor};">
-      ${tierKey || "L?"}
-    </div>
-
-    <div class="land-surface">
-      ${slotHTML}
-    </div>
-
-    <div class="land-strip">
-      <div class="land-strip-row">
-        <span>${shortLabel} • GENESIS</span>
-        <span>Slots: ${slotsUsed}/${slotsTotal}</span>
+      <div class="land-strip">
+        <div class="land-strip-row">
+          <span>${shortLabel} • GENESIS</span>
+          <span>Slots: ${slotsUsed}/${slotsTotal}</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="land-tags">
-    <span class="tag ${landTagClass(tier)}">${tier}</span>
-    <span class="tag">PRODUCTION LAND</span>
-  </div>
-`;        
+    <div class="land-tags">
+      <span class="tag ${landTagClass(tier)}">${tier}</span>
+      <span class="tag">PRODUCTION LAND</span>
+    </div>
+  `;
+  // 👇 your factoriesList code continues here
         const factoriesList = document.createElement("div");
         factoriesList.className = "factories-list";
 
