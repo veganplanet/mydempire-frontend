@@ -1344,11 +1344,11 @@ for (const land of empireLands) {
   landCard.className = "land-card";
 
  // --- tier visuals + labels ---
-const tierKey = (tier || "").toUpperCase();
-const borderColor = LAND_TIER_COLORS[tierKey] || "#64748b"; // uses global map
-const tierName = landTierLabel(tier);                       // your helper
+const landTierKey = (tier || "").toUpperCase();
+const borderColor = LAND_TIER_COLORS[landTierKey] || "#64748b";      // uses global map
+const tierName = landTierLabel(tier);                                 // your helper
 const shortLabel =
-  LAND_TIER_SHORT_LABEL[tierKey] || tierName || "Frontier"; // no level repeat
+  LAND_TIER_SHORT_LABEL[landTierKey] || tierName || "Frontier";       // no level repeat
 
 // --- slots & slot pads ---
 const slotsTotal = totalSlots;
@@ -1370,30 +1370,14 @@ if (slotsTotal === 1) {
   `;
 }
   // --- NFT card HTML ---
-  landCard.innerHTML = `
-    <div class="land-nft-shell" style="border-color:${borderColor};">
-      <div class="land-badge" style="background:${borderColor};">
-        ${tierKey || "L?"}
-      </div>
-
-      <div class="land-surface">
-        ${slotHTML}
-      </div>
-
-      <div class="land-strip">
-        <div class="land-strip-row">
-          <span>${shortLabel} • GENESIS</span>
-          <span>Slots: ${slotsUsed}/${slotsTotal}</span>
-        </div>
-      </div>
+ landCard.innerHTML = `
+  <div class="land-nft-shell" style="border-color:${borderColor};">
+    <div class="land-badge" style="background:${borderColor};">
+      ${landTierKey || "L?"}   <!-- 🔁 use landTierKey here -->
     </div>
-
-    <div class="land-tags">
-      <span class="tag ${landTagClass(tier)}">${tier}</span>
-      <span class="tag">PRODUCTION LAND</span>
-    </div>
-  `;
-  // 👇 your factoriesList code continues here
+    ...
+  </div>
+`;  // 👇 your factoriesList code continues here
         const factoriesList = document.createElement("div");
         factoriesList.className = "factories-list";
 
