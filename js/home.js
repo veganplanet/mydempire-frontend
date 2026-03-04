@@ -1,59 +1,84 @@
 // js/home.js
-console.log("✅ home.js LOADED v1");
+console.log("✅ home.js LOADED (clean build)");
+
+// =====================================================
+// CONFIG
+// =====================================================
+window.API_BASE = "https://mydempire-backend-1.onrender.com";
+
+// Global selected user (used by buyPack)
 window.SELECTED_USERNAME = window.SELECTED_USERNAME || null;
+
+// Local state (persisted)
 let username = localStorage.getItem("mde_username") || null;
+
+// =====================================================
+// UI HELPERS
+// =====================================================
+function setStatus(text) {
+  const status = document.getElementById("status");
+  if (status) status.innerText = text;
+}
 
 function renderWalletUI() {
   const walletDisplay = document.getElementById("walletDisplay");
-  const status = document.getElementById("status");
+  const connectBtn = document.getElementById("connectBtn");
+  const disconnectBtn = document.getElementById("disconnectBtn");
 
   if (username) {
-
     window.SELECTED_USERNAME = username;
 
-    if (walletDisplay) walletDisplay.innerText = "Connected: @" + username;
-    if (status) status.innerText = "✅ Connected: @" + username;
+    if (walletDisplay) walletDisplay.innerText = `Connected: @${username}`;
+    setStatus(`✅ Connected: @${username}`);
 
+    if (connectBtn) connectBtn.style.display = "none";
+    if (disconnectBtn) disconnectBtn.style.display = "inline-flex";
+
+    // Optional: show dashboard nav items when connected
     document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
       el.style.display = "inline-flex";
     });
-
   } else {
     window.SELECTED_USERNAME = null;
+
     if (walletDisplay) walletDisplay.innerText = "";
-    if (status) status.innerText = "Ready ✅";
+    setStatus("Ready ✅");
+
+    if (connectBtn) connectBtn.style.display = "inline-flex";
+    if (disconnectBtn) disconnectBtn.style.display = "none";
+
+    document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
+      el.style.display = "none";
+    });
   }
 }
 
+// =====================================================
+// WALLET CONNECT / DISCONNECT
+// =====================================================
 function connectWallet() {
-  const status = document.getElementById("status");
-
   if (!window.hive_keychain) {
-    alert("Hive Keychain not detected.");
-    if (status) status.innerText = "❌ Hive Keychain not detected.";
+    alert("Hive Keychain not detected ❌");
+    setStatus("❌ Hive Keychain not detected.");
     return;
   }
 
-  if (status) status.innerText = "Connecting…";
+  setStatus("Connecting…");
 
-  // Handshake (resp can be undefined, that's OK)
+  // Handshake (response can be undefined; that's normal)
   window.hive_keychain.requestHandshake(function () {
     console.log("✅ Keychain handshake called");
 
-    // Now actually get the account
     window.hive_keychain.requestGetAccounts(function (res) {
       console.log("getAccounts:", res);
 
       if (!res || !res.success || !res.data || !res.data.length) {
         alert("Failed to get accounts from Keychain ❌");
-        if (status) status.innerText = "❌ Wallet connection failed.";
+        setStatus("❌ Wallet connection failed.");
         return;
       }
 
-      // Pick first account
       username = res.data[0];
-
-      // Save + set global (important for buyPack)
       localStorage.setItem("mde_username", username);
       window.SELECTED_USERNAME = username;
 
@@ -65,214 +90,151 @@ function connectWallet() {
 function disconnectWallet() {
   localStorage.removeItem("mde_username");
   username = null;
+  window.SELECTED_USERNAME = null;
+
   renderWalletUI();
-  const status = document.getElementById("status");
-  if (status) status.innerText = "Disconnected.";
+  setStatus("Disconnected.");
 }
 
-// expose for onclick buttons
-window.connectWallet = connectWallet;
-window.disconnectWallet = disconnectWallet;
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderWalletUI();
-});
-// ============================
-// BUY PACKS (Homepage)
-// ============================
-
-
-
-// Call this after wallet connect success
-function setConnectedUser(username) {
-  SELECTED_USERNAME = username;
-  const status = document.getElementById("status");
-  if (status) status.textContent = `Connected ✅ ${username}`;
-}
-
-// Main button function (your onclick="purchase()")
-async function purchase() {
+// =====================================================
+// BUY PACKS FLOW (create-order → keychain transfer → confirm)
+// =====================================================
+async function buyPack(qty) {
   try {
-    if (!SELECTED_USERNAME) {
+    const packs = parseInt(qty || "1", 10);
+
+    console.log("🛒 buyPack clicked", {
+      packs,
+      user: window.SELECTED_USERNAME,
+      api: window.API_BASE,
+    });
+
+    if (!window.SELECTED_USERNAME) {
       alert("Please connect wallet first ✅");
       return;
     }
 
-    const qtyEl = document.getElementById("packCount");
-    const packs = parseInt(qtyEl?.value || "1", 10);
-
     if (!packs || packs < 1) {
-      alert("Enter valid pack quantity (min 1)");
+      alert("Invalid pack quantity ❌");
       return;
     }
 
-    // ✅ IMPORTANT: API_BASE must be your backend URL on production
-    // Example: https://YOUR-RENDER-BACKEND.onrender.com
-    window.API_BASE = "https://mydempire-backend-1.onrender.com";
-
-    // 1) Create order on backend
-    const orderRes = await fetch(`${API_BASE}/create-order`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: SELECTED_USERNAME, packs }),
-    });
-
-    const orderData = await orderRes.json();
-    if (!orderRes.ok || !orderData?.success) {
-      alert(orderData?.error || "Create order failed");
-      return;
-    }
-
-    // server usually returns { orderId, hive_amount, memo, to }
-    const { orderId, hive_amount, memo, to } = orderData;
-
-    // 2) Ask Hive Keychain transfer
     if (!window.hive_keychain) {
       alert("Hive Keychain not found ❌");
       return;
     }
 
-    window.hive_keychain.requestTransfer(
-      SELECTED_USERNAME,
-      to || "mydempiregain",                 // fallback if backend didn't send
-      `${hive_amount} HIVE`,                  // Keychain expects "X.XXX HIVE"
-      memo || `MYDEMPIRE_ORDER_${orderId}`,   // fallback memo
-      "HIVE",
-      async function (response) {
-        if (!response?.success) {
-          alert("Transaction cancelled or failed ❌");
-          console.error("Keychain response:", response);
-          return;
-        }
-
-        // txid formats vary — handle safely
-        const txid =
-          response?.result?.id ||
-          response?.result?.tx_id ||
-          response?.result?.trx_id ||
-          response?.id ||
-          response?.txid;
-
-        if (!txid) {
-          alert("Transfer succeeded but txid not found. Check console.");
-          console.error("Keychain response (no txid):", response);
-          return;
-        }
-
-        // 3) Confirm payment on backend (mints packs)
-        const confirmRes = await fetch(`${API_BASE}/confirm-payment`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ orderId, txid }),
-        });
-
-        const confirmData = await confirmRes.json();
-        if (!confirmRes.ok || !confirmData?.success) {
-          alert(confirmData?.error || "Confirm payment failed ❌");
-          return;
-        }
-
-        alert("✅ Packs purchased & minted successfully!");
-      }
-    );
-  } catch (err) {
-    console.error("purchase() error:", err);
-    alert("Something went wrong. Check console ❌");
-  }
-}
-// ============================
-// BUY PACK FUNCTION
-// ============================
-
-async function buyPack() {
-
-  if (!SELECTED_USERNAME) {
-    alert("Please connect wallet first");
-    return;
-  }
-
-  const packs = parseInt(document.getElementById("packCount").value || "1");
-
-  console.log("Buying packs:", packs);
-  console.log("User:", SELECTED_USERNAME);
-
-  alert(`Buying ${packs} pack(s) from @${SELECTED_USERNAME}`);
-}
-// ✅ DEBUG: confirm home.js is updated
-console.log("✅ buyPack function injected");
-
-// ✅ GLOBAL buyPack (must be global for onclick="")
-
-// ✅ Make functions callable from onclick=""
-window.connectWallet = window.connectWallet || async function () {
-  alert("connectWallet() is not wired yet — paste your connect logic here");
-};
-
-window.API_BASE = "https://mydempire-backend-1.onrender.com";
-
-window.buyPack = async function (qty) {
-  try {
-    const packs = parseInt(qty || "1", 10);
-
-    if (!window.SELECTED_USERNAME) return alert("Please connect wallet first ✅");
-    if (!window.hive_keychain) return alert("Hive Keychain not found ❌");
-    if (!packs || packs < 1) return alert("Invalid pack quantity ❌");
-
-    // 1) Create order
+    // 1) Create order on backend
     const res = await fetch(`${window.API_BASE}/create-order`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: window.SELECTED_USERNAME, packs }),
     });
 
-    const data = await res.json();
-    console.log("create-order:", data);
+    console.log("📡 create-order status:", res.status);
 
-    if (!res.ok || !data?.success) {
-      alert(data?.error || "Create order failed ❌");
+    let data = null;
+    try {
+      data = await res.json();
+    } catch (e) {
+      console.error("create-order JSON parse failed:", e);
+    }
+
+    console.log("create-order response:", data);
+
+    if (!res.ok || !data || !data.success) {
+      alert((data && data.error) ? data.error : "Create order failed ❌");
       return;
     }
 
-    const { orderId, to, hive_amount, memo } = data;
+    const orderId = data.orderId;
+    const to = data.to || "mydempiregain";
+    const memo = data.memo || `MYDEMPIRE_ORDER_${orderId}`;
+    const hive_amount = data.hive_amount;
 
-    // ✅ Keychain needs "X.XXX" only (no currency text)
-    const amount = Number(hive_amount).toFixed(3);
+    // ✅ Keychain amount must be "X.XXX" ONLY
+    const raw = String(hive_amount);
+    const clean = raw.replace(/[^\d.]/g, ""); // removes " HIVE" if present
+    const num = Number(clean);
 
-    // 2) Keychain popup
+    if (!Number.isFinite(num)) {
+      alert("Invalid hive amount from backend ❌");
+      console.log("Bad hive_amount:", hive_amount);
+      return;
+    }
+
+    const amount = num.toFixed(3);
+
+    console.log("➡️ calling requestTransfer", { to, amount, memo, orderId });
+
+    // 2) Keychain popup transfer
     window.hive_keychain.requestTransfer(
       window.SELECTED_USERNAME,
-      to || "mydempiregain",
+      to,
       amount,
-      memo || `MYDEMPIRE_ORDER_${orderId}`,
+      memo,
       "HIVE",
-      async (response) => {
-        console.log("keychain response:", response);
+      async function (response) {
+        console.log("✅ keychain response:", response);
 
-        if (!response?.success) return alert("Transaction cancelled ❌");
+        if (!response || !response.success) {
+          alert("Transaction cancelled ❌");
+          return;
+        }
 
-        const txid = response?.result?.id || response?.id;
-        if (!txid) return alert("txid missing ❌");
+        const txid =
+          response?.result?.id ||
+          response?.result?.tx_id ||
+          response?.result?.trx_id ||
+          response?.id;
 
-        // 3) Confirm payment (mint)
+        if (!txid) {
+          alert("Transfer done but txid missing ❌ (check console)");
+          return;
+        }
+
+        // 3) Confirm payment on backend (mints packs)
         const cRes = await fetch(`${window.API_BASE}/confirm-payment`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ orderId, txid }),
         });
 
-        const cData = await cRes.json();
-        console.log("confirm-payment:", cData);
+        console.log("📡 confirm-payment status:", cRes.status);
 
-        if (!cRes.ok || !cData?.success) {
-          alert(cData?.error || "Confirm payment failed ❌");
+        let cData = null;
+        try {
+          cData = await cRes.json();
+        } catch (e) {
+          console.error("confirm-payment JSON parse failed:", e);
+        }
+
+        console.log("confirm-payment response:", cData);
+
+        if (!cRes.ok || !cData || !cData.success) {
+          alert((cData && cData.error) ? cData.error : "Confirm payment failed ❌");
           return;
         }
 
         alert("✅ Packs minted successfully!");
       }
     );
-  } catch (e) {
-    console.error("buyPack error:", e);
-    alert("Unexpected error ❌ Check console");
+  } catch (err) {
+    console.error("buyPack error:", err);
+    alert("Unexpected error ❌ Check console.");
   }
-};
+}
+
+// =====================================================
+// EXPOSE FOR onclick="" BUTTONS
+// =====================================================
+window.connectWallet = connectWallet;
+window.disconnectWallet = disconnectWallet;
+window.buyPack = buyPack;
+
+// =====================================================
+// INIT
+// =====================================================
+document.addEventListener("DOMContentLoaded", () => {
+  renderWalletUI();
+});
