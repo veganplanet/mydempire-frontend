@@ -174,3 +174,22 @@ async function purchase() {
     alert("Something went wrong. Check console ❌");
   }
 }
+// ============================
+// BUY PACK FUNCTION
+// ============================
+
+async function buyPack() {
+
+  if (!SELECTED_USERNAME) {
+    alert("Please connect wallet first");
+    return;
+  }
+
+  const packs = parseInt(document.getElementById("packCount").value || "1");
+
+  console.log("Buying packs:", packs);
+  console.log("User:", SELECTED_USERNAME);
+
+  alert(`Buying ${packs} pack(s) from @${SELECTED_USERNAME}`);
+
+}
