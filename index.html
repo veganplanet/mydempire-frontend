@@ -88,19 +88,23 @@
   let username = null;
 
   // 🔐 Connect Wallet
-  function connectWallet() {
-    if (!window.hive_keychain) {
-      alert("Hive Keychain not installed.");
-      return;
-    }
-
-    const user = prompt("Enter your Hive username:");
-    if (!user) return;
-
-    username = user.trim();
-    document.getElementById("walletDisplay").innerText =
-      "Connected: " + username;
+ function connectWallet() {
+  if (!window.hive_keychain) {
+    alert("Hive Keychain not installed.");
+    return;
   }
+
+  const user = prompt("Enter your Hive username:");
+  if (!user) return;
+
+  username = user.trim();
+
+  // ✅ store login for navigation system
+  localStorage.setItem("mde_username", username);
+
+  document.getElementById("walletDisplay").innerText =
+    "Connected: @" + username;
+}
 
   // 💰 Purchase Flow
   async function purchase() {
@@ -172,7 +176,11 @@
           }
 
           document.getElementById("status").innerText =
-            "✅ Purchase successful!";
+  "✅ Purchase successful! Redirecting to dashboard...";
+
+setTimeout(() => {
+  window.location.href = "player-dashboard.html?user=" + username;
+}, 1500);
         }
       );
 
@@ -186,6 +194,8 @@
     document.getElementById("status").innerText = "❌ " + message;
   }
 
-</script><script src="/js/hive.js"></script>
+<script src="js/hive.js"></script>
+<script src="js/nav-auth.js"></script>
 </body>
+
 </html>
