@@ -22,19 +22,26 @@ function setStatus(text) {
 
 function renderWalletUI() {
   const walletDisplay = document.getElementById("walletDisplay");
+  const status = document.getElementById("status");
+
   const connectBtn = document.getElementById("connectBtn");
-  const disconnectBtn = document.getElementById("disconnectBtn");
+  const walletChip = document.getElementById("walletChip");
+  const walletChipText = document.getElementById("walletChipText");
 
   if (username) {
     window.SELECTED_USERNAME = username;
 
     if (walletDisplay) walletDisplay.innerText = `Connected: @${username}`;
-    setStatus(`✅ Connected: @${username}`);
+    if (status) status.innerText = `✅ Connected: @${username}`;
 
+    // ✅ Hide connect button
     if (connectBtn) connectBtn.style.display = "none";
-    if (disconnectBtn) disconnectBtn.style.display = "inline-flex";
 
-    // Optional: show dashboard nav items when connected
+    // ✅ Show wallet chip + disconnect
+    if (walletChip) walletChip.style.display = "inline-flex";
+    if (walletChipText) walletChipText.innerText = `@${username}`;
+
+    // ✅ Show dashboard tab
     document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
       el.style.display = "inline-flex";
     });
@@ -42,49 +49,16 @@ function renderWalletUI() {
     window.SELECTED_USERNAME = null;
 
     if (walletDisplay) walletDisplay.innerText = "";
-    setStatus("Ready ✅");
+    if (status) status.innerText = "Ready ✅";
 
-    if (connectBtn) connectBtn.style.display = "inline-flex";
-    if (disconnectBtn) disconnectBtn.style.display = "none";
+    if (connectBtn) connectBtn.style.display = "block";
+    if (walletChip) walletChip.style.display = "none";
+    if (walletChipText) walletChipText.innerText = "";
 
     document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
       el.style.display = "none";
     });
   }
-}
-
-// =====================================================
-// WALLET CONNECT / DISCONNECT
-// =====================================================
-function connectWallet() {
-  if (!window.hive_keychain) {
-    alert("Hive Keychain not detected ❌");
-    setStatus("❌ Hive Keychain not detected.");
-    return;
-  }
-
-  setStatus("Connecting…");
-
-  // Handshake (response can be undefined; that's normal)
-  window.hive_keychain.requestHandshake(function () {
-    console.log("✅ Keychain handshake called");
-
-    window.hive_keychain.requestGetAccounts(function (res) {
-      console.log("getAccounts:", res);
-
-      if (!res || !res.success || !res.data || !res.data.length) {
-        alert("Failed to get accounts from Keychain ❌");
-        setStatus("❌ Wallet connection failed.");
-        return;
-      }
-
-      username = res.data[0];
-      localStorage.setItem("mde_username", username);
-      window.SELECTED_USERNAME = username;
-
-      renderWalletUI();
-    });
-  });
 }
 
 function disconnectWallet() {
