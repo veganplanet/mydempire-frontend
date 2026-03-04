@@ -3,6 +3,7 @@ const backend =
   window.location.hostname === "localhost"
     ? "http://localhost:10000"
     : "https://mydempire-backend-1.onrender.com";
+window.backend = backend;
 
 let username = localStorage.getItem("mde_username") || null;
 function renderWalletUI() {
