@@ -5,6 +5,59 @@
   <title>MydEmpire — On-Chain vs Off-Chain Transparency</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    /* ===== TOP NAV (same as other pages) ===== */
+
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 16px rgba(148, 163, 184, 0.25);
+}
+
+.top-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #111827;
+}
+
+.top-nav-logo-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg,#2563eb,#22c55e);
+}
+
+.top-nav-right {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+
+.top-nav-link {
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: #4b5563;
+  text-decoration: none;
+}
+
+.top-nav-link-active {
+  background: #e0ecff;
+  color: #1d4ed8;
+  font-weight: 500;
+}
+
+.top-nav-link:hover {
+  background: #f3f4ff;
+}
     :root {
       --bg: #f4f5fb;
       --card-bg: #ffffff;
@@ -181,6 +234,19 @@
   </style>
 </head>
 <body>
+  <nav class="top-nav">
+  <div class="top-nav-left">
+    <div class="top-nav-logo-dot"></div>
+    <span>MydEmpire</span>
+  </div>
+  <div class="top-nav-right">
+    <a href="index.html" class="top-nav-link">Home</a>
+    <a href="player-dashboard.html" class="top-nav-link">Dashboard</a>
+    <a href="faq.html" class="top-nav-link">FAQ</a>
+    <a href="economy.html" class="top-nav-link">Economy Paper</a>
+    <a href="transparency.html" class="top-nav-link top-nav-link-active">Transparency</a>
+  </div>
+</nav>
   <div class="page">
     <header>
       <h1>MydEmpire — On-Chain vs Off-Chain</h1>
