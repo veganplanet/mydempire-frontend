@@ -1,6 +1,6 @@
 // js/home.js
 console.log("✅ home.js LOADED v1");
-let SELECTED_USERNAME = null;
+window.SELECTED_USERNAME = window.SELECTED_USERNAME || null;
 let username = localStorage.getItem("mde_username") || null;
 
 function renderWalletUI() {
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // BUY PACKS (Homepage)
 // ============================
 
-let SELECTED_USERNAME = null;
+
 
 // Call this after wallet connect success
 function setConnectedUser(username) {
@@ -208,4 +208,16 @@ window.buyPack = function (qty) {
   const user = window.SELECTED_USERNAME || (typeof SELECTED_USERNAME !== "undefined" ? SELECTED_USERNAME : null);
 
   alert(`Buying ${qty} pack(s) for @${user}`);
+};
+// ✅ Make functions callable from onclick=""
+window.connectWallet = window.connectWallet || async function () {
+  alert("connectWallet() is not wired yet — paste your connect logic here");
+};
+
+window.buyPack = async function (qty) {
+  if (!window.SELECTED_USERNAME) {
+    alert("Please connect wallet first ✅");
+    return;
+  }
+  alert(`Buying ${qty} pack(s) for @${window.SELECTED_USERNAME}`);
 };
