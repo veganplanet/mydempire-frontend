@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,34 +53,43 @@
       margin-top: 20px;
       min-height: 20px;
     }
+
+    hr {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      margin: 18px 0;
+    }
   </style>
 </head>
+
 <body>
-<!-- ✅ Top Nav (connects all pages) -->
-<div style="max-width:980px;margin:0 auto 18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;">
-  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-    <a href="index.html" style="padding:8px 12px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,0.12);color:white;text-decoration:none;">Home</a>
-    <a href="economy.html" style="padding:8px 12px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,0.12);color:white;text-decoration:none;">Economy</a>
-    <a href="faq.html" style="padding:8px 12px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,0.12);color:white;text-decoration:none;">FAQ</a>
-    <a href="economy-blueprint-mint.html" style="padding:8px 12px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,0.12);color:white;text-decoration:none;">Blueprint Mint</a>
-    <a href="transparency.html" style="padding:8px 12px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,0.12);color:white;text-decoration:none;">Transparency</a>
 
-    <!-- Dashboard link hidden until login -->
-    <a href="player-dashboard.html"
-       data-nav="dashboard"
-       style="display:none;padding:8px 12px;border-radius:999px;background:#163a2b;border:1px solid rgba(34,197,94,0.55);color:#d1fae5;text-decoration:none;">
-      Dashboard
-    </a>
+  <!-- ✅ Top Nav (connects all pages) -->
+  <div style="max-width:980px;margin:0 auto 18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <a href="index.html" style="padding:8px 12px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,0.12);color:white;text-decoration:none;">Home</a>
+      <a href="economy.html" style="padding:8px 12px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,0.12);color:white;text-decoration:none;">Economy</a>
+      <a href="faq.html" style="padding:8px 12px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,0.12);color:white;text-decoration:none;">FAQ</a>
+      <a href="economy-blueprint-mint.html" style="padding:8px 12px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,0.12);color:white;text-decoration:none;">Blueprint Mint</a>
+      <a href="transparency.html" style="padding:8px 12px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,0.12);color:white;text-decoration:none;">Transparency</a>
+
+      <!-- Dashboard link hidden until login -->
+      <a href="player-dashboard.html"
+         data-nav="dashboard"
+         style="display:none;padding:8px 12px;border-radius:999px;background:#163a2b;border:1px solid rgba(34,197,94,0.55);color:#d1fae5;text-decoration:none;">
+        Dashboard
+      </a>
+    </div>
+
+    <!-- Right side: wallet state -->
+    <div id="walletChip" style="display:none;gap:10px;align-items:center;flex-wrap:wrap;">
+      <span id="walletChipText"
+            style="padding:8px 12px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,0.12);color:white;">
+      </span>
+      <button class="danger" onclick="disconnectWallet()" style="margin:0;">Disconnect</button>
+    </div>
   </div>
 
-  <!-- Right side: wallet state -->
-  <div id="walletChip" style="display:none;gap:10px;align-items:center;flex-wrap:wrap;">
-    <span id="walletChipText"
-          style="padding:8px 12px;border-radius:999px;background:#0b1224;border:1px solid rgba(255,255,255,0.12);color:white;">
-    </span>
-    <button class="danger" onclick="disconnectWallet()" style="margin:0;">Disconnect</button>
-  </div>
-</div>
   <h1>🏛 MYDEMPIRE</h1>
   <p>PRE-GENESIS PACK SALE</p>
 
@@ -103,160 +110,153 @@
     </div>
 
     <div class="status" id="status"></div>
-
   </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  // If already connected earlier, update UI instantly
-  renderWalletUI();
-});
-  const backend = "http://localhost:10000";
-  let username = localStorage.getItem("mde_username") || null;
-function renderWalletUI() {
-  const chip = document.getElementById("walletChip");
-  const chipText = document.getElementById("walletChipText");
-  const walletDisplay = document.getElementById("walletDisplay");
+  <script>
+    const backend = "http://localhost:10000";
+    let username = localStorage.getItem("mde_username") || null;
 
-  if (username) {
-    // show chip
-    if (chip) chip.style.display = "inline-flex";
-    if (chipText) chipText.textContent = "Connected: @" + username;
+    function renderWalletUI() {
+      const chip = document.getElementById("walletChip");
+      const chipText = document.getElementById("walletChipText");
+      const walletDisplay = document.getElementById("walletDisplay");
 
-    // keep your old display too
-    if (walletDisplay) walletDisplay.innerText = "Connected: @" + username;
-  } else {
-    if (chip) chip.style.display = "none";
-    if (walletDisplay) walletDisplay.innerText = "";
-  }
-}
+      if (username) {
+        if (chip) chip.style.display = "inline-flex";
+        if (chipText) chipText.textContent = "Connected: @" + username;
+        if (walletDisplay) walletDisplay.innerText = "Connected: @" + username;
 
-function disconnectWallet() {
-  localStorage.removeItem("mde_username");
-  username = null;
-  renderWalletUI();
+        // Show dashboard link immediately
+        document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
+          el.style.display = "inline-flex";
+        });
+      } else {
+        if (chip) chip.style.display = "none";
+        if (walletDisplay) walletDisplay.innerText = "";
 
-  // Also hide dashboard link immediately
-  document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
-    el.style.display = "none";
-  });
-
-  document.getElementById("status").innerText = "Disconnected.";
-}
-  // 🔐 Connect Wallet
-function connectWallet() {
-  if (!window.hive_keychain) {
-    alert("Hive Keychain not installed.");
-    return;
-  }
-
-  const user = prompt("Enter your Hive username:");
-  if (!user) return;
-
-  username = user.trim();
-
-  // ✅ persist login
-  localStorage.setItem("mde_username", username);
-
-  renderWalletUI();
-
-  // ✅ show dashboard link instantly (no refresh needed)
-  document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
-    el.style.display = "inline-flex";
-  });
-}
-
-  // 💰 Purchase Flow
-  async function purchase() {
-    try {
-      if (!username) {
-        alert("Connect wallet first.");
-        return;
+        document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
+          el.style.display = "none";
+        });
       }
-
-      const packs = parseInt(document.getElementById("packCount").value);
-
-      if (packs <= 0) {
-        alert("Invalid pack amount.");
-        return;
-      }
-
-      document.getElementById("status").innerText = "Creating order...";
-
-      const orderRes = await fetch(`${backend}/create-order`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, packs })
-      });
-
-      const orderData = await orderRes.json();
-
-      if (!orderRes.ok) {
-        showError(orderData.error || "Order creation failed.");
-        return;
-      }
-
-      const orderId = orderData.order.id;
-      const totalAmount = Number(orderData.order.hive_amount);
-
-      document.getElementById("status").innerText =
-        "Waiting for Hive transfer...";
-
-      // ✅ CORRECT TRANSFER FORMAT
-      window.hive_keychain.requestTransfer(
-        username,
-        "mydempiregain",
-        totalAmount.toFixed(3),        // amount only
-        "MydEmpire Pack Purchase",    // memo
-        "HIVE",                       // currency separate
-        async function(response) {
-
-          if (!response.success) {
-            showError("Transfer cancelled.");
-            return;
-          }
-
-          document.getElementById("status").innerText =
-            "Confirming payment...";
-
-          const confirmRes = await fetch(`${backend}/confirm-payment`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              orderId,
-              txid: response.result.id
-            })
-          });
-
-          const confirmData = await confirmRes.json();
-
-          if (!confirmRes.ok) {
-            showError(confirmData.error || "Payment confirmation failed.");
-            return;
-          }
-
-          document.getElementById("status").innerText =
-  "✅ Purchase successful! Redirecting to dashboard...";
-
-setTimeout(() => {
-  window.location.href = "player-dashboard.html?user=" + username;
-}, 1500);
-        }
-      );
-
-    } catch (err) {
-      showError("Unexpected error occurred.");
-      console.error(err);
     }
-  }
 
-  function showError(message) {
-    document.getElementById("status").innerText = "❌ " + message;
-  }
+    function disconnectWallet() {
+      localStorage.removeItem("mde_username");
+      username = null;
+      renderWalletUI();
+      document.getElementById("status").innerText = "Disconnected.";
+    }
 
-<script src="js/hive.js"></script>
-<script src="js/nav-auth.js"></script>
+    // 🔐 Connect Wallet
+    function connectWallet() {
+      if (!window.hive_keychain) {
+        alert("Hive Keychain not installed.");
+        return;
+      }
+
+      const user = prompt("Enter your Hive username:");
+      if (!user) return;
+
+      username = user.trim();
+      localStorage.setItem("mde_username", username);
+      renderWalletUI();
+    }
+
+    // 💰 Purchase Flow
+    async function purchase() {
+      try {
+        if (!username) {
+          alert("Connect wallet first.");
+          return;
+        }
+
+        const packs = parseInt(document.getElementById("packCount").value, 10);
+
+        if (!Number.isFinite(packs) || packs <= 0) {
+          alert("Invalid pack amount.");
+          return;
+        }
+
+        document.getElementById("status").innerText = "Creating order...";
+
+        const orderRes = await fetch(`${backend}/create-order`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, packs })
+        });
+
+        const orderData = await orderRes.json();
+
+        if (!orderRes.ok) {
+          showError(orderData.error || "Order creation failed.");
+          return;
+        }
+
+        const orderId = orderData.order.id;
+        const totalAmount = Number(orderData.order.hive_amount);
+
+        document.getElementById("status").innerText = "Waiting for Hive transfer...";
+
+        // ✅ CORRECT TRANSFER FORMAT
+        window.hive_keychain.requestTransfer(
+          username,
+          "mydempiregain",
+          totalAmount.toFixed(3),
+          "MydEmpire Pack Purchase",
+          "HIVE",
+          async function (response) {
+
+            if (!response || !response.success) {
+              showError("Transfer cancelled.");
+              return;
+            }
+
+            document.getElementById("status").innerText = "Confirming payment...";
+
+            const confirmRes = await fetch(`${backend}/confirm-payment`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                orderId,
+                txid: response.result.id
+              })
+            });
+
+            const confirmData = await confirmRes.json();
+
+            if (!confirmRes.ok) {
+              showError(confirmData.error || "Payment confirmation failed.");
+              return;
+            }
+
+            document.getElementById("status").innerText =
+              "✅ Purchase successful! Redirecting to dashboard...";
+
+            setTimeout(() => {
+              window.location.href = "player-dashboard.html?user=" + encodeURIComponent(username);
+            }, 1200);
+          }
+        );
+
+      } catch (err) {
+        showError("Unexpected error occurred.");
+        console.error(err);
+      }
+    }
+
+    function showError(message) {
+      document.getElementById("status").innerText = "❌ " + message;
+    }
+
+    // Auto-restore wallet UI on reload
+    document.addEventListener("DOMContentLoaded", () => {
+      renderWalletUI();
+    });
+  </script>
+
+  <!-- ✅ IMPORTANT: external scripts MUST be OUTSIDE the JS block -->
+  <script src="js/hive.js"></script>
+  <script src="js/nav-auth.js"></script>
+
 </body>
-
 </html>
-
