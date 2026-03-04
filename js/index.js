@@ -37,7 +37,7 @@ function disconnectWallet() {
   if (status) status.innerText = "Disconnected.";
 }
 
-async function connectWallet() {
+function connectWallet() {
   const status = document.getElementById("status");
 
   if (!window.hive_keychain) {
@@ -46,24 +46,22 @@ async function connectWallet() {
     return;
   }
 
-  // ✅ Ask Keychain for installed accounts (auto-detect)
-  window.hive_keychain.requestGetAccounts(function (resp) {
-    if (!resp || resp.success === false) {
-      alert("Unable to read Keychain accounts. Please unlock Keychain and try again.");
-      if (status) status.innerText = "❌ Please unlock Hive Keychain.";
-      return;
+  // ✅ Compatible auto-detect via handshake
+  window.hive_keychain.requestHandshake(function (resp) {
+    // Some versions return username in resp.result / resp.username
+    const detected =
+      (resp && resp.username) ||
+      (resp && resp.result && resp.result.username) ||
+      null;
+
+    if (!detected) {
+      // Fallback (still no prompt ideally, but better than broken)
+      const user = prompt("Enter your Hive username (without @):");
+      if (!user) return;
+      username = user.trim().replace("@", "");
+    } else {
+      username = String(detected).trim().replace("@", "");
     }
-
-    const accounts = resp.result || [];
-
-    if (!accounts.length) {
-      alert("No accounts found in Hive Keychain. Please add your account in the extension.");
-      if (status) status.innerText = "❌ No Keychain account found.";
-      return;
-    }
-
-    // ✅ Use the first account (simple + common)
-    username = accounts[0];
 
     localStorage.setItem("mde_username", username);
     renderWalletUI();
