@@ -6,7 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
+
 /* ===== LAND NFT (SCRATCH / CLEAN) ===== */
+=======
+
+   
+   /* ==== Land NFT – refined full-frame 3:4 card ==== */
 
 .land-nft{
   /* keep everything you already have */
@@ -1006,7 +1011,7 @@ landCard.innerHTML = `
 
 `;  </style>
 </head>
-<body>
+<body data-requires-login="true">
   <div class="page">
     <!-- ===== COMMON NAV BAR ===== -->
     <nav class="top-nav">
@@ -1015,11 +1020,13 @@ landCard.innerHTML = `
         <span>MydEmpire</span>
       </div>
       <div class="top-nav-right">
-        <a href="index.html" class="top-nav-link">Home</a>
-        <a href="player-dashboard.html" class="top-nav-link top-nav-link-active">Dashboard</a>
-        <a href="faq.html" class="top-nav-link">FAQ</a>
-        <a href="economy.html" class="top-nav-link">Economy Paper</a>
-      </div>
+  <a href="index.html" class="top-nav-link">Home</a>
+  <a href="economy.html" class="top-nav-link">Economy</a>
+  <a href="faq.html" class="top-nav-link">FAQ</a>
+  <a href="economy-blueprint-mint.html" class="top-nav-link">Blueprint Mint</a>
+  <a href="transparency.html" class="top-nav-link">Transparency</a>
+  <a href="player-dashboard.html" data-nav="dashboard" class="top-nav-link top-nav-link-active" style="display:none;">Dashboard</a>
+</div>
     </nav>
 
     <!-- ===== HEADER ===== -->
@@ -1792,6 +1799,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
   </script>
-  
+ <script src="nav-auth.js"></script> 
 </body>
 </html>

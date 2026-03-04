@@ -1,224 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="styles.css" />
   <meta charset="UTF-8" />
-  <title>MydEmpire — On-Chain vs Off-Chain Transparency</title>
+  <title>MydEmpire — On-Chain vs Off-Chain</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ✅ Use the same shared stylesheet as FAQ -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Small page-only styling for the table/cards (safe, no global changes) -->
   <style>
-    :root {
-      --bg: #f4f5fb;
-      --card-bg: #ffffff;
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --border-soft: #e5e7eb;
-      --accent: #2563eb;
-      --accent-soft: #e0ecff;
-      --accent-danger: #b91c1c;
-      --accent-success: #15803d;
-    }
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text-main);
-    }
-    .page {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 24px 16px 40px;
-    }
-    header {
-      margin-bottom: 24px;
-    }
-    h1 {
-      margin: 0 0 8px;
-      font-size: 26px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
-    .subtitle {
-      margin: 0;
-      font-size: 14px;
-      color: var(--text-muted);
-    }
     .pill-row {
       margin-top: 12px;
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
     }
     .pill {
       display: inline-flex;
       align-items: center;
-      padding: 3px 10px;
+      padding: 6px 10px;
       border-radius: 999px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      border: 1px solid var(--border-soft);
-      background: #f9fafb;
-      color: var(--text-muted);
+      font-size: 12px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: rgba(0,0,0,0.03);
     }
-    .pill.onchain {
-      border-color: var(--accent-success);
-      background: #ecfdf3;
-      color: var(--accent-success);
-    }
-    .pill.offchain {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-      color: var(--accent);
-    }
-    .card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      border: 1px solid var(--border-soft);
-      padding: 16px 18px;
-      margin-bottom: 16px;
-    }
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: 18px;
-      font-weight: 600;
-    }
-    .card p {
-      margin: 4px 0;
+    .pill.onchain { border-color: rgba(21,128,61,0.35); background: rgba(21,128,61,0.08); }
+    .pill.offchain { border-color: rgba(37,99,235,0.35); background: rgba(37,99,235,0.08); }
+
+    .highlight-box {
+      border-radius: 14px;
+      border: 1px dashed rgba(37,99,235,0.6);
+      background: rgba(37,99,235,0.06);
+      padding: 12px 14px;
       font-size: 14px;
-      color: var(--text-muted);
+      line-height: 1.55;
+      margin-top: 10px;
     }
-    .table-wrapper {
-      overflow-x: auto;
-      margin-top: 8px;
-    }
+
+    .table-wrap { overflow-x: auto; margin-top: 10px; }
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 13px;
+      font-size: 14px;
+      min-width: 820px;
     }
     th, td {
-      border: 1px solid var(--border-soft);
-      padding: 8px 10px;
+      border: 1px solid rgba(0,0,0,0.12);
+      padding: 10px 12px;
       text-align: left;
       vertical-align: top;
     }
     th {
-      background: #f3f4ff;
-      font-weight: 600;
+      background: rgba(37,99,235,0.06);
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      color: #4b5563;
+      opacity: 0.9;
     }
-    tr:nth-child(even) td {
-      background: #f9fafb;
-    }
+    tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+
     .badge {
       display: inline-flex;
       align-items: center;
-      padding: 2px 8px;
+      padding: 3px 10px;
       border-radius: 999px;
-      font-size: 11px;
-      font-weight: 500;
-      gap: 4px;
+      font-size: 12px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: rgba(0,0,0,0.02);
+      white-space: nowrap;
     }
-    .badge.on {
-      background: #ecfdf3;
-      color: var(--accent-success);
-      border: 1px solid #bbf7d0;
-    }
-    .badge.off {
-      background: #eff6ff;
-      color: var(--accent);
-      border: 1px solid #bfdbfe;
-    }
-    .badge.mixed {
-      background: #fef3c7;
-      color: #92400e;
-      border: 1px solid #fbbf24;
-    }
-    .highlight-box {
-      border-radius: 12px;
-      border: 1px dashed var(--accent);
-      background: #eff6ff;
-      padding: 10px 12px;
-      font-size: 13px;
-      margin-top: 8px;
-      color: #1f2933;
-    }
+    .badge.on { border-color: rgba(21,128,61,0.35); background: rgba(21,128,61,0.10); }
+    .badge.off { border-color: rgba(37,99,235,0.35); background: rgba(37,99,235,0.10); }
+    .badge.mixed { border-color: rgba(245,158,11,0.45); background: rgba(245,158,11,0.14); }
+
     .list {
-      margin: 6px 0;
+      margin: 8px 0 0;
       padding-left: 18px;
-      font-size: 13px;
-      color: var(--text-muted);
+      line-height: 1.6;
     }
-    .list li {
-      margin-bottom: 3px;
-    }
-    footer {
-      margin-top: 28px;
-      font-size: 11px;
-      color: var(--text-muted);
-      text-align: center;
-    }
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    @media (max-width: 600px) {
-      .page {
-        padding: 20px 12px 32px;
-      }
-      h1 {
-        font-size: 22px;
-      }
-    }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
   </style>
 </head>
-<body>
-  <div class="page">
-    <header>
-      <h1>MydEmpire — On-Chain vs Off-Chain</h1>
-      <p class="subtitle">
-        A clear overview of which game actions are recorded on the Hive blockchain and which live inside the MydEmpire game server.
-      </p>
-      <div class="pill-row">
-        <span class="pill onchain">On-Chain = Needs Hive Keychain</span>
-        <span class="pill offchain">Off-Chain = Game Logic Only</span>
-      </div>
-    </header>
 
-    <!-- Intro -->
+<body class="page-root">
+<header class="site-header">
+  <div class="site-header-inner">
+    <div class="brand">
+      <div class="brand-logo"></div>
+      <div>
+        <div class="brand-text-main">MydEmpire</div>
+        <div class="brand-text-sub">Genesis Economy</div>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="economy.html">Economy</a>
+      <a href="faq.html">FAQ</a>
+      <a href="economy-blueprint-mint.html">Blueprint Mint</a>
+      <a href="transparency.html">Transparency</a>
+      <a href="player-dashboard.html" data-nav="dashboard" style="display:none;">Dashboard</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page-main">
+  <div class="page-inner">
+
+    <div class="page-title-wrap">
+      <div class="page-eyebrow">Genesis Era</div>
+      <h1 class="page-title">On-Chain vs Off-Chain</h1>
+      <p class="page-subtitle">
+        A clear overview of which actions are recorded on the Hive blockchain and which live inside the MydEmpire game server.
+      </p>
+
+      <div class="pill-row">
+        <span class="pill onchain">✅ On-Chain = Needs Hive Keychain</span>
+        <span class="pill offchain">⚙️ Off-Chain = Game Logic Only</span>
+      </div>
+    </div>
+
     <section class="card">
       <h2>Why this page exists</h2>
       <p>
-        MydEmpire is a Web3 strategy game built on the Hive blockchain. Some actions directly
-        touch your Hive wallet and are recorded on-chain. Other actions are pure gameplay
-        inside our backend (faster, no fees, no repeated wallet popups).
+        MydEmpire is a Web3 strategy game built on the Hive blockchain. Some actions directly touch your Hive wallet and are visible on-chain.
+        Other actions are pure gameplay inside our backend (faster, no fees, no repeated wallet popups).
       </p>
       <p>
-        To stay transparent, we clearly list which actions are on-chain (you will see a
-        Hive Keychain confirmation) and which are off-chain (stored in the MydEmpire game
-        database).
+        To stay transparent, we clearly list which actions are on-chain (you will see a Hive Keychain confirmation) and which are off-chain
+        (stored in the MydEmpire game database).
       </p>
+
       <div class="highlight-box">
-        <strong>Simple rule:</strong> if an action moves real HIVE between wallets, you will
-        always see a Hive Keychain confirmation and it will be visible on-chain.
+        <strong>Simple rule:</strong> if an action moves real HIVE between wallets, you will always see a Hive Keychain confirmation and it will be visible on-chain.
         Pure game mechanics (lands, factories, upgrades, EP, EMP balances) are handled off-chain.
       </div>
     </section>
 
-    <!-- Main table -->
     <section class="card">
       <h2>Action overview</h2>
-      <p>Here is a high-level overview of how different actions are handled.</p>
+      <p>High-level overview of how different actions are handled.</p>
 
-      <div class="table-wrapper">
+      <div class="table-wrap">
         <table>
           <thead>
             <tr>
@@ -237,6 +161,7 @@
               <td><span class="badge on">On-chain</span></td>
               <td>Requires Hive Keychain. Pack contents (LAND, BLUEPRINT, EMP, RELIC) are then recorded in the game database.</td>
             </tr>
+
             <tr>
               <td>Buying EMP from platform</td>
               <td>EMP economy</td>
@@ -244,6 +169,7 @@
               <td><span class="badge on">On-chain</span></td>
               <td>You pay HIVE via Keychain; EMP balance appears in your in-game account.</td>
             </tr>
+
             <tr>
               <td>Selling EMP for HIVE</td>
               <td>EMP economy</td>
@@ -251,6 +177,7 @@
               <td><span class="badge on">On-chain</span></td>
               <td>When you exit via EMP, the final HIVE payout to your wallet is on-chain.</td>
             </tr>
+
             <tr>
               <td>NFT marketplace trades (LAND, BLUEPRINT, RELIC, WRIT)</td>
               <td>Player-to-player</td>
@@ -258,6 +185,7 @@
               <td><span class="badge on">On-chain</span></td>
               <td>HIVE payment is on-chain. Ownership of the NFT is updated in the game database.</td>
             </tr>
+
             <tr>
               <td>Revenue distribution &amp; treasury movements</td>
               <td>Platform</td>
@@ -265,6 +193,7 @@
               <td><span class="badge on">On-chain</span></td>
               <td>Pack sale revenue splits and treasury → reward wallet movements are executed as on-chain transfers by the admin.</td>
             </tr>
+
             <tr>
               <td>Connecting wallet / login</td>
               <td>Access</td>
@@ -272,6 +201,7 @@
               <td><span class="badge off">Off-chain</span></td>
               <td>No HIVE is moved. This step just lets the game know which Hive account you are playing with.</td>
             </tr>
+
             <tr>
               <td>Opening packs (receiving LAND / BLUEPRINT / RELIC / EMP)</td>
               <td>Gameplay</td>
@@ -279,6 +209,7 @@
               <td><span class="badge off">Off-chain</span></td>
               <td>Random outcomes and NFT assignments are processed inside the game server to keep it fast and fee-less.</td>
             </tr>
+
             <tr>
               <td>Building factories on lands</td>
               <td>Gameplay</td>
@@ -286,13 +217,15 @@
               <td><span class="badge off">Off-chain</span></td>
               <td>Consumes BLUEPRINT and EMP inside the game database. No HIVE leaves or enters your wallet.</td>
             </tr>
+
             <tr>
               <td>Upgrading factories</td>
               <td>Gameplay</td>
               <td>Off-chain</td>
               <td><span class="badge off">Off-chain</span></td>
-              <td>Upgrade rules (active days, land caps, B5 limits) are enforced by the backend. No on-chain transaction is required.</td>
+              <td>Upgrade rules are enforced by the backend. No on-chain transaction is required.</td>
             </tr>
+
             <tr>
               <td>Paying maintenance with EMP</td>
               <td>Gameplay</td>
@@ -300,6 +233,7 @@
               <td><span class="badge off">Off-chain</span></td>
               <td>EMP is deducted inside the game only. This does not touch your on-chain HIVE balance.</td>
             </tr>
+
             <tr>
               <td>Claiming factory production (EMP)</td>
               <td>Gameplay</td>
@@ -307,13 +241,15 @@
               <td><span class="badge off">Off-chain</span></td>
               <td>EMP from your factories is credited to your in-game account. Converting EMP back to HIVE is a separate on-chain step.</td>
             </tr>
+
             <tr>
               <td>EP (Empire Power) calculation</td>
               <td>Scoring</td>
               <td>Off-chain</td>
               <td><span class="badge off">Off-chain</span></td>
-              <td>All EP math (by land, factory, relic boost) is calculated on the server and used for rewards and leaderboards.</td>
+              <td>All EP math is calculated on the server and used for rewards and leaderboards.</td>
             </tr>
+
             <tr>
               <td>Leaderboards &amp; seasonal rankings</td>
               <td>Scoring</td>
@@ -321,6 +257,7 @@
               <td><span class="badge off">Off-chain</span></td>
               <td>Leaderboards are built from the game database and refreshed periodically.</td>
             </tr>
+
             <tr>
               <td>Notifications, logs &amp; empire history</td>
               <td>UX &amp; analytics</td>
@@ -333,12 +270,11 @@
       </div>
     </section>
 
-    <!-- Why not everything on-chain -->
     <section class="card">
       <h2>Why not put everything on-chain?</h2>
       <ul class="list">
-        <li><strong>Too many popups:</strong> building, upgrading and claiming every few minutes would spam Hive Keychain.</li>
-        <li><strong>Performance &amp; cost:</strong> pure game actions don’t need on-chain fees and can be processed instantly.</li>
+        <li><strong>Too many popups:</strong> building, upgrading and claiming frequently would spam Hive Keychain.</li>
+        <li><strong>Performance:</strong> pure game actions can be processed instantly.</li>
         <li><strong>Clean separation:</strong> on-chain is reserved for money &amp; ownership; off-chain handles the simulation engine.</li>
       </ul>
       <p>
@@ -347,26 +283,25 @@
       </p>
     </section>
 
-    <!-- Future section -->
     <section class="card">
       <h2>Future on-chain features</h2>
-      <p>
-        As MydEmpire grows, some additional features may also be moved on-chain, for example:
-      </p>
+      <p>As MydEmpire grows, some additional features may also be moved on-chain, for example:</p>
       <ul class="list">
         <li>Governance and voting (WRIT / RELIC holders influencing future rules)</li>
-        <li>Special prestige NFTs or achievements</li>
+        <li>Prestige NFTs or achievements</li>
         <li>Snapshot-based events or seasonal reward claims</li>
       </ul>
       <p>
-        Whenever we add new on-chain actions, they will be documented on this page so you always
-        know what is happening on the Hive blockchain.
+        Whenever we add new on-chain actions, they will be documented here so you always know what is happening on Hive.
       </p>
     </section>
 
-    <footer>
-      MydEmpire • Transparency first • This page describes current design and may evolve as the game expands.
-    </footer>
   </div>
+</main>
+
+<footer class="site-footer">
+  MydEmpire — Transparency first • Treasury-backed strategy, not financial advice.
+</footer>
+
 </body>
 </html>
