@@ -68,3 +68,106 @@ window.disconnectWallet = disconnectWallet;
 document.addEventListener("DOMContentLoaded", () => {
   renderWalletUI();
 });
+// ============================
+// BUY PACKS (Homepage)
+// ============================
+
+let SELECTED_USERNAME = null;
+
+// Call this after wallet connect success
+function setConnectedUser(username) {
+  SELECTED_USERNAME = username;
+  const status = document.getElementById("status");
+  if (status) status.textContent = `Connected ✅ ${username}`;
+}
+
+// Main button function (your onclick="purchase()")
+async function purchase() {
+  try {
+    if (!SELECTED_USERNAME) {
+      alert("Please connect wallet first ✅");
+      return;
+    }
+
+    const qtyEl = document.getElementById("packCount");
+    const packs = parseInt(qtyEl?.value || "1", 10);
+
+    if (!packs || packs < 1) {
+      alert("Enter valid pack quantity (min 1)");
+      return;
+    }
+
+    // ✅ IMPORTANT: API_BASE must be your backend URL on production
+    // Example: https://YOUR-RENDER-BACKEND.onrender.com
+    const API_BASE = window.API_BASE || "http://localhost:10000";
+
+    // 1) Create order on backend
+    const orderRes = await fetch(`${API_BASE}/create-order`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: SELECTED_USERNAME, packs }),
+    });
+
+    const orderData = await orderRes.json();
+    if (!orderRes.ok || !orderData?.success) {
+      alert(orderData?.error || "Create order failed");
+      return;
+    }
+
+    // server usually returns { orderId, hive_amount, memo, to }
+    const { orderId, hive_amount, memo, to } = orderData;
+
+    // 2) Ask Hive Keychain transfer
+    if (!window.hive_keychain) {
+      alert("Hive Keychain not found ❌");
+      return;
+    }
+
+    window.hive_keychain.requestTransfer(
+      SELECTED_USERNAME,
+      to || "mydempiregain",                 // fallback if backend didn't send
+      `${hive_amount} HIVE`,                  // Keychain expects "X.XXX HIVE"
+      memo || `MYDEMPIRE_ORDER_${orderId}`,   // fallback memo
+      "HIVE",
+      async function (response) {
+        if (!response?.success) {
+          alert("Transaction cancelled or failed ❌");
+          console.error("Keychain response:", response);
+          return;
+        }
+
+        // txid formats vary — handle safely
+        const txid =
+          response?.result?.id ||
+          response?.result?.tx_id ||
+          response?.result?.trx_id ||
+          response?.id ||
+          response?.txid;
+
+        if (!txid) {
+          alert("Transfer succeeded but txid not found. Check console.");
+          console.error("Keychain response (no txid):", response);
+          return;
+        }
+
+        // 3) Confirm payment on backend (mints packs)
+        const confirmRes = await fetch(`${API_BASE}/confirm-payment`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orderId, txid }),
+        });
+
+        const confirmData = await confirmRes.json();
+        if (!confirmRes.ok || !confirmData?.success) {
+          alert(confirmData?.error || "Confirm payment failed ❌");
+          return;
+        }
+
+        alert("✅ Packs purchased & minted successfully!");
+      }
+    );
+  } catch (err) {
+    console.error("purchase() error:", err);
+    alert("Something went wrong. Check console ❌");
+  }
+}
