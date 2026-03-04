@@ -316,7 +316,7 @@
         <a class="pill dashboard" href="player-dashboard.html" data-nav="dashboard" style="display:none;">Dashboard</a>
       </div>
 
-      <!-- Wallet chip -->
+      <!-- Wallet chip (shows after connect) -->
       <div id="walletChip" class="walletChip">
         <span id="walletChipText" class="chip"></span>
         <button class="btnTiny" onclick="disconnectWallet()">Disconnect</button>
@@ -369,7 +369,9 @@
             </div>
           </div>
 
-          <button class="btn btnPrimary" onclick="connectWallet()">Connect Wallet</button>
+          <!-- ✅ Add id so JS can hide this after connect -->
+          <button id="connectBtn" class="btn btnPrimary" onclick="connectWallet()">Connect Wallet</button>
+
           <p id="walletDisplay" style="margin:10px 0 0;color:rgba(255,255,255,0.70);font-size:13px;"></p>
 
           <div class="divider"></div>
@@ -405,4 +407,3 @@
   <script src="js/home.js?v=1"></script>
 </body>
 </html>
-
