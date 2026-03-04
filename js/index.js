@@ -1,3 +1,4 @@
+console.log("✅ index.js LOADED v3 (handshake version)");
 // js/index.js
 const backend =
   window.location.hostname === "localhost"
