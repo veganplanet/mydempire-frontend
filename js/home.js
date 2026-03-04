@@ -9,7 +9,7 @@ function renderWalletUI() {
 
   if (username) {
 
-    SELECTED_USERNAME = username; // ✅ ADD THIS
+    window.SELECTED_USERNAME = username;
 
     if (walletDisplay) walletDisplay.innerText = "Connected: @" + username;
     if (status) status.innerText = "✅ Connected: @" + username;
@@ -19,7 +19,7 @@ function renderWalletUI() {
     });
 
   } else {
-    SELECTED_USERNAME = null; // ✅ optional (good practice)
+    window.SELECTED_USERNAME = null;
     if (walletDisplay) walletDisplay.innerText = "";
     if (status) status.innerText = "Ready ✅";
   }
@@ -36,24 +36,8 @@ function connectWallet() {
 
   // ✅ Compatible handshake
   window.hive_keychain.requestHandshake(function (resp) {
-    console.log("Handshake resp:", resp);
-
-    const detected =
-      (resp && resp.username) ||
-      (resp && resp.result && resp.result.username) ||
-      null;
-
-    if (!detected) {
-      const user = prompt("Enter your Hive username (without @):");
-      if (!user) return;
-      username = user.trim().replace("@", "");
-    } else {
-      username = String(detected).trim().replace("@", "");
-    }
-
-    localStorage.setItem("mde_username", username);
-    renderWalletUI();
-  });
+  console.log("✅ Keychain handshake called");
+});
 }
 
 function disconnectWallet() {
