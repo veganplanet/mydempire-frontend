@@ -1,6 +1,6 @@
 // js/home.js
 console.log("✅ home.js LOADED v1");
-
+let SELECTED_USERNAME = null;
 let username = localStorage.getItem("mde_username") || null;
 
 function renderWalletUI() {
@@ -8,17 +8,20 @@ function renderWalletUI() {
   const status = document.getElementById("status");
 
   if (username) {
+
+    SELECTED_USERNAME = username; // ✅ ADD THIS
+
     if (walletDisplay) walletDisplay.innerText = "Connected: @" + username;
     if (status) status.innerText = "✅ Connected: @" + username;
 
     document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
       el.style.display = "inline-flex";
     });
+
   } else {
+    SELECTED_USERNAME = null; // ✅ optional (good practice)
     if (walletDisplay) walletDisplay.innerText = "";
-    document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
-      el.style.display = "none";
-    });
+    if (status) status.innerText = "Ready ✅";
   }
 }
 
