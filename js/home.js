@@ -208,10 +208,71 @@ window.connectWallet = window.connectWallet || async function () {
   alert("connectWallet() is not wired yet — paste your connect logic here");
 };
 
+window.API_BASE = "https://mydempire-backend-1.onrender.com";
+
 window.buyPack = async function (qty) {
-  if (!window.SELECTED_USERNAME) {
-    alert("Please connect wallet first ✅");
-    return;
+  try {
+    const packs = parseInt(qty || "1", 10);
+
+    if (!window.SELECTED_USERNAME) return alert("Please connect wallet first ✅");
+    if (!window.hive_keychain) return alert("Hive Keychain not found ❌");
+    if (!packs || packs < 1) return alert("Invalid pack quantity ❌");
+
+    // 1) Create order
+    const res = await fetch(`${window.API_BASE}/create-order`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: window.SELECTED_USERNAME, packs }),
+    });
+
+    const data = await res.json();
+    console.log("create-order:", data);
+
+    if (!res.ok || !data?.success) {
+      alert(data?.error || "Create order failed ❌");
+      return;
+    }
+
+    const { orderId, to, hive_amount, memo } = data;
+
+    // ✅ Keychain needs "X.XXX" only (no currency text)
+    const amount = Number(hive_amount).toFixed(3);
+
+    // 2) Keychain popup
+    window.hive_keychain.requestTransfer(
+      window.SELECTED_USERNAME,
+      to || "mydempiregain",
+      amount,
+      memo || `MYDEMPIRE_ORDER_${orderId}`,
+      "HIVE",
+      async (response) => {
+        console.log("keychain response:", response);
+
+        if (!response?.success) return alert("Transaction cancelled ❌");
+
+        const txid = response?.result?.id || response?.id;
+        if (!txid) return alert("txid missing ❌");
+
+        // 3) Confirm payment (mint)
+        const cRes = await fetch(`${window.API_BASE}/confirm-payment`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orderId, txid }),
+        });
+
+        const cData = await cRes.json();
+        console.log("confirm-payment:", cData);
+
+        if (!cRes.ok || !cData?.success) {
+          alert(cData?.error || "Confirm payment failed ❌");
+          return;
+        }
+
+        alert("✅ Packs minted successfully!");
+      }
+    );
+  } catch (e) {
+    console.error("buyPack error:", e);
+    alert("Unexpected error ❌ Check console");
   }
-  alert(`Buying ${qty} pack(s) for @${window.SELECTED_USERNAME}`);
 };
