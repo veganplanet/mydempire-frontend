@@ -1,5 +1,8 @@
 // js/index.js
-const backend = "http://localhost:10000"; // NOTE: will not work on GitHub Pages for purchases
+const backend =
+  window.location.hostname === "localhost"
+    ? "http://localhost:10000"
+    https://mydempire-backend-1.onrender.com";
 let username = localStorage.getItem("mde_username") || null;
 
 function renderWalletUI() {
