@@ -102,7 +102,7 @@ async function purchase() {
 
     // ✅ IMPORTANT: API_BASE must be your backend URL on production
     // Example: https://YOUR-RENDER-BACKEND.onrender.com
-    const API_BASE = window.API_BASE = "https://mydempire-backend-1.onrender.com";
+    window.API_BASE = "https://mydempire-backend-1.onrender.com";
 
     // 1) Create order on backend
     const orderRes = await fetch(`${API_BASE}/create-order`, {
