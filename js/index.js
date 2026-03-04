@@ -1,5 +1,6 @@
-console.log("✅ index.js LOADED v3 (handshake version)");
 // js/index.js
+console.log("✅ index.js LOADED v3 (handshake version)");
+
 const backend =
   window.location.hostname === "localhost"
     ? "http://localhost:10000"
