@@ -34,10 +34,32 @@ function connectWallet() {
     return;
   }
 
-  // ✅ Compatible handshake
-  window.hive_keychain.requestHandshake(function (resp) {
-  console.log("✅ Keychain handshake called");
-});
+  if (status) status.innerText = "Connecting…";
+
+  // Handshake (resp can be undefined, that's OK)
+  window.hive_keychain.requestHandshake(function () {
+    console.log("✅ Keychain handshake called");
+
+    // Now actually get the account
+    window.hive_keychain.requestGetAccounts(function (res) {
+      console.log("getAccounts:", res);
+
+      if (!res || !res.success || !res.data || !res.data.length) {
+        alert("Failed to get accounts from Keychain ❌");
+        if (status) status.innerText = "❌ Wallet connection failed.";
+        return;
+      }
+
+      // Pick first account
+      username = res.data[0];
+
+      // Save + set global (important for buyPack)
+      localStorage.setItem("mde_username", username);
+      window.SELECTED_USERNAME = username;
+
+      renderWalletUI();
+    });
+  });
 }
 
 function disconnectWallet() {
