@@ -1343,41 +1343,62 @@ for (const land of empireLands) {
   const landCard = document.createElement("div");
   landCard.className = "land-card";
 
- // --- tier visuals + labels ---
-const landTierKey = (tier || "").toUpperCase();
-const borderColor = LAND_TIER_COLORS[tier] || "#64748b";
-const tierName = landTierLabel(tier);                                 // your helper
-const shortLabel =
-  LAND_TIER_SHORT_LABEL[landTierKey] || tierName || "Frontier";       // no level repeat
+  // --- tier visuals + labels ---
+  const landTierKey =
+    typeof tier === "number"
+      ? `L${tier}`
+      : String(tier || "").toUpperCase();
 
-// --- slots & slot pads ---
-const slotsTotal = totalSlots;
-const slotsUsed = usedSlots;
+  const borderColor = LAND_TIER_COLORS[landTierKey] || "#64748b";
+  const tierName = landTierLabel(tier); // your existing helper
+  const shortLabel =
+    LAND_TIER_SHORT_LABEL[landTierKey] || tierName || "Frontier";
 
-let slotHTML = "";
-if (slotsTotal === 1) {
-  slotHTML = `<div class="land-slot center"></div>`;
-} else if (slotsTotal === 2) {
-  slotHTML = `
-    <div class="land-slot left"></div>
-    <div class="land-slot right"></div>
-  `;
-} else if (slotsTotal >= 3) {
-  slotHTML = `
-    <div class="land-slot left"></div>
-    <div class="land-slot center"></div>
-    <div class="land-slot right"></div>
-  `;
-}
-  // --- NFT card HTML ---
- landCard.innerHTML = `
-  <div class="land-nft-shell" style="border-color:${borderColor};">
-    <div class="land-badge" style="background:${borderColor};">
-      ${landTierKey || "L?"}   <!-- 🔁 use landTierKey here -->
+  // --- slots & slot pads ---
+  const slotsTotal = totalSlots;
+  const slotsUsed = usedSlots;
+
+  let slotHTML = "";
+  if (slotsTotal === 1) {
+    slotHTML = `<div class="land-slot center"></div>`;
+  } else if (slotsTotal === 2) {
+    slotHTML = `
+      <div class="land-slot left"></div>
+      <div class="land-slot right"></div>
+    `;
+  } else if (slotsTotal >= 3) {
+    slotHTML = `
+      <div class="land-slot left"></div>
+      <div class="land-slot center"></div>
+      <div class="land-slot right"></div>
+    `;
+  }
+
+  // --- NFT visual card ---
+  landCard.innerHTML = `
+    <div class="land-nft-shell" style="border-color:${borderColor};">
+      <div class="land-badge" style="background:${borderColor};">
+        ${landTierKey}
+      </div>
+
+      <div class="land-surface">
+        ${slotHTML}
+      </div>
+
+      <div class="land-strip">
+        <div class="land-strip-row">
+          <span>${shortLabel} • GENESIS</span>
+          <span>Slots: ${slotsUsed}/${slotsTotal}</span>
+        </div>
+      </div>
     </div>
-    ...
-  </div>
-`;  // 👇 your factoriesList code continues here
+
+    <div class="land-tags">
+      <span class="tag ${landTagClass(tier)}">${tier}</span>
+      <span class="tag">PRODUCTION LAND</span>
+    </div>
+  `;
+  // 👇 your factoriesList code continues here
         const factoriesList = document.createElement("div");
         factoriesList.className = "factories-list";
 
