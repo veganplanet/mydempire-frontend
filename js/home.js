@@ -196,19 +196,7 @@ async function buyPack() {
 console.log("✅ buyPack function injected");
 
 // ✅ GLOBAL buyPack (must be global for onclick="")
-window.buyPack = function (qty) {
-  console.log("✅ buyPack clicked", qty);
 
-  if (!window.SELECTED_USERNAME && typeof SELECTED_USERNAME === "undefined") {
-    alert("Please connect wallet first ✅");
-    return;
-  }
-
-  // supports both patterns: SELECTED_USERNAME variable OR window.SELECTED_USERNAME
-  const user = window.SELECTED_USERNAME || (typeof SELECTED_USERNAME !== "undefined" ? SELECTED_USERNAME : null);
-
-  alert(`Buying ${qty} pack(s) for @${user}`);
-};
 // ✅ Make functions callable from onclick=""
 window.connectWallet = window.connectWallet || async function () {
   alert("connectWallet() is not wired yet — paste your connect logic here");
