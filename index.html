@@ -18,7 +18,7 @@
       background: #1e293b;
       padding: 30px;
       border-radius: 10px;
-      max-width: 500px;
+      max-width: 520px;
       margin: auto;
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
     }
@@ -51,7 +51,7 @@
 
     .status {
       margin-top: 20px;
-      min-height: 20px;
+      min-height: 22px;
     }
 
     hr {
@@ -112,153 +112,10 @@
     <div class="status" id="status"></div>
   </div>
 
-  <script>
-    
-    let username = localStorage.getItem("mde_username") || null;
+  <!-- ✅ Scripts ONLY (no inline code to avoid duplicates) -->
+  <script src="js/hive.js"></script>
+  <script src="js/nav-auth.js"></script>
+  <script src="js/index.js"></script>
 
-    function renderWalletUI() {
-      const chip = document.getElementById("walletChip");
-      const chipText = document.getElementById("walletChipText");
-      const walletDisplay = document.getElementById("walletDisplay");
-
-      if (username) {
-        if (chip) chip.style.display = "inline-flex";
-        if (chipText) chipText.textContent = "Connected: @" + username;
-        if (walletDisplay) walletDisplay.innerText = "Connected: @" + username;
-
-        // Show dashboard link immediately
-        document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
-          el.style.display = "inline-flex";
-        });
-      } else {
-        if (chip) chip.style.display = "none";
-        if (walletDisplay) walletDisplay.innerText = "";
-
-        document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
-          el.style.display = "none";
-        });
-      }
-    }
-
-    function disconnectWallet() {
-      localStorage.removeItem("mde_username");
-      username = null;
-      renderWalletUI();
-      document.getElementById("status").innerText = "Disconnected.";
-    }
-
-    // 🔐 Connect Wallet
-    function connectWallet() {
-      if (!window.hive_keychain) {
-        alert("Hive Keychain not installed.");
-        return;
-      }
-
-      const user = prompt("Enter your Hive username:");
-      if (!user) return;
-
-      username = user.trim();
-      localStorage.setItem("mde_username", username);
-      renderWalletUI();
-    }
-
-    // 💰 Purchase Flow
-    async function purchase() {
-      try {
-        if (!username) {
-          alert("Connect wallet first.");
-          return;
-        }
-
-        const packs = parseInt(document.getElementById("packCount").value, 10);
-
-        if (!Number.isFinite(packs) || packs <= 0) {
-          alert("Invalid pack amount.");
-          return;
-        }
-
-        document.getElementById("status").innerText = "Creating order...";
-
-        const orderRes = await fetch(`${backend}/create-order`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, packs })
-        });
-
-        const orderData = await orderRes.json();
-
-        if (!orderRes.ok) {
-          showError(orderData.error || "Order creation failed.");
-          return;
-        }
-
-        const orderId = orderData.order.id;
-        const totalAmount = Number(orderData.order.hive_amount);
-
-        document.getElementById("status").innerText = "Waiting for Hive transfer...";
-
-        // ✅ CORRECT TRANSFER FORMAT
-        window.hive_keychain.requestTransfer(
-          username,
-          "mydempiregain",
-          totalAmount.toFixed(3),
-          "MydEmpire Pack Purchase",
-          "HIVE",
-          async function (response) {
-
-            if (!response || !response.success) {
-              showError("Transfer cancelled.");
-              return;
-            }
-
-            document.getElementById("status").innerText = "Confirming payment...";
-
-            const confirmRes = await fetch(`${backend}/confirm-payment`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                orderId,
-                txid: response.result.id
-              })
-            });
-
-            const confirmData = await confirmRes.json();
-
-            if (!confirmRes.ok) {
-              showError(confirmData.error || "Payment confirmation failed.");
-              return;
-            }
-
-            document.getElementById("status").innerText =
-              "✅ Purchase successful! Redirecting to dashboard...";
-
-            setTimeout(() => {
-              window.location.href = "player-dashboard.html?user=" + encodeURIComponent(username);
-            }, 1200);
-          }
-        );
-
-      } catch (err) {
-        showError("Unexpected error occurred.");
-        console.error(err);
-      }
-    }
-
-    function showError(message) {
-      document.getElementById("status").innerText = "❌ " + message;
-    }
-
-    // Auto-restore wallet UI on reload
-    document.addEventListener("DOMContentLoaded", () => {
-      renderWalletUI();
-    });
-  </script>
-
-  <!-- ✅ IMPORTANT: external scripts MUST be OUTSIDE the JS block -->
- <script src="js/hive.js"></script>
-<script src="js/nav-auth.js"></script>
-<script src="js/index.js"></script>
 </body>
 </html>
-
-
