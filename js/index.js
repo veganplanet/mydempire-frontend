@@ -37,23 +37,39 @@ function disconnectWallet() {
   if (status) status.innerText = "Disconnected.";
 }
 
-function connectWallet() {
+async function connectWallet() {
   const status = document.getElementById("status");
 
   if (!window.hive_keychain) {
-    if (status) status.innerText = "❌ Hive Keychain not detected. Please enable the extension.";
-    alert("Hive Keychain not detected.\n\nInstall/enable Hive Keychain and refresh.");
+    alert("Hive Keychain not detected. Please install/enable it.");
+    if (status) status.innerText = "❌ Hive Keychain not detected.";
     return;
   }
 
-  const user = prompt("Enter your Hive username (without @):");
-  if (!user) return;
+  // ✅ Ask Keychain for installed accounts (auto-detect)
+  window.hive_keychain.requestGetAccounts(function (resp) {
+    if (!resp || resp.success === false) {
+      alert("Unable to read Keychain accounts. Please unlock Keychain and try again.");
+      if (status) status.innerText = "❌ Please unlock Hive Keychain.";
+      return;
+    }
 
-  username = user.trim().replace("@", "");
-  localStorage.setItem("mde_username", username);
-  renderWalletUI();
+    const accounts = resp.result || [];
 
-  if (status) status.innerText = "✅ Wallet connected: @" + username;
+    if (!accounts.length) {
+      alert("No accounts found in Hive Keychain. Please add your account in the extension.");
+      if (status) status.innerText = "❌ No Keychain account found.";
+      return;
+    }
+
+    // ✅ Use the first account (simple + common)
+    username = accounts[0];
+
+    localStorage.setItem("mde_username", username);
+    renderWalletUI();
+
+    if (status) status.innerText = "✅ Connected: @" + username;
+  });
 }
 
 async function purchase() {
