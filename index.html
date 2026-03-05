@@ -1,490 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MydEmpire — Pre Genesis</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MydEmpire — Pre Genesis</title>
 
-  <style>
-    :root{
-      --ink:#0b1224;
-      --muted:rgba(11,18,36,.68);
+<style>
 
-      --glass: rgba(255,255,255,0.70);
-      --glass2: rgba(255,255,255,0.86);
-      --border: rgba(10, 25, 50, 0.12);
-      --border2: rgba(10, 25, 50, 0.20);
-
-      --shadow: 0 18px 60px rgba(15, 23, 42, 0.16);
-      --shadow2: 0 10px 26px rgba(15, 23, 42, 0.12);
-
-      --radius: 20px;
-
-      --green:#16a34a;
-      --blue:#2563eb;
-      --pink:#db2777;
-      --orange:#f97316;
-      --purple:#7c3aed;
-      --teal:#14b8a6;
-    }
-
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-
-   body{
+body{
   margin:0;
-  font-family: ui-sans-serif, system-ui;
+  font-family:Arial, Helvetica, sans-serif;
   background:white;
-  color:#0b1224;
-  padding:28px 18px 40px;
+  color:#1e293b;
 }
-    .wrap{ max-width: 1120px; margin:0 auto; }
 
-    /* ===== Top Bar ===== */
-    .topbar{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      margin-bottom: 14px;
-    }
+/* NAV */
 
-    .navPills{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.78);
-      border: 1px solid var(--border);
-      color: rgba(11,18,36,0.92);
-      text-decoration:none;
-      font-size: 14px;
-      line-height: 1;
-      box-shadow: 0 10px 22px rgba(15,23,42,0.06);
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-      user-select:none;
-      backdrop-filter: blur(10px);
-    }
-    .pill:hover{
-      transform: translateY(-1px);
-      border-color: var(--border2);
-      background: rgba(255,255,255,0.92);
-    }
-    .pill.dashboard{
-      background: linear-gradient(135deg, rgba(22,163,74,0.18), rgba(20,184,166,0.18));
-      border-color: rgba(22,163,74,0.28);
-      font-weight: 900;
-    }
+.nav{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  padding:20px;
+}
 
-    /* Wallet chip */
-    .walletChip{
-      display:none;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.80);
-      border: 1px solid var(--border);
-      box-shadow: 0 10px 22px rgba(15,23,42,0.06);
-      backdrop-filter: blur(10px);
-    }
-    .chip{
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(11,18,36,0.06);
-      border: 1px solid rgba(11,18,36,0.10);
-      color: rgba(11,18,36,0.88);
-      font-size: 14px;
-      font-weight: 900;
-    }
-    .btnTiny{
-      padding: 9px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(239,68,68,0.22);
-      background: rgba(239,68,68,0.10);
-      color: rgba(11,18,36,0.92);
-      cursor:pointer;
-      font-weight: 950;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-    }
-    .btnTiny:hover{
-      transform: translateY(-1px);
-      border-color: rgba(239,68,68,0.32);
-      background: rgba(239,68,68,0.14);
-    }
+.nav a{
+  text-decoration:none;
+  padding:10px 16px;
+  border-radius:20px;
+  background:#f1f5f9;
+  color:#1e293b;
+  font-weight:600;
+}
 
-    /* ===== Hero Banner ===== */
-    .heroBanner{
-      position: relative;
-      border-radius: 26px;
-      overflow:hidden;
-      border: 1px solid rgba(11,18,36,0.10);
-      box-shadow: 0 22px 70px rgba(15,23,42,0.18);
-      background: rgba(255,255,255,0.35);
-    }
-    .heroBanner img{
-      width:100%;
-      height: 360px;
-      object-fit: cover;
-      display:block;
-    }
-    @media (max-width: 700px){
-      .heroBanner img{ height: 260px; }
-    }
+/* HERO */
 
-    /* overlay gradient + content */
-    .heroOverlay{
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(90deg, rgba(255,255,255,0.92), rgba(255,255,255,0.25) 55%, rgba(255,255,255,0.10));
-      display:flex;
-      align-items:stretch;
-    }
-    .heroContent{
-      width: min(560px, 92%);
-      padding: 18px 18px 18px 18px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap: 10px;
-    }
+.hero{
+  text-align:center;
+  padding:30px 20px 10px;
+}
 
-    .brandLogo img{
-      height: 72px;
-      display:block;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.10));
-    }
-    .heroTitle{
-      margin:0;
-      font-size: 22px;
-      font-weight: 950;
-      letter-spacing: 0.2px;
-    }
-    .heroText{
-      margin:0;
-      color: rgba(11,18,36,0.70);
-      font-size: 14px;
-      line-height: 1.55;
-      font-weight: 650;
-    }
-    .heroBadges{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top: 2px;
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 9px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.78);
-      border: 1px solid rgba(11,18,36,0.12);
-      box-shadow: 0 10px 20px rgba(15,23,42,0.06);
-      font-size: 13px;
-      color: rgba(11,18,36,0.82);
-      font-weight: 800;
-    }
+.hero img{
+  max-width:420px;
+}
 
-    /* ===== Main layout ===== */
-    .heroGrid{
-      display:grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 16px;
-      margin-top: 14px;
-      align-items: stretch;
-    }
-    @media (max-width: 980px){
-      .heroGrid{ grid-template-columns: 1fr; }
-    }
+/* INTRO */
 
-    .panel{
-      background: linear-gradient(180deg, var(--glass), var(--glass2));
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      backdrop-filter: blur(14px);
-      position: relative;
-    }
-    .panel::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-       
-      pointer-events:none;
-      opacity: .7;
-    }
-    .panelInner{
-      position:relative;
-      padding: 20px 20px 18px;
-    }
+.intro{
+  text-align:center;
+  max-width:700px;
+  margin:auto;
+  padding:10px 20px 40px;
+  line-height:1.6;
+}
 
-    .sectionTitle{
-      margin: 18px 0 10px;
-      font-size: 18px;
-      font-weight: 950;
-      color: rgba(11,18,36,0.92);
-    }
+/* BUY PANEL */
 
-    .divider{ height: 1px; background: rgba(11,18,36,0.10); margin: 14px 0; }
+.buy-box{
+  max-width:420px;
+  margin:0 auto 40px;
+  padding:25px;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  text-align:center;
+}
 
-    /* Buttons / inputs */
-    .btn{
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(11,18,36,0.12);
-      background: rgba(255,255,255,0.78);
-      color: rgba(11,18,36,0.92);
-      cursor:pointer;
-      font-weight: 950;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-      width: 100%;
-      box-shadow: 0 10px 22px rgba(15,23,42,0.08);
-      backdrop-filter: blur(12px);
-    }
-    .btn:hover{
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.92);
-      border-color: rgba(11,18,36,0.18);
-    }
-    .btnPrimary{
-      background: linear-gradient(135deg, rgba(22,163,74,0.22), rgba(20,184,166,0.22));
-      border-color: rgba(22,163,74,0.30);
-    }
+.buy-box button{
+  padding:12px 18px;
+  border:none;
+  background:#16a34a;
+  color:white;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media (max-width: 980px){ .grid2{ grid-template-columns: 1fr; } }
+.buy-box input{
+  padding:10px;
+  width:80px;
+  text-align:center;
+  margin-top:10px;
+}
 
-    .field{ display:flex; flex-direction:column; gap: 8px; }
-    .label{ font-size: 12px; color: rgba(11,18,36,0.70); font-weight: 850; letter-spacing: .2px; }
+/* FACTORY GALLERY */
 
-    .input{
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(11,18,36,0.12);
-      background: rgba(255,255,255,0.80);
-      color: rgba(11,18,36,0.92);
-      font-size: 16px;
-      outline:none;
-      text-align:center;
-      box-shadow: 0 10px 22px rgba(15,23,42,0.06);
-      backdrop-filter: blur(12px);
-    }
-    .input:focus{
-      border-color: rgba(37,99,235,0.30);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.14);
-    }
+.factory-section{
+  text-align:center;
+  padding:40px 20px;
+}
 
-    .status{
-      margin-top: 14px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px dashed rgba(11,18,36,0.18);
-      background: rgba(255,255,255,0.76);
-      color: rgba(11,18,36,0.86);
-      min-height: 44px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      line-height: 1.3;
-      box-shadow: 0 10px 22px rgba(15,23,42,0.06);
-      backdrop-filter: blur(12px);
-      font-weight: 750;
-    }
+.factory-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:30px;
+  max-width:900px;
+  margin:auto;
+}
 
-    /* How it works cards */
-    .howGrid{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 10px;
-    }
-    @media (max-width: 980px){ .howGrid{ grid-template-columns: 1fr; } }
+.factory-card img{
+  width:100%;
+}
 
-    .howCard{
-      border-radius: 16px;
-      border: 1px solid rgba(11,18,36,0.10);
-      background: rgba(255,255,255,0.78);
-      box-shadow: var(--shadow2);
-      padding: 14px;
-      backdrop-filter: blur(12px);
-      transition: transform .12s ease;
-    }
-    .howCard:hover{ transform: translateY(-2px); }
-    .howCard h3{ margin:0; font-size: 14px; font-weight: 950; }
-    .howCard p{ margin:8px 0 0; color: rgba(11,18,36,0.70); font-size: 13px; line-height: 1.5; }
+.factory-card p{
+  font-weight:bold;
+}
 
-    /* Big section image */
-    .sectionBanner{
-      display:flex;
-      justify-content:center;
-      margin: 18px 0 8px;
-    }
-    .sectionBanner img{
-      height: 170px;
-      width: auto;
-      max-width: 100%;
-      filter: drop-shadow(0 14px 24px rgba(15,23,42,0.14));
-    }
-    @media (max-width: 520px){
-      .sectionBanner img{ height: 135px; }
-    }
+/* FOOTER */
 
-    /* Footer */
-    .foot{
-      margin-top: 18px;
-      color: rgba(11,18,36,0.62);
-      font-size: 12px;
-      text-align:center;
-    }
-  </style>
+.footer{
+  text-align:center;
+  padding:30px;
+  color:#64748b;
+}
+
+</style>
 </head>
 
 <body>
-  <div class="wrap">
 
-    <!-- Top Nav -->
-    <div class="topbar">
-      <div class="navPills">
-        <a class="pill" href="index.html">Home</a>
-        <a class="pill" href="economy.html">Economy</a>
-        <a class="pill" href="faq.html">FAQ</a>
-        <a class="pill" href="economy-blueprint-mint.html">Blueprint Mint</a>
-        <a class="pill" href="transparency.html">Transparency</a>
+<!-- NAV -->
 
-        <!-- Hidden until authenticated -->
-        <a class="pill dashboard" href="player-dashboard.html" data-nav="dashboard" style="display:none;">Dashboard</a>
-      </div>
+<div class="nav">
+<a href="index.html">Home</a>
+<a href="economy.html">Economy</a>
+<a href="faq.html">FAQ</a>
+<a href="economy-blueprint-mint.html">Blueprint Mint</a>
+<a href="transparency.html">Transparency</a>
+</div>
 
-      <!-- Wallet chip -->
-      <div id="walletChip" class="walletChip">
-        <span id="walletChipText" class="chip"></span>
-        <button class="btnTiny" onclick="disconnectWallet()">Disconnect</button>
-      </div>
-    </div>
+<!-- HERO LOGO -->
 
-    <!-- HERO BANNER -->
-    <div class="heroBanner">
-      <img src="assets/hero-city.png" alt="MydEmpire City" />
-      <div class="heroOverlay">
-        <div class="heroContent">
-          <div class="brandLogo">
-            <img src="assets/logo-name.png" alt="MydEmpire" />
-          </div>
+<div class="hero">
+<img src="assets/logo-name.png">
+</div>
 
-          <h2 class="heroTitle">PRE-GENESIS Pack Sale (Invite-Only Test)</h2>
-          <p class="heroText">
-            A vibrant strategy economy game on Hive 🏛️⚙️ — buy sealed packs, open them on your Dashboard, and build factories for fun.
-            All important actions stay transparent on-chain.
-          </p>
+<!-- INTRO -->
 
-          <div class="heroBadges">
-            <span class="badge">🔐 Keychain Verified</span>
-            <span class="badge">📦 Sealed Packs</span>
-            <span class="badge">🧪 Closed Testing</span>
-            <span class="badge">🧾 Max 10 packs/wallet</span>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="intro">
 
-    <!-- MAIN GRID -->
-    <div class="heroGrid">
+<h2>PRE-GENESIS Pack Sale (Invite-Only Test)</h2>
 
-      <!-- LEFT: How it works -->
-      <div class="panel">
-        <div class="panelInner">
-          <div class="sectionTitle">How it works</div>
-          <div class="howGrid">
-            <div class="howCard">
-              <h3>1️⃣ Connect & Verify</h3>
-              <p>Connect Hive Keychain and verify your username (signature). This is real authentication.</p>
-            </div>
-            <div class="howCard">
-              <h3>2️⃣ Buy Sealed Packs</h3>
-              <p>Pre-Genesis price is <b>3 HIVE</b> per pack. Hard cap: <b>10 packs</b> per wallet.</p>
-            </div>
-            <div class="howCard">
-              <h3>3️⃣ Open on Dashboard</h3>
-              <p>Packs are sealed after purchase and will appear in <b>Dashboard → Inventory</b> for opening.</p>
-            </div>
-          </div>
+<p>
+A vibrant strategy economy game on Hive ⚙️🏛️.
+Buy sealed packs, open them in your dashboard,
+and build factories to grow your empire.
+</p>
 
-          <div class="divider"></div>
+<p>
+Max 10 packs per wallet · Price 3 HIVE
+</p>
 
-          <div style="color:rgba(11,18,36,0.72);font-size:13px;line-height:1.55;">
-            <b>Why this phase?</b> Pre-Genesis is a controlled live test to validate payments, minting, and UI stability before Genesis launch.
-          </div>
+</div>
 
-          <div class="sectionBanner">
-            <img src="assets/empire-sign.png" alt="Build Your Empire" />
-          </div>
+<!-- BUY PACK -->
 
-          <div style="color:rgba(11,18,36,0.72);font-size:13px;line-height:1.55;text-align:center;">
-            Build for excitement 🎮 — earning rules are transparent, but strategy and fun come first.
-          </div>
-        </div>
-      </div>
+<div class="buy-box">
 
-      <!-- RIGHT: Purchase Card -->
-      <div class="panel">
-        <div class="panelInner">
-          <div class="sectionTitle">Buy Pre-Genesis Packs</div>
+<button onclick="connectWallet()">Connect Wallet</button>
 
-          <div style="color:rgba(11,18,36,0.70);font-size:13px;line-height:1.5;">
-            Price: <b>3 HIVE</b> per pack · Wallet cap: <b>10</b> packs
-          </div>
+<p id="walletDisplay"></p>
 
-          <div class="divider"></div>
+<br>
 
-          <button id="connectBtn" class="btn btnPrimary" onclick="connectWallet()">Connect Wallet</button>
-          <p id="walletDisplay" style="margin:10px 0 0;color:rgba(11,18,36,0.70);font-size:13px;"></p>
+<input id="packCount" type="number" value="1" min="1" max="10">
 
-          <div class="divider"></div>
+<br><br>
 
-          <div class="grid2">
-            <div class="field">
-              <div class="label">Pack quantity</div>
-              <input class="input" type="number" id="packCount" value="1" min="1" max="10" />
-            </div>
+<button onclick="buyPack(document.getElementById('packCount').value)">
+Buy Packs
+</button>
 
-            <div class="field">
-              <div class="label">Action</div>
-              <button class="btn btnPrimary" onclick="buyPack(document.getElementById('packCount').value)">
-                Buy Packs
-              </button>
-            </div>
-          </div>
+<div id="status" style="margin-top:15px;">
+Ready
+</div>
 
-          <div id="status" class="status">Ready ✅</div>
+</div>
 
-          <div style="margin-top:12px;color:rgba(11,18,36,0.68);font-size:12px;line-height:1.45;">
-            🔐 Purchases always require Hive Keychain approval. If you reject in Keychain, nothing is sent.
-          </div>
-        </div>
-      </div>
-    </div>
+<!-- FACTORY GALLERY -->
 
-    <div class="foot">
-      MydEmpire — vibrant strategy on Hive · No hype, just fun + transparency 🧠✨
-    </div>
+<div class="factory-section">
 
-  </div>
+<h2>Industries of MydEmpire</h2>
 
-  <!-- Scripts -->
-  <script src="js/hive.js"></script>
-  <script src="js/nav-auth.js"></script>
-  <script src="js/home.js?v=1"></script>
+<div class="factory-grid">
+
+<div class="factory-card">
+<img src="assets/factories/food.png">
+<p>Food Industry</p>
+</div>
+
+<div class="factory-card">
+<img src="assets/factories/textile.png">
+<p>Textile Industry</p>
+</div>
+
+<div class="factory-card">
+<img src="assets/factories/pharma.png">
+<p>Pharma Industry</p>
+</div>
+
+<div class="factory-card">
+<img src="assets/factories/chemical.png">
+<p>Chemical Industry</p>
+</div>
+
+<div class="factory-card">
+<img src="assets/factories/supermarket.png">
+<p>Supermarket</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- SIGN IMAGE -->
+
+<div style="text-align:center;margin-top:30px;">
+
+<img src="assets/empire-sign.png" width="250">
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+MydEmpire — Strategy game on Hive
+
+</div>
+
+<!-- JS -->
+
+<script src="js/hive.js"></script>
+<script src="js/nav-auth.js"></script>
+<script src="js/home.js"></script>
+
 </body>
 </html>
-
-
