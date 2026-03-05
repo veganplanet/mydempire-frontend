@@ -71,13 +71,13 @@ function connectWallet() {
   window.hive_keychain.requestHandshake(function () {
     console.log("✅ Keychain handshake called");
 
-    // If Keychain supports requestGetAccounts, use it
+    // ✅ Best case: Keychain returns accounts automatically
     if (typeof window.hive_keychain.requestGetAccounts === "function") {
       window.hive_keychain.requestGetAccounts(function (res) {
         console.log("getAccounts:", res);
 
         if (!res || !res.success || !res.data || !res.data.length) {
-          alert("Failed to get accounts from Keychain ❌");
+          alert("Keychain did not return accounts ❌");
           setStatus("❌ Wallet connection failed.");
           return;
         }
@@ -91,20 +91,52 @@ function connectWallet() {
       return;
     }
 
-    // Fallback if requestGetAccounts not available
-    const typed = prompt("Keychain connected ✅\nEnter your Hive username (without @):");
+    // ✅ Fallback: Ask username BUT require Keychain signature popup
+    const typed = prompt("Enter your Hive username (without @):");
     if (!typed) {
       setStatus("❌ Wallet not selected.");
       return;
     }
 
-    username = typed.replace("@", "").trim();
-    localStorage.setItem("mde_username", username);
-    window.SELECTED_USERNAME = username;
-    renderWalletUI();
+    const u = typed.replace("@", "").trim();
+
+    if (typeof window.hive_keychain.requestSignBuffer !== "function") {
+      alert("Your Keychain version cannot sign messages (requestSignBuffer missing). Please update Keychain ❌");
+      setStatus("❌ Keychain update needed.");
+      return;
+    }
+
+    // Random challenge → proves the user approved via Keychain
+    const nonce = Math.random().toString(36).slice(2);
+    const challenge = `MYDEMPIRE_CONNECT:${u}:${Date.now()}:${nonce}`;
+
+    setStatus("Approve Keychain signature…");
+
+    // This MUST show a Keychain popup
+    window.hive_keychain.requestSignBuffer(
+      u,
+      challenge,
+      "Posting", // ✅ Safe: no funds, only auth proof
+      function (resp) {
+        console.log("signBuffer resp:", resp);
+
+        if (!resp || !resp.success) {
+          const msg = resp?.message || resp?.error || "Signature rejected/cancelled";
+          alert("❌ " + msg);
+          setStatus("❌ Connection cancelled.");
+          return;
+        }
+
+        // ✅ Authenticated connection
+        username = u;
+        localStorage.setItem("mde_username", username);
+        window.SELECTED_USERNAME = username;
+
+        renderWalletUI();
+      }
+    );
   });
 }
-
 function disconnectWallet() {
   localStorage.removeItem("mde_username");
   username = null;
