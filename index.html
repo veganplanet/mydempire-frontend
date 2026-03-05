@@ -1,240 +1,552 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MydEmpire — Pre Genesis</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MydEmpire — Pre Genesis</title>
 
-<style>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --ink:#0b1224;
+      --muted:rgba(11,18,36,.70);
 
-body{
-  margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  background:white;
-  color:#1e293b;
-}
+      --card:#ffffff;
+      --border:#e6e9ef;
+      --border2:#d7dce6;
 
-/* NAV */
+      --shadow: 0 18px 60px rgba(15, 23, 42, 0.10);
+      --shadow2: 0 10px 24px rgba(15, 23, 42, 0.08);
 
-.nav{
-  display:flex;
-  justify-content:center;
-  gap:14px;
-  padding:20px;
-}
+      --radius: 18px;
 
-.nav a{
-  text-decoration:none;
-  padding:10px 16px;
-  border-radius:20px;
-  background:#f1f5f9;
-  color:#1e293b;
-  font-weight:600;
-}
+      --green:#16a34a;
+      --green2:#0f8a3d;
+      --blue:#2563eb;
+      --chip:#f3f6fb;
+    }
 
-/* HERO */
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--ink);
+    }
 
-.hero{
-  text-align:center;
-  padding:30px 20px 10px;
-}
+    .wrap{ max-width: 1140px; margin: 0 auto; padding: 18px 16px 60px; }
 
-.hero img{
-  max-width:420px;
-}
+    /* ===== Top Nav ===== */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      padding: 10px 4px 14px;
+    }
+    .navPills{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: #f5f7fb;
+      border: 1px solid var(--border);
+      color: rgba(11,18,36,0.92);
+      text-decoration:none;
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      user-select:none;
+    }
+    .pill:hover{
+      transform: translateY(-1px);
+      background: #eef3ff;
+      border-color: var(--border2);
+    }
+    .pill.dashboard{
+      background: #eaf7ef;
+      border-color: rgba(22,163,74,0.25);
+      color: rgba(8, 60, 32, 0.95);
+      font-weight: 900;
+    }
 
-/* INTRO */
+    /* Wallet chip */
+    .walletChip{
+      display:none;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #f5f7fb;
+      border: 1px solid var(--border);
+    }
+    .chip{
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(11,18,36,0.06);
+      border: 1px solid rgba(11,18,36,0.10);
+      font-weight: 900;
+      font-size: 14px;
+      color: rgba(11,18,36,0.88);
+    }
+    .btnTiny{
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(239,68,68,0.22);
+      background: rgba(239,68,68,0.10);
+      color: rgba(11,18,36,0.92);
+      cursor:pointer;
+      font-weight: 950;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .btnTiny:hover{
+      transform: translateY(-1px);
+      border-color: rgba(239,68,68,0.34);
+      background: rgba(239,68,68,0.14);
+    }
 
-.intro{
-  text-align:center;
-  max-width:700px;
-  margin:auto;
-  padding:10px 20px 40px;
-  line-height:1.6;
-}
+    /* ===== Hero ===== */
+    .hero{
+      border-radius: 22px;
+      overflow:hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      background: #fff;
+    }
+    .heroImg{
+      width: 100%;
+      height: 340px;
+      object-fit: cover;
+      display:block;
+    }
+    @media (max-width: 720px){
+      .heroImg{ height: 240px; }
+    }
 
-/* BUY PANEL */
+    .heroBody{
+      padding: 18px 18px 0;
+    }
 
-.buy-box{
-  max-width:420px;
-  margin:0 auto 40px;
-  padding:25px;
-  border:1px solid #e2e8f0;
-  border-radius:10px;
-  text-align:center;
-}
+    .brandRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      flex-wrap:wrap;
+      margin-top: -52px;
+    }
 
-.buy-box button{
-  padding:12px 18px;
-  border:none;
-  background:#16a34a;
-  color:white;
-  border-radius:6px;
-  font-weight:bold;
-  cursor:pointer;
-}
+    /* logo on a clean card so it doesn't float weird */
+    .logoCard{
+      display:inline-flex;
+      align-items:center;
+      gap:12px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow2);
+    }
+    .logoCard img{
+      height: 56px;
+      display:block;
+    }
 
-.buy-box input{
-  padding:10px;
-  width:80px;
-  text-align:center;
-  margin-top:10px;
-}
+    .heroBadges{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: var(--chip);
+      border: 1px solid var(--border);
+      color: rgba(11,18,36,0.80);
+      font-weight: 800;
+      font-size: 13px;
+    }
 
-/* FACTORY GALLERY */
+    .heroText{
+      margin: 14px 0 0;
+      display:grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
+      align-items: start;
+      padding-bottom: 18px;
+    }
+    @media (max-width: 980px){
+      .heroText{ grid-template-columns: 1fr; }
+    }
 
-.factory-section{
-  text-align:center;
-  padding:40px 20px;
-}
+    .headline h1{
+      margin: 0;
+      font-size: 24px;
+      font-weight: 1000;
+      letter-spacing: .2px;
+      color: rgba(11,18,36,0.96);
+    }
+    .headline p{
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+      font-weight: 650;
+      max-width: 64ch;
+    }
 
-.factory-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:30px;
-  max-width:900px;
-  margin:auto;
-}
+    /* ===== Buy Card ===== */
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow2);
+      padding: 16px;
+    }
+    .cardTitle{
+      margin: 0;
+      font-size: 16px;
+      font-weight: 950;
+    }
+    .small{
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
 
-.factory-card img{
-  width:100%;
-}
+    .btn{
+      width:100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #f7fafc;
+      color: rgba(11,18,36,0.92);
+      cursor:pointer;
+      font-weight: 950;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      background: #eef3ff;
+      border-color: var(--border2);
+    }
+    .btnPrimary{
+      background: linear-gradient(180deg, #22c55e, #16a34a);
+      border-color: rgba(22,163,74,0.35);
+      color: white;
+    }
+    .btnPrimary:hover{
+      background: linear-gradient(180deg, #27d063, #139a45);
+      border-color: rgba(22,163,74,0.50);
+    }
 
-.factory-card p{
-  font-weight:bold;
-}
+    .buyGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    @media (max-width: 520px){
+      .buyGrid{ grid-template-columns: 1fr; }
+    }
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+    }
+    .label{
+      font-size: 12px;
+      color: rgba(11,18,36,0.70);
+      font-weight: 850;
+    }
+    .input{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 16px;
+      text-align:center;
+      outline:none;
+    }
+    .input:focus{
+      border-color: rgba(37,99,235,0.35);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+    .status{
+      margin-top: 12px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px dashed var(--border2);
+      background: #fbfcff;
+      min-height: 44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color: rgba(11,18,36,0.82);
+      font-weight: 750;
+    }
 
-/* FOOTER */
+    /* ===== Sections ===== */
+    .section{
+      margin-top: 26px;
+    }
+    .sectionHead{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      margin-bottom: 12px;
+    }
+    .sectionHead h2{
+      margin:0;
+      font-size: 18px;
+      font-weight: 1000;
+      letter-spacing: .2px;
+    }
+    .sectionHead p{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
 
-.footer{
-  text-align:center;
-  padding:30px;
-  color:#64748b;
-}
+    /* ===== Factory Gallery ===== */
+    .factoryGrid{
+      display:grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 1100px){
+      .factoryGrid{ grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 720px){
+      .factoryGrid{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 420px){
+      .factoryGrid{ grid-template-columns: 1fr; }
+    }
 
-</style>
+    .factoryCard{
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: var(--shadow2);
+      padding: 12px;
+      transition: transform .12s ease, border-color .12s ease;
+    }
+    .factoryCard:hover{
+      transform: translateY(-2px);
+      border-color: var(--border2);
+    }
+    .factoryImgWrap{
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid #eef1f7;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 10px;
+      height: 150px;
+      overflow:hidden;
+    }
+    .factoryImgWrap img{
+      max-height: 140px;
+      max-width: 100%;
+      height: auto;
+      width: auto;
+      display:block;
+    }
+    .factoryName{
+      margin: 10px 0 0;
+      font-weight: 950;
+      font-size: 14px;
+    }
+    .factoryHint{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 650;
+    }
+
+    /* ===== Divider badge ===== */
+    .signRow{
+      display:flex;
+      justify-content:center;
+      margin-top: 24px;
+    }
+    .signRow img{
+      height: 140px;
+      width: auto;
+      max-width: 100%;
+      display:block;
+    }
+
+    .foot{
+      margin-top: 22px;
+      text-align:center;
+      color: rgba(11,18,36,0.55);
+      font-size: 12px;
+      padding-bottom: 10px;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="wrap">
 
-<!-- NAV -->
+    <!-- TOP NAV -->
+    <div class="topbar">
+      <div class="navPills">
+        <a class="pill" href="index.html">Home</a>
+        <a class="pill" href="economy.html">Economy</a>
+        <a class="pill" href="faq.html">FAQ</a>
+        <a class="pill" href="economy-blueprint-mint.html">Blueprint Mint</a>
+        <a class="pill" href="transparency.html">Transparency</a>
 
-<div class="nav">
-<a href="index.html">Home</a>
-<a href="economy.html">Economy</a>
-<a href="faq.html">FAQ</a>
-<a href="economy-blueprint-mint.html">Blueprint Mint</a>
-<a href="transparency.html">Transparency</a>
-</div>
+        <!-- hidden until auth -->
+        <a class="pill dashboard" href="player-dashboard.html" data-nav="dashboard" style="display:none;">Dashboard</a>
+      </div>
 
-<!-- HERO LOGO -->
+      <div id="walletChip" class="walletChip">
+        <span id="walletChipText" class="chip"></span>
+        <button class="btnTiny" onclick="disconnectWallet()">Disconnect</button>
+      </div>
+    </div>
 
-<div class="hero">
-<img src="assets/logo-name.png">
-</div>
+    <!-- HERO -->
+    <div class="hero">
+      <img class="heroImg" src="assets/hero-city.png" alt="MydEmpire City" />
 
-<!-- INTRO -->
+      <div class="heroBody">
 
-<div class="intro">
+        <div class="brandRow">
+          <div class="logoCard">
+            <img src="assets/logo-name.png" alt="MydEmpire" />
+          </div>
 
-<h2>PRE-GENESIS Pack Sale (Invite-Only Test)</h2>
+          <div class="heroBadges">
+            <span class="badge">🔐 Keychain Verified</span>
+            <span class="badge">📦 Sealed Packs</span>
+            <span class="badge">🧪 Invite-Only Test</span>
+            <span class="badge">🧾 Max 10 packs/wallet</span>
+          </div>
+        </div>
 
-<p>
-A vibrant strategy economy game on Hive ⚙️🏛️.
-Buy sealed packs, open them in your dashboard,
-and build factories to grow your empire.
-</p>
+        <div class="heroText">
+          <div class="headline">
+            <h1>PRE-GENESIS Pack Sale (Closed Testing)</h1>
+            <p>
+              A vibrant strategy economy game on Hive 🏛️⚙️.
+              Buy sealed packs, open them on your Dashboard, and build factories for fun.
+              We keep all important actions transparent on-chain.
+            </p>
+          </div>
 
-<p>
-Max 10 packs per wallet · Price 3 HIVE
-</p>
+          <!-- BUY CARD -->
+          <div class="card">
+            <div class="cardTitle">Buy Pre-Genesis Packs</div>
+            <div class="small">Price: <b>3 HIVE</b> per pack · Wallet cap: <b>10</b> packs</div>
 
-</div>
+            <div style="margin-top:12px;">
+              <button id="connectBtn" class="btn btnPrimary" onclick="connectWallet()">Connect Wallet</button>
+              <p id="walletDisplay" style="margin:10px 0 0;color:rgba(11,18,36,0.70);font-size:13px;"></p>
+            </div>
 
-<!-- BUY PACK -->
+            <div class="buyGrid">
+              <div class="field">
+                <div class="label">Pack quantity</div>
+                <input class="input" type="number" id="packCount" value="1" min="1" max="10" />
+              </div>
+              <div class="field">
+                <div class="label">Action</div>
+                <button class="btn btnPrimary" onclick="buyPack(document.getElementById('packCount').value)">Buy Packs</button>
+              </div>
+            </div>
 
-<div class="buy-box">
+            <div id="status" class="status">Ready ✅</div>
 
-<button onclick="connectWallet()">Connect Wallet</button>
+            <div class="small" style="margin-top:10px;">
+              Packs stay <b>sealed</b> after purchase and will appear in <b>Dashboard → Inventory</b> for opening.
+            </div>
+          </div>
+        </div>
 
-<p id="walletDisplay"></p>
+      </div>
+    </div>
 
-<br>
+    <!-- FACTORY GALLERY -->
+    <div class="section">
+      <div class="sectionHead">
+        <div>
+          <h2>Factory Showcase</h2>
+          <p>Your final front-view building designs (clean, vibrant, non-polluting).</p>
+        </div>
+      </div>
 
-<input id="packCount" type="number" value="1" min="1" max="10">
+      <div class="factoryGrid">
+        <div class="factoryCard">
+          <div class="factoryImgWrap"><img src="assets/food-building.png" alt="Food Industry" /></div>
+          <div class="factoryName">🌾 Food Industry</div>
+          <div class="factoryHint">Essential production — bold, clean, and strategic.</div>
+        </div>
 
-<br><br>
+        <div class="factoryCard">
+          <div class="factoryImgWrap"><img src="assets/textile-building.png" alt="Textile Industry" /></div>
+          <div class="factoryName">🧵 Textile Industry</div>
+          <div class="factoryHint">Vibrant modern factory with signature purple theme.</div>
+        </div>
 
-<button onclick="buyPack(document.getElementById('packCount').value)">
-Buy Packs
-</button>
+        <div class="factoryCard">
+          <div class="factoryImgWrap"><img src="assets/pharma-building.png" alt="Pharma Industry" /></div>
+          <div class="factoryName">💊 Pharma Industry</div>
+          <div class="factoryHint">Clean Rx-grade production — futuristic and safe.</div>
+        </div>
 
-<div id="status" style="margin-top:15px;">
-Ready
-</div>
+        <div class="factoryCard">
+          <div class="factoryImgWrap"><img src="assets/chemical-building.png" alt="Chemical Industry" /></div>
+          <div class="factoryName">🧪 Chemical Industry</div>
+          <div class="factoryHint">Colorful tanks & pipes — powerful, clean aesthetic.</div>
+        </div>
 
-</div>
+        <div class="factoryCard">
+          <div class="factoryImgWrap"><img src="assets/supermarket-building.png" alt="Supermarket" /></div>
+          <div class="factoryName">🛒 Supermarket</div>
+          <div class="factoryHint">Modern retail hub — clean signage, bold colors.</div>
+        </div>
+      </div>
 
-<!-- FACTORY GALLERY -->
+      <div class="signRow">
+        <img src="assets/empire-sign.png" alt="MydEmpire" />
+      </div>
 
-<div class="factory-section">
+      <div class="foot">
+        MydEmpire — No hype, just strategy + fun 🎮 · Purchases always require Hive Keychain approval 🔐
+      </div>
+    </div>
 
-<h2>Industries of MydEmpire</h2>
+  </div>
 
-<div class="factory-grid">
-
-<div class="factory-card">
-<img src="assets/food-building.png">
-<p>Food Industry</p>
-</div>
-
-<div class="factory-card">
-<img src="assets/textile-building.png">
-<p>Textile Industry</p>
-</div>
-
-<div class="factory-card">
-<img src="assets/pharma-building.png">
-<p>Pharma Industry</p>
-</div>
-
-<div class="factory-card">
-<img src="assets/chemical-building.png">
-<p>Chemical Industry</p>
-</div>
-
-<div class="factory-card">
-<img src="assets/supermarket-building.png">
-<p>Supermarket</p>
-</div>
-
-</div>
-
-</div>
-
-<!-- SIGN IMAGE -->
-
-<div style="text-align:center;margin-top:30px;">
-
-<img src="assets/empire-sign.png" width="250">
-
-</div>
-
-<!-- FOOTER -->
-
-<div class="footer">
-
-MydEmpire — Strategy game on Hive
-
-</div>
-
-<!-- JS -->
-
-<script src="js/hive.js"></script>
-<script src="js/nav-auth.js"></script>
-<script src="js/home.js"></script>
-
+  <!-- Scripts -->
+  <script src="js/hive.js"></script>
+  <script src="js/nav-auth.js"></script>
+  <script src="js/home.js?v=1"></script>
 </body>
 </html>
-
