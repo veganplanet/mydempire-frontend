@@ -122,194 +122,51 @@
       background: rgba(239,68,68,0.14);
     }
 
-    /* ===== Hero ===== */
-    .hero{
-      border-radius: 22px;
-      overflow:hidden;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      background: #fff;
-    }
-    .heroImg{
-      width: 100%;
-      height: 340px;
-      object-fit: cover;
-      display:block;
-    }
-    @media (max-width: 720px){
-      .heroImg{ height: 240px; }
-    }
+    <!-- HERO (NEW - FACTORY SKYLINE) -->
+<section class="heroSky">
 
-    .heroBody{
-      padding: 18px 18px 0;
-    }
+  <div class="heroText">
+    <h1 class="heroTitle">MydEmpire</h1>
+    <p class="heroSub">
+      A Web3 strategy economy on Hive 🏛️⚙️ — build factories, grow EP, and play for fun.
+    </p>
 
-    .brandRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 14px;
-      flex-wrap:wrap;
-      margin-top: -52px;
-    }
+    <div class="heroPills">
+      <span class="pillTag">🔐 Keychain</span>
+      <span class="pillTag">📦 Sealed Packs</span>
+      <span class="pillTag">🧪 Invite-Only Test</span>
+      <span class="pillTag">🧾 Max 10 packs/wallet</span>
+    </div>
+  </div>
 
-    /* logo on a clean card so it doesn't float weird */
-    .logoCard{
-      display:inline-flex;
-      align-items:center;
-      gap:12px;
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: #fff;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow2);
-    }
-   .logoCard img{
-  height:70px;
-  width:auto;
-}
-    }
+  <div class="factoryRow">
+    <div class="factoryItem">
+      <img src="assets/food-building.png" alt="Food Industry">
+      <div class="factoryLabel">Food</div>
+    </div>
 
-    .heroBadges{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 9px 12px;
-      border-radius: 999px;
-      background: var(--chip);
-      border: 1px solid var(--border);
-      color: rgba(11,18,36,0.80);
-      font-weight: 800;
-      font-size: 13px;
-    }
+    <div class="factoryItem">
+      <img src="assets/textile-building.png" alt="Textile Industry">
+      <div class="factoryLabel">Textile</div>
+    </div>
 
-    .heroText{
-      margin: 14px 0 0;
-      display:grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 16px;
-      align-items: start;
-      padding-bottom: 18px;
-    }
-    @media (max-width: 980px){
-      .heroText{ grid-template-columns: 1fr; }
-    }
+    <div class="factoryItem">
+      <img src="assets/pharma-building.png" alt="Pharma Industry">
+      <div class="factoryLabel">Pharma</div>
+    </div>
 
-    .headline h1{
-      margin: 0;
-      font-size: 24px;
-      font-weight: 1000;
-      letter-spacing: .2px;
-      color: rgba(11,18,36,0.96);
-    }
-    .headline p{
-      margin: 10px 0 0;
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 14px;
-      font-weight: 650;
-      max-width: 64ch;
-    }
+    <div class="factoryItem">
+      <img src="assets/chemical-building.png" alt="Chemical Industry">
+      <div class="factoryLabel">Chemical</div>
+    </div>
 
-    /* ===== Buy Card ===== */
-    .card{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: var(--shadow2);
-      padding: 16px;
-    }
-    .cardTitle{
-      margin: 0;
-      font-size: 16px;
-      font-weight: 950;
-    }
-    .small{
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
+    <div class="factoryItem">
+      <img src="assets/supermarket-building.png" alt="Supermarket">
+      <div class="factoryLabel">Supermarket</div>
+    </div>
+  </div>
 
-    .btn{
-      width:100%;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: #f7fafc;
-      color: rgba(11,18,36,0.92);
-      cursor:pointer;
-      font-weight: 950;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-    }
-    .btn:hover{
-      transform: translateY(-1px);
-      background: #eef3ff;
-      border-color: var(--border2);
-    }
-    .btnPrimary{
-      background: linear-gradient(180deg, #22c55e, #16a34a);
-      border-color: rgba(22,163,74,0.35);
-      color: white;
-    }
-    .btnPrimary:hover{
-      background: linear-gradient(180deg, #27d063, #139a45);
-      border-color: rgba(22,163,74,0.50);
-    }
-
-    .buyGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 12px;
-    }
-    @media (max-width: 520px){
-      .buyGrid{ grid-template-columns: 1fr; }
-    }
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-    }
-    .label{
-      font-size: 12px;
-      color: rgba(11,18,36,0.70);
-      font-weight: 850;
-    }
-    .input{
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: #fff;
-      font-size: 16px;
-      text-align:center;
-      outline:none;
-    }
-    .input:focus{
-      border-color: rgba(37,99,235,0.35);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
-    }
-    .status{
-      margin-top: 12px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px dashed var(--border2);
-      background: #fbfcff;
-      min-height: 44px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      color: rgba(11,18,36,0.82);
-      font-weight: 750;
-    }
-
+</section>
     /* ===== Sections ===== */
     .section{
       margin-top: 26px;
@@ -558,6 +415,7 @@
   <script src="js/home.js?v=1"></script>
 </body>
 </html>
+
 
 
 
