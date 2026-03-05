@@ -271,6 +271,102 @@
       font-size: 12px;
       padding-bottom: 10px;
     }
+
+    /* ===== HERO SKYLINE ===== */
+.heroSky{
+  margin: 14px auto 22px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid #e6e9ef;
+  background: linear-gradient(180deg, #eaf4ff 0%, #ffffff 70%);
+  padding: 54px 18px 26px;
+  text-align: center;
+}
+
+.heroText{
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.heroTitle{
+  margin: 0;
+  font-size: 52px;
+  font-weight: 1000;
+  letter-spacing: .2px;
+  color: #0b1224;
+}
+
+.heroSub{
+  margin: 10px 0 0;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.6;
+  color: rgba(11,18,36,.70);
+}
+
+.heroPills{
+  margin-top: 16px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.pillTag{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: #f5f7fb;
+  border: 1px solid #e6e9ef;
+  font-size: 13px;
+  font-weight: 850;
+  color: rgba(11,18,36,.82);
+}
+
+.factoryRow{
+  margin-top: 34px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  gap: 22px;
+  flex-wrap:wrap;
+}
+
+.factoryItem{
+  text-align:center;
+  width: 170px;
+}
+
+.factoryItem img{
+  width: 100%;
+  height: auto;
+  display:block;
+  filter: drop-shadow(0 16px 18px rgba(15,23,42,.16));
+  transition: transform .18s ease;
+}
+
+.factoryItem img:hover{
+  transform: translateY(-8px);
+}
+
+.factoryLabel{
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 950;
+  color: rgba(11,18,36,.84);
+}
+
+/* Responsive tuning */
+@media (max-width: 760px){
+  .heroTitle{ font-size: 40px; }
+  .factoryItem{ width: 160px; }
+}
+@media (max-width: 440px){
+  .heroTitle{ font-size: 34px; }
+  .factoryItem{ width: 180px; }
+}
   </style>
 </head>
 
@@ -415,6 +511,7 @@
   <script src="js/home.js?v=1"></script>
 </body>
 </html>
+
 
 
 
