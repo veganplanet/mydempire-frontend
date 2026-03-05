@@ -7,8 +7,64 @@
 
   <style>
 
+  /* ===== SLOT BAR (clean, non-decorative) ===== */
+
+.land-surface{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding-top: 52px;     /* space under badge */
+  padding-bottom: 22px;  /* space above strip */
+}
+
+.slot-bar{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:center;
+}
+
+.slot-pill{
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  border: 2px solid rgba(200,155,99,0.95);
+  background: #eee7dc;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.10);
+}
+
+/* filled slots = darker / more "owned" */
+.slot-pill.filled{
+  background: rgba(0,0,0,0.10);
+}
+
+/* optional: subtle dotted pattern for empty */
+.slot-pill.empty{
+  background: #eee7dc;
+}  
+.land-strip{
+  padding: 10px 14px 12px;
+}
+
+.land-strip-row{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.land-strip-matrix{
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.95;
+}
+
+.land-strip b{
+  color: #fff;
+}
+
 /* ===== LAND NFT (SCRATCH / CLEAN) ===== */
-=======
+
 
    
    /* ==== Land NFT – refined full-frame 3:4 card ==== */
@@ -17,6 +73,12 @@
   /* keep everything you already have */
   background: linear-gradient(180deg,#f8fafc 0%, #eef2f7 50%, #e2e8f0 100%);
 }
+
+.land-nft-shell{
+  position: relative;
+  overflow: hidden;   /* prevents any text peeking behind */
+}
+
 
 /* subtle glow inside (not a border) */
 .land-nft::before{
@@ -185,20 +247,23 @@
   right:0;
   bottom:0;
 
-  height: 92px;
+  height:92px;
 
-  background: var(--tier-color, #64748b);   /* same as border */
-
+  background: var(--tier-color, #64748b);
   color:#fff;
-  padding: 12px 16px 14px;
-  font-size: 12px;
-  font-weight: 800;
 
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
+  padding:14px 16px;
+  font-size:13px;
+  font-weight:700;
 
   letter-spacing:0.03em;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:4px;
+
+  z-index:5; /* keeps strip above surface */
 }
 
 /* ===== MINI BLUEPRINT CARDS (collection view) ===== */
@@ -933,6 +998,58 @@
 /* FINAL: Land NFT shell (single outer border) */
 const tierColor = LAND_TIER_COLORS_BY_KEY[landTierKey] || "#64748b";
 
+// ===== factory status counts =====
+const normalize = (s) => (s || "").toString().trim().toUpperCase();
+
+let activeCount = 0;
+let upgradingCount = 0;
+let inactiveCount = 0;
+
+for (const f of factories) {
+  const s = normalize(f.status);
+
+  if (s === "ACTIVE") {
+    activeCount++;
+  } else if (s === "UPGRADING" || s === "BUILDING") {
+    upgradingCount++;
+  } else {
+    inactiveCount++;
+  }
+}
+
+// ===== EP/day total for this land =====
+let landEP = 0;
+let landEP = 0;
+for (const f of factories) {
+  const s = (f.status || "").toUpperCase();
+  if (s === "ACTIVE" && typeof f.factoryEP === "number") {
+    landEP += f.factoryEP;
+  }
+}
+const landEPText = landEP > 0 ? landEP.toFixed(2) : "0";
+const landEPText = landEP > 0 ? landEP.toFixed(2) : "0";
+
+// ===== days info (safe: based on last_claimed_at if present) =====
+function daysAgo(dateStr){
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return null;
+  const diff = (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24);
+  if (diff < 0) return 0;
+  return diff;
+}
+
+let oldestClaim = null;
+for (const f of factories) {
+  const da = daysAgo(f.last_claimed_at);
+  if (da === null) continue;
+  if (oldestClaim === null || da > oldestClaim) oldestClaim = da;
+}
+
+const daysInfoText = oldestClaim === null
+  ? "Claim info: not available yet"
+  : `Oldest unclaimed production: ~${oldestClaim.toFixed(1)}d ago`;
+
 landCard.innerHTML = `
   <div class="land-nft" style="--tier-color:${tierColor};">
     <div class="land-badge">${landTierKey}</div>
@@ -1001,11 +1118,121 @@ landCard.innerHTML = `
 
 /* slot look */
 .slot-box{
-  width: 82px;
-  height: 82px;
-  border-radius: 16px;
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
   border: 2px solid #c89b63;
   background: #eee7dc;
+}
+/* =========================================================
+   LAND ROW LAYOUT (CLEAN + MATRIX FIRST)
+   Paste at END of your CSS so it overrides old styles.
+   ========================================================= */
+
+.land-grid{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:14px !important;
+}
+
+/* One land = one row */
+.land-card-row{
+  border: 5px solid var(--tier-border, #64748b);
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 260px 1fr 360px; /* left | matrix | factories */
+  gap: 14px;
+  align-items: start;
+}
+
+/* Responsive: stack sections */
+@media (max-width: 980px){
+  .land-card-row{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Left column */
+.land-left{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.land-badge-row{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:48px;
+  height:28px;
+  border-radius: 999px;
+  color:#fff;
+  font-weight:900;
+  font-size:13px;
+}
+
+.land-title-row{
+  font-weight: 900;
+  font-size: 18px;
+  color:#0b1224;
+}
+
+.land-sub-row{
+  font-weight: 800;
+  color: rgba(11,18,36,0.70);
+  font-size: 13px;
+}
+
+/* Slot bar */
+.slot-bar-row{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.slot-pill{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  border:2px solid rgba(200,155,99,0.95);
+  background:#eee7dc;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.10);
+}
+
+.slot-pill.filled{
+  background: rgba(0,0,0,0.12);
+}
+
+/* Matrix column */
+.land-matrix-row{
+  background: rgba(0,0,0,0.03);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  padding: 12px;
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+  font-weight: 800;
+  color:#0b1224;
+}
+
+.land-matrix-row b{
+  font-weight: 900;
+}
+
+.matrix-line{
+  line-height:1.25;
+}
+
+/* Right column factories panel */
+.land-factories-col{
+  background: rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 14px;
+  padding: 10px;
 }
 
 `;  </style>
@@ -1114,7 +1341,7 @@ landCard.innerHTML = `
     <section class="section tab-panel" data-tab-panel="lands">
       <div class="section-header">
         <h2>Lands</h2>
-        <small>Grid of your Genesis lands with NFT placeholders</small>
+        <small>Your Genesis lands with slots, production, and factory status.</small>
       </div>
 
       <div class="land-grid" id="lands-container">
@@ -1312,40 +1539,49 @@ function apiUrl(path) {
 
     // ===== PLAYER SUMMARY =====
     async function loadDashboardSummary() {
-      try {
-        const res = await fetch(
-          apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/dashboard`)
-        );
-        if (!res.ok) throw new Error("HTTP " + res.status);
+  try {
+    const res = await fetch(
+      apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/dashboard`)
+    );
+    if (!res.ok) throw new Error("HTTP " + res.status);
 
-        const data = await res.json();
-        console.log("Dashboard summary:", data);
+    const data = await res.json();
+    console.log("Dashboard summary:", data);
 
-        const usernameFromApi = data.username || PLAYER_USERNAME;
-        document.getElementById("player-username-display").textContent = usernameFromApi;
-        document.getElementById("player-username-raw").textContent = PLAYER_USERNAME;
-        document.getElementById("last-updated").textContent = new Date().toLocaleString();
+    // Safe setter: avoids "Cannot set properties of null"
+    const setText = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    };
 
-        const emp = data.empBalance ?? 0;
-        document.getElementById("summary-emp-balance").textContent =
-          emp.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    const usernameFromApi = data.username || PLAYER_USERNAME;
+    setText("player-username-display", usernameFromApi);
+    setText("player-username-raw", PLAYER_USERNAME);
+    setText("last-updated", new Date().toLocaleString());
 
-        const totalFactories = data.totalFactories ?? 0;
-        document.getElementById("summary-factories-total").textContent = totalFactories;
-        document.getElementById("summary-factories-breakdown").textContent =
-          `Total factories: ${totalFactories}`;
+    const emp = data.empBalance ?? 0;
+    setText(
+      "summary-emp-balance",
+      emp.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })
+    );
 
-        const relicCount = data.relicCount ?? 0;
-        const activeRelicBoost = data.activeRelicBoost ?? 0;
-        document.getElementById("summary-relic-boost").textContent = activeRelicBoost + "%";
-        document.getElementById("summary-relic-count").textContent =
-          `Relics owned: ${relicCount} (max boost: 6%)`;
-        document.getElementById("relics-owned").textContent = relicCount;
-        document.getElementById("relics-boost").textContent = activeRelicBoost + "%";
-      } catch (err) {
-        console.error("Failed to load dashboard summary:", err);
-      }
-    }
+    const totalFactories = data.totalFactories ?? 0;
+    setText("summary-factories-total", totalFactories);
+    setText("summary-factories-breakdown", `Total factories: ${totalFactories}`);
+
+    const relicCount = data.relicCount ?? 0;
+    const activeRelicBoost = data.activeRelicBoost ?? 0;
+
+    setText("summary-relic-boost", activeRelicBoost + "%");
+    setText("summary-relic-count", `Relics owned: ${relicCount} (max boost: 6%)`);
+
+    // These two IDs may not exist in your HTML yet — now it's safe
+    setText("relics-owned", relicCount);
+    setText("relics-boost", activeRelicBoost + "%");
+  } catch (err) {
+    console.error("Failed to load dashboard summary:", err);
+  }
+}
 
     // ===== EMPIRE OVERVIEW =====
     async function loadEmpireOverview() {
@@ -1370,6 +1606,7 @@ function apiUrl(path) {
         allFactoriesFlat = [];
         for (const land of lands) {
           const factories = land.factories || [];
+          console.log("STATUS DEBUG (land", land.land_id || "", "):", factories.map(f => f.status));
           for (const f of factories) {
             allFactoriesFlat.push({
               ...f,
@@ -1407,7 +1644,6 @@ function apiUrl(path) {
         renderConstructionTab();
       } catch (err) {
         console.error("Failed to load empire overview:", err);
-        console.log("RAW land_tier value:", land.land_tier);
         errEl.textContent =
           "Failed to load lands/factories from /player/:username/empire-overview.";
         errEl.style.display = "block";
@@ -1416,153 +1652,202 @@ function apiUrl(path) {
       }
     }
 
-    function renderLandsTab() {
-      const landsContainer = document.getElementById("lands-container");
-      landsContainer.innerHTML = "";
+  function renderLandsTab() {
+  const landsContainer = document.getElementById("lands-container");
+  landsContainer.innerHTML = "";
 
-      if (!empireLands.length) {
-        landsContainer.innerHTML =
-          '<p class="status-text">You don\'t own any lands yet. Buy and open packs to unlock lands.</p>';
-        return;
-      }
+  if (!empireLands || !empireLands.length) {
+    landsContainer.innerHTML =
+      '<p class="status-text">You don\'t own any lands yet. Buy and open packs to unlock lands.</p>';
+    return;
+  }
 
-for (const land of empireLands) {
-  const tier = land.land_tier;
-  const factories = land.factories || [];
-  const usedSlots = factories.length;
-  const totalSlots = landSlotCount(tier);
+  const normalize = (s) => (s || "").toString().trim().toUpperCase();
 
-  const landCard = document.createElement("div");
-  landCard.className = "land-card";
+  // Safe days helper (does NOT crash if date missing)
+  const safeDaysAgo = (dateStr) => {
+    if (!dateStr) return null;
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return null;
+    const diff = (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24);
+    return diff < 0 ? 0 : diff;
+  };
 
-  // --- tier visuals + labels ---
-  
+  for (let idx = 0; idx < empireLands.length; idx++) {
+    const land = empireLands[idx];
 
-const rawTier = land.land_tier; // original value from backend
+    const factories = land.factories || [];
+    const rawTier = land.land_tier;
 
-let landTierKey = "L1"; // default
+    // tier key
+    let landTierKey = "L1";
+    if (rawTier === 1 || rawTier === "1") landTierKey = "L1";
+    else if (rawTier === 2 || rawTier === "2") landTierKey = "L2";
+    else if (rawTier === 3 || rawTier === "3") landTierKey = "L3";
+    else if (typeof rawTier === "string" && rawTier.toUpperCase().startsWith("L")) landTierKey = rawTier.toUpperCase();
 
-if (rawTier === 1 || rawTier === "1") {
-  landTierKey = "L1";
-} else if (rawTier === 2 || rawTier === "2") {
-  landTierKey = "L2";
-} else if (rawTier === 3 || rawTier === "3") {
-  landTierKey = "L3";
-} else if (typeof rawTier === "string" && rawTier.toUpperCase().startsWith("L")) {
-  landTierKey = rawTier.toUpperCase();
-}
-const borderColor = LAND_TIER_COLORS_BY_KEY[landTierKey] || "#64748b";
-  landCard.style.setProperty("--tier-border", borderColor);
+    const borderColor = (LAND_TIER_COLORS_BY_KEY && LAND_TIER_COLORS_BY_KEY[landTierKey]) || "#64748b";
 
+    const tierName = landTierLabel ? landTierLabel(rawTier) : landTierKey;
+    const shortLabel = (LAND_TIER_SHORT_LABEL && LAND_TIER_SHORT_LABEL[landTierKey]) || tierName || "Land";
 
-console.log("LAND tier raw:", rawTier, "→ key:", landTierKey, "→ color:", borderColor);
-  const tierName = landTierLabel(tier); // your existing helper
-  const shortLabel =
-    LAND_TIER_SHORT_LABEL[landTierKey] || tierName || "Frontier";
+    const slotsTotal = landSlotCount ? landSlotCount(rawTier) : (landTierKey === "L3" ? 3 : landTierKey === "L2" ? 2 : 1);
+    const slotsUsed = factories.length;
 
-  // --- slots & slot pads ---
-  const slotsTotal = totalSlots;
-  const slotsUsed = usedSlots;
+    // ===== status counts (strict + correct) =====
+    let activeCount = 0;
+    let upgradingCount = 0;
+    let buildingCount = 0;
+    let inactiveCount = 0;
 
-  let slotHTML = "";
+    for (const f of factories) {
+      const s = normalize(f.status);
 
-if (slotsTotal === 1) {
-  slotHTML = `
-    <div class="slot-grid one">
-      <div class="slot-box"></div>
-    </div>
-  `;
-} else if (slotsTotal === 2) {
-  slotHTML = `
-    <div class="slot-grid two">
-      <div class="slot-box"></div>
-      <div class="slot-box"></div>
-    </div>
-  `;
-} else {
-  slotHTML = `
-    <div class="slot-grid three">
-      <div class="slot-box"></div>
-      <div class="slot-box"></div>
-      <div class="slot-box bottom"></div>
-    </div>
-  `;
-}
-
-  // --- NFT visual card ---
-console.log("LAND DEBUG:", land.land_tier, landTierKey, borderColor);
-
-  landCard.innerHTML = `
-    <div class="land-nft-shell" style="--tier-color:${borderColor};">
-     
-      <div class="land-badge" style="background:${borderColor};">
-        ${landTierKey}
-      </div>
-
-      <div class="land-surface">
-        ${slotHTML}
-      </div>
-
-      <div class="land-strip">
-        <div class="land-strip-row">
-          <span>${shortLabel} • GENESIS</span>
-          <span>Slots: ${slotsUsed}/${slotsTotal}</span>
-        </div>
-      </div>
-    </div>
-
-    
-  `;
-  // 👇 your factoriesList code continues here
-        const factoriesList = document.createElement("div");
-        factoriesList.className = "factories-list";
-
-        if (!factories.length) {
-          const emptyRow = document.createElement("div");
-          emptyRow.className = "factory-row";
-          emptyRow.innerHTML = `
-            <div class="factory-main">
-              <div class="factory-title">No factory built yet</div>
-              <div class="factory-sub">Use a blueprint to construct your first factory.</div>
-            </div>
-          `;
-          factoriesList.appendChild(emptyRow);
-        } else {
-          for (const f of factories) {
-            const row = document.createElement("div");
-            row.className = "factory-row";
-
-            const levelText = f.level || "";
-            const blueprintTier = f.blueprint_tier || "";
-            const status = f.status || "UNKNOWN";
-            const ep = typeof f.factoryEP === "number" ? f.factoryEP : null;
-            const statusCls = statusClass(status);
-
-            row.innerHTML = `
-              <div class="factory-main">
-                <div class="factory-title">
-                  Factory #${f.factory_id}
-                  <span class="factory-status-pill ${statusCls}">${status}</span>
-                </div>
-                <div class="factory-sub">
-                  Blueprint tier: ${blueprintTier || "?"} • Level: ${levelText || "?"}
-                </div>
-              </div>
-              <div class="factory-meta">
-                ${ep !== null ? ep.toFixed(2) + " EP/day" : ""}
-              </div>
-            `;
-
-            factoriesList.appendChild(row);
-          }
-        }
-
-        landCard.appendChild(factoriesList);
-        landsContainer.appendChild(landCard);
-      }
+      if (s === "ACTIVE") activeCount++;
+      else if (s === "UPGRADING") upgradingCount++;
+      else if (s === "BUILDING" || s === "CONSTRUCTING") buildingCount++;
+      else inactiveCount++;
     }
 
-    
+    // ===== land EP/day (ACTIVE only) =====
+    let landEP = 0;
+    for (const f of factories) {
+      const s = normalize(f.status);
+      if (s === "ACTIVE" && typeof f.factoryEP === "number") landEP += f.factoryEP;
+    }
+    const landEPText = landEP.toFixed(2);
+
+    // ===== days info =====
+    // ✅ Claim info should only consider ACTIVE factories
+let oldestClaimDays = null;
+
+for (const f of factories) {
+  const st = (f.status || "").toString().trim().toUpperCase();
+  if (st !== "ACTIVE") continue;
+
+  const da = safeDaysAgo(f.last_claimed_at);
+  if (da === null) continue;
+
+  if (oldestClaimDays === null || da > oldestClaimDays) {
+    oldestClaimDays = da;
+  }
+}
+
+const daysInfoText =
+  oldestClaimDays === null
+    ? "Claim info: not available yet"
+    : `Oldest unclaimed time: ~${oldestClaimDays.toFixed(1)}d`;
+
+    // ===== Build Land Row Card =====
+    const landCard = document.createElement("div");
+    landCard.className = "land-card-row";
+    landCard.style.setProperty("--tier-border", borderColor);
+
+    // Slot bar HTML
+    let slotBarHTML = "";
+    for (let i = 1; i <= slotsTotal; i++) {
+      slotBarHTML += `<div class="slot-pill ${i <= slotsUsed ? "filled" : "empty"}"></div>`;
+    }
+
+    // Matrix HTML (clean + compact)
+    landCard.innerHTML = `
+      <div class="land-left">
+        <div class="land-badge-row" style="background:${borderColor};">${landTierKey}</div>
+        <div class="land-title-row">${shortLabel}</div>
+        <div class="land-sub-row">GENESIS • Slots: <b>${slotsUsed}/${slotsTotal}</b></div>
+
+        <div class="slot-bar-row" aria-label="Slots ${slotsUsed}/${slotsTotal}">
+          ${slotBarHTML}
+        </div>
+      </div>
+
+      <div class="land-matrix-row">
+        <div class="matrix-line">Active: <b>${activeCount}</b> • Inactive: <b>${inactiveCount}</b></div>
+        <div class="matrix-line">Building: <b>${buildingCount}</b> • Upgrading: <b>${upgradingCount}</b></div>
+        <div class="matrix-line">Land EP/day: <b>${landEPText}</b></div>
+        <div class="matrix-line">${daysInfoText}</div>
+      </div>
+
+      <div class="land-factories-col" id="land-factories-${idx}">
+      </div>
+    `;
+
+    // ===== Factories list (right column) =====
+const factoriesList = document.createElement("div");
+factoriesList.className = "factories-list";
+
+if (!factories.length) {
+  const emptyRow = document.createElement("div");
+  emptyRow.className = "factory-row";
+  emptyRow.innerHTML = `
+    <div class="factory-main">
+      <div class="factory-title">No factory built yet</div>
+      <div class="factory-sub">Use a blueprint to construct your first factory.</div>
+    </div>
+  `;
+  factoriesList.appendChild(emptyRow);
+} else {
+  for (const f of factories) {
+    const row = document.createElement("div");
+    row.className = "factory-row";
+
+    // ✅ Normalize status
+    const st = (f.status || "UNKNOWN").toString().trim().toUpperCase();
+
+    // ✅ Robust blueprint tier fallback (fixes ? for most schemas)
+    const blueprintTier =
+      f.blueprint_tier ??
+      f.bp_tier ??
+      f.blueprintTier ??
+      f.blueprint ??
+      f.tier ??
+      f.blueprint_level ??
+      f.blueprintLevel ??
+      "?";
+
+    // ✅ Level fallback
+    const levelText = f.level ?? f.factory_level ?? "?";
+
+    // ✅ EP/day only if ACTIVE + number exists
+    const epRaw = f.factoryEP ?? f.ep ?? f.ep_per_day ?? f.production ?? null;
+const epNum = (typeof epRaw === "number") ? epRaw : null;
+const epText = (st === "ACTIVE" && epNum !== null) ? `${epNum.toFixed(2)} EP/day` : "—";
+
+    // ✅ Status pill class based on st (NOT undefined "status")
+    const statusCls = (typeof statusClass === "function") ? statusClass(st) : "";
+
+    // ✅ Claim text ONLY for ACTIVE factories
+    let claimText = "";
+    if (st === "ACTIVE") {
+      const claimDays = safeDaysAgo(f.last_claimed_at);
+      claimText = (claimDays === null) ? "" : ` • ${claimDays.toFixed(1)}d since claim`;
+    }
+
+    row.innerHTML = `
+      <div class="factory-main">
+        <div class="factory-title">
+          Factory #${f.factory_id ?? f.id ?? "?"}
+          <span class="factory-status-pill ${statusCls}">${st}</span>
+        </div>
+        <div class="factory-sub">
+          Blueprint tier: ${blueprintTier} • Level: ${levelText}${claimText}
+        </div>
+      </div>
+      <div class="factory-meta">
+        ${epText}
+      </div>
+    `;
+
+    factoriesList.appendChild(row);
+  }
+}
+
+    const rightCol = landCard.querySelector(`#land-factories-${idx}`);
+    if (rightCol) rightCol.appendChild(factoriesList);
+
+    landsContainer.appendChild(landCard);
+  }
+}  
 
     function renderConstructionTab() {
       const container = document.getElementById("construction-grid");
@@ -1798,6 +2083,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
   </script>
- <script src="nav-auth.js"></script> 
+  
 </body>
 </html>
