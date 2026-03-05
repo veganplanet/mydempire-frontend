@@ -7,303 +7,331 @@
 
   <style>
     :root{
-      --bg0:#070b14;
-      --bg1:#0b1224;
-      --card:#111c33;
-      --card2:#0f1a30;
-      --border: rgba(255,255,255,0.12);
-      --border2: rgba(255,255,255,0.18);
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.65);
-      --green:#22c55e;
-      --green2:#16a34a;
-      --red:#ef4444;
-      --shadow: 0 18px 60px rgba(0,0,0,0.45);
-      --shadow2: 0 12px 30px rgba(0,0,0,0.35);
+      --bgA:#f7fbff;
+      --bgB:#fff7fb;
+      --ink:#0b1224;
+      --muted:rgba(11,18,36,0.68);
+
+      --glass: rgba(255,255,255,0.62);
+      --glass2: rgba(255,255,255,0.78);
+      --border: rgba(10, 25, 50, 0.10);
+      --border2: rgba(10, 25, 50, 0.18);
+
+      --shadow: 0 18px 60px rgba(15, 23, 42, 0.14);
+      --shadow2: 0 10px 26px rgba(15, 23, 42, 0.10);
+
       --radius: 18px;
+
+      --green:#16a34a;
+      --blue:#2563eb;
+      --pink:#db2777;
+      --orange:#f97316;
+      --purple:#7c3aed;
+      --teal:#14b8a6;
     }
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
-
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color: var(--text);
+      color: var(--ink);
       background:
-        radial-gradient(900px 520px at 15% 5%, rgba(34,197,94,0.12), transparent 60%),
-        radial-gradient(900px 520px at 85% 0%, rgba(59,130,246,0.10), transparent 62%),
-        radial-gradient(900px 520px at 50% 100%, rgba(147,51,234,0.08), transparent 65%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      padding: 28px 18px 40px;
+        radial-gradient(1200px 600px at 12% 10%, rgba(20,184,166,0.24), transparent 60%),
+        radial-gradient(1100px 700px at 88% 12%, rgba(37,99,235,0.20), transparent 60%),
+        radial-gradient(1000px 700px at 50% 105%, rgba(219,39,119,0.14), transparent 60%),
+        linear-gradient(180deg, var(--bgA), var(--bgB));
+      padding: 26px 18px 44px;
     }
 
-    .wrap{
-      max-width: 1040px;
-      margin: 0 auto;
-    }
+    .wrap{ max-width: 1080px; margin:0 auto; }
 
     /* Top nav */
     .topbar{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:space-between;
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
       flex-wrap:wrap;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
     }
-    .navPills{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
+    .navPills{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 9px 13px;
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 10px 14px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.70);
       border: 1px solid var(--border);
-      color: rgba(255,255,255,0.9);
+      color: rgba(11,18,36,0.92);
       text-decoration:none;
       font-size: 14px;
       line-height: 1;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.06);
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
       user-select:none;
+      backdrop-filter: blur(10px);
     }
     .pill:hover{
       transform: translateY(-1px);
       border-color: var(--border2);
-      background: rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.86);
     }
     .pill.dashboard{
-      background: rgba(34,197,94,0.10);
-      border-color: rgba(34,197,94,0.35);
-      color: rgba(209,250,229,0.95);
+      background: linear-gradient(135deg, rgba(22,163,74,0.16), rgba(20,184,166,0.14));
+      border-color: rgba(22,163,74,0.22);
+      color: rgba(11,18,36,0.92);
+      font-weight: 800;
     }
 
+    /* Wallet chip */
     .walletChip{
       display:none;
       gap:10px;
       align-items:center;
       flex-wrap:wrap;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 22px rgba(15,23,42,0.06);
+      backdrop-filter: blur(10px);
     }
     .chip{
-      padding: 9px 12px;
+      padding: 8px 10px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      color: rgba(255,255,255,0.9);
+      background: rgba(11,18,36,0.06);
+      border: 1px solid rgba(11,18,36,0.10);
+      color: rgba(11,18,36,0.88);
       font-size: 14px;
+      font-weight: 800;
     }
     .btnTiny{
       padding: 9px 12px;
       border-radius: 12px;
-      border: 1px solid rgba(239,68,68,0.35);
+      border: 1px solid rgba(239,68,68,0.22);
       background: rgba(239,68,68,0.10);
-      color: rgba(255,255,255,0.92);
+      color: rgba(11,18,36,0.92);
       cursor:pointer;
-      font-weight: 700;
+      font-weight: 900;
       transition: transform .12s ease, background .12s ease, border-color .12s ease;
     }
     .btnTiny:hover{
       transform: translateY(-1px);
-      border-color: rgba(239,68,68,0.55);
+      border-color: rgba(239,68,68,0.34);
       background: rgba(239,68,68,0.14);
     }
 
     /* Hero */
     .hero{
       display:grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 18px;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
       align-items: stretch;
-      margin-top: 6px;
+      margin-top: 8px;
     }
-    @media (max-width: 900px){
+    @media (max-width: 940px){
       .hero{ grid-template-columns: 1fr; }
     }
 
     .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      background: linear-gradient(180deg, var(--glass), var(--glass2));
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      box-shadow: var(--shadow2);
+      box-shadow: var(--shadow);
       overflow:hidden;
+      backdrop-filter: blur(14px);
+      position: relative;
     }
-    .panelInner{
-      padding: 22px 22px 20px;
-    }
-
-    .brandRow{
-      display:flex;
-      align-items:center;
-      gap: 14px;
-      margin-bottom: 10px;
-    }
-    .logoMark{
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
+    .panel::before{
+      content:"";
+      position:absolute; inset:-2px;
       background:
-        radial-gradient(14px 14px at 30% 30%, rgba(255,255,255,0.20), transparent 60%),
-        linear-gradient(135deg, rgba(34,197,94,0.35), rgba(59,130,246,0.20));
-      border: 1px solid rgba(255,255,255,0.16);
-      box-shadow: 0 14px 40px rgba(0,0,0,0.45);
-      display:flex;
-      align-items:center;
-      justify-content:center;
+        radial-gradient(260px 180px at 12% 16%, rgba(20,184,166,0.28), transparent 60%),
+        radial-gradient(260px 180px at 88% 12%, rgba(37,99,235,0.18), transparent 60%),
+        radial-gradient(260px 180px at 60% 112%, rgba(219,39,119,0.16), transparent 60%);
+      pointer-events:none;
+      opacity: .7;
+    }
+    .panelInner{ padding: 22px 22px 20px; position: relative; }
+
+    .brandRow{ display:flex; align-items:center; gap:14px; margin-bottom: 10px; }
+    .logoMark{
+      width: 54px; height: 54px; border-radius: 18px;
+      background: linear-gradient(135deg, rgba(37,99,235,0.22), rgba(20,184,166,0.24));
+      border: 1px solid rgba(11,18,36,0.10);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.12);
+      display:flex; align-items:center; justify-content:center;
       font-size: 22px;
     }
-    .brandTitle{
-      font-size: 28px;
-      font-weight: 900;
-      letter-spacing: 0.3px;
-      margin:0;
-    }
-    .brandSub{
-      margin: 4px 0 0;
-      color: var(--muted);
+    .brandTitle{ font-size: 30px; font-weight: 950; margin:0; letter-spacing: 0.2px; }
+    .brandSub{ margin: 4px 0 0; color: var(--muted); font-size: 14px; font-weight: 650; }
+
+    .heroText{
+      margin:12px 0 0;
+      color: rgba(11,18,36,0.74);
+      line-height: 1.6;
       font-size: 14px;
     }
 
-    .tagRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top: 14px;
-    }
+    .tagRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
     .tag{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding: 8px 10px;
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 9px 11px;
       border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(11,18,36,0.10);
+      background: rgba(255,255,255,0.62);
       font-size: 13px;
-      color: rgba(255,255,255,0.78);
+      color: rgba(11,18,36,0.78);
+      font-weight: 700;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.06);
     }
 
     /* Purchase card */
-    .buyHeader{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 12px;
-    }
-    .buyTitle{
-      margin:0;
-      font-size: 18px;
-      font-weight: 850;
-    }
-    .buyNote{
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.4;
-    }
+    .buyHeader{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom: 12px; }
+    .buyTitle{ margin:0; font-size: 18px; font-weight: 950; }
+    .buyNote{ margin: 6px 0 0; color: rgba(11,18,36,0.68); font-size: 13px; line-height: 1.4; }
 
-    .divider{
-      height: 1px;
-      background: rgba(255,255,255,0.10);
-      margin: 16px 0;
-    }
+    .divider{ height: 1px; background: rgba(11,18,36,0.10); margin: 16px 0; }
 
     .btn{
       padding: 12px 14px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.05);
-      color: rgba(255,255,255,0.92);
+      border: 1px solid rgba(11,18,36,0.12);
+      background: rgba(255,255,255,0.72);
+      color: rgba(11,18,36,0.92);
       cursor:pointer;
-      font-weight: 850;
+      font-weight: 950;
       transition: transform .12s ease, background .12s ease, border-color .12s ease;
       width: 100%;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.08);
+      backdrop-filter: blur(12px);
     }
     .btn:hover{
       transform: translateY(-1px);
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.86);
+      border-color: rgba(11,18,36,0.18);
     }
     .btnPrimary{
-      background: rgba(34,197,94,0.16);
-      border-color: rgba(34,197,94,0.40);
-      color: rgba(209,250,229,0.98);
+      background: linear-gradient(135deg, rgba(22,163,74,0.22), rgba(20,184,166,0.22));
+      border-color: rgba(22,163,74,0.26);
     }
     .btnPrimary:hover{
-      background: rgba(34,197,94,0.20);
-      border-color: rgba(34,197,94,0.55);
+      background: linear-gradient(135deg, rgba(22,163,74,0.26), rgba(20,184,166,0.26));
+      border-color: rgba(22,163,74,0.34);
     }
 
-    .grid2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    @media (max-width: 900px){
-      .grid2{ grid-template-columns: 1fr; }
-    }
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 940px){ .grid2{ grid-template-columns: 1fr; } }
 
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap: 8px;
-      align-items:stretch;
-      text-align:left;
-    }
-    .label{
-      font-size: 12px;
-      color: rgba(255,255,255,0.70);
-      letter-spacing: 0.2px;
-    }
+    .field{ display:flex; flex-direction:column; gap: 8px; align-items:stretch; text-align:left; }
+    .label{ font-size: 12px; color: rgba(11,18,36,0.68); letter-spacing: 0.2px; font-weight: 750; }
+
     .input{
       padding: 12px 12px;
       border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,0.18);
-      color: rgba(255,255,255,0.92);
+      border: 1px solid rgba(11,18,36,0.12);
+      background: rgba(255,255,255,0.75);
+      color: rgba(11,18,36,0.92);
       font-size: 16px;
       outline:none;
       text-align:center;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.06);
+      backdrop-filter: blur(12px);
     }
     .input:focus{
-      border-color: rgba(59,130,246,0.55);
-      box-shadow: 0 0 0 3px rgba(59,130,246,0.16);
+      border-color: rgba(37,99,235,0.32);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.14);
     }
 
     .status{
       margin-top: 14px;
       padding: 12px 12px;
       border-radius: 14px;
-      border: 1px dashed rgba(255,255,255,0.20);
-      background: rgba(0,0,0,0.18);
-      color: rgba(255,255,255,0.85);
+      border: 1px dashed rgba(11,18,36,0.18);
+      background: rgba(255,255,255,0.68);
+      color: rgba(11,18,36,0.86);
       min-height: 44px;
       display:flex;
       align-items:center;
       justify-content:center;
       text-align:center;
       line-height: 1.3;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.06);
+      backdrop-filter: blur(12px);
     }
 
+    /* Factory gallery */
+    .sectionTitle{
+      margin: 22px 0 10px;
+      font-size: 18px;
+      font-weight: 950;
+      color: rgba(11,18,36,0.92);
+    }
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+    @media (max-width: 980px){
+      .gallery{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 520px){
+      .gallery{ grid-template-columns: 1fr; }
+    }
+    .factoryCard{
+      border-radius: 16px;
+      border: 1px solid rgba(11,18,36,0.10);
+      background: rgba(255,255,255,0.72);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+      backdrop-filter: blur(12px);
+      transition: transform .12s ease, border-color .12s ease;
+    }
+    .factoryCard:hover{
+      transform: translateY(-2px);
+      border-color: rgba(11,18,36,0.16);
+    }
+    .factoryImg{
+      width:100%;
+      height: 150px;
+      object-fit: cover;
+      display:block;
+      background: linear-gradient(135deg, rgba(37,99,235,0.10), rgba(20,184,166,0.10));
+    }
+    .factoryMeta{ padding: 12px 12px 12px; }
+    .factoryName{ margin:0; font-weight: 950; font-size: 14px; }
+    .factoryDesc{ margin:6px 0 0; color: rgba(11,18,36,0.66); font-size: 12px; line-height:1.45; }
+
+    .howGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+    @media (max-width: 980px){ .howGrid{ grid-template-columns: 1fr; } }
+    .howCard{
+      border-radius: 16px;
+      border: 1px solid rgba(11,18,36,0.10);
+      background: rgba(255,255,255,0.72);
+      box-shadow: var(--shadow2);
+      padding: 14px;
+      backdrop-filter: blur(12px);
+    }
+    .howCard h3{ margin:0; font-size: 14px; font-weight: 950; }
+    .howCard p{ margin:8px 0 0; color: rgba(11,18,36,0.70); font-size: 13px; line-height: 1.5; }
+
     .foot{
-      margin-top: 22px;
-      color: rgba(255,255,255,0.55);
+      margin-top: 18px;
+      color: rgba(11,18,36,0.62);
       font-size: 12px;
       text-align:center;
     }
-    .foot a{ color: rgba(255,255,255,0.72); }
   </style>
 </head>
 
 <body>
   <div class="wrap">
 
-    <!-- ✅ Top Nav -->
+    <!-- Top Nav -->
     <div class="topbar">
       <div class="navPills">
         <a class="pill" href="index.html">Home</a>
@@ -312,11 +340,10 @@
         <a class="pill" href="economy-blueprint-mint.html">Blueprint Mint</a>
         <a class="pill" href="transparency.html">Transparency</a>
 
-        <!-- Dashboard hidden until login -->
         <a class="pill dashboard" href="player-dashboard.html" data-nav="dashboard" style="display:none;">Dashboard</a>
       </div>
 
-      <!-- Wallet chip (shows after connect) -->
+      <!-- Wallet chip -->
       <div id="walletChip" class="walletChip">
         <span id="walletChipText" class="chip"></span>
         <button class="btnTiny" onclick="disconnectWallet()">Disconnect</button>
@@ -325,43 +352,54 @@
 
     <!-- HERO -->
     <div class="hero">
-
-      <!-- Left: story/intro -->
+      <!-- Left -->
       <div class="panel">
         <div class="panelInner">
           <div class="brandRow">
             <div class="logoMark">🏛️</div>
             <div>
               <h1 class="brandTitle">MYDEMPIRE</h1>
-              <div class="brandSub">PRE-GENESIS PACK SALE — closed testing phase</div>
+              <div class="brandSub">PRE-GENESIS — vibrant closed testing phase (invite-only)</div>
             </div>
           </div>
 
-          <p style="margin:12px 0 0;color:var(--muted);line-height:1.55;">
-            Build your empire for fun 🧠⚙️. Buy packs, open them later to receive assets, and grow strategically.
-            Rewards and on-chain actions are always transparent.
+          <p class="heroText">
+            Build your empire for fun 🧠⚙️ — choose industries, grow strategically, and keep everything transparent on-chain.
+            This phase is focused on stability and smooth UX.
           </p>
 
           <div class="tagRow">
             <span class="tag">🧪 Invite-only test</span>
-            <span class="tag">🔐 Hive Keychain</span>
+            <span class="tag">🔐 Keychain verified</span>
             <span class="tag">📦 Sealed packs</span>
-            <span class="tag">🧾 Clean on-chain logs</span>
+            <span class="tag">🧾 Max 10 packs/wallet</span>
           </div>
 
-          <div class="divider"></div>
+          <div style="margin-top:14px;color:rgba(11,18,36,0.70);font-size:13px;line-height:1.55;">
+            <b>Quick note:</b> Packs stay sealed after purchase and will appear inside <b>Dashboard → Inventory</b> for opening.
+          </div>
 
-          <p style="margin:0;color:rgba(255,255,255,0.72);font-size:13px;line-height:1.5;">
-            <b>Note:</b> Pre-Genesis packs are for system validation and UI polishing.
-            Your Dashboard unlocks after wallet connection.
-          </p>
+          <div class="sectionTitle">How it works</div>
+          <div class="howGrid">
+            <div class="howCard">
+              <h3>1️⃣ Connect & verify</h3>
+              <p>Connect Hive Keychain and verify your username with a quick signed message.</p>
+            </div>
+            <div class="howCard">
+              <h3>2️⃣ Buy sealed packs</h3>
+              <p>Price is <b>3 HIVE</b> per pack. Pre-Genesis cap is <b>10 packs</b> per wallet.</p>
+            </div>
+            <div class="howCard">
+              <h3>3️⃣ Open on Dashboard</h3>
+              <p>Open packs later from your Inventory to receive assets and start building.</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Right: purchase card -->
+      <!-- Right: purchase -->
       <div class="panel">
         <div class="panelInner">
-
           <div class="buyHeader">
             <div>
               <h2 class="buyTitle">Buy Pre-Genesis Packs</h2>
@@ -369,15 +407,11 @@
             </div>
           </div>
 
-          <!-- ✅ Add id so JS can hide this after connect -->
           <button id="connectBtn" class="btn btnPrimary" onclick="connectWallet()">Connect Wallet</button>
-
-          <p id="walletDisplay" style="margin:10px 0 0;color:rgba(255,255,255,0.70);font-size:13px;"></p>
+          <p id="walletDisplay" style="margin:10px 0 0;color:rgba(11,18,36,0.68);font-size:13px;"></p>
 
           <div class="divider"></div>
-<p style="margin:12px 0 0;color:rgba(255,255,255,0.72);font-size:13px;line-height:1.5;">
-  📦 Packs are <b>sealed</b> after purchase. You’ll see them inside <b>Dashboard → Inventory</b> and open them there.
-</p>
+
           <div class="grid2">
             <div class="field">
               <div class="label">Pack quantity</div>
@@ -391,14 +425,60 @@
           </div>
 
           <div id="status" class="status">Ready ✅</div>
+        </div>
+      </div>
+    </div>
 
+    <!-- Factory Gallery -->
+    <div class="sectionTitle">Your Industries (Factory Showcase)</div>
+    <div style="color:rgba(11,18,36,0.70);font-size:13px;line-height:1.5;">
+      A glimpse of the factories you’ll build (your final front-view designs) 👇
+    </div>
+
+    <div class="gallery">
+      <div class="factoryCard">
+        <img class="factoryImg" src="assets/factories/food.png" alt="Food Industry Factory">
+        <div class="factoryMeta">
+          <p class="factoryName">🌾 Food Industry</p>
+          <p class="factoryDesc">Bright, clean, barn-style production — strategy starts with essentials.</p>
         </div>
       </div>
 
+      <div class="factoryCard">
+        <img class="factoryImg" src="assets/factories/textile.png" alt="Textile Industry Factory">
+        <div class="factoryMeta">
+          <p class="factoryName">🧵 Textile Industry</p>
+          <p class="factoryDesc">Thread-driven growth with a vibrant modern look (purple theme).</p>
+        </div>
+      </div>
+
+      <div class="factoryCard">
+        <img class="factoryImg" src="assets/factories/pharma.png" alt="Pharma Industry Factory">
+        <div class="factoryMeta">
+          <p class="factoryName">💊 Pharma Industry</p>
+          <p class="factoryDesc">Clean Rx-grade production with non-polluting, futuristic design.</p>
+        </div>
+      </div>
+
+      <div class="factoryCard">
+        <img class="factoryImg" src="assets/factories/chemical.png" alt="Chemical Industry Factory">
+        <div class="factoryMeta">
+          <p class="factoryName">🧪 Chemical Industry</p>
+          <p class="factoryDesc">Colorful tanks & pipes — powerful production, clean aesthetic.</p>
+        </div>
+      </div>
+
+      <div class="factoryCard">
+        <img class="factoryImg" src="assets/factories/supermarket.png" alt="Supermarket Industry Factory">
+        <div class="factoryMeta">
+          <p class="factoryName">🛒 Supermarket</p>
+          <p class="factoryDesc">Modern retail hub — clean signage, high utility vibes.</p>
+        </div>
+      </div>
     </div>
 
     <div class="foot">
-      MydEmpire — Genesis Era economy · <span style="opacity:0.75;">No hype, just strategy 🎮</span>
+      MydEmpire — No hype, just strategy 🎮 · Purchases always require Hive Keychain approval 🔐
     </div>
 
   </div>
@@ -409,4 +489,3 @@
   <script src="js/home.js?v=1"></script>
 </body>
 </html>
-
