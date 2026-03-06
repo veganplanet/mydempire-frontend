@@ -510,7 +510,7 @@ dash.href="player-dashboard.html?user="+user;
 // BUY PACK
 // =======================
 
-function buyPack(qty) {
+async function buyPack(qty) {
 
   const username = localStorage.getItem("mde_username");
 
@@ -531,28 +531,84 @@ function buyPack(qty) {
     return;
   }
 
-  // PRE-GENESIS fixed price
-  const pricePerPack = 3;
-  const total = (pricePerPack * packs).toFixed(3);
+  try {
 
-  const memo = `MYDEMPIRE_PREGENESIS_${Date.now()}`;
+    // STEP 1 — create order (wallet cap check happens here)
+    const orderRes = await fetch("https://mydempire-backend-1.onrender.com/create-order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username,
+        packs: packs
+      })
+    });
 
-  window.hive_keychain.requestTransfer(
-    username,
-    "mydempiregain",
-    total,
-    memo,
-    "HIVE",
-    function (response) {
+    const orderData = await orderRes.json();
 
-      if (!response.success) {
-        alert("Transaction cancelled.");
-        return;
-      }
-
-      
+    if (!orderRes.ok || !orderData.success) {
+      alert(orderData.error || "Create order failed.");
+      return;
     }
-  );
+
+    const order = orderData.order;
+    const orderId = order.id;
+    const amount = Number(order.hive_amount).toFixed(3);
+    const memo = `MYDEMPIRE_ORDER_${orderId}`;
+
+    // STEP 2 — hive transfer
+    window.hive_keychain.requestTransfer(
+      username,
+      "mydempiregain",
+      amount,
+      memo,
+      "HIVE",
+      async function (response) {
+
+        if (!response || !response.success) {
+          alert("Transaction cancelled.");
+          return;
+        }
+
+        const txid =
+          response?.result?.id ||
+          response?.result?.trx_id ||
+          response?.id;
+
+        if (!txid) {
+          alert("Transaction completed but txid missing.");
+          return;
+        }
+
+        // STEP 3 — confirm payment (THIS MINTS THE PACK)
+        const confirmRes = await fetch("https://mydempire-backend-1.onrender.com/confirm-payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            orderId: orderId,
+            txid: txid
+          })
+        });
+
+        const confirmed = await confirmRes.json();
+
+        if (!confirmed.success) {
+          alert("Payment confirmation failed.");
+          return;
+        }
+
+        alert("✅ Packs minted successfully!");
+
+      }
+    );
+
+  } catch (err) {
+    console.error(err);
+    alert("Unexpected error.");
+  }
 
 }
 
@@ -563,4 +619,5 @@ function buyPack(qty) {
 </body>
 
 </html>
+
 
