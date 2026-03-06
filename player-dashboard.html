@@ -1267,8 +1267,48 @@ landCard.innerHTML = `
   color: #111827;
   font-size: 13px;
   cursor: pointer;
+}`;  
+
+  .pack-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
 }
-`;  </style>
+
+.pack-modal.hidden {
+  display: none;
+}
+
+.pack-modal-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.pack-modal-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 14px;
+  color: #111827;
+}
+
+.pack-modal-message {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #374151;
+  white-space: pre-line;
+  margin-bottom: 18px;
+}
+  </style>
 </head>
 <body data-requires-login="true">
   <div class="page">
@@ -1770,6 +1810,26 @@ async function loadUnopenedPacks(username) {
     if (totalEl) totalEl.textContent = "Error";
   }
 }
+function showPackOpenModal(message) {
+  const modal = document.getElementById("pack-open-modal");
+  const msg = document.getElementById("pack-open-modal-message");
+
+  if (!modal || !msg) {
+    console.error("Pack modal elements not found");
+    return;
+  }
+
+  msg.textContent = message;
+  modal.classList.remove("hidden");
+}
+
+function hidePackOpenModal() {
+  const modal = document.getElementById("pack-open-modal");
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+}
+    
 async function openSelectedPacks() {
   const countEl = document.getElementById("open-pack-count");
   const statusEl = document.getElementById("open-pack-status");
@@ -1809,11 +1869,12 @@ async function openSelectedPacks() {
     statusEl.textContent =
   `Opened ${data.opened} pack(s) • EMP gained: ${data.totalEmp}`;
 
-// PACK OPEN POPUP
-alert(`🎁 Pack Opened!
+   showPackOpenModal(
+  `🎁 Pack Opened!
 
 Opened ${data.opened} pack(s)
-EMP gained: ${data.totalEmp}`);
+EMP gained: ${data.totalEmp}`
+);
 
     await loadDashboardSummary();
     await loadEmpireOverview();
@@ -2374,6 +2435,17 @@ window.addEventListener("DOMContentLoaded", async () => {
       setActiveTab(btn.dataset.tab);
     });
   });
+  const modalCloseBtn = document.getElementById("pack-open-modal-close");
+if (modalCloseBtn) {
+  modalCloseBtn.addEventListener("click", hidePackOpenModal);
+}
+
+const modal = document.getElementById("pack-open-modal");
+if (modal) {
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) hidePackOpenModal();
+  });
+}
 const username = localStorage.getItem("hiveUsername");
   await loadUnopenedPacks(PLAYER_USERNAME);
 
@@ -2395,6 +2467,12 @@ if (openPackBtn) {
 });
 
   </script>
-  
+ <div id="pack-open-modal" class="pack-modal hidden">
+  <div class="pack-modal-card">
+    <div class="pack-modal-title">🎁 Pack Opened</div>
+    <div id="pack-open-modal-message" class="pack-modal-message"></div>
+    <button id="pack-open-modal-close" class="primary-button">Close</button>
+  </div>
+</div> 
 </body>
 </html>
