@@ -1727,25 +1727,23 @@ async function openPack(username, pack_id) {
       return;
     }
 
-    const rewards = data.rewards || {};
+   const drops = data.drops || [];
 
-    const land = rewards.land || {};
-    const blueprint = rewards.blueprint || {};
+let landTier = "?";
+let blueprintTier = "?";
+const empAmount = data.totalEmp || 0;
 
-    const landTier = land.tier || rewards.land_tier || "L1";
-    const landId = land.id || rewards.land_id || "?";
+if (drops.length > 0) {
+  landTier = drops[0].land || "?";
+  blueprintTier = drops[0].blueprint || "?";
+}
 
-    const blueprintTier = blueprint.tier || rewards.blueprint_tier || "FOOD_B1";
-    const blueprintId = blueprint.id || rewards.blueprint_id || "?";
-
-    const empAmount = rewards.emp || data.emp || 0;
-
-    alert(
-      `🎉 Pack Opened!\n\n` +
-      `LAND: ${landTier} (NFT #${landId})\n` +
-      `BLUEPRINT: ${blueprintTier} (NFT #${blueprintId})\n` +
-      `EMP: +${empAmount}`
-    );
+alert(
+  `🎉 Pack Opened!\n\n` +
+  `LAND: ${landTier}\n` +
+  `BLUEPRINT: ${blueprintTier}\n` +
+  `EMP: +${empAmount}`
+);
 
     // refresh sections
     await loadUnopenedPacks(username);
