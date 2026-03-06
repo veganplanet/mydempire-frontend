@@ -1702,7 +1702,7 @@ async function openPack(username, pack_id) {
   if (!confirm(`Open Pack #${pack_id}?`)) return;
 
   try {
-    const r = await fetch(`${API_BASE}/pack/open`, {
+    const r = await fetch(`${API_BASE}/open-pack`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
