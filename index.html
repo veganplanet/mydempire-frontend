@@ -358,6 +358,12 @@ placeholder="Enter your Hive username"
 <button id="connectBtn" class="btn btnPrimary" onclick="connectWallet()">
 Connect Wallet
 </button>
+  <button id="disconnectBtn"
+        class="btn"
+        onclick="disconnectWallet()"
+        style="display:none;">
+  Disconnect
+</button>
 
 <p id="walletDisplay" style="margin-top:10px;color:#6b7280;font-size:13px;font-weight:700;"></p>
 
@@ -481,6 +487,10 @@ return;
 localStorage.setItem("mde_username",username);
 
 document.getElementById("walletDisplay").textContent="Connected: @"+username;
+  const disconnectBtn = document.getElementById("disconnectBtn");
+if (disconnectBtn) {
+  disconnectBtn.style.display = "inline-flex";
+}
 
 const dash=document.getElementById("dashboardLink");
 dash.style.display="inline-flex";
@@ -611,7 +621,19 @@ async function buyPack(qty) {
   }
 
 }
+function disconnectWallet() {
 
+  localStorage.removeItem("mde_username");
+
+  const walletDisplay=document.getElementById("walletDisplay");
+  const dash=document.getElementById("dashboardLink");
+  const disconnectBtn=document.getElementById("disconnectBtn");
+
+  if(walletDisplay) walletDisplay.textContent="";
+  if(dash) dash.style.display="none";
+  if(disconnectBtn) disconnectBtn.style.display="none";
+
+}
 </script>
 
 
@@ -619,5 +641,6 @@ async function buyPack(qty) {
 </body>
 
 </html>
+
 
 
