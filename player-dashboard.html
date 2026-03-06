@@ -1702,32 +1702,45 @@ async function openPack(username, pack_id) {
   if (!confirm(`Open Pack #${pack_id}?`)) return;
 
   try {
-   const r = await fetch(`${API_BASE}/pack/open`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    username,
-    pack_id: packId
-  })
-});
+    const r = await fetch(`${API_BASE}/pack/open`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        pack_id: pack_id
+      })
+    });
 
-const text = await r.text();
-console.log("openPack raw response:", text);
+    const text = await r.text();
+    console.log("openPack raw response:", text);
 
-let data;
-try {
-  data = JSON.parse(text);
-} catch (e) {
-  alert("Open pack failed: server did not return JSON.");
-  return;
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      alert("Open pack failed: server did not return JSON.");
+      return;
+    }
+
+    if (!r.ok || !data.ok) {
+      alert(data.error || "Open pack failed.");
+      return;
+    }
+
+    // Simple reveal for now
+    alert("✅ Pack opened successfully!");
+
+    // refresh dashboard sections
+    await loadUnopenedPacks(username);
+    await loadBlueprints(username);
+    await loadEmpireOverview(username);
+    await loadDashboardSummary(username);
+
+  } catch (err) {
+    console.error("openPack error:", err);
+    alert("Unexpected error while opening pack.");
+  }
 }
-
-if (!r.ok || !data.ok) {
-  alert(data.error || "Open pack failed.");
-  return;
-}
-
-    // Simple reveal for now (later we replace with premium visuals)
     const rewards = data.rewards || {};
 
 const land = rewards.land || {};
