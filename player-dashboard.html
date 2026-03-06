@@ -1702,18 +1702,30 @@ async function openPack(username, pack_id) {
   if (!confirm(`Open Pack #${pack_id}?`)) return;
 
   try {
-    const r = await fetch(`${API_BASE}/pack/open`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, pack_id })
-    });
+   const r = await fetch(`${API_BASE}/pack/open`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    username,
+    pack_id: packId
+  })
+});
 
-    const data = await r.json();
+const text = await r.text();
+console.log("openPack raw response:", text);
 
-    if (!r.ok) {
-      alert(data.error || "Open pack failed");
-      return;
-    }
+let data;
+try {
+  data = JSON.parse(text);
+} catch (e) {
+  alert("Open pack failed: server did not return JSON.");
+  return;
+}
+
+if (!r.ok || !data.ok) {
+  alert(data.error || "Open pack failed.");
+  return;
+}
 
     // Simple reveal for now (later we replace with premium visuals)
     const rewards = data.rewards || {};
