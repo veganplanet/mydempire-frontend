@@ -1259,7 +1259,15 @@ landCard.innerHTML = `
   cursor: pointer;
 }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
+.primary-select {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  font-size: 13px;
+  cursor: pointer;
+}
 `;  </style>
 </head>
 <body data-requires-login="true">
@@ -1360,6 +1368,24 @@ landCard.innerHTML = `
           <div class="summary-sub">Genesis strategic documents you hold</div>
         </div>
       </div>
+      <div class="summary-card">
+  <div class="summary-label"><span class="summary-emoji">📦</span>Unopened Packs</div>
+  <div class="summary-value" id="summary-unopened-packs">0</div>
+  <div class="summary-sub">Open up to 5 packs at a time</div>
+
+  <div class="summary-actions">
+    <select id="open-pack-count" class="primary-select">
+      <option value="1">1 pack</option>
+      <option value="2">2 packs</option>
+      <option value="3">3 packs</option>
+      <option value="4">4 packs</option>
+      <option value="5">5 packs</option>
+    </select>
+
+    <button id="open-pack-btn" class="primary-button">Open Pack</button>
+    <div id="open-pack-status" class="status-text">No pack opened yet.</div>
+  </div>
+</div>
     </section>
 
     <!-- ===== TAB: LANDS (GRID) ===== -->
@@ -1697,7 +1723,105 @@ async function loadUnopenedPacks(username) {
     el.innerHTML = `<div class="muted">Error: ${e.message}</div>`;
   }
 }
+async function loadUnopenedPacks(username) {
+  try {
+    const res = await fetch(
+      apiUrl(`/player/${encodeURIComponent(username)}/unopened-packs`)
+    );
+    if (!res.ok) throw new Error("HTTP " + res.status);
 
+    const data = await res.json();
+    const total = data.totalUnopenedPacks || 0;
+
+    const totalEl = document.getElementById("summary-unopened-packs");
+    const selectEl = document.getElementById("open-pack-count");
+    const btnEl = document.getElementById("open-pack-btn");
+
+    if (totalEl) totalEl.textContent = total;
+
+    if (selectEl) {
+      const maxSelectable = Math.min(total, 5);
+
+      selectEl.innerHTML = "";
+
+      if (maxSelectable <= 0) {
+        const opt = document.createElement("option");
+        opt.value = "0";
+        opt.textContent = "No packs";
+        selectEl.appendChild(opt);
+        selectEl.disabled = true;
+      } else {
+        for (let i = 1; i <= maxSelectable; i++) {
+          const opt = document.createElement("option");
+          opt.value = String(i);
+          opt.textContent = i === 1 ? "1 pack" : `${i} packs`;
+          selectEl.appendChild(opt);
+        }
+        selectEl.disabled = false;
+      }
+    }
+
+    if (btnEl) {
+      btnEl.disabled = total <= 0;
+    }
+  } catch (err) {
+    console.error("Failed to load unopened packs:", err);
+    const totalEl = document.getElementById("summary-unopened-packs");
+    if (totalEl) totalEl.textContent = "Error";
+  }
+}
+async function openSelectedPacks() {
+  const countEl = document.getElementById("open-pack-count");
+  const statusEl = document.getElementById("open-pack-status");
+  const btnEl = document.getElementById("open-pack-btn");
+
+  if (!countEl || !statusEl || !btnEl) return;
+
+  const count = parseInt(countEl.value, 10) || 1;
+
+  if (count < 1) {
+    statusEl.textContent = "No unopened packs available.";
+    return;
+  }
+
+  btnEl.disabled = true;
+  statusEl.textContent = "Opening pack(s)...";
+
+  try {
+    const res = await fetch(apiUrl(`/open-pack`), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: PLAYER_USERNAME,
+        count: count
+      })
+    });
+
+    const data = await res.json();
+    console.log("Open pack result:", data);
+
+    if (!res.ok || !data.success) {
+      statusEl.textContent = data.error || "Open pack failed.";
+      btnEl.disabled = false;
+      return;
+    }
+
+    statusEl.textContent =
+      `Opened ${data.opened} pack(s) • EMP gained: ${data.totalEmp}`;
+
+    await loadDashboardSummary();
+    await loadEmpireOverview();
+    await loadBlueprints();
+    await loadUnopenedPacks(PLAYER_USERNAME);
+
+  } catch (err) {
+    console.error("Open pack error:", err);
+    statusEl.textContent = "Error while opening packs.";
+  } finally {
+    btnEl.disabled = false;
+  }
+}
+    
 async function openPack(username, pack_id) {
   if (!confirm(`Open Pack #${pack_id}?`)) return;
 
@@ -2245,6 +2369,12 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
   });
 const username = localStorage.getItem("hiveUsername");
+  await loadUnopenedPacks(PLAYER_USERNAME);
+
+const openPackBtn = document.getElementById("open-pack-btn");
+if (openPackBtn) {
+  openPackBtn.addEventListener("click", openSelectedPacks);
+}
   try {
     await loadDashboardSummary();
     await loadEmpireOverview();
