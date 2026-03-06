@@ -1235,6 +1235,31 @@ landCard.innerHTML = `
   padding: 10px;
 }
 
+.rows { display: flex; flex-direction: column; gap: 10px; }
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border, #e6e9ef);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.row .muted { opacity: 0.7; font-size: 12px; }
+
+.btn {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border2, #d7dce6);
+  background: #0b1224;
+  color: white;
+  cursor: pointer;
+}
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
 `;  </style>
 </head>
 <body data-requires-login="true">
@@ -1351,6 +1376,18 @@ landCard.innerHTML = `
       <div id="empire-error" class="status-error" style="display:none;"></div>
     </section>
 
+    <!-- =============================== -->
+<!-- 🎁 UNOPENED PACKS -->
+<!-- =============================== -->
+<section class="panel">
+  <div class="panel-head">
+    <h2>🎁 Unopened Packs</h2>
+    <div class="muted" id="packsMeta"></div>
+  </div>
+
+  <div id="packsRows" class="rows"></div>
+</section>
+
    <!-- ===== TAB: BLUEPRINTS ===== -->
 <section class="section tab-panel" data-tab-panel="blueprints">
   <div class="section-header">
@@ -1425,6 +1462,39 @@ landCard.innerHTML = `
   </div>
 
   <script>
+
+    function getUsernameFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("user");
+}
+
+const username = getUsernameFromURL() || localStorage.getItem("hiveUsername");
+
+if (username) {
+  localStorage.setItem("hiveUsername", username);
+}
+
+console.log("Dashboard loading for:", username);
+
+  let ACTIVE_USER = null;
+
+function getActiveUser() {
+  const u = (localStorage.getItem("hiveUsername") || "").trim();
+  return u;
+}
+
+function setActiveUser(u) {
+  const user = (u || "").trim().toLowerCase();
+  localStorage.setItem("hiveUsername", user);
+  ACTIVE_USER = user;
+
+  const el = document.getElementById("welcomeUser"); // optional if you have it
+  if (el) el.textContent = `@${user}`;
+
+  return user;
+}  
+
+ 
 const LAND_TIER_COLORS_BY_KEY = {
   L1: "#16a34a", // Frontier
   L2: "#fbbf24", // Estate
@@ -1455,11 +1525,14 @@ const LAND_TIER_NAMES = {
 // ===== BASIC CONFIG =====
 
 const LOCAL_API = "http://localhost:10000";
-const PROD_API  = "https://mydempire-backend-1.onrender.com"; 
-const API_BASE =
-  window.location.hostname === "localhost"
-    ? LOCAL_API
-    : PROD_API;
+const PROD_API  = "https://mydempire-backend-1.onrender.com";
+
+const host = window.location.hostname;
+const isLocal = host === "localhost" || host === "127.0.0.1";
+
+const API_BASE = isLocal ? LOCAL_API : PROD_API;
+console.log("✅ Packs Debug | host:", window.location.hostname, "| API_BASE:", API_BASE);
+console.log("API_BASE:", API_BASE, "host:", host);
 
 function apiUrl(path) {
   return API_BASE + path;
@@ -1582,6 +1655,98 @@ function apiUrl(path) {
     console.error("Failed to load dashboard summary:", err);
   }
 }
+async function loadUnopenedPacks(username) {
+  const el = document.getElementById("packsRows");
+  if (!el) {
+    console.log("❌ packsRows element not found");
+    return;
+  }
+
+  console.log("✅ loadUnopenedPacks called for:", username, "API_BASE:", API_BASE);
+  el.innerHTML = `<div class="muted">Loading packs...</div>`;
+
+  try {
+    const r = await fetch(`${API_BASE}/player/${username}/packs`);
+    const data = await r.json();
+    console.log("📦 PACK OPEN RESPONSE:", data);
+
+    
+
+    if (!r.ok) {
+      el.innerHTML = `<div class="muted">Error: ${data.error || "Failed to load packs"}</div>`;
+      return;
+    }
+
+    const packs = data.packs || [];
+    if (!packs.length) {
+      el.innerHTML = `<div class="muted">No unopened packs 🎉</div>`;
+      return;
+    }
+
+    el.innerHTML = packs.map(p => `
+      <div class="row">
+        <div>
+          <div><b>Pack #${p.id}</b></div>
+          <div class="muted">${(p.era || "")} ${(p.edition || "")}</div>
+        </div>
+        <button class="btn" onclick="openPack('${username}', ${p.id})">OPEN</button>
+      </div>
+    `).join("");
+
+  } catch (e) {
+    el.innerHTML = `<div class="muted">Error: ${e.message}</div>`;
+  }
+}
+
+async function openPack(username, pack_id) {
+  if (!confirm(`Open Pack #${pack_id}?`)) return;
+
+  try {
+    const r = await fetch(`${API_BASE}/pack/open`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, pack_id })
+    });
+
+    const data = await r.json();
+
+    if (!r.ok) {
+      alert(data.error || "Open pack failed");
+      return;
+    }
+
+    // Simple reveal for now (later we replace with premium visuals)
+    const rewards = data.rewards || {};
+
+const land = rewards.land || {};
+const blueprint = rewards.blueprint || {};
+
+const landTier = land.tier || rewards.land_tier || "L1";
+const landId = land.id || rewards.land_id || "?";
+
+const blueprintTier = blueprint.tier || rewards.blueprint_tier || "FOOD_B1";
+const blueprintId = blueprint.id || rewards.blueprint_id || "?";
+
+const empAmount = rewards.emp || data.emp || 0;
+
+alert(
+  `🎉 Pack Opened!\n\n` +
+  `LAND: ${landTier} (NFT #${landId})\n` +
+  `BLUEPRINT: ${blueprintTier} (NFT #${blueprintId})\n` +
+  `EMP: +${empAmount}`
+);
+
+    // refresh sections
+    await loadUnopenedPacks(username);
+    await loadEmpireOverview(username);
+    await loadBlueprints(username);
+    await loadDashboardSummary(username);
+
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
 
     // ===== EMPIRE OVERVIEW =====
     async function loadEmpireOverview() {
@@ -2069,11 +2234,12 @@ window.addEventListener("DOMContentLoaded", async () => {
       setActiveTab(btn.dataset.tab);
     });
   });
-
+const username = localStorage.getItem("hiveUsername");
   try {
     await loadDashboardSummary();
     await loadEmpireOverview();
     await loadBlueprints();  // ✅ now also awaited
+    await loadUnopenedPacks(username);
   } catch (err) {
     console.error("Error during initial dashboard load:", err);
   }

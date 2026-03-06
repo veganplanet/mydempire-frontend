@@ -20,6 +20,19 @@ function setStatus(text) {
   if (el) el.innerText = text;
 }
 
+function updateDashboardLinks() {
+  const dashboardLinks = document.querySelectorAll('[data-nav="dashboard"]');
+
+  dashboardLinks.forEach((el) => {
+    if (username) {
+      el.href = `player-dashboard.html?user=${encodeURIComponent(username)}`;
+      el.style.display = "inline-flex";
+    } else {
+      el.href = "player-dashboard.html";
+      el.style.display = "none";
+    }
+  });
+}
 function renderWalletUI() {
   const walletDisplay = document.getElementById("walletDisplay");
   const connectBtn = document.getElementById("connectBtn");
@@ -35,11 +48,6 @@ function renderWalletUI() {
     if (connectBtn) connectBtn.style.display = "none";
     if (walletChip) walletChip.style.display = "inline-flex";
     if (walletChipText) walletChipText.innerText = `@${username}`;
-
-    // show dashboard link
-    document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
-      el.style.display = "inline-flex";
-    });
   } else {
     window.SELECTED_USERNAME = null;
 
@@ -49,11 +57,9 @@ function renderWalletUI() {
     if (connectBtn) connectBtn.style.display = "block";
     if (walletChip) walletChip.style.display = "none";
     if (walletChipText) walletChipText.innerText = "";
-
-    document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
-      el.style.display = "none";
-    });
   }
+
+  updateDashboardLinks();
 }
 
 // ======================
@@ -71,52 +77,55 @@ function connectWallet() {
   window.hive_keychain.requestHandshake(function () {
     console.log("✅ Keychain handshake called");
 
-    // ✅ Best case: Keychain returns accounts automatically
+    // Best case: Keychain returns accounts automatically
     if (typeof window.hive_keychain.requestGetAccounts === "function") {
       window.hive_keychain.requestGetAccounts(function (res) {
         console.log("getAccounts:", res);
 
-        if (!res || !res.success || !res.data || !res.data.length) {
+        const accounts = res?.data || res?.accounts || [];
+        if (!res || !res.success || !accounts.length) {
           alert("Keychain did not return accounts ❌");
           setStatus("❌ Wallet connection failed.");
           return;
         }
 
-        username = res.data[0];
+        username = String(accounts[0]).replace("@", "").trim().toLowerCase();
         localStorage.setItem("mde_username", username);
+        localStorage.setItem("hiveUsername", username);
         window.SELECTED_USERNAME = username;
 
         renderWalletUI();
+setTimeout(() => {
+  location.reload();
+}, 150);
       });
       return;
     }
 
-    // ✅ Fallback: Ask username BUT require Keychain signature popup
+    // Fallback: prompt username + Keychain signature
     const typed = prompt("Enter your Hive username (without @):");
     if (!typed) {
       setStatus("❌ Wallet not selected.");
       return;
     }
 
-    const u = typed.replace("@", "").trim();
+    const u = typed.replace("@", "").trim().toLowerCase();
 
     if (typeof window.hive_keychain.requestSignBuffer !== "function") {
-      alert("Your Keychain version cannot sign messages (requestSignBuffer missing). Please update Keychain ❌");
+      alert("Your Keychain version cannot sign messages. Please update Keychain ❌");
       setStatus("❌ Keychain update needed.");
       return;
     }
 
-    // Random challenge → proves the user approved via Keychain
     const nonce = Math.random().toString(36).slice(2);
     const challenge = `MYDEMPIRE_CONNECT:${u}:${Date.now()}:${nonce}`;
 
     setStatus("Approve Keychain signature…");
 
-    // This MUST show a Keychain popup
     window.hive_keychain.requestSignBuffer(
       u,
       challenge,
-      "Posting", // ✅ Safe: no funds, only auth proof
+      "Posting",
       function (resp) {
         console.log("signBuffer resp:", resp);
 
@@ -127,18 +136,23 @@ function connectWallet() {
           return;
         }
 
-        // ✅ Authenticated connection
         username = u;
         localStorage.setItem("mde_username", username);
+        localStorage.setItem("hiveUsername", username);
         window.SELECTED_USERNAME = username;
 
         renderWalletUI();
+setTimeout(() => {
+  location.reload();
+}, 150);
       }
     );
   });
 }
+
 function disconnectWallet() {
   localStorage.removeItem("mde_username");
+  localStorage.removeItem("hiveUsername");
   username = null;
   window.SELECTED_USERNAME = null;
   renderWalletUI();
@@ -152,10 +166,15 @@ async function buyPack(qty) {
   try {
     const packs = parseInt(qty || "1", 10);
 
-    if (!window.SELECTED_USERNAME) {
-      alert("Please connect wallet first ✅");
-      return;
-    }
+   const window.SELECTED_USERNAME =
+  activeUser ||
+  localStorage.getItem("mde_username") ||
+  localStorage.getItem("hiveUsername");
+
+if (!activeUser) {
+  alert("Please connect wallet first ✅");
+  return;
+}
     if (!window.hive_keychain) {
       alert("Hive Keychain not found ❌");
       return;
@@ -171,7 +190,10 @@ async function buyPack(qty) {
     const res = await fetch(`${window.API_BASE}/create-order`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: window.SELECTED_USERNAME, packs }),
+      body: JSON.stringify({
+        username: activeUser,
+        packs
+      }),
     });
 
     console.log("📡 create-order status:", res.status);
@@ -179,35 +201,41 @@ async function buyPack(qty) {
     const data = await res.json();
     console.log("create-order response:", data);
 
-    if (!res.ok || !data?.success) {
+    if (!res.ok || !data?.success || !data?.order) {
       setStatus("❌ Create order failed.");
       alert(data?.error || "Create order failed ❌");
       return;
     }
 
-    const { orderId, to, hive_amount, memo } = data;
+    // ✅ Correctly read nested order
+    const order = data.order;
+    const orderId = order.id;
+    const hiveAmountRaw = order.hive_amount;
 
-    // Keychain needs amount like "3.000" (no 'HIVE' text)
-    const raw = String(hive_amount);
-    const clean = raw.replace(/[^\d.]/g, "");
-    const num = Number(clean);
-
-    if (!Number.isFinite(num)) {
+    const num = Number(hiveAmountRaw);
+    if (!Number.isFinite(num) || num <= 0) {
       setStatus("❌ Invalid amount from server.");
       alert("Invalid hive amount from backend ❌");
-      console.log("Bad hive_amount:", hive_amount);
+      console.log("Bad hive_amount:", hiveAmountRaw);
       return;
     }
 
     const amount = num.toFixed(3);
+    const to = "mydempiregain";
+    const memo = `MYDEMPIRE_ORDER_${orderId}`;
+
+    console.log("Parsed order:", order);
+    console.log("amount:", amount);
+    console.log("memo:", memo);
+
     setStatus("Waiting for Keychain approval…");
 
     // 2) Keychain transfer
     window.hive_keychain.requestTransfer(
-      window.SELECTED_USERNAME,
-      to || "mydempiregain",
+      activeUser,
+      to,
       amount,
-      memo || `MYDEMPIRE_ORDER_${orderId}`,
+      memo,
       "HIVE",
       async function (response) {
         console.log("🧾 Keychain response:", response);
@@ -253,6 +281,8 @@ async function buyPack(qty) {
 
         setStatus("✅ Packs minted successfully!");
         alert("✅ Packs minted successfully!");
+
+        updateDashboardLinks();
       }
     );
   } catch (err) {
