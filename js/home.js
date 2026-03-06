@@ -325,11 +325,10 @@ async function buyPack(qty) {
   }
 
   try {
-
     const statusEl = document.getElementById("status");
     if (statusEl) statusEl.textContent = "Creating order...";
 
-    // STEP 1 — create order
+    // STEP 1 — create order (this is where wallet cap is enforced)
     const orderRes = await fetch(
       "https://mydempire-backend-1.onrender.com/create-order",
       {
@@ -347,13 +346,13 @@ async function buyPack(qty) {
     const created = await orderRes.json();
     console.log("create-order:", created);
 
-    if (!created.success || !created.order) {
-      alert("Create order failed.");
+    if (!orderRes.ok || !created.success || !created.order) {
+      alert(created.error || "Create order failed.");
+      if (statusEl) statusEl.textContent = created.error || "Create order failed.";
       return;
     }
 
     const order = created.order;
-
     const orderId = order.id;
     const amount = Number(order.hive_amount).toFixed(3);
     const memo = `MYDEMPIRE_ORDER_${orderId}`;
@@ -361,7 +360,7 @@ async function buyPack(qty) {
 
     if (statusEl) statusEl.textContent = "Waiting for Keychain approval...";
 
-    // STEP 2 — send payment
+    // STEP 2 — transfer
     window.hive_keychain.requestTransfer(
       username,
       to,
@@ -369,19 +368,23 @@ async function buyPack(qty) {
       memo,
       "HIVE",
       async function (response) {
+        console.log("keychain response:", response);
 
         if (!response || !response.success) {
           alert("Transaction cancelled.");
+          if (statusEl) statusEl.textContent = "Transaction cancelled.";
           return;
         }
 
         const txid =
           response?.result?.id ||
+          response?.result?.tx_id ||
           response?.result?.trx_id ||
           response?.id;
 
         if (!txid) {
-          alert("Transaction done but txid missing.");
+          alert("Transaction completed but txid missing.");
+          if (statusEl) statusEl.textContent = "txid missing.";
           return;
         }
 
@@ -403,31 +406,26 @@ async function buyPack(qty) {
         );
 
         const confirmed = await confirmRes.json();
-
         console.log("confirm-payment:", confirmed);
 
-        if (!confirmed.success) {
-          alert("Payment confirmation failed.");
+        if (!confirmRes.ok || !confirmed.success) {
+          alert(confirmed.error || "Payment confirmation failed.");
+          if (statusEl) statusEl.textContent = confirmed.error || "Payment confirmation failed.";
           return;
         }
 
         if (statusEl) statusEl.textContent = "✅ Packs minted successfully!";
-        alert("Packs minted successfully!");
-
+        alert("✅ Packs minted successfully!");
       }
     );
 
   } catch (err) {
-
     console.error("buyPack error:", err);
     alert("Unexpected error.");
-
+    const statusEl = document.getElementById("status");
+    if (statusEl) statusEl.textContent = "Unexpected error.";
   }
-
 }
-// ======================
-// INIT
-// ======================
-document.addEventListener("DOMContentLoaded", () => {
-  renderWalletUI();
-});
+
+// expose for onclick in index.html
+window.buyPack = buyPack;
