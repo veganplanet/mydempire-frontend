@@ -487,10 +487,9 @@ return;
 localStorage.setItem("mde_username",username);
 
 document.getElementById("walletDisplay").textContent="Connected: @"+username;
-  const disconnectBtn = document.getElementById("disconnectBtn");
-if (disconnectBtn) {
-  disconnectBtn.style.display = "inline-flex";
-}
+
+document.getElementById("connectBtn").style.display="none";
+document.getElementById("disconnectBtn").style.display="inline-flex";
 
 const dash=document.getElementById("dashboardLink");
 dash.style.display="inline-flex";
@@ -641,6 +640,7 @@ function disconnectWallet() {
 </body>
 
 </html>
+
 
 
 
