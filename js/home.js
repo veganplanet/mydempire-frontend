@@ -299,6 +299,132 @@ window.connectWallet = connectWallet;
 window.disconnectWallet = disconnectWallet;
 window.buyPack = buyPack;
 
+// ============================
+// BUY PACK
+// ============================
+
+async function buyPack(qty) {
+
+  const username = localStorage.getItem("mde_username");
+
+  if (!username) {
+    alert("Please connect wallet first.");
+    return;
+  }
+
+  const packs = parseInt(qty || "1", 10);
+
+  if (!packs || packs < 1) {
+    alert("Invalid pack quantity.");
+    return;
+  }
+
+  if (!window.hive_keychain) {
+    alert("Hive Keychain not found.");
+    return;
+  }
+
+  try {
+
+    const statusEl = document.getElementById("status");
+    if (statusEl) statusEl.textContent = "Creating order...";
+
+    // STEP 1 — create order
+    const orderRes = await fetch(
+      "https://mydempire-backend-1.onrender.com/create-order",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: username,
+          packs: packs
+        })
+      }
+    );
+
+    const created = await orderRes.json();
+    console.log("create-order:", created);
+
+    if (!created.success || !created.order) {
+      alert("Create order failed.");
+      return;
+    }
+
+    const order = created.order;
+
+    const orderId = order.id;
+    const amount = Number(order.hive_amount).toFixed(3);
+    const memo = `MYDEMPIRE_ORDER_${orderId}`;
+    const to = "mydempiregain";
+
+    if (statusEl) statusEl.textContent = "Waiting for Keychain approval...";
+
+    // STEP 2 — send payment
+    window.hive_keychain.requestTransfer(
+      username,
+      to,
+      amount,
+      memo,
+      "HIVE",
+      async function (response) {
+
+        if (!response || !response.success) {
+          alert("Transaction cancelled.");
+          return;
+        }
+
+        const txid =
+          response?.result?.id ||
+          response?.result?.trx_id ||
+          response?.id;
+
+        if (!txid) {
+          alert("Transaction done but txid missing.");
+          return;
+        }
+
+        if (statusEl) statusEl.textContent = "Confirming payment...";
+
+        // STEP 3 — confirm payment
+        const confirmRes = await fetch(
+          "https://mydempire-backend-1.onrender.com/confirm-payment",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              orderId: orderId,
+              txid: txid
+            })
+          }
+        );
+
+        const confirmed = await confirmRes.json();
+
+        console.log("confirm-payment:", confirmed);
+
+        if (!confirmed.success) {
+          alert("Payment confirmation failed.");
+          return;
+        }
+
+        if (statusEl) statusEl.textContent = "✅ Packs minted successfully!";
+        alert("Packs minted successfully!");
+
+      }
+    );
+
+  } catch (err) {
+
+    console.error("buyPack error:", err);
+    alert("Unexpected error.");
+
+  }
+
+}
 // ======================
 // INIT
 // ======================
