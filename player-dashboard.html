@@ -1722,44 +1722,30 @@ async function openPack(username, pack_id) {
       return;
     }
 
-    if (!r.ok || !data.ok) {
+    if (!r.ok) {
       alert(data.error || "Open pack failed.");
       return;
     }
 
-    // Simple reveal for now
-    alert("✅ Pack opened successfully!");
-
-    // refresh dashboard sections
-    await loadUnopenedPacks(username);
-    await loadBlueprints(username);
-    await loadEmpireOverview(username);
-    await loadDashboardSummary(username);
-
-  } catch (err) {
-    console.error("openPack error:", err);
-    alert("Unexpected error while opening pack.");
-  }
-}
     const rewards = data.rewards || {};
 
-const land = rewards.land || {};
-const blueprint = rewards.blueprint || {};
+    const land = rewards.land || {};
+    const blueprint = rewards.blueprint || {};
 
-const landTier = land.tier || rewards.land_tier || "L1";
-const landId = land.id || rewards.land_id || "?";
+    const landTier = land.tier || rewards.land_tier || "L1";
+    const landId = land.id || rewards.land_id || "?";
 
-const blueprintTier = blueprint.tier || rewards.blueprint_tier || "FOOD_B1";
-const blueprintId = blueprint.id || rewards.blueprint_id || "?";
+    const blueprintTier = blueprint.tier || rewards.blueprint_tier || "FOOD_B1";
+    const blueprintId = blueprint.id || rewards.blueprint_id || "?";
 
-const empAmount = rewards.emp || data.emp || 0;
+    const empAmount = rewards.emp || data.emp || 0;
 
-alert(
-  `🎉 Pack Opened!\n\n` +
-  `LAND: ${landTier} (NFT #${landId})\n` +
-  `BLUEPRINT: ${blueprintTier} (NFT #${blueprintId})\n` +
-  `EMP: +${empAmount}`
-);
+    alert(
+      `🎉 Pack Opened!\n\n` +
+      `LAND: ${landTier} (NFT #${landId})\n` +
+      `BLUEPRINT: ${blueprintTier} (NFT #${blueprintId})\n` +
+      `EMP: +${empAmount}`
+    );
 
     // refresh sections
     await loadUnopenedPacks(username);
@@ -1768,6 +1754,7 @@ alert(
     await loadDashboardSummary(username);
 
   } catch (e) {
+    console.error("openPack error:", e);
     alert(e.message);
   }
 }
