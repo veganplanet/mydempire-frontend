@@ -1807,7 +1807,13 @@ async function openSelectedPacks() {
     }
 
     statusEl.textContent =
-      `Opened ${data.opened} pack(s) • EMP gained: ${data.totalEmp}`;
+  `Opened ${data.opened} pack(s) • EMP gained: ${data.totalEmp}`;
+
+// PACK OPEN POPUP
+alert(`🎁 Pack Opened!
+
+Opened ${data.opened} pack(s)
+EMP gained: ${data.totalEmp}`);
 
     await loadDashboardSummary();
     await loadEmpireOverview();
