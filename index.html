@@ -330,6 +330,57 @@ color:#6b7280;
   line-height: 1;
   font-family: Arial, Helvetica, sans-serif;
 }
+  .industry-slider-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 24px auto 32px;
+}
+
+.industry-slider {
+  width: 320px;
+  max-width: 90vw;
+  position: relative;
+}
+
+.industry-slide {
+  display: none;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+.industry-slide.active {
+  display: block;
+}
+
+.industry-slide-img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 12px;
+}
+
+.slider-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.slider-btn:hover {
+  background: #f9fafb;
+}
 </style>
 </head>
 
@@ -693,6 +744,7 @@ function disconnectWallet() {
 </body>
 
 </html>
+
 
 
 
