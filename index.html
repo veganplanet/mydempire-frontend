@@ -307,6 +307,29 @@ color:#6b7280;
 .slot-symbol .pharma-rx {
   font-size: 20px;
 }
+
+  .industry-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-weight: 800;
+  font-size: 14px;
+  color: #111827;
+}
+
+.industry-name-text {
+  font-weight: 800;
+  color: #111827;
+}
+
+.pharma-rx {
+  color: #dc2626;
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 1;
+  font-family: Arial, Helvetica, sans-serif;
+}
 </style>
 </head>
 
@@ -412,43 +435,41 @@ Buy Packs
 
 <div class="factorySection">
 
-<div class="factoryGrid">
 
-<div class="factoryCard">
-<div class="factoryImgWrap">
-<img src="assets/food-building.png">
-</div>
-<div class="factoryName">🌾 Food</div>
-</div>
 
-<div class="factoryCard">
-<div class="factoryImgWrap">
-<img src="assets/textile-building.png">
-</div>
-<div class="factoryName">🧵 Textile</div>
-</div>
+<div class="industry-slider-wrap">
+  <button class="slider-btn" id="industry-prev-btn">‹</button>
 
-<div class="factoryCard">
-<div class="factoryImgWrap">
-<img src="assets/pharma-building.png">
-</div>
-<span class="pharma-rx">Rx</span> Pharma
-</div>
+  <div class="industry-slider">
+    <div class="industry-slide active">
+      <img src="assets/food-building.png" alt="Food Industry" class="industry-slide-img" />
+      <div class="industry-label">🌾 Food</div>
+    </div>
 
-<div class="factoryCard">
-<div class="factoryImgWrap">
-<img src="assets/chemical-building.png">
-</div>
-<div class="factoryName">🧪 Chemical</div>
-</div>
+    <div class="industry-slide">
+      <img src="assets/textile-building.png" alt="Textile Industry" class="industry-slide-img" />
+      <div class="industry-label">🧵 Textile</div>
+    </div>
 
-<div class="factoryCard">
-<div class="factoryImgWrap">
-<img src="assets/supermarket-building.png">
-</div>
-<div class="factoryName">🛒 Supermarket</div>
-</div>
+    <div class="industry-slide">
+      <img src="assets/pharma-building.png" alt="Pharma Industry" class="industry-slide-img" />
+      <div class="industry-label">
+        <span class="pharma-rx">Rx</span><span class="industry-name-text"> Pharma</span>
+      </div>
+    </div>
 
+    <div class="industry-slide">
+      <img src="assets/chemical-building.png" alt="Chemical Industry" class="industry-slide-img" />
+      <div class="industry-label">⚗ Chemical</div>
+    </div>
+
+    <div class="industry-slide">
+      <img src="assets/supermarket-building.png" alt="Supermarket Industry" class="industry-slide-img" />
+      <div class="industry-label">🛒 Supermarket</div>
+    </div>
+  </div>
+
+  <button class="slider-btn" id="industry-next-btn">›</button>
 </div>
 
 <div class="bottomRow">
@@ -672,6 +693,7 @@ function disconnectWallet() {
 </body>
 
 </html>
+
 
 
 
