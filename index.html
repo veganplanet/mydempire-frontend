@@ -381,6 +381,36 @@ body{
   .empire-path-grid { grid-template-columns: 1fr; }
   .empire-path-grid::before{ display:none; }
 }
+  .social-icons img{
+  width:32px;
+  height:32px;
+  transition:transform .2s ease, filter .2s ease;
+  cursor:pointer;
+}
+
+.social-icons img:hover{
+  transform:scale(1.18);
+  filter:brightness(1.2);
+}
+  .founder-box{
+  margin-top:16px;
+  padding:16px;
+  border-radius:16px;
+  border:1px solid #e5e7eb;
+  background:#ffffff;
+}
+
+.founder-box h4{
+  margin-bottom:10px;
+  font-size:14px;
+  font-weight:700;
+}
+
+.founder-item{
+  font-size:13px;
+  margin-bottom:6px;
+  color:#475569;
+}
 </style>
 </head>
 <body>
@@ -524,7 +554,25 @@ body{
     </div>
   </div>
 </div>
+<div class="founder-box">
+  <h4>Genesis Founder Benefits</h4>
 
+  <div class="founder-item">
+    🌱 Early empire development advantage
+  </div>
+
+  <div class="founder-item">
+    ⚙️ Build and name your own factories
+  </div>
+
+  <div class="founder-item">
+    💎 Ultra-rare relic drop chance
+  </div>
+
+  <div class="founder-item">
+    🏛 Genesis assets remain historically valuable
+  </div>
+</div>
 <div class="factorySection">
   <section class="industry-showcase">
     <div class="industry-slider-wrap">
@@ -731,3 +779,4 @@ async function buyPack(qty) {
 </script>
 </body>
 </html>
+
