@@ -346,27 +346,31 @@ body{
 }
 .empire-path-card {
   background:
-    radial-gradient(circle at top left, rgba(59, 130, 246, 0.08), transparent 28%),
-    radial-gradient(circle at top right, rgba(139, 92, 246, 0.08), transparent 30%),
-    linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid #e5e7eb;
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
-  margin-top: 20px;
+    radial-gradient(circle at top left, rgba(59,130,246,0.08), transparent 30%),
+    radial-gradient(circle at top right, rgba(139,92,246,0.08), transparent 30%),
+    linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+  border:1px solid #e5e7eb;
+  border-radius:24px;
+  padding:26px;
+  box-shadow:0 18px 40px rgba(15,23,42,0.08);
+  margin-top:20px;
 }
 
 .empire-path-head {
   margin-bottom: 18px;
 }
 
-.empire-path-eyebrow {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #2563eb;
-  margin-bottom: 8px;
+.empire-path-eyebrow{
+  display:inline-block;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#2563eb;
+  background:#eff6ff;
+  padding:4px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
 }
 
 .empire-path-title {
@@ -434,6 +438,7 @@ body{
   letter-spacing: 0.08em;
   margin-bottom: 14px;
   color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
   .empire-path-step:nth-child(1) .empire-step-icon {
   background:#22c55e;
@@ -474,14 +479,15 @@ body{
   border-top: 1px solid #e5e7eb;
 }
 
-.empire-path-highlight {
-  font-size: 14px;
-  font-weight: 700;
-  color: #7c3aed;
-  background: #f3e8ff;
-  padding: 10px 14px;
-  border-radius: 12px;
-  display: inline-block;
+.empire-path-highlight{
+  font-size:14px;
+  font-weight:700;
+  color:#7c3aed;
+  background:#f3e8ff;
+  padding:10px 14px;
+  border-radius:12px;
+  display:inline-block;
+  box-shadow:0 6px 14px rgba(124,58,237,0.12);
 }
 
 .empire-path-note {
@@ -558,6 +564,38 @@ body{
 .empire-path-step:nth-child(5) {
   border-top: 4px solid #ef4444;
   background: linear-gradient(180deg, #ffffff 0%, #fef2f2 100%);
+}
+  .empire-path-grid {
+  position: relative;
+}
+
+.empire-path-grid::before {
+  content: "";
+  position: absolute;
+  top: 70px;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    #22c55e,
+    #f59e0b,
+    #3b82f6,
+    #8b5cf6,
+    #ef4444
+  );
+  opacity: 0.25;
+  z-index: 0;
+}
+
+.empire-path-step {
+  position: relative;
+  z-index: 1;
+}
+
+  .empire-path-step:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
 }
 </style>
 </head>
@@ -959,6 +997,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 </body>
 </html>
+
 
 
 
