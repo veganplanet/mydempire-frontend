@@ -7,303 +7,288 @@
 
 <style>
 :root{
-  --bg:#ffffff;
-  --ink:#0b1224;
-  --muted: rgba(11,18,36,.70);
-  --card:#ffffff;
-  --border:#e6e9ef;
-  --border2:#d7dce6;
-  --shadow: 0 18px 60px rgba(15,23,42,0.10);
-  --shadow2: 0 10px 24px rgba(15,23,42,0.08);
-  --green:#16a34a;
-  --radius:18px;
+--bg:#ffffff;
+--ink:#0b1224;
+--muted: rgba(11,18,36,.70);
+
+--card:#ffffff;
+--border:#e6e9ef;
+--border2:#d7dce6;
+
+--shadow: 0 18px 60px rgba(15,23,42,0.10);
+--shadow2: 0 10px 24px rgba(15,23,42,0.08);
+
+--green:#16a34a;
+--green2:#0f8a3d;
+
+--radius: 18px;
 }
 
 *{ box-sizing:border-box; }
 html,body{ height:100%; }
 
 body{
-  margin:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  background:var(--bg);
-  color:var(--ink);
+margin:0;
+font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+background: var(--bg);
+color: var(--ink);
 }
 
 .wrap{
-  max-width:1180px;
-  margin:0 auto;
-  padding:16px 14px 60px;
+max-width:1180px;
+margin:0 auto;
+padding:16px 14px 60px;
 }
 
 /* NAV */
+
 .topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-  padding:10px 2px 14px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
+flex-wrap:wrap;
+padding:10px 2px 14px;
 }
 
 .navPills{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
 }
 
 .pill{
-  display:inline-flex;
-  align-items:center;
-  padding:9px 14px;
-  border-radius:999px;
-  background:#f5f7fb;
-  border:1px solid var(--border);
-  font-size:14px;
-  font-weight:800;
-  text-decoration:none;
-  color:#0b1224;
+display:inline-flex;
+align-items:center;
+padding:9px 14px;
+border-radius:999px;
+background:#f5f7fb;
+border:1px solid var(--border);
+font-size:14px;
+font-weight:800;
+text-decoration:none;
+color:#0b1224;
 }
 
 .pill.dashboard{
-  background:#eaf7ef;
-  border-color:rgba(22,163,74,.25);
-  font-weight:900;
+background:#eaf7ef;
+border-color:rgba(22,163,74,.25);
+font-weight:900;
+}
+
+.walletChip{
+display:none;
+gap:10px;
+align-items:center;
+padding:8px 10px;
+border-radius:999px;
+background:#f5f7fb;
+border:1px solid var(--border);
+}
+
+.chip{
+padding:7px 10px;
+border-radius:999px;
+background:rgba(11,18,36,.06);
+font-weight:900;
+font-size:14px;
 }
 
 .btnTiny{
-  padding:8px 12px;
-  border-radius:12px;
-  border:1px solid rgba(239,68,68,.22);
-  background:rgba(239,68,68,.10);
-  cursor:pointer;
-  font-weight:900;
+padding:8px 12px;
+border-radius:12px;
+border:1px solid rgba(239,68,68,.22);
+background:rgba(239,68,68,.10);
+cursor:pointer;
+font-weight:900;
 }
 
 /* HERO */
+
 .hero{
-  border-radius:24px;
-  overflow:hidden;
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
+border-radius:24px;
+overflow:hidden;
+border:1px solid var(--border);
+box-shadow:var(--shadow);
 }
 
 .heroImg{
-  width:100%;
-  height:420px;
-  object-fit:cover;
-  display:block;
+width:100%;
+height:420px;
+object-fit:cover;
 }
 
 .heroBelow{
-  padding:16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:12px;
+padding:16px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
 }
 
 .nameLogo{
-  height:62px;
+height:62px;
 }
 
 .tags{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
 }
 
 .tag{
-  padding:8px 12px;
-  border-radius:999px;
-  background:#f5f7fb;
-  border:1px solid var(--border);
-  font-size:13px;
-  font-weight:800;
+padding:8px 12px;
+border-radius:999px;
+background:#f5f7fb;
+border:1px solid var(--border);
+font-size:13px;
+font-weight:800;
 }
 
 /* GRID */
+
 .mainGrid{
-  display:grid;
-  grid-template-columns:1.1fr .9fr;
-  gap:16px;
-  margin-top:16px;
+display:grid;
+grid-template-columns:1.1fr .9fr;
+gap:16px;
+margin-top:16px;
 }
 
 .card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:18px;
-  box-shadow:var(--shadow2);
-  padding:16px;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:18px;
+box-shadow:var(--shadow2);
+padding:16px;
 }
 
 .hTitle{
-  margin:0;
-  font-size:18px;
-  font-weight:900;
+margin:0;
+font-size:18px;
+font-weight:900;
 }
 
 .hText{
-  margin-top:10px;
-  color:var(--muted);
-  font-size:14px;
-  line-height:1.6;
+margin-top:10px;
+color:var(--muted);
+font-size:14px;
+line-height:1.6;
 }
 
 .btn{
-  width:100%;
-  padding:12px;
-  border-radius:14px;
-  border:1px solid var(--border);
-  background:#f7fafc;
-  cursor:pointer;
-  font-weight:900;
+width:100%;
+padding:12px;
+border-radius:14px;
+border:1px solid var(--border);
+background:#f7fafc;
+cursor:pointer;
+font-weight:900;
 }
 
 .btnPrimary{
-  background:linear-gradient(180deg,#22c55e,#16a34a);
-  border-color:rgba(22,163,74,.35);
-  color:white;
+background:linear-gradient(180deg,#22c55e,#16a34a);
+border-color:rgba(22,163,74,.35);
+color:white;
 }
 
 .buyGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:12px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:12px;
 }
 
 .label{
-  font-size:12px;
-  font-weight:800;
-  margin-bottom:6px;
+font-size:12px;
+font-weight:800;
+margin-bottom:6px;
 }
 
 .input{
-  width:100%;
-  padding:12px;
-  border-radius:14px;
-  border:1px solid var(--border);
-  text-align:center;
+width:100%;
+padding:12px;
+border-radius:14px;
+border:1px solid var(--border);
+text-align:center;
 }
 
 .status{
-  margin-top:12px;
-  padding:12px;
-  border-radius:14px;
-  border:1px dashed var(--border2);
-  text-align:center;
-  font-weight:800;
+margin-top:12px;
+padding:12px;
+border-radius:14px;
+border:1px dashed var(--border2);
+text-align:center;
+font-weight:800;
 }
 
-/* INDUSTRY SLIDER */
-.factorySection{ margin-top:24px; }
+/* FACTORY */
 
-.industry-showcase{
-  margin: 8px 0 26px;
+.factorySection{ margin-top:20px; }
+
+.factoryGrid{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:14px;
 }
 
-.industry-slider-wrap{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:14px;
+.factoryCard{
+border:1px solid var(--border);
+border-radius:18px;
+background:white;
+box-shadow:var(--shadow2);
+padding:12px;
+text-align:center;
 }
 
-.industry-slider{
-  width:min(760px, 92vw);
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0, 1fr));
-  gap:14px;
+.factoryImgWrap{
+border-radius:14px;
+border:1px solid #eef1f7;
+padding:10px;
+height:150px;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
-.industry-slide{
-  display:none;
-  background:#ffffff;
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:14px;
-  text-align:center;
-  box-shadow:var(--shadow2);
+.factoryImgWrap img{
+max-height:140px;
 }
 
-.industry-slide.active{
-  display:block;
+.factoryName{
+margin-top:10px;
+font-weight:900;
 }
 
-.industry-slide-img{
-  width:100%;
-  height:165px;
-  object-fit:contain;
-  display:block;
-  margin:0 auto 10px;
+/* FOOT */
+
+.bottomRow{
+margin-top:18px;
+display:flex;
+justify-content:space-between;
+flex-wrap:wrap;
 }
 
-.industry-label{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  font-weight:900;
-  font-size:18px;
-  color:#111827;
+.signWrap img{ height:120px; }
+
+.social a{
+padding:10px 14px;
+border-radius:14px;
+border:1px solid var(--border);
+background:#f5f7fb;
+font-weight:900;
+text-decoration:none;
+color:#0b1224;
 }
 
-.industry-name-text{
-  font-weight:900;
-  color:#111827;
-}
-
-.pharma-rx{
-  color:#dc2626;
-  font-weight:900;
-  font-size:22px;
-  line-height:1;
-  font-family:Arial, Helvetica, sans-serif;
-}
-
-.slider-btn{
-  width:42px;
-  height:42px;
-  border-radius:999px;
-  border:1px solid var(--border2);
-  background:#ffffff;
-  color:#111827;
-  font-size:26px;
-  line-height:1;
-  cursor:pointer;
-  flex-shrink:0;
-}
-
-.slider-btn:hover{
-  background:#f9fafb;
-}
-
-/* FOOTER */
-.site-footer{
-  margin-top:28px;
-  padding-top:8px;
-}
-
-.footer-brand-center{
-  width:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:16px;
-  text-align:center;
-}
-
-.footer-logo-center{
-  width:116px;
-  height:auto;
-  display:block;
-  margin:0 auto;
+.foot{
+margin-top:18px;
+text-align:center;
+font-size:12px;
+color:#6b7280;
 }
 
 .community-links{
+  margin-top:40px;
   display:flex;
   justify-content:center;
   gap:28px;
@@ -312,488 +297,224 @@ body{
 .community-links img{
   width:42px;
   height:42px;
-  transition:transform .2s ease, opacity .2s ease;
+  transition: transform .2s ease, opacity .2s ease;
 }
 
 .community-links img:hover{
-  transform:scale(1.12);
-  opacity:.85;
+  transform: scale(1.15);
+  opacity:0.85;
+}
+.slot-symbol .pharma-rx {
+  font-size: 20px;
 }
 
-.foot{
-  text-align:center;
-  font-size:12px;
-  color:#6b7280;
-}
-
-@media (max-width: 860px){
-  .mainGrid{
-    grid-template-columns:1fr;
-  }
-
-  .industry-slider{
-    grid-template-columns:1fr;
-    width:min(360px, 90vw);
-  }
-
-  .heroImg{
-    height:320px;
-  }
-
-  .heroBelow{
-    justify-content:center;
-  }
-}
-.empire-path-card {
-  background:
-    radial-gradient(circle at top left, rgba(59,130,246,0.08), transparent 30%),
-    radial-gradient(circle at top right, rgba(139,92,246,0.08), transparent 30%),
-    linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
-  border:1px solid #e5e7eb;
-  border-radius:24px;
-  padding:26px;
-  box-shadow:0 18px 40px rgba(15,23,42,0.08);
-  margin-top:20px;
-}
-
-.empire-path-head {
-  margin-bottom: 18px;
-}
-
-.empire-path-eyebrow{
-  display:inline-block;
-  font-size:11px;
-  font-weight:800;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:#2563eb;
-  background:#eff6ff;
-  padding:4px 10px;
-  border-radius:999px;
-  margin-bottom:10px;
-}
-
-.empire-path-title {
-  margin: 0 0 10px;
-  font-size: 30px;
-  line-height: 1.08;
-  font-weight: 800;
-  color: #0f172a;
-  letter-spacing: -0.02em;
-}
-
-.empire-path-subtitle {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.7;
-  color: #475569;
-  max-width: 760px;
-}
-
-.empire-path-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
-  margin-top: 20px;
-}
-
-.empire-path-step {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.empire-path-step {
-  border: 1px solid #e5e7eb;
-  border-radius: 18px;
-  padding: 18px 16px;
-  position: relative;
-  min-height: 188px;
+  .industry-label {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.empire-step-badge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  font-size: 11px;
-  font-weight: 800;
-  color: #94a3b8;
-  letter-spacing: 0.08em;
-}
-
-.empire-step-icon {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 68px;
-  height: 30px;
-  padding: 0 10px;
-  border-radius: 999px;
-  font-size: 11px;
+  gap: 4px;
   font-weight: 800;
-  letter-spacing: 0.08em;
-  margin-bottom: 14px;
-  color: white;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-  .empire-path-step:nth-child(1) .empire-step-icon {
-  background:#22c55e;
+  font-size: 14px;
+  color: #111827;
 }
 
-.empire-path-step:nth-child(2) .empire-step-icon {
-  background:#f59e0b;
-}
-
-.empire-path-step:nth-child(3) .empire-step-icon {
-  background:#3b82f6;
-}
-
-.empire-path-step:nth-child(4) .empire-step-icon {
-  background:#8b5cf6;
-}
-
-.empire-path-step:nth-child(5) .empire-step-icon {
-  background:#ef4444;
-}
-
-.empire-step-title {
-  font-size: 16px;
+.industry-name-text {
   font-weight: 800;
   color: #111827;
-  margin-bottom: 8px;
 }
 
-.empire-step-text {
-  font-size: 13px;
-  line-height: 1.6;
-  color: #64748b;
+.pharma-rx {
+  color: #dc2626;
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 1;
+  font-family: Arial, Helvetica, sans-serif;
+}
+ /* ===== INDUSTRY SLIDER ===== */
+.industry-showcase {
+  margin: 28px auto 36px;
 }
 
-.empire-path-footer {
-  margin-top: 18px;
-  padding-top: 16px;
-  border-top: 1px solid #e5e7eb;
+.industry-slider-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
 }
 
-.empire-path-highlight{
-  font-size:14px;
-  font-weight:700;
-  color:#7c3aed;
-  background:#f3e8ff;
-  padding:10px 14px;
-  border-radius:12px;
-  display:inline-block;
-  box-shadow:0 6px 14px rgba(124,58,237,0.12);
+.industry-slider {
+  width: 340px;
+  max-width: 90vw;
 }
 
-.empire-path-note {
-  font-size: 13px;
-  color: #64748b;
-  margin-top: 8px;
-  font-style: italic;
+.industry-slide {
+  display: none;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 18px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
 }
 
-@media (max-width: 1080px) {
-  .empire-path-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.industry-slide.active {
+  display: block;
 }
 
-@media (max-width: 640px) {
-  .empire-path-card {
-    padding: 18px;
-  }
-
-  .empire-path-title {
-    font-size: 22px;
-  }
-
-  .empire-path-grid {
-    grid-template-columns: 1fr;
-  }
-}
-  .empire-path-step:nth-child(1) {
-  border-top: 4px solid #22c55e;
+.industry-slide-img {
+  width: 100%;
+  max-height: 190px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 12px;
 }
 
-.empire-path-step:nth-child(2) {
-  border-top: 4px solid #f59e0b;
+.slider-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
-.empire-path-step:nth-child(3) {
-  border-top: 4px solid #3b82f6;
+.slider-btn:hover {
+  background: #f9fafb;
 }
 
-.empire-path-step:nth-child(4) {
-  border-top: 4px solid #8b5cf6;
+.industry-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-weight: 800;
+  font-size: 20px;
+  color: #111827;
 }
 
-.empire-path-step:nth-child(5) {
-  border-top: 4px solid #ef4444;
-}
-  .empire-path-step:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 28px rgba(0,0,0,0.08);
-  transition: all 0.25s ease;
+.industry-name-text {
+  font-weight: 800;
+  color: #111827;
 }
 
-  .empire-path-step:nth-child(1) {
-  border-top: 4px solid #22c55e;
-  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+.pharma-rx {
+  color: #dc2626;
+  font-weight: 900;
+  font-size: 22px;
+  line-height: 1;
+  font-family: Arial, Helvetica, sans-serif;
 }
-
-.empire-path-step:nth-child(2) {
-  border-top: 4px solid #f59e0b;
-  background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);
-}
-
-.empire-path-step:nth-child(3) {
-  border-top: 4px solid #3b82f6;
-  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
-}
-
-.empire-path-step:nth-child(4) {
-  border-top: 4px solid #8b5cf6;
-  background: linear-gradient(180deg, #ffffff 0%, #f5f3ff 100%);
-}
-
-.empire-path-step:nth-child(5) {
-  border-top: 4px solid #ef4444;
-  background: linear-gradient(180deg, #ffffff 0%, #fef2f2 100%);
-}
-  .empire-path-grid {
-  position: relative;
-}
-
-.empire-path-grid::before {
-  content: "";
-  position: absolute;
-  top: 70px;
-  left: 5%;
-  right: 5%;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    #22c55e,
-    #f59e0b,
-    #3b82f6,
-    #8b5cf6,
-    #ef4444
-  );
-  opacity: 0.25;
-  z-index: 0;
-}
-
-.empire-path-step {
-  position: relative;
-  z-index: 1;
-}
-
-  .empire-path-step:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
-}
-  
-  
-  .pack-item.land{
-  border-top:4px solid #22c55e;
-}
-
-.pack-item.blueprint{
-  border-top:4px solid #3b82f6;
-}
-
-.pack-item.emp{
-  border-top:4px solid #f59e0b;
-}
-
-.pack-item.relic{
-  border-top:4px solid #8b5cf6;
-}
-.inside-pack-mini{
-  margin-top:18px;
-  padding:16px;
-  background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
-  border:1px solid #e5e7eb;
-  border-radius:18px;
-}
-
-.inside-pack-mini-title{
-  font-size:15px;
-  font-weight:800;
-  color:#0f172a;
-  margin-bottom:12px;
-}
-
-.inside-pack-mini-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-}
-
-.inside-pack-mini-item{
-  text-align:center;
-  padding:12px 8px;
-  border-radius:14px;
-  background:#ffffff;
-  border:1px solid #e5e7eb;
-}
-
-.inside-pack-mini-item.land{
-  border-top:3px solid #22c55e;
-}
-
-.inside-pack-mini-item.blueprint{
-  border-top:3px solid #3b82f6;
-}
-
-.inside-pack-mini-item.emp{
-  border-top:3px solid #f59e0b;
-}
-
-.inside-pack-mini-item.relic{
-  border-top:3px solid #8b5cf6;
-}
-
-.inside-pack-mini-icon{
-  font-size:22px;
-  margin-bottom:6px;
-}
-
-.inside-pack-mini-name{
-  font-size:13px;
-  font-weight:800;
-  color:#111827;
-}
-
-.inside-pack-mini-note{
-  margin-top:12px;
-  font-size:12px;
-  line-height:1.5;
-  color:#64748b;
-}
-
-@media (max-width: 640px){
-  .inside-pack-mini-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-}
-  
 </style>
 </head>
 
 <body>
 <div class="wrap">
 
-  <div class="topbar">
-    <div class="navPills">
-      <a class="pill" href="index.html">Home</a>
-      <a class="pill" href="economy.html">Economy</a>
-      <a class="pill" href="faq.html">FAQ</a>
-      <a class="pill" href="economy-blueprint-mint.html">Blueprint Mint</a>
-      <a class="pill" href="transparency.html">Transparency</a>
-      <a id="dashboardLink" class="pill dashboard" href="#" style="display:none;">Dashboard</a>
-    </div>
-  </div>
+<!-- NAV -->
 
-  <div class="hero">
-    <img class="heroImg" src="assets/mydempire-hero.png" alt="MydEmpire Hero Banner">
+<div class="topbar">
+<div class="navPills">
+<a class="pill" href="index.html">Home</a>
+<a class="pill" href="economy.html">Economy</a>
+<a class="pill" href="faq.html">FAQ</a>
+<a class="pill" href="economy-blueprint-mint.html">Blueprint Mint</a>
+<a class="pill" href="transparency.html">Transparency</a>
 
-    <div class="heroBelow">
-      <img class="nameLogo" src="assets/logo-name.png" alt="MydEmpire Name Logo">
+<a id="dashboardLink" class="pill dashboard" href="#" style="display:none;">Dashboard</a>
+</div>
+</div>
 
-      <div class="tags">
-        <span class="tag">🔐 Keychain Verified</span>
-        <span class="tag">📦 Sealed Packs</span>
-        <span class="tag">🧪 Invite-Only Test</span>
-        <span class="tag">🧾 Max 10 packs/wallet</span>
-      </div>
-    </div>
-  </div>
+<!-- HERO -->
+
+<div class="hero">
+<img class="heroImg" src="assets/mydempire-hero.png">
+
+<div class="heroBelow">
+<img class="nameLogo" src="assets/logo-name.png">
+
+<div class="tags">
+<span class="tag">🔐 Keychain Verified</span>
+<span class="tag">📦 Sealed Packs</span>
+<span class="tag">🧪 Invite-Only Test</span>
+<span class="tag">🧾 Max 10 packs/wallet</span>
+</div>
+</div>
+</div>
+
+<!-- GRID -->
+
 
   <div class="mainGrid">
     <div class="card">
       <h2 class="hTitle">PRE-GENESIS Pack Sale (Closed Testing)</h2>
       <p class="hText">
-        This is a controlled live test to validate payments, minting, and UI stability before Genesis launch.
+        Pre-Genesis is a controlled live test designed to validate core gameplay, payments, minting, and platform stability before the Genesis launch.
         Packs stay sealed after purchase and will appear inside your Dashboard for opening.
       </p>
       <p class="hText">
-<b>Price:</b> 3 HIVE per pack · <b>Cap:</b> 10 packs per wallet · <b>Phase:</b> Invite-only
-</p>
-
-<div class="progress-pack-row">
-
-<div class="empire-path-card">
-  <div class="empire-path-head">
-    <div class="empire-path-eyebrow">Genesis Progression</div>
-        <h2 class="empire-path-title">From First Pack to Industrial Empire</h2>
-    <p class="empire-path-subtitle">
-      Secure land, deploy blueprints, establish factories, generate EMP, and expand your economic network step by step.
-    </p>
-  </div>
-  
-  <div class="empire-path-grid">
-    <div class="empire-path-step">
-      <div class="empire-step-badge">01</div>
-      <div class="empire-step-icon">PACK</div>
-      <div class="empire-step-title">Acquire Packs</div>
-      <div class="empire-step-text">
-        Begin your journey by securing pre-genesis packs.
-      </div>
-    </div>
-
-    <div class="empire-path-step">
-      <div class="empire-step-badge">02</div>
-      <div class="empire-step-icon">LAND</div>
-      <div class="empire-step-title">Unlock Territory</div>
-      <div class="empire-step-text">
-        Reveal lands and prepare the foundation of your empire.
-      </div>
-    </div>
-
-    <div class="empire-path-step">
-      <div class="empire-step-badge">03</div>
-      <div class="empire-step-icon">BUILD</div>
-      <div class="empire-step-title">Construct Industry</div>
-      <div class="empire-step-text">
-        Use blueprints to establish factories across your slots.
-      </div>
-    </div>
-
-    <div class="empire-path-step">
-      <div class="empire-step-badge">04</div>
-      <div class="empire-step-icon">EMP</div>
-      <div class="empire-step-title">Generate Power</div>
-      <div class="empire-step-text">
-        Produce EMP and strengthen your long-term industrial output.
-      </div>
-    </div>
-
-    <div class="empire-path-step">
-      <div class="empire-step-badge">05</div>
-      <div class="empire-step-icon">GROW</div>
-      <div class="empire-step-title">Expand Strategically</div>
-      <div class="empire-step-text">
-        Upgrade, optimize, and grow into a larger economic force.
-      </div>
-    </div>
-  </div>
-
-  <div class="empire-path-footer">
-    <div class="empire-path-highlight">
-      Ultra-rare Relics can grant elite strategic advantages to fortunate founders.
-    </div>
-    <div class="empire-path-note">
-      Every empire begins with a single move.
-    </div>
-  </div>
-</div>
+        <b>Price:</b> 3 HIVE per pack · <b>Cap:</b> 10 packs per wallet · <b>Phase:</b> Invite-only
       </p>
+
+      <div class="empire-path-card">
+        <div class="empire-path-head">
+          <div class="empire-path-eyebrow">Genesis Progression</div>
+          <h2 class="empire-path-title">From First Pack to Industrial Empire</h2>
+          <p class="empire-path-subtitle">
+            Secure land, deploy blueprints, establish factories, generate EMP, and expand your economic network step by step.
+          </p>
+        </div>
+
+        <div class="empire-path-grid">
+          <div class="empire-path-step">
+            <div class="empire-step-badge">01</div>
+            <div class="empire-step-icon">PACK</div>
+            <div class="empire-step-title">Acquire Packs</div>
+            <div class="empire-step-text">Begin your journey by securing pre-genesis packs.</div>
+          </div>
+
+          <div class="empire-path-step">
+            <div class="empire-step-badge">02</div>
+            <div class="empire-step-icon">LAND</div>
+            <div class="empire-step-title">Unlock Territory</div>
+            <div class="empire-step-text">Reveal lands and prepare the foundation of your empire.</div>
+          </div>
+
+          <div class="empire-path-step">
+            <div class="empire-step-badge">03</div>
+            <div class="empire-step-icon">BUILD</div>
+            <div class="empire-step-title">Construct Industry</div>
+            <div class="empire-step-text">Use blueprints to establish factories across your slots.</div>
+          </div>
+
+          <div class="empire-path-step">
+            <div class="empire-step-badge">04</div>
+            <div class="empire-step-icon">EMP</div>
+            <div class="empire-step-title">Generate Power</div>
+            <div class="empire-step-text">Produce EMP and strengthen your long-term industrial output.</div>
+          </div>
+
+          <div class="empire-path-step">
+            <div class="empire-step-badge">05</div>
+            <div class="empire-step-icon">GROW</div>
+            <div class="empire-step-title">Expand Strategically</div>
+            <div class="empire-step-text">Upgrade, optimize, and grow into a larger economic force.</div>
+          </div>
+        </div>
+
+        <div class="empire-path-footer">
+          <div class="empire-path-highlight">
+            Ultra-rare Relics can grant elite strategic advantages to fortunate founders.
+          </div>
+          <div class="empire-path-note">
+            Every empire begins with a single move.
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -833,297 +554,36 @@ body{
       </div>
 
       <div id="status" class="status">Ready ✅</div>
+
       <div class="inside-pack-mini">
-  <div class="inside-pack-mini-title">Inside a Genesis Pack</div>
+        <div class="inside-pack-mini-title">Inside a Genesis Pack</div>
 
-  <div class="inside-pack-mini-grid">
-    <div class="inside-pack-mini-item land">
-      <div class="inside-pack-mini-icon">🌍</div>
-      <div class="inside-pack-mini-name">Land</div>
-    </div>
-
-    <div class="inside-pack-mini-item blueprint">
-      <div class="inside-pack-mini-icon">📜</div>
-      <div class="inside-pack-mini-name">Blueprint</div>
-    </div>
-
-    <div class="inside-pack-mini-item emp">
-      <div class="inside-pack-mini-icon">⚡</div>
-      <div class="inside-pack-mini-name">EMP</div>
-    </div>
-
-    <div class="inside-pack-mini-item relic">
-      <div class="inside-pack-mini-icon">💎</div>
-      <div class="inside-pack-mini-name">Relic</div>
-    </div>
-  </div>
-
-  <div class="inside-pack-mini-note">
-    Land, blueprints, EMP, and a tiny chance of an ultra-rare relic.
-  </div>
-</div>
-    </div>
-  </div>
-
-  <div class="factorySection">
-    <section class="industry-showcase">
-      <div class="industry-slider-wrap">
-        <button type="button" class="slider-btn" id="industry-prev-btn">‹</button>
-
-        <div class="industry-slider">
-          <div class="industry-slide active">
-            <img src="assets/food-building.png" alt="Food Industry" class="industry-slide-img" />
-            <div class="industry-label">🌾 <span class="industry-name-text">Food</span></div>
+        <div class="inside-pack-mini-grid">
+          <div class="inside-pack-mini-item land">
+            <div class="inside-pack-mini-icon">🌍</div>
+            <div class="inside-pack-mini-name">Land</div>
           </div>
 
-          <div class="industry-slide active">
-            <img src="assets/textile-building.png" alt="Textile Industry" class="industry-slide-img" />
-            <div class="industry-label">🧵 <span class="industry-name-text">Textile</span></div>
+          <div class="inside-pack-mini-item blueprint">
+            <div class="inside-pack-mini-icon">📜</div>
+            <div class="inside-pack-mini-name">Blueprint</div>
           </div>
 
-          <div class="industry-slide">
-            <img src="assets/pharma-building.png" alt="Pharma Industry" class="industry-slide-img" />
-            <div class="industry-label"><span class="pharma-rx">Rx</span><span class="industry-name-text">Pharma</span></div>
+          <div class="inside-pack-mini-item emp">
+            <div class="inside-pack-mini-icon">⚡</div>
+            <div class="inside-pack-mini-name">EMP</div>
           </div>
 
-          <div class="industry-slide">
-            <img src="assets/chemical-building.png" alt="Chemical Industry" class="industry-slide-img" />
-            <div class="industry-label">⚗ <span class="industry-name-text">Chemical</span></div>
-          </div>
-
-          <div class="industry-slide">
-            <img src="assets/supermarket-building.png" alt="Supermarket Industry" class="industry-slide-img" />
-            <div class="industry-label">🛒 <span class="industry-name-text">Supermarket</span></div>
+          <div class="inside-pack-mini-item relic">
+            <div class="inside-pack-mini-icon">💎</div>
+            <div class="inside-pack-mini-name">Relic</div>
           </div>
         </div>
 
-        <button type="button" class="slider-btn" id="industry-next-btn">›</button>
+        <div class="inside-pack-mini-note">
+          Land, blueprints, EMP, and a tiny chance of an ultra-rare relic.
+        </div>
       </div>
-    </section>
-  </div>
-
-  <footer class="site-footer">
-    <div class="footer-brand-center">
-      <img src="assets/empire-sign.png" alt="MydEmpire Logo" class="footer-logo-center">
-
-      <div class="community-links">
-        <a href="https://discord.gg/npbnDpUe" target="_blank" rel="noopener noreferrer">
-          <img src="assets/discord.svg" alt="Discord">
-        </a>
-
-        <a href="https://x.com/my_d_empire" target="_blank" rel="noopener noreferrer">
-          <img src="assets/x.png" alt="X">
-        </a>
-
-        <a href="https://hive.blog/@mydempire" target="_blank" rel="noopener noreferrer">
-          <img src="assets/hive.png" alt="Hive Blog">
-        </a>
-      </div>
-
-      <div class="foot">MydEmpire — No hype, just strategy + fun 🎮</div>
     </div>
-  </footer>
-
-</div>
-
-<script src="js/hive.js"></script>
-<script src="js/nav-auth.js"></script>
-<script src="js/home.js?v=6"></script>
-
-<script>
-function connectWallet(){
-  if(!window.hive_keychain){
-    alert("Hive Keychain not installed");
-    return;
-  }
-
-  const input = document.getElementById("hiveUsernameInput");
-  const username = input.value.trim().replace("@", "").toLowerCase();
-
-  if(!username){
-    alert("Please enter your Hive username first.");
-    return;
-  }
-
-  window.hive_keychain.requestSignBuffer(
-    username,
-    "MydEmpire Login " + Date.now(),
-    "Posting",
-    function(res){
-      if(!res.success){
-        alert("Login cancelled");
-        return;
-      }
-
-      localStorage.setItem("mde_username", username);
-      document.getElementById("walletDisplay").textContent = "Connected: @" + username;
-      document.getElementById("connectBtn").style.display = "none";
-      document.getElementById("disconnectBtn").style.display = "inline-flex";
-
-      const dash = document.getElementById("dashboardLink");
-      dash.style.display = "inline-flex";
-      dash.href = "player-dashboard.html?user=" + username;
-    }
-  );
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  const user = localStorage.getItem("mde_username");
-  if(!user) return;
-
-  document.getElementById("hiveUsernameInput").value = user;
-  document.getElementById("walletDisplay").textContent = "Connected: @" + user;
-  document.getElementById("connectBtn").style.display = "none";
-  document.getElementById("disconnectBtn").style.display = "inline-flex";
-
-  const dash = document.getElementById("dashboardLink");
-  dash.style.display = "inline-flex";
-  dash.href = "player-dashboard.html?user=" + user;
-});
-
-async function buyPack(qty) {
-  const username = localStorage.getItem("mde_username");
-
-  if (!username) {
-    alert("Please connect wallet first.");
-    return;
-  }
-
-  if (!window.hive_keychain) {
-    alert("Hive Keychain not found.");
-    return;
-  }
-
-  const packs = parseInt(qty || "1", 10);
-
-  if (!packs || packs < 1) {
-    alert("Invalid pack quantity.");
-    return;
-  }
-
-  try {
-    const orderRes = await fetch("https://mydempire-backend-1.onrender.com/create-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, packs })
-    });
-
-    const orderData = await orderRes.json();
-
-    if (!orderRes.ok || !orderData.success) {
-      alert(orderData.error || "Create order failed.");
-      return;
-    }
-
-    const order = orderData.order;
-    const orderId = order.id;
-    const amount = Number(order.hive_amount).toFixed(3);
-    const memo = `MYDEMPIRE_ORDER_${orderId}`;
-
-    window.hive_keychain.requestTransfer(
-      username,
-      "mydempiregain",
-      amount,
-      memo,
-      "HIVE",
-      async function (response) {
-        if (!response || !response.success) {
-          alert("Transaction cancelled.");
-          return;
-        }
-
-        const txid =
-          response?.result?.id ||
-          response?.result?.trx_id ||
-          response?.id;
-
-        if (!txid) {
-          alert("Transaction completed but txid missing.");
-          return;
-        }
-
-        const confirmRes = await fetch("https://mydempire-backend-1.onrender.com/confirm-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ orderId, txid })
-        });
-
-        const confirmed = await confirmRes.json();
-
-        if (!confirmed.success) {
-          alert("Payment confirmation failed.");
-          return;
-        }
-
-        alert("✅ Packs minted successfully!");
-      }
-    );
-  } catch (err) {
-    console.error(err);
-    alert("Unexpected error.");
-  }
-}
-
-function disconnectWallet() {
-  localStorage.removeItem("mde_username");
-
-  const walletDisplay = document.getElementById("walletDisplay");
-  const dash = document.getElementById("dashboardLink");
-  const disconnectBtn = document.getElementById("disconnectBtn");
-  const connectBtn = document.getElementById("connectBtn");
-
-  if(walletDisplay) walletDisplay.textContent = "";
-  if(dash) dash.style.display = "none";
-  if(disconnectBtn) disconnectBtn.style.display = "none";
-  if(connectBtn) connectBtn.style.display = "inline-flex";
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  const slides = document.querySelectorAll(".industry-slide");
-  const prevBtn = document.getElementById("industry-prev-btn");
-  const nextBtn = document.getElementById("industry-next-btn");
-
-  if (!slides.length || !prevBtn || !nextBtn) return;
-
-  let currentStart = 0;
-  const visibleCount = window.innerWidth <= 860 ? 1 : 2;
-
-  function showSlides(startIndex) {
-    slides.forEach((slide, i) => {
-      const active = i >= startIndex && i < startIndex + visibleCount;
-      slide.classList.toggle("active", active);
-    });
-  }
-
-  prevBtn.addEventListener("click", function () {
-    currentStart = currentStart - visibleCount;
-    if (currentStart < 0) {
-      currentStart = Math.max(0, slides.length - visibleCount);
-    }
-    showSlides(currentStart);
-  });
-
-  nextBtn.addEventListener("click", function () {
-    currentStart = currentStart + visibleCount;
-    if (currentStart >= slides.length) {
-      currentStart = 0;
-    }
-    showSlides(currentStart);
-  });
-
-  showSlides(currentStart);
-});
-</script>
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
+  </div>
 
