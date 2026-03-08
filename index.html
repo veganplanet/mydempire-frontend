@@ -672,6 +672,75 @@ body{
 .pack-item.relic{
   border-top:4px solid #8b5cf6;
 }
+.inside-pack-mini{
+  margin-top:18px;
+  padding:16px;
+  background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+  border:1px solid #e5e7eb;
+  border-radius:18px;
+}
+
+.inside-pack-mini-title{
+  font-size:15px;
+  font-weight:800;
+  color:#0f172a;
+  margin-bottom:12px;
+}
+
+.inside-pack-mini-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.inside-pack-mini-item{
+  text-align:center;
+  padding:12px 8px;
+  border-radius:14px;
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+}
+
+.inside-pack-mini-item.land{
+  border-top:3px solid #22c55e;
+}
+
+.inside-pack-mini-item.blueprint{
+  border-top:3px solid #3b82f6;
+}
+
+.inside-pack-mini-item.emp{
+  border-top:3px solid #f59e0b;
+}
+
+.inside-pack-mini-item.relic{
+  border-top:3px solid #8b5cf6;
+}
+
+.inside-pack-mini-icon{
+  font-size:22px;
+  margin-bottom:6px;
+}
+
+.inside-pack-mini-name{
+  font-size:13px;
+  font-weight:800;
+  color:#111827;
+}
+
+.inside-pack-mini-note{
+  margin-top:12px;
+  font-size:12px;
+  line-height:1.5;
+  color:#64748b;
+}
+
+@media (max-width: 640px){
+  .inside-pack-mini-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+  
 </style>
 </head>
 
@@ -867,6 +936,35 @@ body{
       </div>
 
       <div id="status" class="status">Ready ✅</div>
+      <div class="inside-pack-mini">
+  <div class="inside-pack-mini-title">Inside a Genesis Pack</div>
+
+  <div class="inside-pack-mini-grid">
+    <div class="inside-pack-mini-item land">
+      <div class="inside-pack-mini-icon">🌍</div>
+      <div class="inside-pack-mini-name">Land</div>
+    </div>
+
+    <div class="inside-pack-mini-item blueprint">
+      <div class="inside-pack-mini-icon">📜</div>
+      <div class="inside-pack-mini-name">Blueprint</div>
+    </div>
+
+    <div class="inside-pack-mini-item emp">
+      <div class="inside-pack-mini-icon">⚡</div>
+      <div class="inside-pack-mini-name">EMP</div>
+    </div>
+
+    <div class="inside-pack-mini-item relic">
+      <div class="inside-pack-mini-icon">💎</div>
+      <div class="inside-pack-mini-name">Relic</div>
+    </div>
+  </div>
+
+  <div class="inside-pack-mini-note">
+    Land, blueprints, EMP, and a tiny chance of an ultra-rare relic.
+  </div>
+</div>
     </div>
   </div>
 
@@ -1121,6 +1219,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 </body>
 </html>
+
 
 
 
