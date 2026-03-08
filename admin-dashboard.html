@@ -1,1 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MydEmpire — Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      color: #111827;
+      margin: 0;
+      padding: 24px;
+    }
 
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+    }
+
+    .sub {
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    .top-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #f9fafb;
+    }
+
+    .primary {
+      background: #dbeafe;
+      border-color: #93c5fd;
+    }
+
+    .danger {
+      background: #fee2e2;
+      border-color: #fca5a5;
+    }
+
+    .section {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    .section h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 20px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .label {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .value {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    input {
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      min-width: 240px;
+      font-size: 14px;
+    }
+
+    .player-box .kv {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>MydEmpire — Admin Dashboard</h1>
+    <div class="sub">Economy control center for Genesis / Pre-Genesis</div>
+
+    <div class="top-row">
+      <button id="connect-admin-btn" class="primary">Connect Admin</button>
+      <button id="distribute-btn">Distribute Revenue</button>
+      <button id="pause-pack-sales-btn" class="danger">Pause Pack Sales</button>
+      <button id="resume-pack-sales-btn">Resume Pack Sales</button>
+    </div>
+
+    <div class="pill" id="phase-pill">Game Phase: --</div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <div class="metrics">
+        <div class="card">
+          <div class="label">Genesis Packs Sold</div>
+          <div class="value" id="metric-packs-sold">--</div>
+          <div class="small" id="metric-packs-remaining">Remaining: --</div>
+        </div>
+
+        <div class="card">
+          <div class="label">Treasury Balance</div>
+          <div class="value" id="metric-treasury">--</div>
+        </div>
+
+        <div class="card">
+          <div class="label">EMP Supply</div>
+          <div class="value" id="metric-emp">--</div>
+        </div>
+
+        <div class="card">
+          <div class="label">Factories</div>
+          <div class="value" id="metric-factories">--</div>
+        </div>
+
+        <div class="card">
+          <div class="label">Active Players</div>
+          <div class="value" id="metric-players">--</div>
+        </div>
+      </div>
+
+      <div class="status" id="admin-status">Not connected yet.</div>
+    </div>
+
+    <div class="section">
+      <h2>Player Inspector</h2>
+
+      <div class="row">
+        <input
+          type="text"
+          id="player-search-input"
+          placeholder="Enter Hive username"
+        />
+        <button id="player-search-btn">Inspect Player</button>
+      </div>
+
+      <div id="player-inspector-box" class="player-box">
+        <div class="kv"><span>Player</span><span>--</span></div>
+        <div class="kv"><span>EMP Balance</span><span>--</span></div>
+        <div class="kv"><span>Lands</span><span>--</span></div>
+        <div class="kv"><span>Factories</span><span>--</span></div>
+        <div class="kv"><span>Blueprints</span><span>--</span></div>
+        <div class="kv"><span>Unopened Packs</span><span>--</span></div>
+        <div class="kv"><span>Relics</span><span>--</span></div>
+        <div class="kv"><span>WRITs</span><span>--</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const LOCAL_API = "http://localhost:10000";
+    const PROD_API = "https://mydempire-backend-1.onrender.com";
+
+    const isLocal =
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1";
+
+    const API_BASE = isLocal ? LOCAL_API : PROD_API;
+
+    let ADMIN_KEY = "";
+
+    function setStatus(message) {
+      document.getElementById("admin-status").textContent = message;
+    }
+
+    async function connectAdmin() {
+      const key = prompt("Enter ADMIN_SECRET");
+      if (!key) return;
+
+      ADMIN_KEY = key.trim();
+      setStatus("Admin connected. Loading overview...");
+
+      await loadAdminOverview();
+    }
+
+    async function loadAdminOverview() {
+      try {
+        const r = await fetch(`${API_BASE}/admin/overview`, {
+          headers: {
+            "x-admin-key": ADMIN_KEY
+          }
+        });
+
+        const data = await r.json();
+        console.log("admin overview:", data);
+
+        if (!data.success) {
+          alert(data.error || "Failed to load admin overview");
+          setStatus("Failed to load admin overview.");
+          return;
+        }
+
+        document.getElementById("metric-packs-sold").textContent =
+          data.packs.genesis_sold;
+
+        document.getElementById("metric-packs-remaining").textContent =
+          "Remaining: " + data.packs.genesis_remaining;
+
+        document.getElementById("metric-emp").textContent =
+          data.emp.total_supply;
+
+        document.getElementById("metric-factories").textContent =
+          data.factories.total;
+
+        document.getElementById("metric-players").textContent =
+          data.players.active;
+
+        document.getElementById("metric-treasury").textContent =
+          data.treasury.balance;
+
+        document.getElementById("phase-pill").textContent =
+          "Game Phase: " + data.phase;
+
+        setStatus("Overview loaded successfully.");
+      } catch (err) {
+        console.error(err);
+        alert("Error loading admin overview.");
+        setStatus("Error loading admin overview.");
+      }
+    }
+
+    async function inspectPlayer() {
+      const username = document
+        .getElementById("player-search-input")
+        .value.trim();
+
+      if (!username) {
+        alert("Enter username first");
+        return;
+      }
+
+      if (!ADMIN_KEY) {
+        alert("Connect Admin first");
+        return;
+      }
+
+      try {
+        const r = await fetch(`${API_BASE}/admin/player/${username}`, {
+          headers: {
+            "x-admin-key": ADMIN_KEY
+          }
+        });
+
+        const data = await r.json();
+        console.log("player inspect:", data);
+
+        if (!data.success) {
+          alert(data.error || "Failed to inspect player");
+          return;
+        }
+
+        document.getElementById("player-inspector-box").innerHTML = `
+          <div class="kv"><span>Player</span><span>@${data.username}</span></div>
+          <div class="kv"><span>EMP Balance</span><span>${data.emp_balance}</span></div>
+          <div class="kv"><span>Lands</span><span>${data.total_lands}</span></div>
+          <div class="kv"><span>Factories</span><span>${data.total_factories}</span></div>
+          <div class="kv"><span>Blueprints</span><span>${data.total_blueprints}</span></div>
+          <div class="kv"><span>Unopened Packs</span><span>${data.unopened_packs}</span></div>
+          <div class="kv"><span>Relics</span><span>${data.relic_count}</span></div>
+          <div class="kv"><span>WRITs</span><span>${data.writ_count}</span></div>
+        `;
+      } catch (err) {
+        console.error(err);
+        alert("Error inspecting player.");
+      }
+    }
+
+    async function togglePackSales(value) {
+      if (!ADMIN_KEY) {
+        alert("Connect Admin first");
+        return;
+      }
+
+      try {
+        const r = await fetch(`${API_BASE}/admin/flags/pack_sales_enabled`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-key": ADMIN_KEY
+          },
+          body: JSON.stringify({ value })
+        });
+
+        const data = await r.json();
+        console.log("toggle result:", data);
+
+        if (!data.success) {
+          alert(data.error || "Failed to update pack sales flag");
+          return;
+        }
+
+        alert("Pack sales updated to: " + value);
+        loadAdminOverview();
+      } catch (err) {
+        console.error(err);
+        alert("Error updating pack sales flag.");
+      }
+    }
+
+    async function distributeRevenue() {
+      if (!ADMIN_KEY) {
+        alert("Connect Admin first");
+        return;
+      }
+
+      try {
+        const r = await fetch(`${API_BASE}/admin/distribute`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-key": ADMIN_KEY
+          }
+        });
+
+        const data = await r.json();
+        console.log("distribute result:", data);
+
+        if (!data.success) {
+          alert(data.error || "Distribution failed");
+          return;
+        }
+
+        alert("Revenue distributed successfully.");
+        loadAdminOverview();
+      } catch (err) {
+        console.error(err);
+        alert("Error distributing revenue.");
+      }
+    }
+
+    document
+      .getElementById("connect-admin-btn")
+      .addEventListener("click", connectAdmin);
+
+    document
+      .getElementById("player-search-btn")
+      .addEventListener("click", inspectPlayer);
+
+    document
+      .getElementById("pause-pack-sales-btn")
+      .addEventListener("click", () => togglePackSales(false));
+
+    document
+      .getElementById("resume-pack-sales-btn")
+      .addEventListener("click", () => togglePackSales(true));
+
+    document
+      .getElementById("distribute-btn")
+      .addEventListener("click", distributeRevenue);
+  </script>
+</body>
+</html>

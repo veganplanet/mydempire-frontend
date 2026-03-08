@@ -1800,6 +1800,41 @@ button {
   }
 }
 
+/* ===== BUILD FACTORY UI ===== */
+.build-factory-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.build-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.build-row label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.build-input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #ffffff;
+  font-size: 14px;
+  color: #111827;
+}
+
+.build-input:focus,
+.primary-select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+
   </style>
 </head>
 <body data-requires-login="true">
@@ -2013,7 +2048,55 @@ button {
     <small>Your current Genesis factory blueprints</small>
   </div>
 
-  
+  <div class="section" style="margin-top: 0; margin-bottom: 14px; background:#f9fafb;">
+  <div class="section-header" style="margin-bottom: 12px;">
+    <h2 style="font-size:18px;">Build Factory</h2>
+    <small>Choose land, blueprint, and optional factory name</small>
+  </div>
+
+  <div class="build-factory-box">
+    <div class="build-row">
+      <label for="build-land-select">Choose Land</label>
+      <select id="build-land-select" class="primary-select">
+        <option value="">Loading lands...</option>
+      </select>
+    </div>
+
+    <div class="build-row">
+      <label for="build-blueprint-select">Choose Blueprint</label>
+      <select id="build-blueprint-select" class="primary-select">
+        <option value="">Loading blueprints...</option>
+      </select>
+    </div>
+
+    <div class="build-row">
+      <label for="build-factory-name">Factory Name (optional)</label>
+      <input
+        id="build-factory-name"
+        type="text"
+        maxlength="30"
+        placeholder="Example: YOUR NAME Textile Works"
+        class="build-input"
+      />
+    </div>
+<div class="build-row">
+  <label style="display:flex; align-items:center; gap:8px;">
+    <input type="checkbox" id="build-use-relic" />
+    Use Relic Construction Privilege
+  </label>
+  <div class="status-text" id="build-relic-note">
+    If you own a relic, this will make build instant and reduce fee to 25%.
+  </div>
+</div>
+    <div class="build-row">
+      <button id="build-factory-btn" class="primary-button">Build Factory</button>
+    </div>
+
+    <div id="build-factory-status" class="status-text">
+      Select a land and blueprint to begin.
+    </div>
+  </div>
+</div>
 
   <!-- Existing textual grid of blueprints -->
   <div id="blueprints-grid" class="factory-grid">
@@ -2330,6 +2413,7 @@ function initEmpBuyButtons() {
 
     let empireLands = [];
     let allFactoriesFlat = [];
+    let playerBlueprints = [];
 
     function landTierLabel(tier) {
       if (tier === "L1") return "L1 Frontier";
@@ -2698,6 +2782,7 @@ alert(
 
         renderLandsTab();
         renderConstructionTab();
+        renderBuildFactorySection();
         renderEmpirePreview();
       } catch (err) {
         console.error("Failed to load empire overview:", err);
@@ -2885,20 +2970,24 @@ const epText = (st === "ACTIVE" && epNum !== null) ? `${epNum.toFixed(2)} EP/day
       claimText = (claimDays === null) ? "" : ` • ${claimDays.toFixed(1)}d since claim`;
     }
 
-    row.innerHTML = `
-      <div class="factory-main">
-        <div class="factory-title">
-          Factory #${f.factory_id ?? f.id ?? "?"}
-          <span class="factory-status-pill ${statusCls}">${st}</span>
-        </div>
-        <div class="factory-sub">
-          Blueprint tier: ${blueprintTier} • Level: ${levelText}${claimText}
-        </div>
-      </div>
-      <div class="factory-meta">
-        ${epText}
-      </div>
-    `;
+    const factoryId = f.factory_id ?? f.id ?? "?";
+const factoryName =
+  (String(f.factory_name || "").trim()) || `Factory #${factoryId}`;
+
+row.innerHTML = `
+  <div class="factory-main">
+    <div class="factory-title">
+      ${factoryName}
+      <span class="factory-status-pill ${statusCls}">${st.toLowerCase()}</span>
+    </div>
+    <div class="factory-sub">
+      Blueprint tier: ${blueprintTier} • Level: ${levelText}${claimText}
+    </div>
+  </div>
+  <div class="factory-meta">
+    ${epText}
+  </div>
+`;
 
     factoriesList.appendChild(row);
   }
@@ -2912,46 +3001,65 @@ const epText = (st === "ACTIVE" && epNum !== null) ? `${epNum.toFixed(2)} EP/day
 }  
 
     function renderConstructionTab() {
-      const container = document.getElementById("construction-grid");
-      container.innerHTML = "";
+  const container = document.getElementById("construction-grid");
+  if (!container) return;
 
-      const underConstruction = allFactoriesFlat.filter(f => {
-        const s = (f.status || "").toUpperCase();
-        return s && s !== "ACTIVE";
-      });
+  container.innerHTML = "";
 
-      if (!underConstruction.length) {
-        container.innerHTML =
-          '<p class="status-text">No factories under construction or inactive right now.</p>';
-        return;
-      }
+  const underConstruction = (allFactoriesFlat || []).filter(f => {
+    const s = String(f.status || "").trim().toUpperCase();
+    return s !== "ACTIVE";
+  });
 
-      for (const f of underConstruction) {
-        const card = document.createElement("div");
-        card.className = "factory-card";
+  if (!underConstruction.length) {
+    container.innerHTML =
+      '<p class="status-text">No factories under construction or inactive right now.</p>';
+    return;
+  }
 
-        const status = f.status || "UNKNOWN";
-        const statusCls = statusClass(status);
-        const ep = typeof f.factoryEP === "number" ? f.factoryEP : null;
+  for (const f of underConstruction) {
+    const card = document.createElement("div");
+    card.className = "factory-card";
 
-        card.innerHTML = `
-          <div class="factory-card-header">
-            <div class="factory-card-title">Factory #${f.factory_id}</div>
-            <div class="factory-status-pill ${statusCls}">${status}</div>
-          </div>
-          <div class="factory-card-meta">
-            Land #${f.land_id} (${landTierLabel(f.land_tier)})
-          </div>
-          <div class="factory-card-meta">
-            Blueprint tier: ${f.blueprint_tier || "?"} • Level: ${f.level || "?"}
-          </div>
-          <div class="factory-card-meta">
-            ${ep !== null ? ep.toFixed(2) + " EP/day" : ""}
-          </div>
-        `;
-        container.appendChild(card);
-      }
-    }
+    const status = String(f.status || "UNKNOWN").trim().toUpperCase();
+    const statusCls = statusClass(status);
+
+    const factoryId = f.id ?? f.factory_id ?? "?";
+    const factoryName =
+      (String(f.factory_name || "").trim()) || `Factory #${factoryId}`;
+
+    const landId = f.land_id ?? "?";
+    const landTier = f.land_tier || "";
+    const blueprintTier = f.blueprint_tier || "?";
+    const level = f.level || 1;
+
+    let readyText = "Ready time not available";
+
+if (f.upgrade_complete_at) {
+  const readyDate = new Date(f.upgrade_complete_at);
+  if (!isNaN(readyDate.getTime())) {
+    readyText = readyDate.toLocaleString();
+  }
+} else if (f.created_at) {
+  const createdDate = new Date(f.created_at);
+  if (!isNaN(createdDate.getTime())) {
+    readyText = `Started at: ${createdDate.toLocaleString()}`;
+  }
+}
+
+    card.innerHTML = `
+      <div class="factory-card-header">
+        <div class="factory-card-title">${factoryName}</div>
+        <div class="factory-status-pill ${statusCls}">${status.toLowerCase()}</div>
+      </div>
+      <div class="factory-card-meta">Land #${landId} (${landTierLabel(landTier)})</div>
+      <div class="factory-card-meta">Blueprint tier: ${blueprintTier} • Level: ${level}</div>
+      <div class="factory-card-meta">Ready at: ${readyText}</div>
+    `;
+
+    container.appendChild(card);
+  }
+}
      
 // Small helpers for blueprint visuals
 const BP_INDUSTRY_IMAGES = {
@@ -2987,17 +3095,22 @@ const BP_LEVEL_COLORS = {
     if (!res.ok) throw new Error("HTTP " + res.status);
 
     const data = await res.json();
-    console.log("Blueprint inventory:", data);
+console.log("Blueprint inventory:", data);
 
-    const blueprints = data.blueprints || [];
+const blueprints = data.blueprints || [];
+playerBlueprints = blueprints;
 
-    window.blueprintInventory = blueprints;
+if (!blueprints.length) {
+  playerBlueprints = [];
+  renderBuildFactorySection();
+  grid.innerHTML =
+  '<p class="status-text">You do not have any factory blueprints recorded for this account.</p>';
+  return;
+}
 
-    if (!blueprints.length) {
-      grid.innerHTML =
-        '<p class="status-text">You do not have any factory blueprints recorded for this account.</p>';
-      return;
-    }
+// ... existing blueprint rendering code ...
+
+renderBuildFactorySection();
 
     grid.innerHTML = "";
 
@@ -3380,6 +3493,136 @@ await loadBlueprintMintInfo();
     grid.appendChild(tile);
   }
 }
+function getFreeBuildLands() {
+  if (!Array.isArray(empireLands)) return [];
+
+  return empireLands.filter(land => {
+    const tier = String(land.land_tier || "").toUpperCase();
+    const maxSlots = landSlotCount(tier);
+    const used = Array.isArray(land.factories) ? land.factories.length : 0;
+    return used < maxSlots;
+  });
+}
+
+function renderBuildFactorySection() {
+  const landSelect = document.getElementById("build-land-select");
+  const blueprintSelect = document.getElementById("build-blueprint-select");
+  const statusEl = document.getElementById("build-factory-status");
+
+  if (!landSelect || !blueprintSelect || !statusEl) return;
+
+  const freeLands = getFreeBuildLands();
+
+  // Lands
+  landSelect.innerHTML = "";
+  if (!freeLands.length) {
+    landSelect.innerHTML = `<option value="">No free land slots available</option>`;
+  } else {
+    landSelect.innerHTML = `<option value="">Select land</option>` + freeLands.map(land => {
+      const tier = String(land.land_tier || "").toUpperCase();
+      const maxSlots = landSlotCount(tier);
+      const used = Array.isArray(land.factories) ? land.factories.length : 0;
+      return `
+        <option value="${land.land_id}">
+          Land #${land.land_id} • ${landTierLabel(tier)} • Slots ${used}/${maxSlots}
+        </option>
+      `;
+    }).join("");
+  }
+
+  // Blueprints
+  blueprintSelect.innerHTML = "";
+  if (!Array.isArray(playerBlueprints) || !playerBlueprints.length) {
+    blueprintSelect.innerHTML = `<option value="">No blueprints available</option>`;
+  } else {
+    blueprintSelect.innerHTML = `<option value="">Select blueprint</option>` + playerBlueprints.map(bp => {
+      const label = `${bp.industry || "UNKNOWN"} ${bp.level || ""}`.trim();
+      return `
+        <option value="${bp.blueprint_id}">
+          #${bp.blueprint_id} • ${label}
+        </option>
+      `;
+    }).join("");
+  }
+
+  statusEl.textContent = "Select a land and blueprint to begin.";
+}
+
+async function buildFactoryFromUI() {
+  const landSelect = document.getElementById("build-land-select");
+  const blueprintSelect = document.getElementById("build-blueprint-select");
+  const nameInput = document.getElementById("build-factory-name");
+  const statusEl = document.getElementById("build-factory-status");
+  const btn = document.getElementById("build-factory-btn");
+
+  if (!landSelect || !blueprintSelect || !nameInput || !statusEl || !btn) return;
+
+  const landId = parseInt(landSelect.value, 10);
+  const blueprintId = parseInt(blueprintSelect.value, 10);
+  const factoryName = (nameInput.value || "").trim();
+  const useRelicBonus =
+  document.getElementById("build-use-relic")?.checked || false;
+
+  if (!landId) {
+    statusEl.textContent = "Please choose a land first.";
+    return;
+  }
+
+  if (!blueprintId) {
+    statusEl.textContent = "Please choose a blueprint first.";
+    return;
+  }
+
+  btn.disabled = true;
+  statusEl.textContent = "Building factory...";
+
+  try {
+    const res = await fetch(apiUrl("/build-factory"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+  username: PLAYER_USERNAME,
+  land_id: landId,
+  blueprint_id: blueprintId,
+  factory_name: factoryName,
+  use_relic_bonus: useRelicBonus
+})
+    });
+
+    const data = await res.json();
+    console.log("Build factory result:", data);
+
+    if (!res.ok || !data.success) {
+      statusEl.textContent = data.error || "Factory build failed.";
+      btn.disabled = false;
+      return;
+    }
+
+    statusEl.textContent = data.used_relic_bonus
+  ? `Relic build activated! Cost: ${data.build_cost_emp} EMP • Factory is active instantly.`
+  : `Factory build started successfully! Cost: ${data.build_cost_emp} EMP • Time: ${data.build_days} day(s)`;
+
+    nameInput.value = "";
+    const relicCheckbox = document.getElementById("build-use-relic");
+if (relicCheckbox) relicCheckbox.checked = false;
+
+    await loadDashboardSummary();
+    await loadEmpireOverview();
+    await loadBlueprints();
+
+  } catch (err) {
+    console.error("Build factory error:", err);
+    statusEl.textContent = "Error while building factory.";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+document
+  .getElementById("build-factory-btn")
+  .addEventListener("click", buildFactoryFromUI);
 
   </script>
 
