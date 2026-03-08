@@ -344,6 +344,136 @@ body{
     justify-content:center;
   }
 }
+  .empire-path-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+  margin-top: 20px;
+}
+
+.empire-path-head {
+  margin-bottom: 18px;
+}
+
+.empire-path-eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #2563eb;
+  margin-bottom: 8px;
+}
+
+.empire-path-title {
+  margin: 0 0 10px;
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.empire-path-subtitle {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #475569;
+  max-width: 760px;
+}
+
+.empire-path-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.empire-path-step {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 16px 14px;
+  position: relative;
+  min-height: 170px;
+}
+
+.empire-step-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #94a3b8;
+  letter-spacing: 0.08em;
+}
+
+.empire-step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 68px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+
+.empire-step-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.empire-step-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+.empire-path-footer {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.empire-path-highlight {
+  font-size: 14px;
+  font-weight: 700;
+  color: #7c3aed;
+  margin-bottom: 6px;
+}
+
+.empire-path-note {
+  font-size: 13px;
+  color: #64748b;
+}
+
+@media (max-width: 1080px) {
+  .empire-path-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .empire-path-card {
+    padding: 18px;
+  }
+
+  .empire-path-title {
+    font-size: 22px;
+  }
+
+  .empire-path-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 </head>
 
@@ -744,4 +874,5 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 </body>
 </html>
+
 
