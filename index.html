@@ -384,9 +384,14 @@ body{
 
 .empire-path-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 14px;
   margin-top: 20px;
+}
+
+.empire-path-step {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .empire-path-step {
@@ -416,12 +421,30 @@ body{
   height: 30px;
   padding: 0 10px;
   border-radius: 999px;
-  background: #eff6ff;
-  color: #1d4ed8;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
   margin-bottom: 14px;
+  color: white;
+}
+  .empire-path-step:nth-child(1) .empire-step-icon {
+  background:#22c55e;
+}
+
+.empire-path-step:nth-child(2) .empire-step-icon {
+  background:#f59e0b;
+}
+
+.empire-path-step:nth-child(3) .empire-step-icon {
+  background:#3b82f6;
+}
+
+.empire-path-step:nth-child(4) .empire-step-icon {
+  background:#8b5cf6;
+}
+
+.empire-path-step:nth-child(5) .empire-step-icon {
+  background:#ef4444;
 }
 
 .empire-step-title {
@@ -447,7 +470,10 @@ body{
   font-size: 14px;
   font-weight: 700;
   color: #7c3aed;
-  margin-bottom: 6px;
+  background: #f3e8ff;
+  padding: 10px 14px;
+  border-radius: 12px;
+  display: inline-block;
 }
 
 .empire-path-note {
@@ -473,6 +499,25 @@ body{
   .empire-path-grid {
     grid-template-columns: 1fr;
   }
+}
+  .empire-path-step:nth-child(1) {
+  border-top: 4px solid #22c55e;
+}
+
+.empire-path-step:nth-child(2) {
+  border-top: 4px solid #f59e0b;
+}
+
+.empire-path-step:nth-child(3) {
+  border-top: 4px solid #3b82f6;
+}
+
+.empire-path-step:nth-child(4) {
+  border-top: 4px solid #8b5cf6;
+}
+
+.empire-path-step:nth-child(5) {
+  border-top: 4px solid #ef4444;
 }
 </style>
 </head>
@@ -874,5 +919,6 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 </body>
 </html>
+
 
 
