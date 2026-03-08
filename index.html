@@ -7,288 +7,303 @@
 
 <style>
 :root{
---bg:#ffffff;
---ink:#0b1224;
---muted: rgba(11,18,36,.70);
-
---card:#ffffff;
---border:#e6e9ef;
---border2:#d7dce6;
-
---shadow: 0 18px 60px rgba(15,23,42,0.10);
---shadow2: 0 10px 24px rgba(15,23,42,0.08);
-
---green:#16a34a;
---green2:#0f8a3d;
-
---radius: 18px;
+  --bg:#ffffff;
+  --ink:#0b1224;
+  --muted: rgba(11,18,36,.70);
+  --card:#ffffff;
+  --border:#e6e9ef;
+  --border2:#d7dce6;
+  --shadow: 0 18px 60px rgba(15,23,42,0.10);
+  --shadow2: 0 10px 24px rgba(15,23,42,0.08);
+  --green:#16a34a;
+  --radius:18px;
 }
 
 *{ box-sizing:border-box; }
 html,body{ height:100%; }
 
 body{
-margin:0;
-font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-background: var(--bg);
-color: var(--ink);
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background:var(--bg);
+  color:var(--ink);
 }
 
 .wrap{
-max-width:1180px;
-margin:0 auto;
-padding:16px 14px 60px;
+  max-width:1180px;
+  margin:0 auto;
+  padding:16px 14px 60px;
 }
 
 /* NAV */
-
 .topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:12px;
-flex-wrap:wrap;
-padding:10px 2px 14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:10px 2px 14px;
 }
 
 .navPills{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
 .pill{
-display:inline-flex;
-align-items:center;
-padding:9px 14px;
-border-radius:999px;
-background:#f5f7fb;
-border:1px solid var(--border);
-font-size:14px;
-font-weight:800;
-text-decoration:none;
-color:#0b1224;
+  display:inline-flex;
+  align-items:center;
+  padding:9px 14px;
+  border-radius:999px;
+  background:#f5f7fb;
+  border:1px solid var(--border);
+  font-size:14px;
+  font-weight:800;
+  text-decoration:none;
+  color:#0b1224;
 }
 
 .pill.dashboard{
-background:#eaf7ef;
-border-color:rgba(22,163,74,.25);
-font-weight:900;
-}
-
-.walletChip{
-display:none;
-gap:10px;
-align-items:center;
-padding:8px 10px;
-border-radius:999px;
-background:#f5f7fb;
-border:1px solid var(--border);
-}
-
-.chip{
-padding:7px 10px;
-border-radius:999px;
-background:rgba(11,18,36,.06);
-font-weight:900;
-font-size:14px;
+  background:#eaf7ef;
+  border-color:rgba(22,163,74,.25);
+  font-weight:900;
 }
 
 .btnTiny{
-padding:8px 12px;
-border-radius:12px;
-border:1px solid rgba(239,68,68,.22);
-background:rgba(239,68,68,.10);
-cursor:pointer;
-font-weight:900;
+  padding:8px 12px;
+  border-radius:12px;
+  border:1px solid rgba(239,68,68,.22);
+  background:rgba(239,68,68,.10);
+  cursor:pointer;
+  font-weight:900;
 }
 
 /* HERO */
-
 .hero{
-border-radius:24px;
-overflow:hidden;
-border:1px solid var(--border);
-box-shadow:var(--shadow);
+  border-radius:24px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
 }
 
 .heroImg{
-width:100%;
-height:420px;
-object-fit:cover;
+  width:100%;
+  height:420px;
+  object-fit:cover;
+  display:block;
 }
 
 .heroBelow{
-padding:16px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-flex-wrap:wrap;
+  padding:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
 }
 
 .nameLogo{
-height:62px;
+  height:62px;
 }
 
 .tags{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
 .tag{
-padding:8px 12px;
-border-radius:999px;
-background:#f5f7fb;
-border:1px solid var(--border);
-font-size:13px;
-font-weight:800;
+  padding:8px 12px;
+  border-radius:999px;
+  background:#f5f7fb;
+  border:1px solid var(--border);
+  font-size:13px;
+  font-weight:800;
 }
 
 /* GRID */
-
 .mainGrid{
-display:grid;
-grid-template-columns:1.1fr .9fr;
-gap:16px;
-margin-top:16px;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:16px;
+  margin-top:16px;
 }
 
 .card{
-background:var(--card);
-border:1px solid var(--border);
-border-radius:18px;
-box-shadow:var(--shadow2);
-padding:16px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow2);
+  padding:16px;
 }
 
 .hTitle{
-margin:0;
-font-size:18px;
-font-weight:900;
+  margin:0;
+  font-size:18px;
+  font-weight:900;
 }
 
 .hText{
-margin-top:10px;
-color:var(--muted);
-font-size:14px;
-line-height:1.6;
+  margin-top:10px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
 }
 
 .btn{
-width:100%;
-padding:12px;
-border-radius:14px;
-border:1px solid var(--border);
-background:#f7fafc;
-cursor:pointer;
-font-weight:900;
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:#f7fafc;
+  cursor:pointer;
+  font-weight:900;
 }
 
 .btnPrimary{
-background:linear-gradient(180deg,#22c55e,#16a34a);
-border-color:rgba(22,163,74,.35);
-color:white;
+  background:linear-gradient(180deg,#22c55e,#16a34a);
+  border-color:rgba(22,163,74,.35);
+  color:white;
 }
 
 .buyGrid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-margin-top:12px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
 }
 
 .label{
-font-size:12px;
-font-weight:800;
-margin-bottom:6px;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:6px;
 }
 
 .input{
-width:100%;
-padding:12px;
-border-radius:14px;
-border:1px solid var(--border);
-text-align:center;
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  text-align:center;
 }
 
 .status{
-margin-top:12px;
-padding:12px;
-border-radius:14px;
-border:1px dashed var(--border2);
-text-align:center;
-font-weight:800;
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
+  border:1px dashed var(--border2);
+  text-align:center;
+  font-weight:800;
 }
 
-/* FACTORY */
+/* INDUSTRY SLIDER */
+.factorySection{ margin-top:24px; }
 
-.factorySection{ margin-top:20px; }
-
-.factoryGrid{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:14px;
+.industry-showcase{
+  margin: 8px 0 26px;
 }
 
-.factoryCard{
-border:1px solid var(--border);
-border-radius:18px;
-background:white;
-box-shadow:var(--shadow2);
-padding:12px;
-text-align:center;
+.industry-slider-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
 }
 
-.factoryImgWrap{
-border-radius:14px;
-border:1px solid #eef1f7;
-padding:10px;
-height:150px;
-display:flex;
-align-items:center;
-justify-content:center;
+.industry-slider{
+  width:min(760px, 92vw);
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:14px;
 }
 
-.factoryImgWrap img{
-max-height:140px;
+.industry-slide{
+  display:none;
+  background:#ffffff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:14px;
+  text-align:center;
+  box-shadow:var(--shadow2);
 }
 
-.factoryName{
-margin-top:10px;
-font-weight:900;
+.industry-slide.active{
+  display:block;
 }
 
-/* FOOT */
-
-.bottomRow{
-margin-top:18px;
-display:flex;
-justify-content:space-between;
-flex-wrap:wrap;
+.industry-slide-img{
+  width:100%;
+  height:165px;
+  object-fit:contain;
+  display:block;
+  margin:0 auto 10px;
 }
 
-.signWrap img{ height:120px; }
-
-.social a{
-padding:10px 14px;
-border-radius:14px;
-border:1px solid var(--border);
-background:#f5f7fb;
-font-weight:900;
-text-decoration:none;
-color:#0b1224;
+.industry-label{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font-weight:900;
+  font-size:18px;
+  color:#111827;
 }
 
-.foot{
-margin-top:18px;
-text-align:center;
-font-size:12px;
-color:#6b7280;
+.industry-name-text{
+  font-weight:900;
+  color:#111827;
+}
+
+.pharma-rx{
+  color:#dc2626;
+  font-weight:900;
+  font-size:22px;
+  line-height:1;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+.slider-btn{
+  width:42px;
+  height:42px;
+  border-radius:999px;
+  border:1px solid var(--border2);
+  background:#ffffff;
+  color:#111827;
+  font-size:26px;
+  line-height:1;
+  cursor:pointer;
+  flex-shrink:0;
+}
+
+.slider-btn:hover{
+  background:#f9fafb;
+}
+
+/* FOOTER */
+.site-footer{
+  margin-top:28px;
+  padding-top:8px;
+}
+
+.footer-brand-center{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  text-align:center;
+}
+
+.footer-logo-center{
+  width:116px;
+  height:auto;
+  display:block;
+  margin:0 auto;
 }
 
 .community-links{
-  margin-top:40px;
   display:flex;
   justify-content:center;
   gap:28px;
@@ -297,117 +312,37 @@ color:#6b7280;
 .community-links img{
   width:42px;
   height:42px;
-  transition: transform .2s ease, opacity .2s ease;
+  transition:transform .2s ease, opacity .2s ease;
 }
 
 .community-links img:hover{
-  transform: scale(1.15);
-  opacity:0.85;
-}
-.slot-symbol .pharma-rx {
-  font-size: 20px;
+  transform:scale(1.12);
+  opacity:.85;
 }
 
-  .industry-label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  font-weight: 800;
-  font-size: 14px;
-  color: #111827;
+.foot{
+  text-align:center;
+  font-size:12px;
+  color:#6b7280;
 }
 
-.industry-name-text {
-  font-weight: 800;
-  color: #111827;
-}
+@media (max-width: 860px){
+  .mainGrid{
+    grid-template-columns:1fr;
+  }
 
-.pharma-rx {
-  color: #dc2626;
-  font-weight: 900;
-  font-size: 16px;
-  line-height: 1;
-  font-family: Arial, Helvetica, sans-serif;
-}
- /* ===== INDUSTRY SLIDER ===== */
-.industry-showcase {
-  margin: 28px auto 36px;
-}
+  .industry-slider{
+    grid-template-columns:1fr;
+    width:min(360px, 90vw);
+  }
 
-.industry-slider-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  width: 100%;
-}
+  .heroImg{
+    height:320px;
+  }
 
-.industry-slider {
-  width: 340px;
-  max-width: 90vw;
-}
-
-.industry-slide {
-  display: none;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 20px;
-  padding: 18px;
-  text-align: center;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
-}
-
-.industry-slide.active {
-  display: block;
-}
-
-.industry-slide-img {
-  width: 100%;
-  max-height: 190px;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto 12px;
-}
-
-.slider-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  color: #111827;
-  font-size: 26px;
-  line-height: 1;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.slider-btn:hover {
-  background: #f9fafb;
-}
-
-.industry-label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  font-weight: 800;
-  font-size: 20px;
-  color: #111827;
-}
-
-.industry-name-text {
-  font-weight: 800;
-  color: #111827;
-}
-
-.pharma-rx {
-  color: #dc2626;
-  font-weight: 900;
-  font-size: 22px;
-  line-height: 1;
-  font-family: Arial, Helvetica, sans-serif;
+  .heroBelow{
+    justify-content:center;
+  }
 }
 </style>
 </head>
@@ -415,171 +350,142 @@ color:#6b7280;
 <body>
 <div class="wrap">
 
-<!-- NAV -->
-
-<div class="topbar">
-<div class="navPills">
-<a class="pill" href="index.html">Home</a>
-<a class="pill" href="economy.html">Economy</a>
-<a class="pill" href="faq.html">FAQ</a>
-<a class="pill" href="economy-blueprint-mint.html">Blueprint Mint</a>
-<a class="pill" href="transparency.html">Transparency</a>
-
-<a id="dashboardLink" class="pill dashboard" href="#" style="display:none;">Dashboard</a>
-</div>
-</div>
-
-<!-- HERO -->
-
-<div class="hero">
-<img class="heroImg" src="assets/mydempire-hero.png">
-
-<div class="heroBelow">
-<img class="nameLogo" src="assets/logo-name.png">
-
-<div class="tags">
-<span class="tag">🔐 Keychain Verified</span>
-<span class="tag">📦 Sealed Packs</span>
-<span class="tag">🧪 Invite-Only Test</span>
-<span class="tag">🧾 Max 10 packs/wallet</span>
-</div>
-</div>
-</div>
-
-<!-- GRID -->
-
-<div class="mainGrid">
-
-<div class="card">
-<h2 class="hTitle">PRE-GENESIS Pack Sale (Closed Testing)</h2>
-
-<p class="hText">
-This is a controlled live test to validate payments, minting, and UI stability before Genesis launch.
-Packs stay sealed after purchase and will appear inside your Dashboard for opening.
-</p>
-
-<p class="hText">
-<b>Price:</b> 3 HIVE per pack · <b>Cap:</b> 10 packs per wallet · <b>Phase:</b> Invite-only
-</p>
-</div>
-
-<div class="card">
-
-<h2 class="hTitle">Buy Pre-Genesis Packs</h2>
-
-<p class="hText">Connect wallet → choose quantity → approve Keychain transfer.</p>
-
-<label class="label">Hive Username</label>
-
-<input
-id="hiveUsernameInput"
-class="input"
-type="text"
-placeholder="Enter your Hive username"
-/>
-
-<button id="connectBtn" class="btn btnPrimary" onclick="connectWallet()">
-Connect Wallet
-</button>
- <button id="disconnectBtn"
-        class="btn"
-        onclick="disconnectWallet()"
-        style="display:none;">
-  Disconnect
-</button>
-
-<p id="walletDisplay" style="margin-top:10px;color:#6b7280;font-size:13px;font-weight:700;"></p>
-
-<div class="buyGrid">
-<div>
-<div class="label">Pack quantity</div>
-<input class="input" type="number" id="packCount" value="1" min="1" max="10">
-</div>
-
-<div>
-<div class="label">Action</div>
-<button class="btn btnPrimary" onclick="buyPack(document.getElementById('packCount').value)">
-Buy Packs
-</button>
-</div>
-</div>
-
-<div id="status" class="status">Ready ✅</div>
-
-</div>
-
-</div>
-
-<!-- FACTORY -->
-
-<div class="factorySection">
-
-
-
-<div class="industry-slider-wrap">
-  <button class="slider-btn" id="industry-prev-btn">‹</button>
-
-  <div class="industry-slider">
-    <div class="industry-slide active">
-      <img src="assets/food-building.png" alt="Food Industry" class="industry-slide-img" />
-      <div class="industry-label">🌾 Food</div>
-    </div>
-
-    <div class="industry-slide">
-      <img src="assets/textile-building.png" alt="Textile Industry" class="industry-slide-img" />
-      <div class="industry-label">🧵 Textile</div>
-    </div>
-
-    <div class="industry-slide">
-      <img src="assets/pharma-building.png" alt="Pharma Industry" class="industry-slide-img" />
-      <div class="industry-label">
-        <span class="pharma-rx">Rx</span><span class="industry-name-text"> Pharma</span>
-      </div>
-    </div>
-
-    <div class="industry-slide">
-      <img src="assets/chemical-building.png" alt="Chemical Industry" class="industry-slide-img" />
-      <div class="industry-label">⚗ Chemical</div>
-    </div>
-
-    <div class="industry-slide">
-      <img src="assets/supermarket-building.png" alt="Supermarket Industry" class="industry-slide-img" />
-      <div class="industry-label">🛒 Supermarket</div>
+  <div class="topbar">
+    <div class="navPills">
+      <a class="pill" href="index.html">Home</a>
+      <a class="pill" href="economy.html">Economy</a>
+      <a class="pill" href="faq.html">FAQ</a>
+      <a class="pill" href="economy-blueprint-mint.html">Blueprint Mint</a>
+      <a class="pill" href="transparency.html">Transparency</a>
+      <a id="dashboardLink" class="pill dashboard" href="#" style="display:none;">Dashboard</a>
     </div>
   </div>
 
-  <button class="slider-btn" id="industry-next-btn">›</button>
-</div>
+  <div class="hero">
+    <img class="heroImg" src="assets/mydempire-hero.png" alt="MydEmpire Hero Banner">
 
-<div class="bottomRow">
-<center>
-<div class="signWrap">
-<img src="assets/empire-sign.png">
-</div>
-</center>
+    <div class="heroBelow">
+      <img class="nameLogo" src="assets/logo-name.png" alt="MydEmpire Name Logo">
 
+      <div class="tags">
+        <span class="tag">🔐 Keychain Verified</span>
+        <span class="tag">📦 Sealed Packs</span>
+        <span class="tag">🧪 Invite-Only Test</span>
+        <span class="tag">🧾 Max 10 packs/wallet</span>
+      </div>
+    </div>
+  </div>
 
+  <div class="mainGrid">
+    <div class="card">
+      <h2 class="hTitle">PRE-GENESIS Pack Sale (Closed Testing)</h2>
+      <p class="hText">
+        This is a controlled live test to validate payments, minting, and UI stability before Genesis launch.
+        Packs stay sealed after purchase and will appear inside your Dashboard for opening.
+      </p>
+      <p class="hText">
+        <b>Price:</b> 3 HIVE per pack · <b>Cap:</b> 10 packs per wallet · <b>Phase:</b> Invite-only
+      </p>
+    </div>
 
-</div>
-<!-- COMMUNITY LINKS -->
-<div class="community-links">
-  <a href="https://https://discord.gg/npbnDpUe" target="_blank">
-    <img src="assets/discord.svg" alt="Discord">
-  </a>
+    <div class="card">
+      <h2 class="hTitle">Buy Pre-Genesis Packs</h2>
+      <p class="hText">Connect wallet → choose quantity → approve Keychain transfer.</p>
 
-  <a href="https://x.com/my_d_empire" target="_blank">
-    <img src="assets/x.png" alt="X">
-  </a>
+      <label class="label">Hive Username</label>
+      <input
+        id="hiveUsernameInput"
+        class="input"
+        type="text"
+        placeholder="Enter your Hive username"
+      />
 
-  <a href="https://hive.blog/@mydempire" target="_blank">
-    <img src="assets/hive.png" alt="Hive Blog">
-  </a>
-</div>
-<div class="foot">
-MydEmpire — No hype, just strategy + fun 🎮
-</div>
+      <button id="connectBtn" class="btn btnPrimary" onclick="connectWallet()">
+        Connect Wallet
+      </button>
 
-</div>
+      <button id="disconnectBtn" class="btn" onclick="disconnectWallet()" style="display:none;">
+        Disconnect
+      </button>
+
+      <p id="walletDisplay" style="margin-top:10px;color:#6b7280;font-size:13px;font-weight:700;"></p>
+
+      <div class="buyGrid">
+        <div>
+          <div class="label">Pack quantity</div>
+          <input class="input" type="number" id="packCount" value="1" min="1" max="10">
+        </div>
+
+        <div>
+          <div class="label">Action</div>
+          <button class="btn btnPrimary" onclick="buyPack(document.getElementById('packCount').value)">
+            Buy Packs
+          </button>
+        </div>
+      </div>
+
+      <div id="status" class="status">Ready ✅</div>
+    </div>
+  </div>
+
+  <div class="factorySection">
+    <section class="industry-showcase">
+      <div class="industry-slider-wrap">
+        <button type="button" class="slider-btn" id="industry-prev-btn">‹</button>
+
+        <div class="industry-slider">
+          <div class="industry-slide active">
+            <img src="assets/food-building.png" alt="Food Industry" class="industry-slide-img" />
+            <div class="industry-label">🌾 <span class="industry-name-text">Food</span></div>
+          </div>
+
+          <div class="industry-slide active">
+            <img src="assets/textile-building.png" alt="Textile Industry" class="industry-slide-img" />
+            <div class="industry-label">🧵 <span class="industry-name-text">Textile</span></div>
+          </div>
+
+          <div class="industry-slide">
+            <img src="assets/pharma-building.png" alt="Pharma Industry" class="industry-slide-img" />
+            <div class="industry-label"><span class="pharma-rx">Rx</span><span class="industry-name-text">Pharma</span></div>
+          </div>
+
+          <div class="industry-slide">
+            <img src="assets/chemical-building.png" alt="Chemical Industry" class="industry-slide-img" />
+            <div class="industry-label">⚗ <span class="industry-name-text">Chemical</span></div>
+          </div>
+
+          <div class="industry-slide">
+            <img src="assets/supermarket-building.png" alt="Supermarket Industry" class="industry-slide-img" />
+            <div class="industry-label">🛒 <span class="industry-name-text">Supermarket</span></div>
+          </div>
+        </div>
+
+        <button type="button" class="slider-btn" id="industry-next-btn">›</button>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-brand-center">
+      <img src="assets/empire-sign.png" alt="MydEmpire Logo" class="footer-logo-center">
+
+      <div class="community-links">
+        <a href="https://discord.gg/npbnDpUe" target="_blank" rel="noopener noreferrer">
+          <img src="assets/discord.svg" alt="Discord">
+        </a>
+
+        <a href="https://x.com/my_d_empire" target="_blank" rel="noopener noreferrer">
+          <img src="assets/x.png" alt="X">
+        </a>
+
+        <a href="https://hive.blog/@mydempire" target="_blank" rel="noopener noreferrer">
+          <img src="assets/hive.png" alt="Hive Blog">
+        </a>
+      </div>
+
+      <div class="foot">MydEmpire — No hype, just strategy + fun 🎮</div>
+    </div>
+  </footer>
 
 </div>
 
@@ -588,71 +494,57 @@ MydEmpire — No hype, just strategy + fun 🎮
 <script src="js/home.js?v=6"></script>
 
 <script>
-
 function connectWallet(){
+  if(!window.hive_keychain){
+    alert("Hive Keychain not installed");
+    return;
+  }
 
-if(!window.hive_keychain){
-alert("Hive Keychain not installed");
-return;
+  const input = document.getElementById("hiveUsernameInput");
+  const username = input.value.trim().replace("@", "").toLowerCase();
+
+  if(!username){
+    alert("Please enter your Hive username first.");
+    return;
+  }
+
+  window.hive_keychain.requestSignBuffer(
+    username,
+    "MydEmpire Login " + Date.now(),
+    "Posting",
+    function(res){
+      if(!res.success){
+        alert("Login cancelled");
+        return;
+      }
+
+      localStorage.setItem("mde_username", username);
+      document.getElementById("walletDisplay").textContent = "Connected: @" + username;
+      document.getElementById("connectBtn").style.display = "none";
+      document.getElementById("disconnectBtn").style.display = "inline-flex";
+
+      const dash = document.getElementById("dashboardLink");
+      dash.style.display = "inline-flex";
+      dash.href = "player-dashboard.html?user=" + username;
+    }
+  );
 }
 
-const input=document.getElementById("hiveUsernameInput");
-const username=input.value.trim().replace("@","").toLowerCase();
+window.addEventListener("DOMContentLoaded", () => {
+  const user = localStorage.getItem("mde_username");
+  if(!user) return;
 
-if(!username){
-alert("Please enter your Hive username first.");
-return;
-}
+  document.getElementById("hiveUsernameInput").value = user;
+  document.getElementById("walletDisplay").textContent = "Connected: @" + user;
+  document.getElementById("connectBtn").style.display = "none";
+  document.getElementById("disconnectBtn").style.display = "inline-flex";
 
-window.hive_keychain.requestSignBuffer(
-username,
-"MydEmpire Login "+Date.now(),
-"Posting",
-
-function(res){
-
-if(!res.success){
-alert("Login cancelled");
-return;
-}
-
-localStorage.setItem("mde_username",username);
-
-document.getElementById("walletDisplay").textContent="Connected: @"+username;
-
-document.getElementById("connectBtn").style.display="none";
-document.getElementById("disconnectBtn").style.display="inline-flex";
-
-const dash=document.getElementById("dashboardLink");
-dash.style.display="inline-flex";
-dash.href="player-dashboard.html?user="+username;
-
-}
-);
-
-}
-
-window.addEventListener("DOMContentLoaded",()=>{
-
-const user=localStorage.getItem("mde_username");
-
-if(!user) return;
-
-document.getElementById("hiveUsernameInput").value=user;
-document.getElementById("walletDisplay").textContent="Connected: @"+user;
-
-const dash=document.getElementById("dashboardLink");
-dash.style.display="inline-flex";
-dash.href="player-dashboard.html?user="+user;
-
+  const dash = document.getElementById("dashboardLink");
+  dash.style.display = "inline-flex";
+  dash.href = "player-dashboard.html?user=" + user;
 });
 
-// =======================
-// BUY PACK
-// =======================
-
 async function buyPack(qty) {
-
   const username = localStorage.getItem("mde_username");
 
   if (!username) {
@@ -665,7 +557,7 @@ async function buyPack(qty) {
     return;
   }
 
-  const packs = parseInt(qty || "1");
+  const packs = parseInt(qty || "1", 10);
 
   if (!packs || packs < 1) {
     alert("Invalid pack quantity.");
@@ -673,17 +565,10 @@ async function buyPack(qty) {
   }
 
   try {
-
-    // STEP 1 — create order (wallet cap check happens here)
     const orderRes = await fetch("https://mydempire-backend-1.onrender.com/create-order", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        username: username,
-        packs: packs
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, packs })
     });
 
     const orderData = await orderRes.json();
@@ -698,7 +583,6 @@ async function buyPack(qty) {
     const amount = Number(order.hive_amount).toFixed(3);
     const memo = `MYDEMPIRE_ORDER_${orderId}`;
 
-    // STEP 2 — hive transfer
     window.hive_keychain.requestTransfer(
       username,
       "mydempiregain",
@@ -706,7 +590,6 @@ async function buyPack(qty) {
       memo,
       "HIVE",
       async function (response) {
-
         if (!response || !response.success) {
           alert("Transaction cancelled.");
           return;
@@ -722,16 +605,10 @@ async function buyPack(qty) {
           return;
         }
 
-        // STEP 3 — confirm payment (THIS MINTS THE PACK)
         const confirmRes = await fetch("https://mydempire-backend-1.onrender.com/confirm-payment", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            orderId: orderId,
-            txid: txid
-          })
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orderId, txid })
         });
 
         const confirmed = await confirmRes.json();
@@ -742,74 +619,63 @@ async function buyPack(qty) {
         }
 
         alert("✅ Packs minted successfully!");
-
       }
     );
-
   } catch (err) {
     console.error(err);
     alert("Unexpected error.");
   }
-
 }
-function disconnectWallet() {
 
+function disconnectWallet() {
   localStorage.removeItem("mde_username");
 
-  const walletDisplay=document.getElementById("walletDisplay");
-  const dash=document.getElementById("dashboardLink");
-  const disconnectBtn=document.getElementById("disconnectBtn");
+  const walletDisplay = document.getElementById("walletDisplay");
+  const dash = document.getElementById("dashboardLink");
+  const disconnectBtn = document.getElementById("disconnectBtn");
+  const connectBtn = document.getElementById("connectBtn");
 
-  if(walletDisplay) walletDisplay.textContent="";
-  if(dash) dash.style.display="none";
-  if(disconnectBtn) disconnectBtn.style.display="none";
-
+  if(walletDisplay) walletDisplay.textContent = "";
+  if(dash) dash.style.display = "none";
+  if(disconnectBtn) disconnectBtn.style.display = "none";
+  if(connectBtn) connectBtn.style.display = "inline-flex";
 }
 
-  <script>
-  const industrySlides = document.querySelectorAll(".industry-slide");
+document.addEventListener("DOMContentLoaded", function () {
+  const slides = document.querySelectorAll(".industry-slide");
   const prevBtn = document.getElementById("industry-prev-btn");
   const nextBtn = document.getElementById("industry-next-btn");
 
-  let currentIndustrySlide = 0;
+  if (!slides.length || !prevBtn || !nextBtn) return;
 
-  function showIndustrySlide(index) {
-    industrySlides.forEach((slide, i) => {
-      slide.classList.toggle("active", i === index);
+  let currentStart = 0;
+  const visibleCount = window.innerWidth <= 860 ? 1 : 2;
+
+  function showSlides(startIndex) {
+    slides.forEach((slide, i) => {
+      const active = i >= startIndex && i < startIndex + visibleCount;
+      slide.classList.toggle("active", active);
     });
   }
 
-  if (prevBtn && nextBtn && industrySlides.length > 0) {
-    prevBtn.addEventListener("click", () => {
-      currentIndustrySlide =
-        (currentIndustrySlide - 1 + industrySlides.length) % industrySlides.length;
-      showIndustrySlide(currentIndustrySlide);
-    });
+  prevBtn.addEventListener("click", function () {
+    currentStart = currentStart - visibleCount;
+    if (currentStart < 0) {
+      currentStart = Math.max(0, slides.length - visibleCount);
+    }
+    showSlides(currentStart);
+  });
 
-    nextBtn.addEventListener("click", () => {
-      currentIndustrySlide =
-        (currentIndustrySlide + 1) % industrySlides.length;
-      showIndustrySlide(currentIndustrySlide);
-    });
+  nextBtn.addEventListener("click", function () {
+    currentStart = currentStart + visibleCount;
+    if (currentStart >= slides.length) {
+      currentStart = 0;
+    }
+    showSlides(currentStart);
+  });
 
-    showIndustrySlide(currentIndustrySlide);
-  }
+  showSlides(currentStart);
+});
 </script>
-</script>
-
-
-
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
