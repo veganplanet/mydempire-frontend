@@ -737,6 +737,36 @@ function disconnectWallet() {
   if(disconnectBtn) disconnectBtn.style.display="none";
 
 }
+
+  <script>
+  const industrySlides = document.querySelectorAll(".industry-slide");
+  const prevBtn = document.getElementById("industry-prev-btn");
+  const nextBtn = document.getElementById("industry-next-btn");
+
+  let currentIndustrySlide = 0;
+
+  function showIndustrySlide(index) {
+    industrySlides.forEach((slide, i) => {
+      slide.classList.toggle("active", i === index);
+    });
+  }
+
+  if (prevBtn && nextBtn && industrySlides.length > 0) {
+    prevBtn.addEventListener("click", () => {
+      currentIndustrySlide =
+        (currentIndustrySlide - 1 + industrySlides.length) % industrySlides.length;
+      showIndustrySlide(currentIndustrySlide);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      currentIndustrySlide =
+        (currentIndustrySlide + 1) % industrySlides.length;
+      showIndustrySlide(currentIndustrySlide);
+    });
+
+    showIndustrySlide(currentIndustrySlide);
+  }
+</script>
 </script>
 
 
@@ -744,6 +774,7 @@ function disconnectWallet() {
 </body>
 
 </html>
+
 
 
 
