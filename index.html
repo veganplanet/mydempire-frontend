@@ -392,24 +392,30 @@ body{
   transform:scale(1.18);
   filter:brightness(1.2);
 }
-  .founder-box{
+ .founder-box{
   margin-top:16px;
   padding:16px;
   border-radius:16px;
   border:1px solid #e5e7eb;
-  background:#ffffff;
+  background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
 }
 
 .founder-box h4{
-  margin-bottom:10px;
+  margin:0 0 10px;
   font-size:14px;
-  font-weight:700;
+  font-weight:800;
+  color:#0f172a;
 }
 
 .founder-item{
   font-size:13px;
-  margin-bottom:6px;
+  line-height:1.5;
   color:#475569;
+  margin-bottom:6px;
+}
+
+.founder-item:last-child{
+  margin-bottom:0;
 }
 </style>
 </head>
@@ -529,7 +535,6 @@ body{
     </div>
 
     <div id="status" class="status">Ready ✅</div>
-
     <div class="inside-pack-mini">
       <div class="inside-pack-mini-title">Inside a Genesis Pack</div>
       <div class="inside-pack-mini-grid">
@@ -554,7 +559,7 @@ body{
     </div>
   </div>
 </div>
-<div class="founder-box">
+  <div class="founder-box">
   <h4>Genesis Founder Benefits</h4>
 
   <div class="founder-item">
@@ -573,6 +578,7 @@ body{
     🏛 Genesis assets remain historically valuable
   </div>
 </div>
+
 <div class="factorySection">
   <section class="industry-showcase">
     <div class="industry-slider-wrap">
@@ -779,4 +785,5 @@ async function buyPack(qty) {
 </script>
 </body>
 </html>
+
 
