@@ -417,6 +417,39 @@ body{
 .founder-item:last-child{
   margin-bottom:0;
 }
+
+.footer-social-link{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform .2s ease;
+}
+
+.footer-social-icon{
+  width:34px;
+  height:34px;
+  object-fit:contain;
+  display:block;
+  transition:transform .2s ease, filter .2s ease, opacity .2s ease;
+}
+
+.footer-social-link:hover .footer-social-icon{
+  transform:translateY(-3px) scale(1.12);
+  filter:brightness(1.15);
+  opacity:0.95;
+}
+.footer-social-icon{
+  width:32px;
+  height:32px;
+  margin:0 10px;
+  transition: transform 0.25s ease, filter 0.25s ease;
+  cursor:pointer;
+}
+
+.footer-social-icon:hover{
+  transform:translateY(-4px) scale(1.15);
+  filter:brightness(1.2);
+}
 </style>
 </head>
 <body>
@@ -557,9 +590,7 @@ body{
       </div>
       <div class="inside-pack-mini-note">Land, blueprints, EMP, and a tiny chance of an ultra-rare relic.</div>
     </div>
-  </div>
-</div>
-  <div class="founder-box">
+      <div class="founder-box">
   <h4>Genesis Founder Benefits</h4>
 
   <div class="founder-item">
@@ -578,6 +609,9 @@ body{
     🏛 Genesis assets remain historically valuable
   </div>
 </div>
+  </div>
+</div>
+
 
 <div class="factorySection">
   <section class="industry-showcase">

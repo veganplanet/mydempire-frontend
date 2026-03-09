@@ -995,6 +995,59 @@ button {
   opacity: 0.85;
 }
 
+/* ===== Empire Preview polish ===== */
+
+.empire-tile {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-weight: 800;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.empire-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 24px rgba(15, 23, 42, 0.14);
+}
+
+.empire-tile-label {
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.empire-tile-meta {
+  font-size: 13px;
+  line-height: 1;
+  color: rgba(15, 23, 42, 0.72);
+  font-weight: 700;
+}
+
+.empire-tile-alert {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 6px 12px rgba(239, 68, 68, 0.28);
+}
+
 .empire-tile.l1 {
   background: #dcfce7;
   color: #166534;
@@ -1834,7 +1887,383 @@ button {
   border-color: #2563eb;
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
 }
+/* ===== EMPIRE PREVIEW POLISH ===== */
 
+.empire-preview-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.empire-preview-tile {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  cursor: default;
+}
+
+.empire-preview-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 24px rgba(15, 23, 42, 0.14);
+}
+
+.empire-preview-tier {
+  font-size: 25px;
+  line-height: 1;
+}
+
+.empire-preview-label {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.empire-preview-meta {
+  font-size: 12px;
+  color: rgba(15, 23, 42, 0.72);
+  line-height: 1;
+}
+
+/* Tier looks */
+.empire-preview-l1 {
+  background: linear-gradient(180deg, #dcfce7, #bbf7d0);
+}
+
+.empire-preview-l2 {
+  background: linear-gradient(180deg, #fef3c7, #fde68a);
+}
+
+.empire-preview-l3 {
+  background: linear-gradient(180deg, #fee2e2, #fecaca);
+}
+
+/* Small alert badge */
+.empire-preview-alert {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 12px rgba(239, 68, 68, 0.28);
+  border: 2px solid #ffffff;
+}
+
+/* CTA button polish */
+.empire-preview-btn {
+  margin-top: 18px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.empire-preview-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+/* ===== MINI TERRITORY ZONE ===== */
+
+.land-territory {
+  margin-top: 14px;
+  margin-bottom: 14px;
+  min-height: 150px;
+  border-radius: 22px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255,255,255,0.95), rgba(248,250,252,0.92) 60%, rgba(241,245,249,0.96) 100%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(148,163,184,0.05) 0px,
+      rgba(148,163,184,0.05) 1px,
+      transparent 1px,
+      transparent 30px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(148,163,184,0.05) 0px,
+      rgba(148,163,184,0.05) 1px,
+      transparent 1px,
+      transparent 30px
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.8),
+    0 8px 18px rgba(15, 23, 42, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+.land-tier-l1 .land-territory {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(34,197,94,0.20), rgba(255,255,255,0.96) 62%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(148,163,184,0.05) 0px,
+      rgba(148,163,184,0.05) 1px,
+      transparent 1px,
+      transparent 30px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(148,163,184,0.05) 0px,
+      rgba(148,163,184,0.05) 1px,
+      transparent 1px,
+      transparent 30px
+    ) !important;
+}
+
+.land-tier-l2 .land-territory {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(234,179,8,0.20), rgba(255,255,255,0.96) 62%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(148,163,184,0.05) 0px,
+      rgba(148,163,184,0.05) 1px,
+      transparent 1px,
+      transparent 30px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(148,163,184,0.05) 0px,
+      rgba(148,163,184,0.05) 1px,
+      transparent 1px,
+      transparent 30px
+    ) !important;
+}
+
+.land-tier-l3 .land-territory {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(239,68,68,0.20), rgba(255,255,255,0.96) 62%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(148,163,184,0.05) 0px,
+      rgba(148,163,184,0.05) 1px,
+      transparent 1px,
+      transparent 30px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(148,163,184,0.05) 0px,
+      rgba(148,163,184,0.05) 1px,
+      transparent 1px,
+      transparent 30px
+    ) !important;
+}
+
+.land-territory-slots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.land-slot-pad {
+  width: 122px;
+  height: 122px;
+  border-radius: 22px;
+  border: 2px solid rgba(200, 155, 99, 0.95);
+  background: linear-gradient(180deg, #f8f1e6, #eee7dc);
+  box-shadow:
+    inset 0 2px 6px rgba(255,255,255,0.65),
+    0 8px 16px rgba(15, 23, 42, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.land-slot-pad.filled {
+  width: 132px;
+  height: 132px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.land-slot-pad.empty::after {
+  content: "+";
+  font-size: 28px;
+  font-weight: 700;
+  color: rgba(148, 163, 184, 0.7);
+}
+
+.land-slot-factory {
+  width: 118px;
+  height: 118px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  box-shadow:
+    0 14px 24px rgba(15, 23, 42, 0.14),
+    inset 0 1px 0 rgba(255,255,255,0.85);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.land-slot-pad.filled:hover .land-slot-factory {
+  transform: translateY(-3px);
+  box-shadow:
+    0 18px 28px rgba(15, 23, 42, 0.18),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+.land-slot-factory-img {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  display: block;
+}
+
+.land-slot-badge {
+  position: absolute;
+  bottom: -10px;
+  right: -8px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #ffffff;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.18);
+}
+
+.land-slot-status {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.12);
+}
+
+.land-slot-status.active {
+  background: #22c55e;
+  color: #ffffff;
+}
+
+.land-slot-status.inactive {
+  background: #9ca3af;
+  color: #ffffff;
+}
+
+.land-slot-status.building {
+  background: #f59e0b;
+  color: #ffffff;
+}
+.land-slot-pad.empty {
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  background: linear-gradient(180deg, #f8f1e6, #ece3d4);
+}
+
+.land-slot-pad.empty:hover {
+  transform: translateY(-3px) scale(1.03);
+  border-color: #2563eb;
+  box-shadow:
+    inset 0 2px 8px rgba(255,255,255,0.7),
+    0 12px 22px rgba(37, 99, 235, 0.16);
+}
+
+.land-slot-pad.empty::after {
+  content: "+";
+  font-size: 36px;
+  font-weight: 700;
+  color: #2563eb;
+  line-height: 1;
+}
+
+/* ===== Construction animation ===== */
+
+.land-slot-status.building {
+  background: #f59e0b;
+  color: white;
+}
+
+/* glowing construction frame */
+.land-slot-pad.filled.building {
+  animation: constructionGlow 1.6s ease-in-out infinite;
+}
+
+/* animated hammer icon */
+.land-slot-status.building::after {
+  content: "🔨";
+  font-size: 12px;
+}
+
+@keyframes constructionGlow {
+  0% {
+    box-shadow:
+      0 0 0 rgba(245,158,11,0.0),
+      0 8px 16px rgba(15,23,42,0.12);
+  }
+
+  50% {
+    box-shadow:
+      0 0 16px rgba(245,158,11,0.65),
+      0 8px 16px rgba(15,23,42,0.12);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 rgba(245,158,11,0.0),
+      0 8px 16px rgba(15,23,42,0.12);
+  }
+}
+
+.land-slot-pad.empty {
+  cursor: pointer;
+}
+
+.land-slot-pad.empty:hover {
+  transform: translateY(-3px);
+  border-color: #2563eb;
+  box-shadow:
+    0 0 16px rgba(37, 99, 235, 0.25),
+    0 8px 18px rgba(15, 23, 42, 0.12);
+}
   </style>
 </head>
 <body data-requires-login="true">
@@ -2099,6 +2528,9 @@ button {
 </div>
 
   <!-- Existing textual grid of blueprints -->
+   <div id="selected-build-land-box" class="status-text" style="margin-bottom:10px;">
+  No land selected yet.
+</div>
   <div id="blueprints-grid" class="factory-grid">
     <p class="status-text">Loading blueprints…</p>
   </div>
@@ -2504,8 +2936,15 @@ async function loadDashboardSummary() {
     );
 
     const totalFactories = data.totalFactories ?? 0;
-    setText("summary-factories-total", totalFactories);
-    setText("summary-factories-breakdown", `Total factories: ${totalFactories}`);
+const activeFactories = data.activeFactories ?? 0;
+const buildingFactories = data.buildingFactories ?? 0;
+const inactiveFactories = data.inactiveFactories ?? 0;
+
+setText("summary-factories-total", totalFactories);
+setText(
+  "summary-factories-breakdown",
+  `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories}`
+);
 
     const relicCount = data.relicCount ?? 0;
     const activeRelicBoost = data.activeRelicBoost ?? 0;
@@ -2775,9 +3214,9 @@ alert(
           `${totalBoostedEP.toFixed(2)} EP/day`;
 
         if (typeof totals.totalFactories === "number") {
-          document.getElementById("summary-factories-total").textContent = totals.totalFactories;
-          document.getElementById("summary-factories-breakdown").textContent =
-            `Total factories: ${totals.totalFactories}`;
+          if (typeof totals.totalFactories === "number") {
+  document.getElementById("summary-factories-total").textContent = totals.totalFactories;
+}
         }
 
         renderLandsTab();
@@ -2798,7 +3237,111 @@ if (landsContainer) {
 }
       }
     }
+function factoryIndustryEmoji(factory) {
+  const raw =
+    (factory.blueprint_tier ||
+     factory.blueprintTier ||
+     factory.tier ||
+     factory.raw_tier ||
+     "").toString().toUpperCase();
 
+  if (raw.includes("FOOD")) return "🌾";
+  if (raw.includes("TEXTILE")) return "🧵";
+  if (raw.includes("PHARMA")) return "💊";
+  if (raw.includes("CHEMICAL")) return "⚗️";
+  if (raw.includes("SUPERMARKET")) return "🛒";
+
+  return "🏭";
+}
+
+function factoryStatusClass(status) {
+  const s = (status || "").toString().trim().toUpperCase();
+
+  if (s === "ACTIVE") return "active";
+  if (s === "BUILDING" || s === "UPGRADING") return "building";
+  return "inactive";
+}
+
+function getFactoryBuildingImage(factory) {
+  const blueprintTier =
+    factory.blueprint_tier ??
+    factory.bp_tier ??
+    factory.blueprintTier ??
+    factory.blueprint ??
+    factory.tier ??
+    factory.raw_tier ??
+    factory.blueprint_level ??
+    factory.blueprintLevel ??
+    "";
+
+  const raw = String(blueprintTier).toUpperCase();
+
+  if (raw.includes("FOOD")) return "assets/food-building.png";
+  if (raw.includes("TEXTILE")) return "assets/textile-building.png";
+  if (raw.includes("PHARMA")) return "assets/pharma-building.png";
+  if (raw.includes("CHEMICAL")) return "assets/chemical-building.png";
+  if (raw.includes("SUPERMARKET")) return "assets/supermarket-building.png";
+
+  return null;
+}
+
+function renderTerritorySlots(factories, slotsTotal, landId) {
+  let html = `<div class="land-territory"><div class="land-territory-slots">`;
+
+  for (let i = 0; i < slotsTotal; i++) {
+    const factory = factories[i];
+
+    if (factory) {
+      const statusClass = factoryStatusClass(factory.status);
+      const buildingImg = getFactoryBuildingImage(factory);
+
+      // ✅ Read blueprint/build tier, not factory level
+      const blueprintTierRaw =
+        factory.blueprint_tier ??
+        factory.bp_tier ??
+        factory.blueprintTier ??
+        factory.blueprint ??
+        factory.tier ??
+        factory.raw_tier ??
+        factory.blueprint_level ??
+        factory.blueprintLevel ??
+        "";
+
+      const blueprintTierText = String(blueprintTierRaw).toUpperCase();
+      const badgeMatch = blueprintTierText.match(/B[1-5]/);
+      const factoryBadge = badgeMatch ? badgeMatch[0] : "B1";
+
+      html += `
+        <div class="land-slot-pad filled ${statusClass}">
+          <div class="land-slot-factory">
+            ${
+              buildingImg
+                ? `<img src="${buildingImg}" alt="Factory" class="land-slot-factory-img">`
+                : `🏭`
+            }
+          </div>
+
+          <div class="land-slot-badge">${factoryBadge}</div>
+
+          <div class="land-slot-status ${statusClass}">
+            ${statusClass === "active" ? "✓" : statusClass === "building" ? "⏳" : "!"}
+          </div>
+        </div>
+      `;
+    } else {
+      html += `
+        <div
+          class="land-slot-pad empty"
+          data-build-land-id="${landId}"
+          title="Build factory on this land"
+        ></div>
+      `;
+    }
+  }
+
+  html += `</div></div>`;
+  return html;
+}
   function renderLandsTab() {
   const landsContainer = document.getElementById("lands-container");
   landsContainer.innerHTML = "";
@@ -2819,7 +3362,31 @@ if (landsContainer) {
     const diff = (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24);
     return diff < 0 ? 0 : diff;
   };
+empireLands.sort((a, b) => {
 
+  const tierSlots = tier =>
+    tier === "L3" ? 3 :
+    tier === "L2" ? 2 :
+    1;
+
+  const aSlots = tierSlots(a.land_tier);
+  const bSlots = tierSlots(b.land_tier);
+
+  const aUsed = (a.factories || []).length;
+  const bUsed = (b.factories || []).length;
+
+  const aRatio = aUsed / aSlots;
+  const bRatio = bUsed / bSlots;
+
+  // fuller lands first
+  if (bRatio !== aRatio) return bRatio - aRatio;
+
+  // more factories first
+  if (bUsed !== aUsed) return bUsed - aUsed;
+
+  // larger lands first
+  return bSlots - aSlots;
+});
   for (let idx = 0; idx < empireLands.length; idx++) {
     const land = empireLands[idx];
 
@@ -2887,7 +3454,7 @@ const daysInfoText =
 
     // ===== Build Land Row Card =====
     const landCard = document.createElement("div");
-    landCard.className = "land-card-row";
+    landCard.className = `land-card-row land-tier-${landTierKey.toLowerCase()}`;
     landCard.style.setProperty("--tier-border", borderColor);
 
     // Slot bar HTML
@@ -2895,17 +3462,16 @@ const daysInfoText =
     for (let i = 1; i <= slotsTotal; i++) {
       slotBarHTML += `<div class="slot-pill ${i <= slotsUsed ? "filled" : "empty"}"></div>`;
     }
-
+const territoryHtml = renderTerritorySlots(factories, slotsTotal, land.land_id);
     // Matrix HTML (clean + compact)
+    
     landCard.innerHTML = `
       <div class="land-left">
         <div class="land-badge-row" style="background:${borderColor};">${landTierKey}</div>
         <div class="land-title-row">${shortLabel}</div>
         <div class="land-sub-row">GENESIS • Slots: <b>${slotsUsed}/${slotsTotal}</b></div>
 
-        <div class="slot-bar-row" aria-label="Slots ${slotsUsed}/${slotsTotal}">
-          ${slotBarHTML}
-        </div>
+        ${territoryHtml}
       </div>
 
       <div class="land-matrix-row">
@@ -2974,18 +3540,12 @@ const epText = (st === "ACTIVE" && epNum !== null) ? `${epNum.toFixed(2)} EP/day
 const factoryName =
   (String(f.factory_name || "").trim()) || `Factory #${factoryId}`;
 
+let subLine = `Blueprint tier: ${blueprintTier}`;
+
 row.innerHTML = `
   <div class="factory-main">
-    <div class="factory-title">
-      ${factoryName}
-      <span class="factory-status-pill ${statusCls}">${st.toLowerCase()}</span>
-    </div>
-    <div class="factory-sub">
-      Blueprint tier: ${blueprintTier} • Level: ${levelText}${claimText}
-    </div>
-  </div>
-  <div class="factory-meta">
-    ${epText}
+    <div class="factory-title">${factoryName}</div>
+    <div class="factory-sub">${subLine}</div>
   </div>
 `;
 
@@ -2998,7 +3558,33 @@ row.innerHTML = `
 
     landsContainer.appendChild(landCard);
   }
+  wireEmptySlotBuildActions();
 }  
+
+
+function wireEmptySlotBuildActions() {
+  document.querySelectorAll(".land-slot-pad.empty").forEach(slot => {
+    slot.addEventListener("click", () => {
+      const landId = slot.dataset.buildLandId;
+      if (!landId) return;
+
+      // remember selected land
+      window.selectedBuildLandId = landId;
+      updateSelectedBuildLandBox();
+
+      // switch to blueprints tab
+      setActiveTab("blueprints");
+
+      // optional status message
+      const grid = document.getElementById("blueprints-grid");
+      if (grid) {
+        grid.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      alert(`Build factory for Land #${landId}: now choose a blueprint.`);
+    });
+  });
+}
 
     function renderConstructionTab() {
   const container = document.getElementById("construction-grid");
@@ -3183,7 +3769,56 @@ renderBuildFactorySection();
             </div>
           </div>
         `;
+card.style.cursor = "pointer";
 
+card.addEventListener("click", async () => {
+  const selectedLandId = window.selectedBuildLandId;
+
+  if (!selectedLandId) {
+    alert("Please select an empty land slot first.");
+    return;
+  }
+
+  const ok = confirm(`Build this blueprint on Land #${selectedLandId}?`);
+  if (!ok) return;
+
+  try {
+    const res = await fetch(apiUrl("/build-factory"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: PLAYER_USERNAME,
+        land_id: selectedLandId,
+        blueprint_id: b.blueprint_id
+      })
+    });
+
+    const data = await res.json();
+    console.log("Build factory result:", data);
+
+    if (!res.ok || !data.success) {
+      alert(data.error || "Factory build failed.");
+      return;
+    }
+
+    alert("Factory construction started successfully!");
+
+    // clear selected land after successful build
+    window.selectedBuildLandId = null;
+    updateSelectedBuildLandBox();
+
+    // refresh sections
+    await loadBlueprints();
+    await loadEmpireOverview();
+
+    // switch back to lands tab to show result
+    setActiveTab("lands");
+
+  } catch (err) {
+    console.error("Build factory error:", err);
+    alert("Error while building factory.");
+  }
+});
         grid.appendChild(card);
       } catch (e) {
         console.error("Blueprint render failed for item:", b, e);
@@ -3194,7 +3829,9 @@ renderBuildFactorySection();
     grid.innerHTML =
       '<p class="status-error">Failed to load blueprints from backend.</p>';
   }
+  updateSelectedBuildLandBox();
 }
+
     // ===== CLAIM PRODUCTION =====
     async function claimAllProduction() {
       const statusEl = document.getElementById("claim-status");
@@ -3484,9 +4121,10 @@ await loadBlueprintMintInfo();
         : "L1";
 
     tile.innerHTML = `
-      <div>${tierLabel}</div>
-      <small>🏭 ${factories}/${maxSlots}</small>
-    `;
+  ${needsAction ? `<span class="empire-tile-alert">!</span>` : ""}
+  <div class="empire-tile-label">${tierLabel}</div>
+  <small class="empire-tile-meta">🏭 ${factories === maxSlots ? "Full" : `${factories}/${maxSlots}`}</small>
+`;
 
     tile.title = `${tierLabel} • Factories: ${factories}/${maxSlots}`;
 
@@ -3623,6 +4261,80 @@ if (relicCheckbox) relicCheckbox.checked = false;
 document
   .getElementById("build-factory-btn")
   .addEventListener("click", buildFactoryFromUI);
+function wireEmptySlotBuildActions() {
+  const slots = document.querySelectorAll(".land-slot-pad.empty");
+
+  slots.forEach(slot => {
+    slot.addEventListener("click", () => {
+
+      const landId = slot.dataset.buildLandId;
+      if (!landId) return;
+
+      // remember selected land globally
+      window.selectedBuildLandId = landId;
+
+      console.log("Selected land for build:", landId);
+
+      // switch to blueprints tab
+      setActiveTab("blueprints");
+
+      // scroll to blueprint section
+      const bpSection = document.getElementById("blueprints-grid");
+      if (bpSection) {
+        bpSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+    });
+  });
+}
+
+function wireEmptySlotBuildActions() {
+  const slots = document.querySelectorAll(".land-slot-pad.empty");
+
+  slots.forEach(slot => {
+    slot.addEventListener("click", () => {
+
+      const landId = slot.dataset.buildLandId;
+      if (!landId) return;
+
+      // remember which land user clicked
+      window.selectedBuildLandId = landId;
+
+      console.log("Build factory on land:", landId);
+
+      // switch to blueprint tab
+      setActiveTab("blueprints");
+
+      // scroll to blueprint grid
+      const grid = document.getElementById("blueprints-grid");
+      if (grid) {
+        grid.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+    });
+  });
+}
+function updateSelectedBuildLandBox() {
+  const box = document.getElementById("selected-build-land-box");
+  if (!box) return;
+
+  const landId = window.selectedBuildLandId;
+
+  if (!landId) {
+    box.textContent = "No land selected yet.";
+    return;
+  }
+
+  const land = (empireLands || []).find(l => String(l.land_id) === String(landId));
+
+  if (!land) {
+    box.textContent = `Selected land: #${landId}`;
+    return;
+  }
+
+  const tier = land.land_tier || "L1";
+  box.textContent = `Selected land for build: ${tier} • Land #${landId}`;
+}
 
   </script>
 
