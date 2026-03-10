@@ -3439,13 +3439,14 @@ empireLands.sort((a, b) => {
       else inactiveCount++;
     }
 
-    // ===== land EP/day (ACTIVE only) =====
-    let landEP = 0;
-    for (const f of factories) {
-      const s = normalize(f.status);
-      if (s === "ACTIVE" && typeof f.factoryEP === "number") landEP += f.factoryEP;
-    }
-    const landEPText = landEP.toFixed(2);
+   // ===== land EP/day (ACTIVE only) =====
+let landEP = 0;
+for (const f of factories) {
+  const s = normalize(f.status);
+  const ep = Number(f.factoryEP ?? f.ep_unclaimed ?? 0);
+  if (s === "ACTIVE" && !isNaN(ep)) landEP += ep;
+}
+const landEPText = landEP.toFixed(2);
 
     // ===== days info =====
     // ✅ Claim info should only consider ACTIVE factories
