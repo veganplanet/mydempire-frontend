@@ -2967,6 +2967,10 @@ setText(
 
     setText("summary-relic-boost", activeRelicBoost + "%");
     setText("summary-relic-count", `Relics owned: ${relicCount} (max boost: 6%)`);
+        const totalBaseEP = Number(data.totalBaseEP ?? data.totals?.totalBaseEP ?? 0);
+    const totalBoostedEP = Number(data.totalBoostedEP ?? data.totals?.totalBoostedEP ?? totalBaseEP);
+
+    setText("summary-production-rate", `${totalBoostedEP.toFixed(2)} EP/day`);
 
     // Optional fields — safe even if missing in HTML
     setText("relics-owned", relicCount);
