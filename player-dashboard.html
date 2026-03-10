@@ -3578,7 +3578,11 @@ if (renameBtn) {
     e.stopPropagation();
 
     const newName = prompt("Enter new factory name:", factoryName);
-    if (!newName) return;
+    const clean = newName.trim();
+if (clean.length < 3) {
+  alert("Factory name must be at least 3 characters.");
+  return;
+}
 
     try {
       const res = await fetch(apiUrl("/factory/rename"), {
