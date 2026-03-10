@@ -3443,7 +3443,9 @@ empireLands.sort((a, b) => {
 let landEP = 0;
 for (const f of factories) {
   const s = normalize(f.status);
-  const ep = Number(f.factoryEP ?? f.ep_unclaimed ?? 0);
+  const ep = Number(
+  (Number(f.factoryEP) > 0 ? f.factoryEP : f.ep_unclaimed) ?? 0
+);
   if (s === "ACTIVE" && !isNaN(ep)) landEP += ep;
 }
 const landEPText = landEP.toFixed(2);
