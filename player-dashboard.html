@@ -2264,6 +2264,22 @@ button {
     0 0 16px rgba(37, 99, 235, 0.25),
     0 8px 18px rgba(15, 23, 42, 0.12);
 }
+.factory-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.rename-factory-btn {
+  padding: 3px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  flex-shrink: 0;
+}
   </style>
 </head>
 <body data-requires-login="true">
@@ -2504,7 +2520,7 @@ button {
         id="build-factory-name"
         type="text"
         maxlength="30"
-        placeholder="Example: YOUR NAME Textile Works"
+        placeholder="Example: Name your company you like"
         class="build-input"
       />
     </div>
@@ -3540,16 +3556,62 @@ const epText = (st === "ACTIVE" && epNum !== null) ? `${epNum.toFixed(2)} EP/day
 const factoryName =
   (String(f.factory_name || "").trim()) || `Factory #${factoryId}`;
 
+const status = (String(f.status || "").trim().toUpperCase());
+const canRename = status === "ACTIVE";
+
 let subLine = `Blueprint tier: ${blueprintTier}`;
 
 row.innerHTML = `
   <div class="factory-main">
-    <div class="factory-title">${factoryName}</div>
+    <div class="factory-title-row">
+      <div class="factory-title">${factoryName}</div>
+      ${canRename ? `<button class="rename-factory-btn" data-factory-id="${factoryId}">Rename</button>` : ""}
+    </div>
     <div class="factory-sub">${subLine}</div>
   </div>
 `;
 
-    factoriesList.appendChild(row);
+const renameBtn = row.querySelector(".rename-factory-btn");
+
+if (renameBtn) {
+  renameBtn.addEventListener("click", async (e) => {
+    e.stopPropagation();
+
+    const newName = prompt("Enter new factory name:", factoryName);
+    if (!newName) return;
+
+    try {
+      const res = await fetch(apiUrl("/factory/rename"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: PLAYER_USERNAME,
+          factory_id: factoryId,
+          factory_name: newName
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        alert(data.error || "Rename failed.");
+        return;
+      }
+
+      alert("Factory renamed successfully!");
+
+      await loadEmpireOverview();
+
+    } catch (err) {
+      console.error("Rename error:", err);
+      alert("Rename failed.");
+    }
+  });
+}
+
+factoriesList.appendChild(row);
   }
 }
 
@@ -3563,29 +3625,39 @@ row.innerHTML = `
 
 
 function wireEmptySlotBuildActions() {
-  document.querySelectorAll(".land-slot-pad.empty").forEach(slot => {
+  const slots = document.querySelectorAll(".land-slot-pad.empty");
+
+  slots.forEach(slot => {
     slot.addEventListener("click", () => {
       const landId = slot.dataset.buildLandId;
       if (!landId) return;
 
-      // remember selected land
       window.selectedBuildLandId = landId;
-      updateSelectedBuildLandBox();
 
-      // switch to blueprints tab
       setActiveTab("blueprints");
 
-      // optional status message
-      const grid = document.getElementById("blueprints-grid");
-      if (grid) {
-        grid.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      setTimeout(() => {
+        renderBuildFactorySection();
 
-      alert(`Build factory for Land #${landId}: now choose a blueprint.`);
+        const landSelect = document.getElementById("build-land-select");
+        const bpSection = document.getElementById("blueprints-grid");
+        const nameInput = document.getElementById("build-factory-name");
+
+        if (landSelect) {
+          landSelect.value = String(landId);
+        }
+
+        if (bpSection) {
+          bpSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        if (nameInput) {
+          nameInput.focus();
+        }
+      }, 300);
     });
   });
 }
-
     function renderConstructionTab() {
   const container = document.getElementById("construction-grid");
   if (!container) return;
@@ -3593,9 +3665,9 @@ function wireEmptySlotBuildActions() {
   container.innerHTML = "";
 
   const underConstruction = (allFactoriesFlat || []).filter(f => {
-    const s = String(f.status || "").trim().toUpperCase();
-    return s !== "ACTIVE";
-  });
+  const s = String(f.status || "").trim().toUpperCase();
+  return s === "BUILDING" || s === "UPGRADING";
+});
 
   if (!underConstruction.length) {
     container.innerHTML =
@@ -3608,6 +3680,7 @@ function wireEmptySlotBuildActions() {
     card.className = "factory-card";
 
     const status = String(f.status || "UNKNOWN").trim().toUpperCase();
+    const canRename = status === "ACTIVE";
     const statusCls = statusClass(status);
 
     const factoryId = f.id ?? f.factory_id ?? "?";
@@ -3619,30 +3692,72 @@ function wireEmptySlotBuildActions() {
     const blueprintTier = f.blueprint_tier || "?";
     const level = f.level || 1;
 
-    let readyText = "Ready time not available";
+    let timeText = "Not available";
 
-if (f.upgrade_complete_at) {
-  const readyDate = new Date(f.upgrade_complete_at);
+const readyAt = f.upgrade_complete_at || f.build_complete_at || f.built_at;
+
+if (readyAt) {
+  const readyDate = new Date(readyAt);
   if (!isNaN(readyDate.getTime())) {
-    readyText = readyDate.toLocaleString();
-  }
-} else if (f.created_at) {
-  const createdDate = new Date(f.created_at);
-  if (!isNaN(createdDate.getTime())) {
-    readyText = `Started at: ${createdDate.toLocaleString()}`;
+    timeText = readyDate.toLocaleString();
   }
 }
 
     card.innerHTML = `
-      <div class="factory-card-header">
-        <div class="factory-card-title">${factoryName}</div>
-        <div class="factory-status-pill ${statusCls}">${status.toLowerCase()}</div>
-      </div>
-      <div class="factory-card-meta">Land #${landId} (${landTierLabel(landTier)})</div>
-      <div class="factory-card-meta">Blueprint tier: ${blueprintTier} • Level: ${level}</div>
-      <div class="factory-card-meta">Ready at: ${readyText}</div>
-    `;
+  <div class="factory-card-header">
+    <div class="factory-card-title">${factoryName}</div>
 
+    <div>
+      ${canRename ? `<button class="rename-factory-btn" data-factory-id="${factoryId}">Rename</button>` : ""}
+
+      <div class="factory-status-pill ${statusCls}">
+        ${status.toLowerCase()}
+      </div>
+    </div>
+  </div>
+  <div class="factory-card-meta">Land #${landId} (${landTierLabel(landTier)})</div>
+  <div class="factory-card-meta">Blueprint tier: ${blueprintTier} • Level: ${level}</div>
+  <div class="factory-card-meta">Ready at: ${timeText}</div>
+`;
+const renameBtn = card.querySelector(".rename-factory-btn");
+
+if (renameBtn) {
+  renameBtn.addEventListener("click", async () => {
+
+    const newName = prompt("Enter new factory name:", factoryName);
+    if (!newName) return;
+
+    try {
+      const res = await fetch(apiUrl("/factory/rename"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: PLAYER_USERNAME,
+          factory_id: factoryId,
+          factory_name: newName
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        alert(data.error || "Rename failed.");
+        return;
+      }
+
+      alert("Factory renamed successfully!");
+
+      await loadEmpireOverview();
+
+    } catch (err) {
+      console.error("Rename error:", err);
+      alert("Rename failed.");
+    }
+
+  });
+}
     container.appendChild(card);
   }
 }
@@ -3771,7 +3886,7 @@ renderBuildFactorySection();
         `;
 card.style.cursor = "pointer";
 
-card.addEventListener("click", async () => {
+card.addEventListener("click", () => {
   const selectedLandId = window.selectedBuildLandId;
 
   if (!selectedLandId) {
@@ -3779,44 +3894,19 @@ card.addEventListener("click", async () => {
     return;
   }
 
-  const ok = confirm(`Build this blueprint on Land #${selectedLandId}?`);
-  if (!ok) return;
+  window.selectedBuildBlueprintId = b.blueprint_id;
 
-  try {
-    const res = await fetch(apiUrl("/build-factory"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: PLAYER_USERNAME,
-        land_id: selectedLandId,
-        blueprint_id: b.blueprint_id
-      })
-    });
+  renderBuildFactorySection();
 
-    const data = await res.json();
-    console.log("Build factory result:", data);
+  const blueprintSelect = document.getElementById("build-blueprint-select");
+  const nameInput = document.getElementById("build-factory-name");
 
-    if (!res.ok || !data.success) {
-      alert(data.error || "Factory build failed.");
-      return;
-    }
+  if (blueprintSelect) {
+    blueprintSelect.value = String(b.blueprint_id);
+  }
 
-    alert("Factory construction started successfully!");
-
-    // clear selected land after successful build
-    window.selectedBuildLandId = null;
-    updateSelectedBuildLandBox();
-
-    // refresh sections
-    await loadBlueprints();
-    await loadEmpireOverview();
-
-    // switch back to lands tab to show result
-    setActiveTab("lands");
-
-  } catch (err) {
-    console.error("Build factory error:", err);
-    alert("Error while building factory.");
+  if (nameInput) {
+    nameInput.focus();
   }
 });
         grid.appendChild(card);
@@ -4167,6 +4257,9 @@ function renderBuildFactorySection() {
       `;
     }).join("");
   }
+  if (window.selectedBuildLandId) {
+  landSelect.value = String(window.selectedBuildLandId);
+}
 
   // Blueprints
   blueprintSelect.innerHTML = "";
@@ -4182,11 +4275,14 @@ function renderBuildFactorySection() {
       `;
     }).join("");
   }
-
+if (window.selectedBuildBlueprintId) {
+  blueprintSelect.value = String(window.selectedBuildBlueprintId);
+}
   statusEl.textContent = "Select a land and blueprint to begin.";
 }
 
 async function buildFactoryFromUI() {
+
   const landSelect = document.getElementById("build-land-select");
   const blueprintSelect = document.getElementById("build-blueprint-select");
   const nameInput = document.getElementById("build-factory-name");
@@ -4215,21 +4311,35 @@ async function buildFactoryFromUI() {
   statusEl.textContent = "Building factory...";
 
   try {
-    const res = await fetch(apiUrl("/build-factory"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
+   
+
+
+const payload = {
   username: PLAYER_USERNAME,
+  land_id: parseInt(landSelect.value, 10),
+  blueprint_tier: blueprintSelect.value,
+  factory_name: nameInput.value.trim()
+};
+
+console.log("TEST BUILD", payload);
+
+const res = await fetch(apiUrl("/build-factory"), {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+  username: PLAYER_USERNAME,
+  factory_name: factoryName,
   land_id: landId,
   blueprint_id: blueprintId,
-  factory_name: factoryName,
   use_relic_bonus: useRelicBonus
 })
-    });
+});
+
 
     const data = await res.json();
+   
     console.log("Build factory result:", data);
 
     if (!res.ok || !data.success) {
@@ -4266,54 +4376,38 @@ function wireEmptySlotBuildActions() {
 
   slots.forEach(slot => {
     slot.addEventListener("click", () => {
-
       const landId = slot.dataset.buildLandId;
       if (!landId) return;
 
-      // remember selected land globally
       window.selectedBuildLandId = landId;
 
-      console.log("Selected land for build:", landId);
-
-      // switch to blueprints tab
       setActiveTab("blueprints");
 
-      // scroll to blueprint section
-      const bpSection = document.getElementById("blueprints-grid");
-      if (bpSection) {
-        bpSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      setTimeout(() => {
+        renderBuildFactorySection();
 
+        const landSelect = document.getElementById("build-land-select");
+        const bpSection = document.getElementById("blueprints-grid");
+        const nameInput = document.getElementById("build-factory-name");
+
+        if (landSelect) {
+          landSelect.value = String(landId);
+        }
+
+        if (bpSection) {
+          bpSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        if (nameInput) {
+          nameInput.focus();
+        }
+
+        updateSelectedBuildLandBox();
+      }, 300);
     });
   });
 }
 
-function wireEmptySlotBuildActions() {
-  const slots = document.querySelectorAll(".land-slot-pad.empty");
-
-  slots.forEach(slot => {
-    slot.addEventListener("click", () => {
-
-      const landId = slot.dataset.buildLandId;
-      if (!landId) return;
-
-      // remember which land user clicked
-      window.selectedBuildLandId = landId;
-
-      console.log("Build factory on land:", landId);
-
-      // switch to blueprint tab
-      setActiveTab("blueprints");
-
-      // scroll to blueprint grid
-      const grid = document.getElementById("blueprints-grid");
-      if (grid) {
-        grid.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-
-    });
-  });
-}
 function updateSelectedBuildLandBox() {
   const box = document.getElementById("selected-build-land-box");
   if (!box) return;
@@ -4333,7 +4427,7 @@ function updateSelectedBuildLandBox() {
   }
 
   const tier = land.land_tier || "L1";
-  box.textContent = `Selected land for build: ${tier} • Land #${landId}`;
+  box.textContent = `Selected land for build: Land #${land.land_id} (${landTierLabel(tier)})`;
 }
 
   </script>
