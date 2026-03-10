@@ -3439,16 +3439,31 @@ empireLands.sort((a, b) => {
       else inactiveCount++;
     }
 
-   // ===== land EP/day (ACTIVE only) =====
-let landEP = 0;
+  // ===== land production + unclaimed EP (ACTIVE only) =====
+let landUnclaimedEP = 0;
+let landRatePerDay = 0;
+
 for (const f of factories) {
   const s = normalize(f.status);
-  const ep = Number(
-  (Number(f.factoryEP) > 0 ? f.factoryEP : f.ep_unclaimed) ?? 0
-);
-  if (s === "ACTIVE" && !isNaN(ep)) landEP += ep;
+  if (s !== "ACTIVE") continue;
+
+  const unclaimed = Number(f.ep_unclaimed ?? f.factoryEP ?? 0);
+  if (!isNaN(unclaimed)) {
+    landUnclaimedEP += unclaimed;
+  }
+
+  const days = safeDaysAgo(f.last_claimed_at);
+
+  if (days && days > 0) {
+    const rate = unclaimed / days;
+    if (!isNaN(rate)) {
+      landRatePerDay += rate;
+    }
+  }
 }
-const landEPText = landEP.toFixed(2);
+
+const landUnclaimedEPText = landUnclaimedEP.toFixed(2);
+const landRatePerDayText = landRatePerDay.toFixed(2);
 
     // ===== days info =====
     // ✅ Claim info should only consider ACTIVE factories
@@ -3496,8 +3511,9 @@ const territoryHtml = renderTerritorySlots(factories, slotsTotal, land.land_id);
       <div class="land-matrix-row">
         <div class="matrix-line">Active: <b>${activeCount}</b> • Inactive: <b>${inactiveCount}</b></div>
         <div class="matrix-line">Building: <b>${buildingCount}</b> • Upgrading: <b>${upgradingCount}</b></div>
-        <div class="matrix-line">Land EP/day: <b>${landEPText}</b></div>
-        <div class="matrix-line">${daysInfoText}</div>
+       <div class="matrix-line">EP/day: <b>${landRatePerDayText}</b></div>
+<div class="matrix-line">Unclaimed EP: <b>${landUnclaimedEPText}</b></div>
+<div class="matrix-line">${daysInfoText}</div>
       </div>
 
       <div class="land-factories-col" id="land-factories-${idx}">
