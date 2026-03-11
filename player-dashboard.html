@@ -2279,6 +2279,153 @@ button {
   cursor: pointer;
   font-size: 12px;
   flex-shrink: 0;
+
+  /* ===== DASHBOARD POLISH PASS ===== */
+
+/* smoother feel */
+.summary-card,
+.section,
+.land-card-row,
+.factory-card,
+.primary-button,
+.subnav-btn,
+.top-nav-link {
+  transition: all 0.18s ease;
+}
+
+/* section polish */
+.section {
+  background: linear-gradient(180deg, #ffffff 0%, #fcfcfe 100%);
+  border: 1px solid #e6eaf2;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.section-header {
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+/* summary cards look more premium */
+.summary-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e7ebf3;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.05);
+}
+
+.summary-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #2563eb, #fbbf24);
+  opacity: 0.9;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
+}
+
+.summary-value {
+  letter-spacing: -0.02em;
+}
+
+/* stronger production card feel */
+#summary-production-rate {
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+/* claim button more important */
+.primary-button {
+  background: linear-gradient(180deg, #e0ecff 0%, #cfe2ff 100%);
+  border-color: #93c5fd;
+  color: #173b7a;
+  font-weight: 600;
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.12);
+}
+
+.primary-button:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, #dbeafe 0%, #bfdbfe 100%);
+  box-shadow: 0 10px 18px rgba(37, 99, 235, 0.18);
+}
+
+/* tabs nicer */
+.subnav-btn {
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.subnav-btn:hover {
+  background: #f8fbff;
+  border-color: #cfe0ff;
+}
+
+.subnav-btn-active {
+  background: linear-gradient(180deg, #e9f2ff 0%, #dceaff 100%);
+  border-color: #93c5fd;
+  color: #1d4ed8;
+  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.10);
+}
+
+/* land rows more polished */
+.land-card-row {
+  border-width: 4px;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+}
+
+.land-card-row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.09);
+}
+
+.land-matrix-row,
+.land-factories-col {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e8edf5;
+}
+
+/* slot pills slightly better */
+.slot-pill {
+  border-color: rgba(200, 155, 99, 0.95);
+  box-shadow:
+    0 6px 12px rgba(0, 0, 0, 0.08),
+    inset 0 2px 4px rgba(255,255,255,0.35);
+}
+
+.slot-pill.filled {
+  background: linear-gradient(180deg, #d7c2a1 0%, #bea178 100%);
+}
+
+/* factory rows cleaner */
+.factory-row,
+.factory-card {
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.03);
+}
+
+.factory-row:hover,
+.factory-card:hover {
+  border-color: #d7e3f7;
+  background: #fbfdff;
+}
+
+/* claim/open status text more readable */
+.status-text {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+/* top nav slight polish */
+.top-nav {
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+}
 }
   </style>
 </head>
@@ -2363,6 +2510,7 @@ button {
         <div class="summary-value" id="summary-production-rate">0 EP/day</div>
         <div class="summary-sub" id="summary-production-sub">
           Total boosted EP/day (includes relic effects)
+          <div class="summary-sub" id="summary-claimable-ep">Unclaimed EP: 0.00</div>
         </div>
         <div class="summary-actions">
           <button id="claim-production-btn" class="primary-button">Claim Production</button>
@@ -2829,20 +2977,25 @@ async function buyEmp(hiveAmount) {
 }
 
 function initEmpBuyButtons() {
-  document.querySelectorAll("[data-hive-buy]").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const hiveAmount = parseInt(btn.dataset.hiveBuy, 10);
+  const select = document.getElementById("emp-buy-select");
+  const btn = document.getElementById("buy-emp-btn");
 
-      if (!Number.isInteger(hiveAmount)) return;
+  if (!select || !btn) return;
 
-      const ok = confirm(
-        `Buy ${hiveAmount * 100} EMP for ${hiveAmount} HIVE?`
-      );
+  btn.addEventListener("click", async () => {
+    const hiveAmount = parseInt(select.value, 10);
 
-      if (!ok) return;
+    if (!Number.isInteger(hiveAmount) || hiveAmount < 1 || hiveAmount > 10) {
+      alert("Please select a valid HIVE amount.");
+      return;
+    }
 
-      await buyEmp(hiveAmount);
-    });
+    const empAmount = hiveAmount * 100;
+
+    const ok = confirm(`Buy ${empAmount} EMP for ${hiveAmount} HIVE?`);
+    if (!ok) return;
+
+    await buyEmp(hiveAmount);
   });
 }
 
@@ -2920,7 +3073,7 @@ function initEmpBuyButtons() {
       });
     }
 
-   // ===== PLAYER SUMMARY =====
+// ===== PLAYER SUMMARY =====
 async function loadDashboardSummary() {
   try {
     const res = await fetch(
@@ -2931,7 +3084,6 @@ async function loadDashboardSummary() {
     const data = await res.json();
     console.log("Dashboard summary:", data);
 
-    // Safe setter: avoids "Cannot set properties of null"
     const setText = (id, value) => {
       const el = document.getElementById(id);
       if (el) el.textContent = value;
@@ -2942,7 +3094,7 @@ async function loadDashboardSummary() {
     setText("player-username-raw", PLAYER_USERNAME);
     setText("last-updated", new Date().toLocaleString());
 
-    const emp = data.empBalance ?? 0;
+    const emp = Number(data.empBalance ?? 0);
     setText(
       "summary-emp-balance",
       emp.toLocaleString(undefined, {
@@ -2951,30 +3103,36 @@ async function loadDashboardSummary() {
       })
     );
 
-    const totalFactories = data.totalFactories ?? 0;
-const activeFactories = data.activeFactories ?? 0;
-const buildingFactories = data.buildingFactories ?? 0;
-const inactiveFactories = data.inactiveFactories ?? 0;
+    const totalFactories = Number(data.totalFactories ?? data.totals?.totalFactories ?? 0);
+    const activeFactories = Number(data.activeFactories ?? data.totals?.activeFactories ?? 0);
+    const buildingFactories = Number(data.buildingFactories ?? data.totals?.buildingFactories ?? 0);
+    const inactiveFactories = Number(data.inactiveFactories ?? data.totals?.inactiveFactories ?? 0);
 
-setText("summary-factories-total", totalFactories);
-setText(
-  "summary-factories-breakdown",
-  `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories}`
-);
+    setText("summary-factories-total", totalFactories);
+    setText(
+      "summary-factories-breakdown",
+      `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories}`
+    );
 
-    const relicCount = data.relicCount ?? 0;
-    const activeRelicBoost = data.activeRelicBoost ?? 0;
+    const relicCount = Number(data.relicCount ?? 0);
+    const activeRelicBoost = Number(data.activeRelicBoost ?? 0);
 
-    setText("summary-relic-boost", activeRelicBoost + "%");
+    setText("summary-relic-boost", `${activeRelicBoost}%`);
     setText("summary-relic-count", `Relics owned: ${relicCount} (max boost: 6%)`);
-        const totalBaseEP = Number(data.totalBaseEP ?? data.totals?.totalBaseEP ?? 0);
-    const totalBoostedEP = Number(data.totalBoostedEP ?? data.totals?.totalBoostedEP ?? totalBaseEP);
+
+    const totalBaseEP = Number(data.totalBaseEP ?? data.totals?.totalBaseEP ?? 0);
+    const totalBoostedEP = Number(
+      data.totalBoostedEP ?? data.totals?.totalBoostedEP ?? totalBaseEP
+    );
+    const totalClaimableEP = Number(
+      data.totalClaimableEP ?? data.totals?.totalClaimableEP ?? 0
+    );
 
     setText("summary-production-rate", `${totalBoostedEP.toFixed(2)} EP/day`);
+    setText("summary-claimable-ep", `Unclaimed EP: ${totalClaimableEP.toFixed(2)}`);
 
-    // Optional fields — safe even if missing in HTML
     setText("relics-owned", relicCount);
-    setText("relics-boost", activeRelicBoost + "%");
+    setText("relics-boost", `${activeRelicBoost}%`);
   } catch (err) {
     console.error("Failed to load dashboard summary:", err);
   }
@@ -3203,17 +3361,23 @@ alert(
 
         // flatten factories
         allFactoriesFlat = [];
-        for (const land of lands) {
-          const factories = land.factories || [];
-          console.log("STATUS DEBUG (land", land.land_id || "", "):", factories.map(f => f.status));
-          for (const f of factories) {
-            allFactoriesFlat.push({
-              ...f,
-              land_id: land.land_id,
-              land_tier: land.land_tier
-            });
-          }
-        }
+for (const land of lands) {
+  const factories = land.factories || [];
+  console.log(
+    "STATUS DEBUG (land",
+    land.land_id || "",
+    "):",
+    factories.map((f) => f.status)
+  );
+
+  for (const f of factories) {
+    allFactoriesFlat.push({
+      ...f,
+      land_id: land.land_id,
+      land_tier: land.land_tier
+    });
+  }
+}
 
         // summary numbers
         const totalLands = lands.length;
@@ -3227,11 +3391,6 @@ alert(
         }
         document.getElementById("summary-lands-breakdown").textContent =
           `L1: ${l1} | L2: ${l2} | L3: ${l3}`;
-
-        const totalBaseEP = totals.totalBaseEP ?? 0;
-        const totalBoostedEP = totals.totalBoostedEP ?? totalBaseEP;
-        document.getElementById("summary-production-rate").textContent =
-          `${totalBoostedEP.toFixed(2)} EP/day`;
 
         if (typeof totals.totalFactories === "number") {
           if (typeof totals.totalFactories === "number") {
@@ -3691,9 +3850,19 @@ function wireEmptySlotBuildActions() {
 
   container.innerHTML = "";
 
-  const underConstruction = (allFactoriesFlat || []).filter(f => {
+  const underConstruction = (allFactoriesFlat || []).filter((f) => {
   const s = String(f.status || "").trim().toUpperCase();
-  return s === "BUILDING" || s === "UPGRADING";
+
+  if (s !== "BUILDING" && s !== "UPGRADING") return false;
+
+  const readyAt = f.upgrade_complete_at || f.build_complete_at || f.built_at;
+  if (!readyAt) return true;
+
+  const readyDate = new Date(readyAt);
+  if (isNaN(readyDate.getTime())) return true;
+
+  // ✅ If time is already completed, do not show in construction tab
+  return readyDate.getTime() > Date.now();
 });
 
   if (!underConstruction.length) {
