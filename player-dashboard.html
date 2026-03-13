@@ -2511,102 +2511,95 @@ body {
     <small>Your Genesis EMP, lands, factories and boosts</small>
   </div>
 
-  <!-- ===== BLOCK 1: SNAPSHOT ===== -->
-  <div class="overview-block">
-    <div class="overview-block-title">Empire Snapshot</div>
+ <!-- ===== BLOCK 1: SNAPSHOT ===== -->
+<div class="overview-block">
+  <div class="overview-block-title">Empire Snapshot</div>
 
-    <div class="summary-grid snapshot-grid">
-      <div class="summary-card">
-        <div class="summary-label"><span class="summary-emoji">💰</span>EMP Balance</div>
-        <div class="summary-value" id="summary-emp-balance">0</div>
-        <div class="summary-sub">Total EMP you currently own</div>
-      </div>
+  <div class="summary-grid snapshot-grid">
 
-      <div class="summary-card">
-        <div class="summary-label"><span class="summary-emoji">🌍</span>Lands Owned</div>
-        <div class="summary-value" id="summary-lands-total">0</div>
-        <div class="summary-sub" id="summary-lands-breakdown">L1: 0 | L2: 0 | L3: 0</div>
-      </div>
+    <div class="summary-card card-emp">
+      <div class="summary-label"><span class="summary-emoji">💰</span>EMP Balance</div>
+      <div class="summary-value" id="summary-emp-balance">0</div>
+      <div class="summary-sub">Total EMP you currently own</div>
+    </div>
 
-      <div class="summary-card">
-        <div class="summary-label"><span class="summary-emoji">🏭</span>Factories</div>
-        <div class="summary-value" id="summary-factories-total">0</div>
-        <div class="summary-sub" id="summary-factories-breakdown">Total factories: 0</div>
-      </div>
+    <div class="summary-card card-land">
+      <div class="summary-label"><span class="summary-emoji">🌍</span>Lands Owned</div>
+      <div class="summary-value" id="summary-lands-total">0</div>
+      <div class="summary-sub" id="summary-lands-breakdown">L1: 0 | L2: 0 | L3: 0</div>
+    </div>
 
-      <div class="summary-card">
-        <div class="summary-label"><span class="summary-emoji">⚡</span>Production</div>
-        <div class="summary-value" id="summary-production-rate">0 EP/day</div>
-        <div class="summary-sub" id="summary-production-sub">
-          Empire production including relic boosts
-          <div class="summary-sub" id="summary-claimable-ep">Accumulated EP: 0.00</div>
-        </div>
-        
-      </div>
+    <div class="summary-card card-factory">
+      <div class="summary-label"><span class="summary-emoji">🏭</span>Factories</div>
+      <div class="summary-value" id="summary-factories-total">0</div>
+      <div class="summary-sub" id="summary-factories-breakdown">Total factories: 0</div>
+    </div>
 
-      <div class="summary-card">
-  <div class="summary-label">
-    <span class="summary-emoji">⚡</span>Empire Accumulated EP
-  </div>
-
-  <div class="summary-value" id="summary-total-empire-ep">0</div>
-
-  <div class="summary-sub">
-    Total accumulated EP across your factories
-  </div>
-</div>
-
-      <div class="summary-card">
-  <div class="summary-label">
-    <span class="summary-emoji">🎁</span>Claimable HIVE
-  </div>
-
-  <div class="summary-value" id="summary-claimable-hive">0.000</div>
-
-  <div class="summary-sub">
-    Treasury reward available to claim
-  </div>
-</div>
-
-      <div class="summary-card">
-  <div class="summary-label">
-    <span class="summary-emoji">🏦</span>Wallet HIVE
-  </div>
-
-  <div class="summary-value" id="summary-wallet-hive">0.000</div>
-
-  <div class="summary-sub">
-    Claimed reward balance
-  </div>
-</div>
-
-      <div class="summary-card">
-  <div class="summary-label">
-    <span class="summary-emoji">💸</span>Withdraw Status
-  </div>
-
-  <div class="summary-value" id="summary-withdraw-status">Not Ready</div>
-
-  <div class="summary-sub" id="summary-withdraw-sub">
-    Minimum withdrawal is 1.000 HIVE
-  </div>
-</div>
-
-      <div class="summary-card">
-        <div class="summary-label"><span class="summary-emoji">💎</span>Relic Boost</div>
-        <div class="summary-value" id="summary-relic-boost">0%</div>
-        <div class="summary-sub" id="summary-relic-count">
-          Relics owned: 0 (max boost: 6%)
-        </div>
-      </div>
-
-      <div class="summary-card">
-        <div class="summary-label"><span class="summary-emoji">🧾</span>WRITs</div>
-        <div class="summary-value" id="summary-writ-count">0</div>
-        <div class="summary-sub">Genesis strategic documents you hold</div>
+    <div class="summary-card card-production">
+      <div class="summary-label"><span class="summary-emoji">⚡</span>Production</div>
+      <div class="summary-value" id="summary-production-rate">0 EP/day</div>
+      <div class="summary-sub" id="summary-production-sub">
+        Empire production including relic boosts
+        <div class="summary-sub" id="summary-claimable-ep">Accumulated EP: 0.00</div>
       </div>
     </div>
+
+    <div class="summary-card card-ep">
+      <div class="summary-label">
+        <span class="summary-emoji">⚡</span>Empire Accumulated EP
+      </div>
+      <div class="summary-value" id="summary-total-empire-ep">0</div>
+      <div class="summary-sub">
+        Total accumulated EP across your factories
+      </div>
+    </div>
+
+    <div class="summary-card card-reward">
+      <div class="summary-label">
+        <span class="summary-emoji">🎁</span>Claimable HIVE
+      </div>
+      <div class="summary-value" id="summary-claimable-hive">0.000</div>
+      <div class="summary-sub">
+        Treasury reward available to claim
+      </div>
+    </div>
+
+    <div class="summary-card card-wallet">
+      <div class="summary-label">
+        <span class="summary-emoji">🏦</span>Wallet HIVE
+      </div>
+      <div class="summary-value" id="summary-wallet-hive">0.000</div>
+      <div class="summary-sub">
+        Claimed reward balance
+      </div>
+    </div>
+
+    <div class="summary-card card-withdraw">
+      <div class="summary-label">
+        <span class="summary-emoji">💸</span>Withdraw Status
+      </div>
+      <div class="summary-value" id="summary-withdraw-status">Not Ready</div>
+      <div class="summary-sub" id="summary-withdraw-sub">
+        Minimum withdrawal is 1.000 HIVE
+      </div>
+    </div>
+
+    <div class="summary-card card-relic">
+      <div class="summary-label"><span class="summary-emoji">💎</span>Relic Boost</div>
+      <div class="summary-value" id="summary-relic-boost">0%</div>
+      <div class="summary-sub" id="summary-relic-count">
+        Relics owned: 0 (max boost: 6%)
+      </div>
+    </div>
+
+    <div class="summary-card card-writ">
+      <div class="summary-label"><span class="summary-emoji">🧾</span>WRITs</div>
+      <div class="summary-value" id="summary-writ-count">0</div>
+      <div class="summary-sub">Genesis strategic documents you hold</div>
+    </div>
+
   </div>
+</div>
 
   <!-- ===== BLOCK 2: EMPIRE PREVIEW ===== -->
   <div class="overview-block">
