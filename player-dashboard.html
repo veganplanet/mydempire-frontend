@@ -3465,9 +3465,16 @@ function factoryIndustryEmoji(factory) {
   return "🏭";
 }
 
-function factoryStatusClass(status) {
-  const s = (status || "").toString().trim().toUpperCase();
+function factoryStatusClass(factoryOrStatus) {
+  if (typeof factoryOrStatus === "object" && factoryOrStatus !== null) {
+    if (isTrulyActiveFactory(factoryOrStatus)) return "active";
 
+    const s = (factoryOrStatus.status || "").toString().trim().toUpperCase();
+    if (s === "BUILDING" || s === "UPGRADING") return "building";
+    return "inactive";
+  }
+
+  const s = (factoryOrStatus || "").toString().trim().toUpperCase();
   if (s === "ACTIVE") return "active";
   if (s === "BUILDING" || s === "UPGRADING") return "building";
   return "inactive";
@@ -3503,7 +3510,7 @@ function renderTerritorySlots(factories, slotsTotal, landId) {
     const factory = factories[i];
 
     if (factory) {
-      const statusClass = factoryStatusClass(factory.status);
+      const statusClass = factoryStatusClass(factory);
       const buildingImg = getFactoryBuildingImage(factory);
 
       // ✅ Read blueprint/build tier, not factory level
