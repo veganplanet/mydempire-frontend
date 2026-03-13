@@ -3335,7 +3335,27 @@ alert(
     alert(e.message);
   }
 }
+function getRequiredActiveDaysForUpgradeTier(blueprintTier) {
+  const t = String(blueprintTier || "").toUpperCase();
 
+  if (t.endsWith("_B1")) return 30;
+  if (t.endsWith("_B2")) return 60;
+  if (t.endsWith("_B3")) return 120;
+  if (t.endsWith("_B4")) return 240;
+
+  return null; // B5 or invalid
+}
+
+function getNextUpgradeLabel(blueprintTier) {
+  const t = String(blueprintTier || "").toUpperCase();
+
+  if (t.endsWith("_B1")) return "B2";
+  if (t.endsWith("_B2")) return "B3";
+  if (t.endsWith("_B3")) return "B4";
+  if (t.endsWith("_B4")) return "B5";
+
+  return null;
+}
 
     // ===== EMPIRE OVERVIEW =====
    async function loadEmpireOverview() {
@@ -3741,13 +3761,43 @@ const factoryName =
 const status = (String(f.status || "").trim().toUpperCase());
 const canRename = status === "ACTIVE";
 
-let subLine = `Blueprint tier: ${blueprintTier}`;
+const activeDays = Number(f.active_days || 0);
+const requiredDays = getRequiredActiveDaysForUpgradeTier(blueprintTier);
+const nextUpgradeLabel = getNextUpgradeLabel(blueprintTier);
+const maintenanceText = getMaintenanceStatusText(f.maintenance_ends_at);
+const isMaxTier = !requiredDays || !nextUpgradeLabel;
+const isReadyToUpgrade =
+  status === "ACTIVE" &&
+  !isMaxTier &&
+  activeDays >= requiredDays;
+
+const canUpgrade = isReadyToUpgrade;
+
+let upgradeMatrix = "";
+
+if (isMaxTier) {
+  upgradeMatrix = `✅ Max tier reached`;
+} else if (status !== "ACTIVE") {
+  upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Upgrade unavailable while ${status.toLowerCase()}`;
+} else if (isReadyToUpgrade) {
+  upgradeMatrix = `✅ Factory is ready to upgrade to ${nextUpgradeLabel}`;
+} else {
+  upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Needs ${requiredDays - activeDays} more day(s) for ${nextUpgradeLabel}`;
+}
+
+let subLine = `Blueprint tier: ${blueprintTier}<br>${upgradeMatrix}<br>${maintenanceText}`;
 
 row.innerHTML = `
   <div class="factory-main">
     <div class="factory-title-row">
       <div class="factory-title">${factoryName}</div>
-      ${canRename ? `<button class="rename-factory-btn" data-factory-id="${factoryId}">Rename</button>` : ""}
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+  ${canRename ? `<button class="rename-factory-btn" data-factory-id="${factoryId}">Rename</button>` : ""}
+  ${canUpgrade ? `<button class="upgrade-factory-btn" data-factory-id="${factoryId}">Upgrade</button>` : ""}
+  <button class="maintenance-factory-btn" data-factory-id="${factoryId}">Pay Maintenance</button>
+</div>
+      </div>
     </div>
     <div class="factory-sub">${subLine}</div>
   </div>
@@ -3797,6 +3847,92 @@ if (clean.length < 3) {
   });
 }
 
+const upgradeBtn = row.querySelector(".upgrade-factory-btn");
+
+if (upgradeBtn) {
+  upgradeBtn.addEventListener("click", async (e) => {
+    e.stopPropagation();
+
+    const ok = confirm(`Upgrade ${factoryName}?`);
+    if (!ok) return;
+
+    try {
+      const res = await fetch(apiUrl("/factory/upgrade"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: PLAYER_USERNAME,
+          factory_id: factoryId
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        alert(data.error || "Upgrade failed.");
+        return;
+      }
+
+      alert(data.message || "Factory upgraded successfully!");
+
+      await loadDashboardSummary();
+      await loadEmpireOverview();
+
+    } catch (err) {
+      console.error("Upgrade error:", err);
+      alert("Upgrade failed.");
+    }
+  });
+}
+const maintenanceBtn = row.querySelector(".maintenance-factory-btn");
+
+if (maintenanceBtn) {
+  maintenanceBtn.addEventListener("click", async (e) => {
+    e.stopPropagation();
+
+    const daysInput = prompt("Enter maintenance days (1 to 7):", "1");
+    if (!daysInput) return;
+
+    const days = parseInt(daysInput, 10);
+
+    if (!days || days < 1 || days > 7) {
+      alert("Please enter a number between 1 and 7.");
+      return;
+    }
+
+    try {
+      const res = await fetch(apiUrl("/factory/pay-maintenance"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: PLAYER_USERNAME,
+          factory_id: factoryId,
+          days
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        alert(data.error || "Maintenance payment failed.");
+        return;
+      }
+
+      alert(`Maintenance paid successfully! Added ${data.days_added} day(s). EMP spent: ${data.emp_spent}`);
+
+      await loadDashboardSummary();
+      await loadEmpireOverview();
+
+    } catch (err) {
+      console.error("Maintenance payment error:", err);
+      alert("Maintenance payment failed.");
+    }
+  });
+}
 factoriesList.appendChild(row);
   }
 }
@@ -4624,6 +4760,69 @@ function updateSelectedBuildLandBox() {
 
   const tier = land.land_tier || "L1";
   box.textContent = `Selected land for build: Land #${land.land_id} (${landTierLabel(tier)})`;
+}
+
+async function upgradeFactory(username, factoryId) {
+  try {
+    const ok = confirm(`Upgrade Factory #${factoryId}?`);
+    if (!ok) return;
+
+    const r = await fetch(`${API_BASE}/factory/upgrade`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        factory_id: factoryId
+      })
+    });
+
+    const text = await r.text();
+    console.log("upgradeFactory raw response:", text);
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      alert("Upgrade failed: server did not return JSON.");
+      return;
+    }
+
+    if (!r.ok || !data.success) {
+      alert(data.error || "Upgrade failed.");
+      return;
+    }
+
+    alert(data.message || "Factory upgrade started successfully!");
+
+    await loadDashboardSummary(username);
+    await loadEmpireOverview(username);
+
+  } catch (err) {
+    console.error("upgradeFactory error:", err);
+    alert("Upgrade failed.");
+  }
+}
+
+function getMaintenanceStatusText(maintenanceEndsAt) {
+  if (!maintenanceEndsAt) {
+    return `<span style="color:#c62828; font-weight:600;">🔴 Maintenance: expired</span>`;
+  }
+
+  const end = new Date(maintenanceEndsAt);
+  const now = new Date();
+
+  if (isNaN(end.getTime())) {
+    return `<span style="color:#c62828; font-weight:600;">🔴 Maintenance: expired</span>`;
+  }
+
+  if (end <= now) {
+    return `<span style="color:#c62828; font-weight:600;">🔴 Maintenance: expired</span>`;
+  }
+
+  const diffMs = end - now;
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  return `<span style="color:#2e7d32; font-weight:600;">🟢 Maintenance: active (${diffDays} day${diffDays === 1 ? "" : "s"} left)</span>`;
 }
 
   </script>

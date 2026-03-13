@@ -1,232 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>MydEmpire – Simple Blueprint</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <style>
-    :root {
-      /* Level colors (locked) */
-      --b1-color: #b0bec5; /* Steel Grey */
-      --b2-color: #1565c0; /* Deep Blue */
-      --b3-color: #7e57c2; /* Purple */
-      --b4-color: #ff8f00; /* Orange */
-      --b5-color: #ffca28; /* Gold */
-
-      /* Current accent (updated by JS) */
-      --bp-accent: var(--b1-color);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: #ffffff;
-      color: #222;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .panel {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      align-items: center;
-    }
-
-    /* SIMPLE BLUEPRINT CARD */
-    .bp-card {
-      position: relative;
-      width: 420px;
-      height: 640px;
-      border-radius: 24px;
-      border: 12px solid var(--bp-accent); /* thicker frame */
-      background: color-mix(in srgb, var(--bp-accent) 10%, #ffffff 90%); /* flat 10% level colour */
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-      overflow: hidden;
-    }
-
-    /* TOP BADGE (simple circle, fully inside) */
-    .bp-badge {
-      position: absolute;
-      top: 40px;                     /* inside the frame */
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: var(--bp-accent);
-      border: 4px solid #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 24px;
-      color: #ffffff;
-      text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
-      z-index: 3;
-    }
-
-    /* BUILDING – bigger and near bottom above matrix */
-    .bp-building {
-      position: absolute;
-      left: 50%;
-      bottom: 60px;                 /* sits just above strip */
-      transform: translateX(-50%);
-      width: 120%;                    /* big */
-      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.5));
-      pointer-events: none;
-    }
-
-    .bp-building img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    /* BOTTOM STRIP (MATRIX) */
-    .bp-matrix-strip {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      padding: 12px 24px;
-      background: #050b14;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      color: #ffffff;
-    }
-
-    .bp-matrix-group {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      text-align: left;
-    }
-
-    .bp-matrix-label {
-      opacity: 0.85;
-      font-weight: 600;
-      font-size: 11px;
-    }
-
-    .bp-matrix-value {
-      color: var(--bp-accent);
-      font-weight: 900;
-      font-size: 15px;
-    }
-
-    /* CONTROLS */
-    .controls {
-      margin-top: 10px;
-      display: flex;
-      gap: 8px;
-      font-size: 12px;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    button.level-btn {
-      border-radius: 99px;
-      border: 1px solid rgba(144, 202, 249, 0.5);
-      background: rgba(12, 30, 60, 0.9);
-      color: #e3f2fd;
-      padding: 4px 10px;
-      cursor: pointer;
-    }
-
-    button.level-btn.active {
-      border-color: var(--bp-accent);
-      box-shadow: 0 0 10px color-mix(in srgb, var(--bp-accent) 60%, transparent);
-    }
-  </style>
+  <title>Factory Upgrade Test</title>
 </head>
 <body>
+  <h2>Factory Upgrade Test</h2>
 
-  <div class="panel">
+  <label>Username:</label><br>
+  <input id="username" value=""><br><br>
 
-    <div class="bp-card">
-      <!-- Badge -->
-      <div class="bp-badge" id="bp-badge-text">B1</div>
+  <label>Factory ID:</label><br>
+  <input id="factoryid" value=""><br><br>
 
-      <!-- Building -->
-      <div class="bp-building">
-        <img src="assets/pharma-building.png" alt="Pharma factory" />
-      </div>
+  <button onclick="upgradeFactory()">Upgrade Factory</button>
 
-      <!-- Matrix strip -->
-      <div class="bp-matrix-strip">
-        <div class="bp-matrix-group">
-          <div class="bp-matrix-label">Industry</div>
-          <div class="bp-matrix-value" id="bp-industry-short">PHARMA</div>
-        </div>
-        <div class="bp-matrix-group">
-          <div class="bp-matrix-label">Base EP / hr</div>
-          <div class="bp-matrix-value" id="bp-ep">+120</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Level controls -->
-    <div class="controls">
-      <button class="level-btn active" data-level="1">B1</button>
-      <button class="level-btn" data-level="2">B2</button>
-      <button class="level-btn" data-level="3">B3</button>
-      <button class="level-btn" data-level="4">B4</button>
-      <button class="level-btn" data-level="5">B5</button>
-    </div>
-
-  </div>
+  <h3>Result:</h3>
+  <pre id="result"></pre>
 
   <script>
-    const LEVEL_CONFIG = {
-      1: { colorVar: "--b1-color", ep: "+120" },
-      2: { colorVar: "--b2-color", ep: "+180" },
-      3: { colorVar: "--b3-color", ep: "+260" },
-      4: { colorVar: "--b4-color", ep: "+360" },
-      5: { colorVar: "--b5-color", ep: "+500" }
-    };
+    async function upgradeFactory() {
+      const username = document.getElementById("username").value.trim();
+      const factory_id = parseInt(document.getElementById("factoryid").value, 10);
 
-    function setBlueprintLevel(level) {
-      const cfg = LEVEL_CONFIG[level];
-      if (!cfg) return;
+      try {
+        const res = await fetch("http://localhost:10000/factory/upgrade", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            username,
+            factory_id
+          })
+        });
 
-      const root = document.documentElement;
-      const accent = getComputedStyle(root).getPropertyValue(cfg.colorVar).trim();
-
-      // Set main accent (frame, badge, matrix value)
-      root.style.setProperty("--bp-accent", accent);
-
-      document.getElementById("bp-ep").textContent = cfg.ep;
-      document.getElementById("bp-badge-text").textContent = "B" + level;
-
-      document.querySelectorAll(".level-btn").forEach(btn => {
-        btn.classList.toggle("active", Number(btn.dataset.level) === level);
-      });
+        const text = await res.text();
+        document.getElementById("result").innerText = text;
+      } catch (err) {
+        document.getElementById("result").innerText = "Error: " + err.message;
+      }
     }
-
-    document.querySelectorAll(".level-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const lvl = Number(btn.dataset.level);
-        setBlueprintLevel(lvl);
-      });
-    });
-
-    // initial
-    setBlueprintLevel(1);
   </script>
 </body>
 </html>
