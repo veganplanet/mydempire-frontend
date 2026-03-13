@@ -3356,7 +3356,19 @@ function getNextUpgradeLabel(blueprintTier) {
 
   return null;
 }
+function hasValidMaintenance(factory) {
+  if (!factory || !factory.maintenance_ends_at) return false;
 
+  const end = new Date(factory.maintenance_ends_at);
+  if (isNaN(end.getTime())) return false;
+
+  return end > new Date();
+}
+
+function isTrulyActiveFactory(factory) {
+  const s = String(factory?.status || "").trim().toUpperCase();
+  return s === "ACTIVE" && hasValidMaintenance(factory);
+}
     // ===== EMPIRE OVERVIEW =====
    async function loadEmpireOverview() {
   const landsContainer = document.getElementById("lands-container");
@@ -3608,27 +3620,26 @@ empireLands.sort((a, b) => {
     const slotsUsed = factories.length;
 
     // ===== status counts (strict + correct) =====
-    let activeCount = 0;
-    let upgradingCount = 0;
-    let buildingCount = 0;
-    let inactiveCount = 0;
+   let activeCount = 0;
+let upgradingCount = 0;
+let buildingCount = 0;
+let inactiveCount = 0;
 
-    for (const f of factories) {
-      const s = normalize(f.status);
+for (const f of factories) {
+  const s = normalize(f.status);
 
-      if (s === "ACTIVE") activeCount++;
-      else if (s === "UPGRADING") upgradingCount++;
-      else if (s === "BUILDING" || s === "CONSTRUCTING") buildingCount++;
-      else inactiveCount++;
-    }
+  if (isTrulyActiveFactory(f)) activeCount++;
+  else if (s === "UPGRADING") upgradingCount++;
+  else if (s === "BUILDING" || s === "CONSTRUCTING") buildingCount++;
+  else inactiveCount++;
+}
 
   // ===== land production + unclaimed EP (ACTIVE only) =====
 let landUnclaimedEP = 0;
 let landRatePerDay = 0;
 
 for (const f of factories) {
-  const s = normalize(f.status);
-  if (s !== "ACTIVE") continue;
+  if (!isTrulyActiveFactory(f)) continue;
 
   const unclaimed = Number(f.ep_unclaimed ?? f.factoryEP ?? 0);
   if (!isNaN(unclaimed)) {
