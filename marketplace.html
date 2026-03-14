@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MydEmpire Marketplace</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --card: #ffffff;
+      --text: #182235;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --danger: #dc2626;
+      --danger-dark: #b91c1c;
+      --success: #16a34a;
+      --warning: #b45309;
+      --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+
+      --b1-color: #b0bec5;
+      --b2-color: #1565c0;
+      --b3-color: #7e57c2;
+      --b4-color: #ff8f00;
+      --b5-color: #ffca28;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .title {
+      font-size: 30px;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 6px;
+    }
+
+    .userbox {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 16px;
+      box-shadow: var(--shadow);
+      font-weight: 700;
+    }
+
+    .tabbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      border: 1px solid #c7d2fe;
+      background: #eef2ff;
+      color: #312e81;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .tab-btn:hover {
+      background: #e0e7ff;
+      transform: translateY(-1px);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      border-color: #1d4ed8;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+    }
+
+    .market-tab-panel {
+      display: none;
+    }
+
+    .market-tab-panel.active {
+      display: block;
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .card h2 {
+      margin: 0 0 16px 0;
+      font-size: 20px;
+    }
+
+    .market-toolbar {
+      display: grid;
+      grid-template-columns: 1.15fr 1.15fr 0.9fr auto auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .market-toolbar.emp {
+      grid-template-columns: 1.2fr 1fr 0.9fr auto auto;
+    }
+
+    .market-toolbar.simple {
+      grid-template-columns: 1fr auto auto;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--muted);
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      color: white;
+    }
+
+    .primary-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .danger-btn {
+      background: var(--danger);
+      color: white;
+    }
+
+    .danger-btn:hover {
+      background: var(--danger-dark);
+    }
+
+    .secondary-btn {
+      background: #eef2ff;
+      color: #312e81;
+    }
+
+    .secondary-btn:hover {
+      background: #e0e7ff;
+    }
+
+    .ghost-btn {
+      background: #ffffff;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
+    }
+
+    .ghost-btn:hover {
+      background: #f8fafc;
+    }
+
+    .status {
+      min-height: 20px;
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--muted);
+      white-space: pre-wrap;
+      line-height: 1.45;
+    }
+
+    .market-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .market-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .market-header-sub {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .listing-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .listing-card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fff;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .listing-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    }
+
+    .listing-card.mine {
+      border-color: #bfdbfe;
+      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    }
+
+    .listing-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .listing-title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .listing-meta {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .kv-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(120px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+      margin-bottom: 12px;
+    }
+
+    .kv {
+      background: #f8fafc;
+      border: 1px solid #edf2f7;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .kv .k {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .kv .v {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .empty {
+      padding: 22px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .bp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .bp-market-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .bp-market-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
+    }
+
+    .bp-mini-card {
+      position: relative;
+      border-radius: 24px;
+      border: 6px solid #d1d5db;
+      background: radial-gradient(circle at top, #fdfdfd 0%, #f3f4f6 45%, #e5e7eb 100%);
+      padding: 22px 18px 64px;
+      overflow: hidden;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
+      width: 100%;
+      min-height: 290px;
+    }
+
+    .bp-mini-badge {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 4px solid #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 15px;
+      color: #ffffff;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+      z-index: 3;
+    }
+
+    .bp-mini-building {
+      margin-top: 38px;
+      filter: drop-shadow(0 8px 16px rgba(15, 23, 42, 0.35));
+    }
+
+    .bp-mini-building img {
+      width: 100%;
+      display: block;
+    }
+
+    .bp-mini-strip {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 8px 14px 10px;
+      background: #050b14;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .bp-mini-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .bp-mini-label {
+      opacity: 0.8;
+    }
+
+    .bp-mini-value {
+      font-weight: 800;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .bp-market-meta {
+      padding: 12px 14px 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .placeholder-box {
+      border: 1px dashed #cbd5e1;
+      border-radius: 16px;
+      background: #f8fafc;
+      padding: 18px;
+      color: #475569;
+      line-height: 1.55;
+    }
+
+    .coming-list {
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+
+    .subtabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .subtab-btn {
+      border: 1px solid #dbeafe;
+      background: #f8fbff;
+      color: #1e3a8a;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .subtab-btn.active {
+      background: #dbeafe;
+    }
+
+    .subtab-panel {
+      display: none;
+    }
+
+    .subtab-panel.active {
+      display: block;
+    }
+
+    @media (max-width: 1000px) {
+      .market-toolbar,
+      .market-toolbar.emp,
+      .market-toolbar.simple {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div>
+        <h1 class="title">MydEmpire Marketplace</h1>
+        <div class="subtitle">Market first • manage with dropdown views</div>
+      </div>
+      <div class="userbox">
+        Active User: <span id="active-username">--</span>
+      </div>
+    </div>
+
+    <div class="tabbar">
+      <button class="tab-btn active" data-market-tab="emp">EMP Market</button>
+      <button class="tab-btn" data-market-tab="blueprints">Blueprint Market</button>
+      <button class="tab-btn" data-market-tab="lands">Lands</button>
+      <button class="tab-btn" data-market-tab="premium">Premium Cards</button>
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- EMP TAB -->
+    <!-- ===================================================== -->
+    <section class="market-tab-panel active" data-market-tab-panel="emp">
+      <div class="stack">
+        <div class="card">
+          <div class="market-header">
+            <div class="market-header-left">
+              <h2 style="margin:0;">EMP Market Controls</h2>
+              <div class="market-header-sub">Choose view, create listing, then manage it inside the same market feed.</div>
+            </div>
+            <div class="pill">1 HIVE = 100 EMP</div>
+          </div>
+
+          <div class="market-toolbar emp">
+            <div class="field">
+              <label for="emp-view-select">View</label>
+              <select id="emp-view-select">
+                <option value="market">Market Listings</option>
+                <option value="mine">My Listings</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="emp-quantity">EMP Quantity</label>
+              <input id="emp-quantity" type="number" min="100" step="1" placeholder="e.g. 500" />
+              <div class="hint">Minimum listing: 100 EMP</div>
+            </div>
+
+            <div class="field">
+              <label for="emp-price">Price per EMP (HIVE)</label>
+              <input id="emp-price" type="number" min="0.0075" step="0.0001" placeholder="e.g. 0.009" />
+              <div class="hint">EMP floor price: 0.0075 HIVE</div>
+            </div>
+
+            <button class="primary-btn" id="create-emp-listing-btn">Create EMP Listing</button>
+            <button class="secondary-btn" id="refresh-market-btn">Refresh</button>
+          </div>
+
+          <div class="hint" id="listing-preview" style="margin-top:12px;">
+            Enter quantity and price to preview total, fee, and seller net.
+          </div>
+          <div class="status" id="create-listing-status"></div>
+        </div>
+
+        <div class="card">
+          <div class="market-header">
+            <div class="market-header-left">
+              <h2 style="margin:0;" id="emp-feed-title">EMP Market Listings</h2>
+              <div class="market-header-sub" id="emp-feed-subtitle">Browse active EMP listings.</div>
+            </div>
+            <div class="pill" id="emp-market-count-pill">0 Listings</div>
+          </div>
+
+          <div id="emp-market-list" class="listing-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- BLUEPRINT TAB -->
+    <!-- ===================================================== -->
+    <section class="market-tab-panel" data-market-tab-panel="blueprints">
+      <div class="stack">
+        <div class="card">
+          <div class="market-header">
+            <div class="market-header-left">
+              <h2 style="margin:0;">Blueprint Market Controls</h2>
+              <div class="market-header-sub">Switch between market, your listings, and your blueprints without changing page layout.</div>
+            </div>
+            <div class="pill">HIVE Only</div>
+          </div>
+
+          <div class="market-toolbar">
+            <div class="field">
+              <label for="blueprint-view-select">View</label>
+              <select id="blueprint-view-select">
+                <option value="market">Market Listings</option>
+                <option value="mine">My Listings</option>
+                <option value="inventory">My Blueprints</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="blueprint-select">Choose Blueprint</label>
+              <select id="blueprint-select">
+                <option value="">Loading blueprints...</option>
+              </select>
+              <div class="hint" id="blueprint-market-status">Loading blueprint inventory...</div>
+            </div>
+
+            <div class="field">
+              <label for="blueprint-price-hive">Listing Price (HIVE)</label>
+              <input id="blueprint-price-hive" type="number" min="0.001" step="0.001" placeholder="e.g. 3.500" />
+            </div>
+
+            <button class="primary-btn" id="create-blueprint-listing-btn">Create Blueprint Listing</button>
+            <button class="secondary-btn" id="refresh-blueprint-market-btn">Refresh</button>
+          </div>
+
+          <div class="status" id="blueprint-create-status"></div>
+        </div>
+
+        <div class="card">
+          <div class="market-header">
+            <div class="market-header-left">
+              <h2 style="margin:0;" id="blueprint-feed-title">Blueprint Market Listings</h2>
+              <div class="market-header-sub" id="blueprint-feed-subtitle">Browse active blueprint listings.</div>
+            </div>
+            <div class="pill" id="blueprint-market-count-pill">0 Items</div>
+          </div>
+
+          <div id="blueprint-feed"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- LANDS TAB -->
+    <!-- ===================================================== -->
+    <section class="market-tab-panel" data-market-tab-panel="lands">
+      <div class="card">
+        <div class="market-header">
+          <div class="market-header-left">
+            <h2 style="margin:0;">Land Marketplace</h2>
+            <div class="market-header-sub">This tab is layout-ready for later backend wiring.</div>
+          </div>
+          <div class="pill">Coming Next</div>
+        </div>
+
+        <div class="placeholder-box">
+          Recommended future structure for Lands:
+          <ul class="coming-list">
+            <li>View dropdown: Market Listings / My Listings / My Lands</li>
+            <li>List Land controls at top</li>
+            <li>Single feed below</li>
+            <li>No separate lower management block</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- PREMIUM TAB -->
+    <!-- ===================================================== -->
+    <section class="market-tab-panel" data-market-tab-panel="premium">
+      <div class="card">
+        <div class="market-header">
+          <div class="market-header-left">
+            <h2 style="margin:0;">Premium Cards Marketplace</h2>
+            <div class="market-header-sub">Grouped for Relic, Writ, and future premium card types.</div>
+          </div>
+          <div class="pill">Long-term Structure</div>
+        </div>
+
+        <div class="subtabs">
+          <button class="subtab-btn active" data-premium-subtab="overview">Overview</button>
+          <button class="subtab-btn" data-premium-subtab="relics">Relics</button>
+          <button class="subtab-btn" data-premium-subtab="writs">Writs</button>
+          <button class="subtab-btn" data-premium-subtab="future">Future Cards</button>
+        </div>
+
+        <div class="subtab-panel active" data-premium-subtab-panel="overview">
+          <div class="placeholder-box">
+            Use this section for premium strategic assets:
+            <ul class="coming-list">
+              <li>RELIC</li>
+              <li>WRIT</li>
+              <li>Future premium cards</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="subtab-panel" data-premium-subtab-panel="relics">
+          <div class="placeholder-box">Relic market placeholder.</div>
+        </div>
+
+        <div class="subtab-panel" data-premium-subtab-panel="writs">
+          <div class="placeholder-box">Writ market placeholder.</div>
+        </div>
+
+        <div class="subtab-panel" data-premium-subtab-panel="future">
+          <div class="placeholder-box">Future premium card category placeholder.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const LOCAL_API = "http://localhost:10000";
+    const PROD_API = "https://mydempire-backend-1.onrender.com";
+
+    const host = window.location.hostname;
+    const isLocal = host === "localhost" || host === "127.0.0.1";
+    const API_BASE = isLocal ? LOCAL_API : PROD_API;
+
+    function apiUrl(path) {
+      return API_BASE + path;
+    }
+
+    function getUsernameFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("user");
+    }
+
+    function getActiveUser() {
+      const fromUrl = (getUsernameFromURL() || "").trim().toLowerCase();
+      if (fromUrl) {
+        localStorage.setItem("hiveUsername", fromUrl);
+        return fromUrl;
+      }
+      return (localStorage.getItem("hiveUsername") || "").trim().toLowerCase();
+    }
+
+    const ACTIVE_USER = getActiveUser();
+    document.getElementById("active-username").textContent = ACTIVE_USER || "--";
+
+    function setStatus(id, text, isError = false) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = text || "";
+      el.style.color = isError ? "#b91c1c" : "#6b7280";
+    }
+
+    function round8(n) {
+      return Number(Number(n || 0).toFixed(8));
+    }
+
+    function normalizeTxIdFromKeychainResponse(response) {
+      return (
+        response?.result?.id ||
+        response?.result?.tx_id ||
+        response?.result?.trx_id ||
+        response?.tx_id ||
+        response?.id ||
+        ""
+      );
+    }
+
+    function hiveTransfer(from, to, amount, memo) {
+      return new Promise((resolve, reject) => {
+        if (!window.hive_keychain) {
+          reject(new Error("Hive Keychain is not available."));
+          return;
+        }
+
+        window.hive_keychain.requestTransfer(
+          from,
+          to,
+          amount,
+          memo,
+          "HIVE",
+          (response) => {
+            if (!response || !response.success) {
+              reject(new Error(response?.message || "Hive transfer failed."));
+              return;
+            }
+
+            resolve({
+              success: true,
+              tx_id: normalizeTxIdFromKeychainResponse(response),
+              raw: response
+            });
+          }
+        );
+      });
+    }
+
+    /* ===================================================== */
+    /* MAIN TABS */
+    /* ===================================================== */
+    function activateMarketTab(tabName) {
+      document.querySelectorAll("[data-market-tab]").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.marketTab === tabName);
+      });
+
+      document.querySelectorAll("[data-market-tab-panel]").forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.marketTabPanel === tabName);
+      });
+
+      if (tabName === "blueprints") {
+        loadBlueprintInventory();
+        loadBlueprintListings();
+      }
+    }
+
+    document.querySelectorAll("[data-market-tab]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        activateMarketTab(btn.dataset.marketTab);
+      });
+    });
+
+    /* ===================================================== */
+    /* PREMIUM SUBTABS */
+    /* ===================================================== */
+    function activatePremiumSubtab(name) {
+      document.querySelectorAll("[data-premium-subtab]").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.premiumSubtab === name);
+      });
+
+      document.querySelectorAll("[data-premium-subtab-panel]").forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.premiumSubtabPanel === name);
+      });
+    }
+
+    document.querySelectorAll("[data-premium-subtab]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        activatePremiumSubtab(btn.dataset.premiumSubtab);
+      });
+    });
+
+    /* ===================================================== */
+    /* EMP MARKET */
+    /* ===================================================== */
+    let allEmpListings = [];
+    let currentEmpView = "market";
+
+    function updateEmpFeedHeader() {
+      const title = document.getElementById("emp-feed-title");
+      const subtitle = document.getElementById("emp-feed-subtitle");
+
+      if (currentEmpView === "mine") {
+        title.textContent = "My EMP Listings";
+        subtitle.textContent = "Manage your active EMP listings here.";
+      } else {
+        title.textContent = "EMP Market Listings";
+        subtitle.textContent = "Browse active EMP listings.";
+      }
+    }
+
+    function updateListingPreview() {
+      const quantity = Number(document.getElementById("emp-quantity").value || 0);
+      const unitPrice = Number(document.getElementById("emp-price").value || 0);
+      const previewEl = document.getElementById("listing-preview");
+
+      if (!quantity || !unitPrice) {
+        previewEl.textContent =
+          "Enter quantity and price to preview total, fee, and seller net.";
+        return;
+      }
+
+      const total = round8(quantity * unitPrice);
+      const fee = round8(total * 0.03);
+      const sellerNet = round8(total - fee);
+
+      previewEl.textContent =
+        `Total HIVE: ${total.toFixed(3)} | Fee (3%): ${fee.toFixed(3)} | Seller Receives: ${sellerNet.toFixed(3)}`;
+    }
+
+    function getFilteredEmpListings() {
+      if (currentEmpView === "mine") {
+        return allEmpListings.filter((x) => ACTIVE_USER && x.seller_username === ACTIVE_USER);
+      }
+      return allEmpListings;
+    }
+
+    function renderEmpMarket() {
+      const box = document.getElementById("emp-market-list");
+      const list = getFilteredEmpListings();
+      const countPill = document.getElementById("emp-market-count-pill");
+
+      updateEmpFeedHeader();
+
+      if (countPill) {
+        countPill.textContent = `${list.length} Listing${list.length === 1 ? "" : "s"}`;
+      }
+
+      if (!list.length) {
+        box.innerHTML = `<div class="empty">${currentEmpView === "mine" ? "You have no active EMP listings." : "No active EMP listings found."}</div>`;
+        return;
+      }
+
+      box.innerHTML = list.map((listing) => {
+        const mine = ACTIVE_USER && listing.seller_username === ACTIVE_USER;
+        return `
+          <div class="listing-card ${mine ? "mine" : ""}">
+            <div class="listing-top">
+              <div>
+                <div class="listing-title">${Number(listing.quantity).toLocaleString()} EMP</div>
+                <div class="listing-meta">
+                  Seller: @${listing.seller_username} • Listing #${listing.id}
+                </div>
+              </div>
+              <div class="pill">${mine ? "Your Listing" : "Active Listing"}</div>
+            </div>
+
+            <div class="kv-grid">
+              <div class="kv">
+                <div class="k">Price / EMP</div>
+                <div class="v">${Number(listing.unit_price_hive).toFixed(4)} HIVE</div>
+              </div>
+              <div class="kv">
+                <div class="k">Total</div>
+                <div class="v">${Number(listing.total_price_hive).toFixed(3)} HIVE</div>
+              </div>
+              <div class="kv">
+                <div class="k">Fee</div>
+                <div class="v">${Number(listing.fee_amount_hive).toFixed(3)} HIVE</div>
+              </div>
+              <div class="kv">
+                <div class="k">Seller Receives</div>
+                <div class="v">${Number(listing.seller_amount_hive).toFixed(3)} HIVE</div>
+              </div>
+            </div>
+
+            <div class="button-row">
+              ${
+                mine
+                  ? `<button class="danger-btn" onclick="cancelEmpListing(${listing.id})">Cancel Listing</button>`
+                  : `<button class="primary-btn" onclick="buyEmpListing(${listing.id})">Buy EMP</button>`
+              }
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function createEmpListing() {
+      try {
+        if (!ACTIVE_USER) {
+          alert("No active Hive username found. Open page with ?user=yourname or log in first.");
+          return;
+        }
+
+        const quantity = Number(document.getElementById("emp-quantity").value || 0);
+        const unit_price_hive = Number(document.getElementById("emp-price").value || 0);
+
+        setStatus("create-listing-status", "Creating EMP listing...");
+
+        const res = await fetch(apiUrl("/marketplace/emp/list"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: ACTIVE_USER,
+            quantity,
+            unit_price_hive
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || "Failed to create EMP listing.");
+        }
+
+        setStatus(
+          "create-listing-status",
+          `✅ EMP listing created successfully. Listing ID: ${data.listing.id}`
+        );
+
+        document.getElementById("emp-quantity").value = "";
+        document.getElementById("emp-price").value = "";
+        updateListingPreview();
+        await loadEmpListings();
+      } catch (err) {
+        console.error("createEmpListing error:", err);
+        setStatus("create-listing-status", err.message || "Failed to create EMP listing.", true);
+      }
+    }
+
+    async function loadEmpListings() {
+      try {
+        const res = await fetch(apiUrl("/marketplace/emp"));
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || "Failed to load EMP listings.");
+        }
+
+        allEmpListings = data.listings || [];
+        renderEmpMarket();
+      } catch (err) {
+        console.error("loadEmpListings error:", err);
+        document.getElementById("emp-market-list").innerHTML =
+          `<div class="empty">Failed to load EMP listings.</div>`;
+      }
+    }
+
+    async function cancelEmpListing(listingId) {
+      try {
+        if (!ACTIVE_USER) {
+          alert("No active user found.");
+          return;
+        }
+
+        const ok = confirm(`Cancel EMP listing #${listingId}?`);
+        if (!ok) return;
+
+        const res = await fetch(apiUrl("/marketplace/emp/cancel"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: ACTIVE_USER,
+            listing_id: listingId
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || "Failed to cancel EMP listing.");
+        }
+
+        alert("✅ EMP listing cancelled successfully.");
+        await loadEmpListings();
+      } catch (err) {
+        console.error("cancelEmpListing error:", err);
+        alert(err.message || "Failed to cancel EMP listing.");
+      }
+    }
+
+    async function buyEmpListing(listingId) {
+      try {
+        if (!ACTIVE_USER) {
+          alert("No active user found.");
+          return;
+        }
+
+        const initRes = await fetch(apiUrl("/marketplace/emp/buy-init"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: ACTIVE_USER,
+            listing_id: listingId
+          })
+        });
+
+        const initData = await initRes.json();
+
+        if (!initRes.ok || !initData.success) {
+          throw new Error(initData.error || "Failed to initialize EMP purchase.");
+        }
+
+        const session = initData.session;
+
+        const confirmText =
+          `Buy ${session.quantity} EMP?\n\n` +
+          `Seller payment: ${session.seller_payment.amount} HIVE to @${session.seller_payment.to}\n` +
+          `Fee payment: ${session.fee_payment.amount} HIVE to @${session.fee_payment.to}`;
+
+        const ok = confirm(confirmText);
+        if (!ok) return;
+
+        alert("Step 1/2: Hive Keychain will open for seller payment.");
+
+        const sellerTransfer = await hiveTransfer(
+          ACTIVE_USER,
+          session.seller_payment.to,
+          session.seller_payment.amount,
+          session.seller_payment.memo
+        );
+
+        alert("Step 2/2: Hive Keychain will now open for marketplace fee payment.");
+
+        const feeTransfer = await hiveTransfer(
+          ACTIVE_USER,
+          session.fee_payment.to,
+          session.fee_payment.amount,
+          session.fee_payment.memo
+        );
+
+        const finalizeRes = await fetch(apiUrl("/marketplace/emp/buy-finalize"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: ACTIVE_USER,
+            session_id: session.id,
+            seller_tx_id: sellerTransfer.tx_id,
+            fee_tx_id: feeTransfer.tx_id
+          })
+        });
+
+        const finalizeData = await finalizeRes.json();
+
+        if (!finalizeRes.ok || !finalizeData.success) {
+          throw new Error(finalizeData.error || "Failed to finalize EMP trade.");
+        }
+
+        alert("✅ EMP trade completed successfully.");
+        await loadEmpListings();
+      } catch (err) {
+        console.error("buyEmpListing error:", err);
+        alert(err.message || "EMP purchase failed.");
+      }
+    }
+
+    /* ===================================================== */
+    /* BLUEPRINT MARKET */
+    /* ===================================================== */
+    const BP_INDUSTRY_IMAGES = {
+      PHARMA: "assets/pharma-building.png",
+      FOOD: "assets/food-building.png",
+      TEXTILE: "assets/textile-building.png",
+      CHEMICAL: "assets/chemical-building.png",
+      SUPERMARKET: "assets/supermarket-building.png",
+    };
+
+    const BP_LEVEL_COLORS = {
+      1: "#b0bec5",
+      2: "#1565c0",
+      3: "#7e57c2",
+      4: "#ff8f00",
+      5: "#ffca28",
+    };
+
+    let playerBlueprintInventory = [];
+    let allBlueprintListings = [];
+    let currentBlueprintView = "market";
+
+    function parseBlueprintCardData(b) {
+      const rawTier = String(b.raw_tier || b.tier || b.level || "").toUpperCase();
+
+      let industry = String(
+        b.industry ||
+        b.industry_name ||
+        b.industry_type ||
+        b.industry_code ||
+        b.blueprint_industry ||
+        ""
+      ).toUpperCase();
+
+      if (!industry && rawTier.includes("_")) {
+        industry = rawTier.split("_")[0];
+      }
+
+      const levelNumber = parseInt(rawTier.replace(/[^0-9]/g, ""), 10) || 1;
+      const levelLabel = "B" + levelNumber;
+      const borderColor = BP_LEVEL_COLORS[levelNumber] || "#d1d5db";
+      const imgSrc = BP_INDUSTRY_IMAGES[industry] || BP_INDUSTRY_IMAGES.PHARMA;
+
+      const levelMult = 1 + 0.25 * (levelNumber - 1);
+      const levelMultText = levelMult.toFixed(2).replace(/\.00$/, "");
+
+      return {
+        blueprintId: b.blueprint_id || b.nft_id || b.id,
+        rawTier: rawTier || "B1",
+        industry: industry || "PHARMA",
+        levelNumber,
+        levelLabel,
+        borderColor,
+        imgSrc,
+        levelMultText,
+        eraText: String(b.era || "GENESIS").toUpperCase(),
+      };
+    }
+
+    function updateBlueprintFeedHeader() {
+      const title = document.getElementById("blueprint-feed-title");
+      const subtitle = document.getElementById("blueprint-feed-subtitle");
+
+      if (currentBlueprintView === "mine") {
+        title.textContent = "My Blueprint Listings";
+        subtitle.textContent = "Manage your active blueprint listings here.";
+      } else if (currentBlueprintView === "inventory") {
+        title.textContent = "My Blueprints";
+        subtitle.textContent = "Your owned blueprint inventory for reference and selection.";
+      } else {
+        title.textContent = "Blueprint Market Listings";
+        subtitle.textContent = "Browse active blueprint listings.";
+      }
+    }
+
+    function renderBlueprintSelect() {
+      const select = document.getElementById("blueprint-select");
+      if (!select) return;
+
+      if (!playerBlueprintInventory.length) {
+        select.innerHTML = `<option value="">No blueprints available</option>`;
+        return;
+      }
+
+      select.innerHTML =
+        `<option value="">Select blueprint</option>` +
+        playerBlueprintInventory.map((bp) => {
+          const item = parseBlueprintCardData(bp);
+          return `<option value="${item.blueprintId}">#${item.blueprintId} • ${item.industry} ${item.rawTier}</option>`;
+        }).join("");
+    }
+
+    function renderBlueprintInventoryFeed() {
+      const feed = document.getElementById("blueprint-feed");
+      const countPill = document.getElementById("blueprint-market-count-pill");
+
+      updateBlueprintFeedHeader();
+
+      if (countPill) {
+        countPill.textContent = `${playerBlueprintInventory.length} Blueprint${playerBlueprintInventory.length === 1 ? "" : "s"}`;
+      }
+
+      if (!playerBlueprintInventory.length) {
+        feed.innerHTML = `<div class="empty">No blueprints found for this account.</div>`;
+        return;
+      }
+
+      feed.innerHTML = `
+        <div class="bp-grid">
+          ${playerBlueprintInventory.map((b) => {
+            const item = parseBlueprintCardData(b);
+            return `
+              <div class="bp-market-card">
+                <div class="bp-mini-card" style="border-color:${item.borderColor};">
+                  <div class="bp-mini-badge" style="background:${item.borderColor};">
+                    ${item.levelLabel}
+                  </div>
+
+                  <div class="bp-mini-building">
+                    <img src="${item.imgSrc}" alt="${item.industry}">
+                  </div>
+
+                  <div class="bp-mini-strip">
+                    <div class="bp-mini-row">
+                      <span class="bp-mini-label">Industry</span>
+                      <span class="bp-mini-value">${item.industry} • ${item.eraText}</span>
+                    </div>
+                    <div class="bp-mini-row">
+                      <span class="bp-mini-label">Production (EMP/day)</span>
+                      <span class="bp-mini-value">10 × Land × ${item.levelMultText}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bp-market-meta">
+                  <span>Blueprint #${item.blueprintId}</span>
+                  <span>${item.rawTier}</span>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function getFilteredBlueprintListings() {
+      if (currentBlueprintView === "mine") {
+        return allBlueprintListings.filter((x) => ACTIVE_USER && x.seller_username === ACTIVE_USER);
+      }
+      return allBlueprintListings;
+    }
+
+    function renderBlueprintListingFeed() {
+      const feed = document.getElementById("blueprint-feed");
+      const listings = getFilteredBlueprintListings();
+      const countPill = document.getElementById("blueprint-market-count-pill");
+
+      updateBlueprintFeedHeader();
+
+      if (countPill) {
+        countPill.textContent = `${listings.length} Listing${listings.length === 1 ? "" : "s"}`;
+      }
+
+      if (!listings.length) {
+        feed.innerHTML = `<div class="empty">${currentBlueprintView === "mine" ? "You have no active blueprint listings." : "No active blueprint listings found."}</div>`;
+        return;
+      }
+
+      feed.innerHTML = `
+        <div class="listing-list">
+          ${listings.map((listing) => {
+            const mine = ACTIVE_USER && listing.seller_username === ACTIVE_USER;
+            const tier = listing.blueprint?.tier || "B1";
+            const edition = listing.blueprint?.edition || "--";
+            const era = listing.blueprint?.era || "GENESIS";
+
+            return `
+              <div class="listing-card ${mine ? "mine" : ""}">
+                <div class="listing-top">
+                  <div>
+                    <div class="listing-title">Blueprint #${listing.asset_id}</div>
+                    <div class="listing-meta">
+                      Seller: @${listing.seller_username} • Listing #${listing.id}
+                    </div>
+                  </div>
+                  <div class="pill">${mine ? "Your Listing" : "Active Listing"}</div>
+                </div>
+
+                <div class="kv-grid">
+                  <div class="kv">
+                    <div class="k">Tier</div>
+                    <div class="v">${tier}</div>
+                  </div>
+                  <div class="kv">
+                    <div class="k">Edition</div>
+                    <div class="v">${edition}</div>
+                  </div>
+                  <div class="kv">
+                    <div class="k">Era</div>
+                    <div class="v">${era}</div>
+                  </div>
+                  <div class="kv">
+                    <div class="k">Price</div>
+                    <div class="v">${Number(listing.total_price_hive).toFixed(3)} HIVE</div>
+                  </div>
+                </div>
+
+                <div class="button-row">
+                  ${
+                    mine
+                      ? `<button class="danger-btn" onclick="cancelBlueprintListing(${listing.id})">Cancel Listing</button>`
+                      : `<button class="primary-btn" onclick="buyBlueprintListing(${listing.id})">Buy Blueprint</button>`
+                  }
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderBlueprintFeed() {
+      if (currentBlueprintView === "inventory") {
+        renderBlueprintInventoryFeed();
+      } else {
+        renderBlueprintListingFeed();
+      }
+    }
+
+    async function loadBlueprintInventory() {
+      if (!ACTIVE_USER) {
+        setStatus("blueprint-market-status", "Please connect wallet first.", true);
+        playerBlueprintInventory = [];
+        renderBlueprintSelect();
+        if (currentBlueprintView === "inventory") {
+          renderBlueprintFeed();
+        }
+        return;
+      }
+
+      setStatus("blueprint-market-status", "Loading blueprint inventory...");
+
+      try {
+        const res = await fetch(apiUrl(`/player/${encodeURIComponent(ACTIVE_USER)}/blueprints`));
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
+        const data = await res.json();
+        playerBlueprintInventory = data.blueprints || [];
+
+        renderBlueprintSelect();
+
+        if (playerBlueprintInventory.length) {
+          setStatus("blueprint-market-status", `Loaded ${playerBlueprintInventory.length} blueprint(s).`);
+        } else {
+          setStatus("blueprint-market-status", "No blueprint NFTs found for this account.");
+        }
+
+        if (currentBlueprintView === "inventory") {
+          renderBlueprintFeed();
+        }
+      } catch (err) {
+        console.error("loadBlueprintInventory error:", err);
+        playerBlueprintInventory = [];
+        renderBlueprintSelect();
+        setStatus("blueprint-market-status", "Failed to load blueprint inventory.", true);
+
+        if (currentBlueprintView === "inventory") {
+          renderBlueprintFeed();
+        }
+      }
+    }
+
+    async function loadBlueprintListings() {
+      try {
+        const res = await fetch(apiUrl("/marketplace/blueprint"));
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || "Failed to load blueprint listings.");
+        }
+
+        allBlueprintListings = data.listings || [];
+
+        if (currentBlueprintView !== "inventory") {
+          renderBlueprintFeed();
+        }
+      } catch (err) {
+        console.error("loadBlueprintListings error:", err);
+        if (currentBlueprintView !== "inventory") {
+          document.getElementById("blueprint-feed").innerHTML =
+            `<div class="empty">Failed to load blueprint marketplace listings.</div>`;
+        }
+      }
+    }
+
+    async function createBlueprintListing() {
+      try {
+        if (!ACTIVE_USER) {
+          alert("No active user found.");
+          return;
+        }
+
+        const nft_id = Number(document.getElementById("blueprint-select").value || 0);
+        const price_hive = Number(document.getElementById("blueprint-price-hive").value || 0);
+
+        if (!nft_id) {
+          setStatus("blueprint-create-status", "Please choose a blueprint.", true);
+          return;
+        }
+
+        if (!price_hive || price_hive <= 0) {
+          setStatus("blueprint-create-status", "Please enter a valid HIVE price.", true);
+          return;
+        }
+
+        setStatus("blueprint-create-status", "Creating blueprint listing...");
+
+        const res = await fetch(apiUrl("/marketplace/blueprint/list"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: ACTIVE_USER,
+            nft_id,
+            price_hive
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || "Failed to create blueprint listing.");
+        }
+
+        setStatus(
+          "blueprint-create-status",
+          `✅ Blueprint listing created successfully. Listing ID: ${data.listing.id}`
+        );
+
+        document.getElementById("blueprint-select").value = "";
+        document.getElementById("blueprint-price-hive").value = "";
+
+        await loadBlueprintInventory();
+        await loadBlueprintListings();
+      } catch (err) {
+        console.error("createBlueprintListing error:", err);
+        setStatus("blueprint-create-status", err.message || "Failed to create blueprint listing.", true);
+      }
+    }
+
+    async function cancelBlueprintListing(listingId) {
+      try {
+        if (!ACTIVE_USER) {
+          alert("No active user found.");
+          return;
+        }
+
+        const ok = confirm(`Cancel Blueprint listing #${listingId}?`);
+        if (!ok) return;
+
+        const res = await fetch(apiUrl("/marketplace/blueprint/cancel"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: ACTIVE_USER,
+            listing_id: listingId
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || "Failed to cancel blueprint listing.");
+        }
+
+        alert("✅ Blueprint listing cancelled successfully.");
+        await loadBlueprintInventory();
+        await loadBlueprintListings();
+      } catch (err) {
+        console.error("cancelBlueprintListing error:", err);
+        alert(err.message || "Failed to cancel blueprint listing.");
+      }
+    }
+
+    async function buyBlueprintListing(listingId) {
+      try {
+        if (!ACTIVE_USER) {
+          alert("No active user found.");
+          return;
+        }
+
+        const initRes = await fetch(apiUrl("/marketplace/blueprint/buy-init"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: ACTIVE_USER,
+            listing_id: listingId
+          })
+        });
+
+        const initData = await initRes.json();
+
+        if (!initRes.ok || !initData.success) {
+          throw new Error(initData.error || "Failed to initialize blueprint purchase.");
+        }
+
+        const session = initData.session;
+
+        const confirmText =
+          `Buy Blueprint #${session.asset_id || ""}?\n\n` +
+          `Seller payment: ${session.seller_payment.amount} HIVE to @${session.seller_payment.to}\n` +
+          `Fee payment: ${session.fee_payment.amount} HIVE to @${session.fee_payment.to}`;
+
+        const ok = confirm(confirmText);
+        if (!ok) return;
+
+        alert("Step 1/2: Hive Keychain will open for seller payment.");
+
+        const sellerTransfer = await hiveTransfer(
+          ACTIVE_USER,
+          session.seller_payment.to,
+          session.seller_payment.amount,
+          session.seller_payment.memo
+        );
+
+        alert("Step 2/2: Hive Keychain will now open for marketplace fee payment.");
+
+        const feeTransfer = await hiveTransfer(
+          ACTIVE_USER,
+          session.fee_payment.to,
+          session.fee_payment.amount,
+          session.fee_payment.memo
+        );
+
+        const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: ACTIVE_USER,
+            session_id: session.id,
+            seller_tx_id: sellerTransfer.tx_id,
+            fee_tx_id: feeTransfer.tx_id
+          })
+        });
+
+        const finalizeData = await finalizeRes.json();
+
+        if (!finalizeRes.ok || !finalizeData.success) {
+          throw new Error(finalizeData.error || "Failed to finalize blueprint trade.");
+        }
+
+        alert("✅ Blueprint trade completed successfully.");
+        await loadBlueprintInventory();
+        await loadBlueprintListings();
+      } catch (err) {
+        console.error("buyBlueprintListing error:", err);
+        alert(err.message || "Blueprint purchase failed.");
+      }
+    }
+
+    /* ===================================================== */
+    /* EVENTS */
+    /* ===================================================== */
+    document.getElementById("emp-quantity").addEventListener("input", updateListingPreview);
+    document.getElementById("emp-price").addEventListener("input", updateListingPreview);
+    document.getElementById("create-emp-listing-btn").addEventListener("click", createEmpListing);
+    document.getElementById("refresh-market-btn").addEventListener("click", loadEmpListings);
+
+    document.getElementById("emp-view-select").addEventListener("change", (e) => {
+      currentEmpView = e.target.value;
+      renderEmpMarket();
+    });
+
+    document.getElementById("blueprint-view-select").addEventListener("change", (e) => {
+      currentBlueprintView = e.target.value;
+      renderBlueprintFeed();
+    });
+
+    document.getElementById("create-blueprint-listing-btn").addEventListener("click", createBlueprintListing);
+    document.getElementById("refresh-blueprint-market-btn").addEventListener("click", async () => {
+      await loadBlueprintInventory();
+      await loadBlueprintListings();
+      renderBlueprintFeed();
+    });
+
+    /* ===================================================== */
+    /* INIT */
+    /* ===================================================== */
+    loadEmpListings();
+    updateListingPreview();
+    function normalizeTxIdFromKeychainResponse(response) {
+  return (
+    response?.result?.id ||
+    response?.result?.tx_id ||
+    response?.result?.trx_id ||
+    response?.tx_id ||
+    response?.id ||
+    ""
+  );
+}
+
+function hiveTransfer(from, to, amount, memo) {
+  return new Promise((resolve, reject) => {
+    if (!window.hive_keychain) {
+      reject(new Error("Hive Keychain is not available."));
+      return;
+    }
+
+    window.hive_keychain.requestTransfer(
+      from,
+      to,
+      amount,
+      memo,
+      "HIVE",
+      (response) => {
+        if (!response || !response.success) {
+          reject(new Error(response?.message || "Hive transfer failed."));
+          return;
+        }
+
+        const txId = normalizeTxIdFromKeychainResponse(response);
+
+        if (!txId) {
+          reject(new Error("Transaction ID not returned by Hive Keychain."));
+          return;
+        }
+
+        resolve({
+          success: true,
+          tx_id: txId,
+          raw: response
+        });
+      }
+    );
+  });
+}
+async function buyBlueprintListing(listingId) {
+  try {
+    if (!ACTIVE_USER) {
+      alert("No active user found.");
+      return;
+    }
+
+    const initRes = await fetch(apiUrl("/marketplace/blueprint/buy-init"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: ACTIVE_USER,
+        listing_id: listingId
+      })
+    });
+
+    const initData = await initRes.json();
+
+    if (!initRes.ok || !initData.success) {
+      throw new Error(initData.error || "Failed to initialize blueprint purchase.");
+    }
+
+    const session = initData.session;
+
+    const confirmText =
+      `Buy Blueprint #${session.listing_id}?\n\n` +
+      `Seller payment: ${session.seller_payment.amount} HIVE to @${session.seller_payment.to}\n` +
+      `Fee payment: ${session.fee_payment.amount} HIVE to @${session.fee_payment.to}`;
+
+    const ok = confirm(confirmText);
+    if (!ok) return;
+
+    alert("Step 1/2: Hive Keychain will open for seller payment.");
+
+    const sellerTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      session.seller_payment.to,
+      session.seller_payment.amount,
+      session.seller_payment.memo
+    );
+
+    alert("Step 2/2: Hive Keychain will now open for marketplace fee payment.");
+
+    const feeTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      session.fee_payment.to,
+      session.fee_payment.amount,
+      session.fee_payment.memo
+    );
+
+    const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: ACTIVE_USER,
+        session_id: session.id,
+        seller_tx_id: sellerTransfer.tx_id,
+        fee_tx_id: feeTransfer.tx_id
+      })
+    });
+
+    const finalizeData = await finalizeRes.json();
+
+    if (!finalizeRes.ok || !finalizeData.success) {
+      throw new Error(finalizeData.error || "Failed to finalize blueprint trade.");
+    }
+
+    alert("✅ Blueprint trade completed successfully.");
+    await loadBlueprintInventory();
+    await loadBlueprintListings();
+    renderBlueprintFeed();
+  } catch (err) {
+    console.error("buyBlueprintListing error:", err);
+    alert(err.message || "Blueprint purchase failed.");
+  }
+}
+  </script>
+</body>
+</html>

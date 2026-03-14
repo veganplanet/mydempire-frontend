@@ -2606,24 +2606,60 @@ body {
     </div>
 
     <div class="summary-card card-reward">
-      <div class="summary-label">
-        <span class="summary-emoji">🎁</span>Claimable HIVE
-      </div>
-      <div class="summary-value" id="summary-claimable-hive">0.000</div>
-      <div class="summary-sub">
-        Treasury reward available to claim
-      </div>
+
+  <div class="summary-label">
+    <span class="summary-emoji">🎁</span>Claimable HIVE
+  </div>
+
+  <div class="summary-value" id="summary-claimable-hive">
+    0.000
+  </div>
+
+  <div class="summary-sub">
+    Treasury reward available to claim
+  </div>
+
+  <div class="summary-actions">
+
+    <button id="claim-reward-btn" class="primary-button">
+      Claim Reward
+    </button>
+
+    <div id="claim-reward-status" class="status-text">
+      No claim attempted yet.
     </div>
 
-    <div class="summary-card card-wallet">
-      <div class="summary-label">
-        <span class="summary-emoji">🏦</span>Wallet HIVE
-      </div>
-      <div class="summary-value" id="summary-wallet-hive">0.000</div>
-      <div class="summary-sub">
-        Claimed reward balance
-      </div>
+  </div>
+
+</div>
+
+   <div class="summary-card card-wallet">
+
+  <div class="summary-label">
+    <span class="summary-emoji">🏦</span>Wallet HIVE
+  </div>
+
+  <div class="summary-value" id="summary-wallet-hive">
+    0.000
+  </div>
+
+  <div class="summary-sub">
+    Claimed reward balance
+  </div>
+
+  <div class="summary-actions">
+
+    <button id="withdraw-hive-btn" class="primary-button">
+      Withdraw HIVE
+    </button>
+
+    <div id="withdraw-hive-status" class="status-text">
+      Withdrawal not requested yet.
     </div>
+
+  </div>
+
+</div>
 
     <div class="summary-card card-withdraw">
       <div class="summary-label">
@@ -3246,13 +3282,163 @@ async function loadDashboardSummary() {
       data.totalClaimableEP ?? data.totals?.totalClaimableEP ?? 0
     );
 
+    // Production card
     setText("summary-production-rate", `${totalBoostedEP.toFixed(2)} EP/day`);
-    setText("summary-claimable-ep", `Unclaimed EP: ${totalClaimableEP.toFixed(2)}`);
+    setText("summary-production-sub", "Empire production including relic boosts");
+
+    // Empire Accumulated EP card
+    setText("summary-total-empire-ep", totalClaimableEP.toFixed(2));
+
+    // If old accumulated EP line still exists anywhere, update it too
+    const claimableEpEl = document.getElementById("summary-claimable-ep");
+    if (claimableEpEl) {
+      claimableEpEl.textContent = `Accumulated EP: ${totalClaimableEP.toFixed(2)}`;
+    }
 
     setText("relics-owned", relicCount);
     setText("relics-boost", `${activeRelicBoost}%`);
   } catch (err) {
     console.error("Failed to load dashboard summary:", err);
+  }
+}
+
+async function loadRewardSummary() {
+  try {
+    const res = await fetch(
+      apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/reward-summary`)
+    );
+
+    if (!res.ok) throw new Error("HTTP " + res.status);
+
+    const data = await res.json();
+    console.log("Reward summary:", data);
+
+    const setText = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    };
+
+    const claimableHive = Number(
+      data.claimable_hive ?? data.claimable_amount ?? 0
+    );
+
+    const walletHive = Number(
+      data.wallet_hive ?? data.wallet_balance ?? 0
+    );
+
+    setText("summary-claimable-hive", claimableHive.toFixed(3));
+    setText("summary-wallet-hive", walletHive.toFixed(3));
+
+    if (walletHive >= 1) {
+      setText("summary-withdraw-status", "Ready");
+      setText("summary-withdraw-sub", "You can request withdrawal now.");
+    } else {
+      setText("summary-withdraw-status", "Not Ready");
+      setText("summary-withdraw-sub", "Minimum withdrawal is 1.000 HIVE");
+    }
+
+    const claimRewardStatus = document.getElementById("claim-reward-status");
+    if (claimRewardStatus) {
+      claimRewardStatus.textContent =
+        claimableHive > 0
+          ? `${claimableHive.toFixed(3)} HIVE available to claim`
+          : "No reward available to claim.";
+    }
+
+    const withdrawHiveStatus = document.getElementById("withdraw-hive-status");
+    if (withdrawHiveStatus) {
+      withdrawHiveStatus.textContent =
+        walletHive >= 1
+          ? `${walletHive.toFixed(3)} HIVE available for withdrawal request`
+          : "Withdrawal not ready yet.";
+    }
+
+  } catch (err) {
+    console.error("Failed to load reward summary:", err);
+  }
+}
+
+async function claimReward() {
+  const statusEl = document.getElementById("claim-reward-status");
+
+  try {
+    if (statusEl) {
+      statusEl.textContent = "Claiming reward...";
+    }
+
+    const res = await fetch(
+      apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/claim-rewards`)
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || data.message || "Claim reward failed.");
+    }
+
+    if (statusEl) {
+      statusEl.textContent =
+        `✅ Claimed ${Number(data.claimable_amount || 0).toFixed(3)} HIVE`;
+    }
+
+    await loadRewardSummary();
+  } catch (err) {
+    console.error("claimReward error:", err);
+    if (statusEl) {
+      statusEl.textContent = err.message || "Claim reward failed.";
+    }
+  }
+}
+
+async function requestWithdrawHive() {
+  const statusEl = document.getElementById("withdraw-hive-status");
+
+  try {
+    const walletText =
+      document.getElementById("summary-wallet-hive")?.textContent || "0";
+
+    const walletAmount = Number(walletText);
+
+    if (!Number.isFinite(walletAmount) || walletAmount < 1) {
+      if (statusEl) {
+        statusEl.textContent = "Minimum withdrawal is 1.000 HIVE";
+      }
+      return;
+    }
+
+    const confirmed = confirm(
+      `Request withdrawal of ${walletAmount.toFixed(3)} HIVE?`
+    );
+
+    if (!confirmed) return;
+
+    if (statusEl) {
+      statusEl.textContent = "Creating withdrawal request...";
+    }
+
+    const res = await fetch(
+      apiUrl(
+        `/player/${encodeURIComponent(PLAYER_USERNAME)}/request-withdraw/${walletAmount.toFixed(8)}`
+      )
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || data.message || "Withdraw request failed.");
+    }
+
+    if (statusEl) {
+      statusEl.textContent =
+        `✅ Withdrawal request created for ${walletAmount.toFixed(3)} HIVE`;
+    }
+
+    await loadRewardSummary();
+  } catch (err) {
+    console.error("requestWithdrawHive error:", err);
+    if (statusEl) {
+      statusEl.textContent = err.message || "Withdraw request failed.";
+    }
   }
 }
 
@@ -3831,7 +4017,7 @@ const territoryHtml = renderTerritorySlots(factories, slotsTotal, land.land_id);
         <div class="matrix-line">Active: <b>${activeCount}</b> • Inactive: <b>${inactiveCount}</b></div>
         <div class="matrix-line">Building: <b>${buildingCount}</b> • Upgrading: <b>${upgradingCount}</b></div>
        <div class="matrix-line">EP/day: <b>${landRatePerDayText}</b></div>
-<div class="matrix-line">Unclaimed EP: <b>${landUnclaimedEPText}</b></div>
+<div class="matrix-line">Accumulated EP: <b>${landUnclaimedEPText}</b></div>
 <div class="matrix-line">${daysInfoText}</div>
       </div>
 
@@ -4014,7 +4200,8 @@ if (upgradeBtn) {
       alert(data.message || "Factory upgraded successfully!");
 
       await loadDashboardSummary();
-      await loadEmpireOverview();
+await loadRewardSummary();
+await loadEmpireOverview();
 
     } catch (err) {
       console.error("Upgrade error:", err);
@@ -4061,7 +4248,8 @@ if (maintenanceBtn) {
       alert(`Maintenance paid successfully! Added ${data.days_added} day(s). EMP spent: ${data.emp_spent}`);
 
       await loadDashboardSummary();
-      await loadEmpireOverview();
+await loadRewardSummary();
+await loadEmpireOverview();
 
     } catch (err) {
       console.error("Maintenance payment error:", err);
@@ -4619,10 +4807,15 @@ window.addEventListener("DOMContentLoaded", async () => {
     openPackBtn.addEventListener("click", openSelectedPacks);
   }
 
-  const claimBtn = document.getElementById("claim-production-btn");
-  if (claimBtn) {
-    claimBtn.addEventListener("click", claimAllProduction);
-  }
+  const claimRewardBtn = document.getElementById("claim-reward-btn");
+if (claimRewardBtn) {
+  claimRewardBtn.addEventListener("click", claimReward);
+}
+
+const withdrawHiveBtn = document.getElementById("withdraw-hive-btn");
+if (withdrawHiveBtn) {
+  withdrawHiveBtn.addEventListener("click", requestWithdrawHive);
+}
 
   try {
     await loadDashboardSummary();
@@ -4960,6 +5153,14 @@ function getMaintenanceStatusText(maintenanceEndsAt) {
 
   return `<span style="color:#2e7d32; font-weight:600;">🟢 Maintenance: active (${diffDays} day${diffDays === 1 ? "" : "s"} left)</span>`;
 }
+window.addEventListener("load", async () => {
+  try {
+    await loadDashboardSummary();
+    await loadRewardSummary();
+  } catch (err) {
+    console.error("Initial dashboard load failed:", err);
+  }
+}); 
 
   </script>
 
