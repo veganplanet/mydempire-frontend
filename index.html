@@ -706,6 +706,8 @@ function disconnectWallet(){
   if(disconnectBtn) disconnectBtn.style.display="none";
   if(connectBtn) connectBtn.style.display="inline-flex";
   if(input) input.value="";
+  const market = document.getElementById("marketplaceLink");
+if (market) market.style.display = "none";
 }
 
 window.addEventListener("DOMContentLoaded",()=>{
@@ -718,6 +720,12 @@ window.addEventListener("DOMContentLoaded",()=>{
     const dash=document.getElementById("dashboardLink");
     dash.style.display="inline-flex";
     dash.href="player-dashboard.html?user="+user;
+    const market = document.getElementById("marketplaceLink");
+market.style.display = "inline-flex";
+market.href = "marketplace.html?user=" + username;
+    const market = document.getElementById("marketplaceLink");
+market.style.display = "inline-flex";
+market.href = "marketplace.html?user=" + user;
   }
 
   const slides = Array.from(document.querySelectorAll(".industry-slide"));
