@@ -1245,10 +1245,9 @@ async function buyEmpListing(listingId) {
         );
 
        
-console.log("sellerTransfer =", sellerTransfer);
-console.log("feeTransfer =", feeTransfer);
-console.log("seller tx id =", sellerTransfer?.tx_id);
-console.log("fee tx id =", feeTransfer?.tx_id);
+console.log("paymentTransfer =", paymentTransfer);
+console.log("payment tx id =", paymentTransfer?.tx_id || paymentTransfer?.id);
+
         const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
