@@ -804,7 +804,14 @@
       }
     }
 
-   async function buyEmpListing(listingId) {
+// ======================================================
+// EMP SINGLE-PAYMENT + SAFE BUY FLOW PATCH
+// Replace your current buyEmpListing() with this version.
+// ======================================================
+
+let empBuyInProgress = false;
+
+async function buyEmpListing(listingId) {
   if (empBuyInProgress) {
     alert("EMP purchase already in progress. Please wait.");
     return;
@@ -821,7 +828,10 @@
     const initRes = await fetch(apiUrl("/marketplace/emp/buy-init"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: ACTIVE_USER, listing_id: listingId })
+      body: JSON.stringify({
+        username: ACTIVE_USER,
+        listing_id: listingId
+      })
     });
 
     const initData = await initRes.json();
@@ -842,20 +852,17 @@
       throw new Error("Invalid total payment amount returned by server.");
     }
 
-    // Hive Keychain requires a STRING with exactly 3 decimals, e.g. "1.230"
     const totalAmount = numericTotal.toFixed(3);
-
-    const paymentTo =
-      session.total_payment?.to ||
-      "mydempiregain";
-
-    const paymentMemo =
-      session.total_payment?.memo ||
-      `EMP_MARKET_${session.id}`;
+    const paymentTo = session.total_payment?.to || "mydempiregain";
+    const paymentMemo = session.total_payment?.memo || `MDE_EMPBUY_${session.id}`;
+    const reserveUntil = session.reservation_expires_at
+      ? new Date(session.reservation_expires_at).toLocaleString()
+      : "shortly";
 
     const confirmText =
       `Buy ${Number(session.quantity).toLocaleString()} EMP?\n\n` +
-      `Total payment: ${totalAmount} HIVE to @${paymentTo}`;
+      `Total payment: ${totalAmount} HIVE to @${paymentTo}\n` +
+      `Reservation valid until: ${reserveUntil}`;
 
     const ok = confirm(confirmText);
     if (!ok) return;
@@ -883,15 +890,18 @@
       throw new Error(finalizeData.error || "Failed to finalize EMP trade.");
     }
 
-    alert(
-      `✅ EMP trade completed successfully. ${Number(session.quantity).toLocaleString()} EMP credited.`
-    );
-
+    alert(`✅ EMP trade completed successfully. ${Number(session.quantity).toLocaleString()} EMP credited.`);
     await loadEmpListings();
-    await loadActiveUserEmpBalance();
+    if (typeof loadActiveUserEmpBalance === "function") {
+      await loadActiveUserEmpBalance();
+    }
   } catch (err) {
     console.error("buyEmpListing error:", err);
     alert(err.message || "EMP purchase failed.");
+
+    try {
+      await loadEmpListings();
+    } catch (e) {}
   } finally {
     empBuyInProgress = false;
   }
