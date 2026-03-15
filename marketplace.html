@@ -1257,7 +1257,7 @@ console.log("fee tx id =", feeTransfer?.tx_id);
   session_id: session.id,
   payment_tx_id: paymentTransfer?.tx_id || paymentTransfer?.id
 })
-
+});
         const finalizeData = await finalizeRes.json();
 
         if (!finalizeRes.ok || !finalizeData.success) {
