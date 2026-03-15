@@ -880,7 +880,7 @@ async function buyEmpListing(listingId) {
       body: JSON.stringify({
         username: ACTIVE_USER,
         session_id: session.id,
-        payment_tx_id: paymentTransfer.tx_id
+        payment_tx_id: paymentTransfer?.tx_id || paymentTransfer?.id
       })
     });
 
@@ -1253,12 +1253,10 @@ console.log("fee tx id =", feeTransfer?.tx_id);
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            username: ACTIVE_USER,
-            session_id: session.id,
-            seller_tx_id: sellerTransfer.id,
-fee_tx_id: feeTransfer.id
-          })
-        });
+  username: ACTIVE_USER,
+  session_id: session.id,
+  payment_tx_id: paymentTransfer?.tx_id || paymentTransfer?.id
+})
 
         const finalizeData = await finalizeRes.json();
 
