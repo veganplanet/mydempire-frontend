@@ -462,7 +462,7 @@ body{
     <a class="pill" href="faq.html">FAQ</a>
     <a class="pill" href="economy-blueprint-mint.html">Blueprint Mint</a>
     <a class="pill" href="transparency.html">Transparency</a>
-    <a id="marketplaceLink" class="pill" href="marketplace.html" style="display:none;">Marketplace</a>
+    <a id="marketplaceLink" class="pill" href="#" style="display:none;">Marketplace</a>
     <a id="dashboardLink" class="pill dashboard" href="#" style="display:none;">Dashboard</a>
   </div>
 </div>
@@ -687,6 +687,11 @@ function connectWallet(){
       document.getElementById("walletDisplay").textContent="Connected: @"+username;
       document.getElementById("connectBtn").style.display="none";
       document.getElementById("disconnectBtn").style.display="inline-flex";
+      const market=document.getElementById("marketplaceLink");
+      if(market){
+        market.style.display="inline-flex";
+        market.href="marketplace.html?user="+username;
+      }
       const dash=document.getElementById("dashboardLink");
       dash.style.display="inline-flex";
       dash.href="player-dashboard.html?user="+username;
@@ -697,17 +702,17 @@ function connectWallet(){
 function disconnectWallet(){
   localStorage.removeItem("mde_username");
   const walletDisplay=document.getElementById("walletDisplay");
+  const market=document.getElementById("marketplaceLink");
   const dash=document.getElementById("dashboardLink");
   const disconnectBtn=document.getElementById("disconnectBtn");
   const connectBtn=document.getElementById("connectBtn");
   const input=document.getElementById("hiveUsernameInput");
   if(walletDisplay) walletDisplay.textContent="";
+  if(market) market.style.display="none";
   if(dash) dash.style.display="none";
   if(disconnectBtn) disconnectBtn.style.display="none";
   if(connectBtn) connectBtn.style.display="inline-flex";
   if(input) input.value="";
-  const market = document.getElementById("marketplaceLink");
-if (market) market.style.display = "none";
 }
 
 window.addEventListener("DOMContentLoaded",()=>{
@@ -717,15 +722,14 @@ window.addEventListener("DOMContentLoaded",()=>{
     document.getElementById("walletDisplay").textContent="Connected: @"+user;
     document.getElementById("connectBtn").style.display="none";
     document.getElementById("disconnectBtn").style.display="inline-flex";
+    const market=document.getElementById("marketplaceLink");
+    if(market){
+      market.style.display="inline-flex";
+      market.href="marketplace.html?user="+user;
+    }
     const dash=document.getElementById("dashboardLink");
     dash.style.display="inline-flex";
     dash.href="player-dashboard.html?user="+user;
-    const market = document.getElementById("marketplaceLink");
-market.style.display = "inline-flex";
-market.href = "marketplace.html?user=" + username;
-    const market = document.getElementById("marketplaceLink");
-market.style.display = "inline-flex";
-market.href = "marketplace.html?user=" + user;
   }
 
   const slides = Array.from(document.querySelectorAll(".industry-slide"));
