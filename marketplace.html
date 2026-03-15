@@ -1244,12 +1244,7 @@ async function buyEmpListing(listingId) {
           session.seller_payment.memo
         );
 
-        const feeTransfer = await hiveTransfer(
-          ACTIVE_USER,
-          session.fee_payment.to,
-          session.fee_payment.amount,
-          session.fee_payment.memo
-        );
+       
 console.log("sellerTransfer =", sellerTransfer);
 console.log("feeTransfer =", feeTransfer);
 console.log("seller tx id =", sellerTransfer?.tx_id);
