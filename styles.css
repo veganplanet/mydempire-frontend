@@ -1556,3 +1556,40 @@ display:block;
 .site-nav a{
   font-size:20px !important;
 }
+/* ===== FINAL NAV FORCE OVERRIDE ===== */
+
+.appbar{
+  background:#5b6b85 !important;
+  height:120px !important;
+  border-bottom:2px solid #718096 !important;
+  box-shadow:0 10px 24px rgba(0,0,0,0.18) !important;
+}
+
+.appbar-inner{
+  max-width:980px !important;
+  padding:0 18px !important;
+}
+
+.appbar-logo img{
+  height:96px !important;
+  width:auto !important;
+  display:block !important;
+}
+
+.appbar-link{
+  font-size:22px !important;
+  font-weight:800 !important;
+  padding:0 18px !important;
+  min-height:46px !important;
+}
+
+.appbar-login-btn,
+.appbar-account-btn{
+  font-size:20px !important;
+  min-height:48px !important;
+  padding:0 18px !important;
+}
+
+body{
+  padding-top:120px !important;
+}
