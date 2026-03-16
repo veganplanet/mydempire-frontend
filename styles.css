@@ -1560,16 +1560,14 @@ display:block;
 
 .appbar{
   background:#8E44AD !important;
-  height:108px !important;
+  height:70px !important;
   border-bottom:2px solid rgba(255,255,255,0.18) !important;
   box-shadow:0 10px 24px rgba(0,0,0,0.20) !important;
 }
 
 .appbar-inner{
   width:100%;
-  max-width:1100px;   /* controls the width like your screenshot */
-  margin:0 auto;
-  padding:0 20px;
+  padding:0 40px;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -1598,22 +1596,12 @@ display:block;
 }
 
 .appbar-link{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:40px;
-  padding:0 14px;
-
-  font-size:17px;
+  font-size:16px;
   font-weight:700;
-
   color:white;
   text-decoration:none;
-
-  border:1px solid rgba(255,255,255,0.35); /* thin border */
-  border-radius:10px;
-
-  transition:all .15s ease;
+  padding:6px 6px;
+  position:relative;
 }
 
 .appbar-link:hover{
