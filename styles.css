@@ -1337,15 +1337,15 @@ body{
   top: 0;
   left: 0;
   right: 0;
-  height: var(--appbar-height);
+  height: 96px;
   z-index: 1000;
-  background: var(--appbar-bg);
-  border-bottom: 1px solid var(--appbar-border);
+  background: #334155;
+  border-bottom: 1px solid #475569;
   box-shadow: 0 8px 24px rgba(2, 6, 23, 0.18);
 }
 
 .appbar-inner{
-  max-width: 1200px;
+  max-width: 1000px;
   height: 100%;
   margin: 0 auto;
   padding: 0 18px;
@@ -1369,7 +1369,7 @@ body{
 }
 
 .appbar-logo img{
-  height:60px;
+  height: 84px;
   width: auto;
   display: block;
   object-fit: contain;
@@ -1391,7 +1391,7 @@ body{
   border-radius: 10px;
   color: var(--appbar-text);
   text-decoration: none;
-  font-size:18px;
+  font-size:16px;
   font-weight: 700;
   transition: background .18s ease, color .18s ease, transform .18s ease;
 }
