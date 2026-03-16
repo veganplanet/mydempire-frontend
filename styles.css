@@ -1,3 +1,26 @@
+/* ============================= */
+/* GLOBAL PAGE BACKGROUND */
+/* ============================= */
+
+body{
+  margin:0;
+  font-family:system-ui, Arial, sans-serif;
+
+  background:linear-gradient(
+    180deg,
+    #f5f7fb 0%,
+    #e6ecf5 100%
+  );
+
+  min-height:100vh;
+}
+
+.page-main{
+  max-width:1200px;
+  margin:0 auto;
+  padding:40px 24px;
+}
+
 /* styles.css — MydEmpire Light Theme (Global)
    Use this for all pages (Home, FAQ, Economy, etc.)
 */
