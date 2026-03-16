@@ -11,20 +11,19 @@
   left:0;
   right:0;
   height:64px;
-  background:#1e3a8a;
+  background:#1e40af;
   display:flex;
   align-items:center;
   justify-content:center;
   z-index:1000;
   box-shadow:0 6px 20px rgba(0,0,0,0.2);
+   border-bottom:1px solid #475569;
 }
 
 .site-header-inner{
   width:100%;
-  max-width:1200px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  max-width:1000px;   /* reduced width */
+  margin:auto;
   padding:0 20px;
 }
 
@@ -156,8 +155,8 @@ body {
 }
 
 .brand-logo {
-  width: 30px;
-  height: 30px;
+  width: 80px;
+  height: 80px;
   border-radius: 9px;
   background: radial-gradient(circle at 30% 0, #fbbf24, #c0841a 55%, #854d0e);
   border: 1px solid #f9d977;
@@ -183,7 +182,7 @@ body {
 
 .site-nav a {
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
   padding: 6px 10px;
   border-radius: 999px;
