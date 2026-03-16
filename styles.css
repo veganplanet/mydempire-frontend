@@ -1556,19 +1556,24 @@ display:block;
 .site-nav a{
   font-size:20px !important;
 }
-/* ===== FINAL APPBAR LAYOUT FIX ===== */
+/* ===== FINAL APPBAR UI FIX ===== */
 
 .appbar{
-  background:#44546c !important;
-  height:110px !important;
-  border-bottom:2px solid #718096 !important;
+  background:#2f5d8a !important;   /* blue */
+  height:112px !important;
+  border-bottom:2px solid #4d79a6 !important;
   box-shadow:0 10px 24px rgba(0,0,0,0.18) !important;
 }
 
 .appbar-inner{
-  max-width:1180px !important;   /* wider so nav stays in one row */
+  width:100% !important;
+  max-width:900px !important;      /* content compact in the middle */
+  margin:0 auto !important;
   padding:0 18px !important;
-  gap:20px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:18px !important;
 }
 
 .appbar-left{
@@ -1579,7 +1584,7 @@ display:block;
 }
 
 .appbar-logo img{
-  height:92px !important;
+  height:106px !important;         /* little bigger */
   width:auto !important;
   display:block !important;
 }
@@ -1587,16 +1592,17 @@ display:block;
 .appbar-nav{
   display:flex !important;
   align-items:center !important;
-  gap:8px !important;
-  flex-wrap:nowrap !important;   /* prevent second line */
+  gap:6px !important;
+  flex-wrap:nowrap !important;
 }
 
 .appbar-link{
   font-size:18px !important;
   font-weight:800 !important;
-  padding:0 14px !important;
+  padding:0 12px !important;
   min-height:42px !important;
-  white-space:nowrap !important; /* keep each item on one line */
+  white-space:nowrap !important;
+  color:#f1f5f9 !important;
 }
 
 .appbar-right{
@@ -1607,12 +1613,13 @@ display:block;
 
 .appbar-login-btn,
 .appbar-account-btn{
-  font-size:18px !important;
-  min-height:46px !important;
-  padding:0 18px !important;
+  font-size:18px !important;       /* same as other header items */
+  font-weight:800 !important;
+  min-height:42px !important;
+  padding:0 16px !important;
   white-space:nowrap !important;
 }
 
 body{
-  padding-top:110px !important;
+  padding-top:112px !important;
 }
