@@ -4721,124 +4721,85 @@ body {
   }
 }
 
-/* ===== MYDEMPIRE VIBRANT GAME NAV FINAL ===== */
+/* ===== APPBAR LAYOUT STABILITY FIX ===== */
 
 .appbar{
   position:fixed;
   top:0;
   left:0;
   right:0;
+  width:100%;
+  height:72px;
   z-index:1000;
-
-  transition:transform 0.25s ease;
-}
-  left:0 !important;
-  right:0 !important;
-  width:100% !important;
-  height:72px !important;   /* slimmer like game nav */
-  z-index:1000 !important;
-  background:#8E44AD !important;
-  border-bottom:2px solid rgba(255,255,255,0.18) !important;
-  box-shadow:none !important;
+  background:#8E44AD;
+  border-bottom:2px solid rgba(255,255,255,0.18);
 }
 
 .appbar-inner{
-  width:100% !important;
-  max-width:none !important;
-  margin:0 !important;
-  padding:0 12px !important;   /* very small left/right gap */
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-  gap:18px !important;
+  width:100%;
+  padding:0 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
 }
 
 .appbar-left{
-  display:flex !important;
-  align-items:center !important;
-  gap:20px !important;
-  min-width:0 !important;
-  flex:1 1 auto !important;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  flex:1 1 auto;
+  min-width:0;
 }
 
 .appbar-logo img{
-  height:90px !important;
-  width:auto !important;
-  display:block !important;
+  height:48px;
+  width:auto;
+  display:block;
 }
 
 .appbar-nav{
-  display:flex !important;
-  align-items:center !important;
-  gap:22px !important;
-  flex-wrap:nowrap !important;
-  white-space:nowrap !important;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  flex-wrap:nowrap;
+  white-space:nowrap;
 }
 
 .appbar-link{
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  color:#ffffff !important;
-  text-decoration:none !important;
-  font-size:17px !important;
-  font-weight:900 !important;
-  padding:0 !important;
-  min-height:auto !important;
-  border:none !important;
-  background:none !important;
-  border-radius:0 !important;
-  white-space:nowrap !important;
-
-  /* text outline / border look */
+  color:#ffffff;
+  text-decoration:none;
+  font-size:16px;
+  font-weight:800;
+  white-space:nowrap;
   text-shadow:
-    -1px -1px 0 rgba(0,0,0,0.45),
-     1px -1px 0 rgba(0,0,0,0.45),
-    -1px  1px 0 rgba(0,0,0,0.45),
-     1px  1px 0 rgba(0,0,0,0.45);
-}
-
-.appbar-link:hover,
-.appbar-link.active{
-  color:#fff7d6 !important;
-}
-.appbar-link.active{
-  background:rgba(255,255,255,0.18) !important;
-  color:#ffffff !important;
+    -1px -1px 0 rgba(0,0,0,0.35),
+     1px -1px 0 rgba(0,0,0,0.35),
+    -1px  1px 0 rgba(0,0,0,0.35),
+     1px  1px 0 rgba(0,0,0,0.35);
 }
 
 .appbar-right{
-  display:flex !important;
-  align-items:center !important;
-  flex:0 0 auto !important;
+  display:flex;
+  align-items:center;
+  flex:0 0 auto;
 }
 
 .appbar-login-btn,
 .appbar-account-btn{
-  min-height:40px !important;
-  padding:0 16px !important;
-  border-radius:10px !important;
-  border:1px solid rgba(255,255,255,0.35) !important;
-  background:rgba(255,255,255,0.08) !important;
-  color:#ffffff !important;
-  font-size:16px !important;
-  font-weight:900 !important;
-  white-space:nowrap !important;
-
-  text-shadow:
-    -1px -1px 0 rgba(0,0,0,0.30),
-     1px -1px 0 rgba(0,0,0,0.30),
-    -1px  1px 0 rgba(0,0,0,0.30),
-     1px  1px 0 rgba(0,0,0,0.30);
-}
-
-.appbar-login-btn:hover,
-.appbar-account-btn:hover{
-  background:rgba(255,255,255,0.18) !important;
+  min-height:40px;
+  padding:0 14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.08);
+  color:#ffffff;
+  font-size:15px;
+  font-weight:800;
+  white-space:nowrap;
 }
 
 body{
-  padding-top:72px !important;
+  padding-top:72px;
 }
 /* ============================= */
 /* MYDEMPIRE LIVE GAME CARD SYSTEM */
