@@ -4721,85 +4721,100 @@ body {
   }
 }
 
-/* ===== APPBAR LAYOUT STABILITY FIX ===== */
+/* ===== REVERT TO PREVIOUS STABLE APPBAR ===== */
 
 .appbar{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  width:100%;
-  height:72px;
-  z-index:1000;
-  background:#8E44AD;
-  border-bottom:2px solid rgba(255,255,255,0.18);
+  background:#8E44AD !important;
+  height:72px !important;
+  border-bottom:2px solid rgba(255,255,255,0.18) !important;
+  box-shadow:none !important;
 }
 
 .appbar-inner{
-  width:100%;
-  padding:0 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:24px;
+  width:100% !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 12px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:18px !important;
 }
 
 .appbar-left{
-  display:flex;
-  align-items:center;
-  gap:20px;
-  flex:1 1 auto;
-  min-width:0;
+  display:flex !important;
+  align-items:center !important;
+  gap:20px !important;
+  min-width:0 !important;
+  flex:1 1 auto !important;
 }
 
 .appbar-logo img{
-  height:48px;
-  width:auto;
-  display:block;
+  height:52px !important;
+  width:auto !important;
+  display:block !important;
 }
 
 .appbar-nav{
-  display:flex;
-  align-items:center;
-  gap:18px;
-  flex-wrap:nowrap;
-  white-space:nowrap;
+  display:flex !important;
+  align-items:center !important;
+  gap:22px !important;
+  flex-wrap:nowrap !important;
+  white-space:nowrap !important;
 }
 
 .appbar-link{
-  color:#ffffff;
-  text-decoration:none;
-  font-size:16px;
-  font-weight:800;
-  white-space:nowrap;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  color:#ffffff !important;
+  text-decoration:none !important;
+  font-size:17px !important;
+  font-weight:900 !important;
+  padding:0 !important;
+  min-height:auto !important;
+  border:none !important;
+  background:none !important;
+  border-radius:0 !important;
+  white-space:nowrap !important;
   text-shadow:
-    -1px -1px 0 rgba(0,0,0,0.35),
-     1px -1px 0 rgba(0,0,0,0.35),
-    -1px  1px 0 rgba(0,0,0,0.35),
-     1px  1px 0 rgba(0,0,0,0.35);
+    -1px -1px 0 rgba(0,0,0,0.45),
+     1px -1px 0 rgba(0,0,0,0.45),
+    -1px  1px 0 rgba(0,0,0,0.45),
+     1px  1px 0 rgba(0,0,0,0.45);
+}
+
+.appbar-link:hover,
+.appbar-link.active{
+  color:#fff7d6 !important;
 }
 
 .appbar-right{
-  display:flex;
-  align-items:center;
-  flex:0 0 auto;
+  display:flex !important;
+  align-items:center !important;
+  flex:0 0 auto !important;
 }
 
 .appbar-login-btn,
 .appbar-account-btn{
-  min-height:40px;
-  padding:0 14px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.35);
-  background:rgba(255,255,255,0.08);
-  color:#ffffff;
-  font-size:15px;
-  font-weight:800;
-  white-space:nowrap;
+  min-height:40px !important;
+  padding:0 16px !important;
+  border-radius:10px !important;
+  border:1px solid rgba(255,255,255,0.35) !important;
+  background:rgba(255,255,255,0.08) !important;
+  color:#ffffff !important;
+  font-size:16px !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+  text-shadow:
+    -1px -1px 0 rgba(0,0,0,0.30),
+     1px -1px 0 rgba(0,0,0,0.30),
+    -1px  1px 0 rgba(0,0,0,0.30),
+     1px  1px 0 rgba(0,0,0,0.30);
 }
 
 body{
-  padding-top:72px;
+  padding-top:72px !important;
 }
 /* ============================= */
 /* MYDEMPIRE LIVE GAME CARD SYSTEM */
