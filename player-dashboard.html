@@ -2506,26 +2506,131 @@ body {
   border-top:4px solid #0ea5e9;
   background:linear-gradient(180deg,#f0f9ff,#ffffff);
 }
+/* ===== LOGGED-IN MAIN NAV ===== */
+.app-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  margin: 0 0 18px 0;
+  border: 1px solid #dbe3f0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
 
+.app-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.app-nav-logo-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+  flex: 0 0 auto;
+}
+
+.app-nav-brand {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.app-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.app-nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid #dbe3f0;
+  background: #ffffff;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.18s ease;
+}
+
+.app-nav-link:hover {
+  transform: translateY(-1px);
+  border-color: #c7d7ee;
+  background: #f8fbff;
+  color: #0f172a;
+}
+
+.app-nav-link.active {
+  border-color: #2563eb;
+  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+  color: #1d4ed8;
+}
+
+.app-nav-account {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid #dbe3f0;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.app-nav-account span {
+  color: #64748b;
+  font-weight: 600;
+}
+
+@media (max-width: 860px) {
+  .app-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .app-nav-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
   </style>
 </head>
 <body data-requires-login="true">
   <div class="page">
     <!-- ===== COMMON NAV BAR ===== -->
-    <nav class="top-nav">
-      <div class="top-nav-left">
-        <div class="top-nav-logo-dot"></div>
-        <span>MydEmpire</span>
-      </div>
-      <div class="top-nav-right">
-  <a href="index.html" class="top-nav-link">Home</a>
-  <a href="economy.html" class="top-nav-link">Economy</a>
-  <a href="faq.html" class="top-nav-link">FAQ</a>
-  <a href="economy-blueprint-mint.html" class="top-nav-link">Blueprint Mint</a>
-  <a href="transparency.html" class="top-nav-link">Transparency</a>
-  <a href="player-dashboard.html" data-nav="dashboard" class="top-nav-link top-nav-link-active" style="display:none;">Dashboard</a>
-</div>
-    </nav>
+    <nav class="app-nav" id="loggedInNav" style="display:none;">
+  <div class="app-nav-left">
+    <div class="app-nav-logo-dot"></div>
+    <div class="app-nav-brand">MydEmpire</div>
+  </div>
+
+  <div class="app-nav-right">
+    <a href="player-dashboard.html" class="app-nav-link active">Dashboard</a>
+    <a href="player-dashboard.html?section=shop" class="app-nav-link">Shop</a>
+    <a href="marketplace.html" class="app-nav-link">Marketplace</a>
+    <a href="player-dashboard.html?section=transfer" class="app-nav-link">Transfer</a>
+    <a href="player-dashboard.html?section=codex" class="app-nav-link">Codex</a>
+    <div class="app-nav-account">
+      Account <span id="nav-account-name">Guest</span>
+    </div>
+  </div>
+</nav>
 
     <!-- ===== HEADER ===== -->
     <header class="header">
@@ -5161,6 +5266,28 @@ window.addEventListener("load", async () => {
     console.error("Initial dashboard load failed:", err);
   }
 }); 
+
+function setupLoggedInNav() {
+  const nav = document.getElementById("loggedInNav");
+  const accountName = document.getElementById("nav-account-name");
+
+  const storedUser =
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    "";
+
+  const cleanUser = String(storedUser).replace("@", "").trim();
+
+  if (cleanUser) {
+    if (nav) nav.style.display = "flex";
+    if (accountName) accountName.textContent = "@" + cleanUser;
+  } else {
+    if (nav) nav.style.display = "none";
+    if (accountName) accountName.textContent = "Guest";
+  }
+}
+
+setupLoggedInNav();
 
   </script>
 

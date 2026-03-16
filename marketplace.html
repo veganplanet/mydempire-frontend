@@ -351,9 +351,130 @@
         grid-template-columns: 1fr;
       }
     }
+    /* ===== LOGGED-IN MAIN NAV ===== */
+.app-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.app-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.app-nav-logo-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+  flex: 0 0 auto;
+}
+
+.app-nav-brand {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.app-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.app-nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid #dbe3f0;
+  background: #ffffff;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.18s ease;
+}
+
+.app-nav-link:hover {
+  transform: translateY(-1px);
+  border-color: #c7d7ee;
+  background: #f8fbff;
+  color: #0f172a;
+}
+
+.app-nav-link.active {
+  border-color: #2563eb;
+  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+  color: #1d4ed8;
+}
+
+.app-nav-account {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid #dbe3f0;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.app-nav-account span {
+  color: #64748b;
+  font-weight: 600;
+}
+
+@media (max-width: 860px) {
+  .app-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .app-nav-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
   </style>
 </head>
 <body>
+
+  <nav class="app-nav" id="loggedInNav" style="display:none;">
+  <div class="app-nav-left">
+    <div class="app-nav-logo-dot"></div>
+    <div class="app-nav-brand">MydEmpire</div>
+  </div>
+
+  <div class="app-nav-right">
+    <a href="player-dashboard.html" class="app-nav-link active">Dashboard</a>
+    <a href="player-dashboard.html?section=shop" class="app-nav-link">Shop</a>
+    <a href="marketplace.html" class="app-nav-link">Marketplace</a>
+    <a href="player-dashboard.html?section=transfer" class="app-nav-link">Transfer</a>
+    <a href="player-dashboard.html?section=codex" class="app-nav-link">Codex</a>
+    <div class="app-nav-account">
+      Account <span id="nav-account-name">Guest</span>
+    </div>
+  </div>
+</nav>
   <div class="page">
     <div class="topbar">
       <div>
@@ -854,17 +975,16 @@ async function buyEmpListing(listingId) {
 
     const totalAmount = numericTotal.toFixed(3);
     const paymentTo = session.total_payment?.to || "mydempiregain";
-    const paymentMemo = session.total_payment?.memo || `MDE_EMPBUY_${session.id}`;
+    const paymentMemo = session.total_payment?.memo || `MDE_EMPBUY_${session.id}_${ACTIVE_USER}`;
     const reserveUntil = session.reservation_expires_at
       ? new Date(session.reservation_expires_at).toLocaleString()
       : "shortly";
 
-    const confirmText =
+    const ok = confirm(
       `Buy ${Number(session.quantity).toLocaleString()} EMP?\n\n` +
       `Total payment: ${totalAmount} HIVE to @${paymentTo}\n` +
-      `Reservation valid until: ${reserveUntil}`;
-
-    const ok = confirm(confirmText);
+      `Reservation valid until: ${reserveUntil}`
+    );
     if (!ok) return;
 
     const paymentTransfer = await hiveTransfer(
@@ -874,13 +994,19 @@ async function buyEmpListing(listingId) {
       paymentMemo
     );
 
+    const paymentTxId = paymentTransfer?.tx_id || paymentTransfer?.id;
+
+    if (!paymentTxId) {
+      throw new Error("Payment transfer did not return a transaction id.");
+    }
+
     const finalizeRes = await fetch(apiUrl("/marketplace/emp/buy-finalize"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         username: ACTIVE_USER,
         session_id: session.id,
-        payment_tx_id: paymentTransfer?.tx_id || paymentTransfer?.id
+        payment_tx_id: paymentTxId
       })
     });
 
@@ -892,6 +1018,7 @@ async function buyEmpListing(listingId) {
 
     alert(`✅ EMP trade completed successfully. ${Number(session.quantity).toLocaleString()} EMP credited.`);
     await loadEmpListings();
+
     if (typeof loadActiveUserEmpBalance === "function") {
       await loadActiveUserEmpBalance();
     }
@@ -901,12 +1028,11 @@ async function buyEmpListing(listingId) {
 
     try {
       await loadEmpListings();
-    } catch (e) {}
+    } catch (_) {}
   } finally {
     empBuyInProgress = false;
   }
 }
-
 
     /* BLUEPRINTS */
     let playerBlueprintInventory = [];
@@ -1238,24 +1364,23 @@ async function buyEmpListing(listingId) {
         if (!ok) return;
 
         const sellerTransfer = await hiveTransfer(
-          ACTIVE_USER,
-          session.seller_payment.to,
-          session.seller_payment.amount,
-          session.seller_payment.memo
-        );
+  ACTIVE_USER,
+  session.seller_payment.to,
+  session.seller_payment.amount,
+  session.seller_payment.memo
+);
 
-       
-console.log("paymentTransfer =", paymentTransfer);
-console.log("payment tx id =", paymentTransfer?.tx_id || paymentTransfer?.id);
+console.log("sellerTransfer =", sellerTransfer);
+console.log("payment tx id =", sellerTransfer?.tx_id || sellerTransfer?.id);
 
-        const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-  username: ACTIVE_USER,
-  session_id: session.id,
-  payment_tx_id: paymentTransfer?.tx_id || paymentTransfer?.id
-})
+const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    username: ACTIVE_USER,
+    session_id: session.id,
+    payment_tx_id: sellerTransfer?.tx_id || sellerTransfer?.id
+  })
 });
         const finalizeData = await finalizeRes.json();
 
@@ -1346,6 +1471,28 @@ console.log("payment tx id =", paymentTransfer?.tx_id || paymentTransfer?.id);
     loadEmpListings();
     loadActiveUserEmpBalance();
     updateListingPreview();
+
+    function setupLoggedInNav() {
+  const nav = document.getElementById("loggedInNav");
+  const accountName = document.getElementById("nav-account-name");
+
+  const storedUser =
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    "";
+
+  const cleanUser = String(storedUser).replace("@", "").trim();
+
+  if (cleanUser) {
+    if (nav) nav.style.display = "flex";
+    if (accountName) accountName.textContent = "@" + cleanUser;
+  } else {
+    if (nav) nav.style.display = "none";
+    if (accountName) accountName.textContent = "Guest";
+  }
+}
+
+setupLoggedInNav();
   </script>
 </body>
 </html>
