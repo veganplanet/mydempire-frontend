@@ -1556,40 +1556,63 @@ display:block;
 .site-nav a{
   font-size:20px !important;
 }
-/* ===== FINAL NAV FORCE OVERRIDE ===== */
+/* ===== FINAL APPBAR LAYOUT FIX ===== */
 
 .appbar{
-  background:#5b6b85 !important;
-  height:120px !important;
+  background:#44546c !important;
+  height:110px !important;
   border-bottom:2px solid #718096 !important;
   box-shadow:0 10px 24px rgba(0,0,0,0.18) !important;
 }
 
 .appbar-inner{
-  max-width:980px !important;
+  max-width:1180px !important;   /* wider so nav stays in one row */
   padding:0 18px !important;
+  gap:20px !important;
+}
+
+.appbar-left{
+  display:flex !important;
+  align-items:center !important;
+  gap:18px !important;
+  min-width:0 !important;
 }
 
 .appbar-logo img{
-  height:96px !important;
+  height:92px !important;
   width:auto !important;
   display:block !important;
 }
 
+.appbar-nav{
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  flex-wrap:nowrap !important;   /* prevent second line */
+}
+
 .appbar-link{
-  font-size:22px !important;
+  font-size:18px !important;
   font-weight:800 !important;
-  padding:0 18px !important;
-  min-height:46px !important;
+  padding:0 14px !important;
+  min-height:42px !important;
+  white-space:nowrap !important; /* keep each item on one line */
+}
+
+.appbar-right{
+  display:flex !important;
+  align-items:center !important;
+  flex:0 0 auto !important;
 }
 
 .appbar-login-btn,
 .appbar-account-btn{
-  font-size:20px !important;
-  min-height:48px !important;
+  font-size:18px !important;
+  min-height:46px !important;
   padding:0 18px !important;
+  white-space:nowrap !important;
 }
 
 body{
-  padding-top:120px !important;
+  padding-top:110px !important;
 }
