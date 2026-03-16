@@ -1559,7 +1559,7 @@ display:block;
 /* ===== MYDEMPIRE VIBRANT GAME NAV FINAL ===== */
 
 .appbar{
-  background:linear-gradient(90deg, #1d4ed8 0%, #2563eb 45%, #0f766e 100%) !important;
+  background:#8E44AD !important;
   height:108px !important;
   border-bottom:2px solid rgba(255,255,255,0.18) !important;
   box-shadow:0 10px 24px rgba(0,0,0,0.20) !important;
@@ -1567,13 +1567,12 @@ display:block;
 
 .appbar-inner{
   width:100% !important;
-  max-width:none !important;      /* no narrow center squeeze */
-  margin:0 !important;
-  padding:0 32px !important;
+  max-width:1400px !important;
+  margin:0 auto !important;
+  padding:0 40px !important;
   display:flex !important;
   align-items:center !important;
   justify-content:space-between !important;
-  gap:24px !important;
 }
 
 .appbar-left{
