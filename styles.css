@@ -1505,3 +1505,43 @@ body{
     height: 36px;
   }
 }
+.account-menu{
+position:relative;
+margin-left:auto;
+font-weight:600;
+cursor:pointer;
+}
+
+.account-name{
+padding:8px 14px;
+background:#f1f5f9;
+border-radius:8px;
+border:1px solid #e2e8f0;
+}
+
+.account-dropdown{
+display:none;
+position:absolute;
+right:0;
+top:40px;
+background:white;
+border:1px solid #e2e8f0;
+border-radius:8px;
+box-shadow:0 6px 16px rgba(0,0,0,0.1);
+min-width:200px;
+}
+
+.account-dropdown a{
+display:block;
+padding:10px 14px;
+text-decoration:none;
+color:#333;
+}
+
+.account-dropdown a:hover{
+background:#f3f4f6;
+}
+
+.account-menu:hover .account-dropdown{
+display:block;
+}
