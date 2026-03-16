@@ -10,14 +10,14 @@
   top:0;
   left:0;
   right:0;
-  height:64px;
-  background:#red;
+  height:110px;
+  background:#334155;
   display:flex;
   align-items:center;
   justify-content:center;
   z-index:1000;
   box-shadow:0 6px 20px rgba(0,0,0,0.2);
-   border-bottom:1px solid #475569;
+  border-bottom:1px solid #475569;
 }
 
 .site-header-inner{
@@ -28,7 +28,7 @@
 }
 
 .site-logo{
-  height:52px;
+  height:100px;
 }
 
 .site-nav{
@@ -49,7 +49,7 @@
 }
 
 .page-main{
-  padding-top:80px;
+  padding-top:130px;
 }
 
 .site-nav a.active{
