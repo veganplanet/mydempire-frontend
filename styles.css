@@ -18,7 +18,9 @@ body{
   margin:0 auto;
   padding:40px 24px;
 }
-
+.page-inner{
+  width:100%;
+}
 /* styles.css — MydEmpire Light Theme (Global)
    Use this for all pages (Home, FAQ, Economy, etc.)
 */
