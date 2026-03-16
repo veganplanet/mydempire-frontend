@@ -6,11 +6,9 @@ body{
   margin:0;
   font-family:system-ui, Arial, sans-serif;
 
-  background:linear-gradient(
-    180deg,
-    #f5f7fb 0%,
-    #e6ecf5 100%
-  );
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.9) 0%, rgba(238,244,255,0.95) 35%, rgba(223,233,247,1) 100%),
+    linear-gradient(180deg,#f5f7fb 0%,#e6ecf5 100%);
 
   min-height:100vh;
 }
