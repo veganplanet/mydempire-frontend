@@ -8,39 +8,42 @@
 </head>
 <body class="page-root">
 
-<header class="site-header">
-  <div class="site-header-inner">
-    <div class="brand">
-      <div class="brand-logo"></div>
-      <div>
-        <div class="brand-text-main">MydEmpire</div>
-        <div class="brand-text-sub">Genesis Economy</div>
+<header class="appbar">
+  <div class="appbar-inner">
+    <div class="appbar-left">
+      <a href="index.html" class="appbar-logo" aria-label="MydEmpire Home">
+        <img src="assets/logo.png" alt="MydEmpire">
+      </a>
+
+      <nav class="appbar-nav">
+        <a href="index.html" class="appbar-link active">Home</a>
+        <a href="economy.html" class="appbar-link">Economy</a>
+        <a href="transparency.html" class="appbar-link">Transparency</a>
+        <a href="codex.html" class="appbar-link">Codex</a>
+        <a id="appbarDashboardLink" href="player-dashboard.html" class="appbar-link">Dashboard</a>
+        <a id="appbarShopLink" href="player-dashboard.html?section=shop" class="appbar-link">Shop</a>
+        <a id="appbarMarketplaceLink" href="marketplace.html" class="appbar-link">Marketplace</a>
+      </nav>
+    </div>
+
+    <div class="appbar-right">
+      <button id="appbarLoginBtn" class="appbar-login-btn" type="button">
+        Connect Wallet
+      </button>
+
+      <div id="appbarAccountWrap" class="appbar-account-wrap" style="display:none;">
+        <button id="appbarAccountBtn" class="appbar-account-btn" type="button">
+          @username ▼
+        </button>
+
+        <div id="appbarDropdown" class="appbar-dropdown">
+          <div id="appbarDropdownHead" class="appbar-dropdown-head">@username</div>
+          <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link">Visit My Empire</a>
+          <button id="visitOtherEmpireBtn" type="button" class="appbar-dropdown-link">Visit Other Empire</button>
+          <button id="appbarLogoutBtn" type="button" class="appbar-dropdown-link">Logout</button>
+        </div>
       </div>
     </div>
-  <nav class="site-nav">
-
-<a href="index.html">Home</a>
-<a href="economy.html">Economy</a>
-<a href="transparency.html">Transparency</a>
-<a href="codex.html">Codex</a>
-<a href="player-dashboard.html">Dashboard</a>
-<a href="shop.html">Shop</a>
-<a href="marketplace.html">Marketplace</a>
-
-</nav>
-    <div class="account-menu">
-
-<span class="account-name">Username ▾</span>
-
-<div class="account-dropdown">
-
-<a href="player-dashboard.html">Visit My Empire</a>
-<a href="#">Visit Other Empire</a>
-<a href="/">Logout</a>
-
-</div>
-
-</div>
   </div>
 </header>
 
