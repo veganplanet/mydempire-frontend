@@ -1,17 +1,36 @@
-let lastScroll = 0;
+document.addEventListener("DOMContentLoaded", () => {
+  const navbar = document.querySelector(".appbar");
+  if (!navbar) return;
 
-const navbar = document.querySelector(".appbar");
+  let lastScrollY = window.scrollY;
+  let ticking = false;
 
-window.addEventListener("scroll", () => {
+  function handleScroll() {
+    const currentScrollY = window.scrollY;
 
-  const currentScroll = window.pageYOffset;
+    /* keep navbar visible near top of page */
+    if (currentScrollY <= 80) {
+      navbar.classList.remove("appbar-hidden");
+      lastScrollY = currentScrollY;
+      ticking = false;
+      return;
+    }
 
-  if (currentScroll > lastScroll && currentScroll > 80) {
-    navbar.classList.add("appbar-hidden");
-  } else {
-    navbar.classList.remove("appbar-hidden");
+    /* hide only when scrolling down */
+    if (currentScrollY > lastScrollY) {
+      navbar.classList.add("appbar-hidden");
+    } else {
+      navbar.classList.remove("appbar-hidden");
+    }
+
+    lastScrollY = currentScrollY;
+    ticking = false;
   }
 
-  lastScroll = currentScroll;
-
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      window.requestAnimationFrame(handleScroll);
+      ticking = true;
+    }
+  });
 });
