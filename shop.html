@@ -1,23 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MydEmpire — Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Global CSS -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="page-root">
+
 <header class="appbar">
   <div class="appbar-inner">
+
     <div class="appbar-left">
       <a href="index.html" class="appbar-logo">
         <img src="assets/logo.png" alt="MydEmpire">
       </a>
 
-     <nav class="appbar-nav">
-  <a href="index.html" class="appbar-link">Home</a>
-  <a href="economy.html" class="appbar-link">Economy</a>
-  <a href="transparency.html" class="appbar-link">Transparency</a>
-  <a href="codex.html" class="appbar-link">Codex</a>
-  <a href="player-dashboard.html" class="appbar-link">Dashboard</a>
-  <a href="shop.html" class="appbar-link">Shop</a>
-  <a href="marketplace.html" class="appbar-link">Marketplace</a>
-</nav>
+      <nav class="appbar-nav">
+        <a href="index.html" class="appbar-link">Home</a>
+        <a href="economy.html" class="appbar-link">Economy</a>
+        <a href="transparency.html" class="appbar-link">Transparency</a>
+        <a href="codex.html" class="appbar-link">Codex</a>
+        <a href="player-dashboard.html" class="appbar-link">Dashboard</a>
+        <a href="shop.html" class="appbar-link active">Shop</a>
+        <a href="marketplace.html" class="appbar-link">Marketplace</a>
+      </nav>
     </div>
 
     <div class="appbar-right">
       <button id="appbarLoginBtn" class="appbar-login-btn">Connect Wallet</button>
+
+      <div id="appbarAccountWrap" class="appbar-account-wrap" style="display:none;">
+        <button id="appbarAccountBtn" class="appbar-account-btn">@username ▼</button>
+
+        <div id="appbarDropdown" class="appbar-dropdown">
+          <div class="appbar-dropdown-head">@username</div>
+          <a href="#" class="appbar-dropdown-link">Visit My Empire</a>
+          <button class="appbar-dropdown-link">Visit Other Empire</button>
+          <button class="appbar-dropdown-link">Logout</button>
+        </div>
+      </div>
     </div>
+
   </div>
 </header>
+
+<main class="page-main">
+  <div class="page-inner">
+
+    <h1>Shop</h1>
+    <p>Purchase Genesis Packs and EMP to expand your empire.</p>
+
+  </div>
+</main>
+
+</body>
+</html>
