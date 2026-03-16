@@ -1566,13 +1566,13 @@ display:block;
 }
 
 .appbar-inner{
-  width:100% !important;
-  max-width:1400px !important;
-  margin:0 auto !important;
-  padding:0 40px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
+  width:100%;
+  max-width:1100px;   /* controls the width like your screenshot */
+  margin:0 auto;
+  padding:0 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
 
 .appbar-left{
@@ -1598,26 +1598,28 @@ display:block;
 }
 
 .appbar-link{
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  min-height:42px !important;
-  padding:0 14px !important;
-  border-radius:12px !important;
-  color:#f8fafc !important;
-  text-decoration:none !important;
-  font-size:17px !important;
-  font-weight:800 !important;
-  white-space:nowrap !important;
-  transition:all .18s ease !important;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:40px;
+  padding:0 14px;
+
+  font-size:17px;
+  font-weight:700;
+
+  color:white;
+  text-decoration:none;
+
+  border:1px solid rgba(255,255,255,0.35); /* thin border */
+  border-radius:10px;
+
+  transition:all .15s ease;
 }
 
 .appbar-link:hover{
-  background:rgba(255,255,255,0.14) !important;
-  color:#ffffff !important;
-  transform:translateY(-1px) !important;
+  background:rgba(255,255,255,0.15);
+  border-color:white;
 }
-
 .appbar-link.active{
   background:rgba(255,255,255,0.18) !important;
   color:#ffffff !important;
