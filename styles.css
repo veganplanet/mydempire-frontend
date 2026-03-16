@@ -1544,3 +1544,15 @@ background:#f3f4f6;
 .account-menu:hover .account-dropdown{
 display:block;
 }
+.site-header{
+  background:#334155 !important;
+}
+
+.brand-logo{
+  width:90px !important;
+  height:90px !important;
+}
+
+.site-nav a{
+  font-size:20px !important;
+}
