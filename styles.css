@@ -4185,6 +4185,81 @@ body {
     justify-content: flex-start;
   }
 }
+/*==================*/
+   TRANSPARENCT
+/*=================*/
+ .pill-row {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: rgba(0,0,0,0.03);
+    }
+    .pill.onchain { border-color: rgba(21,128,61,0.35); background: rgba(21,128,61,0.08); }
+    .pill.offchain { border-color: rgba(37,99,235,0.35); background: rgba(37,99,235,0.08); }
+
+    .highlight-box {
+      border-radius: 14px;
+      border: 1px dashed rgba(37,99,235,0.6);
+      background: rgba(37,99,235,0.06);
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.55;
+      margin-top: 10px;
+    }
+
+    .table-wrap { overflow-x: auto; margin-top: 10px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      min-width: 820px;
+    }
+    th, td {
+      border: 1px solid rgba(0,0,0,0.12);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: rgba(37,99,235,0.06);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.9;
+    }
+    tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: rgba(0,0,0,0.02);
+      white-space: nowrap;
+    }
+    .badge.on { border-color: rgba(21,128,61,0.35); background: rgba(21,128,61,0.10); }
+    .badge.off { border-color: rgba(37,99,235,0.35); background: rgba(37,99,235,0.10); }
+    .badge.mixed { border-color: rgba(245,158,11,0.45); background: rgba(245,158,11,0.14); }
+
+    .list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      line-height: 1.6;
+    }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+
 
 /*===MARKETPLACE ====*/
 /*=====================*/
