@@ -1556,35 +1556,36 @@ display:block;
 .site-nav a{
   font-size:20px !important;
 }
-/* ===== FINAL APPBAR UI FIX ===== */
+/* ===== MYDEMPIRE VIBRANT GAME NAV FINAL ===== */
 
 .appbar{
-  background:#2f5d8a !important;   /* blue */
-  height:112px !important;
-  border-bottom:2px solid #4d79a6 !important;
-  box-shadow:0 10px 24px rgba(0,0,0,0.18) !important;
+  background:linear-gradient(90deg, #1d4ed8 0%, #2563eb 45%, #0f766e 100%) !important;
+  height:108px !important;
+  border-bottom:2px solid rgba(255,255,255,0.18) !important;
+  box-shadow:0 10px 24px rgba(0,0,0,0.20) !important;
 }
 
 .appbar-inner{
   width:100% !important;
-  max-width:900px !important;      /* content compact in the middle */
-  margin:0 auto !important;
-  padding:0 18px !important;
+  max-width:none !important;      /* no narrow center squeeze */
+  margin:0 !important;
+  padding:0 32px !important;
   display:flex !important;
   align-items:center !important;
   justify-content:space-between !important;
-  gap:18px !important;
+  gap:24px !important;
 }
 
 .appbar-left{
   display:flex !important;
   align-items:center !important;
-  gap:18px !important;
+  gap:28px !important;
   min-width:0 !important;
+  flex:1 1 auto !important;
 }
 
 .appbar-logo img{
-  height:106px !important;         /* little bigger */
+  height:92px !important;         /* a little bigger, but not too huge */
   width:auto !important;
   display:block !important;
 }
@@ -1592,17 +1593,35 @@ display:block;
 .appbar-nav{
   display:flex !important;
   align-items:center !important;
-  gap:6px !important;
+  gap:10px !important;
   flex-wrap:nowrap !important;
+  white-space:nowrap !important;
 }
 
 .appbar-link{
-  font-size:18px !important;
-  font-weight:800 !important;
-  padding:0 12px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
   min-height:42px !important;
+  padding:0 14px !important;
+  border-radius:12px !important;
+  color:#f8fafc !important;
+  text-decoration:none !important;
+  font-size:17px !important;
+  font-weight:800 !important;
   white-space:nowrap !important;
-  color:#f1f5f9 !important;
+  transition:all .18s ease !important;
+}
+
+.appbar-link:hover{
+  background:rgba(255,255,255,0.14) !important;
+  color:#ffffff !important;
+  transform:translateY(-1px) !important;
+}
+
+.appbar-link.active{
+  background:rgba(255,255,255,0.18) !important;
+  color:#ffffff !important;
 }
 
 .appbar-right{
@@ -1613,13 +1632,22 @@ display:block;
 
 .appbar-login-btn,
 .appbar-account-btn{
-  font-size:18px !important;       /* same as other header items */
+  min-height:44px !important;
+  padding:0 18px !important;
+  border-radius:12px !important;
+  border:1px solid rgba(255,255,255,0.22) !important;
+  background:rgba(255,255,255,0.10) !important;
+  color:#ffffff !important;
+  font-size:17px !important;   /* same visual family as nav */
   font-weight:800 !important;
-  min-height:42px !important;
-  padding:0 16px !important;
   white-space:nowrap !important;
 }
 
+.appbar-login-btn:hover,
+.appbar-account-btn:hover{
+  background:rgba(255,255,255,0.18) !important;
+}
+
 body{
-  padding-top:112px !important;
+  padding-top:108px !important;
 }
