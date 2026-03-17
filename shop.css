@@ -1495,3 +1495,27 @@
   color:#5e6d82;
   box-shadow:0 4px 10px rgba(0,0,0,0.06);
 }
+.relic-image-card,
+.writ-image-card{
+  background:transparent;
+  border:none;
+  box-shadow:none;
+  padding:0;
+  overflow:visible;
+}
+
+.nft-image-wrap{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+}
+
+.nft-card-image{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
