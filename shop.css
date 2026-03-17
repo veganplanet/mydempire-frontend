@@ -1252,12 +1252,30 @@
   border-color:rgba(255,255,255,0.08);
 }
 
+.relic-card-body{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px 12px;
+  min-height:0;
+  overflow:hidden;
+}
+
 .relic-card-image{
-  width:100%;
-  max-width:132px;
+  width:auto;
+  max-width:100%;
+  max-height:130px;
   height:auto;
   object-fit:contain;
+  display:block;
   filter:drop-shadow(0 10px 16px rgba(0,0,0,0.28));
+}
+
+.relic-card .uniform-card-bottom{
+  font-size:12px;
+  line-height:1.2;
+  padding:10px 8px;
 }
 
 /* =========================================================
