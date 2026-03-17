@@ -46,121 +46,327 @@
 
 <main class="page-main">
   <div class="page-inner">
+<div class="page-inner">
 
-    <div class="game-card feature-card purple">
-      <div class="game-card-icon">📖</div>
-      <div class="game-card-title">The Codex of MydEmpire</div>
-      <div class="game-card-text">
-        Every empire begins with a single decision.
-        In <strong>MydEmpire</strong>, you do not simply collect assets —
-        you build territory, unlock industry, activate production,
-        and shape a living economy on the Hive blockchain.
-        <br><br>
-        This Codex is your field guide.
-        It will help you understand the world, the assets, and the path from
-        your first pack to a functioning industrial empire.
-      </div>
+  <div class="codex-layout">
+
+    <!-- LEFT MENU -->
+    <aside class="codex-sidebar">
+      <div class="codex-sidebar-title">Codex</div>
+
+      <nav class="codex-menu">
+        <a href="#loop">Gameplay Loop</a>
+        <a href="#land">Land Rules</a>
+        <a href="#blueprint">Blueprints</a>
+        <a href="#factory">Factories</a>
+        <a href="#emp">EMP</a>
+        <a href="#relic">Relics</a>
+        <a href="#writ">Writ</a>
+        <a href="#ep">EP System</a>
+        <a href="#maintenance">Maintenance</a>
+        <a href="#upgrade">Upgrades</a>
+        <a href="#reward">Rewards</a>
+        <a href="#shop">Shop</a>
+        <a href="#market">Marketplace</a>
+        <a href="#p2p">P2P Transfer</a>
+        <a href="#start">New Player Guide</a>
+      </nav>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="codex-content">
+
+      <!-- HERO -->
+      <section class="codex-hero">
+        <h1>The Codex of MydEmpire</h1>
+        <p>
+          This Codex defines how the empire truly works. Every asset, every rule,
+          and every system is part of a connected production network. 
+          Understanding this page means understanding how to build a stronger empire.
+        </p>
+      </section>
+
+      <!-- LOOP -->
+      <section id="loop" class="codex-section">
+        <h2>Core Gameplay Loop</h2>
+
+        <div class="codex-flow">
+          Pack → Land + Blueprint + EMP → Build Factory → Generate EP →
+          Maintain → Upgrade → Earn Share → Expand Empire
+        </div>
+
+        <p>
+          The goal is not collecting assets, but converting them into a working industrial system.
+        </p>
+      </section>
+
+      <!-- LAND -->
+      <section id="land" class="codex-section">
+        <h2>Land Rules</h2>
+
+        <h3>Slots</h3>
+        <ul>
+          <li>L1 Frontier → 1 slot</li>
+          <li>L2 Estate → 2 slots</li>
+          <li>L3 Industrial Zone → 3 slots</li>
+        </ul>
+
+        <h3>B5 Limitation Rule</h3>
+        <p><strong>Each land can have maximum 1 B5 factory.</strong></p>
+
+        <h3>Upgrade Behavior</h3>
+        <p>
+          Upgrade capability depends on how the factory started:
+        </p>
+
+        <ul>
+          <li>L1:
+            <ul>
+              <li>Direct B4/B5 build allowed</li>
+              <li>If started B1/B2 → max upgrade B3</li>
+            </ul>
+          </li>
+
+          <li>L2:
+            <ul>
+              <li>Max 1 B5</li>
+              <li>If one B5 exists → other slot max B4</li>
+              <li>If both start low → both can go up to B4</li>
+            </ul>
+          </li>
+
+          <li>L3:
+            <ul>
+              <li>If one B5 → other 2 max B4</li>
+              <li>If all start low → 1 can reach B5, others B4</li>
+            </ul>
+          </li>
+        </ul>
+
+      </section>
+
+      <!-- BLUEPRINT -->
+      <section id="blueprint" class="codex-section">
+        <h2>Blueprints</h2>
+
+        <p>Blueprints define what industry can be built and are consumed during construction.</p>
+
+        <h3>Levels</h3>
+        <ul>
+          <li>B1 → Basic</li>
+          <li>B2 → Improved</li>
+          <li>B3 → Advanced</li>
+          <li>B4 → High</li>
+          <li>B5 → Elite</li>
+        </ul>
+
+        <h3>Extra Blueprint Mint</h3>
+        <p>
+          Allowed only when total blueprint count is lower than available slots.
+          EMP spent goes 100% to treasury.
+        </p>
+      </section>
+
+      <!-- FACTORY -->
+      <section id="factory" class="codex-section">
+        <h2>Factories</h2>
+
+        <p>
+          Factories are built using land + blueprint + EMP.
+        </p>
+
+        <h3>States</h3>
+        <ul>
+          <li>Building</li>
+          <li>Active</li>
+          <li>Upgrading</li>
+          <li>Inactive</li>
+        </ul>
+
+        <h3>Build Time</h3>
+        <ul>
+          <li>B1 → 1 day</li>
+          <li>B2 → 2 days</li>
+          <li>B3 → 3 days</li>
+          <li>B4 → 4 days</li>
+          <li>B5 → 5 days</li>
+        </ul>
+      </section>
+
+      <!-- EMP -->
+      <section id="emp" class="codex-section">
+        <h2>EMP</h2>
+
+        <p>
+          EMP is the core utility resource used for:
+        </p>
+
+        <ul>
+          <li>Building factories</li>
+          <li>Upgrades</li>
+          <li>Maintenance</li>
+          <li>Blueprint minting</li>
+        </ul>
+
+        <p>
+          EMP from packs is soulbound and intended for gameplay use.
+        </p>
+      </section>
+
+      <!-- RELIC -->
+      <section id="relic" class="codex-section">
+        <h2>Relics</h2>
+
+        <ul>
+          <li>+3% EP per relic</li>
+          <li>Max 2 counted</li>
+          <li>Total max boost = 6%</li>
+        </ul>
+
+        <h3>Special Ability</h3>
+        <p>
+          Relic holders can instantly upgrade factories by paying 25% extra cost
+          after required active days are completed.
+        </p>
+      </section>
+
+      <!-- WRIT -->
+      <section id="writ" class="codex-section">
+        <h2>Writ</h2>
+
+        <p>
+          Writ is a premium Genesis asset linked to Founder-level strategic value.
+          It represents special privilege within the ecosystem.
+        </p>
+      </section>
+
+      <!-- EP -->
+      <section id="ep" class="codex-section">
+        <h2>EP System</h2>
+
+        <p>
+          EP (Empire Power) represents total production strength.
+        </p>
+
+        <ul>
+          <li>Generated by active factories</li>
+          <li>Boosted by relics</li>
+          <li>Defines reward share</li>
+        </ul>
+
+        <p>
+          Production accumulates for maximum 7 days.
+        </p>
+      </section>
+
+      <!-- MAINTENANCE -->
+      <section id="maintenance" class="codex-section">
+        <h2>Maintenance</h2>
+
+        <ul>
+          <li>Cycle: 7 days</li>
+          <li>Cost: 5% of daily EP (rounded, no decimals)</li>
+          <li>Stops production if unpaid</li>
+          <li>No penalty beyond inactivity</li>
+        </ul>
+      </section>
+
+      <!-- UPGRADE -->
+      <section id="upgrade" class="codex-section">
+        <h2>Upgrades</h2>
+
+        <h3>Cost</h3>
+        <ul>
+          <li>B1 → B2: 50 EMP</li>
+          <li>B2 → B3: 100 EMP</li>
+          <li>B3 → B4: 200 EMP</li>
+          <li>B4 → B5: 400 EMP</li>
+        </ul>
+
+        <h3>Active Days Required</h3>
+        <ul>
+          <li>B1 → B2: 30 days</li>
+          <li>B2 → B3: 60 days</li>
+          <li>B3 → B4: 120 days</li>
+          <li>B4 → B5: 240 days</li>
+        </ul>
+      </section>
+
+      <!-- REWARD -->
+      <section id="reward" class="codex-section">
+        <h2>Rewards</h2>
+
+        <p>
+          Rewards are distributed based on EP share:
+        </p>
+
+        <div class="codex-flow">
+          Player Reward = (Player EP / Total EP) × Reward Pool
+        </div>
+
+        <ul>
+          <li>Max emission: 0.5% of treasury</li>
+          <li>Dynamic based on treasury health</li>
+          <li>No guaranteed returns</li>
+        </ul>
+      </section>
+
+      <!-- SHOP -->
+      <section id="shop" class="codex-section">
+        <h2>Shop</h2>
+
+        <ul>
+          <li>Buy sealed packs</li>
+          <li>Buy EMP (100 EMP = 1 HIVE)</li>
+          <li>Mint blueprint if eligible</li>
+        </ul>
+      </section>
+
+      <!-- MARKET -->
+      <section id="market" class="codex-section">
+        <h2>Marketplace</h2>
+
+        <ul>
+          <li>Tradable: EMP, Blueprint, Relic, Writ</li>
+          <li>Land trading in future phase</li>
+          <li>EMP fee: 3%</li>
+          <li>Other assets: 5%</li>
+          <li>Trades in HIVE</li>
+        </ul>
+
+        <h3>EMP Rules</h3>
+        <ul>
+          <li>Minimum price: 75% floor</li>
+          <li>Must list in multiples of 100</li>
+        </ul>
+      </section>
+
+      <!-- P2P -->
+      <section id="p2p" class="codex-section">
+        <h2>P2P Transfer</h2>
+
+        <ul>
+          <li>No platform fee</li>
+          <li>Direct transfer allowed</li>
+          <li>Platform not responsible for off-market deals</li>
+        </ul>
+      </section>
+
+      <!-- START -->
+      <section id="start" class="codex-section">
+        <h2>New Player Guide</h2>
+
+        <ul>
+          <li>Buy a Genesis Pack</li>
+          <li>Open and review assets</li>
+          <li>Build first factory</li>
+          <li>Maintain production</li>
+          <li>Upgrade strategically</li>
+          <li>Expand empire</li>
+        </ul>
+      </section>
+
     </div>
-
-    <div class="card-grid">
-
-      <div class="game-card blue">
-        <div class="game-card-icon">🎁</div>
-        <div class="game-card-title">1. Every Empire Starts with a Pack</div>
-        <div class="game-card-text">
-          Your journey begins with a pack. Each pack opens into the core building
-          blocks of your future empire — <strong>Land</strong>, <strong>Blueprint</strong>,
-          and <strong>EMP</strong>. Some packs may even reveal rarer strategic assets.
-          Opening a pack is not just a reveal moment — it is the first step into empire creation.
-        </div>
-      </div>
-
-      <div class="game-card green">
-        <div class="game-card-icon">🌍</div>
-        <div class="game-card-title">2. Land Is Your Foundation</div>
-        <div class="game-card-text">
-          Land is where your industries rise. Different land tiers offer different
-          levels of building capacity, which means your territory directly shapes
-          your long-term growth. A stronger empire starts with stronger foundations.
-        </div>
-      </div>
-
-      <div class="game-card gold">
-        <div class="game-card-icon">📜</div>
-        <div class="game-card-title">3. Blueprints Unlock Industry</div>
-        <div class="game-card-text">
-          Blueprints are the plans behind your expansion. They determine what kind
-          of factory can be built on your land. Every blueprint is a strategic opportunity:
-          what you build today affects your economic strength tomorrow.
-        </div>
-      </div>
-
-      <div class="game-card purple">
-        <div class="game-card-icon">🏭</div>
-        <div class="game-card-title">4. Factories Bring Your Empire to Life</div>
-        <div class="game-card-text">
-          Once a blueprint is used, your land becomes productive.
-          Factories are the living engine of MydEmpire — they generate
-          <strong>EP</strong>, strengthen your position, and push your empire forward.
-          Idle assets become active power when industry begins.
-        </div>
-      </div>
-
-      <div class="game-card red">
-        <div class="game-card-icon">⚡</div>
-        <div class="game-card-title">5. EMP Powers Progress</div>
-        <div class="game-card-text">
-          EMP is the energy of your economic machine. It supports upgrades,
-          maintenance, and future strategic choices. Without EMP, an empire may exist —
-          but it cannot truly evolve.
-        </div>
-      </div>
-
-      <div class="game-card blue">
-        <div class="game-card-icon">💠</div>
-        <div class="game-card-title">6. EP Measures Your Industrial Weight</div>
-        <div class="game-card-text">
-          EP, or Empire Power, is the strength of your productive network.
-          It reflects how powerful your economy has become and connects your empire
-          to the larger reward logic of the game. A stronger industrial system means
-          a stronger presence in the world of MydEmpire.
-        </div>
-      </div>
-
-      <div class="game-card green">
-        <div class="game-card-icon">🛒</div>
-        <div class="game-card-title">7. The Marketplace Creates Strategy</div>
-        <div class="game-card-text">
-          The marketplace is where players reshape their empires through trade.
-          Assets can change hands, strategies can shift, and opportunities can emerge.
-          It is not just a store of listings — it is part of the living economy.
-        </div>
-      </div>
-
-      <div class="game-card gold">
-        <div class="game-card-icon">👑</div>
-        <div class="game-card-title">8. This Is Not Just Collection — It Is Expansion</div>
-        <div class="game-card-text">
-          MydEmpire is designed around growth, planning, and participation.
-          The most successful players will not simply own the most assets —
-          they will understand how to turn those assets into a working empire.
-          Every land, every blueprint, every factory is a decision.
-        </div>
-      </div>
-
-    </div>
-
-    <div class="game-card feature-card blue">
-      <div class="game-card-icon">🚀</div>
-      <div class="game-card-title">Your First Objective</div>
-      <div class="game-card-text">
-        Open your first pack. Study your land. Understand your blueprint.
-        Build your first factory.
-        <br><br>
-        Once production begins, you are no longer just a player looking at assets —
-        you are an empire builder.
-      </div>
-    </div>
-
   </div>
-</main>
+
+</div>

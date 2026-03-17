@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <title>MydEmpire — Shop</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Global CSS -->
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="shop.css" />
 </head>
 
 <body class="page-root">
 
+<!-- ===== NAVBAR (SAME AS ALL PAGES) ===== -->
 <header class="appbar">
   <div class="appbar-inner">
 
@@ -31,30 +31,266 @@
     </div>
 
     <div class="appbar-right">
-      <button id="appbarLoginBtn" class="appbar-login-btn">Connect Wallet</button>
-
-      <div id="appbarAccountWrap" class="appbar-account-wrap" style="display:none;">
-        <button id="appbarAccountBtn" class="appbar-account-btn">@username ▼</button>
-
-        <div id="appbarDropdown" class="appbar-dropdown">
-          <div class="appbar-dropdown-head">@username</div>
-          <a href="#" class="appbar-dropdown-link">Visit My Empire</a>
-          <button class="appbar-dropdown-link">Visit Other Empire</button>
-          <button class="appbar-dropdown-link">Logout</button>
-        </div>
-      </div>
+      <button class="appbar-login-btn">Connect Wallet</button>
     </div>
 
   </div>
 </header>
 
+<!-- ===== PAGE ===== -->
 <main class="page-main">
-  <div class="page-inner">
 
-    <h1>Shop</h1>
-    <p>Purchase Genesis Packs and EMP to expand your empire.</p>
+  <!-- HERO -->
+  <section class="shop-hero">
+  <div class="shop-hero-eyebrow">GENESIS COMMERCE</div>
+  <h1>Empire Shop</h1>
+  <p>
+    Acquire Genesis Packs, secure strategic assets, and expand the industrial power
+    of your empire through the official MydEmpire platform shop.
+  </p>
+</section>
+
+  <!-- PACK PURCHASE -->
+ <section class="shop-section">
+  <h2>Genesis Pack Purchase</h2>
+  <p class="shop-section-sub">
+    Founder-era pack access with slab-based discounted pricing, paid only in HIVE
+    using live USD conversion at the time of purchase.
+  </p>
+
+  <div class="shop-grid">
+
+    <div class="shop-card">
+      <h3>Pricing Slabs</h3>
+
+      <table class="shop-table">
+        <thead>
+          <tr>
+            <th>Pack Range</th>
+            <th>USD Price</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>0 – 500</td>
+            <td>$0.50</td>
+            <td>Earliest supporter tier</td>
+          </tr>
+          <tr>
+            <td>501 – 1,500</td>
+            <td>$0.75</td>
+            <td>Second discounted tier</td>
+          </tr>
+          <tr>
+            <td>1,501 – 3,000</td>
+            <td>$1.00</td>
+            <td>Mid Genesis tier</td>
+          </tr>
+          <tr>
+            <td>3,001 – 5,000</td>
+            <td>$1.25</td>
+            <td>Final Founder tier</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="shop-note">
+        Original reference value is $2 per pack. Genesis Founder pricing is intentionally discounted
+        to reward earlier participation.
+      </div>
+    </div>
+
+    <div class="shop-card">
+      <h3>Phase Rules</h3>
+      <table class="shop-table shop-table-compact">
+        <tbody>
+          <tr>
+            <th>Total Founder Packs</th>
+            <td>5,000</td>
+          </tr>
+          <tr>
+            <th>Genesis Wallet Cap</th>
+            <td>50 packs</td>
+          </tr>
+          <tr>
+            <th>Payment Currency</th>
+            <td>HIVE only</td>
+          </tr>
+          <tr>
+            <th>Price Calculation</th>
+            <td>Live HIVE/USD at purchase time</td>
+          </tr>
+          <tr>
+            <th>Expansion Price</th>
+            <td>Fixed $2 per pack</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
   </div>
+
+  <div class="shop-buy-dominant">
+    <div class="shop-buy-dominant-left">
+      <div class="shop-buy-label">BUY GENESIS PACKS</div>
+      <div class="shop-buy-title">Start Building Your Empire</div>
+      <div class="shop-buy-text">
+        Every pack is a gateway to land, blueprints, EMP, and strategic progression.
+        Buy early to enter lower pricing slabs and secure stronger Founder-era positioning.
+      </div>
+    </div>
+
+    <div class="shop-buy-dominant-right">
+      <label for="pack-qty" class="shop-buy-field-label">Pack Quantity</label>
+      <input id="pack-qty" type="number" min="1" max="50" placeholder="Enter pack quantity" />
+
+      <div class="shop-buy-helper">
+        Genesis limit: maximum 50 packs per wallet
+      </div>
+
+      <button class="shop-buy-main-btn">Buy Packs</button>
+    </div>
+  </div>
+</section>
+<section class="shop-section">
+  <h2>What’s Inside the Pack</h2>
+  <p class="shop-section-sub">
+    Genesis Packs unlock core industrial assets required to build your empire.
+    In the Genesis phase, five industries are available:
+    <strong>FOOD, TEXTILE, PHARMA, CHEMICAL, SUPERMARKET</strong>.
+    Each industry requires a Blueprint to construct a factory.
+    Blueprints exist in five levels (B1–B5), each with increasing power and rarity.
+  </p>
+
+  <!-- ===== BLUEPRINT SHOWCASE ===== -->
+  <div class="shop-sub-block">
+    <h3 class="shop-sub-title">Blueprint Industries</h3>
+
+    <div class="blueprint-grid">
+
+      <!-- FOOD B1 -->
+      <div class="bp-card b1">
+        <div class="bp-title">FOOD</div>
+        <div class="bp-art">
+          <img src="assets/food-building.png" />
+        </div>
+        <div class="bp-level">B1</div>
+      </div>
+
+      <!-- TEXTILE B2 -->
+      <div class="bp-card b2">
+        <div class="bp-title">TEXTILE</div>
+        <div class="bp-art">
+          <img src="assets/textile-building.png" />
+        </div>
+        <div class="bp-level">B2</div>
+      </div>
+
+      <!-- PHARMA B3 -->
+      <div class="bp-card b3">
+        <div class="bp-title">PHARMA</div>
+        <div class="bp-art">
+          <img src="assets/pharma-building.png" />
+        </div>
+        <div class="bp-level">B3</div>
+      </div>
+
+      <!-- CHEMICAL B4 -->
+      <div class="bp-card b4">
+        <div class="bp-title">CHEMICAL</div>
+        <div class="bp-art">
+          <img src="assets/chemical-building.png" />
+        </div>
+        <div class="bp-level">B4</div>
+      </div>
+
+      <!-- SUPERMARKET B5 -->
+      <div class="bp-card b5">
+        <div class="bp-title">SUPERMARKET</div>
+        <div class="bp-art">
+          <img src="assets/supermarket-building.png" />
+        </div>
+        <div class="bp-level">B5</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== LAND SHOWCASE ===== -->
+  <div class="shop-sub-block">
+    <h3 class="shop-sub-title">Land Cards</h3>
+
+    <div class="land-grid">
+
+      <!-- L1 -->
+      <div class="land-card l1">
+        <div class="land-title">L1 Frontier</div>
+        <div class="land-slots one"></div>
+        <div class="land-meta">1 Slot</div>
+      </div>
+
+      <!-- L2 -->
+      <div class="land-card l2">
+        <div class="land-title">L2 Estate</div>
+        <div class="land-slots two"></div>
+        <div class="land-meta">2 Slots</div>
+      </div>
+
+      <!-- L3 -->
+      <div class="land-card l3">
+        <div class="land-title">L3 Industrial Zone</div>
+        <div class="land-slots three"></div>
+        <div class="land-meta">3 Slots</div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+  
+    <div class="pack-card relic">
+      <div class="pack-card-title">GENESIS RELIC</div>
+      <div class="pack-card-art">
+        <img src="assets/relic.png" class="pack-card-image" alt="Relic">
+      </div>
+      <div class="pack-card-meta">+3% EP • Ultra Rare</div>
+    </div>
+
+    <div class="pack-card writ">
+      <div class="pack-card-title">FOUNDER WRIT</div>
+      <div class="pack-card-art">
+        <div class="pack-card-placeholder"></div>
+      </div>
+      <div class="pack-card-meta">1 per 10 packs</div>
+    </div>
+
+  </div>
+
+
+      
+
+  <!-- WRIT RULE -->
+  <section class="content-block">
+    <h2>🎟️ Writ — Founder Bonus</h2>
+    <p>
+      1 Writ is granted for every 10 Genesis Founder packs purchased.
+      Only complete bundles are counted.
+    </p>
+  </section>
+
+  <!-- EMP -->
+  <section class="content-block">
+    <h2>⚡ EMP Purchase</h2>
+    <p>Fixed Rate: <strong>100 EMP = 1 HIVE</strong></p>
+
+    <div class="shop-buy-box">
+      <input type="number" placeholder="Enter EMP amount" />
+      <button>Buy EMP</button>
+    </div>
+  </section>
+
 </main>
 
 </body>
