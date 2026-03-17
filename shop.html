@@ -408,7 +408,46 @@
       <button>Buy EMP</button>
     </div>
   </section>
+<script>
+  async function loadGenesisPackProgress() {
+    const soldEl = document.getElementById("packs-sold-count");
+    const remainingEl = document.getElementById("packs-remaining-count");
+    const percentEl = document.getElementById("pack-progress-percent");
+    const fillEl = document.getElementById("pack-progress-fill");
 
+    const TOTAL_CAP = 5000;
+
+    try {
+      const LOCAL_API = "http://localhost:10000";
+      const PROD_API = "https://mydempire-backend-1.onrender.com";
+      const host = window.location.hostname;
+      const isLocal = host === "localhost" || host === "127.0.0.1";
+      const API_BASE = isLocal ? LOCAL_API : PROD_API;
+
+      const res = await fetch(`${API_BASE}/genesis-sale-status`);
+      const data = await res.json();
+
+      if (!res.ok) throw new Error("Failed to load sale progress.");
+
+      const sold = Number(data.total_genesis_sold || 0);
+      const remaining = Math.max(TOTAL_CAP - sold, 0);
+      const percent = Math.min((sold / TOTAL_CAP) * 100, 100);
+
+      soldEl.textContent = sold.toLocaleString();
+      remainingEl.textContent = `${remaining.toLocaleString()} packs remaining`;
+      percentEl.textContent = `${percent.toFixed(1)}% sold`;
+      fillEl.style.width = `${percent}%`;
+    } catch (err) {
+      soldEl.textContent = "0";
+      remainingEl.textContent = "5000 packs remaining";
+      percentEl.textContent = "0% sold";
+      fillEl.style.width = "0%";
+      console.error("Pack progress error:", err);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", loadGenesisPackProgress);
+</script>
 </main>
 
 </body>
