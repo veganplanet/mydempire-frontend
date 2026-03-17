@@ -1357,3 +1357,9 @@
     font-size:20px;
   }
 }
+.pack-gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(5, minmax(0, 1fr));
+  gap:18px;
+  width:100%;
+}
