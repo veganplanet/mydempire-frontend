@@ -1485,3 +1485,13 @@
     radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85), transparent 45%),
     linear-gradient(180deg,#ff7c7c 0%, #df4a4a 100%);
 }
+.land-symbol{
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.04em;
+  background:rgba(255,255,255,0.75);
+  color:#5e6d82;
+  box-shadow:0 4px 10px rgba(0,0,0,0.06);
+}
