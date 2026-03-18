@@ -600,6 +600,35 @@ function initEmpBuyButtons() {
 window.addEventListener("DOMContentLoaded", () => {
   initEmpBuyButtons();
 });
+    async function loadShopEmpBalance() {
+  try {
+    const activeUser = getShopActiveUser();
+    const balanceEl = document.getElementById("shop-emp-balance");
+
+    if (!balanceEl) return;
+
+    if (!activeUser) {
+      balanceEl.textContent = "0";
+      return;
+    }
+
+    const res = await fetch(
+      shopApiUrl(`/player/${encodeURIComponent(activeUser)}/emp-balance`)
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to load EMP balance.");
+    }
+
+    balanceEl.textContent = Number(data.emp_balance || 0).toLocaleString();
+  } catch (err) {
+    console.error("loadShopEmpBalance error:", err);
+    const balanceEl = document.getElementById("shop-emp-balance");
+    if (balanceEl) balanceEl.textContent = "Error";
+  }
+}
 </script>
 </body>
 </html>
