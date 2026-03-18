@@ -430,49 +430,6 @@
     </footer>
   </div>
 <script>
-
-const params = new URLSearchParams(window.location.search);
-const fromUrl = (params.get("user") || "").replace("@", "").trim().toLowerCase();
-
-const activeUser = (
-  fromUrl ||
-  localStorage.getItem("mde_username") ||
-  localStorage.getItem("hiveUsername") ||
-  localStorage.getItem("username") ||
-  ""
-).replace("@", "").trim().toLowerCase();
-
-if (activeUser) {
-  localStorage.setItem("mde_username", activeUser);
-  localStorage.setItem("hiveUsername", activeUser);
-  localStorage.setItem("username", activeUser);
-}
-
-  const loginBtn = document.getElementById("appbarLoginBtn");
-  const accountWrap = document.getElementById("appbarAccountWrap");
-  const accountBtn = document.getElementById("appbarAccountBtn");
-  const dropdownHead = document.getElementById("appbarDropdownHead");
-  const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
-
-  console.log("activeUser =", activeUser);
-console.log("loginBtn =", loginBtn);
-console.log("accountWrap =", accountWrap);
-console.log("accountBtn =", accountBtn);
-
-  if (!activeUser) {
-    if (loginBtn) loginBtn.style.display = "inline-flex";
-    if (accountWrap) accountWrap.style.display = "none";
-    return;
-  }
-
-  if (loginBtn) loginBtn.style.display = "none";
-  if (accountWrap) accountWrap.style.display = "block";
-  if (accountBtn) accountBtn.textContent = "@" + activeUser + " ▼";
-  if (dropdownHead) dropdownHead.textContent = "@" + activeUser;
-  if (visitMyEmpireLink) {
-    visitMyEmpireLink.href = "player-dashboard.html?user=" + encodeURIComponent(activeUser);
-  }
-}
 function setupDashboardNavbar() {
   const activeUser = (
     new URLSearchParams(window.location.search).get("user") ||
