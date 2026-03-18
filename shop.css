@@ -1530,3 +1530,17 @@
 .nft-card-image.textile-card-fix {
   transform: scale(1.14);
 }
+/* ===================================== */
+/* GLOBAL UNIFORM CARD SYSTEM */
+/* ===================================== */
+
+.uniform-card {
+  width: 100%;
+  max-width: 200px;   /* you can tweak: 180–220 */
+  aspect-ratio: 3 / 4;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
