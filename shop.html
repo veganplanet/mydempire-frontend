@@ -257,15 +257,56 @@
   </section>
 
   <!-- EMP -->
-  <section class="content-block">
-    <h2>⚡ EMP Purchase</h2>
-    <p>Fixed Rate: <strong>100 EMP = 1 HIVE</strong></p>
+ <section class="shop-sub-block">
+  <h2 class="shop-sub-title">⚡ EMP Purchase</h2>
+  <p class="shop-section-sub">
+    Fixed rate: <strong>100 EMP = 1 HIVE</strong>
+  </p>
 
-    <div class="shop-buy-box">
-      <input type="number" placeholder="Enter EMP amount" />
-      <button>Buy EMP</button>
+  <div class="emp-purchase-card">
+    <div class="emp-purchase-left">
+      <div class="emp-purchase-label">Instant utility purchase</div>
+      <div class="emp-purchase-title">Power up your empire</div>
+      <div class="emp-purchase-text">
+        Buy EMP instantly for building, upgrading, maintenance, and extra blueprint minting.
+      </div>
+
+      <div class="emp-purchase-rate">
+        <span>Rate</span>
+        <strong>1 HIVE = 100 EMP</strong>
+      </div>
     </div>
-  </section>
+
+    <div class="emp-purchase-right">
+      <label for="emp-buy-select" class="emp-purchase-field-label">Choose amount</label>
+
+      <select id="emp-buy-select" class="emp-purchase-select">
+        <option value="1">1 HIVE → 100 EMP</option>
+        <option value="2">2 HIVE → 200 EMP</option>
+        <option value="3">3 HIVE → 300 EMP</option>
+        <option value="4">4 HIVE → 400 EMP</option>
+        <option value="5">5 HIVE → 500 EMP</option>
+        <option value="6">6 HIVE → 600 EMP</option>
+        <option value="7">7 HIVE → 700 EMP</option>
+        <option value="8">8 HIVE → 800 EMP</option>
+        <option value="9">9 HIVE → 900 EMP</option>
+        <option value="10">10 HIVE → 1000 EMP</option>
+      </select>
+
+      <div class="emp-purchase-helper">
+        Whole HIVE only. Minimum 1 HIVE, maximum 10 HIVE per transaction.
+      </div>
+
+      <button id="buy-emp-btn" class="emp-purchase-btn" type="button">
+        Buy EMP
+      </button>
+
+      <div id="emp-buy-status" class="emp-purchase-status">
+        No EMP purchase yet.
+      </div>
+    </div>
+  </div>
+</section>
 <script>
   async function loadGenesisPackProgress() {
     const soldEl = document.getElementById("packs-sold-count");
