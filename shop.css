@@ -1519,3 +1519,14 @@
   object-fit:contain;
   display:block;
 }
+/* Fix only the two smaller-looking display cards */
+.nft-card-image.food-card-fix,
+.nft-card-image.textile-card-fix {
+  transform: scale(1.12);
+  transform-origin: center center;
+}
+
+/* Optional fine tuning if one still looks slightly smaller */
+.nft-card-image.textile-card-fix {
+  transform: scale(1.14);
+}
