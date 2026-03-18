@@ -1558,4 +1558,6 @@
   object-fit: contain;
   display: block;
 }
-
+.pack-gallery-grid {
+  align-items: stretch;
+}
