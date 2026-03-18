@@ -416,7 +416,19 @@ function setupUniversalNavbar() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  // Navbar
   setupUniversalNavbar();
+
+  // EMP purchase
+  initEmpBuyButtons();
+
+  // EMP balance (IMPORTANT for your upgrade)
+  loadShopEmpBalance();
+
+  // Future-safe (blueprint mint)
+  if (typeof refreshBlueprintMintPanel === "function") {
+    refreshBlueprintMintPanel();
+  }
 });
 </script>
   <script>
@@ -653,7 +665,19 @@ function initEmpBuyButtons() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  // Navbar
+  setupUniversalNavbar();
+
+  // EMP purchase
   initEmpBuyButtons();
+
+  // EMP balance (IMPORTANT for your upgrade)
+  loadShopEmpBalance();
+
+  // Future-safe (blueprint mint)
+  if (typeof refreshBlueprintMintPanel === "function") {
+    refreshBlueprintMintPanel();
+  }
 });
     async function loadShopEmpBalance() {
   try {
