@@ -415,5 +415,187 @@ window.addEventListener("DOMContentLoaded", () => {
   setupUniversalNavbar();
 });
 </script>
+  <script>
+const LOCAL_API = "http://localhost:10000";
+const PROD_API = "https://mydempire-backend-1.onrender.com";
+
+const shopHost = window.location.hostname;
+const shopIsLocal = shopHost === "localhost" || shopHost === "127.0.0.1";
+const SHOP_API_BASE = shopIsLocal ? LOCAL_API : PROD_API;
+
+function shopApiUrl(path) {
+  return SHOP_API_BASE + path;
+}
+
+function getShopActiveUser() {
+  const params = new URLSearchParams(window.location.search);
+  const fromUrl = (params.get("user") || "").trim().replace("@", "").toLowerCase();
+
+  if (fromUrl) {
+    localStorage.setItem("mde_username", fromUrl);
+    localStorage.setItem("hiveUsername", fromUrl);
+    localStorage.setItem("username", fromUrl);
+    return fromUrl;
+  }
+
+  return (
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("username") ||
+    ""
+  ).trim().replace("@", "").toLowerCase();
+}
+
+function setEmpBuyStatus(message, isError = false) {
+  const el = document.getElementById("emp-buy-status");
+  if (!el) return;
+  el.textContent = message;
+  el.style.color = isError ? "#b91c1c" : "#64748b";
+}
+
+function setEmpBuyButtonDisabled(disabled) {
+  const btn = document.getElementById("buy-emp-btn");
+  if (btn) btn.disabled = disabled;
+}
+
+async function createEmpOrder(username, hiveAmount) {
+  const res = await fetch(shopApiUrl("/create-emp-order"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username,
+      hive_amount: hiveAmount
+    })
+  });
+
+  const data = await res.json();
+
+  if (!res.ok || !data.success) {
+    throw new Error(data.error || "Failed to create EMP order.");
+  }
+
+  return data;
+}
+
+async function confirmEmpPayment(orderId, txid) {
+  const res = await fetch(shopApiUrl("/confirm-emp-payment"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      orderId,
+      txid
+    })
+  });
+
+  const data = await res.json();
+
+  if (!res.ok || !data.success) {
+    throw new Error(data.error || "Failed to confirm EMP payment.");
+  }
+
+  return data;
+}
+
+function requestHiveKeychainTransfer({ from, to, amount, memo }) {
+  return new Promise((resolve, reject) => {
+    if (!window.hive_keychain) {
+      reject(new Error("Hive Keychain not found."));
+      return;
+    }
+
+    window.hive_keychain.requestTransfer(
+      from,
+      to,
+      amount,
+      memo,
+      "HIVE",
+      function (response) {
+        if (!response || response.success !== true) {
+          reject(new Error("Hive transfer was cancelled or failed."));
+          return;
+        }
+
+        const txid =
+          response.result?.id ||
+          response.result?.tx_id ||
+          response.result?.trx_id ||
+          response.id ||
+          null;
+
+        if (!txid) {
+          reject(new Error("Transaction ID not returned by Keychain."));
+          return;
+        }
+
+        resolve(txid);
+      }
+    );
+  });
+}
+
+async function buyEmp(hiveAmount) {
+  try {
+    const activeUser = getShopActiveUser();
+
+    if (!activeUser) {
+      setEmpBuyStatus("Please connect wallet first.", true);
+      return;
+    }
+
+    setEmpBuyButtonDisabled(true);
+    setEmpBuyStatus(`Creating EMP order for ${hiveAmount} HIVE...`);
+
+    const orderData = await createEmpOrder(activeUser, hiveAmount);
+    const order = orderData.order;
+    const payment = orderData.payment;
+
+    setEmpBuyStatus("Waiting for Hive Keychain confirmation...");
+
+    const txid = await requestHiveKeychainTransfer({
+      from: activeUser,
+      to: payment.to,
+      amount: Number(order.hive_amount).toFixed(3),
+      memo: payment.memo
+    });
+
+    setEmpBuyStatus("Payment sent. Confirming EMP credit...");
+
+    const confirmData = await confirmEmpPayment(order.id, txid);
+
+    setEmpBuyStatus(`✅ ${confirmData.emp_credited} EMP credited successfully.`);
+  } catch (err) {
+    console.error("EMP buy error:", err);
+    setEmpBuyStatus(err.message || "EMP purchase failed.", true);
+  } finally {
+    setEmpBuyButtonDisabled(false);
+  }
+}
+
+function initEmpBuyButtons() {
+  const select = document.getElementById("emp-buy-select");
+  const btn = document.getElementById("buy-emp-btn");
+
+  if (!select || !btn) return;
+
+  btn.addEventListener("click", async () => {
+    const hiveAmount = parseInt(select.value, 10);
+
+    if (!Number.isInteger(hiveAmount) || hiveAmount < 1 || hiveAmount > 10) {
+      alert("Please select a valid HIVE amount.");
+      return;
+    }
+
+    const empAmount = hiveAmount * 100;
+    const ok = confirm(`Buy ${empAmount} EMP for ${hiveAmount} HIVE?`);
+    if (!ok) return;
+
+    await buyEmp(hiveAmount);
+  });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  initEmpBuyButtons();
+});
+</script>
 </body>
 </html>
