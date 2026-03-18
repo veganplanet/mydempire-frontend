@@ -5177,3 +5177,7 @@ body{
 .hidden-auth-link.show-auth-link {
   display: inline-flex !important;
 }
+.uniform-card.nft-image-card .textile-card-fix {
+  transform: scale(1.14);
+  transform-origin: center center;
+}
