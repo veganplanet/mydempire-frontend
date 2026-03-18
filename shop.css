@@ -1561,3 +1561,52 @@
 .pack-gallery-grid {
   align-items: stretch;
 }
+/* ============================= */
+/* SHOP DISPLAY NFT IMAGE FIXES */
+/* ============================= */
+
+.pack-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 20px;
+  justify-items: center;
+  align-items: start;
+}
+
+.uniform-card.nft-image-card {
+  width: 190px !important;
+  height: 253px !important;   /* 3:4 ratio */
+  max-width: 190px !important;
+  aspect-ratio: 3 / 4 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.uniform-card.nft-image-card .nft-card-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  background: transparent !important;
+}
+
+/* food/textile visual size correction only */
+.uniform-card.nft-image-card .food-card-fix {
+  transform: scale(1.12);
+  transform-origin: center center;
+}
+
+.uniform-card.nft-image-card .textile-card-fix {
+  transform: scale(1.14);
+  transform-origin: center center;
+}
