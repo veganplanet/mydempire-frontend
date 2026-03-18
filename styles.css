@@ -5181,3 +5181,8 @@ body{
   transform: scale(1.14);
   transform-origin: center center;
 }
+.uniform-card.nft-image-card .food-card-fix {
+  transform: scale(1.22);
+  transform-origin: center center;
+  background: transparent !important;
+}
