@@ -450,11 +450,54 @@ function getShopActiveUser() {
   ).trim().replace("@", "").toLowerCase();
 }
 
-function setEmpBuyStatus(message, isError = false) {
-  const el = document.getElementById("emp-buy-status");
-  if (!el) return;
-  el.textContent = message;
-  el.style.color = isError ? "#b91c1c" : "#64748b";
+async function buyEmp(hiveAmount) {
+  try {
+    const activeUser = getShopActiveUser();
+
+    if (!activeUser) {
+      setEmpBuyStatus("Please connect wallet first.", "error");
+      return;
+    }
+
+    setEmpBuyButtonDisabled(true);
+    setEmpBuyStatus(`Creating EMP order for ${hiveAmount} HIVE...`, "progress");
+
+    const orderData = await createEmpOrder(activeUser, hiveAmount);
+    const order = orderData.order;
+    const payment = orderData.payment;
+
+    setEmpBuyStatus("Waiting for Hive Keychain confirmation...", "progress");
+
+    const txid = await requestHiveKeychainTransfer({
+      from: activeUser,
+      to: payment.to,
+      amount: Number(order.hive_amount).toFixed(3),
+      memo: payment.memo
+    });
+
+    setEmpBuyStatus("Payment sent. Confirming EMP credit...", "progress");
+
+    const confirmData = await confirmEmpPayment(order.id, txid);
+
+    setEmpBuyStatus(
+      `✅ ${confirmData.emp_credited} EMP credited successfully.`,
+      "success"
+    );
+
+    // refresh EMP balance instantly
+    await loadShopEmpBalance();
+
+    // if blueprint mint UI exists on same page, refresh it too
+    if (typeof refreshBlueprintMintPanel === "function") {
+      await refreshBlueprintMintPanel();
+    }
+
+  } catch (err) {
+    console.error("EMP buy error:", err);
+    setEmpBuyStatus(err.message || "EMP purchase failed.", "error");
+  } finally {
+    setEmpBuyButtonDisabled(false);
+  }
 }
 
 function setEmpBuyButtonDisabled(disabled) {
@@ -542,18 +585,18 @@ async function buyEmp(hiveAmount) {
     const activeUser = getShopActiveUser();
 
     if (!activeUser) {
-      setEmpBuyStatus("Please connect wallet first.", true);
+      setEmpBuyStatus("Please connect wallet first.", "error");
       return;
     }
 
     setEmpBuyButtonDisabled(true);
-    setEmpBuyStatus(`Creating EMP order for ${hiveAmount} HIVE...`);
+    setEmpBuyStatus(`Creating EMP order for ${hiveAmount} HIVE...`, "progress");
 
     const orderData = await createEmpOrder(activeUser, hiveAmount);
     const order = orderData.order;
     const payment = orderData.payment;
 
-    setEmpBuyStatus("Waiting for Hive Keychain confirmation...");
+    setEmpBuyStatus("Waiting for Hive Keychain confirmation...", "progress");
 
     const txid = await requestHiveKeychainTransfer({
       from: activeUser,
@@ -562,14 +605,26 @@ async function buyEmp(hiveAmount) {
       memo: payment.memo
     });
 
-    setEmpBuyStatus("Payment sent. Confirming EMP credit...");
+    setEmpBuyStatus("Payment sent. Confirming EMP credit...", "progress");
 
     const confirmData = await confirmEmpPayment(order.id, txid);
 
-    setEmpBuyStatus(`✅ ${confirmData.emp_credited} EMP credited successfully.`);
+    setEmpBuyStatus(
+      `✅ ${confirmData.emp_credited} EMP credited successfully.`,
+      "success"
+    );
+
+    // refresh EMP balance instantly
+    await loadShopEmpBalance();
+
+    // if blueprint mint UI exists on same page, refresh it too
+    if (typeof refreshBlueprintMintPanel === "function") {
+      await refreshBlueprintMintPanel();
+    }
+
   } catch (err) {
     console.error("EMP buy error:", err);
-    setEmpBuyStatus(err.message || "EMP purchase failed.", true);
+    setEmpBuyStatus(err.message || "EMP purchase failed.", "error");
   } finally {
     setEmpBuyButtonDisabled(false);
   }
