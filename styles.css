@@ -5170,3 +5170,10 @@ body{
   background:#f1c40f;
   color:#000;
 }
+.hidden-auth-link {
+  display: none !important;
+}
+
+.hidden-auth-link.show-auth-link {
+  display: inline-flex !important;
+}

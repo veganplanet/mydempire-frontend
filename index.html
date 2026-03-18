@@ -16,14 +16,15 @@
         <img src="assets/logo.png" alt="MydEmpire">
       </a>
 
-     <nav class="appbar-nav">
+      <nav class="appbar-nav">
   <a href="index.html" class="appbar-link">Home</a>
   <a href="economy.html" class="appbar-link">Economy</a>
   <a href="transparency.html" class="appbar-link">Transparency</a>
   <a href="codex.html" class="appbar-link">Codex</a>
-  <a href="player-dashboard.html" class="appbar-link">Dashboard</a>
-  <a href="shop.html" class="appbar-link">Shop</a>
-  <a href="marketplace.html" class="appbar-link">Marketplace</a>
+
+  <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only hidden-auth-link">Dashboard</a>
+  <a href="shop.html" id="shopLink" class="appbar-link auth-only hidden-auth-link">Shop</a>
+  <a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only hidden-auth-link">Marketplace</a>
 </nav>
     </div>
 
@@ -43,6 +44,7 @@
     </div>
   </div>
 </header>
+
 <div class="hero">
   <img class="heroImg" src="assets/mydempire-hero.png" alt="MydEmpire hero">
   <div class="heroBelow">
@@ -122,29 +124,16 @@
   </div>
 
   <div class="card">
-    <h2 class="hTitle">Buy Pre-Genesis Packs</h2>
-    <p class="hText">Connect wallet → choose quantity → approve Keychain transfer.</p>
+    <h2 class="hTitle">Enter the World of MydEmpire</h2>
+    <p class="hText">
+      MydEmpire is a strategy-driven blockchain game where players develop land, deploy blueprints,
+      and build industrial strength step by step.
+    </p>
+    <p class="hText">
+      Instead of focusing only on buying, the game is built around progression, planning, and
+      long-term empire growth inside a limited early world.
+    </p>
 
-    <label class="label" for="hiveUsernameInput">Hive Username</label>
-    <input id="hiveUsernameInput" class="input" type="text" placeholder="Enter your Hive username" />
-
-    <button id="connectBtn" class="btn btnPrimary" type="button" onclick="connectWallet()">Connect Wallet</button>
-    <button id="disconnectBtn" class="btn" type="button" onclick="disconnectWallet()" style="display:none; margin-top:10px;">Disconnect</button>
-
-    <p id="walletDisplay" style="margin-top:10px;color:#6b7280;font-size:13px;font-weight:700;"></p>
-
-    <div class="buyGrid">
-      <div>
-        <div class="label">Pack quantity</div>
-        <input class="input" type="number" id="packCount" value="1" min="1" max="10">
-      </div>
-      <div>
-        <div class="label">Action</div>
-        <button class="btn btnPrimary" type="button" onclick="buyPack(document.getElementById('packCount').value)">Buy Packs</button>
-      </div>
-    </div>
-
-    <div id="status" class="status">Ready ✅</div>
     <div class="inside-pack-mini">
       <div class="inside-pack-mini-title">Inside a Genesis Pack</div>
       <div class="inside-pack-mini-grid">
@@ -167,28 +156,17 @@
       </div>
       <div class="inside-pack-mini-note">Land, blueprints, EMP, and a tiny chance of an ultra-rare relic.</div>
     </div>
-      <div class="founder-box">
-  <h4>Genesis Founder Benefits</h4>
 
-  <div class="founder-item">
-    🌱 Early empire development advantage
-  </div>
+    <div class="founder-box">
+      <h4>Why Early Players Matter</h4>
 
-  <div class="founder-item">
-    ⚙️ Build and name your own factories
-  </div>
-
-  <div class="founder-item">
-    💎 Ultra-rare relic drop chance
-  </div>
-
-  <div class="founder-item">
-    🏛 Genesis assets remain historically valuable
+      <div class="founder-item">🌱 Establish the first generation of industrial empires</div>
+      <div class="founder-item">⚙️ Build factories and shape your long-term strategy</div>
+      <div class="founder-item">💎 Discover ultra-rare relic opportunities</div>
+      <div class="founder-item">🏛 Become part of the earliest MydEmpire world</div>
+    </div>
   </div>
 </div>
-  </div>
-</div>
-
 
 <div class="factorySection">
   <section class="industry-showcase">
@@ -238,177 +216,9 @@
 <script src="js/hive.js"></script>
 <script src="js/nav-auth.js"></script>
 <script src="js/home.js?v=6"></script>
+
 <script>
-function connectWallet(){
-  if(!window.hive_keychain){
-    alert("Hive Keychain not installed");
-    return;
-  }
-  const input=document.getElementById("hiveUsernameInput");
-  const username=input.value.trim().replace("@","").toLowerCase();
-  if(!username){
-    alert("Please enter your Hive username first.");
-    return;
-  }
-  window.hive_keychain.requestSignBuffer(
-    username,
-    "MydEmpire Login "+Date.now(),
-    "Posting",
-    function(res){
-      if(!res.success){
-        alert("Login cancelled");
-        return;
-      }
-      localStorage.setItem("mde_username",username);
-      document.getElementById("walletDisplay").textContent="Connected: @"+username;
-      document.getElementById("connectBtn").style.display="none";
-      document.getElementById("disconnectBtn").style.display="inline-flex";
-      const market=document.getElementById("marketplaceLink");
-      if(market){
-        market.style.display="inline-flex";
-        market.href="marketplace.html?user="+username;
-      }
-     
-const dash=document.getElementById("dashboardLink");
-dash.style.display="inline-flex";
-dash.href="player-dashboard.html?user="+username;
-    }
-  );
-}
-
-function disconnectWallet(){
-  localStorage.removeItem("mde_username");
-  const walletDisplay=document.getElementById("walletDisplay");
-const market=document.getElementById("marketplaceLink");
-const dash=document.getElementById("dashboardLink");
-const disconnectBtn=document.getElementById("disconnectBtn");
-const connectBtn=document.getElementById("connectBtn");
-const input=document.getElementById("hiveUsernameInput");
-if(walletDisplay) walletDisplay.textContent="";
-if(market) market.style.display="none";
-if(dash) dash.style.display="none";
-if(disconnectBtn) disconnectBtn.style.display="none";
-if(connectBtn) connectBtn.style.display="inline-flex";
-if(input) input.value="";
-}
-
-window.addEventListener("DOMContentLoaded",()=>{
-  const user=localStorage.getItem("mde_username");
-  if(user){
-    document.getElementById("hiveUsernameInput").value=user;
-    document.getElementById("walletDisplay").textContent="Connected: @"+user;
-    document.getElementById("connectBtn").style.display="none";
-    document.getElementById("disconnectBtn").style.display="inline-flex";
-    const market=document.getElementById("marketplaceLink");
-    if(market){
-      market.style.display="inline-flex";
-      market.href="marketplace.html?user="+user;
-    }
-
-const dash=document.getElementById("dashboardLink");
-dash.style.display="inline-flex";
-dash.href="player-dashboard.html?user="+user;
-  }
-
-  const slides = Array.from(document.querySelectorAll(".industry-slide"));
-  const prevBtn = document.getElementById("industry-prev-btn");
-  const nextBtn = document.getElementById("industry-next-btn");
-  let startIndex = 0;
-
-  function showSlides(index){
-    slides.forEach(slide => slide.classList.remove("active"));
-    if (!slides.length) return;
-    slides[index % slides.length].classList.add("active");
-    if (window.innerWidth > 640 && slides.length > 1) {
-      slides[(index + 1) % slides.length].classList.add("active");
-    }
-  }
-
-  if(prevBtn && nextBtn && slides.length){
-    prevBtn.addEventListener("click",()=>{
-      startIndex = (startIndex - 1 + slides.length) % slides.length;
-      showSlides(startIndex);
-    });
-    nextBtn.addEventListener("click",()=>{
-      startIndex = (startIndex + 1) % slides.length;
-      showSlides(startIndex);
-    });
-    showSlides(startIndex);
-    window.addEventListener("resize", ()=> showSlides(startIndex));
-  }
-});
-
-async function buyPack(qty) {
-  const username = localStorage.getItem("mde_username");
-  if (!username) {
-    alert("Please connect wallet first.");
-    return;
-  }
-  if (!window.hive_keychain) {
-    alert("Hive Keychain not found.");
-    return;
-  }
-  const packs = parseInt(qty || "1", 10);
-  if (!packs || packs < 1) {
-    alert("Invalid pack quantity.");
-    return;
-  }
-
-  try {
-    const orderRes = await fetch("https://mydempire-backend-1.onrender.com/create-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, packs })
-    });
-    const orderData = await orderRes.json();
-    if (!orderRes.ok || !orderData.success) {
-      alert(orderData.error || "Create order failed.");
-      return;
-    }
-
-    const order = orderData.order;
-    const orderId = order.id;
-    const amount = Number(order.hive_amount).toFixed(3);
-    const memo = `MYDEMPIRE_ORDER_${orderId}`;
-
-    window.hive_keychain.requestTransfer(
-      username,
-      "mydempiregain",
-      amount,
-      memo,
-      "HIVE",
-      async function (response) {
-        if (!response || !response.success) {
-          alert("Transaction cancelled.");
-          return;
-        }
-
-        const txid = response?.result?.id || response?.result?.trx_id || response?.id;
-        if (!txid) {
-          alert("Transaction completed but txid missing.");
-          return;
-        }
-
-        const confirmRes = await fetch("https://mydempire-backend-1.onrender.com/confirm-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ orderId, txid })
-        });
-        const confirmed = await confirmRes.json();
-        if (!confirmed.success) {
-          alert("Payment confirmation failed.");
-          return;
-        }
-        alert("✅ Packs minted successfully!");
-      }
-    );
-  } catch (err) {
-    console.error(err);
-    alert("Unexpected error.");
-  }
-}
-
-function getStoredNavUser() {
+function getStoredUser() {
   return (
     localStorage.getItem("mde_username") ||
     localStorage.getItem("hiveUsername") ||
@@ -417,41 +227,117 @@ function getStoredNavUser() {
   ).replace("@", "").trim().toLowerCase();
 }
 
-function setupUniversalAppbar() {
+function showLoggedOutNav() {
+  document.querySelectorAll(".auth-only").forEach(link => {
+    link.classList.remove("show-auth-link");
+  });
+
+  const loginBtn = document.getElementById("appbarLoginBtn");
+  const accountWrap = document.getElementById("appbarAccountWrap");
+  const dropdown = document.getElementById("appbarDropdown");
+
+  if (loginBtn) loginBtn.style.display = "inline-flex";
+  if (accountWrap) accountWrap.style.display = "none";
+  if (dropdown) dropdown.classList.remove("open");
+}
+
+function showLoggedInNav(username) {
+  const dashboard = document.getElementById("dashboardLink");
+  const shop = document.getElementById("shopLink");
+  const marketplace = document.getElementById("marketplaceLink");
+
+  document.querySelectorAll(".auth-only").forEach(link => {
+    link.classList.add("show-auth-link");
+  });
+
+  if (dashboard) {
+    dashboard.href = "player-dashboard.html?user=" + encodeURIComponent(username);
+  }
+
+  if (shop) {
+    shop.href = "shop.html?user=" + encodeURIComponent(username);
+  }
+
+  if (marketplace) {
+    marketplace.href = "marketplace.html?user=" + encodeURIComponent(username);
+  }
+
   const loginBtn = document.getElementById("appbarLoginBtn");
   const accountWrap = document.getElementById("appbarAccountWrap");
   const accountBtn = document.getElementById("appbarAccountBtn");
-  const dropdown = document.getElementById("appbarDropdown");
   const dropdownHead = document.getElementById("appbarDropdownHead");
   const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
-  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
-  const logoutBtn = document.getElementById("appbarLogoutBtn");
 
-  const currentUser = getStoredNavUser();
+  if (loginBtn) loginBtn.style.display = "none";
+  if (accountWrap) accountWrap.style.display = "block";
+  if (accountBtn) accountBtn.textContent = "@" + username + " ▼";
+  if (dropdownHead) dropdownHead.textContent = "@" + username;
 
-  if (currentUser) {
-    if (loginBtn) loginBtn.style.display = "none";
-    if (accountWrap) accountWrap.style.display = "block";
-    if (accountBtn) accountBtn.textContent = `@${currentUser} ▼`;
-    if (dropdownHead) dropdownHead.textContent = `@${currentUser}`;
-    if (visitMyEmpireLink) {
-      visitMyEmpireLink.href = `player-dashboard.html?user=${encodeURIComponent(currentUser)}`;
-    }
-  } else {
-    if (loginBtn) loginBtn.style.display = "inline-flex";
-    if (accountWrap) accountWrap.style.display = "none";
+  if (visitMyEmpireLink) {
+    visitMyEmpireLink.href = "player-dashboard.html?user=" + encodeURIComponent(username);
+  }
+}
+
+function redirectToDashboard(username) {
+  window.location.href = "player-dashboard.html?user=" + encodeURIComponent(username);
+}
+
+function connectWallet() {
+  if (!window.hive_keychain) {
+    alert("Hive Keychain not installed");
+    return;
   }
 
-  if (loginBtn) {
-    loginBtn.addEventListener("click", () => {
-      const existingInput = document.getElementById("hiveUsernameInput");
-      if (existingInput) {
-        existingInput.scrollIntoView({ behavior: "smooth", block: "center" });
-        existingInput.focus();
-      } else if (typeof connectWallet === "function") {
-        connectWallet();
+  const entered = prompt("Enter your Hive username:");
+  const username = String(entered || "").replace("@", "").trim().toLowerCase();
+
+  if (!username) {
+    alert("Please enter your Hive username first.");
+    return;
+  }
+
+  window.hive_keychain.requestSignBuffer(
+    username,
+    "MydEmpire Login " + Date.now(),
+    "Posting",
+    function(res) {
+      if (!res || !res.success) {
+        alert("Login cancelled");
+        return;
       }
-    });
+
+      localStorage.setItem("mde_username", username);
+      showLoggedInNav(username);
+      redirectToDashboard(username);
+    }
+  );
+}
+
+function disconnectWallet() {
+  localStorage.removeItem("mde_username");
+  localStorage.removeItem("hiveUsername");
+  localStorage.removeItem("username");
+  showLoggedOutNav();
+  window.location.href = "index.html";
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const storedUser = getStoredUser();
+
+  if (storedUser) {
+    showLoggedInNav(storedUser);
+  } else {
+    showLoggedOutNav();
+  }
+
+  const loginBtn = document.getElementById("appbarLoginBtn");
+  const accountBtn = document.getElementById("appbarAccountBtn");
+  const dropdown = document.getElementById("appbarDropdown");
+  const logoutBtn = document.getElementById("appbarLogoutBtn");
+  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
+
+  if (loginBtn) {
+    loginBtn.addEventListener("click", connectWallet);
   }
 
   if (accountBtn && dropdown) {
@@ -465,13 +351,48 @@ function setupUniversalAppbar() {
     });
   }
 
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", disconnectWallet);
+  }
+
   if (visitOtherEmpireBtn) {
     visitOtherEmpireBtn.addEventListener("click", () => {
       const target = prompt("Enter Hive username to visit empire:");
-      const clean = String(target || "").replace("@", "").
+      const clean = String(target || "").replace("@", "").trim().toLowerCase();
+      if (!clean) return;
+      window.location.href = "player-dashboard.html?user=" + encodeURIComponent(clean);
+    });
+  }
+
+  const slides = Array.from(document.querySelectorAll(".industry-slide"));
+  const prevBtn = document.getElementById("industry-prev-btn");
+  const nextBtn = document.getElementById("industry-next-btn");
+  let startIndex = 0;
+
+  function showSlides(index) {
+    slides.forEach(slide => slide.classList.remove("active"));
+    if (!slides.length) return;
+    slides[index % slides.length].classList.add("active");
+    if (window.innerWidth > 640 && slides.length > 1) {
+      slides[(index + 1) % slides.length].classList.add("active");
+    }
+  }
+
+  if (prevBtn && nextBtn && slides.length) {
+    prevBtn.addEventListener("click", () => {
+      startIndex = (startIndex - 1 + slides.length) % slides.length;
+      showSlides(startIndex);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      startIndex = (startIndex + 1) % slides.length;
+      showSlides(startIndex);
+    });
+
+    showSlides(startIndex);
+    window.addEventListener("resize", () => showSlides(startIndex));
+  }
+});
 </script>
 </body>
 </html>
-
-
-
