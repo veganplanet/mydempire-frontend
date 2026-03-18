@@ -5185,3 +5185,28 @@ body{
   transform: scale(1.28);
   transform-origin: center center;
 }
+.shop-emp-balance-box{
+  margin: 14px 0 18px;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(148,163,184,0.18);
+  box-shadow: 0 8px 18px rgba(15,23,42,0.05);
+}
+
+.shop-emp-balance-label{
+  font-size: 12px;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.shop-emp-balance-value{
+  font-size: 28px;
+  font-weight: 900;
+  color: #111827;
+}
