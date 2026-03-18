@@ -1643,12 +1643,13 @@
   border-radius: 12px !important;
   padding: 6px !important;
 }
+/* Final visual correction for Food / Textile shop display */
 .uniform-card.nft-image-card .food-card-fix {
-  transform: scale(1.10);
+  transform: scale(1.34);
   transform-origin: center center;
 }
 
 .uniform-card.nft-image-card .textile-card-fix {
-  transform: scale(1.14);
+  transform: scale(1.26);
   transform-origin: center center;
 }
