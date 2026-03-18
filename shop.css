@@ -1610,3 +1610,45 @@
   transform: scale(1.14);
   transform-origin: center center;
 }
+/* ===================================== */
+/* NFT DISPLAY SHOWCASE WRAP */
+/* ===================================== */
+
+.uniform-card.nft-image-card {
+  width: 190px !important;
+  height: 253px !important;
+  max-width: 190px !important;
+  aspect-ratio: 3 / 4 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 12px !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+
+  background: linear-gradient(180deg, #0f172a 0%, #111827 100%) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.28) !important;
+}
+.uniform-card.nft-image-card .nft-card-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  padding: 6px !important;
+}
+.uniform-card.nft-image-card .food-card-fix {
+  transform: scale(1.10);
+  transform-origin: center center;
+}
+
+.uniform-card.nft-image-card .textile-card-fix {
+  transform: scale(1.14);
+  transform-origin: center center;
+}
