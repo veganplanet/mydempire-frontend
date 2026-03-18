@@ -1653,3 +1653,12 @@
   transform: scale(1.26);
   transform-origin: center center;
 }
+.uniform-card.nft-image-card .food-card-fix {
+  transform: scale(1.40);
+  transform-origin: center center;
+}
+.uniform-card.nft-image-card .nft-card-image {
+  background: #f8fafc !important;
+  border-radius: 12px !important;
+  padding: 4px !important;
+}
