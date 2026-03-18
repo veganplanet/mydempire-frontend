@@ -1610,3 +1610,149 @@
   transform: scale(1.14);
   transform-origin: center center;
 }
+/* ============================= */
+/* EMP PURCHASE CARD */
+/* ============================= */
+
+.emp-purchase-card{
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 22px;
+  border-radius: 22px;
+  padding: 24px;
+  background: linear-gradient(135deg, #111827 0%, #0f172a 100%);
+  box-shadow: 0 18px 36px rgba(15,23,42,0.18);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.emp-purchase-left{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.emp-purchase-label{
+  display: inline-block;
+  width: fit-content;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(250,204,21,0.14);
+  color: #facc15;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.emp-purchase-title{
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1.08;
+  margin-bottom: 10px;
+}
+
+.emp-purchase-text{
+  font-size: 15px;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.86);
+  max-width: 620px;
+}
+
+.emp-purchase-rate{
+  margin-top: 16px;
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.10);
+  width: fit-content;
+}
+
+.emp-purchase-rate span{
+  font-size: 13px;
+  color: rgba(255,255,255,0.72);
+  font-weight: 700;
+}
+
+.emp-purchase-rate strong{
+  font-size: 15px;
+  color: #ffffff;
+}
+
+.emp-purchase-right{
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.emp-purchase-field-label{
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: #f8fafc;
+}
+
+.emp-purchase-select{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 14px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  margin-bottom: 10px;
+  background: #ffffff;
+  color: #111827;
+}
+
+.emp-purchase-helper{
+  font-size: 13px;
+  color: rgba(255,255,255,0.78);
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+
+.emp-purchase-btn{
+  width: 100%;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #facc15 0%, #f59e0b 100%);
+  color: #111827;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.16);
+}
+
+.emp-purchase-btn:hover{
+  filter: brightness(0.98);
+}
+
+.emp-purchase-status{
+  margin-top: 12px;
+  min-height: 20px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.78);
+  white-space: pre-wrap;
+}
+
+@media (max-width: 980px){
+  .emp-purchase-card{
+    grid-template-columns: 1fr;
+  }
+
+  .emp-purchase-title{
+    font-size: 26px;
+  }
+}
