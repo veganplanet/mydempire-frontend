@@ -1907,6 +1907,7 @@ renderBuildFactorySection();
         const levelLabel = "B" + levelNumber; // "B4"
 
         const borderColor = BP_LEVEL_COLORS[levelNumber] || "#d1d5db";
+        const bgColor = borderColor + "15";
    
 
         // Level multiplier: 1 + 0.25*(level-1)
@@ -1923,7 +1924,7 @@ renderBuildFactorySection();
 
         // ----- Render (adjust innerHTML to your final bp-mini design if needed) -----
         card.innerHTML = `
-          <div class="bp-mini-card" style="border-color:${borderColor};">
+          <div class="bp-mini-card" style="--bp-border:${borderColor}; --bp-bg:${bgColor};">
             <div class="bp-mini-badge" style="background:${borderColor};">${levelLabel}</div>
 
             <div class="bp-mini-building">

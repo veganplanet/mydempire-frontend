@@ -1919,16 +1919,22 @@ button {
   position:relative;
   width:100%;
   min-height:310px;
-  border-radius:20px;
-  border:2px solid var(--bp-border, #22c55e);
-  background:#f3f4f6;
+  border-radius:18px;
+
+  border:4px solid var(--bp-border, #d1d5db);
+
+  background:var(--bp-bg, #f8fafc);
+
+  padding:0;              /* 👈 ADD THIS (important) */
+
   overflow:hidden;
-  box-shadow:0 6px 16px rgba(15,23,42,0.10);
+
+  box-shadow:none;        /* 👈 REMOVE shadow (causes extra edge) */
 }
 
 .bp-mini-badge{
   position:absolute;
-  top:14px;
+  top:10px;
   left:50%;
   transform:translateX(-50%);
   width:46px;
@@ -2001,6 +2007,7 @@ button {
 @media (max-width: 768px){
   .bp-mini-card{
     min-height:360px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
   }
 
   .bp-mini-building{
@@ -3031,15 +3038,15 @@ button {
       margin-top: 6px;
     }
 
-    .factory-card {
-      border-radius: 12px;
-      padding: 10px 12px;
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+    .factory-card{
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
 
     .factory-card-header {
       display: flex;
