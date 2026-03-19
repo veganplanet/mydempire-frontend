@@ -1969,7 +1969,7 @@ button {
   bottom:8px;
   min-height:54px;
   padding:8px 10px;
-  background:var(--bp-border, #22c55e);
+  background: hotpink !important;
   border-radius:12px;
   color:#ffffff;
   display:flex;
