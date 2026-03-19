@@ -2162,14 +2162,7 @@ button {
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
 }
 
-/* Blueprint level colors */
---b1-color: #b0bec5; /* Steel Grey */
---b2-color: #1565c0; /* Deep Blue */
---b3-color: #7e57c2; /* Purple */
---b4-color: #ff8f00; /* Orange */
---b5-color: #ffca28; /* Gold */
 
---bp-accent: var(--b1-color);
 
     :root {
   --bg-page: #f4f6fb;
