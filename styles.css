@@ -5231,9 +5231,7 @@ box-shadow:
   0 0 0 2px rgba(255,255,255,0.4);
 /* ===== FORCE BLUEPRINT COLORS (FINAL FIX) ===== */
 
-.bp-mini-card{
-  --bp-border: #22c55e !important; /* default B1 = green */
-}
+
 
 .bp-mini-card[data-level="2"]{
   --bp-border: #2563eb !important;
@@ -5264,10 +5262,6 @@ box-shadow:
   background: var(--bp-border, #22c55e) !important;
 }
 /* ===== FORCE B1 GREEN ===== */
-.bp-mini-card[data-level="1"]{
-  --bp-border: #22c55e !important;
-}
+
 /* ===== TEMP FORCE ALL B1-LOOK CARDS GREEN ===== */
 .bp-mini-card{
-  --bp-border: #22c55e !important;
-}
