@@ -2012,17 +2012,24 @@ button {
     /* ===== BLUEPRINT NFT PREVIEW (LOCKED DESIGN) ===== */
 
 :root {
-  /* Level colours (locked) */
+  --bg-page: #f4f6fb;
+  --bg-card: #ffffff;
+  --bg-section: #ffffff;
+  --border-soft: #e4e7ec;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --accent-blue: #4f7cff;
+  --accent-gold: #fbbf24;
+  --accent-green: #16a34a;
+  --accent-red: #ef4444;
+
   --b1-color: #b0bec5; /* Steel Grey */
   --b2-color: #1565c0; /* Deep Blue */
   --b3-color: #7e57c2; /* Purple */
   --b4-color: #ff8f00; /* Orange */
   --b5-color: #ffca28; /* Gold */
-
-  /* Current accent, controlled by JS */
   --bp-accent: var(--b1-color);
 }
-
 .bp-panel {
   display: flex;
   flex-direction: column;
