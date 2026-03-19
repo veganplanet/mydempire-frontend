@@ -1905,7 +1905,7 @@ renderBuildFactorySection();
         const levelNumber =
           parseInt(rawTier.replace(/[^0-9]/g, ""), 10) || 1; // 4
         const levelLabel = "B" + levelNumber; // "B4"
-
+console.log("LEVEL DEBUG:", levelNumber);
         const borderColor = BP_LEVEL_COLORS[levelNumber] || "#d1d5db";
 
         // Level multiplier: 1 + 0.25*(level-1)
