@@ -94,7 +94,7 @@ body{
 
   --text-main: #111827;
   --text-muted: #6b7280;
-  --text-soft: #9ca3af;
+  --text-soft: #22c55e
 
   --accent-gold: #c9a227;
   --accent-gold-soft: #f7f2de;
@@ -480,7 +480,7 @@ strong {
   --bg-soft: #f9fafb;
 
   --border-soft: #e5e7eb;
-  --border-strong: #d1d5db;
+  --border-strong: #22c55e;
 
   --text-main: #111827;
   --text-muted: #6b7280;
@@ -1919,14 +1919,11 @@ button {
   position:relative;
   width:100%;
   min-height:310px;
-  border-radius:24px;
-  border: 2px solid var(--bp-border, #22c55e);
-  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+  border-radius:20px;
+  border:2px solid var(--bp-border, #22c55e);
+  background:#f3f4f6;
   overflow:hidden;
-  box-shadow:0 14px 30px rgba(15,23,42,0.16);
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
+  box-shadow:0 6px 16px rgba(15,23,42,0.10);
 }
 
 .bp-mini-badge{
@@ -1934,23 +1931,18 @@ button {
   top:14px;
   left:50%;
   transform:translateX(-50%);
-
   width:46px;
   height:46px;
   border-radius:50%;
-  border:3px solid #ffffff;
-
   display:flex;
   align-items:center;
   justify-content:center;
-
   font-weight:900;
   font-size:13px;
-
-   background: var(--bp-border); /* 👈 THIS LINE (IMPORTANT) */
+  background:var(--bp-border, #22c55e);
   color:#ffffff;
-
-  box-shadow:0 5px 12px rgba(0,0,0,0.18);
+  border:2px solid #ffffff;
+  box-shadow:0 4px 10px rgba(0,0,0,0.16);
   z-index:3;
 }
 
@@ -1975,16 +1967,11 @@ button {
   left:8px;
   right:8px;
   bottom:8px;
-box-shadow: 0 6px 14px rgba(0,0,0,0.18);
-  min-height:56px;
+  min-height:54px;
   padding:8px 10px;
-
-  background: var(--bp-border, #22c55e);👈 KEY CHANGE */
-
+  background:var(--bp-border, #22c55e);
   border-radius:12px;
-
   color:#ffffff;
-
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -4320,7 +4307,7 @@ body {
       --danger-dark: #b91c1c;
       --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
       --radius: 18px;
-      --b1-color: #b0bec5;
+      --b1-color: #22c55e
       --b2-color: #1565c0;
       --b3-color: #7e57c2;
       --b4-color: #ff8f00;
