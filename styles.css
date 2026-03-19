@@ -1918,7 +1918,7 @@ button {
 .bp-mini-card{
   position:relative;
   width:100%;
-  min-height:420px;
+  min-height:310px;
   border-radius:24px;
   border:8px solid var(--bp-border, #d1d5db);
   background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
