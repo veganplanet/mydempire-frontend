@@ -672,7 +672,114 @@ function initEmpBuyButtons() {
     await buyEmp(hiveAmount);
   });
 }
+function setMintBlueprintStatus(message, type = "idle") {
+  const el = document.getElementById("mint-blueprint-status");
+  if (!el) return;
 
+  el.textContent = message;
+
+  if (type === "success") {
+    el.style.color = "#15803d";
+  } else if (type === "error") {
+    el.style.color = "#b91c1c";
+  } else {
+    el.style.color = "#64748b";
+  }
+}
+
+async function loadBlueprintMintInfo() {
+  try {
+    const activeUser = getShopActiveUser();
+    if (!activeUser) return;
+
+    const costEl = document.getElementById("blueprint-mint-cost");
+    const eligibilityEl = document.getElementById("blueprint-mint-eligibility");
+    const btn = document.getElementById("mint-blueprint-btn");
+
+    const dashboardRes = await fetch(
+      shopApiUrl(`/player/${encodeURIComponent(activeUser)}/dashboard`)
+    );
+    const dashboardData = await dashboardRes.json();
+
+    const blueprintsRes = await fetch(
+      shopApiUrl(`/player/${encodeURIComponent(activeUser)}/blueprints`)
+    );
+    const blueprintsData = await blueprintsRes.json();
+
+    if (!dashboardRes.ok || !blueprintsRes.ok) {
+      throw new Error("Failed to load blueprint mint info.");
+    }
+
+    const totalL1 = Number(dashboardData.totalL1 || dashboardData.totals?.totalL1 || 0);
+    const totalL2 = Number(dashboardData.totalL2 || dashboardData.totals?.totalL2 || 0);
+    const totalL3 = Number(dashboardData.totalL3 || dashboardData.totals?.totalL3 || 0);
+
+    const totalSlots = (totalL1 * 1) + (totalL2 * 2) + (totalL3 * 3);
+    const totalBlueprints = Array.isArray(blueprintsData.blueprints) ? blueprintsData.blueprints.length : 0;
+    const eligibleMints = Math.max(totalSlots - totalBlueprints, 0);
+
+    if (costEl) costEl.textContent = "150 EMP";
+
+    if (eligibilityEl) {
+      eligibilityEl.textContent =
+        eligibleMints > 0
+          ? `Eligible empty slots: ${eligibleMints}`
+          : "All current land slots are already covered by blueprints.";
+    }
+
+    if (btn) btn.disabled = eligibleMints <= 0;
+  } catch (err) {
+    console.error("loadBlueprintMintInfo error:", err);
+    setMintBlueprintStatus("Failed to load blueprint mint info.", "error");
+  }
+}
+
+async function mintExtraBlueprint() {
+  try {
+    const activeUser = getShopActiveUser();
+    if (!activeUser) {
+      setMintBlueprintStatus("Please connect wallet first.", "error");
+      return;
+    }
+
+    const ok = confirm("Mint extra blueprint for 150 EMP?");
+    if (!ok) return;
+
+    setMintBlueprintStatus("Minting blueprint...");
+
+    const res = await fetch(shopApiUrl("/mint-extra-blueprint"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ username: activeUser })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Blueprint mint failed.");
+    }
+
+    const mintedTier = data.blueprint?.tier || "UNKNOWN";
+    setMintBlueprintStatus(`✅ Blueprint minted successfully: ${mintedTier}`, "success");
+
+    await loadShopEmpBalance();
+    await loadBlueprintMintInfo();
+  } catch (err) {
+    console.error("mintExtraBlueprint error:", err);
+    setMintBlueprintStatus(err.message || "Blueprint mint failed.", "error");
+  }
+}
+
+function initMintBlueprintButton() {
+  const btn = document.getElementById("mint-blueprint-btn");
+  if (!btn) return;
+
+  btn.addEventListener("click", async () => {
+    await mintExtraBlueprint();
+  });
+}
 window.addEventListener("DOMContentLoaded", () => {
   // Navbar
   setupUniversalNavbar();
@@ -682,6 +789,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // EMP balance (IMPORTANT for your upgrade)
   loadShopEmpBalance();
+   initMintBlueprintButton();
+  loadBlueprintMintInfo();
 
   // Future-safe (blueprint mint)
   if (typeof refreshBlueprintMintPanel === "function") {
