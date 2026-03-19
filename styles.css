@@ -1966,17 +1966,30 @@ button {
 
 .bp-mini-strip{
   position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  min-height:74px;
-  padding:10px 14px 12px;
-  background:#050b14;
+  left:8px;
+  right:8px;
+  bottom:8px;
+
+  min-height:54px;
+  padding:8px 10px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(2,6,23,0.0) 0%,
+    rgba(2,6,23,0.75) 40%,
+    rgba(2,6,23,0.92) 100%
+  );
+
+  backdrop-filter: blur(4px);
+
+  border-radius:14px;
+
   color:#ffffff;
+
   display:flex;
   flex-direction:column;
   justify-content:center;
-  gap:5px;
+  gap:3px;
 }
 
 .bp-mini-row{
@@ -1987,16 +2000,16 @@ button {
 }
 
 .bp-mini-label{
-  font-size:11px;
+  font-size:10px;
   font-weight:600;
-  opacity:0.82;
+  opacity:0.75;
 }
 
 .bp-mini-value{
-  font-size:11px;
+  font-size:10px;
   font-weight:800;
   text-align:right;
-  color:var(--bp-border, #d1d5db);
+  color:#ffffff;
 }
 
 @media (max-width: 768px){
