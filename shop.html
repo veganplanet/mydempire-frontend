@@ -320,6 +320,45 @@
     </div>
   </div>
 </section>
+  <section class="shop-sub-block blueprint-mint-section">
+  <h2 class="shop-sub-title">🧾 Blueprint Mint</h2>
+
+  <p class="shop-section-sub">
+    If your total land slots are greater than your current blueprint count, you can mint an extra blueprint using EMP.
+  </p>
+
+  <div class="blueprint-mint-shop-card">
+    <div class="blueprint-mint-shop-left">
+      <div class="blueprint-mint-shop-label">Slot activation utility</div>
+      <div class="blueprint-mint-shop-title">Activate unused capacity</div>
+
+      <div class="blueprint-mint-shop-text">
+        Extra blueprint minting helps fill idle L2 and L3 land slots and keeps your empire expanding efficiently.
+      </div>
+
+      <div class="blueprint-mint-shop-impact">
+        EMP spent here goes <strong>100% to treasury</strong>, reinforcing long-term reward sustainability while converting unused slots into productive capacity.
+      </div>
+    </div>
+
+    <div class="blueprint-mint-shop-right">
+      <div class="blueprint-mint-shop-cost-label">Current Mint Cost</div>
+      <div class="blueprint-mint-shop-cost" id="blueprint-mint-cost">-- EMP</div>
+
+      <div class="blueprint-mint-shop-eligibility" id="blueprint-mint-eligibility">
+        Checking slot eligibility...
+      </div>
+
+      <button id="mint-blueprint-btn" class="blueprint-mint-shop-btn" type="button">
+        Mint Extra Blueprint
+      </button>
+
+      <div id="mint-blueprint-status" class="blueprint-mint-shop-status">
+        No blueprint mint yet.
+      </div>
+    </div>
+  </div>
+</section>
 <script>
   async function loadGenesisPackProgress() {
     const soldEl = document.getElementById("packs-sold-count");
