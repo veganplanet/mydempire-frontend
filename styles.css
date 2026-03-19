@@ -1920,7 +1920,7 @@ button {
   width:100%;
   min-height:310px;
   border-radius:24px;
-   border:1.5px solid var(--bp-border);
+  border: 2px solid var(--bp-border, #22c55e);
   background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
   overflow:hidden;
   box-shadow:0 14px 30px rgba(15,23,42,0.16);
@@ -1979,7 +1979,7 @@ box-shadow: 0 6px 14px rgba(0,0,0,0.18);
   min-height:56px;
   padding:8px 10px;
 
-  background: var(--bp-border); /* 👈 KEY CHANGE */
+  background: var(--bp-border, #22c55e);👈 KEY CHANGE */
 
   border-radius:12px;
 
