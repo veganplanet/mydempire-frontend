@@ -462,22 +462,6 @@ function setupUniversalNavbar() {
     });
   }
 }
-
-window.addEventListener("DOMContentLoaded", () => {
-  // Navbar
-  setupUniversalNavbar();
-
-  // EMP purchase
-  initEmpBuyButtons();
-
-  // EMP balance (IMPORTANT for your upgrade)
-  loadShopEmpBalance();
-
-  // Future-safe (blueprint mint)
-  if (typeof refreshBlueprintMintPanel === "function") {
-    refreshBlueprintMintPanel();
-  }
-});
 </script>
 const LOCAL_API = "http://localhost:10000";
 const PROD_API = "https://mydempire-backend-1.onrender.com";
