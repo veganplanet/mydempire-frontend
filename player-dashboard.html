@@ -1907,6 +1907,7 @@ renderBuildFactorySection();
         const levelLabel = "B" + levelNumber; // "B4"
 console.log("LEVEL DEBUG:", levelNumber);
         const borderColor = BP_LEVEL_COLORS[levelNumber] || "#d1d5db";
+        console.log("COLOR DEBUG:", levelNumber, borderColor);
 
         // Level multiplier: 1 + 0.25*(level-1)
         const levelMult = 1 + 0.25 * (levelNumber - 1);
