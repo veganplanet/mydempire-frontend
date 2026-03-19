@@ -5131,45 +5131,6 @@ body{
 /* BLUEPRINT COLORS */
 /* ================= */
 
-.blueprint.b1{
-  border:2px solid #7f8c8d;
-}
-.blueprint.b1 .card-header{
-  background:#7f8c8d;
-}
-
-/* B2 */
-.blueprint.b2{
-  border:2px solid #1f3a93;
-}
-.blueprint.b2 .card-header{
-  background:#1f3a93;
-}
-
-/* B3 */
-.blueprint.b3{
-  border:2px solid #8e44ad;
-}
-.blueprint.b3 .card-header{
-  background:#8e44ad;
-}
-
-/* B4 */
-.blueprint.b4{
-  border:2px solid #e67e22;
-}
-.blueprint.b4 .card-header{
-  background:#e67e22;
-}
-
-/* B5 */
-.blueprint.b5{
-  border:2px solid #f1c40f;
-}
-.blueprint.b5 .card-header{
-  background:#f1c40f;
-  color:#000;
-}
 .hidden-auth-link {
   display: none !important;
 }
@@ -5209,4 +5170,35 @@ body{
   font-size: 28px;
   font-weight: 900;
   color: #111827;
+}
+/* ============================= */
+/* SHOP NFT IMAGE CARD FIX */
+/* ============================= */
+
+.uniform-card.nft-image-card{
+  border-radius: 18px;
+  overflow: hidden;
+  background: #0b1220;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+}
+
+.uniform-card.nft-image-card .nft-card-image{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Optional blueprint image tuning */
+.uniform-card.nft-image-card .food-card-fix{
+  transform: scale(1.18);
+  transform-origin: center center;
+}
+
+.uniform-card.nft-image-card .textile-card-fix{
+  transform: scale(1.08);
+  transform-origin: center center;
 }
