@@ -1920,7 +1920,7 @@ button {
   width:100%;
   min-height:310px;
   border-radius:24px;
-  border:8px solid var(--bp-border, #d1d5db);
+   border:1.5px solid var(--bp-border);
   background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
   overflow:hidden;
   box-shadow:0 14px 30px rgba(15,23,42,0.16);
@@ -1947,7 +1947,7 @@ button {
   font-weight:900;
   font-size:13px;
 
-  background: var(--bp-border);  /* 👈 THIS LINE (IMPORTANT) */
+   background: var(--bp-border); /* 👈 THIS LINE (IMPORTANT) */
   color:#ffffff;
 
   box-shadow:0 5px 12px rgba(0,0,0,0.18);
@@ -1979,7 +1979,7 @@ box-shadow: 0 6px 14px rgba(0,0,0,0.18);
   min-height:56px;
   padding:8px 10px;
 
-  background: var(--bp-border, #6b7280); /* 👈 KEY CHANGE */
+  background: var(--bp-border); /* 👈 KEY CHANGE */
 
   border-radius:12px;
 
@@ -5242,3 +5242,24 @@ body{
 box-shadow:
   0 4px 10px rgba(0,0,0,0.2),
   0 0 0 2px rgba(255,255,255,0.4);
+/* ===== FORCE BLUEPRINT COLORS (FINAL FIX) ===== */
+
+.bp-mini-card{
+  --bp-border: #22c55e !important; /* default B1 = green */
+}
+
+.bp-mini-card[data-level="2"]{
+  --bp-border: #2563eb !important;
+}
+
+.bp-mini-card[data-level="3"]{
+  --bp-border: #7c3aed !important;
+}
+
+.bp-mini-card[data-level="4"]{
+  --bp-border: #ea580c !important;
+}
+
+.bp-mini-card[data-level="5"]{
+  --bp-border: #facc15 !important;
+}
