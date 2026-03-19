@@ -1969,7 +1969,7 @@ button {
   left:8px;
   right:8px;
   bottom:8px;
-
+box-shadow: 0 6px 14px rgba(0,0,0,0.18);
   min-height:56px;
   padding:8px 10px;
 
