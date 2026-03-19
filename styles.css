@@ -1970,19 +1970,12 @@ button {
   right:8px;
   bottom:8px;
 
-  min-height:54px;
+  min-height:56px;
   padding:8px 10px;
 
-  background: linear-gradient(
-    180deg,
-    rgba(2,6,23,0.0) 0%,
-    rgba(2,6,23,0.75) 40%,
-    rgba(2,6,23,0.92) 100%
-  );
+  background: var(--bp-border, #6b7280); /* 👈 KEY CHANGE */
 
-  backdrop-filter: blur(4px);
-
-  border-radius:14px;
+  border-radius:12px;
 
   color:#ffffff;
 
