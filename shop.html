@@ -811,6 +811,7 @@ async function mintExtraBlueprint() {
   }
 }
 
+<script>
 function initMintBlueprintButton() {
   const btn = document.getElementById("mint-blueprint-btn");
   if (!btn) return;
@@ -819,24 +820,8 @@ function initMintBlueprintButton() {
     await mintExtraBlueprint();
   });
 }
-window.addEventListener("DOMContentLoaded", () => {
-  // Navbar
-  setupUniversalNavbar();
 
-  // EMP purchase
-  initEmpBuyButtons();
-
-  // EMP balance (IMPORTANT for your upgrade)
-  loadShopEmpBalance();
-   initMintBlueprintButton();
-  loadBlueprintMintInfo();
-
-  // Future-safe (blueprint mint)
-  if (typeof refreshBlueprintMintPanel === "function") {
-    refreshBlueprintMintPanel();
-  }
-});
-    async function loadShopEmpBalance() {
+async function loadShopEmpBalance() {
   try {
     const activeUser = getShopActiveUser();
     const balanceEl = document.getElementById("shop-emp-balance");
@@ -865,6 +850,16 @@ window.addEventListener("DOMContentLoaded", () => {
     if (balanceEl) balanceEl.textContent = "Error";
   }
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+  setupUniversalNavbar();
+
+  initEmpBuyButtons();
+  loadShopEmpBalance();
+
+  initMintBlueprintButton();
+  loadBlueprintMintInfo();
+});
 </script>
-</body>
+  </body>
 </html>
