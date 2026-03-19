@@ -718,26 +718,34 @@ async function loadBlueprintMintInfo() {
     const eligibilityEl = document.getElementById("blueprint-mint-eligibility");
     const btn = document.getElementById("mint-blueprint-btn");
 
-    const dashboardRes = await fetch(
-      shopApiUrl(`/player/${encodeURIComponent(activeUser)}/dashboard`)
+    const overviewRes = await fetch(
+      shopApiUrl(`/player/${encodeURIComponent(activeUser)}/empire-overview`)
     );
-    const dashboardData = await dashboardRes.json();
+    const overviewData = await overviewRes.json();
 
     const blueprintsRes = await fetch(
       shopApiUrl(`/player/${encodeURIComponent(activeUser)}/blueprints`)
     );
     const blueprintsData = await blueprintsRes.json();
 
-    if (!dashboardRes.ok || !blueprintsRes.ok) {
+    if (!overviewRes.ok || !blueprintsRes.ok) {
       throw new Error("Failed to load blueprint mint info.");
     }
 
-    const totalL1 = Number(dashboardData.totalL1 || dashboardData.totals?.totalL1 || 0);
-    const totalL2 = Number(dashboardData.totalL2 || dashboardData.totals?.totalL2 || 0);
-    const totalL3 = Number(dashboardData.totalL3 || dashboardData.totals?.totalL3 || 0);
+    const lands = Array.isArray(overviewData.lands) ? overviewData.lands : [];
 
-    const totalSlots = (totalL1 * 1) + (totalL2 * 2) + (totalL3 * 3);
-    const totalBlueprints = Array.isArray(blueprintsData.blueprints) ? blueprintsData.blueprints.length : 0;
+    let totalSlots = 0;
+    for (const land of lands) {
+      const tier = String(land.land_tier || "").toUpperCase();
+      if (tier === "L1") totalSlots += 1;
+      else if (tier === "L2") totalSlots += 2;
+      else if (tier === "L3") totalSlots += 3;
+    }
+
+    const totalBlueprints = Array.isArray(blueprintsData.blueprints)
+      ? blueprintsData.blueprints.length
+      : 0;
+
     const eligibleMints = Math.max(totalSlots - totalBlueprints, 0);
 
     if (costEl) costEl.textContent = "150 EMP";
@@ -755,7 +763,6 @@ async function loadBlueprintMintInfo() {
     setMintBlueprintStatus("Failed to load blueprint mint info.", "error");
   }
 }
-
 async function mintExtraBlueprint() {
   try {
     const activeUser = getShopActiveUser();
