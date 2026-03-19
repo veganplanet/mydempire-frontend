@@ -5263,11 +5263,16 @@ box-shadow:
 .bp-mini-card[data-level="5"]{
   --bp-border: #facc15 !important;
 }
-/* ===== FORCE TEST (DEBUG) ===== */
+/* ===== FINAL BLUEPRINT MINI CARD COLORS ===== */
 
-.bp-mini-card,
-.bp-mini-badge,
+.bp-mini-card{
+  border-color: var(--bp-border, #22c55e) !important;
+}
+
+.bp-mini-badge{
+  background: var(--bp-border, #22c55e) !important;
+}
+
 .bp-mini-strip{
-  background: #22c55e !important;
-  border-color: #22c55e !important;
+  background: var(--bp-border, #22c55e) !important;
 }
