@@ -331,37 +331,9 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   const loginBtn = document.getElementById("appbarLoginBtn");
-  const accountBtn = document.getElementById("appbarAccountBtn");
-  const dropdown = document.getElementById("appbarDropdown");
-  const logoutBtn = document.getElementById("appbarLogoutBtn");
-  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
 
   if (loginBtn) {
     loginBtn.addEventListener("click", connectWallet);
-  }
-
-  if (accountBtn && dropdown) {
-    accountBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("open");
-    });
-
-    document.addEventListener("click", () => {
-      dropdown.classList.remove("open");
-    });
-  }
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", disconnectWallet);
-  }
-
-  if (visitOtherEmpireBtn) {
-    visitOtherEmpireBtn.addEventListener("click", () => {
-      const target = prompt("Enter Hive username to visit empire:");
-      const clean = String(target || "").replace("@", "").trim().toLowerCase();
-      if (!clean) return;
-      window.location.href = "player-dashboard.html?user=" + encodeURIComponent(clean);
-    });
   }
 
   const slides = Array.from(document.querySelectorAll(".industry-slide"));
@@ -394,5 +366,6 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+<script src="js/appbar.js"></script>
 </body>
 </html>

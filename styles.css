@@ -1429,6 +1429,14 @@ body{
   background: var(--appbar-active-bg);
   color: var(--appbar-active);
 }
+/* 🔐 AUTH PROTECTED NAV LINKS FIX */
+.appbar-link.auth-only {
+  display: none !important;
+}
+
+.appbar-link.auth-only.show-auth-link {
+  display: inline-flex !important;
+}
 
 .appbar-right{
   display: flex;
@@ -5271,4 +5279,35 @@ box-shadow:
 /* ===== FORCE B1 GREEN ===== */
 
 /* ===== TEMP FORCE ALL B1-LOOK CARDS GREEN ===== */
-.bp-mini-card{
+/* Hide protected nav links by default */
+.appbar-link.protected-link {
+  display: none !important;
+}
+
+/* Show them only after login */
+body.user-logged-in .appbar-link.protected-link {
+  display: inline-flex !important;
+}
+/* ===== AUTH-AWARE APPBAR LINKS ===== */
+.appbar-link.auth-only.hidden-auth-link {
+  display: none !important;
+}
+
+body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
+  display: inline-flex !important;
+}
+
+/* ===== APPBAR HIDE ON SCROLL ===== */
+.appbar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  transform: translateY(0);
+  transition: transform 0.28s ease;
+}
+
+.appbar.appbar-hidden {
+  transform: translateY(-100%);
+}

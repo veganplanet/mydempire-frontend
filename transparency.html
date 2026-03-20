@@ -17,14 +17,15 @@
       </a>
 
       <nav class="appbar-nav">
-        <a href="index.html" class="appbar-link">Home</a>
-        <a href="economy.html" class="appbar-link">Economy</a>
-        <a href="transparency.html" class="appbar-link active">Transparency</a>
-        <a href="codex.html" class="appbar-link">Codex</a>
-        <a id="appbarDashboardLink" href="player-dashboard.html" class="appbar-link">Dashboard</a>
-        <a id="appbarShopLink" href="shop.html" class="appbar-link">Shop</a>
-        <a id="appbarMarketplaceLink" href="marketplace.html" class="appbar-link">Marketplace</a>
-      </nav>
+  <a href="index.html" class="appbar-link">Home</a>
+  <a href="economy.html" class="appbar-link">Economy</a>
+  <a href="transparency.html" class="appbar-link">Transparency</a>
+  <a href="codex.html" class="appbar-link">Codex</a>
+
+  <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only hidden-auth-link">Dashboard</a>
+  <a href="shop.html" id="shopLink" class="appbar-link auth-only hidden-auth-link">Shop</a>
+  <a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only hidden-auth-link">Marketplace</a>
+</nav>
     </div>
 
     <div class="appbar-right">
@@ -255,72 +256,6 @@
     </div>
   </div>
 </div>
-  <script>
-function setupUniversalNavbar() {
-  const activeUser = (
-    localStorage.getItem("mde_username") ||
-    localStorage.getItem("hiveUsername") ||
-    localStorage.getItem("username") ||
-    ""
-  ).replace("@", "").trim().toLowerCase();
-
-  const loginBtn = document.getElementById("appbarLoginBtn");
-  const accountWrap = document.getElementById("appbarAccountWrap");
-  const accountBtn = document.getElementById("appbarAccountBtn");
-  const dropdown = document.getElementById("appbarDropdown");
-  const dropdownHead = document.getElementById("appbarDropdownHead");
-  const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
-  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
-  const logoutBtn = document.getElementById("appbarLogoutBtn");
-
-  if (!activeUser) {
-    if (loginBtn) loginBtn.style.display = "inline-flex";
-    if (accountWrap) accountWrap.style.display = "none";
-    return;
-  }
-
-  if (loginBtn) loginBtn.style.display = "none";
-  if (accountWrap) accountWrap.style.display = "block";
-  if (accountBtn) accountBtn.textContent = "@" + activeUser + " ▼";
-  if (dropdownHead) dropdownHead.textContent = "@" + activeUser;
-
-  if (visitMyEmpireLink) {
-    visitMyEmpireLink.href = "player-dashboard.html?user=" + encodeURIComponent(activeUser);
-  }
-
-  if (accountBtn && dropdown) {
-    accountBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("open");
-    });
-
-    document.addEventListener("click", () => {
-      dropdown.classList.remove("open");
-    });
-  }
-
-  if (visitOtherEmpireBtn) {
-    visitOtherEmpireBtn.addEventListener("click", () => {
-      const target = prompt("Enter Hive username to visit empire:");
-      const clean = String(target || "").replace("@", "").trim().toLowerCase();
-      if (!clean) return;
-      window.location.href = "player-dashboard.html?user=" + encodeURIComponent(clean);
-    });
-  }
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("mde_username");
-      localStorage.removeItem("hiveUsername");
-      localStorage.removeItem("username");
-      window.location.href = "index.html";
-    });
-  }
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  setupUniversalNavbar();
-});
-</script>
+  <script src="js/appbar.js"></script>
 </body>
 </html>

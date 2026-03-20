@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="shop.css" />
 </head>
 
-<body class="page-root">
+<body class="page-root" data-requires-login="true">
 
 <!-- ===== NAVBAR (SAME AS ALL PAGES) ===== -->
 <header class="appbar">
@@ -19,14 +19,16 @@
         <img src="assets/logo.png" alt="MydEmpire">
       </a>
 
-      <nav class="appbar-nav">
-        <a href="index.html" class="appbar-link">Home</a>
-        <a href="economy.html" class="appbar-link">Economy</a>
-        <a href="transparency.html" class="appbar-link">Transparency</a>
-        <a href="codex.html" class="appbar-link">Codex</a>
-        <a href="player-dashboard.html" class="appbar-link">Dashboard</a>
-        <a href="shop.html" class="appbar-link active">Shop</a>
-        <a href="marketplace.html" class="appbar-link">Marketplace</a>
+     <nav class="appbar-nav">
+  <a href="index.html" class="appbar-link">Home</a>
+  <a href="economy.html" class="appbar-link">Economy</a>
+  <a href="transparency.html" class="appbar-link">Transparency</a>
+  <a href="codex.html" class="appbar-link">Codex</a>
+
+  <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only hidden-auth-link">Dashboard</a>
+  <a href="shop.html" id="shopLink" class="appbar-link auth-only hidden-auth-link">Shop</a>
+  <a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only hidden-auth-link">Marketplace</a>
+</nav>
       </nav>
     </div>
 
@@ -142,37 +144,16 @@
 
   </div>
 
-  <div class="shop-buy-dominant">
-    <div class="shop-buy-dominant-left">
-      <div class="shop-buy-label">BUY GENESIS PACKS</div>
-      <div class="shop-buy-title">Start Building Your Empire</div>
-      <div class="shop-buy-text">
-        Every pack is a gateway to land, blueprints, EMP, and strategic progression.
-        Buy early to enter lower pricing slabs and secure stronger Founder-era positioning.
-      </div>
-    </div>
-
-    <div class="shop-buy-dominant-right">
-      <label for="pack-qty" class="shop-buy-field-label">Pack Quantity</label>
-      <input id="pack-qty" type="number" min="1" max="50" placeholder="Enter pack quantity" />
-
-      <div class="shop-buy-helper">
-        Genesis limit: maximum 50 packs per wallet
-      </div>
-
-      <button class="shop-buy-main-btn">Buy Packs</button>
-    </div>
-  </div>
+  
 </section>
 <section class="shop-section pack-contents-section">
   <div class="section-heading-wrap">
     <span class="section-eyebrow">Genesis Assets</span>
     <h2 class="section-title">What’s Inside the Pack</h2>
     <p class="section-subtitle">
-      Every Genesis pack can expand your empire with land, blueprints, EMP, and rare premium assets. 
-      There are 5 types of industries and each industry have 5 levels B1, B2, B3, B4 and B5. So out of 
-      these 25 cards you have chance to get any one as per dropping rate.
-    </p>
+  Genesis packs can contain land, blueprint NFTs, EMP, and rare premium assets.
+  Founder Writ is not a pack drop — it is granted on each complete 10-pack bundle.
+</p>
   </div>
 
   <!-- Pack sale progress -->
@@ -201,60 +182,216 @@
 
  
    
-  <div class="pack-gallery-grid">
-  <!-- ROW 1 — BLUEPRINTS -->
-  <article class="uniform-card nft-image-card">
-  <img src="assets/food-nft.png" class="nft-card-image food-card-fix">
-</article>
+  <section class="pack-contents-section">
+  <div class="container">
 
-<article class="uniform-card nft-image-card">
-  <img src="assets/textile-nft.png" class="nft-card-image textile-card-fix">
-</article>
+   
 
-<article class="uniform-card nft-image-card">
-  <img src="assets/pharma-nft.png" class="nft-card-image">
-</article>
+    <div class="pack-showcase-slider-wrap">
+  <button class="pack-showcase-nav prev" type="button" aria-label="Previous slide">‹</button>
 
-<article class="uniform-card nft-image-card">
-  <img src="assets/chemical-nft.png" class="nft-card-image">
-</article>
+  <div class="pack-showcase-slider" id="pack-showcase-slider">
 
-<article class="uniform-card nft-image-card">
-  <img src="assets/supermarket-nft.png" class="nft-card-image">
-</article>
+    <!-- SLIDE 1 -->
+    <section class="pack-showcase-slide active">
+      <div class="pack-showcase-head">
+        <div class="pack-showcase-kicker">Genesis Collection</div>
+        <h3>Foundation Assets & Founder Bonus</h3>
+        <p>
+          Lands and Relic can be obtained through Genesis packs. Writ is not a pack drop —
+          it is granted as a Founder bonus on every complete 10-pack bundle.
+        </p>
+      </div>
 
-  <!-- ROW 2 — LAND + PREMIUM -->
- <article class="uniform-card nft-image-card">
-  <img src="assets/l1-nft.png" class="nft-card-image">
-</article>
+      <div class="pack-showcase-grid foundation-grid">
 
-<article class="uniform-card nft-image-card">
-  <img src="assets/l2-nft.png" class="nft-card-image">
-</article>
+        <!-- L1 -->
+        <div class="nft-card land l1">
+          <div class="nft-inner">
+            <div class="nft-title">FRONTIER</div>
+            <div class="land-layout land-layout-1">
+              <img src="assets/land-l1.png" class="land-tile" alt="L1 Frontier">
+            </div>
+            <div class="nft-badge">L1</div>
+          </div>
+        </div>
 
-<article class="uniform-card nft-image-card">
-  <img src="assets/l3-nft.png" class="nft-card-image">
-</article>
+        <!-- L2 -->
+        <div class="nft-card land l2">
+          <div class="nft-inner">
+            <div class="nft-title">ESTATE</div>
+            <div class="land-layout land-layout-2">
+              <img src="assets/land-l2.png" class="land-tile" alt="L2 Estate">
+              <img src="assets/land-l2.png" class="land-tile" alt="L2 Estate">
+            </div>
+            <div class="nft-badge">L2</div>
+          </div>
+        </div>
 
-<article class="uniform-card nft-image-card">
-  <img src="assets/relic.png" class="nft-card-image">
-</article>
+        <!-- L3 -->
+        <div class="nft-card land l3">
+          <div class="nft-inner">
+            <div class="nft-title">INDUSTRIAL ZONE</div>
+            <div class="land-layout land-layout-3">
+              <img src="assets/land-l3.png" class="land-tile land-top" alt="L3 Industrial Zone">
+              <img src="assets/land-l3.png" class="land-tile land-bottom-left" alt="L3 Industrial Zone">
+              <img src="assets/land-l3.png" class="land-tile land-bottom-right" alt="L3 Industrial Zone">
+            </div>
+            <div class="nft-badge">L3</div>
+          </div>
+        </div>
 
-<article class="uniform-card nft-image-card">
-  <img src="assets/writ-nft.png" class="nft-card-image">
-</article>
-    </div> <!-- end .pack-gallery-grid -->
+        <!-- RELIC -->
+        <div class="nft-card relic-card shop-special-card">
+          <div class="relic-art-wrap">
+            <img src="assets/relic.png" alt="Founder Relic" class="relic-art-img">
+          </div>
+          <div class="shop-special-note rare-note">Rare Pack Drop</div>
+        </div>
 
+        <!-- WRIT -->
+        <div class="nft-card writ-card shop-special-card">
+          <div class="writ-art-wrap">
+            <img src="assets/writ.png" alt="Founder Writ" class="writ-art-img">
+          </div>
+          <div class="shop-special-note bundle-note">Bundle Reward • 10 Packs</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 2 -->
+    <section class="pack-showcase-slide">
+      <div class="pack-showcase-head">
+        <div class="pack-showcase-kicker">Blueprint Tier</div>
+        <h3>B1 • Basic Blueprints</h3>
+        <p>Entry tier across all five Genesis industries.</p>
+      </div>
+
+      <div class="pack-showcase-grid blueprint-grid">
+        <div class="nft-card blueprint b1"><div class="nft-inner"><div class="nft-title">FOOD</div><div class="nft-art"><img src="assets/food.png" alt="Food B1"></div><div class="nft-badge">B1</div></div></div>
+        <div class="nft-card blueprint b1"><div class="nft-inner"><div class="nft-title">TEXTILE</div><div class="nft-art"><img src="assets/textile.png" alt="Textile B1"></div><div class="nft-badge">B1</div></div></div>
+        <div class="nft-card blueprint b1"><div class="nft-inner"><div class="nft-title">PHARMA</div><div class="nft-art"><img src="assets/pharma.png" alt="Pharma B1"></div><div class="nft-badge">B1</div></div></div>
+        <div class="nft-card blueprint b1"><div class="nft-inner"><div class="nft-title">CHEMICAL</div><div class="nft-art"><img src="assets/chemical.png" alt="Chemical B1"></div><div class="nft-badge">B1</div></div></div>
+        <div class="nft-card blueprint b1"><div class="nft-inner"><div class="nft-title">SUPERMARKET</div><div class="nft-art"><img src="assets/supermarket.png" alt="Supermarket B1"></div><div class="nft-badge">B1</div></div></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3 -->
+    <section class="pack-showcase-slide">
+      <div class="pack-showcase-head">
+        <div class="pack-showcase-kicker">Blueprint Tier</div>
+        <h3>B2 • Improved Blueprints</h3>
+        <p>Second blueprint tier with stronger progression value.</p>
+      </div>
+
+      <div class="pack-showcase-grid blueprint-grid">
+        <div class="nft-card blueprint b2"><div class="nft-inner"><div class="nft-title">FOOD</div><div class="nft-art"><img src="assets/food.png" alt="Food B2"></div><div class="nft-badge">B2</div></div></div>
+        <div class="nft-card blueprint b2"><div class="nft-inner"><div class="nft-title">TEXTILE</div><div class="nft-art"><img src="assets/textile.png" alt="Textile B2"></div><div class="nft-badge">B2</div></div></div>
+        <div class="nft-card blueprint b2"><div class="nft-inner"><div class="nft-title">PHARMA</div><div class="nft-art"><img src="assets/pharma.png" alt="Pharma B2"></div><div class="nft-badge">B2</div></div></div>
+        <div class="nft-card blueprint b2"><div class="nft-inner"><div class="nft-title">CHEMICAL</div><div class="nft-art"><img src="assets/chemical.png" alt="Chemical B2"></div><div class="nft-badge">B2</div></div></div>
+        <div class="nft-card blueprint b2"><div class="nft-inner"><div class="nft-title">SUPERMARKET</div><div class="nft-art"><img src="assets/supermarket.png" alt="Supermarket B2"></div><div class="nft-badge">B2</div></div></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4 -->
+    <section class="pack-showcase-slide">
+      <div class="pack-showcase-head">
+        <div class="pack-showcase-kicker">Blueprint Tier</div>
+        <h3>B3 • Advanced Blueprints</h3>
+        <p>Mid-tier blueprints with stronger prestige and stronger visual impact.</p>
+      </div>
+
+      <div class="pack-showcase-grid blueprint-grid">
+        <div class="nft-card blueprint b3"><div class="nft-inner"><div class="nft-title">FOOD</div><div class="nft-art"><img src="assets/food.png" alt="Food B3"></div><div class="nft-badge">B3</div></div></div>
+        <div class="nft-card blueprint b3"><div class="nft-inner"><div class="nft-title">TEXTILE</div><div class="nft-art"><img src="assets/textile.png" alt="Textile B3"></div><div class="nft-badge">B3</div></div></div>
+        <div class="nft-card blueprint b3"><div class="nft-inner"><div class="nft-title">PHARMA</div><div class="nft-art"><img src="assets/pharma.png" alt="Pharma B3"></div><div class="nft-badge">B3</div></div></div>
+        <div class="nft-card blueprint b3"><div class="nft-inner"><div class="nft-title">CHEMICAL</div><div class="nft-art"><img src="assets/chemical.png" alt="Chemical B3"></div><div class="nft-badge">B3</div></div></div>
+        <div class="nft-card blueprint b3"><div class="nft-inner"><div class="nft-title">SUPERMARKET</div><div class="nft-art"><img src="assets/supermarket.png" alt="Supermarket B3"></div><div class="nft-badge">B3</div></div></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5 -->
+    <section class="pack-showcase-slide">
+      <div class="pack-showcase-head">
+        <div class="pack-showcase-kicker">Blueprint Tier</div>
+        <h3>B4 • High Blueprints</h3>
+        <p>Higher-tier blueprints designed to feel rarer and more aspirational.</p>
+      </div>
+
+      <div class="pack-showcase-grid blueprint-grid">
+        <div class="nft-card blueprint b4"><div class="nft-inner"><div class="nft-title">FOOD</div><div class="nft-art"><img src="assets/food.png" alt="Food B4"></div><div class="nft-badge">B4</div></div></div>
+        <div class="nft-card blueprint b4"><div class="nft-inner"><div class="nft-title">TEXTILE</div><div class="nft-art"><img src="assets/textile.png" alt="Textile B4"></div><div class="nft-badge">B4</div></div></div>
+        <div class="nft-card blueprint b4"><div class="nft-inner"><div class="nft-title">PHARMA</div><div class="nft-art"><img src="assets/pharma.png" alt="Pharma B4"></div><div class="nft-badge">B4</div></div></div>
+        <div class="nft-card blueprint b4"><div class="nft-inner"><div class="nft-title">CHEMICAL</div><div class="nft-art"><img src="assets/chemical.png" alt="Chemical B4"></div><div class="nft-badge">B4</div></div></div>
+        <div class="nft-card blueprint b4"><div class="nft-inner"><div class="nft-title">SUPERMARKET</div><div class="nft-art"><img src="assets/supermarket.png" alt="Supermarket B4"></div><div class="nft-badge">B4</div></div></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6 -->
+    <section class="pack-showcase-slide">
+      <div class="pack-showcase-head">
+        <div class="pack-showcase-kicker">Blueprint Tier</div>
+        <h3>B5 • Elite Blueprints</h3>
+        <p>Top Genesis blueprint tier with the strongest premium color signal.</p>
+      </div>
+
+      <div class="pack-showcase-grid blueprint-grid">
+        <div class="nft-card blueprint b5"><div class="nft-inner"><div class="nft-title">FOOD</div><div class="nft-art"><img src="assets/food.png" alt="Food B5"></div><div class="nft-badge">B5</div></div></div>
+        <div class="nft-card blueprint b5"><div class="nft-inner"><div class="nft-title">TEXTILE</div><div class="nft-art"><img src="assets/textile.png" alt="Textile B5"></div><div class="nft-badge">B5</div></div></div>
+        <div class="nft-card blueprint b5"><div class="nft-inner"><div class="nft-title">PHARMA</div><div class="nft-art"><img src="assets/pharma.png" alt="Pharma B5"></div><div class="nft-badge">B5</div></div></div>
+        <div class="nft-card blueprint b5"><div class="nft-inner"><div class="nft-title">CHEMICAL</div><div class="nft-art"><img src="assets/chemical.png" alt="Chemical B5"></div><div class="nft-badge">B5</div></div></div>
+        <div class="nft-card blueprint b5"><div class="nft-inner"><div class="nft-title">SUPERMARKET</div><div class="nft-art"><img src="assets/supermarket.png" alt="Supermarket B5"></div><div class="nft-badge">B5</div></div></div>
+      </div>
+    </section>
+
+  </div>
+
+  <button class="pack-showcase-nav next" type="button" aria-label="Next slide">›</button>
+</div>
+
+<div class="pack-showcase-dots" id="pack-showcase-dots">
+  <button class="active" type="button" aria-label="Go to slide 1"></button>
+  <button type="button" aria-label="Go to slide 2"></button>
+  <button type="button" aria-label="Go to slide 3"></button>
+  <button type="button" aria-label="Go to slide 4"></button>
+  <button type="button" aria-label="Go to slide 5"></button>
+  <button type="button" aria-label="Go to slide 6"></button>
+</div>
+
+
+<div class="shop-buy-dominant">
+    <div class="shop-buy-dominant-left">
+      <div class="shop-buy-label">BUY GENESIS PACKS</div>
+      <div class="shop-buy-title">Start Building Your Empire</div>
+      <div class="shop-buy-text">
+        Every pack is a gateway to land, blueprints, EMP, and strategic progression.
+        Buy early to enter lower pricing slabs and secure stronger Founder-era positioning.
+      </div>
+    </div>
+
+    <div class="shop-buy-dominant-right">
+      <label for="pack-qty" class="shop-buy-field-label">Pack Quantity</label>
+      <input id="pack-qty" type="number" min="1" max="10" placeholder="Enter pack quantity" />
+<div class="shop-pack-live-price">
+  <div class="shop-pack-live-label">PRE-GENESIS PRICE</div>
+  <div class="shop-pack-live-value">3 HIVE per pack</div>
+  <div class="shop-pack-live-sub">
+    Invite only phase • Maximum 10 packs per approved wallet
+  </div>
+</div>
+      <div class="shop-buy-helper">
+        Genesis limit: maximum 50 packs per wallet
+      </div>
+
+      <button id="buy-packs-btn" class="shop-buy-main-btn">Buy Packs</button>
+    </div>
+  </div>
+  </div>
+</section>
  
 
-  <!-- WRIT RULE -->
-  <section class="content-block">
-    <h2>🎟️ Writ — Founder Bonus</h2>
-    <p>
-      1 Writ is granted for every 10 Genesis Founder packs purchased.
-      Only complete bundles are counted.
-    </p>
-  </section>
+  
 
   <!-- EMP -->
  <section class="shop-sub-block emp-purchase-section">
@@ -377,6 +514,10 @@
 
       const res = await fetch(`${API_BASE}/genesis-sale-status`);
       const data = await res.json();
+      if (!res.ok) {
+  alert(data.error || "Unable to create order.");
+  return;
+}
 
       if (!res.ok) throw new Error("Failed to load sale progress.");
 
@@ -401,67 +542,7 @@
 </script>
 </main>
 <script>
-function setupUniversalNavbar() {
-  const activeUser = (
-    localStorage.getItem("mde_username") ||
-    localStorage.getItem("hiveUsername") ||
-    localStorage.getItem("username") ||
-    ""
-  ).replace("@", "").trim().toLowerCase();
 
-  const loginBtn = document.getElementById("appbarLoginBtn");
-  const accountWrap = document.getElementById("appbarAccountWrap");
-  const accountBtn = document.getElementById("appbarAccountBtn");
-  const dropdown = document.getElementById("appbarDropdown");
-  const dropdownHead = document.getElementById("appbarDropdownHead");
-  const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
-  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
-  const logoutBtn = document.getElementById("appbarLogoutBtn");
-
-  if (!activeUser) {
-    if (loginBtn) loginBtn.style.display = "inline-flex";
-    if (accountWrap) accountWrap.style.display = "none";
-    return;
-  }
-
-  if (loginBtn) loginBtn.style.display = "none";
-  if (accountWrap) accountWrap.style.display = "block";
-  if (accountBtn) accountBtn.textContent = "@" + activeUser + " ▼";
-  if (dropdownHead) dropdownHead.textContent = "@" + activeUser;
-
-  if (visitMyEmpireLink) {
-    visitMyEmpireLink.href = "player-dashboard.html?user=" + encodeURIComponent(activeUser);
-  }
-
-  if (accountBtn && dropdown) {
-    accountBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("open");
-    });
-
-    document.addEventListener("click", () => {
-      dropdown.classList.remove("open");
-    });
-  }
-
-  if (visitOtherEmpireBtn) {
-    visitOtherEmpireBtn.addEventListener("click", () => {
-      const target = prompt("Enter Hive username to visit empire:");
-      const clean = String(target || "").replace("@", "").trim().toLowerCase();
-      if (!clean) return;
-      window.location.href = "player-dashboard.html?user=" + encodeURIComponent(clean);
-    });
-  }
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("mde_username");
-      localStorage.removeItem("hiveUsername");
-      localStorage.removeItem("username");
-      window.location.href = "index.html";
-    });
-  }
-}
 
 const LOCAL_API = "http://localhost:10000";
 const PROD_API = "https://mydempire-backend-1.onrender.com";
@@ -849,5 +930,237 @@ window.addEventListener("DOMContentLoaded", () => {
   loadBlueprintMintInfo();
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const slider = document.getElementById("pack-showcase-slider");
+  const slides = slider ? Array.from(slider.querySelectorAll(".pack-showcase-slide")) : [];
+  const dotsWrap = document.getElementById("pack-showcase-dots");
+  const dots = dotsWrap ? Array.from(dotsWrap.querySelectorAll("button")) : [];
+  const prevBtn = document.querySelector(".pack-showcase-nav.prev");
+  const nextBtn = document.querySelector(".pack-showcase-nav.next");
+
+  if (!slides.length) return;
+
+  let current = 0;
+  let autoTimer = null;
+
+  function showSlide(index) {
+    current = (index + slides.length) % slides.length;
+
+    slides.forEach((slide, i) => {
+      slide.classList.toggle("active", i === current);
+    });
+
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("active", i === current);
+    });
+  }
+
+  function nextSlide() {
+    showSlide(current + 1);
+  }
+
+  function prevSlide() {
+    showSlide(current - 1);
+  }
+
+  function startAuto() {
+    stopAuto();
+    autoTimer = setInterval(nextSlide, 4200);
+  }
+
+  function stopAuto() {
+    if (autoTimer) {
+      clearInterval(autoTimer);
+      autoTimer = null;
+    }
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      nextSlide();
+      startAuto();
+    });
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      prevSlide();
+      startAuto();
+    });
+  }
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      showSlide(i);
+      startAuto();
+    });
+  });
+
+  if (slider) {
+    slider.addEventListener("mouseenter", stopAuto);
+    slider.addEventListener("mouseleave", startAuto);
+  }
+
+  showSlide(0);
+  startAuto();
+});
+
+</script>
+<script>
+function updatePreGenesisPrice() {
+  const qtyInput = document.getElementById("pack-qty");
+  const priceBox = document.querySelector(".shop-pack-live-value");
+
+  if (!qtyInput || !priceBox) return;
+
+  const qty = Number(qtyInput.value);
+
+  if (!qty || qty <= 0) {
+    priceBox.textContent = "3 HIVE per pack";
+    return;
+  }
+
+  const total = qty * 3;
+  priceBox.textContent = total + " HIVE total";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const qtyInput = document.getElementById("pack-qty");
+  if (!qtyInput) return;
+
+  qtyInput.addEventListener("input", updatePreGenesisPrice);
+});
+async function buyPacks() {
+  try {
+    const activeUser = getShopActiveUser();
+
+    if (!activeUser) {
+      alert("Please connect wallet first.");
+      return;
+    }
+
+
+    
+
+    if (!window.hive_keychain) {
+      alert("Hive Keychain not found.");
+      return;
+    }
+
+    const qtyInput = document.getElementById("pack-qty");
+    const packs = parseInt(qtyInput?.value || "1", 10);
+
+    if (!packs || packs < 1) {
+      alert("Please enter a valid pack quantity.");
+      return;
+    }
+
+    // 🧾 CREATE ORDER
+    const orderRes = await fetch(shopApiUrl("/create-order"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: activeUser,
+        packs
+      })
+    });
+
+    const orderData = await orderRes.json();
+
+    if (!orderRes.ok || !orderData.success) {
+  const errorMsg = orderData.error || "";
+
+  if (errorMsg.includes("Invite only phase")) {
+    showWhitelistPopup();
+  } else {
+    alert(errorMsg || "Unable to create pack order.");
+  }
+
+  return;
+}
+
+    const order = orderData.order;
+    const amount = Number(order.hive_amount).toFixed(3);
+    const memo = `MYDEMPIRE_ORDER_${order.id}`;
+
+    // 💰 HIVE PAYMENT
+    window.hive_keychain.requestTransfer(
+      activeUser,
+      "mydempiregain",
+      amount,
+      memo,
+      "HIVE",
+      async function (response) {
+        if (!response || response.success !== true) {
+          alert("Transaction cancelled.");
+          return;
+        }
+
+        const txid =
+          response?.result?.id ||
+          response?.result?.trx_id ||
+          response?.id;
+
+        if (!txid) {
+          alert("Transaction completed but txid missing.");
+          return;
+        }
+
+        const confirmRes = await fetch(shopApiUrl("/confirm-payment"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: order.id,
+            txid
+          })
+        });
+
+        const confirmData = await confirmRes.json();
+
+        if (!confirmRes.ok || !confirmData.success) {
+          alert(confirmData.error || "Payment confirmation failed.");
+          return;
+        }
+
+        alert("✅ Packs minted successfully!");
+        await loadGenesisPackProgress();
+      }
+    );
+
+  } catch (err) {
+    console.error("Pack buy error:", err);
+    alert(err.message || "Pack purchase failed.");
+  }
+}document.addEventListener("DOMContentLoaded", () => {
+  const buyBtn = document.getElementById("buy-packs-btn");
+  if (buyBtn) {
+    buyBtn.addEventListener("click", buyPacks);
+  }
+});
+function showWhitelistPopup() {
+  const popup = document.getElementById("whitelist-popup");
+  if (popup) popup.classList.remove("hidden");
+}
+
+function closeWhitelistPopup() {
+  const popup = document.getElementById("whitelist-popup");
+  if (popup) popup.classList.add("hidden");
+}
+document.getElementById("whitelist-popup").addEventListener("click", function(e) {
+  if (e.target === this) {
+    closeWhitelistPopup();
+  }
+});
+
+</script>
+<script src="js/appbar.js"></script>
+<script>
+
+
+
+</script>
+  <script src="js/appbar.js"></script>
+
   </body>
 </html>

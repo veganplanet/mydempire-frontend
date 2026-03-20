@@ -15,15 +15,16 @@
           <img src="assets/logo.png" alt="MydEmpire">
         </a>
 
-        <nav class="appbar-nav">
-          <a href="index.html" class="appbar-link">Home</a>
-          <a href="economy.html" class="appbar-link">Economy</a>
-          <a href="transparency.html" class="appbar-link">Transparency</a>
-          <a href="codex.html" class="appbar-link">Codex</a>
-          <a id="appbarDashboardLink" href="player-dashboard.html" class="appbar-link active">Dashboard</a>
-          <a id="appbarShopLink" href="shop.html" class="appbar-link">Shop</a>
-          <a id="appbarMarketplaceLink" href="marketplace.html" class="appbar-link">Marketplace</a>
-        </nav>
+      <nav class="appbar-nav">
+  <a href="index.html" class="appbar-link">Home</a>
+  <a href="economy.html" class="appbar-link">Economy</a>
+  <a href="transparency.html" class="appbar-link">Transparency</a>
+  <a href="codex.html" class="appbar-link">Codex</a>
+
+  <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only hidden-auth-link">Dashboard</a>
+  <a href="shop.html" id="shopLink" class="appbar-link auth-only hidden-auth-link">Shop</a>
+  <a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only hidden-auth-link">Marketplace</a>
+</nav>
       </div>
 
 <div class="appbar-right">
@@ -396,74 +397,7 @@
     </footer>
   </div>
 <script>
-function setupDashboardNavbar() {
-  const activeUser = (
-    new URLSearchParams(window.location.search).get("user") ||
-    localStorage.getItem("mde_username") ||
-    localStorage.getItem("hiveUsername") ||
-    localStorage.getItem("username") ||
-    ""
-  ).replace("@", "").trim().toLowerCase();
 
-  const loginBtn = document.getElementById("appbarLoginBtn");
-  const accountWrap = document.getElementById("appbarAccountWrap");
-  const accountBtn = document.getElementById("appbarAccountBtn");
-  const dropdown = document.getElementById("appbarDropdown");
-  const dropdownHead = document.getElementById("appbarDropdownHead");
-  const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
-  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
-  const logoutBtn = document.getElementById("appbarLogoutBtn");
-
-  if (activeUser) {
-    localStorage.setItem("mde_username", activeUser);
-    localStorage.setItem("hiveUsername", activeUser);
-    localStorage.setItem("username", activeUser);
-  }
-
-  if (!activeUser) {
-    if (loginBtn) loginBtn.style.display = "inline-flex";
-    if (accountWrap) accountWrap.style.display = "none";
-    return;
-  }
-
-  if (loginBtn) loginBtn.style.display = "none";
-  if (accountWrap) accountWrap.style.display = "block";
-  if (accountBtn) accountBtn.textContent = `@${activeUser} ▼`;
-  if (dropdownHead) dropdownHead.textContent = `@${activeUser}`;
-
-  if (visitMyEmpireLink) {
-    visitMyEmpireLink.href = `player-dashboard.html?user=${encodeURIComponent(activeUser)}`;
-  }
-
-  if (accountBtn && dropdown) {
-    accountBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("open");
-    });
-
-    document.addEventListener("click", () => {
-      dropdown.classList.remove("open");
-    });
-  }
-
-  if (visitOtherEmpireBtn) {
-    visitOtherEmpireBtn.addEventListener("click", () => {
-      const target = prompt("Enter Hive username to visit empire:");
-      const clean = String(target || "").replace("@", "").trim().toLowerCase();
-      if (!clean) return;
-      window.location.href = `player-dashboard.html?user=${encodeURIComponent(clean)}`;
-    });
-  }
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("mde_username");
-      localStorage.removeItem("hiveUsername");
-      localStorage.removeItem("username");
-      window.location.href = "index.html";
-    });
-  }
-}
  function setText(id, value) {
   const el = document.getElementById(id);
   if (el) el.textContent = value;
@@ -2090,60 +2024,7 @@ function setupDashboardNavbar() {
   }
 }
     // ===== INIT =====
-window.addEventListener("DOMContentLoaded", async () => {
-  setupDashboardNavbar();
-  if (!PLAYER_USERNAME) {
-    alert("No active user found. Please connect wallet first.");
-    window.location.href = "index.html";
-    return;
-  }
-  localStorage.setItem("hiveUsername", PLAYER_USERNAME);
-  localStorage.setItem("mde_username", PLAYER_USERNAME);
 
-  setText("player-username-raw", PLAYER_USERNAME);
-  setText("player-username-display", PLAYER_USERNAME);
-
-  document.querySelectorAll(".subnav-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      setActiveTab(btn.dataset.tab);
-    });
-  });
-
-  const modalCloseBtn = document.getElementById("pack-open-modal-close");
-  if (modalCloseBtn) {
-    modalCloseBtn.addEventListener("click", hidePackOpenModal);
-  }
-
-  const modal = document.getElementById("pack-open-modal");
-  if (modal) {
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) hidePackOpenModal();
-    });
-  }
-
-  const openPackBtn = document.getElementById("open-pack-btn");
-  if (openPackBtn) {
-    openPackBtn.addEventListener("click", openSelectedPacks);
-  }
-
-  const claimBtn = document.getElementById("claim-production-btn");
-  if (claimBtn) {
-    claimBtn.addEventListener("click", claimAllProduction);
-  }
-
-  try {
-    await loadDashboardSummary();
-    await loadRewardSummary();
-    await loadEmpireOverview();
-    await loadBlueprints();
-    await loadUnopenedPacks(PLAYER_USERNAME);
-    initEmpBuyButtons();
-    initMintBlueprintButton();
-    await loadBlueprintMintInfo();
-  } catch (err) {
-    console.error("Error during initial dashboard load:", err);
-  }
-});
 
  function renderEmpirePreview() {
   const grid = document.getElementById("empire-preview-grid");
@@ -2501,7 +2382,8 @@ setupLoggedInNav();
 
   </script>
 
-  
+  <script src="js/appbar.js"></script>
+
 
   <div id="blueprint-mint-modal" class="pack-modal hidden">
   <div class="pack-modal-card">

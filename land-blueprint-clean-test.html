@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clean NFT Test</title>
+
+<style>
+body{
+  margin:0;
+  min-height:100vh;
+  padding:40px;
+  display:flex;
+  gap:30px;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:flex-start;
+  background:#0f172a;
+  font-family:Arial, sans-serif;
+}
+
+/* =========================
+   SHARED NFT CARD BASE
+   ========================= */
+.nft-card{
+  width:240px;
+  height:320px;
+  border-radius:22px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 10px 25px rgba(0,0,0,0.35);
+  transition:transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.nft-card:hover{
+  transform:translateY(-6px) scale(1.02);
+  box-shadow:0 20px 40px rgba(0,0,0,0.28);
+}
+
+.nft-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:22px;
+  padding:4px;
+  background:linear-gradient(145deg,var(--color),#0f172a,var(--color));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+}
+
+.nft-inner{
+  position:absolute;
+  inset:8px;
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid rgba(0,0,0,0.08);
+}
+
+.nft-title{
+  text-align:center;
+  font-weight:800;
+  padding:14px 10px 8px;
+  color:#24324a;
+  letter-spacing:1.5px;
+  font-size:13px;
+  position:relative;
+  z-index:2;
+}
+
+.nft-badge{
+  position:absolute;
+  bottom:14px;
+  left:50%;
+  transform:translateX(-50%);
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  color:#13233c;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:17px;
+  border:2px solid rgba(15,23,42,0.18);
+  box-shadow:
+    0 8px 16px rgba(0,0,0,0.18),
+    inset 0 1px 4px rgba(255,255,255,0.45);
+  z-index:3;
+}
+
+/* =========================
+   BLUEPRINT CARDS
+   ========================= */
+.nft-card.blueprint.b1{ --color:#22c55e; }
+.nft-card.blueprint.b2{ --color:#1565c0; }
+.nft-card.blueprint.b3{ --color:#7e57c2; }
+.nft-card.blueprint.b4{ --color:#ff8f00; }
+.nft-card.blueprint.b5{ --color:#ffca28; }
+
+.nft-card.blueprint .nft-inner{
+  background:linear-gradient(180deg,#eaf0f7 0%,#dde6ef 100%);
+}
+
+.nft-card.blueprint .nft-art{
+  height:190px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding-top:8px;
+}
+
+.nft-card.blueprint .nft-art img{
+  max-width:78%;
+  max-height:140px;
+  display:block;
+  filter:drop-shadow(0 10px 18px rgba(0,0,0,0.18));
+}
+
+.nft-card.blueprint.b1 .nft-badge{
+  background:radial-gradient(circle at 35% 30%, #dcfce7 0%, #86efac 58%, #22c55e 100%);
+}
+.nft-card.blueprint.b2 .nft-badge{
+  background:radial-gradient(circle at 35% 30%, #dbeafe 0%, #93c5fd 58%, #1565c0 100%);
+}
+.nft-card.blueprint.b3 .nft-badge{
+  background:radial-gradient(circle at 35% 30%, #f3e8ff 0%, #d8b4fe 58%, #7e57c2 100%);
+}
+.nft-card.blueprint.b4 .nft-badge{
+  background:radial-gradient(circle at 35% 30%, #ffedd5 0%, #fdba74 58%, #ff8f00 100%);
+}
+.nft-card.blueprint.b5 .nft-badge{
+  background:radial-gradient(circle at 35% 30%, #fef9c3 0%, #fde68a 58%, #ffca28 100%);
+}
+
+/* =========================
+   LAND CARDS
+   ========================= */
+.nft-card.land.l1{ --color:#22c55e; }
+.nft-card.land.l2{ --color:#eab308; }
+.nft-card.land.l3{ --color:#ef4444; }
+
+.nft-card.land .nft-inner{
+  background:
+    linear-gradient(180deg, #dfe4ea 0%, #cfd6dd 100%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(0,0,0,0.015) 0px,
+      rgba(0,0,0,0.015) 1px,
+      transparent 1px,
+      transparent 6px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0,0,0,0.015) 0px,
+      rgba(0,0,0,0.015) 1px,
+      transparent 1px,
+      transparent 6px
+    );
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.08);
+}
+
+.land-layout{
+  position:relative;
+  height:210px;
+  margin-top:4px;
+  transform:translateY(-16px);
+}
+
+.land-tile{
+  position:absolute;
+  display:block;
+  width:78px;
+  height:auto;
+  filter:drop-shadow(0 10px 18px rgba(0,0,0,0.18));
+  background:transparent;
+}
+
+/* L1 */
+.land-layout-1 .land-tile{
+  left:50%;
+  top:28px;
+  transform:translateX(-50%);
+}
+
+/* L2 */
+.land-layout-2 .land-tile:nth-child(1){
+  left:28%;
+  top:70px;
+  transform:translateX(-50%);
+}
+.land-layout-2 .land-tile:nth-child(2){
+  left:72%;
+  top:70px;
+  transform:translateX(-50%);
+}
+
+/* L3 */
+.land-layout-3 .land-top{
+  left:50%;
+  top:18px;
+  transform:translateX(-50%);
+}
+.land-layout-3 .land-bottom-left{
+  left:28%;
+  top:105px;
+  transform:translateX(-50%);
+}
+.land-layout-3 .land-bottom-right{
+  left:72%;
+  top:105px;
+  transform:translateX(-50%);
+}
+
+.nft-card.land.l1 .nft-badge{
+  background:radial-gradient(circle at 35% 30%, #dcfce7 0%, #86efac 58%, #22c55e 100%);
+}
+.nft-card.land.l2 .nft-badge{
+  background:radial-gradient(circle at 35% 30%, #fef9c3 0%, #fde68a 58%, #eab308 100%);
+}
+.nft-card.land.l3 .nft-badge{
+  background:radial-gradient(circle at 35% 30%, #fee2e2 0%, #fca5a5 58%, #ef4444 100%);
+}
+
+/* =========================
+   RELIC
+   ========================= */
+.relic-card{
+  --color:#b8962e;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255,223,120,0.35) 0%, rgba(255,223,120,0.12) 25%, transparent 55%),
+    linear-gradient(180deg, #fff6cc 0%, #f3d56b 45%, #caa43a 100%);
+  border:4px solid #b8962e;
+  box-shadow:
+    0 14px 28px rgba(0,0,0,0.35),
+    0 0 18px rgba(212,175,55,0.35),
+    inset 0 2px 4px rgba(255,255,255,0.35),
+    inset 0 -2px 6px rgba(0,0,0,0.25);
+}
+
+.relic-card::before{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border-radius:16px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.06), rgba(0,0,0,0.25));
+  border:1px solid rgba(212,175,55,0.25);
+}
+
+.relic-card::after{
+  content:"";
+  position:absolute;
+  top:30%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(120,150,255,0.25), transparent 70%);
+  filter:blur(12px);
+  pointer-events:none;
+}
+
+.relic-art-wrap{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 10px 12px;
+  z-index:2;
+}
+
+.relic-art-img{
+  max-width:108%;
+  max-height:90%;
+  object-fit:contain;
+  transform:scale(1.08) translateY(8px);
+  filter:
+    drop-shadow(0 14px 24px rgba(0,0,0,0.35))
+    drop-shadow(0 0 18px rgba(99,102,241,0.35));
+}
+
+/* =========================
+   WRIT
+   ========================= */
+.writ-card{
+  --color:#4f7cff;
+  background:
+    radial-gradient(circle at 50% 25%, rgba(120,150,255,0.25), transparent 55%),
+    linear-gradient(180deg, #1e3a8a 0%, #020617 100%);
+  border:4px solid #4f7cff;
+  box-shadow:
+    0 14px 28px rgba(0,0,0,0.4),
+    0 0 18px rgba(79,124,255,0.35),
+    inset 0 2px 6px rgba(255,255,255,0.15);
+}
+
+.writ-card::before{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border-radius:16px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.15), rgba(0,0,0,0.35));
+  border:1px solid rgba(79,124,255,0.35);
+}
+
+.writ-art-wrap{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 12px 18px;
+  z-index:2;
+}
+
+.writ-art-img{
+  max-width:95%;
+  max-height:82%;
+  object-fit:contain;
+  transform:scale(1.15) translateY(10px);
+  filter:drop-shadow(0 10px 18px rgba(0,0,0,0.25));
+}
+</style>
+</head>
+<body>
+
+  <!-- LAND -->
+  <div class="nft-card land l1">
+    <div class="nft-inner">
+      <div class="nft-title">FRONTIER</div>
+      <div class="land-layout land-layout-1">
+        <img src="assets/land-l1.png" class="land-tile" alt="Frontier land">
+      </div>
+      <div class="nft-badge">L1</div>
+    </div>
+  </div>
+
+  <div class="nft-card land l2">
+    <div class="nft-inner">
+      <div class="nft-title">ESTATE</div>
+      <div class="land-layout land-layout-2">
+        <img src="assets/land-l2.png" class="land-tile" alt="Estate land">
+        <img src="assets/land-l2.png" class="land-tile" alt="Estate land">
+      </div>
+      <div class="nft-badge">L2</div>
+    </div>
+  </div>
+
+  <div class="nft-card land l3">
+    <div class="nft-inner">
+      <div class="nft-title">INDUSTRIAL ZONE</div>
+      <div class="land-layout land-layout-3">
+        <img src="assets/land-l3.png" class="land-tile land-top" alt="Industrial land">
+        <img src="assets/land-l3.png" class="land-tile land-bottom-left" alt="Industrial land">
+        <img src="assets/land-l3.png" class="land-tile land-bottom-right" alt="Industrial land">
+      </div>
+      <div class="nft-badge">L3</div>
+    </div>
+  </div>
+
+  <!-- BLUEPRINT SAMPLE -->
+  <div class="nft-card blueprint b1">
+    <div class="nft-inner">
+      <div class="nft-title">PHARMA</div>
+      <div class="nft-art">
+        <img src="assets/pharma.png" alt="Pharma blueprint">
+      </div>
+      <div class="nft-badge">B1</div>
+    </div>
+  </div>
+
+  <div class="nft-card blueprint b3">
+    <div class="nft-inner">
+      <div class="nft-title">FOOD</div>
+      <div class="nft-art">
+        <img src="assets/food.png" alt="Food blueprint">
+      </div>
+      <div class="nft-badge">B3</div>
+    </div>
+  </div>
+
+  <div class="nft-card blueprint b5">
+    <div class="nft-inner">
+      <div class="nft-title">CHEMICAL</div>
+      <div class="nft-art">
+        <img src="assets/chemical.png" alt="Chemical blueprint">
+      </div>
+      <div class="nft-badge">B5</div>
+    </div>
+  </div>
+
+  <!-- RELIC -->
+  <div class="nft-card relic-card">
+    <div class="relic-art-wrap">
+      <img src="assets/relic.png" alt="Relic" class="relic-art-img">
+    </div>
+  </div>
+
+  <!-- WRIT -->
+  <div class="nft-card writ-card">
+    <div class="writ-art-wrap">
+      <img src="assets/writ.png" alt="Writ" class="writ-art-img">
+    </div>
+  </div>
+
+</body>
+</html>

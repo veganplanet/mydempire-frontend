@@ -15,14 +15,15 @@
         <img src="assets/logo.png" alt="MydEmpire">
       </a>
 
-      <nav class="appbar-nav">
+    <nav class="appbar-nav">
   <a href="index.html" class="appbar-link">Home</a>
   <a href="economy.html" class="appbar-link">Economy</a>
   <a href="transparency.html" class="appbar-link">Transparency</a>
   <a href="codex.html" class="appbar-link">Codex</a>
-  <a href="player-dashboard.html" class="appbar-link">Dashboard</a>
-  <a href="shop.html" class="appbar-link">Shop</a>
-  <a href="marketplace.html" class="appbar-link">Marketplace</a>
+
+  <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only hidden-auth-link">Dashboard</a>
+  <a href="shop.html" id="shopLink" class="appbar-link auth-only hidden-auth-link">Shop</a>
+  <a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only hidden-auth-link">Marketplace</a>
 </nav>
     </div>
 
@@ -200,9 +201,8 @@ function setupUniversalNavbar() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  setupUniversalNavbar();
-});
+
 </script>
+<script src="js/appbar.js"></script>
 </body>
 </html>
