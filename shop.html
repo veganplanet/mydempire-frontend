@@ -384,7 +384,7 @@
         Genesis limit: maximum 50 packs per wallet
       </div>
 
-      <button id="buy-packs-btn" class="shop-buy-main-btn">Buy Packs</button>
+      <button id="buy-packs-btn" class="shop-buy-main-btn" type="button">Buy Packs</button>
     </div>
   </div>
   </div>
@@ -923,7 +923,7 @@ async function loadShopEmpBalance() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  setupUniversalNavbar();
+  
   initEmpBuyButtons();
   loadShopEmpBalance();
   initMintBlueprintButton();
@@ -1031,6 +1031,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   qtyInput.addEventListener("input", updatePreGenesisPrice);
 });
+window.showWhitelistPopup = function () {
+  const popup = document.getElementById("whitelist-popup");
+  if (popup) popup.classList.remove("hidden");
+};
+
+window.closeWhitelistPopup = function () {
+  const popup = document.getElementById("whitelist-popup");
+  if (popup) popup.classList.add("hidden");
+};
 async function buyPacks() {
   try {
     const activeUser = getShopActiveUser();
@@ -1057,6 +1066,7 @@ async function buyPacks() {
     }
 
     // 🧾 CREATE ORDER
+    console.log("LOCAL CREATE-ORDER CHECK 21-MARCH");
     const orderRes = await fetch(shopApiUrl("/create-order"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1066,13 +1076,22 @@ async function buyPacks() {
       })
     });
 
-    const orderData = await orderRes.json();
+    let orderData = {};
+try {
+  orderData = await orderRes.json();
+} catch (e) {
+  orderData = {};
+}
 
     if (!orderRes.ok || !orderData.success) {
   const errorMsg = orderData.error || "";
 
   if (errorMsg.includes("Invite only phase")) {
-    showWhitelistPopup();
+    if (typeof showWhitelistPopup === "function") {
+      showWhitelistPopup();
+    } else {
+      alert("Invite only phase. Your wallet is not approved for PRE-GENESIS.");
+    }
   } else {
     alert(errorMsg || "Unable to create pack order.");
   }
@@ -1147,11 +1166,14 @@ function closeWhitelistPopup() {
   const popup = document.getElementById("whitelist-popup");
   if (popup) popup.classList.add("hidden");
 }
-document.getElementById("whitelist-popup").addEventListener("click", function(e) {
-  if (e.target === this) {
-    closeWhitelistPopup();
-  }
-});
+const whitelistPopup = document.getElementById("whitelist-popup");
+if (whitelistPopup) {
+  whitelistPopup.addEventListener("click", function(e) {
+    if (e.target === this) {
+      closeWhitelistPopup();
+    }
+  });
+}
 
 </script>
 <script src="js/appbar.js"></script>
@@ -1160,6 +1182,37 @@ document.getElementById("whitelist-popup").addEventListener("click", function(e)
 
 
 </script>
+<div id="whitelist-popup" class="hidden">
+  <div class="whitelist-popup-box">
+
+    <h2>You’re Early 👑</h2>
+
+    <p>
+      MydEmpire is currently in a <b>PRE-GENESIS invite-only testing phase</b>.
+    </p>
+
+    <p>
+      Your wallet isn’t on the tester list yet — which simply means  
+      you arrived <b>before the gates fully open</b>.
+    </p>
+
+    <p>
+      Join our Discord to request access and become one of the first  
+      <b>Empire Builders</b> shaping the future of MydEmpire.
+    </p>
+
+    <a href="https://discord.gg/cDyCjh57" target="_blank" class="discord-btn">
+      Join Discord
+    </a>
+
+    <button class="popup-ok-btn" onclick="closeWhitelistPopup()">
+      Got it
+    </button>
+
+  </div>
+</div>
+</div>
+</div>
   <script src="js/appbar.js"></script>
 
   </body>

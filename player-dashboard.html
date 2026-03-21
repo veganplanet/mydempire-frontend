@@ -66,13 +66,12 @@
 
     <!-- ===== SUB NAV (TABS) ===== -->
     <div class="subnav">
-      <button class="subnav-btn subnav-btn-active" data-tab="overview">Overview</button>
-      <button class="subnav-btn" data-tab="lands">Lands</button>
-      <button class="subnav-btn" data-tab="blueprints">Factory Blueprints</button>
-      <button class="subnav-btn" data-tab="construction">Under Construction</button>
-      <button class="subnav-btn" data-tab="global">Global</button>
-      <!-- later: Build, Market, Leaderboard, Notifications as separate tabs -->
-    </div>
+  <button type="button" class="subnav-btn subnav-btn-active" data-tab="overview" onclick="setActiveTab('overview')">Overview</button>
+  <button type="button" class="subnav-btn" data-tab="lands" onclick="setActiveTab('lands')">Lands</button>
+  <button type="button" class="subnav-btn" data-tab="blueprints" onclick="setActiveTab('blueprints')">Factory Blueprints</button>
+  <button type="button" class="subnav-btn" data-tab="construction" onclick="setActiveTab('construction')">Under Construction</button>
+  <button type="button" class="subnav-btn" data-tab="global" onclick="setActiveTab('global')">Global</button>
+</div>
 
   <!-- ===== TAB: OVERVIEW ===== -->
 <section class="section tab-panel tab-panel-active" data-tab-panel="overview">
@@ -133,6 +132,7 @@
   <div class="summary-value" id="summary-claimable-hive">
     0.000
   </div>
+  <button id="claim-reward-btn" class="secondary-btn">Claim Reward</button>
 
   <div class="summary-sub">
     Treasury reward available to claim
@@ -140,9 +140,7 @@
 
   <div class="summary-actions">
 
-    <button id="claim-reward-btn" class="primary-button">
-      Claim Reward
-    </button>
+   
 
     <div id="claim-reward-status" class="status-text">
       No claim attempted yet.
@@ -1097,7 +1095,7 @@ function factoryIndustryEmoji(factory) {
 
   if (raw.includes("FOOD")) return "🌾";
   if (raw.includes("TEXTILE")) return "🧵";
-  if (raw.includes("PHARMA")) return "💊";
+  if (raw.includes("PHARMA")) return "Rx";
   if (raw.includes("CHEMICAL")) return "⚗️";
   if (raw.includes("SUPERMARKET")) return "🛒";
 
@@ -1110,6 +1108,17 @@ function factoryStatusClass(factoryOrStatus) {
 
     const s = (factoryOrStatus.status || "").toString().trim().toUpperCase();
     if (s === "BUILDING" || s === "UPGRADING") return "building";
+
+    const maintenanceEndsAt = factoryOrStatus.maintenance_ends_at;
+    if (maintenanceEndsAt) {
+      const end = new Date(maintenanceEndsAt);
+      const now = new Date();
+
+      if (!isNaN(end.getTime()) && end <= now) {
+        return "expired";
+      }
+    }
+
     return "inactive";
   }
 
@@ -1133,11 +1142,11 @@ function getFactoryBuildingImage(factory) {
 
   const raw = String(blueprintTier).toUpperCase();
 
-  if (raw.includes("FOOD")) return "assets/food-building.png";
-  if (raw.includes("TEXTILE")) return "assets/textile-building.png";
-  if (raw.includes("PHARMA")) return "assets/pharma-building.png";
-  if (raw.includes("CHEMICAL")) return "assets/chemical-building.png";
-  if (raw.includes("SUPERMARKET")) return "assets/supermarket-building.png";
+  if (raw.includes("FOOD")) return "assets/food.png";
+  if (raw.includes("TEXTILE")) return "assets/textile.png";
+  if (raw.includes("PHARMA")) return "assets/pharma.png";
+  if (raw.includes("CHEMICAL")) return "assets/chemical.png";
+  if (raw.includes("SUPERMARKET")) return "assets/supermarket.png";
 
   return null;
 }
@@ -1178,7 +1187,7 @@ function renderTerritorySlots(factories, slotsTotal, landId) {
             }
           </div>
 
-          <div class="land-slot-badge">${factoryBadge}</div>
+          <div class="land-slot-badge ${factoryBadge.toLowerCase()}">${factoryBadge}</div>
 
           <div class="land-slot-status ${statusClass}">
             ${statusClass === "active" ? "✓" : statusClass === "building" ? "⏳" : "!"}
@@ -1340,21 +1349,23 @@ const territoryHtml = renderTerritorySlots(factories, slotsTotal, land.land_id);
     // Matrix HTML (clean + compact)
     
     landCard.innerHTML = `
-      <div class="land-left">
-        <div class="land-badge-row" style="background:${borderColor};">${landTierKey}</div>
-        <div class="land-title-row">${shortLabel}</div>
-        <div class="land-sub-row">GENESIS • Slots: <b>${slotsUsed}/${slotsTotal}</b></div>
+     <div class="land-left">
+  <div class="land-title-row">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div class="land-badge-row" style="background:${borderColor};">${landTierKey}</div>
+      <div class="land-name">${shortLabel}</div>
+    </div>
+    <div class="land-sub-row">GENESIS • Slots: <b>${slotsUsed}/${slotsTotal}</b></div>
+  </div>
 
-        ${territoryHtml}
-      </div>
+  ${territoryHtml}
+</div>
 
       <div class="land-matrix-row">
-        <div class="matrix-line">Active: <b>${activeCount}</b> • Inactive: <b>${inactiveCount}</b></div>
-        <div class="matrix-line">Building: <b>${buildingCount}</b> • Upgrading: <b>${upgradingCount}</b></div>
-       <div class="matrix-line">EP/day: <b>${landRatePerDayText}</b></div>
-<div class="matrix-line">Accumulated EP: <b>${landUnclaimedEPText}</b></div>
-<div class="matrix-line">${daysInfoText}</div>
-      </div>
+  <div class="matrix-line">Active: <b>${activeCount}</b> • Inactive: <b>${inactiveCount}</b> • Building: <b>${buildingCount}</b> • Upgrading: <b>${upgradingCount}</b></div>
+  <div class="matrix-line">EP/day: <b>${landRatePerDayText}</b> • Accumulated EP: <b>${landUnclaimedEPText}</b></div>
+  <div class="matrix-line">${daysInfoText}</div>
+</div>
 
       <div class="land-factories-col" id="land-factories-${idx}">
       </div>
@@ -1421,7 +1432,15 @@ const canRename = status === "ACTIVE";
 const activeDays = Number(f.active_days || 0);
 const requiredDays = getRequiredActiveDaysForUpgradeTier(blueprintTier);
 const nextUpgradeLabel = getNextUpgradeLabel(blueprintTier);
-const maintenanceText = getMaintenanceStatusText(f.maintenance_ends_at);
+let maintenanceText = "";
+
+if (status === "BUILDING") {
+  maintenanceText = "Construction in progress • Maintenance starts after build completion";
+} else if (status === "UPGRADING") {
+  maintenanceText = "Upgrade in progress • Maintenance starts after upgrade completion";
+} else {
+  maintenanceText = getMaintenanceStatusText(f.maintenance_ends_at);
+}
 const isMaxTier = !requiredDays || !nextUpgradeLabel;
 const isReadyToUpgrade =
   status === "ACTIVE" &&
@@ -1449,11 +1468,11 @@ row.innerHTML = `
     <div class="factory-title-row">
       <div class="factory-title">${factoryName}</div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-  ${canRename ? `<button class="rename-factory-btn" data-factory-id="${factoryId}">Rename</button>` : ""}
-  ${canUpgrade ? `<button class="upgrade-factory-btn" data-factory-id="${factoryId}">Upgrade</button>` : ""}
-  <button class="maintenance-factory-btn" data-factory-id="${factoryId}">Pay Maintenance</button>
-</div>
+        ${canRename ? `<button class="rename-factory-btn" data-factory-id="${factoryId}">Rename</button>` : ""}
+        ${canUpgrade ? `<button class="upgrade-factory-btn" data-factory-id="${factoryId}">Upgrade</button>` : ""}
+        ${status !== "BUILDING" && status !== "UPGRADING"
+  ? `<button class="maintenance-factory-btn" data-factory-id="${factoryId}">Pay Maintenance</button>`
+  : ""}
       </div>
     </div>
     <div class="factory-sub">${subLine}</div>
@@ -1755,11 +1774,11 @@ if (renameBtn) {
      
 // Small helpers for blueprint visuals
 const BP_INDUSTRY_IMAGES = {
-  PHARMA:      "assets/pharma-building.png",
-  FOOD:        "assets/food-building.png",
-  TEXTILE:     "assets/textile-building.png",
-  CHEMICAL:    "assets/chemical-building.png",
-  SUPERMARKET: "assets/supermarket-building.png",
+  PHARMA:      "assets/pharma.png",
+  FOOD:        "assets/food.png",
+  TEXTILE:     "assets/textile.png",
+  CHEMICAL:    "assets/chemical.png",
+  SUPERMARKET: "assets/supermarket.png",
 };
 
 const BP_LEVEL_COLORS = {
@@ -2353,10 +2372,12 @@ window.addEventListener("load", async () => {
   try {
     await loadDashboardSummary();
     await loadRewardSummary();
+    await loadEmpireOverview();
+    await loadBlueprints();
   } catch (err) {
     console.error("Initial dashboard load failed:", err);
   }
-}); 
+});
 
 function setupLoggedInNav() {
   const nav = document.getElementById("loggedInNav");
@@ -2379,7 +2400,7 @@ function setupLoggedInNav() {
 }
 
 setupLoggedInNav();
-
+document.getElementById("claim-reward-btn")?.addEventListener("click", claimReward);
   </script>
 
   <script src="js/appbar.js"></script>

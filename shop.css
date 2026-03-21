@@ -2898,78 +2898,74 @@
   font-weight: 700;
   color: #64748b;
 }
-/* ===== UPGRADE EXISTING POPUP ===== */
-
-.whitelist-popup {
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: rgba(10, 10, 20, 0.35) !important;
-  backdrop-filter: blur(8px) !important;
-  z-index: 99999 !important;
-}
-.whitelist-popup.hidden {
-  display: none !important;
+/* popup overlay */
+#whitelist-popup{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.85);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
 }
 
-.whitelist-popup-card {
-  width: 420px;
-  max-width: 90%;
-  padding: 28px 24px;
-  border-radius: 18px;
-  text-align: center;
-
-  background: linear-gradient(145deg, #1b1d2e, #2a2d45);
-  color: #ffffff; /* ✅ FIX TEXT VISIBILITY */
-
-  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-  animation: popupFade 0.3s ease;
+/* hidden state */
+.hidden{
+  display:none!important;
 }
 
-.whitelist-popup-badge {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #7c3aed, #4f46e5);
-  margin-bottom: 12px;
+/* popup card */
+.whitelist-popup-box{
+  background:#121212;
+  padding:40px;
+  border-radius:14px;
+  width:420px;
+  max-width:90%;
+  text-align:center;
+  color:#ffffff;
+  border:1px solid #2a2a2a;
+  box-shadow:0 10px 40px rgba(0,0,0,0.6);
 }
 
-.whitelist-discord-btn {
-  background: linear-gradient(135deg, #5865F2, #7289DA);
-  color: #fff;
+/* title */
+.whitelist-popup-box h2{
+  margin-bottom:18px;
+  font-size:26px;
 }
 
-@keyframes popupFade {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-.whitelist-popup-card h2 {
-  color: #ffffff;
+/* text */
+.whitelist-popup-box p{
+  margin:12px 0;
+  line-height:1.6;
+  color:#d4d4d4;
 }
 
-.whitelist-popup-card p {
-  color: rgba(255,255,255,0.85);
+/* discord button */
+.discord-btn{
+  display:inline-block;
+  margin-top:16px;
+  padding:12px 20px;
+  background:#5865F2;
+  color:white;
+  border-radius:6px;
+  text-decoration:none;
+  font-weight:600;
 }
 
-.whitelist-popup-actions button {
-  color: #ffffff;
+.discord-btn:hover{
+  background:#4752c4;
 }
 
-.whitelist-close-btn {
-  background: #3a3a4a;
-}
-.whitelist-popup-card {
-  border: 1px solid rgba(124, 58, 237, 0.4);
+/* got it button */
+.popup-ok-btn{
+  margin-top:16px;
+  padding:10px 18px;
+  border:none;
+  border-radius:6px;
+  background:#333;
+  color:white;
+  cursor:pointer;
 }
