@@ -754,6 +754,7 @@ async function openOnePackFromPacksPage() {
     });
 
     const data = await res.json();
+    console.log("PACK DATA RECEIVED:", data);
     console.log("Pack open result:", data);
 
     if (!res.ok || !data.success) {
