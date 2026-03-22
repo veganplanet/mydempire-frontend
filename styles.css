@@ -6145,3 +6145,43 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   height: auto;
   display: block;
 }
+.blueprint-reveal-card {
+  width: 210px;
+  min-height: 220px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.blueprint-reveal-card .nft-art {
+  width: 180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blueprint-reveal-card .nft-art img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.relic-reveal-card {
+  width: 210px;
+  min-height: 220px;
+  padding: 16px 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.relic-reveal-card .relic-art-img {
+  width: 150px;
+  height: auto;
+  display: block;
+}
