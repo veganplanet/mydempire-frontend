@@ -6217,3 +6217,26 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 .pack-reveal-stage > * {
   width: 100%;
 }
+.packs-layout{
+  display:flex;
+  gap:20px;
+  align-items:flex-start;
+}
+
+.packs-left{
+  width:35%;
+}
+
+.packs-right{
+  width:65%;
+}
+
+@media (max-width:900px){
+  .packs-layout{
+    flex-direction:column;
+  }
+  .packs-left,
+  .packs-right{
+    width:100%;
+  }
+}
