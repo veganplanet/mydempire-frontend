@@ -6029,3 +6029,97 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   color: #6c7a92;
   font-size: 15px;
 }
+.reveal-grid-main {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.reveal-grid-bonus {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.bonus-section {
+  margin-top: 18px;
+  padding-top: 10px;
+}
+
+.bonus-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: #7a4cff;
+  margin-bottom: 14px;
+  letter-spacing: 0.03em;
+}
+
+.bonus-reveal-card {
+  position: relative;
+  background: linear-gradient(180deg, #fff8ff 0%, #f1e8ff 100%);
+  border: 1px solid #c9a8ff;
+  box-shadow: 0 12px 26px rgba(122, 76, 255, 0.16);
+}
+
+.lucky-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #ffdd66, #ffb300);
+  color: #1b1b1b;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 999px;
+  box-shadow: 0 6px 14px rgba(255, 179, 0, 0.25);
+  white-space: nowrap;
+}
+
+.emp-reveal-card {
+  width: 140px;
+  height: 120px;
+  background: linear-gradient(135deg, #ffd96a, #ffb400);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.emp-icon {
+  font-size: 26px;
+}
+
+.emp-value {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.emp-label {
+  font-size: 12px;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+.land-reveal-img {
+  width: 140px;
+}
+
+.blueprint-reveal-img {
+  width: 160px;
+}
+
+.relic-reveal-card .relic-art-img {
+  width: 150px;
+}
+
+.relic-reveal-card {
+  box-shadow: 0 0 24px rgba(255, 215, 0, 0.22);
+}
