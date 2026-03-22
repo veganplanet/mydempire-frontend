@@ -1148,14 +1148,16 @@ async function openSelectedPacks() {
     }
 
     if (d.blueprint) {
-      const industry = d.blueprint.split("_")[0].toLowerCase();
+  const industry = d.blueprint.split("_")[0].toLowerCase();
 
-      cards.push(`
-        <div class="reveal-card blueprint-reveal-card">
-          <img src="assets/${industry}.png" class="blueprint-reveal-img" alt="${d.blueprint}">
-        </div>
-      `);
-    }
+  cards.push(`
+    <div class="reveal-card blueprint-reveal-card">
+      <div class="nft-art">
+        <img src="assets/${industry}.png" alt="${d.blueprint}">
+      </div>
+    </div>
+  `);
+}
 
     if (d.emp || d.emp === 0) {
       cards.push(`
@@ -1189,14 +1191,14 @@ async function openSelectedPacks() {
       `);
     }
 
-    if (d.relic) {
-      bonusCards.push(`
-        <div class="reveal-card relic-reveal-card bonus-reveal-card">
-          <div class="lucky-badge">Lucky Drop</div>
-          <img src="assets/relic.png" alt="Founder Relic" class="relic-art-img">
-        </div>
-      `);
-    }
+   if (d.relic) {
+  bonusCards.push(`
+    <div class="reveal-card relic-reveal-card bonus-reveal-card">
+      <div class="lucky-badge">Lucky Drop</div>
+      <img src="assets/relic.png" alt="Founder Relic" class="relic-art-img">
+    </div>
+  `);
+}
   });
 
   stageEl.innerHTML = `
