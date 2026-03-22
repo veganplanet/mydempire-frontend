@@ -714,68 +714,7 @@ gridEl.innerHTML = `
   }
 }
 
-async function openOnePackFromPacksPage() {
-  try {
-    if (!PLAYER_USERNAME) return;
 
-    const stage = document.getElementById("pack-reveal-stage");
-    if (stage) {
-      stage.innerHTML = `<div class="empty">Opening pack...</div>`;
-    }
-
-    const res = await fetch(apiUrl(`/open-pack`), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: PLAYER_USERNAME,
-        count: 1
-      })
-    });
-
-    const data = await res.json();
-    console.log("PACK DATA RECEIVED:", data);
-    console.log("Pack open result:", data);
-
-    if (!res.ok || !data.success) {
-      if (stage) {
-       stage.innerHTML = `
-  <div class="pack-opened-banner">🎉 Pack Opened</div>
-
-  <div class="reveal-grid reveal-grid-main">
-    ${mainCards.join("")}
-  </div>
-
-  ${bonusCards.length ? `
-    <div class="bonus-section">
-      <div class="bonus-title">✨ Lucky Drops</div>
-      <div class="reveal-grid reveal-grid-bonus">
-        ${bonusCards.join("")}
-      </div>
-    </div>
-  ` : ``}
-`;
-      }
-      return;
-    }
-
-    renderPackReveal(data);
-    await loadPacks();
-
-    const overviewCount = document.getElementById("summary-unopened-packs");
-    if (overviewCount) {
-      const currentText = overviewCount.textContent || "0";
-      const currentNum = parseInt(currentText, 10) || 0;
-      overviewCount.textContent = Math.max(0, currentNum - 1);
-    }
-
-  } catch (err) {
-    console.error("Pack opening failed:", err);
-    const stage = document.getElementById("pack-reveal-stage");
-    if (stage) {
-      stage.innerHTML = `<div class="empty">Pack opening failed.</div>`;
-    }
-  }
-}
 
 function renderPackReveal(data) {
   const stage = document.getElementById("pack-reveal-stage");
