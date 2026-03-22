@@ -6082,30 +6082,36 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 }
 
 .emp-reveal-card {
-  width: 140px;
-  height: 120px;
-  background: linear-gradient(135deg, #ffd96a, #ffb400);
-  border-radius: 14px;
+  width: 170px;
+  height: 140px;
+  background: linear-gradient(145deg, #ffd966 0%, #ffbf00 100%);
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  box-shadow: 0 12px 24px rgba(255, 179, 0, 0.22);
+  border: 2px solid rgba(255,255,255,0.35);
 }
 
 .emp-icon {
-  font-size: 26px;
+  font-size: 30px;
+  margin-bottom: 8px;
 }
 
 .emp-value {
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 800;
+  color: #1e1e1e;
+  line-height: 1;
 }
 
 .emp-label {
-  font-size: 12px;
-  letter-spacing: 1px;
-  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin-top: 8px;
+  color: #2d2d2d;
 }
 
 .land-reveal-img {
