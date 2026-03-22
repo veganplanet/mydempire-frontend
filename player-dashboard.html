@@ -64,146 +64,123 @@
       </div>
     </header>
 
-    <!-- ===== SUB NAV (TABS) ===== -->
-    <div class="subnav">
+   <!-- ===== SUB NAV (TABS) ===== -->
+<div class="subnav">
   <button type="button" class="subnav-btn subnav-btn-active" data-tab="overview" onclick="setActiveTab('overview')">Overview</button>
+  <button type="button" class="subnav-btn" data-tab="packs" onclick="setActiveTab('packs')">Packs</button>
   <button type="button" class="subnav-btn" data-tab="lands" onclick="setActiveTab('lands')">Lands</button>
   <button type="button" class="subnav-btn" data-tab="blueprints" onclick="setActiveTab('blueprints')">Factory Blueprints</button>
   <button type="button" class="subnav-btn" data-tab="construction" onclick="setActiveTab('construction')">Under Construction</button>
   <button type="button" class="subnav-btn" data-tab="global" onclick="setActiveTab('global')">Global</button>
 </div>
 
-  <!-- ===== TAB: OVERVIEW ===== -->
+<!-- ===== TAB: OVERVIEW ===== -->
 <section class="section tab-panel tab-panel-active" data-tab-panel="overview">
+
   <div class="section-header">
     <h2>Overview</h2>
     <small>Your Genesis EMP, lands, factories and boosts</small>
   </div>
 
- <!-- ===== BLOCK 1: SNAPSHOT ===== -->
-<div class="overview-block">
-  <div class="overview-block-title">Empire Snapshot</div>
+  <!-- ===== BLOCK 1: SNAPSHOT ===== -->
+  <div class="overview-block">
+    <div class="overview-block-title">Empire Snapshot</div>
 
-  <div class="summary-grid snapshot-grid">
+    <div class="summary-grid snapshot-grid">
 
-    <div class="summary-card card-emp">
-      <div class="summary-label"><span class="summary-emoji">💰</span>EMP Balance</div>
-      <div class="summary-value" id="summary-emp-balance">0</div>
-      <div class="summary-sub">Total EMP you currently own</div>
-    </div>
-
-    <div class="summary-card card-land">
-      <div class="summary-label"><span class="summary-emoji">🌍</span>Lands Owned</div>
-      <div class="summary-value" id="summary-lands-total">0</div>
-      <div class="summary-sub" id="summary-lands-breakdown">L1: 0 | L2: 0 | L3: 0</div>
-    </div>
-
-    <div class="summary-card card-factory">
-      <div class="summary-label"><span class="summary-emoji">🏭</span>Factories</div>
-      <div class="summary-value" id="summary-factories-total">0</div>
-      <div class="summary-sub" id="summary-factories-breakdown">Total factories: 0</div>
-    </div>
-
-    <div class="summary-card card-production">
-      <div class="summary-label"><span class="summary-emoji">⚡</span>Production</div>
-      <div class="summary-value" id="summary-production-rate">0 EP/day</div>
-      <div class="summary-sub" id="summary-production-sub">
-        Empire production including relic boosts
-        <div class="summary-sub" id="summary-claimable-ep">Accumulated EP: 0.00</div>
+      <div class="summary-card card-emp">
+        <div class="summary-label"><span class="summary-emoji">💰</span>EMP Balance</div>
+        <div class="summary-value" id="summary-emp-balance">0</div>
+        <div class="summary-sub">Total EMP you currently own</div>
       </div>
-    </div>
 
-    <div class="summary-card card-ep">
-      <div class="summary-label">
-        <span class="summary-emoji">⚡</span>Empire Accumulated EP
+      <div class="summary-card card-land">
+        <div class="summary-label"><span class="summary-emoji">🌍</span>Lands Owned</div>
+        <div class="summary-value" id="summary-lands-total">0</div>
+        <div class="summary-sub" id="summary-lands-breakdown">L1: 0 | L2: 0 | L3: 0</div>
       </div>
-      <div class="summary-value" id="summary-total-empire-ep">0</div>
-      <div class="summary-sub">
-        Total accumulated EP across your factories
+
+      <div class="summary-card card-factory">
+        <div class="summary-label"><span class="summary-emoji">🏭</span>Factories</div>
+        <div class="summary-value" id="summary-factories-total">0</div>
+        <div class="summary-sub" id="summary-factories-breakdown">Total factories: 0</div>
       </div>
-    </div>
 
-    <div class="summary-card card-reward">
-
-  <div class="summary-label">
-    <span class="summary-emoji">🎁</span>Claimable HIVE
-  </div>
-
-  <div class="summary-value" id="summary-claimable-hive">
-    0.000
-  </div>
-  <button id="claim-reward-btn" class="secondary-btn">Claim Reward</button>
-
-  <div class="summary-sub">
-    Treasury reward available to claim
-  </div>
-
-  <div class="summary-actions">
-
-   
-
-    <div id="claim-reward-status" class="status-text">
-      No claim attempted yet.
-    </div>
-
-  </div>
-
-</div>
-
-   <div class="summary-card card-wallet">
-
-  <div class="summary-label">
-    <span class="summary-emoji">🏦</span>Wallet HIVE
-  </div>
-
-  <div class="summary-value" id="summary-wallet-hive">
-    0.000
-  </div>
-
-  <div class="summary-sub">
-    Claimed reward balance
-  </div>
-
-  <div class="summary-actions">
-
-    <button id="withdraw-hive-btn" class="primary-button">
-      Withdraw HIVE
-    </button>
-
-    <div id="withdraw-hive-status" class="status-text">
-      Withdrawal not requested yet.
-    </div>
-
-  </div>
-
-</div>
-
-    <div class="summary-card card-withdraw">
-      <div class="summary-label">
-        <span class="summary-emoji">💸</span>Withdraw Status
+      <div class="summary-card card-production">
+        <div class="summary-label"><span class="summary-emoji">⚡</span>Production</div>
+        <div class="summary-value" id="summary-production-rate">0 EP/day</div>
+        <div class="summary-sub" id="summary-production-sub">
+          Empire production including relic boosts
+          <div class="summary-sub" id="summary-claimable-ep">Accumulated EP: 0.00</div>
+        </div>
       </div>
-      <div class="summary-value" id="summary-withdraw-status">Not Ready</div>
-      <div class="summary-sub" id="summary-withdraw-sub">
-        Minimum withdrawal is 1.000 HIVE
+
+      <div class="summary-card card-ep">
+        <div class="summary-label">
+          <span class="summary-emoji">⚡</span>Empire Accumulated EP
+        </div>
+        <div class="summary-value" id="summary-total-empire-ep">0</div>
+        <div class="summary-sub">
+          Total accumulated EP across your factories
+        </div>
       </div>
-    </div>
 
-    <div class="summary-card card-relic">
-      <div class="summary-label"><span class="summary-emoji">💎</span>Relic Boost</div>
-      <div class="summary-value" id="summary-relic-boost">0%</div>
-      <div class="summary-sub" id="summary-relic-count">
-        Relics owned: 0 (max boost: 6%)
+      <div class="summary-card card-reward">
+        <div class="summary-label">
+          <span class="summary-emoji">🎁</span>Claimable HIVE
+        </div>
+        <div class="summary-value" id="summary-claimable-hive">0.000</div>
+        <button id="claim-reward-btn" class="secondary-btn">Claim Reward</button>
+        <div class="summary-sub">Treasury reward available to claim</div>
+        <div class="summary-actions">
+          <div id="claim-reward-status" class="status-text">
+            No claim attempted yet.
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="summary-card card-writ">
-      <div class="summary-label"><span class="summary-emoji">🧾</span>WRITs</div>
-      <div class="summary-value" id="summary-writ-count">0</div>
-      <div class="summary-sub">Genesis strategic documents you hold</div>
-    </div>
+      <div class="summary-card card-wallet">
+        <div class="summary-label">
+          <span class="summary-emoji">🏦</span>Wallet HIVE
+        </div>
+        <div class="summary-value" id="summary-wallet-hive">0.000</div>
+        <div class="summary-sub">Claimed reward balance</div>
+        <div class="summary-actions">
+          <button id="withdraw-hive-btn" class="primary-button">
+            Withdraw HIVE
+          </button>
+          <div id="withdraw-hive-status" class="status-text">
+            Withdrawal not requested yet.
+          </div>
+        </div>
+      </div>
 
+      <div class="summary-card card-withdraw">
+        <div class="summary-label">
+          <span class="summary-emoji">💸</span>Withdraw Status
+        </div>
+        <div class="summary-value" id="summary-withdraw-status">Not Ready</div>
+        <div class="summary-sub" id="summary-withdraw-sub">
+          Minimum withdrawal is 1.000 HIVE
+        </div>
+      </div>
+
+      <div class="summary-card card-relic">
+        <div class="summary-label"><span class="summary-emoji">💎</span>Relic Boost</div>
+        <div class="summary-value" id="summary-relic-boost">0%</div>
+        <div class="summary-sub" id="summary-relic-count">
+          Relics owned: 0 (max boost: 6%)
+        </div>
+      </div>
+
+      <div class="summary-card card-writ">
+        <div class="summary-label"><span class="summary-emoji">🧾</span>WRITs</div>
+        <div class="summary-value" id="summary-writ-count">0</div>
+        <div class="summary-sub">Genesis strategic documents you hold</div>
+      </div>
+
+    </div>
   </div>
-</div>
 
   <!-- ===== BLOCK 2: EMPIRE PREVIEW ===== -->
   <div class="overview-block">
@@ -224,11 +201,6 @@
     <div class="overview-block-title">Actions</div>
 
     <div class="summary-grid action-grid">
-
-      
-
-      
-
       <div class="summary-card action-card">
         <div class="summary-label"><span class="summary-emoji">📦</span>Unopened Packs</div>
         <div class="summary-value" id="summary-unopened-packs">0</div>
@@ -249,11 +221,42 @@
           <div id="open-pack-status" class="status-text">No pack opened yet.</div>
         </div>
       </div>
+    </div>
+  </div>
 
+</section>
+
+<!-- ===== TAB: PACKS ===== -->
+<section class="section tab-panel" data-tab-panel="packs">
+  <div class="page-header">
+    <h2>My Packs</h2>
+    <p class="page-subtitle">Open your sealed packs one by one and reveal your empire assets.</p>
+  </div>
+
+  
+
+  <div class="packs-board-card">
+    <div class="packs-board-head">
+      <h3>Sealed Packs</h3>
+      <div class="packs-board-note">Click one pack to open it</div>
+    </div>
+
+    <div id="packs-grid" class="packs-grid">
+      <div class="empty">No unopened packs.</div>
+    </div>
+  </div>
+
+  <div class="pack-reveal-card">
+    <div class="packs-board-head">
+      <h3>Pack Reveal</h3>
+      <div class="packs-board-note">Selected pack rewards will appear here</div>
+    </div>
+
+    <div id="pack-reveal-stage" class="pack-reveal-stage">
+      <div class="empty">Select a sealed pack to reveal its contents.</div>
     </div>
   </div>
 </section>
-
 <!-- ===== TAB: LANDS (GRID) ===== -->
 <section class="section tab-panel" data-tab-panel="lands">
   <div class="section-header">
@@ -690,7 +693,183 @@ async function loadRewardSummary() {
     console.error("Failed to load reward summary:", err);
   }
 }
+async function loadPacks() {
+  try {
+    if (!PLAYER_USERNAME) return;
 
+    const res = await fetch(
+      apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/unopened-packs`)
+    );
+
+    if (!res.ok) throw new Error("HTTP " + res.status);
+
+    const data = await res.json();
+    console.log("Unopened packs:", data);
+
+    const total = Number(data.totalUnopenedPacks || 0);
+
+    const countEl = document.getElementById("packs-total-count");
+    if (countEl) {
+      countEl.textContent = `${total} Pack${total === 1 ? "" : "s"}`;
+    }
+
+    const gridEl = document.getElementById("packs-grid");
+if (!gridEl) return;
+
+if (!total) {
+  gridEl.innerHTML = `<div class="empty">No unopened packs.</div>`;
+  return;
+}
+
+gridEl.innerHTML = `
+  <button type="button" class="sealed-pack-main" id="open-pack-card">
+    <img src="assets/pack.png" class="sealed-pack-main-img">
+    <div class="sealed-pack-main-title">Genesis Pack</div>
+    <div class="sealed-pack-main-count">${total} Packs Available</div>
+    <div class="sealed-pack-main-sub">Click to open</div>
+  </button>
+`;
+
+  } catch (err) {
+    console.error("Failed to load packs:", err);
+  }
+}
+
+async function openOnePackFromPacksPage() {
+  try {
+    if (!PLAYER_USERNAME) return;
+
+    const stage = document.getElementById("pack-reveal-stage");
+    if (stage) {
+      stage.innerHTML = `<div class="empty">Opening pack...</div>`;
+    }
+
+    const res = await fetch(apiUrl(`/open-pack`), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: PLAYER_USERNAME,
+        count: 1
+      })
+    });
+
+    const data = await res.json();
+    console.log("Pack open result:", data);
+
+    if (!res.ok || !data.success) {
+      if (stage) {
+        stage.innerHTML = `<div class="empty">${data.error || "Failed to open pack."}</div>`;
+      }
+      return;
+    }
+
+    renderPackReveal(data);
+    await loadPacks();
+
+    const overviewCount = document.getElementById("summary-unopened-packs");
+    if (overviewCount) {
+      const currentText = overviewCount.textContent || "0";
+      const currentNum = parseInt(currentText, 10) || 0;
+      overviewCount.textContent = Math.max(0, currentNum - 1);
+    }
+
+  } catch (err) {
+    console.error("Pack opening failed:", err);
+    const stage = document.getElementById("pack-reveal-stage");
+    if (stage) {
+      stage.innerHTML = `<div class="empty">Pack opening failed.</div>`;
+    }
+  }
+}
+
+function renderPackReveal(data) {
+  const stage = document.getElementById("pack-reveal-stage");
+  if (!stage) return;
+
+  const drops = Array.isArray(data.drops) ? data.drops : [];
+
+  const findDrop = (type) => drops.find(d => d.type === type);
+  const filterDrops = (type) => drops.filter(d => d.type === type);
+
+  const land = findDrop("land");
+  const blueprint = findDrop("blueprint");
+  const emp = findDrop("emp");
+  const bonusEmp = findDrop("bonus_emp");
+  const extraBlueprints = filterDrops("extra_blueprint");
+  const relic = findDrop("relic");
+
+  const rewardCards = [];
+
+  if (land) {
+    rewardCards.push(`
+      <div class="reveal-card">
+        <div class="reveal-card-label">LAND</div>
+        <div class="reveal-card-value">${land.tier || "LAND"}</div>
+      </div>
+    `);
+  }
+
+  if (blueprint) {
+    rewardCards.push(`
+      <div class="reveal-card">
+        <div class="reveal-card-label">BLUEPRINT</div>
+        <div class="reveal-card-value">${blueprint.blueprint_tier || blueprint.tier || "BLUEPRINT"}</div>
+        <div class="reveal-card-sub">${blueprint.industry || ""}</div>
+      </div>
+    `);
+  }
+
+  if (emp) {
+    rewardCards.push(`
+      <div class="reveal-card">
+        <div class="reveal-card-label">EMP</div>
+        <div class="reveal-card-value">${emp.amount ?? 0}</div>
+      </div>
+    `);
+  }
+
+  if (bonusEmp) {
+    rewardCards.push(`
+      <div class="reveal-card reveal-card-bonus">
+        <div class="reveal-card-label">BONUS EMP</div>
+        <div class="reveal-card-value">${bonusEmp.amount ?? 0}</div>
+      </div>
+    `);
+  }
+
+  extraBlueprints.forEach((bp) => {
+    rewardCards.push(`
+      <div class="reveal-card reveal-card-bonus">
+        <div class="reveal-card-label">EXTRA BLUEPRINT</div>
+        <div class="reveal-card-value">${bp.blueprint_tier || bp.tier || "BLUEPRINT"}</div>
+        <div class="reveal-card-sub">${bp.industry || ""}</div>
+      </div>
+    `);
+  });
+
+  if (relic) {
+    rewardCards.push(`
+      <div class="reveal-card reveal-card-relic">
+        <div class="reveal-card-label">RELIC</div>
+        <div class="reveal-card-value">Genesis Relic</div>
+      </div>
+    `);
+  }
+
+  stage.innerHTML = `
+    <div class="pack-opened-banner">Pack Opened</div>
+    <div class="reveal-grid">
+      ${rewardCards.join("")}
+    </div>
+  `;
+}
+
+document.addEventListener("click", (e) => {
+  const packBtn = e.target.closest("#open-pack-card");
+  console.log("PACK CLICK TEST:", packBtn);
+  if (!packBtn) return;
+  openOnePackFromPacksPage();
+});
 async function claimReward() {
   const statusEl = document.getElementById("claim-reward-status");
 
@@ -1557,6 +1736,7 @@ if (upgradeBtn) {
 await loadRewardSummary();
 await loadEmpireOverview();
 
+
     } catch (err) {
       console.error("Upgrade error:", err);
       alert("Upgrade failed.");
@@ -2374,6 +2554,7 @@ window.addEventListener("load", async () => {
     await loadRewardSummary();
     await loadEmpireOverview();
     await loadBlueprints();
+    await loadPacks();
   } catch (err) {
     console.error("Initial dashboard load failed:", err);
   }
