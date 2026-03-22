@@ -6240,3 +6240,193 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
     width:100%;
   }
 }
+/* ===== Strong section styling ===== */
+
+.packs-board-card,
+.pack-reveal-card {
+  border: 2px solid #c8d4ea;
+  border-radius: 24px;
+  background: #f7f9fc;
+  padding: 18px;
+  margin-top: 14px;
+  box-shadow: 0 10px 24px rgba(22, 50, 92, 0.08);
+}
+
+/* Solid header strip inside cards */
+.packs-board-head {
+  background: #17305c;
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+}
+
+.packs-board-head h3 {
+  color: #ffffff;
+  margin: 0;
+}
+
+.packs-board-note {
+  color: #d8e4ff;
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Main pack card with stronger identity */
+.sealed-pack-main {
+  width: 260px;
+  margin: 0 auto;
+  padding: 16px 12px 12px;
+  border-radius: 22px;
+  background: #17305c;
+  border: 4px solid #f2c14b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 14px 28px rgba(23, 48, 92, 0.25);
+}
+
+.sealed-pack-main:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 18px 32px rgba(23, 48, 92, 0.32);
+}
+
+.sealed-pack-main-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.sealed-pack-main-count {
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #f2c14b;
+  text-align: center;
+}
+
+.sealed-pack-main-sub {
+  margin-top: 3px;
+  font-size: 12px;
+  color: #d7e4ff;
+  text-align: center;
+}
+
+/* Reveal stage stronger look */
+.pack-reveal-stage {
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  margin-top: 12px;
+  border: 2px solid #d0dbef;
+  border-radius: 22px;
+  background: #eef4fb;
+}
+
+/* Strong top banner */
+.pack-opened-banner {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 900;
+  color: #17305c;
+  margin-bottom: 20px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: #f2c14b;
+  display: inline-block;
+  box-shadow: 0 10px 22px rgba(242, 193, 75, 0.28);
+}
+
+/* EMP solid block */
+.emp-reveal-card {
+  width: 170px;
+  height: 140px;
+  background: #ffbf00;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 14px 26px rgba(255, 191, 0, 0.26);
+  border: 3px solid #fff0b3;
+}
+
+.emp-icon {
+  font-size: 30px;
+  margin-bottom: 8px;
+  color: #1f1f1f;
+}
+
+.emp-value {
+  font-size: 30px;
+  font-weight: 900;
+  color: #1f1f1f;
+  line-height: 1;
+}
+
+.emp-label {
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  margin-top: 8px;
+  color: #1f1f1f;
+}
+
+/* Lucky Drops section with strong purple */
+.bonus-section {
+  margin-top: 24px;
+  padding-top: 8px;
+}
+
+.bonus-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 900;
+  color: #6d28d9;
+  margin-bottom: 14px;
+}
+
+.bonus-reveal-card {
+  position: relative;
+  background: #ede0ff;
+  border: 3px solid #b07cff;
+  box-shadow: 0 14px 26px rgba(109, 40, 217, 0.16);
+}
+
+.lucky-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #6d28d9;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 5px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px rgba(109, 40, 217, 0.22);
+}
+
+/* Tabs stronger */
+.subnav-btn {
+  background: #ffffff;
+  color: #17305c;
+  border: 2px solid #d7e0f0;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.subnav-btn-active {
+  background: #17305c !important;
+  color: #ffffff !important;
+  border-color: #17305c !important;
+  box-shadow: 0 8px 18px rgba(23, 48, 92, 0.22);
+}
