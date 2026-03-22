@@ -6123,3 +6123,25 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 .relic-reveal-card {
   box-shadow: 0 0 24px rgba(255, 215, 0, 0.22);
 }
+.land-reveal-card {
+  width: 190px;
+  min-height: 250px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.land-reveal-card .land-layout {
+  width: 170px;
+  margin: 0 auto;
+}
+
+.land-reveal-card .land-tile {
+  width: 100%;
+  height: auto;
+  display: block;
+}
