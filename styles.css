@@ -5616,3 +5616,197 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 .empty {
   color: #5d6b82;
 }
+/* =========================
+   PACKS PAGE UPGRADE
+   ========================= */
+
+.packs-board-card,
+.pack-reveal-card {
+  border: 1px solid #d9e1ee;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 45%, #fff8eb 100%);
+  padding: 20px 20px 24px;
+  margin-top: 18px;
+  box-shadow: 0 10px 30px rgba(24, 48, 92, 0.06);
+}
+
+.packs-board-head h3,
+.pack-reveal-card h3,
+.page-header h2 {
+  color: #16325c;
+}
+
+.packs-board-note,
+.page-subtitle {
+  color: #5d6f8c;
+}
+
+/* Center area */
+#packs-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 260px;
+  padding: 10px 0 0;
+}
+
+/* Main clickable pack */
+.sealed-pack-main {
+  width: 240px;
+  margin: 0 auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  box-shadow: none;
+}
+
+/* Hover motion */
+.sealed-pack-main:hover {
+  transform: translateY(-6px) scale(1.02);
+  filter: drop-shadow(0 14px 26px rgba(36, 68, 136, 0.18));
+}
+
+/* Pack image bigger */
+.sealed-pack-main-img {
+  width: 170px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 10px;
+  filter: drop-shadow(0 12px 24px rgba(25, 40, 80, 0.18));
+  animation: packFloat 2.6s ease-in-out infinite;
+}
+
+/* Gentle floating motion */
+@keyframes packFloat {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Click shake class for JS */
+.sealed-pack-main.pack-opening .sealed-pack-main-img {
+  animation: packShake 0.7s ease-in-out 1;
+}
+
+@keyframes packShake {
+  0%   { transform: translateY(0) rotate(0deg) scale(1); }
+  15%  { transform: translateY(-4px) rotate(-3deg) scale(1.02); }
+  30%  { transform: translateY(2px) rotate(3deg) scale(1.04); }
+  45%  { transform: translateY(-3px) rotate(-2deg) scale(1.05); }
+  60%  { transform: translateY(2px) rotate(2deg) scale(1.03); }
+  75%  { transform: translateY(-2px) rotate(-1deg) scale(1.02); }
+  100% { transform: translateY(0) rotate(0deg) scale(1); }
+}
+
+/* Text smaller so image dominates */
+.sealed-pack-main-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #17305c;
+  margin-top: 2px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.sealed-pack-main-count {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #36558a;
+  text-align: center;
+}
+
+.sealed-pack-main-sub {
+  margin-top: 3px;
+  font-size: 12px;
+  color: #6f7f98;
+  text-align: center;
+}
+
+/* Reveal area richer */
+.pack-reveal-stage {
+  min-height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  margin-top: 14px;
+  border: 1px solid #d9e1ee;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #ffffff 0%, #f7fbff 60%, #fff8ec 100%);
+}
+
+/* Reveal cards */
+.reveal-grid {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.reveal-card {
+  min-width: 170px;
+  max-width: 185px;
+  min-height: 118px;
+  border: 1px solid #d9e1ee;
+  border-radius: 18px;
+  padding: 16px 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(24, 48, 92, 0.06);
+}
+
+.reveal-card-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #6d7f98;
+  margin-bottom: 10px;
+}
+
+.reveal-card-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: #17305c;
+}
+
+.reveal-card-sub {
+  font-size: 13px;
+  color: #61728c;
+  margin-top: 6px;
+}
+
+.reveal-card-bonus {
+  background: linear-gradient(180deg, #f7fbff 0%, #ecf3ff 100%);
+  border-color: #a9c0ff;
+}
+
+.reveal-card-relic {
+  background: linear-gradient(180deg, #fff8e7 0%, #fff1cc 100%);
+  border-color: #e2bf63;
+}
+
+/* Pack opened banner */
+.pack-opened-banner {
+  font-size: 18px;
+  font-weight: 800;
+  color: #17305c;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* Empty state */
+.empty {
+  color: #6c7a92;
+  font-size: 15px;
+}
