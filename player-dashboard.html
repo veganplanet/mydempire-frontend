@@ -1080,31 +1080,78 @@ async function openSelectedPacks() {
   const bonusCards = [];
 
   drops.forEach((d) => {
-    if (d.land) {
-      let landImg = "assets/land-l1.png";
+   if (d.land) {
+  const landTier = String(d.land).toUpperCase();
 
-      if (d.land === "L2") landImg = "assets/land-l2.png";
-      if (d.land === "L3") landImg = "assets/land-l3.png";
+  let landTitle = "FRONTIER";
+  let landClass = "l1";
+  let landLayoutClass = "land-layout-1";
+  let landImg = "assets/land-l1.png";
+  let landBadge = "L1";
+  let landLayoutHtml = `
+    <div class="land-layout land-layout-1">
+      <img src="assets/land-l1.png" class="land-tile" alt="L1 Frontier">
+    </div>
+  `;
 
-      cards.push(`
-        <div class="reveal-card land-reveal-card">
-          <img src="${landImg}" class="land-reveal-img" alt="${d.land}">
-        </div>
-      `);
-    }
+  if (landTier === "L2") {
+    landTitle = "ESTATE";
+    landClass = "l2";
+    landBadge = "L2";
+    landLayoutHtml = `
+      <div class="land-layout land-layout-2">
+        <img src="assets/land-l2.png" class="land-tile" alt="L2 Estate">
+        <img src="assets/land-l2.png" class="land-tile" alt="L2 Estate">
+      </div>
+    `;
+  }
 
-    if (d.blueprint) {
-  const industry = d.blueprint.split("_")[0].toLowerCase();
+  if (landTier === "L3") {
+    landTitle = "INDUSTRIAL ZONE";
+    landClass = "l3";
+    landBadge = "L3";
+    landLayoutHtml = `
+      <div class="land-layout land-layout-3">
+        <img src="assets/land-l3.png" class="land-tile land-top" alt="L3 Industrial Zone">
+        <img src="assets/land-l3.png" class="land-tile land-bottom-left" alt="L3 Industrial Zone">
+        <img src="assets/land-l3.png" class="land-tile land-bottom-right" alt="L3 Industrial Zone">
+      </div>
+    `;
+  }
 
   cards.push(`
-    <div class="reveal-card blueprint-reveal-card">
-      <div class="nft-art">
-        <img src="assets/${industry}.png" alt="${d.blueprint}">
+    <div class="pack-reveal-nft-shell">
+      <div class="nft-card land ${landClass}">
+        <div class="nft-inner">
+          <div class="nft-title">${landTitle}</div>
+          ${landLayoutHtml}
+          <div class="nft-badge">${landBadge}</div>
+        </div>
       </div>
     </div>
   `);
 }
 
+  if (d.blueprint) {
+  const raw = String(d.blueprint).toUpperCase();
+  const parts = raw.split("_");
+  const industry = parts[0] || "FOOD";
+  const tier = (parts[1] || "B1").toLowerCase(); // b1, b2, b3...
+
+  cards.push(`
+    <div class="pack-reveal-nft-shell">
+      <div class="nft-card blueprint ${tier}">
+        <div class="nft-inner">
+          <div class="nft-title">${industry}</div>
+          <div class="nft-art">
+            <img src="assets/${industry.toLowerCase()}.png" alt="${raw}">
+          </div>
+          <div class="nft-badge">${parts[1] || "B1"}</div>
+        </div>
+      </div>
+    </div>
+  `);
+}
     if (d.emp || d.emp === 0) {
       cards.push(`
         <div class="reveal-card emp-reveal-card">
