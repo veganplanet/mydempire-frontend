@@ -5593,3 +5593,26 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   margin-bottom: 18px;
   text-align: center;
 }
+.pack-reveal-card {
+  border: 1px solid #d7dce5;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+  padding: 20px;
+  margin-top: 18px;
+}
+
+.pack-reveal-stage {
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  margin-top: 14px;
+  border: 1px solid #d7dce5;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+}
+
+.empty {
+  color: #5d6b82;
+}
