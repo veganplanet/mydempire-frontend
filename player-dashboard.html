@@ -865,7 +865,7 @@ function renderPackReveal(data) {
 }
 
 document.addEventListener("click", (e) => {
-  const packBtn = e.target.closest("#open-pack-card");
+  const packBtn = e.target.closest(".sealed-pack-main");
   console.log("PACK CLICK TEST:", packBtn);
   if (!packBtn) return;
   openOnePackFromPacksPage();
