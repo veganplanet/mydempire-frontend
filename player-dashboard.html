@@ -1089,9 +1089,15 @@ async function openSelectedPacks() {
   }
 }    
 
-  async function openPackFromPacksPage() {
+ async function openPackFromPacksPage() {
+  if (window.openingPack) return;
+  window.openingPack = true;
+
   const stageEl = document.getElementById("pack-reveal-stage");
-  if (!stageEl) return;
+  if (!stageEl) {
+    window.openingPack = false;
+    return;
+  }
 
   stageEl.innerHTML = `<div class="empty">Opening pack...</div>`;
 
@@ -1114,15 +1120,17 @@ async function openSelectedPacks() {
     }
 
     await loadDashboardSummary();
-await loadEmpireOverview();
-await loadBlueprints();
-await loadPacks();
+    await loadEmpireOverview();
+    await loadBlueprints();
+    await loadPacks();
 
-renderPacksPageReveal(data);
+    renderPacksPageReveal(data);
 
   } catch (err) {
     console.error("Packs page open error:", err);
     stageEl.innerHTML = `<div class="empty">Error while opening pack.</div>`;
+  } finally {
+    window.openingPack = false;
   }
 }
  function renderPacksPageReveal(data) {
@@ -1218,11 +1226,7 @@ renderPacksPageReveal(data);
     ` : ``}
   `;
 }
-  document.addEventListener("click", (e) => {
-  const packBtn = e.target.closest(".sealed-pack-main");
-  if (!packBtn) return;
-  openPackFromPacksPage();
-});
+ 
 async function openPack(username, pack_id) {
   if (!confirm(`Open Pack #${pack_id}?`)) return;
 
