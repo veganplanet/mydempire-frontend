@@ -1113,12 +1113,12 @@ async function openSelectedPacks() {
       return;
     }
 
-    renderPacksPageReveal(data);
-
     await loadDashboardSummary();
-    await loadEmpireOverview();
-    await loadBlueprints();
-    await loadPacks();
+await loadEmpireOverview();
+await loadBlueprints();
+await loadPacks();
+
+renderPacksPageReveal(data);
 
   } catch (err) {
     console.error("Packs page open error:", err);
