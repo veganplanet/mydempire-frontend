@@ -210,25 +210,33 @@
   </div>
 
   <!-- Sealed Packs -->
-  <div class="packs-board-card">
-    <div class="packs-board-head">
-      <h3>Sealed Packs</h3>
-      <div class="packs-board-note">Click one pack to open it</div>
-    </div>
+ <div class="packs-layout">
 
-    <div id="packs-grid" class="packs-grid">
-      <div class="empty">No unopened packs.</div>
+  <div class="packs-left">
+    <div class="packs-board-card">
+      <div class="packs-board-head">
+        <h3>Sealed Packs</h3>
+        <div class="packs-board-note">Click the pack to open</div>
+      </div>
+
+      <div id="packs-grid" class="packs-grid"></div>
     </div>
   </div>
 
-  <!-- Pack Reveal Area -->
-  <div class="pack-reveal-card">
-    <div class="packs-board-head">
-      <h3>Pack Reveal</h3>
-      <div class="packs-board-note">
-        Selected pack rewards will appear here
+  <div class="packs-right">
+    <div class="pack-reveal-card">
+      <div class="packs-board-head">
+        <h3>Pack Reveal</h3>
+        <div class="packs-board-note">Your rewards appear here</div>
+      </div>
+
+      <div id="pack-reveal-stage" class="pack-reveal-stage">
+        <div class="empty">Open a pack to reveal rewards</div>
       </div>
     </div>
+  </div>
+
+</div>
 
     <div id="pack-reveal-stage" class="pack-reveal-stage">
       <div class="empty">
