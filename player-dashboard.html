@@ -701,12 +701,12 @@ if (!total) {
 }
 
 gridEl.innerHTML = `
-  <button type="button" class="sealed-pack-main" id="open-pack-card">
-    <img src="assets/pack.png" class="sealed-pack-main-img">
-    <div class="sealed-pack-main-title">Genesis Pack</div>
-    <div class="sealed-pack-main-count">${total} Packs Available</div>
-    <div class="sealed-pack-main-sub">Click to open</div>
-  </button>
+  <button type="button" class="sealed-pack-main" id="open-pack-card" onclick="openPackFromPacksPage()">
+  <img src="assets/pack.png" class="sealed-pack-main-img">
+  <div class="sealed-pack-main-title">Genesis Pack</div>
+  <div class="sealed-pack-main-count">${total} Packs Available</div>
+  <div class="sealed-pack-main-sub">Click to open</div>
+</button>
 `;
 
   } catch (err) {
@@ -859,12 +859,7 @@ function renderPackReveal(data) {
   `;
 }
 
-document.addEventListener("click", (e) => {
-  const packBtn = e.target.closest(".sealed-pack-main");
-  console.log("PACK CLICK TEST:", packBtn);
-  if (!packBtn) return;
-  openOnePackFromPacksPage();
-});
+
 async function claimReward() {
   const statusEl = document.getElementById("claim-reward-status");
 
