@@ -7436,7 +7436,7 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 }
 
 /* open pack controls */
-.pack-open-simple{
+/*.pack-open-simple{
   width:100%;
   max-width:320px;
   margin:0 auto;
@@ -7491,4 +7491,47 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   color:#fff;
   background:linear-gradient(90deg,#4f46e5 0%,#7c3aed 100%);
   cursor:pointer;
+} */
+/* SEALED PACK HORIZONTAL LAYOUT */
+
+.pack-open-simple{
+  max-width:720px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:28px;
+  flex-wrap:wrap;
+  text-align:left;
+}
+
+.pack-open-simple-img{
+  width:120px;
+  height:auto;
+}
+
+.pack-open-simple-info{
+  flex:1;
+  min-width:220px;
+}
+
+.pack-open-simple-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.pack-open-simple-count{
+  font-size:14px;
+  color:#475569;
+  margin-bottom:8px;
+}
+
+#pack-open-count-slider{
+  width:100%;
+  margin:8px 0 12px;
+}
+
+.open-selected-packs-btn{
+  max-width:200px;
 }
