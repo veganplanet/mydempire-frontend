@@ -1072,8 +1072,13 @@ async function openSelectedPacks() {
   }
 }
   async function openPackFromPacksPage(count = 1) {
+  const modal = document.getElementById("pack-reveal-modal");
   const modalStageEl = document.getElementById("pack-reveal-modal-stage");
-  if (!modalStageEl) return;
+
+  if (!modal || !modalStageEl) {
+    console.error("Pack reveal modal elements not found");
+    return;
+  }
 
   if (window.openingPack) return;
   window.openingPack = true;
@@ -1081,7 +1086,8 @@ async function openSelectedPacks() {
   const safeCount = Math.max(1, Math.min(5, Number(count || 1)));
 
   try {
-    openPackRevealModal();
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
 
     modalStageEl.innerHTML = `<div class="empty">Opening ${safeCount} pack${safeCount === 1 ? "" : "s"}...</div>`;
 
