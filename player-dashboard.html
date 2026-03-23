@@ -697,29 +697,69 @@ async function loadPacks() {
     }
 
     const gridEl = document.getElementById("packs-grid");
-if (!gridEl) return;
+    if (!gridEl) return;
 
-if (!total) {
-  gridEl.innerHTML = `<div class="empty">No unopened packs.</div>`;
-  return;
-}
+    if (!total) {
+      gridEl.innerHTML = `<div class="empty">No unopened packs.</div>`;
+      return;
+    }
 
-gridEl.innerHTML = `
-  <button type="button" class="sealed-pack-main" id="open-pack-card" onclick="openPackFromPacksPage()">
-  <img src="assets/pack.png" class="sealed-pack-main-img">
-  <div class="sealed-pack-main-title">Genesis Pack</div>
-  <div class="sealed-pack-main-count">${total} Packs Available</div>
-  <div class="sealed-pack-main-sub">Click to open</div>
-</button>
-`;
+    const maxOpen = Math.min(5, total);
+
+    gridEl.innerHTML = `
+      <div class="pack-open-simple">
+        <img src="assets/pack.png" class="pack-open-simple-img" alt="Genesis Pack">
+
+        <div class="pack-open-simple-title">Genesis Pack</div>
+        <div class="pack-open-simple-count">${total} Packs Available</div>
+
+        <label for="pack-open-count-slider" class="pack-open-simple-label">
+          Packs to Open: <span id="pack-open-count-display">1</span>
+        </label>
+
+        <input
+          type="range"
+          id="pack-open-count-slider"
+          min="1"
+          max="${maxOpen}"
+          value="1"
+        >
+
+        <button
+          type="button"
+          id="open-selected-packs-btn"
+          class="open-selected-packs-btn"
+        >
+          Open 1 Pack
+        </button>
+      </div>
+    `;
+
+    const slider = document.getElementById("pack-open-count-slider");
+    const display = document.getElementById("pack-open-count-display");
+    const openBtn = document.getElementById("open-selected-packs-btn");
+
+    function syncPackOpenUI() {
+      const count = Number(slider.value || 1);
+      display.textContent = count;
+      openBtn.textContent = `Open ${count} Pack${count === 1 ? "" : "s"}`;
+    }
+
+    slider.addEventListener("input", syncPackOpenUI);
+
+    openBtn.onclick = function () {
+      const count = Number(slider.value || 1);
+      console.log("OPEN BUTTON WORKING, count =", count);
+      alert("button clicked");
+      openPackFromPacksPage(count);
+    };
+
+    syncPackOpenUI();
 
   } catch (err) {
     console.error("Failed to load packs:", err);
   }
 }
-
-
-
 function renderPackReveal(data) {
   const stage = document.getElementById("pack-reveal-stage");
   if (!stage) return;
@@ -959,7 +999,7 @@ function hidePackOpenModal() {
     modal.classList.add("hidden");
   }
 }
-    
+
 async function openSelectedPacks() {
   const countEl = document.getElementById("open-pack-count");
   const statusEl = document.getElementById("open-pack-status");
@@ -1025,27 +1065,25 @@ async function openSelectedPacks() {
   } finally {
     btnEl.disabled = false;
   }
-}    
+}
+async function openPackFromPacksPage(count = 1) {
+  const stageEl = document.getElementById("pack-reveal-stage");
+  if (!stageEl) return;
 
- async function openPackFromPacksPage() {
   if (window.openingPack) return;
   window.openingPack = true;
 
-  const stageEl = document.getElementById("pack-reveal-stage");
-  if (!stageEl) {
-    window.openingPack = false;
-    return;
-  }
-
-  stageEl.innerHTML = `<div class="empty">Opening pack...</div>`;
+  const safeCount = Math.max(1, Math.min(5, Number(count || 1)));
 
   try {
-    const res = await fetch(apiUrl(`/open-pack`), {
+    stageEl.innerHTML = `<div class="empty">Opening ${safeCount} pack${safeCount === 1 ? "" : "s"}...</div>`;
+
+    const res = await fetch(apiUrl("/open-pack"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         username: PLAYER_USERNAME,
-        count: 1
+        count: safeCount
       })
     });
 
@@ -1062,156 +1100,252 @@ async function openSelectedPacks() {
     await loadBlueprints();
     await loadPacks();
 
+    if (typeof loadPackOpenHistory === "function") {
+      await loadPackOpenHistory();
+    }
+
     renderPacksPageReveal(data);
 
   } catch (err) {
     console.error("Packs page open error:", err);
-    stageEl.innerHTML = `<div class="empty">Error while opening pack.</div>`;
+    console.error(err.stack);
+    stageEl.innerHTML = `<div class="empty">${err.message || "Error while opening pack."}</div>`;
   } finally {
     window.openingPack = false;
   }
 }
- function renderPacksPageReveal(data) {
+  
+  function renderPacksPageReveal(data) {
   const stageEl = document.getElementById("pack-reveal-stage");
   if (!stageEl) return;
 
   const drops = Array.isArray(data.drops) ? data.drops : [];
-  const cards = [];
-  const bonusCards = [];
+  const revealItems = [];
 
   drops.forEach((d) => {
-   if (d.land) {
-  const landTier = String(d.land).toUpperCase();
+    // LAND
+    if (d.land) {
+      const landTier = String(d.land).toUpperCase();
 
-  let landTitle = "FRONTIER";
-  let landClass = "l1";
-  let landLayoutClass = "land-layout-1";
-  let landImg = "assets/land-l1.png";
-  let landBadge = "L1";
-  let landLayoutHtml = `
-    <div class="land-layout land-layout-1">
-      <img src="assets/land-l1.png" class="land-tile" alt="L1 Frontier">
-    </div>
-  `;
-
-  if (landTier === "L2") {
-    landTitle = "ESTATE";
-    landClass = "l2";
-    landBadge = "L2";
-    landLayoutHtml = `
-      <div class="land-layout land-layout-2">
-        <img src="assets/land-l2.png" class="land-tile" alt="L2 Estate">
-        <img src="assets/land-l2.png" class="land-tile" alt="L2 Estate">
-      </div>
-    `;
-  }
-
-  if (landTier === "L3") {
-    landTitle = "INDUSTRIAL ZONE";
-    landClass = "l3";
-    landBadge = "L3";
-    landLayoutHtml = `
-      <div class="land-layout land-layout-3">
-        <img src="assets/land-l3.png" class="land-tile land-top" alt="L3 Industrial Zone">
-        <img src="assets/land-l3.png" class="land-tile land-bottom-left" alt="L3 Industrial Zone">
-        <img src="assets/land-l3.png" class="land-tile land-bottom-right" alt="L3 Industrial Zone">
-      </div>
-    `;
-  }
-
-  cards.push(`
-    <div class="pack-reveal-nft-shell">
-      <div class="nft-card land ${landClass}">
-        <div class="nft-inner">
-          <div class="nft-title">${landTitle}</div>
-          ${landLayoutHtml}
-          <div class="nft-badge">${landBadge}</div>
+      let landTitle = "FRONTIER";
+      let landClass = "l1";
+      let landBadge = "L1";
+      let landLayoutHtml = `
+        <div class="land-layout land-layout-1">
+          <img src="assets/land-l1.png" class="land-tile" alt="L1 Frontier">
         </div>
-      </div>
-    </div>
-  `);
-}
+      `;
 
-  if (d.blueprint) {
-  const raw = String(d.blueprint).toUpperCase();
-  const parts = raw.split("_");
-  const industry = parts[0] || "FOOD";
-  const tier = (parts[1] || "B1").toLowerCase(); // b1, b2, b3...
-
-  cards.push(`
-    <div class="pack-reveal-nft-shell">
-      <div class="nft-card blueprint ${tier}">
-        <div class="nft-inner">
-          <div class="nft-title">${industry}</div>
-          <div class="nft-art">
-            <img src="assets/${industry.toLowerCase()}.png" alt="${raw}">
+      if (landTier === "L2") {
+        landTitle = "ESTATE";
+        landClass = "l2";
+        landBadge = "L2";
+        landLayoutHtml = `
+          <div class="land-layout land-layout-2">
+            <img src="assets/land-l2.png" class="land-tile" alt="L2 Estate">
+            <img src="assets/land-l2.png" class="land-tile" alt="L2 Estate">
           </div>
-          <div class="nft-badge">${parts[1] || "B1"}</div>
+        `;
+      }
+
+      if (landTier === "L3") {
+        landTitle = "INDUSTRIAL ZONE";
+        landClass = "l3";
+        landBadge = "L3";
+        landLayoutHtml = `
+          <div class="land-layout land-layout-3">
+            <img src="assets/land-l3.png" class="land-tile land-top" alt="L3 Industrial Zone">
+            <img src="assets/land-l3.png" class="land-tile land-bottom-left" alt="L3 Industrial Zone">
+            <img src="assets/land-l3.png" class="land-tile land-bottom-right" alt="L3 Industrial Zone">
+          </div>
+        `;
+      }
+
+      revealItems.push(`
+        <div class="pack-reveal-item">
+          <div class="pack-reveal-label">Land Unlocked</div>
+          <div class="pack-reveal-nft-shell">
+            <div class="nft-card land ${landClass}">
+              <div class="nft-inner">
+                <div class="nft-title">${landTitle}</div>
+                ${landLayoutHtml}
+                <div class="nft-badge">${landBadge}</div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  `);
-}
+      `);
+    }
+
+    // BLUEPRINT
+    if (d.blueprint) {
+      const raw = String(d.blueprint).toUpperCase();
+      const parts = raw.split("_");
+      const industry = parts[0] || "FOOD";
+      const tier = (parts[1] || "B1").toLowerCase();
+
+      revealItems.push(`
+        <div class="pack-reveal-item">
+          <div class="pack-reveal-label">Blueprint Found</div>
+          <div class="pack-reveal-nft-shell">
+            <div class="nft-card blueprint ${tier}">
+              <div class="nft-inner">
+                <div class="nft-title">${industry}</div>
+                <div class="nft-art">
+                  <img src="assets/${industry.toLowerCase()}.png" alt="${raw}">
+                </div>
+                <div class="nft-badge">${parts[1] || "B1"}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `);
+    }
+
+    // EMP
     if (d.emp || d.emp === 0) {
-      cards.push(`
-        <div class="reveal-card emp-reveal-card">
-          <div class="emp-icon">⚡</div>
-          <div class="emp-value">${d.emp}</div>
-          <div class="emp-label">EMP</div>
+      revealItems.push(`
+        <div class="pack-reveal-item">
+          <div class="pack-reveal-label">EMP Received</div>
+          <div class="reveal-card emp-reveal-card">
+            <div class="emp-icon">⚡</div>
+            <div class="emp-value">${d.emp}</div>
+            <div class="emp-label">EMP</div>
+          </div>
         </div>
       `);
     }
 
+    // BONUS EMP
     if (d.bonus_emp) {
-      bonusCards.push(`
-        <div class="reveal-card emp-reveal-card bonus-reveal-card">
-          <div class="lucky-badge">Lucky Drop</div>
-          <div class="emp-icon">✨</div>
-          <div class="emp-value">${d.bonus_emp}</div>
-          <div class="emp-label">BONUS EMP</div>
+      revealItems.push(`
+        <div class="pack-reveal-item">
+          <div class="pack-reveal-label lucky">Lucky Drop</div>
+          <div class="reveal-card emp-reveal-card bonus-reveal-card">
+            <div class="lucky-badge">Lucky Drop</div>
+            <div class="emp-icon">✨</div>
+            <div class="emp-value">${d.bonus_emp}</div>
+            <div class="emp-label">BONUS EMP</div>
+          </div>
         </div>
       `);
     }
 
+    // EXTRA BLUEPRINT
     if (d.extra_blueprint) {
-      const industry = d.extra_blueprint.split("_")[0].toLowerCase();
+      const raw = String(d.extra_blueprint).toUpperCase();
+      const parts = raw.split("_");
+      const industry = parts[0] || "FOOD";
+      const tier = (parts[1] || "B1").toLowerCase();
 
-      bonusCards.push(`
-        <div class="reveal-card blueprint-reveal-card bonus-reveal-card">
-          <div class="lucky-badge">Lucky Drop</div>
-          <img src="assets/${industry}.png" class="blueprint-reveal-img" alt="${d.extra_blueprint}">
+      revealItems.push(`
+        <div class="pack-reveal-item">
+          <div class="pack-reveal-label lucky">Lucky Drop</div>
+          <div class="pack-reveal-nft-shell">
+            <div class="nft-card blueprint ${tier}">
+              <div class="nft-inner">
+                <div class="lucky-corner-badge">LUCKY</div>
+                <div class="nft-title">${industry}</div>
+                <div class="nft-art">
+                  <img src="assets/${industry.toLowerCase()}.png" alt="${raw}">
+                </div>
+                <div class="nft-badge">${parts[1] || "B1"}</div>
+              </div>
+            </div>
+          </div>
         </div>
       `);
     }
 
-   if (d.relic) {
-  bonusCards.push(`
-    <div class="reveal-card relic-reveal-card bonus-reveal-card">
-      <div class="lucky-badge">Lucky Drop</div>
-      <img src="assets/relic.png" alt="Founder Relic" class="relic-art-img">
-    </div>
-  `);
-}
+    // RELIC
+    if (d.relic) {
+      revealItems.push(`
+        <div class="pack-reveal-item">
+          <div class="pack-reveal-label lucky">Lucky Drop</div>
+          <div class="reveal-card relic-reveal-card bonus-reveal-card">
+            <div class="lucky-badge">Lucky Drop</div>
+            <img src="assets/relic.png" alt="Founder Relic" class="relic-art-img">
+          </div>
+        </div>
+      `);
+    }
   });
 
+  if (!revealItems.length) {
+    stageEl.innerHTML = `<div class="empty">No drops returned.</div>`;
+    return;
+  }
+
   stageEl.innerHTML = `
-    <div class="pack-opened-banner">Pack Opened</div>
+    <div class="pack-reveal-wrap">
+      <div class="pack-opened-banner">Pack Opened</div>
 
-    <div class="reveal-grid reveal-grid-main">
-      ${cards.join("") || `<div class="empty">No drops returned.</div>`}
-    </div>
-
-    ${bonusCards.length ? `
-      <div class="bonus-section">
-        <div class="bonus-title">✨ Lucky Drops</div>
-        <div class="reveal-grid reveal-grid-bonus">
-          ${bonusCards.join("")}
-        </div>
+      <div class="pack-reveal-progress">
+        <span id="pack-reveal-counter">1 / ${revealItems.length}</span>
       </div>
-    ` : ``}
+
+      <div class="pack-reveal-single-view" id="pack-reveal-single-view">
+        ${revealItems[0]}
+      </div>
+
+      <div class="pack-reveal-controls">
+        <button type="button" class="pack-reveal-next-btn" id="pack-reveal-next-btn">
+          Reveal Next
+        </button>
+      </div>
+
+      <div class="pack-reveal-thumbs" id="pack-reveal-thumbs"></div>
+    </div>
   `;
-}
- 
+
+  let currentIndex = 0;
+  const singleViewEl = document.getElementById("pack-reveal-single-view");
+  const counterEl = document.getElementById("pack-reveal-counter");
+  const nextBtn = document.getElementById("pack-reveal-next-btn");
+  const thumbsEl = document.getElementById("pack-reveal-thumbs");
+
+  function renderThumbs() {
+    thumbsEl.innerHTML = revealItems
+      .map((_, i) => {
+        const active = i === currentIndex ? "active" : "";
+        const opened = i <= currentIndex ? "opened" : "";
+        return `<button type="button" class="pack-reveal-thumb ${active} ${opened}" data-index="${i}">${i + 1}</button>`;
+      })
+      .join("");
+
+    thumbsEl.querySelectorAll(".pack-reveal-thumb").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const idx = Number(btn.dataset.index);
+        currentIndex = idx;
+        updateReveal();
+      });
+    });
+  }
+
+  function updateReveal() {
+    singleViewEl.innerHTML = revealItems[currentIndex];
+    counterEl.textContent = `${currentIndex + 1} / ${revealItems.length}`;
+
+    if (currentIndex >= revealItems.length - 1) {
+      nextBtn.textContent = "All Revealed";
+      nextBtn.disabled = true;
+    } else {
+      nextBtn.textContent = "Reveal Next";
+      nextBtn.disabled = false;
+    }
+
+    renderThumbs();
+  }
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIndex < revealItems.length - 1) {
+      currentIndex += 1;
+      updateReveal();
+    }
+  });
+
+  updateReveal();
+} 
 async function openPack(username, pack_id) {
   if (!confirm(`Open Pack #${pack_id}?`)) return;
 

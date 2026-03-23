@@ -4078,7 +4078,7 @@ button {
 .top-nav {
   background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
 }
-}
+
     /* ===== FINAL SUMMARY VALUE STYLE (OVERRIDE) ===== */
 .summary-value {
   font-size: 25px;
@@ -4667,13 +4667,17 @@ body {
       gap: 16px;
     }
 
-    .pack-card {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: #fff;
-      padding: 16px;
-      box-shadow: var(--shadow);
-    }
+   .pack-card {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #fff;
+  padding: 16px;
+  box-shadow: var(--shadow);
+
+  width: 240px;
+  margin: 0 auto;
+  text-align: center;
+}
 
     .pack-title {
       font-size: 18px;
@@ -5270,10 +5274,12 @@ body{
 .uniform-card.nft-image-card .textile-card-fix{
   transform: scale(1.08);
   transform-origin: center center;
-}
+
 box-shadow:
+
   0 4px 10px rgba(0,0,0,0.2),
   0 0 0 2px rgba(255,255,255,0.4);
+}
 /* ===== FORCE BLUEPRINT COLORS (FINAL FIX) ===== */
 
 
@@ -6217,12 +6223,11 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 .pack-reveal-stage > * {
   width: 100%;
 }
-.packs-layout{
-  display:flex;
-  gap:20px;
-  align-items:flex-start;
+.packs-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
 }
-
 .packs-left{
   width:35%;
 }
@@ -6319,15 +6324,10 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 
 /* Reveal stage stronger look */
 .pack-reveal-stage {
-  min-height: 220px;
+  min-height: 420px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 18px;
-  margin-top: 12px;
-  border: 2px solid #d0dbef;
-  border-radius: 22px;
-  background: #eef4fb;
+  align-items: center;
 }
 
 /* Strong top banner */
@@ -6591,4 +6591,621 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 .pack-reveal-stage .nft-card.blueprint.b5 .nft-badge {
   background: #fde047;
   color: #713f12;
+}
+/* ===================================== */
+/* PACK OPEN REVEAL AREA */
+/* ===================================== */
+
+#pack-reveal-stage{
+  min-height: 420px;
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pack-reveal-wrap{
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 20px 18px 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #dbe4ee;
+  border-radius: 24px;
+  box-shadow: 0 14px 34px rgba(15,23,42,0.10);
+  text-align: center;
+}
+
+.pack-opened-banner{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 15px;
+  color: #fff;
+  background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+  margin-bottom: 14px;
+}
+
+.pack-reveal-progress{
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #475569;
+}
+
+.pack-reveal-single-view{
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pack-reveal-item{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pack-reveal-label{
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: 0.02em;
+}
+
+.pack-reveal-label.lucky{
+  color: #7c3aed;
+}
+
+.pack-reveal-nft-shell{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* premium reveal cards */
+#pack-reveal-stage .nft-card{
+  width: 240px;
+  height: 320px;
+  border-radius: 22px;
+  position: relative;
+  box-shadow:
+    0 18px 32px rgba(15,23,42,0.18),
+    0 6px 12px rgba(15,23,42,0.10);
+  overflow: hidden;
+}
+
+#pack-reveal-stage .nft-card .nft-inner{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+/* blueprint colors */
+#pack-reveal-stage .nft-card.blueprint.b1{ --color:#22c55e; }
+#pack-reveal-stage .nft-card.blueprint.b2{ --color:#1565c0; }
+#pack-reveal-stage .nft-card.blueprint.b3{ --color:#7e57c2; }
+#pack-reveal-stage .nft-card.blueprint.b4{ --color:#ff8f00; }
+#pack-reveal-stage .nft-card.blueprint.b5{ --color:#ffca28; }
+
+#pack-reveal-stage .nft-card.blueprint{
+  background: linear-gradient(180deg, var(--color) 0%, color-mix(in srgb, var(--color) 70%, #000 30%) 100%);
+  padding: 5px;
+}
+
+#pack-reveal-stage .nft-card.blueprint .nft-inner{
+  background: linear-gradient(180deg,#eaf0f7 0%,#dde6ef 100%);
+}
+
+#pack-reveal-stage .nft-card.blueprint .nft-title{
+  padding-top: 16px;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #0f172a;
+}
+
+#pack-reveal-stage .nft-card.blueprint .nft-art{
+  height: 205px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+#pack-reveal-stage .nft-card.blueprint .nft-art img{
+  max-width: 84%;
+  max-height: 170px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 12px 20px rgba(0,0,0,0.20));
+}
+
+#pack-reveal-stage .nft-card.blueprint .nft-badge{
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 58px;
+  height: 58px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  color: #0f172a;
+  border: 2px solid rgba(15,23,42,0.18);
+  box-shadow:
+    0 8px 16px rgba(0,0,0,0.18),
+    inset 0 1px 4px rgba(255,255,255,0.45);
+  z-index: 3;
+}
+
+#pack-reveal-stage .nft-card.blueprint.b1 .nft-badge{
+  background: radial-gradient(circle at 35% 30%, #dcfce7 0%, #86efac 58%, #22c55e 100%);
+}
+#pack-reveal-stage .nft-card.blueprint.b2 .nft-badge{
+  background: radial-gradient(circle at 35% 30%, #dbeafe 0%, #93c5fd 58%, #1565c0 100%);
+}
+#pack-reveal-stage .nft-card.blueprint.b3 .nft-badge{
+  background: radial-gradient(circle at 35% 30%, #f3e8ff 0%, #d8b4fe 58%, #7e57c2 100%);
+}
+#pack-reveal-stage .nft-card.blueprint.b4 .nft-badge{
+  background: radial-gradient(circle at 35% 30%, #ffedd5 0%, #fdba74 58%, #ff8f00 100%);
+}
+#pack-reveal-stage .nft-card.blueprint.b5 .nft-badge{
+  background: radial-gradient(circle at 35% 30%, #fef9c3 0%, #fde68a 58%, #ffca28 100%);
+}
+
+/* land colors */
+#pack-reveal-stage .nft-card.land.l1{ --color:#22c55e; }
+#pack-reveal-stage .nft-card.land.l2{ --color:#eab308; }
+#pack-reveal-stage .nft-card.land.l3{ --color:#ef4444; }
+
+#pack-reveal-stage .nft-card.land{
+  background: linear-gradient(180deg, var(--color) 0%, color-mix(in srgb, var(--color) 72%, #000 28%) 100%);
+  padding: 5px;
+}
+
+#pack-reveal-stage .nft-card.land .nft-inner{
+  background:
+    linear-gradient(180deg, #dfe4ea 0%, #cfd6dd 100%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(0,0,0,0.035) 0px,
+      rgba(0,0,0,0.035) 8px,
+      rgba(255,255,255,0.03) 8px,
+      rgba(255,255,255,0.03) 16px
+    );
+}
+
+#pack-reveal-stage .nft-card.land .nft-title{
+  padding-top: 16px;
+  margin-bottom: 6px;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #0f172a;
+}
+
+#pack-reveal-stage .nft-card.land .nft-badge{
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 58px;
+  height: 58px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  color: #0f172a;
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #e2e8f0 58%, #94a3b8 100%);
+  border: 2px solid rgba(15,23,42,0.18);
+  box-shadow:
+    0 8px 16px rgba(0,0,0,0.18),
+    inset 0 1px 4px rgba(255,255,255,0.45);
+}
+
+/* land layout fix */
+#pack-reveal-stage .nft-card.land .land-layout{
+  position: relative;
+  width: 100%;
+  height: 205px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#pack-reveal-stage .nft-card.land .land-layout-1,
+#pack-reveal-stage .nft-card.land .land-layout-2,
+#pack-reveal-stage .nft-card.land .land-layout-3{
+  position: relative;
+  width: 100%;
+  height: 205px;
+}
+
+#pack-reveal-stage .nft-card.land .land-layout-1{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#pack-reveal-stage .nft-card.land .land-layout-1 .land-tile{
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  display: block;
+  position: static;
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,0.18));
+}
+
+#pack-reveal-stage .nft-card.land .land-layout-2 .land-tile{
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  display: block;
+  position: absolute;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.16));
+}
+
+#pack-reveal-stage .nft-card.land .land-layout-2 .land-tile:nth-child(1){
+  left: 34px;
+  top: 50px;
+}
+
+#pack-reveal-stage .nft-card.land .land-layout-2 .land-tile:nth-child(2){
+  right: 34px;
+  top: 50px;
+}
+
+#pack-reveal-stage .nft-card.land .land-layout-3 .land-tile{
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  display: block;
+  position: absolute;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.16));
+}
+
+#pack-reveal-stage .nft-card.land .land-top{
+  left: 50%;
+  top: 20px;
+  transform: translateX(-50%);
+}
+
+#pack-reveal-stage .nft-card.land .land-bottom-left{
+  left: 42px;
+  bottom: 18px;
+}
+
+#pack-reveal-stage .nft-card.land .land-bottom-right{
+  right: 42px;
+  bottom: 18px;
+}
+
+/* reveal cards */
+#pack-reveal-stage .reveal-card{
+  width: 240px;
+  min-height: 320px;
+  border-radius: 22px;
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #ffffff 0%, #eef4fb 100%);
+  box-shadow:
+    0 18px 32px rgba(15,23,42,0.18),
+    0 6px 12px rgba(15,23,42,0.10);
+  position: relative;
+}
+
+#pack-reveal-stage .emp-icon{
+  font-size: 44px;
+  margin-bottom: 10px;
+}
+
+#pack-reveal-stage .emp-value{
+  font-size: 42px;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1;
+}
+
+#pack-reveal-stage .emp-label{
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #475569;
+}
+
+#pack-reveal-stage .bonus-reveal-card{
+  background: linear-gradient(180deg, #fff7ed 0%, #f3e8ff 100%);
+}
+
+#pack-reveal-stage .lucky-badge,
+#pack-reveal-stage .lucky-corner-badge{
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: linear-gradient(90deg, #f59e0b 0%, #7c3aed 100%);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  border-radius: 999px;
+  padding: 6px 10px;
+  z-index: 5;
+}
+
+#pack-reveal-stage .relic-art-img{
+  max-width: 88%;
+  max-height: 220px;
+  object-fit: contain;
+  display: block;
+}
+
+.pack-reveal-controls{
+  margin-top: 18px;
+}
+
+.pack-reveal-next-btn{
+  border: none;
+  border-radius: 14px;
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(79,70,229,0.25);
+}
+
+.pack-reveal-next-btn:disabled{
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.pack-reveal-thumbs{
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pack-reveal-thumb{
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pack-reveal-thumb.opened{
+  background: #e0e7ff;
+  border-color: #a5b4fc;
+  color: #3730a3;
+}
+
+.pack-reveal-thumb.active{
+  background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+  border-color: transparent;
+  color: #fff;
+}
+
+/* packs page layout */
+.packs-layout {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.packs-left,
+.packs-right {
+  min-width: 0;
+}
+
+.packs-left {
+  width: 340px;
+}
+
+.packs-left .board-card,
+.packs-left .packs-board-card,
+.packs-left .panel-card,
+.packs-left .section-card {
+  width: 100%;
+}
+
+.packs-grid,
+#packs-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+}
+
+.pack-open-controls {
+  width: 240px;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px){
+  .pack-reveal-wrap{
+    max-width: 100%;
+    padding: 18px 12px 16px;
+  }
+
+  #pack-reveal-stage .nft-card,
+  #pack-reveal-stage .reveal-card{
+    width: 220px;
+    min-height: 294px;
+    height: 294px;
+  }
+
+  .pack-reveal-single-view{
+    min-height: 330px;
+  }
+}/* ===== FORCE PACK CONTROLS ABOVE EVERYTHING ===== */
+#packs-grid,
+.sealed-pack-panel,
+.sealed-pack-main,
+.pack-open-controls,
+.open-selected-packs-btn,
+.pack-open-count-slider,
+.pack-open-slider-row,
+.pack-open-count-display {
+  position: relative !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+#pack-reveal-stage,
+.pack-reveal-wrap,
+.pack-reveal-single-view,
+.pack-reveal-item,
+.reveal-grid,
+.reveal-grid-main,
+.reveal-grid-bonus,
+.bonus-section {
+  position: relative !important;
+  z-index: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* prevent any accidental overlay from left pack art */
+.sealed-pack-main {
+  overflow: visible !important;
+  margin-bottom: 18px !important;
+}
+
+.pack-open-controls {
+  display: block !important;
+  width: 240px !important;
+  margin: 0 auto !important;
+  background: #fff !important;
+  border-radius: 16px !important;
+}
+
+/* button itself */
+.open-selected-packs-btn {
+  display: block !important;
+  width: 100% !important;
+  cursor: pointer !important;
+}
+.packs-left,
+.packs-right,
+.packs-layout {
+  position: relative !important;
+}
+
+.packs-left {
+  z-index: 50 !important;
+}
+
+.packs-right {
+  z-index: 1 !important;
+}
+/* ===== TEMP SIMPLE PACK PANEL RESET ===== */
+#packs-grid {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+}
+
+.pack-open-simple {
+  width: 260px;
+  padding: 18px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #dbe4ee;
+  box-shadow: 0 10px 24px rgba(15,23,42,0.08);
+  text-align: center;
+  position: relative;
+  z-index: 50;
+}
+
+.pack-open-simple-img {
+  width: 170px;
+  height: auto;
+  display: block;
+  margin: 0 auto 14px;
+}
+
+.pack-open-simple-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.pack-open-simple-count {
+  font-size: 14px;
+  font-weight: 800;
+  color: #475569;
+  margin-bottom: 12px;
+}
+
+.pack-open-simple-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+
+#pack-open-count-slider {
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.open-selected-packs-btn {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-weight: 900;
+  color: #fff;
+  background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+  cursor: pointer;
+  position: relative;
+  z-index: 60;
+}
+.reveal-card{
+  animation:popReveal .35s ease;
+}
+
+@keyframes popReveal{
+  from{
+    transform:scale(.85);
+    opacity:0;
+  }
+  to{
+    transform:scale(1);
+    opacity:1;
+  }
 }
