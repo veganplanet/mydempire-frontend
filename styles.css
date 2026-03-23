@@ -7351,3 +7351,51 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   right:46px;
   bottom:22px;
 }
+/* ===== PACKS PAGE BALANCE WITHOUT COMPRESSING CARD ===== */
+
+.packs-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.packs-left {
+  display: flex;
+  justify-content: center;
+}
+
+.packs-right {
+  display: flex;
+  justify-content: center;
+}
+
+#pack-reveal-stage {
+  min-height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.pack-reveal-wrap {
+  width: 100%;
+  max-width: 560px;   /* keep roomy */
+  margin: 0 auto;
+  padding: 16px 18px 18px;
+}
+
+.pack-reveal-single-view {
+  min-height: 340px;  /* enough for card */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pack-open-simple {
+  width: 260px;
+}
+
+.packs-board-card .packs-board-body,
+.pack-reveal-board-card .packs-board-body {
+  min-height: auto !important;
+}
