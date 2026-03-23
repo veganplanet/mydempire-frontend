@@ -2839,5 +2839,29 @@ document.getElementById("claim-reward-btn")?.addEventListener("click", claimRewa
     <button id="pack-open-modal-close" class="primary-button">Close</button>
   </div>
 </div> 
+  <!-- PACK REVEAL MODAL -->
+<div id="pack-reveal-modal" class="pack-reveal-modal hidden">
+  <div class="pack-reveal-modal-backdrop" onclick="closePackRevealModal()"></div>
+
+  <div class="pack-reveal-modal-box">
+    <button
+      type="button"
+      class="pack-reveal-close-btn"
+      onclick="closePackRevealModal()"
+      aria-label="Close pack reveal"
+    >
+      ×
+    </button>
+
+    <div class="pack-reveal-modal-head">
+      <h3>Pack Reveal</h3>
+      <div class="pack-reveal-modal-note">Your rewards appear here</div>
+    </div>
+
+    <div id="pack-reveal-modal-stage" class="pack-reveal-modal-stage">
+      <div class="empty">Open a pack to reveal rewards</div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
