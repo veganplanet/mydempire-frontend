@@ -7399,3 +7399,6 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 .pack-reveal-board-card .packs-board-body {
   min-height: auto !important;
 }
+.pack-open-simple {
+  width: 280px;
+}
