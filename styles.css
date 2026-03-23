@@ -7399,6 +7399,60 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 .pack-reveal-board-card .packs-board-body {
   min-height: auto !important;
 }
+/* ===== PACKS PAGE BALANCE ===== */
+
+.packs-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.packs-left {
+  display: flex;
+  justify-content: center;
+}
+
+.packs-right {
+  display: flex;
+  justify-content: center;
+}
+
+#pack-reveal-stage {
+  width: 100%;
+  min-height: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.pack-reveal-wrap {
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 18px 18px 18px;
+}
+
 .pack-open-simple {
-  width: 280px;
+  width: 260px;
+}
+
+.packs-board-card .packs-board-body,
+.pack-reveal-board-card .packs-board-body {
+  min-height: auto !important;
+}
+/* compact only after pack is opened */
+.pack-reveal-wrap .pack-reveal-single-view {
+  min-height: 340px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pack-reveal-wrap .pack-reveal-controls {
+  margin-top: 12px;
+}
+
+.pack-reveal-wrap .pack-reveal-thumbs {
+  margin-top: 10px;
 }
