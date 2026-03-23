@@ -4674,7 +4674,15 @@ body {
       font-weight: 800;
       margin-bottom: 8px;
     }
-
+#pack-reveal-stage .empty {
+  width: 100%;
+  text-align: center;
+  padding: 40px 16px;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
     @media (max-width: 1000px) {
       .market-toolbar {
         grid-template-columns: 1fr;
@@ -7119,15 +7127,14 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 }
 
 .pack-open-simple {
-  width: 260px;
-  padding: 18px;
-  border-radius: 18px;
-  background: #ffffff;
-  border: 1px solid #dbe4ee;
-  box-shadow: 0 10px 24px rgba(15,23,42,0.08);
-  text-align: center;
-  position: relative;
-  z-index: 50;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .pack-open-simple-img {
@@ -7384,9 +7391,14 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 
 .pack-reveal-wrap {
   width: 100%;
-  max-width: 620px;
+  max-width: 280px;
+  min-height: 420px;
   margin: 0 auto;
-  padding: 18px 18px 18px;
+  box-sizing: border-box;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .pack-open-simple {
@@ -7576,6 +7588,62 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   min-height: 420px;
   margin: 0 auto;
   box-sizing: border-box;
+}
+
+.pack-reveal-single-view {
+  min-height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .packs-layout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .packs-left,
+  .packs-right {
+    width: 100%;
+    max-width: 380px;
+  }
+}
+/* ===== SIMPLE TWO PANEL LAYOUT ===== */
+
+.packs-layout {
+  display: grid;
+  grid-template-columns: 380px 380px;
+  justify-content: center;
+  gap: 36px;
+  align-items: start;
+}
+
+.packs-left,
+.packs-right {
+  width: 380px;
+}
+
+.packs-left .packs-board-card,
+.packs-right .packs-board-card {
+  width: 100%;
+  min-height: 520px;
+}
+
+.packs-left .packs-board-body,
+.packs-right .packs-board-body {
+  min-height: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#packs-grid,
+#pack-reveal-stage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .pack-reveal-single-view {
