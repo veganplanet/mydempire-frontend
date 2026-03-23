@@ -1060,6 +1060,7 @@ async function openSelectedPacks() {
   }
 }
   async function openPackFromPacksPage(count = 1) {
+    console.log("FIRST openPackFromPacksPage running");
   const modal = document.getElementById("pack-reveal-modal");
   const modalStageEl = document.getElementById("pack-reveal-modal-stage");
 
@@ -1117,6 +1118,7 @@ if (modal) modal.classList.remove("hidden");
   }
 }
 async function openPackFromPacksPage(count = 1) {
+  console.log("SECOND openPackFromPacksPage running");
   const stageEl = document.getElementById("pack-reveal-stage");
   if (!stageEl) return;
 
