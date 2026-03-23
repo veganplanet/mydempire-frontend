@@ -1170,7 +1170,7 @@ async function openPackFromPacksPage(count = 1) {
 }
   
   function renderPacksPageReveal(data) {
-  const stageEl = document.getElementById("pack-reveal-stage");
+ const stageEl = document.getElementById("pack-reveal-modal-stage");
   if (!stageEl) return;
 
   const drops = Array.isArray(data.drops) ? data.drops : [];
@@ -1381,8 +1381,9 @@ async function openPackFromPacksPage(count = 1) {
     counterEl.textContent = `${currentIndex + 1} / ${revealItems.length}`;
 
     if (currentIndex >= revealItems.length - 1) {
-      nextBtn.textContent = "All Revealed";
-      nextBtn.disabled = true;
+     nextBtn.textContent = "Close";
+nextBtn.disabled = false;
+nextBtn.onclick = closePackRevealModal;
     } else {
       nextBtn.textContent = "Reveal Next";
       nextBtn.disabled = false;
