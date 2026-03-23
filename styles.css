@@ -7338,4 +7338,17 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
     min-height: 330px;
   }
 }
+/* FINAL VERTICAL PACK LAYOUT */
 
+.packs-layout{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:28px;
+}
+
+.packs-left,
+.packs-right{
+  width:100%;
+  max-width:520px;
+}
