@@ -1059,67 +1059,12 @@ async function openSelectedPacks() {
     btnEl.disabled = false;
   }
 }
-  async function openPackFromPacksPage(count = 1) {
-    console.log("FIRST openPackFromPacksPage running");
-  const modal = document.getElementById("pack-reveal-modal");
-  const modalStageEl = document.getElementById("pack-reveal-modal-stage");
-
-  if (!modal || !modalStageEl) {
-    console.error("Pack reveal modal elements not found");
-    return;
-  }
-
-  if (window.openingPack) return;
-  window.openingPack = true;
-
-  const safeCount = Math.max(1, Math.min(5, Number(count || 1)));
-
-  try {
-    const modal = document.getElementById("pack-reveal-modal");
-if (modal) modal.classList.remove("hidden");
-    modal.classList.remove("hidden");
-    document.body.style.overflow = "hidden";
-
-    modalStageEl.innerHTML = `<div class="empty">Opening ${safeCount} pack${safeCount === 1 ? "" : "s"}...</div>`;
-
-    const res = await fetch(apiUrl("/open-pack"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: PLAYER_USERNAME,
-        count: safeCount
-      })
-    });
-
-    const data = await res.json();
-    console.log("Packs page open result:", data);
-
-    if (!res.ok || !data.success) {
-      modalStageEl.innerHTML = `<div class="empty">${data.error || "Open pack failed."}</div>`;
-      return;
-    }
-
-    await loadDashboardSummary();
-    await loadEmpireOverview();
-    await loadBlueprints();
-    await loadPacks();
-
-    if (typeof loadPackOpenHistory === "function") {
-      await loadPackOpenHistory();
-    }
-
-    renderPacksPageReveal(data);
-
-  } catch (err) {
-    console.error("Packs page open error:", err);
-    modalStageEl.innerHTML = `<div class="empty">${err.message || "Error while opening pack."}</div>`;
-  } finally {
-    window.openingPack = false;
-  }
-}
+  
 async function openPackFromPacksPage(count = 1) {
-  console.log("SECOND openPackFromPacksPage running");
+ 
   const stageEl = document.getElementById("pack-reveal-stage");
+  const modal = document.getElementById("pack-reveal-modal");
+if (modal) modal.classList.remove("hidden");
   if (!stageEl) return;
 
   if (window.openingPack) return;
