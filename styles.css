@@ -7561,7 +7561,7 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   position:relative;
   z-index:2;
   width:min(92vw, 720px);
-  max-height:88vh;
+  max-height:95vh;
   overflow:auto;
   border-radius:24px;
   padding:22px 20px 20px;
