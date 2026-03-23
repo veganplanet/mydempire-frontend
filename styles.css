@@ -6773,7 +6773,7 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 #pack-reveal-stage .nft-card.land.l2{ --color:#eab308; }
 #pack-reveal-stage .nft-card.land.l3{ --color:#ef4444; }
 
-#pack-reveal-stage .nft-card.land{
+/*#pack-reveal-stage .nft-card.land{
   background: linear-gradient(180deg, var(--color) 0%, color-mix(in srgb, var(--color) 72%, #000 28%) 100%);
   padding: 5px;
 }
@@ -6819,7 +6819,7 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
     inset 0 1px 4px rgba(255,255,255,0.45);
 }
 
-/* land layout fix */
+/* land layout fix 
 #pack-reveal-stage .nft-card.land .land-layout{
   position: relative;
   width: 100%;
@@ -6896,7 +6896,7 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   right: 42px;
   bottom: 18px;
 }
-
+*/ 
 /* reveal cards */
 #pack-reveal-stage .reveal-card{
   width: 240px;
