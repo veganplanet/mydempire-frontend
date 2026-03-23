@@ -7352,3 +7352,48 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   width:100%;
   max-width:520px;
 }
+/* ===== SIMPLE PACKS PAGE (NO BOXES) ===== */
+
+.packs-layout{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:28px;
+  margin-top:10px;
+}
+
+.packs-section{
+  width:100%;
+  max-width:520px;
+  text-align:center;
+}
+
+.section-title{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:4px;
+  color:#1e3a5f;
+}
+
+.section-note{
+  font-size:13px;
+  color:#64748b;
+  margin-bottom:14px;
+}
+
+.reveal-stage{
+  min-height:260px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.reveal-stage .empty{
+  color:#64748b;
+  font-size:14px;
+}
+
+#packs-grid{
+  display:flex;
+  justify-content:center;
+}
