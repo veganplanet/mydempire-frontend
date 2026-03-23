@@ -737,6 +737,7 @@ async function loadPacks() {
   }
 }
 function renderPackReveal(data) {
+  console.log("REVEAL DATA:", data);
   const stage = document.getElementById("pack-reveal-stage");
   if (!stage) return;
 
@@ -2901,16 +2902,13 @@ document.getElementById("claim-reward-btn")?.addEventListener("click", claimRewa
   <!-- PACK REVEAL MODAL -->
 <div id="pack-reveal-modal" class="pack-reveal-modal hidden">
   <div class="pack-reveal-modal-backdrop" onclick="closePackRevealModal()"></div>
-
-  <div class="pack-reveal-modal-box">
+<div class="pack-reveal-modal-box">
     <button class="pack-reveal-close" type="button" onclick="closePackRevealModal()">×</button>
-
-    <div class="packs-board-head">
+<div class="packs-board-head">
       <h3>Pack Reveal</h3>
       <div class="packs-board-note">Your rewards appear here</div>
     </div>
-
-    <div id="pack-reveal-stage" class="pack-reveal-stage">
+ <div id="pack-reveal-stage" class="pack-reveal-stage">
       <div class="empty">Open a pack to reveal rewards</div>
     </div>
   </div>
