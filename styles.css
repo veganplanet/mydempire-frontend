@@ -7665,3 +7665,48 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
     max-width: 380px;
   }
 }
+/* ===== FINAL BALANCED PACK LAYOUT ===== */
+
+.packs-layout {
+  display: grid;
+  grid-template-columns: 380px 380px;
+  justify-content: center;
+  gap: 36px;
+  align-items: start;
+}
+
+/* both panels same width */
+.packs-left,
+.packs-right {
+  width: 380px;
+}
+
+/* body area inside panels */
+.packs-board-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 10px;
+}
+
+/* left content centered */
+.pack-open-simple {
+  width: 100%;
+  max-width: 280px;
+  text-align: center;
+}
+
+/* reveal stage centered */
+#pack-reveal-stage {
+  width: 100%;
+  max-width: 280px;
+  min-height: 260px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* remove unnecessary vertical stretching */
+.pack-reveal-single-view {
+  min-height: auto;
+}
