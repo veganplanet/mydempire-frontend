@@ -7535,3 +7535,101 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 .open-selected-packs-btn{
   max-width:200px;
 }
+/* ===== PACK REVEAL MODAL ===== */
+
+.pack-reveal-modal.hidden{
+  display:none;
+}
+
+.pack-reveal-modal{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.pack-reveal-modal-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(15,23,42,0.58);
+  backdrop-filter:blur(4px);
+}
+
+.pack-reveal-modal-box{
+  position:relative;
+  z-index:2;
+  width:min(92vw, 720px);
+  max-height:88vh;
+  overflow:auto;
+  border-radius:24px;
+  padding:22px 20px 20px;
+  background:linear-gradient(180deg,#f8fbff 0%,#eef3f9 100%);
+  box-shadow:0 20px 50px rgba(0,0,0,0.28);
+  border:1px solid rgba(255,255,255,0.5);
+}
+
+.pack-reveal-close-btn{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:42px;
+  height:42px;
+  border:none;
+  border-radius:999px;
+  background:#e2e8f0;
+  color:#0f172a;
+  font-size:28px;
+  line-height:1;
+  cursor:pointer;
+}
+
+.pack-reveal-modal-head{
+  text-align:center;
+  margin-bottom:16px;
+}
+
+.pack-reveal-modal-head h3{
+  margin:0 0 4px;
+  font-size:26px;
+  font-weight:800;
+  color:#1e3a5f;
+}
+
+.pack-reveal-modal-note{
+  font-size:14px;
+  color:#64748b;
+}
+
+.pack-reveal-modal-stage{
+  min-height:420px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* empty state in modal */
+.pack-reveal-modal-stage .empty{
+  text-align:center;
+  color:#64748b;
+  font-size:15px;
+}
+
+/* keep reveal content centered in popup */
+.pack-reveal-modal-stage .pack-reveal-wrap{
+  width:100%;
+  max-width:420px;
+  margin:0 auto;
+  padding:0;
+  background:transparent;
+  border:none;
+  box-shadow:none;
+}
+
+.pack-reveal-modal-stage .pack-reveal-single-view{
+  min-height:320px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
