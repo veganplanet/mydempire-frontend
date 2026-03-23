@@ -7352,12 +7352,143 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   width:100%;
   max-width:520px;
 }
-.packs-layout
-.packs-left
-.packs-right
-.pack-open-simple
-.pack-reveal-wrap
-.pack-reveal-single-view
-.packs-section
-.section-title
-.section-note
+/* ===== FULL-WIDTH SIMPLE PACK PAGE ===== */
+
+.packs-layout{
+  width:100%;
+  max-width:1000px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:34px;
+  padding:10px 0 20px;
+}
+
+.packs-hero-section{
+  width:100%;
+  text-align:center;
+}
+
+.packs-section-head{
+  margin-bottom:18px;
+}
+
+.packs-section-head h3{
+  font-size:26px;
+  font-weight:800;
+  color:#1e3a5f;
+  margin:0 0 6px;
+}
+
+.packs-section-note{
+  font-size:14px;
+  color:#64748b;
+}
+
+.pack-reveal-stage{
+  width:100%;
+  min-height:320px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.pack-reveal-stage .empty{
+  font-size:16px;
+  color:#64748b;
+  text-align:center;
+}
+
+.packs-grid{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* opened reveal content */
+.pack-reveal-wrap{
+  width:100%;
+  max-width:420px;
+  margin:0 auto;
+  padding:0;
+  background:transparent;
+  border:none;
+  box-shadow:none;
+}
+
+.pack-reveal-single-view{
+  min-height:300px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.pack-reveal-controls{
+  margin-top:14px;
+}
+
+.pack-reveal-thumbs{
+  margin-top:12px;
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+
+/* open pack controls */
+.pack-open-simple{
+  width:100%;
+  max-width:320px;
+  margin:0 auto;
+  text-align:center;
+  background:transparent;
+  border:none;
+  box-shadow:none;
+  padding:0;
+}
+
+.pack-open-simple-img{
+  width:120px;
+  height:auto;
+  display:block;
+  margin:0 auto 14px;
+}
+
+.pack-open-simple-title{
+  font-size:18px;
+  font-weight:800;
+  color:#0f172a;
+  margin-bottom:6px;
+}
+
+.pack-open-simple-count{
+  font-size:14px;
+  font-weight:700;
+  color:#475569;
+  margin-bottom:10px;
+}
+
+.pack-open-simple-label{
+  display:block;
+  font-size:14px;
+  font-weight:700;
+  color:#0f172a;
+  margin-bottom:10px;
+}
+
+#pack-open-count-slider{
+  width:100%;
+  margin-bottom:14px;
+}
+
+.open-selected-packs-btn{
+  width:100%;
+  border:none;
+  border-radius:14px;
+  padding:13px 16px;
+  font-size:15px;
+  font-weight:800;
+  color:#fff;
+  background:linear-gradient(90deg,#4f46e5 0%,#7c3aed 100%);
+  cursor:pointer;
+}
