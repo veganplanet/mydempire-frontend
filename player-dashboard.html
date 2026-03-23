@@ -201,34 +201,24 @@
 
 <!-- ===== TAB: PACKS ===== -->
 <section class="section tab-panel" data-tab-panel="packs">
-
   <div class="page-header">
     <h2>My Packs</h2>
     <p class="page-subtitle">
       Open your sealed packs one by one and reveal your empire assets.
     </p>
-</div>
+  </div>
 
-<div class="packs-layout">
+  <div class="packs-layout">
+    <section class="packs-hero-section packs-open-section">
+      <div class="packs-section-head">
+        <h3>Sealed Packs</h3>
+        <div class="packs-section-note">Click the pack to open</div>
+      </div>
 
-  <section class="packs-hero-section">
-    <div class="packs-section-head">
-      
-    </div>
-
-   <div id="pack-reveal-stage" class="pack-reveal-stage" style="display:none;"></div>
-  </section>
-
-  <section class="packs-hero-section packs-open-section">
-    <div class="packs-section-head">
-      <h3>Sealed Packs</h3>
-      <div class="packs-section-note">Click the pack to open</div>
-    </div>
-
-    <div id="packs-grid" class="packs-grid"></div>
-  </section>
-
-</div>
+      <div id="packs-grid" class="packs-grid"></div>
+    </section>
+  </div>
+</section>
 
 <!-- ===== TAB: LANDS (GRID) ===== -->
 <section class="section tab-panel" data-tab-panel="lands">
@@ -2913,21 +2903,14 @@ document.getElementById("claim-reward-btn")?.addEventListener("click", claimRewa
   <div class="pack-reveal-modal-backdrop" onclick="closePackRevealModal()"></div>
 
   <div class="pack-reveal-modal-box">
-    <button
-      type="button"
-      class="pack-reveal-close-btn"
-      onclick="closePackRevealModal()"
-      aria-label="Close pack reveal"
-    >
-      ×
-    </button>
+    <button class="pack-reveal-close" type="button" onclick="closePackRevealModal()">×</button>
 
-    <div class="pack-reveal-modal-head">
+    <div class="packs-board-head">
       <h3>Pack Reveal</h3>
-      <div class="pack-reveal-modal-note">Your rewards appear here</div>
+      <div class="packs-board-note">Your rewards appear here</div>
     </div>
 
-    <div id="pack-reveal-modal-stage" class="pack-reveal-modal-stage">
+    <div id="pack-reveal-stage" class="pack-reveal-stage">
       <div class="empty">Open a pack to reveal rewards</div>
     </div>
   </div>
