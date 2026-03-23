@@ -1074,6 +1074,8 @@ async function openSelectedPacks() {
   const safeCount = Math.max(1, Math.min(5, Number(count || 1)));
 
   try {
+    const modal = document.getElementById("pack-reveal-modal");
+if (modal) modal.classList.remove("hidden");
     modal.classList.remove("hidden");
     document.body.style.overflow = "hidden";
 
