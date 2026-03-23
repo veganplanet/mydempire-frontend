@@ -6223,11 +6223,7 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 .pack-reveal-stage > * {
   width: 100%;
 }
-.packs-layout {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 24px;
-}
+
 .packs-left{
   width:35%;
 }
@@ -7014,12 +7010,8 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 }
 
 /* packs page layout */
-.packs-layout {
-  display: grid;
-  grid-template-columns: 340px minmax(0, 1fr);
-  gap: 28px;
-  align-items: start;
-}
+
+
 
 .packs-left,
 .packs-right {
@@ -7353,12 +7345,6 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 }
 /* ===== PACKS PAGE BALANCE WITHOUT COMPRESSING CARD ===== */
 
-.packs-layout {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 24px;
-  align-items: start;
-}
 
 .packs-left {
   display: flex;
@@ -7401,12 +7387,7 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 }
 /* ===== PACKS PAGE BALANCE ===== */
 
-.packs-layout {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 28px;
-  align-items: start;
-}
+
 
 .packs-left {
   display: flex;
@@ -7458,13 +7439,7 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 }
 /* ===== SIMPLE PACKS TWO-BLOCK FIX ===== */
 
-.packs-layout {
-  display: grid;
-  grid-template-columns: 360px 360px;
-  justify-content: center;
-  gap: 40px;
-  align-items: start;
-}
+
 
 .packs-left,
 .packs-right {
@@ -7534,4 +7509,39 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
     width: 360px;
     max-width: 100%;
   }
+}
+/* FIX BOTH PACK PANELS SAME SIZE */
+
+.packs-layout{
+  display:grid;
+  grid-template-columns:360px 360px;
+  justify-content:center;
+  gap:40px;
+}
+
+.packs-left,
+.packs-right{
+  width:360px;
+}
+
+.packs-left .packs-board-card,
+.packs-right .packs-board-card{
+  height:500px;
+  display:flex;
+  flex-direction:column;
+}
+
+.packs-board-body{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
+
+.pack-open-simple{
+  width:100%;
+}
+
+#pack-reveal-stage{
+  width:100%;
 }
