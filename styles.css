@@ -4667,17 +4667,7 @@ body {
       gap: 16px;
     }
 
-   .pack-card {
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: #fff;
-  padding: 16px;
-  box-shadow: var(--shadow);
-
-  width: 240px;
-  margin: 0 auto;
-  text-align: center;
-}
+  
 
     .pack-title {
       font-size: 18px;
@@ -7356,26 +7346,11 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   justify-content: center;
 }
 
-#pack-reveal-stage {
-  min-height: auto;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
 
-.pack-reveal-wrap {
-  width: 100%;
-  max-width: 560px;   /* keep roomy */
-  margin: 0 auto;
-  padding: 16px 18px 18px;
-}
 
-.pack-reveal-single-view {
-  min-height: 340px;  /* enough for card */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
+
+
 
 .pack-open-simple {
   width: 260px;
@@ -7544,4 +7519,81 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
 
 #pack-reveal-stage{
   width:100%;
+}
+/* ===== FINAL PACKS LAYOUT ===== */
+
+.packs-layout {
+  display: grid;
+  grid-template-columns: 380px 380px;
+  justify-content: center;
+  gap: 36px;
+  align-items: start;
+}
+
+.packs-left,
+.packs-right {
+  width: 380px;
+}
+
+.packs-left .packs-board-card,
+.packs-right .packs-board-card {
+  width: 100%;
+  min-height: 520px;
+}
+
+.packs-left .packs-board-body,
+.packs-right .packs-board-body {
+  min-height: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#packs-grid {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.pack-open-simple {
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+#pack-reveal-stage {
+  width: 100%;
+  min-height: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.pack-reveal-wrap {
+  width: 100%;
+  max-width: 280px;
+  min-height: 420px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.pack-reveal-single-view {
+  min-height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .packs-layout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .packs-left,
+  .packs-right {
+    width: 100%;
+    max-width: 380px;
+  }
 }
