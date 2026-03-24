@@ -782,26 +782,26 @@ function setLeaderboardTab(tabName) {
             return;
           }
 
-          let html = "";
+        let html = `<div class="leaderboard-list">`;
 
-          data.leaders.forEach((row, index) => {
-            const medal =
-              index === 0
-                ? "🥇"
-                : index === 1
-                  ? "🥈"
-                  : index === 2
-                    ? "🥉"
-                    : `#${index + 1}`;
+data.leaders.forEach((row, index) => {
+  const rankLabel =
+    index === 0 ? "🥇" :
+    index === 1 ? "🥈" :
+    index === 2 ? "🥉" :
+    `#${index + 1}`;
 
-            html += `
-  <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""}">
-    <div class="leaderboard-rank">${medal}</div>
-    <div class="leaderboard-player">${row.username}</div>
-    <div class="leaderboard-score">${Number(row.lifetime_ep).toFixed(2)} EP</div>
-  </div>
-`;
-          });
+  html += `
+    <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""}">
+      <div class="leaderboard-rank">${rankLabel}</div>
+      <div class="leaderboard-player">${row.username}</div>
+      <div class="leaderboard-score">${Number(row.lifetime_ep).toFixed(2)} EP</div>
+    </div>
+  `;
+});
+
+html += `</div>`;
+container.innerHTML = html;
 
           container.innerHTML = html;
         } catch (err) {
