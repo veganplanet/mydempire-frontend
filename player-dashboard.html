@@ -525,6 +525,16 @@
             Leaderboard will appear once lifetime EP begins accumulating.
           </div>
         </div>
+        <div class="section-header" style="margin-top:28px;">
+  <h2>🏭 Industry Leaders</h2>
+  <small>Top empire in each industry by lifetime EP</small>
+</div>
+
+<div class="leaderboard-card">
+  <div id="industry-leaderboard-list">
+    Industry leaders will appear once lifetime industry EP begins accumulating.
+  </div>
+</div>
       </section>
       <footer class="footer">MydEmpire • Genesis Era • Player Dashboard</footer>
     </div>
@@ -694,8 +704,10 @@
             panel.classList.remove("tab-panel-active");
           }
         });
-        if (tabName === "leaderboard") loadEmperorLeaderboard();
-      }
+        if (tabName === "leaderboard") {
+  loadEmperorLeaderboard();
+  loadIndustryLeaders();
+}      }
 
       async function loadEmperorLeaderboard() {
         try {
@@ -737,6 +749,51 @@
           console.error("Leaderboard error:", err);
         }
       }
+      async function loadIndustryLeaders() {
+  try {
+    const res = await fetch("/leaderboard/industries");
+    const data = await res.json();
+
+    const container = document.getElementById("industry-leaderboard-list");
+    if (!container) return;
+
+    if (!data.success || !data.leaders) {
+      container.innerHTML =
+        "Industry leaders will appear once lifetime industry EP begins accumulating.";
+      return;
+    }
+
+    const items = [
+      { label: "Food", key: "food" },
+      { label: "Textile", key: "textile" },
+      { label: "Pharma", key: "pharma" },
+      { label: "Chemical", key: "chemical" },
+      { label: "Supermarket", key: "supermarket" },
+    ];
+
+    let html = "";
+
+    items.forEach((item) => {
+      const leader = data.leaders[item.key];
+
+      html += `
+        <div class="leaderboard-row">
+          <div class="leaderboard-rank">${item.label}</div>
+          <div class="leaderboard-player">${
+            leader?.username ?? "—"
+          }</div>
+          <div class="leaderboard-score">${
+            leader ? `${Number(leader.ep).toFixed(2)} EP` : "No leader yet"
+          }</div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  } catch (err) {
+    console.error("Industry leaderboard error:", err);
+  }
+}
       // ===== PLAYER SUMMARY =====
       async function loadDashboardSummary() {
         try {
