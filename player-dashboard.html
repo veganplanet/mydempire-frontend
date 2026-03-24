@@ -551,6 +551,9 @@
         </div>
       </div>
     </div>
+    <div id="your-rank-row" class="your-rank-row" style="display:none;">
+  Your rank will appear here.
+</div>
   </div>
 
   <div class="leaderboard-tab-panel" data-lb-panel="industry">
@@ -811,8 +814,33 @@ const title = getPlayerTitle(index + 1);
 
 html += `</div>`;
 container.innerHTML = html;
+const activeUser =
+  window.ACTIVE_PLAYER ||
+  localStorage.getItem("activePlayer") ||
+  localStorage.getItem("username") ||
+  "";
 
-          container.innerHTML = html;
+const yourRankEl = document.getElementById("your-rank-row");
+
+if (yourRankEl && activeUser) {
+  const lowerActiveUser = String(activeUser).trim().toLowerCase();
+
+  const foundIndex = data.leaders.findIndex(
+    (row) => String(row.username).trim().toLowerCase() === lowerActiveUser
+  );
+
+  if (foundIndex >= 0) {
+    const rank = foundIndex + 1;
+    const title = getPlayerTitle(rank);
+    const ep = Number(data.leaders[foundIndex].lifetime_ep).toFixed(2);
+
+    yourRankEl.style.display = "block";
+    yourRankEl.textContent = `Your Rank: #${rank} • ${title} • ${ep} EP`;
+  } else {
+    yourRankEl.style.display = "none";
+  }
+}
+          
         } catch (err) {
           console.error("Leaderboard error:", err);
         }
