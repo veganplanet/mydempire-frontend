@@ -7859,3 +7859,13 @@ body {
   font-weight: 900;
   color: #0f172a;
 }
+.your-rank-row {
+  margin-top: 14px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+  border: 1px solid rgba(59, 130, 246, 0.20);
+  font-weight: 800;
+  color: #1e3a8a;
+  box-shadow: 0 8px 18px rgba(59, 130, 246, 0.08);
+}
