@@ -761,9 +761,9 @@ function setLeaderboardTab(tabName) {
 
   panels.forEach((panel) => {
     if (panel.dataset.lbPanel === tabName) {
-      panel.style.display = "block";
+      panel.classList.add("leaderboard-tab-panel-active");
     } else {
-      panel.style.display = "none";
+      panel.classList.remove("leaderboard-tab-panel-active");
     }
   });
 
@@ -774,8 +774,7 @@ function setLeaderboardTab(tabName) {
   if (tabName === "industry") {
     loadIndustryLeaders();
   }
-}
-      async function loadEmperorLeaderboard() {
+}      async function loadEmperorLeaderboard() {
         try {
           const res = await fetch("/leaderboard/emperors");
           const data = await res.json();
