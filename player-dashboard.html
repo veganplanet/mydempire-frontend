@@ -728,10 +728,39 @@
           }
         });
         if (tabName === "leaderboard") {
+  setLeaderboardTab("empire");
+} {
   loadEmperorLeaderboard();
   loadIndustryLeaders();
 }      }
+function setLeaderboardTab(tabName) {
+  const buttons = document.querySelectorAll(".leaderboard-subnav-btn");
+  const panels = document.querySelectorAll(".leaderboard-tab-panel");
 
+  buttons.forEach((btn) => {
+    if (btn.dataset.lbTab === tabName) {
+      btn.classList.add("leaderboard-subnav-btn-active");
+    } else {
+      btn.classList.remove("leaderboard-subnav-btn-active");
+    }
+  });
+
+  panels.forEach((panel) => {
+    if (panel.dataset.lbPanel === tabName) {
+      panel.style.display = "block";
+    } else {
+      panel.style.display = "none";
+    }
+  });
+
+  if (tabName === "empire") {
+    loadEmperorLeaderboard();
+  }
+
+  if (tabName === "industry") {
+    loadIndustryLeaders();
+  }
+}
       async function loadEmperorLeaderboard() {
         try {
           const res = await fetch("/leaderboard/emperors");
