@@ -781,20 +781,29 @@ function setLeaderboardTab(tabName) {
               "Leaderboard will appear once lifetime EP begins accumulating.";
             return;
           }
-
+function getPlayerTitle(rank) {
+  if (rank === 1) return "👑 Emperor";
+  if (rank <= 5) return "🏛 Grand Lord";
+  if (rank <= 20) return "⚙ Industrial Magnate";
+  return "🏗 Empire Builder";
+}
         let html = `<div class="leaderboard-list">`;
 
 data.leaders.forEach((row, index) => {
   const rankLabel =
+    
     index === 0 ? "🥇" :
     index === 1 ? "🥈" :
     index === 2 ? "🥉" :
     `#${index + 1}`;
-
+const title = getPlayerTitle(index + 1);
   html += `
     <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""}">
       <div class="leaderboard-rank">${rankLabel}</div>
-      <div class="leaderboard-player">${row.username}</div>
+     <div class="leaderboard-player">
+  ${row.username}
+  <div class="leaderboard-title">${title}</div>
+</div>
       <div class="leaderboard-score">${Number(row.lifetime_ep).toFixed(2)} EP</div>
     </div>
   `;
