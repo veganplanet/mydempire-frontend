@@ -7762,12 +7762,12 @@ body {
   color: #ffffff;
 }
 
-.leaderboard-tab-panel{
-  display:none;
+.leaderboard-tab-panel {
+  display: none;
 }
 
-.leaderboard-tab-panel-active{
-  display:block;
+.leaderboard-tab-panel-active {
+  display: block;
 }
 /* ===== Premium Leaderboard ===== */
 
