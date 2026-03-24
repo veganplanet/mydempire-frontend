@@ -7773,7 +7773,7 @@ body {
 
 .card-leaderboard {
   width: 100%;
-  min-height: 210px;
+  min-height: 260px;
   padding: 0;
   overflow: hidden;
 }
@@ -7800,7 +7800,7 @@ body {
 }
 
 .leaderboard-empty {
-  min-height: 150px;
+  min-height: 190px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
