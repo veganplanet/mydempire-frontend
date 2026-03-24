@@ -7738,3 +7738,34 @@ body {
 .leaderboard-rank {
   font-size: 1.05rem;
 }
+/* ===== Leaderboard Sub Navigation ===== */
+
+.leaderboard-subnav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.leaderboard-subnav-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 800;
+  background: #eef2ff;
+  color: #1e3a8a;
+  cursor: pointer;
+}
+
+.leaderboard-subnav-btn-active {
+  background: #1e3a8a;
+  color: #ffffff;
+}
+
+.leaderboard-tab-panel {
+  display: none;
+}
+
+.leaderboard-tab-panel-active {
+  display: block;
+}
