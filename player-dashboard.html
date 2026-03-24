@@ -514,65 +514,63 @@
           </div>
         </div>
       </section>
-      <section class="section tab-panel" data-tab-panel="leaderboard">
-        <div class="section-header">
-          <div class="leaderboard-subnav">
-  <button
-    type="button"
-    class="leaderboard-subnav-btn leaderboard-subnav-btn-active"
-    data-lb-tab="empire"
-    onclick="setLeaderboardTab('empire')"
-  >
-    Empire
-  </button>
+     <section class="section tab-panel" data-tab-panel="leaderboard">
+  <div class="leaderboard-subnav">
+    <button
+      type="button"
+      class="leaderboard-subnav-btn leaderboard-subnav-btn-active"
+      data-lb-tab="empire"
+      onclick="setLeaderboardTab('empire')"
+    >
+      Empire
+    </button>
 
-  <button
-    type="button"
-    class="leaderboard-subnav-btn"
-    data-lb-tab="industry"
-    onclick="setLeaderboardTab('industry')"
-  >
-    Industry
-  </button>
-</div>
-<div class="section-header">
-  <h2>👑 Emperor Leaderboard</h2>
-  <small>Top empires ranked by lifetime EP</small>
-</div>
-  <div class="summary-card card-leaderboard">
-  <div class="leaderboard-shell">
-    <div class="leaderboard-topbar"></div>
-    <div class="leaderboard-body">
-      <div id="emperor-leaderboard-list" class="leaderboard-empty">
-        Leaderboard will appear once lifetime EP begins accumulating.
+    <button
+      type="button"
+      class="leaderboard-subnav-btn"
+      data-lb-tab="industry"
+      onclick="setLeaderboardTab('industry')"
+    >
+      Industry
+    </button>
+  </div>
+
+  <div class="leaderboard-tab-panel leaderboard-tab-panel-active" data-lb-panel="empire">
+    <div class="section-header">
+      <h2>👑 Emperor Leaderboard</h2>
+      <small>Top empires ranked by lifetime EP</small>
+    </div>
+
+    <div class="summary-card card-leaderboard">
+      <div class="leaderboard-shell">
+        <div class="leaderboard-topbar"></div>
+        <div class="leaderboard-body">
+          <div id="emperor-leaderboard-list" class="leaderboard-empty">
+            Leaderboard will appear once lifetime EP begins accumulating.
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-</div>
+  <div class="leaderboard-tab-panel" data-lb-panel="industry">
+    <div class="section-header">
+      <h2>🏭 Industry Leaders</h2>
+      <small>Top empire in each industry by lifetime EP</small>
+    </div>
 
-
-<div class="leaderboard-tab-panel" data-lb-panel="industry">
-
- <div class="section-header">
-  <h2>🏭 Industry Leaders</h2>
-  <small>Top empire in each industry by lifetime EP</small>
-</div>
-
-<div class="summary-card card-leaderboard">
-  <div class="leaderboard-shell">
-    <div class="leaderboard-topbar"></div>
-    <div class="leaderboard-body">
-      <div id="industry-leaderboard-list" class="leaderboard-empty">
-        Industry leaders will appear once lifetime industry EP begins accumulating.
+    <div class="summary-card card-leaderboard">
+      <div class="leaderboard-shell">
+        <div class="leaderboard-topbar"></div>
+        <div class="leaderboard-body">
+          <div id="industry-leaderboard-list" class="leaderboard-empty">
+            Industry leaders will appear once lifetime industry EP begins accumulating.
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-</div>
-      </section>
+</section>
       <footer class="footer">MydEmpire • Genesis Era • Player Dashboard</footer>
     </div>
     <script>
@@ -767,14 +765,10 @@ function setLeaderboardTab(tabName) {
     }
   });
 
-  if (tabName === "empire") {
-    loadEmperorLeaderboard();
-  }
-
-  if (tabName === "industry") {
-    loadIndustryLeaders();
-  }
-}      async function loadEmperorLeaderboard() {
+  if (tabName === "empire") loadEmperorLeaderboard();
+  if (tabName === "industry") loadIndustryLeaders();
+}
+      async function loadEmperorLeaderboard() {
         try {
           const res = await fetch("/leaderboard/emperors");
           const data = await res.json();
