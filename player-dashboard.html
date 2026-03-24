@@ -516,6 +516,26 @@
       </section>
       <section class="section tab-panel" data-tab-panel="leaderboard">
         <div class="section-header">
+          <div class="leaderboard-subnav">
+  <button
+    type="button"
+    class="leaderboard-subnav-btn leaderboard-subnav-btn-active"
+    data-lb-tab="empire"
+    onclick="setLeaderboardTab('empire')"
+  >
+    Empire
+  </button>
+
+  <button
+    type="button"
+    class="leaderboard-subnav-btn"
+    data-lb-tab="industry"
+    onclick="setLeaderboardTab('industry')"
+  >
+    Industry
+  </button>
+</div>
+          <div class="leaderboard-tab-panel leaderboard-tab-panel-active" data-lb-panel="empire">
           <h2>👑 Emperor Leaderboard</h2>
           <small>Top empires ranked by lifetime EP</small>
         </div>
@@ -525,6 +545,8 @@
             Leaderboard will appear once lifetime EP begins accumulating.
           </div>
         </div>
+          </div>
+        <div class="leaderboard-tab-panel" data-lb-panel="industry">
         <div class="section-header" style="margin-top:28px;">
   <h2>🏭 Industry Leaders</h2>
   <small>Top empire in each industry by lifetime EP</small>
@@ -535,6 +557,7 @@
     Industry leaders will appear once lifetime industry EP begins accumulating.
   </div>
 </div>
+          </div>
       </section>
       <footer class="footer">MydEmpire • Genesis Era • Player Dashboard</footer>
     </div>
