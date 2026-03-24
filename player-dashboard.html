@@ -1,688 +1,942 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>MydEmpire — Player Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body data-requires-login="true">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MydEmpire — Player Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-requires-login="true">
+    <header class="appbar">
+      <div class="appbar-inner">
+        <div class="appbar-left">
+          <a href="index.html" class="appbar-logo" aria-label="MydEmpire Home">
+            <img src="assets/logo.png" alt="MydEmpire" />
+          </a>
 
-  <header class="appbar">
-    <div class="appbar-inner">
-      <div class="appbar-left">
-        <a href="index.html" class="appbar-logo" aria-label="MydEmpire Home">
-          <img src="assets/logo.png" alt="MydEmpire">
-        </a>
+          <nav class="appbar-nav">
+            <a href="index.html" class="appbar-link">Home</a>
+            <a href="economy.html" class="appbar-link">Economy</a>
+            <a href="transparency.html" class="appbar-link">Transparency</a>
+            <a href="codex.html" class="appbar-link">Codex</a>
 
-      <nav class="appbar-nav">
-  <a href="index.html" class="appbar-link">Home</a>
-  <a href="economy.html" class="appbar-link">Economy</a>
-  <a href="transparency.html" class="appbar-link">Transparency</a>
-  <a href="codex.html" class="appbar-link">Codex</a>
-
-  <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only hidden-auth-link">Dashboard</a>
-  <a href="shop.html" id="shopLink" class="appbar-link auth-only hidden-auth-link">Shop</a>
-  <a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only hidden-auth-link">Marketplace</a>
-</nav>
-      </div>
-
-<div class="appbar-right">
-  <button id="appbarLoginBtn" class="appbar-login-btn" type="button">Connect Wallet</button>
-
-  <div id="appbarAccountWrap" class="appbar-account-wrap" style="display:none;">
-    <button id="appbarAccountBtn" class="appbar-account-btn" type="button">@username ▼</button>
-
-    <div id="appbarDropdown" class="appbar-dropdown">
-      <div id="appbarDropdownHead" class="appbar-dropdown-head">@username</div>
-      <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link">Visit My Empire</a>
-      <button id="visitOtherEmpireBtn" type="button" class="appbar-dropdown-link">Visit Other Empire</button>
-      <button id="appbarLogoutBtn" type="button" class="appbar-dropdown-link">Logout</button>
-    </div>
-  </div>
-</div>
-    </div>
-  </header>
-
-  <div class="page">
-  
-    <!-- ===== HEADER ===== -->
-    <header class="header">
-      <div class="header-title">
-        <span>Genesis Era</span>
-        <h1>Player Dashboard</h1>
-        <div class="header-subline">
-          Welcome, <strong>@<span id="player-username-display">player</span></strong>. Your empire snapshot.
+            <a
+              href="player-dashboard.html"
+              id="dashboardLink"
+              class="appbar-link auth-only hidden-auth-link"
+              >Dashboard</a
+            >
+            <a
+              href="shop.html"
+              id="shopLink"
+              class="appbar-link auth-only hidden-auth-link"
+              >Shop</a
+            >
+            <a
+              href="marketplace.html"
+              id="marketplaceLink"
+              class="appbar-link auth-only hidden-auth-link"
+              >Marketplace</a
+            >
+          </nav>
         </div>
-      </div>
-      <div class="header-right">
-        <div class="pill">Game Phase: GENESIS</div>
-        <div>API user: <span id="player-username-raw">loading…</span></div>
-        <div style="font-size: 12px;">
-          Last updated: <span id="last-updated">--</span>
+
+        <div class="appbar-right">
+          <button id="appbarLoginBtn" class="appbar-login-btn" type="button">
+            Connect Wallet
+          </button>
+
+          <div
+            id="appbarAccountWrap"
+            class="appbar-account-wrap"
+            style="display: none"
+          >
+            <button
+              id="appbarAccountBtn"
+              class="appbar-account-btn"
+              type="button"
+            >
+              @username ▼
+            </button>
+
+            <div id="appbarDropdown" class="appbar-dropdown">
+              <div id="appbarDropdownHead" class="appbar-dropdown-head">
+                @username
+              </div>
+              <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link"
+                >Visit My Empire</a
+              >
+              <button
+                id="visitOtherEmpireBtn"
+                type="button"
+                class="appbar-dropdown-link"
+              >
+                Visit Other Empire
+              </button>
+              <button
+                id="appbarLogoutBtn"
+                type="button"
+                class="appbar-dropdown-link"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </header>
 
-   <!-- ===== SUB NAV (TABS) ===== -->
-<div class="subnav">
-  <button type="button" class="subnav-btn subnav-btn-active" data-tab="overview" onclick="setActiveTab('overview')">Overview</button>
-  <button type="button" class="subnav-btn" data-tab="packs" onclick="setActiveTab('packs')">Packs</button>
-  <button type="button" class="subnav-btn" data-tab="lands" onclick="setActiveTab('lands')">Lands</button>
-  <button type="button" class="subnav-btn" data-tab="blueprints" onclick="setActiveTab('blueprints')">Factory Blueprints</button>
-  <button type="button" class="subnav-btn" data-tab="construction" onclick="setActiveTab('construction')">Under Construction</button>
-  <button type="button" class="subnav-btn" data-tab="global" onclick="setActiveTab('global')">Global</button>
-</div>
-
-<!-- ===== TAB: OVERVIEW ===== -->
-<section class="section tab-panel tab-panel-active" data-tab-panel="overview">
-
-  <div class="section-header">
-    <h2>Overview</h2>
-    <small>Your Genesis EMP, lands, factories and boosts</small>
-  </div>
-
-  <!-- ===== BLOCK 1: SNAPSHOT ===== -->
-  <div class="overview-block">
-    <div class="overview-block-title">Empire Snapshot</div>
-
-    <div class="summary-grid snapshot-grid">
-
-      <div class="summary-card card-emp">
-        <div class="summary-label"><span class="summary-emoji">💰</span>EMP Balance</div>
-        <div class="summary-value" id="summary-emp-balance">0</div>
-        <div class="summary-sub">Total EMP you currently own</div>
-      </div>
-
-      <div class="summary-card card-land">
-        <div class="summary-label"><span class="summary-emoji">🌍</span>Lands Owned</div>
-        <div class="summary-value" id="summary-lands-total">0</div>
-        <div class="summary-sub" id="summary-lands-breakdown">L1: 0 | L2: 0 | L3: 0</div>
-      </div>
-
-      <div class="summary-card card-factory">
-        <div class="summary-label"><span class="summary-emoji">🏭</span>Factories</div>
-        <div class="summary-value" id="summary-factories-total">0</div>
-        <div class="summary-sub" id="summary-factories-breakdown">Total factories: 0</div>
-      </div>
-
-      <div class="summary-card card-production">
-        <div class="summary-label"><span class="summary-emoji">⚡</span>Production</div>
-        <div class="summary-value" id="summary-production-rate">0 EP/day</div>
-        <div class="summary-sub" id="summary-production-sub">
-          Empire production including relic boosts
-          <div class="summary-sub" id="summary-claimable-ep">Accumulated EP: 0.00</div>
-        </div>
-      </div>
-
-      <div class="summary-card card-ep">
-        <div class="summary-label">
-          <span class="summary-emoji">⚡</span>Empire Accumulated EP
-        </div>
-        <div class="summary-value" id="summary-total-empire-ep">0</div>
-        <div class="summary-sub">
-          Total accumulated EP across your factories
-        </div>
-      </div>
-
-      <div class="summary-card card-reward">
-        <div class="summary-label">
-          <span class="summary-emoji">🎁</span>Claimable HIVE
-        </div>
-        <div class="summary-value" id="summary-claimable-hive">0.000</div>
-        <button id="claim-reward-btn" class="secondary-btn">Claim Reward</button>
-        <div class="summary-sub">Treasury reward available to claim</div>
-        <div class="summary-actions">
-          <div id="claim-reward-status" class="status-text">
-            No claim attempted yet.
+    <div class="page">
+      <!-- ===== HEADER ===== -->
+      <header class="header">
+        <div class="header-title">
+          <span>Genesis Era</span>
+          <h1>Player Dashboard</h1>
+          <div class="header-subline">
+            Welcome,
+            <strong>@<span id="player-username-display">player</span></strong
+            >. Your empire snapshot.
           </div>
         </div>
-      </div>
-
-      <div class="summary-card card-wallet">
-        <div class="summary-label">
-          <span class="summary-emoji">🏦</span>Wallet HIVE
-        </div>
-        <div class="summary-value" id="summary-wallet-hive">0.000</div>
-        <div class="summary-sub">Claimed reward balance</div>
-        <div class="summary-actions">
-          <button id="withdraw-hive-btn" class="primary-button">
-            Withdraw HIVE
-          </button>
-          <div id="withdraw-hive-status" class="status-text">
-            Withdrawal not requested yet.
+        <div class="header-right">
+          <div class="pill">Game Phase: GENESIS</div>
+          <div>API user: <span id="player-username-raw">loading…</span></div>
+          <div style="font-size: 12px">
+            Last updated: <span id="last-updated">--</span>
           </div>
         </div>
+      </header>
+
+      <!-- ===== SUB NAV (TABS) ===== -->
+      <div class="subnav">
+        <button
+          type="button"
+          class="subnav-btn subnav-btn-active"
+          data-tab="overview"
+          onclick="setActiveTab('overview')"
+        >
+          Overview
+        </button>
+        <button
+          type="button"
+          class="subnav-btn"
+          data-tab="packs"
+          onclick="setActiveTab('packs')"
+        >
+          Packs
+        </button>
+        <button
+          type="button"
+          class="subnav-btn"
+          data-tab="lands"
+          onclick="setActiveTab('lands')"
+        >
+          Lands
+        </button>
+        <button
+          type="button"
+          class="subnav-btn"
+          data-tab="blueprints"
+          onclick="setActiveTab('blueprints')"
+        >
+          Factory Blueprints
+        </button>
+        <button
+          type="button"
+          class="subnav-btn"
+          data-tab="construction"
+          onclick="setActiveTab('construction')"
+        >
+          Under Construction
+        </button>
+        <button
+          type="button"
+          class="subnav-btn"
+          data-tab="global"
+          onclick="setActiveTab('global')"
+        >
+          Global Health
+        </button>
+        <button
+          type="button"
+          class="subnav-btn"
+          data-tab="leaderboard"
+          onclick="setActiveTab('leaderboard')"
+        >
+          Leaderboard
+        </button>
       </div>
 
-      <div class="summary-card card-withdraw">
-        <div class="summary-label">
-          <span class="summary-emoji">💸</span>Withdraw Status
+      <!-- ===== TAB: OVERVIEW ===== -->
+      <section
+        class="section tab-panel tab-panel-active"
+        data-tab-panel="overview"
+      >
+        <div class="section-header">
+          <h2>Overview</h2>
+          <small>Your Genesis EMP, lands, factories and boosts</small>
         </div>
-        <div class="summary-value" id="summary-withdraw-status">Not Ready</div>
-        <div class="summary-sub" id="summary-withdraw-sub">
-          Minimum withdrawal is 1.000 HIVE
+        <div class="overview-block" style="margin-bottom: 16px">
+          <div
+            id="empire-status-pulse"
+            style="
+              background: linear-gradient(180deg, #eef6ff 0%, #e0ecff 100%);
+              border: 1px solid #bfdbfe;
+              color: #173b7a;
+              border-radius: 16px;
+              padding: 14px 16px;
+              font-weight: 800;
+              box-shadow: 0 8px 18px rgba(37, 99, 235, 0.1);
+            "
+          >
+            🌿 Loading empire status...
+          </div>
         </div>
-      </div>
+        <!-- ===== BLOCK 1: SNAPSHOT ===== -->
+        <div class="overview-block">
+          <div class="overview-block-title">Empire Snapshot</div>
 
-      <div class="summary-card card-relic">
-        <div class="summary-label"><span class="summary-emoji">💎</span>Relic Boost</div>
-        <div class="summary-value" id="summary-relic-boost">0%</div>
-        <div class="summary-sub" id="summary-relic-count">
-          Relics owned: 0 (max boost: 6%)
-        </div>
-      </div>
+          <div class="summary-grid snapshot-grid">
+            <div class="summary-card card-emp">
+              <div class="summary-label">
+                <span class="summary-emoji">💰</span>EMP Balance
+              </div>
+              <div class="summary-value" id="summary-emp-balance">0</div>
+              <div class="summary-sub">Total EMP you currently own</div>
+            </div>
 
-      <div class="summary-card card-writ">
-        <div class="summary-label"><span class="summary-emoji">🧾</span>WRITs</div>
-        <div class="summary-value" id="summary-writ-count">0</div>
-        <div class="summary-sub">Genesis strategic documents you hold</div>
-      </div>
+            <div class="summary-card card-land">
+              <div class="summary-label">
+                <span class="summary-emoji">🌍</span>Lands Owned
+              </div>
+              <div class="summary-value" id="summary-lands-total">0</div>
+              <div class="summary-sub" id="summary-lands-breakdown">
+                L1: 0 | L2: 0 | L3: 0
+              </div>
+            </div>
 
-    </div>
-  </div>
+            <div class="summary-card card-factory">
+              <div class="summary-label">
+                <span class="summary-emoji">🏭</span>Factories
+              </div>
+              <div class="summary-value" id="summary-factories-total">0</div>
+              <div class="summary-sub" id="summary-factories-breakdown">
+                Total factories: 0
+              </div>
+            </div>
 
-  <!-- ===== BLOCK 2: EMPIRE PREVIEW ===== -->
-  <div class="overview-block">
-    <div class="overview-block-title">Empire Preview</div>
-    <div class="overview-block-sub">A quick thumbnail view of your lands</div>
+            <div class="summary-card card-production">
+              <div class="summary-label">
+                <span class="summary-emoji">⚡</span>Production
+              </div>
+              <div class="summary-value" id="summary-production-rate">
+                0 EP/day
+              </div>
+              <div class="summary-sub" id="summary-production-sub">
+                Empire production including relic boosts
+                <div class="summary-sub" id="summary-claimable-ep">
+                  Accumulated EP: 0.00
+                </div>
+              </div>
+            </div>
 
-    <div id="empire-preview-grid" class="empire-preview-grid">
-      <p class="status-text">Loading empire preview…</p>
-    </div>
+            <div class="summary-card card-ep">
+              <div class="summary-label">
+                <span class="summary-emoji">⚡</span>Empire Accumulated EP
+              </div>
+              <div class="summary-value" id="summary-total-empire-ep">0</div>
+              <div class="summary-sub">
+                Total accumulated EP across your factories
+              </div>
+            </div>
 
-    <div class="overview-link-row">
-      <button class="secondary-button" onclick="setActiveTab('lands')">View All Lands</button>
-    </div>
-  </div>
+            <div class="summary-card card-reward">
+              <div class="summary-label">
+                <span class="summary-emoji">🎁</span>Claimable HIVE
+              </div>
+              <div class="summary-value" id="summary-claimable-hive">0.000</div>
+              <button id="claim-reward-btn" class="secondary-btn">
+                Claim Reward
+              </button>
+              <div class="summary-sub">Treasury reward available to claim</div>
+              <div class="summary-actions">
+                <div id="claim-reward-status" class="status-text">
+                  No claim attempted yet.
+                </div>
+              </div>
+            </div>
 
- 
-</section>
+            <div class="summary-card card-wallet">
+              <div class="summary-label">
+                <span class="summary-emoji">🏦</span>Wallet HIVE
+              </div>
+              <div class="summary-value" id="summary-wallet-hive">0.000</div>
+              <div class="summary-sub">Claimed reward balance</div>
+              <div class="summary-actions">
+                <button id="withdraw-hive-btn" class="primary-button">
+                  Withdraw HIVE
+                </button>
+                <div id="withdraw-hive-status" class="status-text">
+                  Withdrawal not requested yet.
+                </div>
+              </div>
+            </div>
 
-<!-- ===== TAB: PACKS ===== -->
-<section class="section tab-panel" data-tab-panel="packs">
-  <div class="page-header">
-    <h2>My Packs</h2>
-    <p class="page-subtitle">
-      Open your sealed packs one by one and reveal your empire assets.
-    </p>
-  </div>
+            <div class="summary-card card-withdraw">
+              <div class="summary-label">
+                <span class="summary-emoji">💸</span>Withdraw Status
+              </div>
+              <div class="summary-value" id="summary-withdraw-status">
+                Not Ready
+              </div>
+              <div class="summary-sub" id="summary-withdraw-sub">
+                Minimum withdrawal is 1.000 HIVE
+              </div>
+            </div>
+            <div class="summary-card card-lifetime">
+              <div class="summary-label">
+                <span class="summary-emoji">🏆</span>Lifetime EP
+              </div>
+              <div class="summary-value" id="lifetime-ep">0</div>
+              <div class="summary-sub">All-time empire production</div>
+            </div>
+            <div class="summary-card card-relic">
+              <div class="summary-label">
+                <span class="summary-emoji">💎</span>Relic Boost
+              </div>
+              <div class="summary-value" id="summary-relic-boost">0%</div>
+              <div class="summary-sub" id="summary-relic-count">
+                Relics owned: 0 (max boost: 6%)
+              </div>
+            </div>
 
-  <div class="packs-layout">
-    <section class="packs-hero-section packs-open-section">
-      <div class="packs-section-head">
-        <h3>Sealed Packs</h3>
-        <div class="packs-section-note">Click the pack to open</div>
-      </div>
-
-      <div id="packs-grid" class="packs-grid"></div>
-    </section>
-  </div>
-</section>
-
-<!-- ===== TAB: LANDS (GRID) ===== -->
-<section class="section tab-panel" data-tab-panel="lands">
-  <div class="section-header">
-    <h2>Lands</h2>
-    <small>Your Genesis lands with slots, production, and factory status.</small>
-  </div>
-
-  <div class="land-grid" id="lands-container">
-    <p class="status-text">Loading your lands and factories…</p>
-  </div>
-
-  <div id="empire-error" class="status-error" style="display:none;"></div>
-</section>
-<!-- ===== TAB: BLUEPRINTS ===== -->
-<section class="section tab-panel" data-tab-panel="blueprints">
-  <div class="section-header">
-    <h2>Factory Blueprints</h2>
-    <small>Your current Genesis factory blueprints</small>
-  </div>
-
-  <div class="section" style="margin-top: 0; margin-bottom: 14px; background:#f9fafb;">
-  <div class="section-header" style="margin-bottom: 12px;">
-    <h2 style="font-size:18px;">Build Factory</h2>
-    <small>Choose land, blueprint, and optional factory name</small>
-  </div>
-
-  <div class="build-factory-box">
-    <div class="build-row">
-      <label for="build-land-select">Choose Land</label>
-      <select id="build-land-select" class="primary-select">
-        <option value="">Loading lands...</option>
-      </select>
-    </div>
-
-    <div class="build-row">
-      <label for="build-blueprint-select">Choose Blueprint</label>
-      <select id="build-blueprint-select" class="primary-select">
-        <option value="">Loading blueprints...</option>
-      </select>
-    </div>
-
-    <div class="build-row">
-      <label for="build-factory-name">Factory Name (optional)</label>
-      <input
-        id="build-factory-name"
-        type="text"
-        maxlength="30"
-        placeholder="Example: Name your company you like"
-        class="build-input"
-      />
-    </div>
-<div class="build-row">
-  <label style="display:flex; align-items:center; gap:8px;">
-    <input type="checkbox" id="build-use-relic" />
-    Use Relic Construction Privilege
-  </label>
-  <div class="status-text" id="build-relic-note">
-    If you own a relic, this will make build instant and reduce fee to 25%.
-  </div>
-</div>
-    <div class="build-row">
-      <button id="build-factory-btn" class="primary-button">Build Factory</button>
-    </div>
-
-    <div id="build-factory-status" class="status-text">
-      Select a land and blueprint to begin.
-    </div>
-  </div>
-</div>
-
-  <!-- Existing textual grid of blueprints -->
-   <div id="selected-build-land-box" class="status-text" style="margin-bottom:10px;">
-  No land selected yet.
-</div>
-  <div id="blueprints-grid" class="factory-grid">
-    <p class="status-text">Loading blueprints…</p>
-  </div>
-</section>
-    <!-- ===== TAB: UNDER CONSTRUCTION ===== -->
-    <section class="section tab-panel" data-tab-panel="construction">
-      <div class="section-header">
-        <h2>Factories under Construction / Inactive</h2>
-        <small>Anything not fully active</small>
-      </div>
-
-      <div id="construction-grid" class="factory-grid">
-        <p class="status-text">Loading factories…</p>
-      </div>
-    </section>
-
-    <!-- ===== TAB: GLOBAL ===== -->
-    <section class="section tab-panel" data-tab-panel="global">
-      <div class="section-header">
-        <h2>Global Game Health</h2>
-        <small>Layout ready — live stats will be wired to backend</small>
-      </div>
-
-      <div class="summary-grid">
-        <div class="summary-card">
-          <div class="summary-label"><span class="summary-emoji">🌐</span>Global EMP</div>
-          <div class="summary-value" id="global-emp">coming soon</div>
-          <div class="summary-sub">
-            Total EMP across all players (will read from global EMP endpoint)
+            <div class="summary-card card-writ">
+              <div class="summary-label">
+                <span class="summary-emoji">🧾</span>WRITs
+              </div>
+              <div class="summary-value" id="summary-writ-count">0</div>
+              <div class="summary-sub">
+                Genesis strategic documents you hold
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="summary-card">
-          <div class="summary-label"><span class="summary-emoji">🏦</span>Treasury Health</div>
-          <div class="summary-value" id="treasury-balance">coming soon</div>
-          <div class="summary-sub">
-            Sum of @mydempire-vault and @mydempire-pay used for daily rewards
+        <!-- ===== BLOCK 2: EMPIRE PREVIEW ===== -->
+        <div class="overview-block">
+          <div class="overview-block-title">Empire Preview</div>
+          <div class="overview-block-sub">
+            A quick thumbnail view of your lands
+          </div>
+
+          <div id="empire-preview-grid" class="empire-preview-grid">
+            <p class="status-text">Loading empire preview…</p>
+          </div>
+
+          <div class="overview-link-row">
+            <button class="secondary-button" onclick="setActiveTab('lands')">
+              View All Lands
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TAB: PACKS ===== -->
+      <section class="section tab-panel" data-tab-panel="packs">
+        <div class="page-header">
+          <h2>My Packs</h2>
+          <p class="page-subtitle">
+            Open your sealed packs one by one and reveal your empire assets.
+          </p>
+        </div>
+
+        <div class="packs-layout">
+          <section class="packs-hero-section packs-open-section">
+            <div class="packs-section-head">
+              <h3>Sealed Packs</h3>
+              <div class="packs-section-note">Click the pack to open</div>
+            </div>
+
+            <div id="packs-grid" class="packs-grid"></div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ===== TAB: LANDS (GRID) ===== -->
+      <section class="section tab-panel" data-tab-panel="lands">
+        <div class="section-header">
+          <h2>Lands</h2>
+          <small
+            >Your Genesis lands with slots, production, and factory
+            status.</small
+          >
+        </div>
+
+        <div class="land-grid" id="lands-container">
+          <p class="status-text">Loading your lands and factories…</p>
+        </div>
+
+        <div id="empire-error" class="status-error" style="display: none"></div>
+      </section>
+      <!-- ===== TAB: BLUEPRINTS ===== -->
+      <section class="section tab-panel" data-tab-panel="blueprints">
+        <div class="section-header">
+          <h2>Factory Blueprints</h2>
+          <small>Your current Genesis factory blueprints</small>
+        </div>
+
+        <div
+          class="section"
+          style="margin-top: 0; margin-bottom: 14px; background: #f9fafb"
+        >
+          <div class="section-header" style="margin-bottom: 12px">
+            <h2 style="font-size: 18px">Build Factory</h2>
+            <small>Choose land, blueprint, and optional factory name</small>
+          </div>
+
+          <div class="build-factory-box">
+            <div class="build-row">
+              <label for="build-land-select">Choose Land</label>
+              <select id="build-land-select" class="primary-select">
+                <option value="">Loading lands...</option>
+              </select>
+            </div>
+
+            <div class="build-row">
+              <label for="build-blueprint-select">Choose Blueprint</label>
+              <select id="build-blueprint-select" class="primary-select">
+                <option value="">Loading blueprints...</option>
+              </select>
+            </div>
+
+            <div class="build-row">
+              <label for="build-factory-name">Factory Name (optional)</label>
+              <input
+                id="build-factory-name"
+                type="text"
+                maxlength="30"
+                placeholder="Example: Name your company you like"
+                class="build-input"
+              />
+            </div>
+            <div class="build-row">
+              <label style="display: flex; align-items: center; gap: 8px">
+                <input type="checkbox" id="build-use-relic" />
+                Use Relic Construction Privilege
+              </label>
+              <div class="status-text" id="build-relic-note">
+                If you own a relic, this will make build instant and reduce fee
+                to 25%.
+              </div>
+            </div>
+            <div class="build-row">
+              <button id="build-factory-btn" class="primary-button">
+                Build Factory
+              </button>
+            </div>
+
+            <div id="build-factory-status" class="status-text">
+              Select a land and blueprint to begin.
+            </div>
           </div>
         </div>
 
-        <div class="summary-card">
-          <div class="summary-label"><span class="summary-emoji">📦</span>Genesis Packs</div>
-          <div class="summary-value" id="global-packs-sold">coming soon</div>
-          <div class="summary-sub" id="global-packs-sub">
-            Sold / remaining (will be wired to packs sale stats)
-          </div>
+        <!-- Existing textual grid of blueprints -->
+        <div
+          id="selected-build-land-box"
+          class="status-text"
+          style="margin-bottom: 10px"
+        >
+          No land selected yet.
+        </div>
+        <div id="blueprints-grid" class="factory-grid">
+          <p class="status-text">Loading blueprints…</p>
+        </div>
+      </section>
+      <!-- ===== TAB: UNDER CONSTRUCTION ===== -->
+      <section class="section tab-panel" data-tab-panel="construction">
+        <div class="section-header">
+          <h2>Factories under Construction / Inactive</h2>
+          <small>Anything not fully active</small>
         </div>
 
-        <div class="summary-card">
-          <div class="summary-label"><span class="summary-emoji">🏭</span>Global Factories</div>
-          <div class="summary-value" id="global-factories">coming soon</div>
-          <div class="summary-sub">
-            Total factories across all empires (global view)
+        <div id="construction-grid" class="factory-grid">
+          <p class="status-text">Loading factories…</p>
+        </div>
+      </section>
+
+      <!-- ===== TAB: GLOBAL HEALTH ===== -->
+      <section class="section tab-panel" data-tab-panel="global">
+        <div class="section-header">
+          <h2>Global Game Health</h2>
+          <small>Layout ready — live stats will be wired to backend</small>
+        </div>
+
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-label">
+              <span class="summary-emoji">🌐</span>Global EMP
+            </div>
+            <div class="summary-value" id="global-emp">coming soon</div>
+            <div class="summary-sub">
+              Total EMP across all players (will read from global EMP endpoint)
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">
+              <span class="summary-emoji">🏦</span>Treasury Health
+            </div>
+            <div class="summary-value" id="treasury-balance">coming soon</div>
+            <div class="summary-sub">
+              Sum of @mydempire-vault and @mydempire-pay used for daily rewards
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">
+              <span class="summary-emoji">📦</span>Genesis Packs
+            </div>
+            <div class="summary-value" id="global-packs-sold">coming soon</div>
+            <div class="summary-sub" id="global-packs-sub">
+              Sold / remaining (will be wired to packs sale stats)
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">
+              <span class="summary-emoji">🏭</span>Global Factories
+            </div>
+            <div class="summary-value" id="global-factories">coming soon</div>
+            <div class="summary-sub">
+              Total factories across all empires (global view)
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <section class="section tab-panel" data-tab-panel="leaderboard">
+        <div class="section-header">
+          <h2>👑 Emperor Leaderboard</h2>
+          <small>Top empires ranked by lifetime EP</small>
+        </div>
 
-    <footer class="footer">
-      MydEmpire • Genesis Era • Player Dashboard
-    </footer>
-  </div>
-<script>
+        <div class="summary-card card-leaderboard">
+          <div id="emperor-leaderboard-list">
+            Leaderboard will appear once lifetime EP begins accumulating.
+          </div>
+        </div>
+      </section>
+      <footer class="footer">MydEmpire • Genesis Era • Player Dashboard</footer>
+    </div>
+    <script>
+      function setText(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      }
 
- function setText(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = value;
+      function getUsernameFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("user");
+      }
 
-}
+      const username =
+        getUsernameFromURL() || localStorage.getItem("hiveUsername");
 
-    function getUsernameFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("user");
-}
+      if (username) {
+        localStorage.setItem("hiveUsername", username);
+      }
 
-const username = getUsernameFromURL() || localStorage.getItem("hiveUsername");
+      console.log("Dashboard loading for:", username);
 
-if (username) {
-  localStorage.setItem("hiveUsername", username);
-}
+      let ACTIVE_USER = null;
 
-console.log("Dashboard loading for:", username);
+      function getActiveUser() {
+        const u = (localStorage.getItem("hiveUsername") || "").trim();
+        return u;
+      }
 
-  let ACTIVE_USER = null;
+      function setActiveUser(u) {
+        const user = (u || "").trim().toLowerCase();
+        localStorage.setItem("hiveUsername", user);
+        ACTIVE_USER = user;
 
-function getActiveUser() {
-  const u = (localStorage.getItem("hiveUsername") || "").trim();
-  return u;
-}
+        const el = document.getElementById("welcomeUser"); // optional if you have it
+        if (el) el.textContent = `@${user}`;
 
-function setActiveUser(u) {
-  const user = (u || "").trim().toLowerCase();
-  localStorage.setItem("hiveUsername", user);
-  ACTIVE_USER = user;
+        return user;
+      }
 
-  const el = document.getElementById("welcomeUser"); // optional if you have it
-  if (el) el.textContent = `@${user}`;
+      const LAND_TIER_COLORS_BY_KEY = {
+        L1: "#16a34a", // Frontier
+        L2: "#fbbf24", // Estate
+        L3: "#ef4444", // Industrial Zone
+      };
 
-  return user;
-}  
+      const LAND_TIER_SHORT_LABEL = {
+        L1: "Frontier",
+        L2: "Estate",
+        L3: "Industrial Zone",
+      };
 
- 
-const LAND_TIER_COLORS_BY_KEY = {
-  L1: "#16a34a", // Frontier
-  L2: "#fbbf24", // Estate
-  L3: "#ef4444", // Industrial Zone
-};
+      // ===== LAND TIER CONFIG =====
 
-const LAND_TIER_SHORT_LABEL = {
-  L1: "Frontier",
-  L2: "Estate",
-  L3: "Industrial Zone",
-};
-    
-// ===== LAND TIER CONFIG =====
+      const LAND_TIER_COLORS = {
+        1: "#16a34a", // L1 Frontier – Green
+        2: "#fbbf24", // L2 Estate – Yellow
+        3: "#ef4444", // L3 Industrial Zone – Red
+      };
 
-const LAND_TIER_COLORS = {
-  1: "#16a34a", // L1 Frontier – Green
-  2: "#fbbf24", // L2 Estate – Yellow
-  3: "#ef4444", // L3 Industrial Zone – Red
-};
+      const LAND_TIER_NAMES = {
+        1: "Frontier",
+        2: "Estate",
+        3: "Industrial Zone",
+      };
 
-const LAND_TIER_NAMES = {
-  1: "Frontier",
-  2: "Estate",
-  3: "Industrial Zone",
-};
-    
-// ===== BASIC CONFIG =====
+      // ===== BASIC CONFIG =====
 
-const LOCAL_API = "http://localhost:10000";
-const PROD_API  = "https://mydempire-backend-1.onrender.com";
+      const LOCAL_API = "http://localhost:10000";
+      const PROD_API = "https://mydempire-backend-1.onrender.com";
 
-const host = window.location.hostname;
-const isLocal = host === "localhost" || host === "127.0.0.1";
+      const host = window.location.hostname;
+      const isLocal = host === "localhost" || host === "127.0.0.1";
 
-const API_BASE = isLocal ? LOCAL_API : PROD_API;
-console.log("✅ Packs Debug | host:", window.location.hostname, "| API_BASE:", API_BASE);
-console.log("API_BASE:", API_BASE, "host:", host);
+      const API_BASE = isLocal ? LOCAL_API : PROD_API;
+      console.log(
+        "✅ Packs Debug | host:",
+        window.location.hostname,
+        "| API_BASE:",
+        API_BASE,
+      );
+      console.log("API_BASE:", API_BASE, "host:", host);
 
-function apiUrl(path) {
-  return API_BASE + path;
-}
-// ===== BUY EMP FRONTEND =====
+      function apiUrl(path) {
+        return API_BASE + path;
+      }
+      // ===== BUY EMP FRONTEND =====
 
+      function getPlayerUsername() {
+        const params = new URLSearchParams(window.location.search);
 
-    function getPlayerUsername() {
-  const params = new URLSearchParams(window.location.search);
-
-  let fromUrl = params.get("user");
-  if (fromUrl && fromUrl.trim().length > 0) {
-    fromUrl = fromUrl.trim().replace("@", "").toLowerCase();
-    localStorage.setItem("hiveUsername", fromUrl);
-    localStorage.setItem("mde_username", fromUrl);
-    return fromUrl;
-  }
-
-  const stored =
-    localStorage.getItem("mde_username") ||
-    localStorage.getItem("hiveUsername") ||
-    localStorage.getItem("username") ||
-    "";
-
-  return String(stored).trim().replace("@", "").toLowerCase();
-}
-    const PLAYER_USERNAME = getPlayerUsername();
-
-    let empireLands = [];
-    let allFactoriesFlat = [];
-    let playerBlueprints = [];
-
-    function landTierLabel(tier) {
-      if (tier === "L1") return "L1 Frontier";
-      if (tier === "L2") return "L2 Estate";
-      if (tier === "L3") return "L3 Industrial Zone";
-      return tier || "Unknown Land";
-    }
-
-    function landSlotCount(tier) {
-      if (tier === "L2") return 2;
-      if (tier === "L3") return 3;
-      return 1;
-    }
-
-    function landTagClass(tier) {
-      if (tier === "L1") return "tag-l1";
-      if (tier === "L2") return "tag-l2";
-      if (tier === "L3") return "tag-l3";
-      return "";
-    }
-
-    function landHeaderLineClass(tier) {
-      if (tier === "L1") return "land-line-l1";
-      if (tier === "L2") return "land-line-l2";
-      if (tier === "L3") return "land-line-l3";
-      return "";
-    }
-
-    function statusClass(status) {
-      if (!status) return "";
-      const s = status.toUpperCase();
-      if (s === "ACTIVE") return "status-active";
-      if (s === "UPGRADING" || s === "BUILDING") return "status-upgrading";
-      return "status-inactive";
-    }
-
-    // ===== TABS HANDLING =====
-    function setActiveTab(tabName) {
-      const buttons = document.querySelectorAll(".subnav-btn");
-      const panels = document.querySelectorAll(".tab-panel");
-
-      buttons.forEach(btn => {
-        if (btn.dataset.tab === tabName) {
-          btn.classList.add("subnav-btn-active");
-        } else {
-          btn.classList.remove("subnav-btn-active");
+        let fromUrl = params.get("user");
+        if (fromUrl && fromUrl.trim().length > 0) {
+          fromUrl = fromUrl.trim().replace("@", "").toLowerCase();
+          localStorage.setItem("hiveUsername", fromUrl);
+          localStorage.setItem("mde_username", fromUrl);
+          return fromUrl;
         }
-      });
 
-      panels.forEach(panel => {
-        if (panel.dataset.tabPanel === tabName) {
-          panel.classList.add("tab-panel-active");
-        } else {
-          panel.classList.remove("tab-panel-active");
+        const stored =
+          localStorage.getItem("mde_username") ||
+          localStorage.getItem("hiveUsername") ||
+          localStorage.getItem("username") ||
+          "";
+
+        return String(stored).trim().replace("@", "").toLowerCase();
+      }
+      const PLAYER_USERNAME = getPlayerUsername();
+
+      let empireLands = [];
+      let allFactoriesFlat = [];
+      let playerBlueprints = [];
+
+      function landTierLabel(tier) {
+        if (tier === "L1") return "L1 Frontier";
+        if (tier === "L2") return "L2 Estate";
+        if (tier === "L3") return "L3 Industrial Zone";
+        return tier || "Unknown Land";
+      }
+
+      function landSlotCount(tier) {
+        if (tier === "L2") return 2;
+        if (tier === "L3") return 3;
+        return 1;
+      }
+
+      function landTagClass(tier) {
+        if (tier === "L1") return "tag-l1";
+        if (tier === "L2") return "tag-l2";
+        if (tier === "L3") return "tag-l3";
+        return "";
+      }
+
+      function landHeaderLineClass(tier) {
+        if (tier === "L1") return "land-line-l1";
+        if (tier === "L2") return "land-line-l2";
+        if (tier === "L3") return "land-line-l3";
+        return "";
+      }
+
+      function statusClass(status) {
+        if (!status) return "";
+        const s = status.toUpperCase();
+        if (s === "ACTIVE") return "status-active";
+        if (s === "UPGRADING" || s === "BUILDING") return "status-upgrading";
+        return "status-inactive";
+      }
+
+      // ===== TABS HANDLING =====
+      function setActiveTab(tabName) {
+        const buttons = document.querySelectorAll(".subnav-btn");
+        const panels = document.querySelectorAll(".tab-panel");
+
+        buttons.forEach((btn) => {
+          if (btn.dataset.tab === tabName) {
+            btn.classList.add("subnav-btn-active");
+          } else {
+            btn.classList.remove("subnav-btn-active");
+          }
+        });
+
+        panels.forEach((panel) => {
+          if (panel.dataset.tabPanel === tabName) {
+            panel.classList.add("tab-panel-active");
+          } else {
+            panel.classList.remove("tab-panel-active");
+          }
+        });
+        if (tabName === "leaderboard") loadEmperorLeaderboard();
+      }
+
+      async function loadEmperorLeaderboard() {
+        try {
+          const res = await fetch("/leaderboard/emperors");
+          const data = await res.json();
+
+          const container = document.getElementById("emperor-leaderboard-list");
+          if (!container) return;
+
+          if (!data.success || !data.leaders.length) {
+            container.innerHTML =
+              "Leaderboard will appear once lifetime EP begins accumulating.";
+            return;
+          }
+
+          let html = "";
+
+          data.leaders.forEach((row, index) => {
+            const medal =
+              index === 0
+                ? "🥇"
+                : index === 1
+                  ? "🥈"
+                  : index === 2
+                    ? "🥉"
+                    : `#${index + 1}`;
+
+            html += `
+  <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""}">
+    <div class="leaderboard-rank">${medal}</div>
+    <div class="leaderboard-player">${row.username}</div>
+    <div class="leaderboard-score">${Number(row.lifetime_ep).toFixed(2)} EP</div>
+  </div>
+`;
+          });
+
+          container.innerHTML = html;
+        } catch (err) {
+          console.error("Leaderboard error:", err);
         }
-      });
-    }
+      }
+      // ===== PLAYER SUMMARY =====
+      async function loadDashboardSummary() {
+        try {
+          const res = await fetch(
+            apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/dashboard`),
+          );
+          if (!res.ok) throw new Error("HTTP " + res.status);
 
-// ===== PLAYER SUMMARY =====
-async function loadDashboardSummary() {
-  try {
-    const res = await fetch(
-      apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/dashboard`)
-    );
-    if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+          console.log("Dashboard summary:", data);
 
-    const data = await res.json();
-    console.log("Dashboard summary:", data);
+          const setText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+          };
 
-    const setText = (id, value) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = value;
-    };
+          const usernameFromApi = data.username || PLAYER_USERNAME;
+          setText("player-username-display", usernameFromApi);
+          setText("player-username-raw", PLAYER_USERNAME);
+          setText("last-updated", new Date().toLocaleString());
+          const statusEl = document.getElementById("empire-status-pulse");
 
-    const usernameFromApi = data.username || PLAYER_USERNAME;
-    setText("player-username-display", usernameFromApi);
-    setText("player-username-raw", PLAYER_USERNAME);
-    setText("last-updated", new Date().toLocaleString());
+          if (statusEl) {
+            statusEl.innerHTML =
+              data.empireStatus ??
+              data.totals?.empireStatus ??
+              "<span class='status-dot'></span>All factories running smoothly.";
+          }
 
-    const emp = Number(data.empBalance ?? 0);
-    setText(
-      "summary-emp-balance",
-      emp.toLocaleString(undefined, {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2
-      })
-    );
+          const emp = Number(data.empBalance ?? 0);
+          setText(
+            "summary-emp-balance",
+            emp.toLocaleString(undefined, {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2,
+            }),
+          );
 
-    const totalFactories = Number(data.totalFactories ?? data.totals?.totalFactories ?? 0);
-    const activeFactories = Number(data.activeFactories ?? data.totals?.activeFactories ?? 0);
-    const buildingFactories = Number(data.buildingFactories ?? data.totals?.buildingFactories ?? 0);
-    const inactiveFactories = Number(data.inactiveFactories ?? data.totals?.inactiveFactories ?? 0);
+          const totalFactories = Number(
+            data.totalFactories ?? data.totals?.totalFactories ?? 0,
+          );
+          const activeFactories = Number(
+            data.activeFactories ?? data.totals?.activeFactories ?? 0,
+          );
+          const buildingFactories = Number(
+            data.buildingFactories ?? data.totals?.buildingFactories ?? 0,
+          );
+          const inactiveFactories = Number(
+            data.inactiveFactories ?? data.totals?.inactiveFactories ?? 0,
+          );
 
-    setText("summary-factories-total", totalFactories);
-    setText(
-      "summary-factories-breakdown",
-      `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories}`
-    );
+          setText("summary-factories-total", totalFactories);
+          setText(
+            "summary-factories-breakdown",
+            `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories}`,
+          );
 
-    const relicCount = Number(data.relicCount ?? 0);
-    const activeRelicBoost = Number(data.activeRelicBoost ?? 0);
+          const relicCount = Number(data.relicCount ?? 0);
+          const activeRelicBoost = Number(data.activeRelicBoost ?? 0);
 
-    setText("summary-relic-boost", `${activeRelicBoost}%`);
-    setText("summary-relic-count", `Relics owned: ${relicCount} (max boost: 6%)`);
+          setText("summary-relic-boost", `${activeRelicBoost}%`);
+          setText(
+            "summary-relic-count",
+            `Relics owned: ${relicCount} (max boost: 6%)`,
+          );
 
-    const totalBaseEP = Number(data.totalBaseEP ?? data.totals?.totalBaseEP ?? 0);
-    const totalBoostedEP = Number(
-      data.totalBoostedEP ?? data.totals?.totalBoostedEP ?? totalBaseEP
-    );
-    const totalClaimableEP = Number(
-      data.totalClaimableEP ?? data.totals?.totalClaimableEP ?? 0
-    );
+          const totalBaseEP = Number(
+            data.totalBaseEP ?? data.totals?.totalBaseEP ?? 0,
+          );
+          const totalBoostedEP = Number(
+            data.totalBoostedEP ?? data.totals?.totalBoostedEP ?? totalBaseEP,
+          );
+          const totalClaimableEP = Number(
+            data.totalClaimableEP ?? data.totals?.totalClaimableEP ?? 0,
+          );
+          const lifetimeEP = Number(
+            data.lifetimeEP ?? data.totals?.lifetimeEP ?? 0,
+          );
+          console.log("Lifetime EP:", lifetimeEP);
 
-    // Production card
-    setText("summary-production-rate", `${totalBoostedEP.toFixed(2)} EP/day`);
-    setText("summary-production-sub", "Empire production including relic boosts");
+          // Production card
+          setText(
+            "summary-production-rate",
+            `${totalBoostedEP.toFixed(2)} EP/day`,
+          );
+          setText(
+            "summary-production-sub",
+            "Empire production including relic boosts",
+          );
+          setText("lifetime-ep", lifetimeEP.toFixed(2));
 
-    // Empire Accumulated EP card
-    setText("summary-total-empire-ep", totalClaimableEP.toFixed(2));
+          // Empire Accumulated EP card
+          setText("summary-total-empire-ep", totalClaimableEP.toFixed(2));
 
-    // If old accumulated EP line still exists anywhere, update it too
-    const claimableEpEl = document.getElementById("summary-claimable-ep");
-    if (claimableEpEl) {
-      claimableEpEl.textContent = `Accumulated EP: ${totalClaimableEP.toFixed(2)}`;
-    }
+          // If old accumulated EP line still exists anywhere, update it too
+          const claimableEpEl = document.getElementById("summary-claimable-ep");
+          if (claimableEpEl) {
+            claimableEpEl.textContent = `Accumulated EP: ${totalClaimableEP.toFixed(2)}`;
+          }
 
-    setText("relics-owned", relicCount);
-    setText("relics-boost", `${activeRelicBoost}%`);
-  } catch (err) {
-    console.error("Failed to load dashboard summary:", err);
-  }
-}
+          setText("relics-owned", relicCount);
+          setText("relics-boost", `${activeRelicBoost}%`);
+        } catch (err) {
+          console.error("Failed to load dashboard summary:", err);
+        }
+      }
 
-async function loadRewardSummary() {
-  try {
-    const res = await fetch(
-      apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/reward-summary`)
-    );
+      async function loadRewardSummary() {
+        try {
+          const res = await fetch(
+            apiUrl(
+              `/player/${encodeURIComponent(PLAYER_USERNAME)}/reward-summary`,
+            ),
+          );
 
-    if (!res.ok) throw new Error("HTTP " + res.status);
+          if (!res.ok) throw new Error("HTTP " + res.status);
 
-    const data = await res.json();
-    console.log("Reward summary:", data);
+          const data = await res.json();
+          console.log("Reward summary:", data);
 
-    const setText = (id, value) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = value;
-    };
+          const setText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+          };
 
-    const claimableHive = Number(
-      data.claimable_hive ?? data.claimable_amount ?? 0
-    );
+          const claimableHive = Number(
+            data.claimable_hive ?? data.claimable_amount ?? 0,
+          );
 
-    const walletHive = Number(
-      data.wallet_hive ?? data.wallet_balance ?? 0
-    );
+          const walletHive = Number(
+            data.wallet_hive ?? data.wallet_balance ?? 0,
+          );
 
-    setText("summary-claimable-hive", claimableHive.toFixed(3));
-    setText("summary-wallet-hive", walletHive.toFixed(3));
+          setText("summary-claimable-hive", claimableHive.toFixed(3));
+          setText("summary-wallet-hive", walletHive.toFixed(3));
 
-    if (walletHive >= 1) {
-      setText("summary-withdraw-status", "Ready");
-      setText("summary-withdraw-sub", "You can request withdrawal now.");
-    } else {
-      setText("summary-withdraw-status", "Not Ready");
-      setText("summary-withdraw-sub", "Minimum withdrawal is 1.000 HIVE");
-    }
+          if (walletHive >= 1) {
+            setText("summary-withdraw-status", "Ready");
+            setText("summary-withdraw-sub", "You can request withdrawal now.");
+          } else {
+            setText("summary-withdraw-status", "Not Ready");
+            setText("summary-withdraw-sub", "Minimum withdrawal is 1.000 HIVE");
+          }
 
-    const claimRewardStatus = document.getElementById("claim-reward-status");
-    if (claimRewardStatus) {
-      claimRewardStatus.textContent =
-        claimableHive > 0
-          ? `${claimableHive.toFixed(3)} HIVE available to claim`
-          : "No reward available to claim.";
-    }
+          const claimRewardStatus = document.getElementById(
+            "claim-reward-status",
+          );
+          if (claimRewardStatus) {
+            claimRewardStatus.textContent =
+              claimableHive > 0
+                ? `${claimableHive.toFixed(3)} HIVE available to claim`
+                : "No reward available to claim.";
+          }
 
-    const withdrawHiveStatus = document.getElementById("withdraw-hive-status");
-    if (withdrawHiveStatus) {
-      withdrawHiveStatus.textContent =
-        walletHive >= 1
-          ? `${walletHive.toFixed(3)} HIVE available for withdrawal request`
-          : "Withdrawal not ready yet.";
-    }
+          const withdrawHiveStatus = document.getElementById(
+            "withdraw-hive-status",
+          );
+          if (withdrawHiveStatus) {
+            withdrawHiveStatus.textContent =
+              walletHive >= 1
+                ? `${walletHive.toFixed(3)} HIVE available for withdrawal request`
+                : "Withdrawal not ready yet.";
+          }
+        } catch (err) {
+          console.error("Failed to load reward summary:", err);
+        }
+      }
+      async function loadPacks() {
+        try {
+          if (!PLAYER_USERNAME) return;
 
-  } catch (err) {
-    console.error("Failed to load reward summary:", err);
-  }
-}
-async function loadPacks() {
-  try {
-    if (!PLAYER_USERNAME) return;
+          const res = await fetch(
+            apiUrl(
+              `/player/${encodeURIComponent(PLAYER_USERNAME)}/unopened-packs`,
+            ),
+          );
 
-    const res = await fetch(
-      apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/unopened-packs`)
-    );
+          if (!res.ok) throw new Error("HTTP " + res.status);
 
-    if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+          console.log("Unopened packs:", data);
 
-    const data = await res.json();
-    console.log("Unopened packs:", data);
+          const total = Number(data.totalUnopenedPacks || 0);
 
-    const total = Number(data.totalUnopenedPacks || 0);
+          const countEl = document.getElementById("packs-total-count");
+          if (countEl) {
+            countEl.textContent = `${total} Pack${total === 1 ? "" : "s"}`;
+          }
 
-    const countEl = document.getElementById("packs-total-count");
-    if (countEl) {
-      countEl.textContent = `${total} Pack${total === 1 ? "" : "s"}`;
-    }
+          const gridEl = document.getElementById("packs-grid");
+          if (!gridEl) return;
 
-    const gridEl = document.getElementById("packs-grid");
-    if (!gridEl) return;
+          if (!total) {
+            gridEl.innerHTML = `<div class="empty">No unopened packs.</div>`;
+            return;
+          }
 
-    if (!total) {
-      gridEl.innerHTML = `<div class="empty">No unopened packs.</div>`;
-      return;
-    }
+          const maxOpen = Math.min(5, total);
 
-    const maxOpen = Math.min(5, total);
-
-    gridEl.innerHTML = `
+          gridEl.innerHTML = `
       <div class="pack-open-simple">
         <img src="assets/pack.png" class="pack-open-simple-img" alt="Genesis Pack">
 
@@ -711,454 +965,452 @@ async function loadPacks() {
       </div>
     `;
 
-    const slider = document.getElementById("pack-open-count-slider");
-    const display = document.getElementById("pack-open-count-display");
-    const openBtn = document.getElementById("open-selected-packs-btn");
+          const slider = document.getElementById("pack-open-count-slider");
+          const display = document.getElementById("pack-open-count-display");
+          const openBtn = document.getElementById("open-selected-packs-btn");
 
-    function syncPackOpenUI() {
-      const count = Number(slider.value || 1);
-      display.textContent = count;
-      openBtn.textContent = `Open ${count} Pack${count === 1 ? "" : "s"}`;
-    }
+          function syncPackOpenUI() {
+            const count = Number(slider.value || 1);
+            display.textContent = count;
+            openBtn.textContent = `Open ${count} Pack${count === 1 ? "" : "s"}`;
+          }
 
-    slider.addEventListener("input", syncPackOpenUI);
+          slider.addEventListener("input", syncPackOpenUI);
 
-    openBtn.onclick = function () {
-      const count = Number(slider.value || 1);
-      console.log("OPEN BUTTON WORKING, count =", count);
-      
-      openPackFromPacksPage(count);
-    };
+          openBtn.onclick = function () {
+            const count = Number(slider.value || 1);
+            console.log("OPEN BUTTON WORKING, count =", count);
 
-    syncPackOpenUI();
+            openPackFromPacksPage(count);
+          };
 
-  } catch (err) {
-    console.error("Failed to load packs:", err);
-  }
-}
-function renderPackReveal(data) {
-  console.log("REVEAL DATA:", data);
-  const stage = document.getElementById("pack-reveal-stage");
-  if (!stage) return;
+          syncPackOpenUI();
+        } catch (err) {
+          console.error("Failed to load packs:", err);
+        }
+      }
+      function renderPackReveal(data) {
+        console.log("REVEAL DATA:", data);
+        const stage = document.getElementById("pack-reveal-stage");
+        if (!stage) return;
 
-  const drops = Array.isArray(data.drops) ? data.drops : [];
+        const drops = Array.isArray(data.drops) ? data.drops : [];
 
-  const findDrop = (type) => drops.find(d => d.type === type);
-  const filterDrops = (type) => drops.filter(d => d.type === type);
+        const findDrop = (type) => drops.find((d) => d.type === type);
+        const filterDrops = (type) => drops.filter((d) => d.type === type);
 
-  const land = findDrop("land");
-  const blueprint = findDrop("blueprint");
-  const emp = findDrop("emp");
-  const bonusEmp = findDrop("bonus_emp");
-  const extraBlueprints = filterDrops("extra_blueprint");
-  const relic = findDrop("relic");
+        const land = findDrop("land");
+        const blueprint = findDrop("blueprint");
+        const emp = findDrop("emp");
+        const bonusEmp = findDrop("bonus_emp");
+        const extraBlueprints = filterDrops("extra_blueprint");
+        const relic = findDrop("relic");
 
-  const rewardCards = [];
+        const rewardCards = [];
 
-  if (land) {
-    rewardCards.push(`
+        if (land) {
+          rewardCards.push(`
       <div class="reveal-card">
         <div class="reveal-card-label">LAND</div>
         <div class="reveal-card-value">${land.tier || "LAND"}</div>
       </div>
     `);
-  }
+        }
 
-  if (blueprint) {
-    rewardCards.push(`
+        if (blueprint) {
+          rewardCards.push(`
       <div class="reveal-card">
         <div class="reveal-card-label">BLUEPRINT</div>
         <div class="reveal-card-value">${blueprint.blueprint_tier || blueprint.tier || "BLUEPRINT"}</div>
         <div class="reveal-card-sub">${blueprint.industry || ""}</div>
       </div>
     `);
-  }
+        }
 
-  if (emp) {
-    rewardCards.push(`
+        if (emp) {
+          rewardCards.push(`
       <div class="reveal-card">
         <div class="reveal-card-label">EMP</div>
         <div class="reveal-card-value">${emp.amount ?? 0}</div>
       </div>
     `);
-  }
+        }
 
-  if (bonusEmp) {
-    rewardCards.push(`
+        if (bonusEmp) {
+          rewardCards.push(`
       <div class="reveal-card reveal-card-bonus">
         <div class="reveal-card-label">BONUS EMP</div>
         <div class="reveal-card-value">${bonusEmp.amount ?? 0}</div>
       </div>
     `);
-  }
+        }
 
-  extraBlueprints.forEach((bp) => {
-    rewardCards.push(`
+        extraBlueprints.forEach((bp) => {
+          rewardCards.push(`
       <div class="reveal-card reveal-card-bonus">
         <div class="reveal-card-label">EXTRA BLUEPRINT</div>
         <div class="reveal-card-value">${bp.blueprint_tier || bp.tier || "BLUEPRINT"}</div>
         <div class="reveal-card-sub">${bp.industry || ""}</div>
       </div>
     `);
-  });
+        });
 
-  if (relic) {
-    rewardCards.push(`
+        if (relic) {
+          rewardCards.push(`
       <div class="reveal-card reveal-card-relic">
         <div class="reveal-card-label">RELIC</div>
         <div class="reveal-card-value">Genesis Relic</div>
       </div>
     `);
-  }
+        }
 
-  stage.innerHTML = `
+        stage.innerHTML = `
     <div class="pack-opened-banner">Pack Opened</div>
     <div class="reveal-grid">
       ${rewardCards.join("")}
     </div>
   `;
-}
-
-
-async function claimReward() {
-  const statusEl = document.getElementById("claim-reward-status");
-
-  try {
-    if (statusEl) {
-      statusEl.textContent = "Claiming reward...";
-    }
-
-    const res = await fetch(
-      apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/claim-rewards`)
-    );
-
-    const data = await res.json();
-
-    if (!res.ok || !data.success) {
-      throw new Error(data.error || data.message || "Claim reward failed.");
-    }
-
-    if (statusEl) {
-      statusEl.textContent =
-        `✅ Claimed ${Number(data.claimable_amount || 0).toFixed(3)} HIVE`;
-    }
-
-    await loadRewardSummary();
-  } catch (err) {
-    console.error("claimReward error:", err);
-    if (statusEl) {
-      statusEl.textContent = err.message || "Claim reward failed.";
-    }
-  }
-}
-
-async function requestWithdrawHive() {
-  const statusEl = document.getElementById("withdraw-hive-status");
-
-  try {
-    const walletText =
-      document.getElementById("summary-wallet-hive")?.textContent || "0";
-
-    const walletAmount = Number(walletText);
-
-    if (!Number.isFinite(walletAmount) || walletAmount < 1) {
-      if (statusEl) {
-        statusEl.textContent = "Minimum withdrawal is 1.000 HIVE";
       }
-      return;
-    }
 
-    const confirmed = confirm(
-      `Request withdrawal of ${walletAmount.toFixed(3)} HIVE?`
-    );
+      async function claimReward() {
+        const statusEl = document.getElementById("claim-reward-status");
 
-    if (!confirmed) return;
+        try {
+          if (statusEl) {
+            statusEl.textContent = "Claiming reward...";
+          }
 
-    if (statusEl) {
-      statusEl.textContent = "Creating withdrawal request...";
-    }
+          const res = await fetch(
+            apiUrl(
+              `/player/${encodeURIComponent(PLAYER_USERNAME)}/claim-rewards`,
+            ),
+          );
 
-    const res = await fetch(
-      apiUrl(
-        `/player/${encodeURIComponent(PLAYER_USERNAME)}/request-withdraw/${walletAmount.toFixed(8)}`
-      )
-    );
+          const data = await res.json();
 
-    const data = await res.json();
+          if (!res.ok || !data.success) {
+            throw new Error(
+              data.error || data.message || "Claim reward failed.",
+            );
+          }
 
-    if (!res.ok || !data.success) {
-      throw new Error(data.error || data.message || "Withdraw request failed.");
-    }
+          if (statusEl) {
+            statusEl.textContent = `✅ Claimed ${Number(data.claimable_amount || 0).toFixed(3)} HIVE`;
+          }
 
-    if (statusEl) {
-      statusEl.textContent =
-        `✅ Withdrawal request created for ${walletAmount.toFixed(3)} HIVE`;
-    }
-
-    await loadRewardSummary();
-  } catch (err) {
-    console.error("requestWithdrawHive error:", err);
-    if (statusEl) {
-      statusEl.textContent = err.message || "Withdraw request failed.";
-    }
-  }
-}
-
-async function loadUnopenedPacks(username) {
-  try {
-    const res = await fetch(
-      apiUrl(`/player/${encodeURIComponent(username)}/unopened-packs`)
-    );
-    if (!res.ok) throw new Error("HTTP " + res.status);
-
-    const data = await res.json();
-    console.log("Unopened packs response:", data);
-
-    const total =
-      data.totalUnopenedPacks ??
-      data.total_unopened_packs ??
-      data.total ??
-      0;
-
-    const totalEl = document.getElementById("summary-unopened-packs");
-    const selectEl = document.getElementById("open-pack-count");
-    const btnEl = document.getElementById("open-pack-btn");
-
-    if (totalEl) totalEl.textContent = total;
-
-    if (selectEl) {
-      const maxSelectable = Math.min(total, 5);
-      selectEl.innerHTML = "";
-
-      if (maxSelectable <= 0) {
-        const opt = document.createElement("option");
-        opt.value = "0";
-        opt.textContent = "No packs";
-        selectEl.appendChild(opt);
-        selectEl.disabled = true;
-      } else {
-        for (let i = 1; i <= maxSelectable; i++) {
-          const opt = document.createElement("option");
-          opt.value = String(i);
-          opt.textContent = i === 1 ? "1 pack" : `${i} packs`;
-          selectEl.appendChild(opt);
+          await loadRewardSummary();
+        } catch (err) {
+          console.error("claimReward error:", err);
+          if (statusEl) {
+            statusEl.textContent = err.message || "Claim reward failed.";
+          }
         }
-        selectEl.disabled = false;
       }
-    }
 
-    if (btnEl) {
-      btnEl.disabled = total <= 0;
-    }
-  } catch (err) {
-    console.error("Failed to load unopened packs:", err);
+      async function requestWithdrawHive() {
+        const statusEl = document.getElementById("withdraw-hive-status");
 
-    const totalEl = document.getElementById("summary-unopened-packs");
-    if (totalEl) totalEl.textContent = "Error";
-  }
-}
-function openPackRevealModal() {
-  const modal = document.getElementById("pack-reveal-modal");
-  if (modal) {
-    modal.classList.remove("hidden");
-    document.body.style.overflow = "hidden";
-  }
-}
+        try {
+          const walletText =
+            document.getElementById("summary-wallet-hive")?.textContent || "0";
 
-function closePackRevealModal() {
-  const modal = document.getElementById("pack-reveal-modal");
-  if (modal) {
-    modal.classList.add("hidden");
-    document.body.style.overflow = "";
-  }
-}
-  
-function showPackOpenModal(message) {
-  const modal = document.getElementById("pack-open-modal");
-  const msg = document.getElementById("pack-open-modal-message");
+          const walletAmount = Number(walletText);
 
-  if (!modal || !msg) {
-    console.error("Pack modal elements not found");
-    return;
-  }
+          if (!Number.isFinite(walletAmount) || walletAmount < 1) {
+            if (statusEl) {
+              statusEl.textContent = "Minimum withdrawal is 1.000 HIVE";
+            }
+            return;
+          }
 
-  msg.innerHTML = message.replace(/\n/g, "<br>");
-  modal.classList.remove("hidden");
-}
+          const confirmed = confirm(
+            `Request withdrawal of ${walletAmount.toFixed(3)} HIVE?`,
+          );
 
-function hidePackOpenModal() {
-  const modal = document.getElementById("pack-open-modal");
-  if (modal) {
-    modal.classList.add("hidden");
-  }
-}
+          if (!confirmed) return;
 
-async function openSelectedPacks() {
-  const countEl = document.getElementById("open-pack-count");
-  const statusEl = document.getElementById("open-pack-status");
-  const btnEl = document.getElementById("open-pack-btn");
+          if (statusEl) {
+            statusEl.textContent = "Creating withdrawal request...";
+          }
 
-  if (!countEl || !statusEl || !btnEl) return;
+          const res = await fetch(
+            apiUrl(
+              `/player/${encodeURIComponent(PLAYER_USERNAME)}/request-withdraw/${walletAmount.toFixed(8)}`,
+            ),
+          );
 
-  const count = parseInt(countEl.value, 10) || 1;
+          const data = await res.json();
 
-  if (count < 1) {
-    statusEl.textContent = "No unopened packs available.";
-    return;
-  }
+          if (!res.ok || !data.success) {
+            throw new Error(
+              data.error || data.message || "Withdraw request failed.",
+            );
+          }
 
-  btnEl.disabled = true;
-  statusEl.textContent = "Opening pack(s)...";
+          if (statusEl) {
+            statusEl.textContent = `✅ Withdrawal request created for ${walletAmount.toFixed(3)} HIVE`;
+          }
 
-  try {
-    const res = await fetch(apiUrl(`/open-pack`), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: PLAYER_USERNAME,
-        count: count
-      })
-    });
+          await loadRewardSummary();
+        } catch (err) {
+          console.error("requestWithdrawHive error:", err);
+          if (statusEl) {
+            statusEl.textContent = err.message || "Withdraw request failed.";
+          }
+        }
+      }
 
-    const data = await res.json();
-    console.log("Open pack result:", data);
+      async function loadUnopenedPacks(username) {
+        try {
+          const res = await fetch(
+            apiUrl(`/player/${encodeURIComponent(username)}/unopened-packs`),
+          );
+          if (!res.ok) throw new Error("HTTP " + res.status);
 
-    if (!res.ok || !data.success) {
-      statusEl.textContent = data.error || "Open pack failed.";
-      btnEl.disabled = false;
-      return;
-    }
+          const data = await res.json();
+          console.log("Unopened packs response:", data);
 
-    statusEl.textContent =
-      `Opened ${data.opened} pack(s) • EMP gained: ${data.totalEmp}`;
+          const total =
+            data.totalUnopenedPacks ??
+            data.total_unopened_packs ??
+            data.total ??
+            0;
 
-    let msg = `🎁 Pack Opened!\n\nOpened ${data.opened} pack(s)\nEMP gained: ${data.totalEmp}\n\n`;
+          const totalEl = document.getElementById("summary-unopened-packs");
+          const selectEl = document.getElementById("open-pack-count");
+          const btnEl = document.getElementById("open-pack-btn");
 
-    if (Array.isArray(data.drops) && data.drops.length > 0) {
-      msg += "Drops:\n";
+          if (totalEl) totalEl.textContent = total;
 
-      data.drops.forEach((d, i) => {
-        const land = d.land || "?";
-        const bp = d.blueprint || "?";
-        const relic = d.relic ? " • RELIC 🎖" : "";
-        msg += `Pack ${i + 1}: LAND ${land} • BLUEPRINT ${bp}${relic}\n`;
-      });
-    }
+          if (selectEl) {
+            const maxSelectable = Math.min(total, 5);
+            selectEl.innerHTML = "";
 
-    showPackOpenModal(msg);
+            if (maxSelectable <= 0) {
+              const opt = document.createElement("option");
+              opt.value = "0";
+              opt.textContent = "No packs";
+              selectEl.appendChild(opt);
+              selectEl.disabled = true;
+            } else {
+              for (let i = 1; i <= maxSelectable; i++) {
+                const opt = document.createElement("option");
+                opt.value = String(i);
+                opt.textContent = i === 1 ? "1 pack" : `${i} packs`;
+                selectEl.appendChild(opt);
+              }
+              selectEl.disabled = false;
+            }
+          }
 
-    await loadDashboardSummary();
-    await loadEmpireOverview();
-    await loadBlueprints();
-    await loadUnopenedPacks(PLAYER_USERNAME);
+          if (btnEl) {
+            btnEl.disabled = total <= 0;
+          }
+        } catch (err) {
+          console.error("Failed to load unopened packs:", err);
 
-  } catch (err) {
-    console.error("Open pack error:", err);
-    statusEl.textContent = "Error while opening packs.";
-  } finally {
-    btnEl.disabled = false;
-  }
-}
-  
-async function openPackFromPacksPage(count = 1) {
- 
-  const stageEl = document.getElementById("pack-reveal-stage");
-  const modal = document.getElementById("pack-reveal-modal");
-if (modal) modal.classList.remove("hidden");
-  if (!stageEl) return;
+          const totalEl = document.getElementById("summary-unopened-packs");
+          if (totalEl) totalEl.textContent = "Error";
+        }
+      }
+      function openPackRevealModal() {
+        const modal = document.getElementById("pack-reveal-modal");
+        if (modal) {
+          modal.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+        }
+      }
 
-  if (window.openingPack) return;
-  window.openingPack = true;
+      function closePackRevealModal() {
+        const modal = document.getElementById("pack-reveal-modal");
+        if (modal) {
+          modal.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+      }
 
-  const safeCount = Math.max(1, Math.min(5, Number(count || 1)));
+      function showPackOpenModal(message) {
+        const modal = document.getElementById("pack-open-modal");
+        const msg = document.getElementById("pack-open-modal-message");
 
-  try {
-    stageEl.innerHTML = `<div class="empty">Opening ${safeCount} pack${safeCount === 1 ? "" : "s"}...</div>`;
+        if (!modal || !msg) {
+          console.error("Pack modal elements not found");
+          return;
+        }
 
-    const res = await fetch(apiUrl("/open-pack"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: PLAYER_USERNAME,
-        count: safeCount
-      })
-    });
+        msg.innerHTML = message.replace(/\n/g, "<br>");
+        modal.classList.remove("hidden");
+      }
 
-    const data = await res.json();
-    console.log("Packs page open result:", data);
+      function hidePackOpenModal() {
+        const modal = document.getElementById("pack-open-modal");
+        if (modal) {
+          modal.classList.add("hidden");
+        }
+      }
 
-    if (!res.ok || !data.success) {
-      stageEl.innerHTML = `<div class="empty">${data.error || "Open pack failed."}</div>`;
-      return;
-    }
+      async function openSelectedPacks() {
+        const countEl = document.getElementById("open-pack-count");
+        const statusEl = document.getElementById("open-pack-status");
+        const btnEl = document.getElementById("open-pack-btn");
 
-    await loadDashboardSummary();
-    await loadEmpireOverview();
-    await loadBlueprints();
-    await loadPacks();
+        if (!countEl || !statusEl || !btnEl) return;
 
-    if (typeof loadPackOpenHistory === "function") {
-      await loadPackOpenHistory();
-    }
+        const count = parseInt(countEl.value, 10) || 1;
 
-    renderPacksPageReveal(data);
+        if (count < 1) {
+          statusEl.textContent = "No unopened packs available.";
+          return;
+        }
 
-  } catch (err) {
-    console.error("Packs page open error:", err);
-    console.error(err.stack);
-    stageEl.innerHTML = `<div class="empty">${err.message || "Error while opening pack."}</div>`;
-  } finally {
-    window.openingPack = false;
-  }
-}
-  
-  function renderPacksPageReveal(data) {
- const stageEl = document.getElementById("pack-reveal-stage");
-  if (!stageEl) return;
+        btnEl.disabled = true;
+        statusEl.textContent = "Opening pack(s)...";
 
-  const drops = Array.isArray(data.drops) ? data.drops : [];
-  const revealItems = [];
+        try {
+          const res = await fetch(apiUrl(`/open-pack`), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: PLAYER_USERNAME,
+              count: count,
+            }),
+          });
 
-  drops.forEach((d) => {
-    // LAND
-    if (d.land) {
-      const landTier = String(d.land).toUpperCase();
+          const data = await res.json();
+          console.log("Open pack result:", data);
 
-      let landTitle = "FRONTIER";
-      let landClass = "l1";
-      let landBadge = "L1";
-      let landLayoutHtml = `
+          if (!res.ok || !data.success) {
+            statusEl.textContent = data.error || "Open pack failed.";
+            btnEl.disabled = false;
+            return;
+          }
+
+          statusEl.textContent = `Opened ${data.opened} pack(s) • EMP gained: ${data.totalEmp}`;
+
+          let msg = `🎁 Pack Opened!\n\nOpened ${data.opened} pack(s)\nEMP gained: ${data.totalEmp}\n\n`;
+
+          if (Array.isArray(data.drops) && data.drops.length > 0) {
+            msg += "Drops:\n";
+
+            data.drops.forEach((d, i) => {
+              const land = d.land || "?";
+              const bp = d.blueprint || "?";
+              const relic = d.relic ? " • RELIC 🎖" : "";
+              msg += `Pack ${i + 1}: LAND ${land} • BLUEPRINT ${bp}${relic}\n`;
+            });
+          }
+
+          showPackOpenModal(msg);
+
+          await loadDashboardSummary();
+          await loadEmpireOverview();
+          await loadBlueprints();
+          await loadUnopenedPacks(PLAYER_USERNAME);
+        } catch (err) {
+          console.error("Open pack error:", err);
+          statusEl.textContent = "Error while opening packs.";
+        } finally {
+          btnEl.disabled = false;
+        }
+      }
+
+      async function openPackFromPacksPage(count = 1) {
+        const stageEl = document.getElementById("pack-reveal-stage");
+        const modal = document.getElementById("pack-reveal-modal");
+        if (modal) modal.classList.remove("hidden");
+        if (!stageEl) return;
+
+        if (window.openingPack) return;
+        window.openingPack = true;
+
+        const safeCount = Math.max(1, Math.min(5, Number(count || 1)));
+
+        try {
+          stageEl.innerHTML = `<div class="empty">Opening ${safeCount} pack${safeCount === 1 ? "" : "s"}...</div>`;
+
+          const res = await fetch(apiUrl("/open-pack"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: PLAYER_USERNAME,
+              count: safeCount,
+            }),
+          });
+
+          const data = await res.json();
+          console.log("Packs page open result:", data);
+
+          if (!res.ok || !data.success) {
+            stageEl.innerHTML = `<div class="empty">${data.error || "Open pack failed."}</div>`;
+            return;
+          }
+
+          await loadDashboardSummary();
+          await loadEmpireOverview();
+          await loadBlueprints();
+          await loadPacks();
+
+          if (typeof loadPackOpenHistory === "function") {
+            await loadPackOpenHistory();
+          }
+
+          renderPacksPageReveal(data);
+        } catch (err) {
+          console.error("Packs page open error:", err);
+          console.error(err.stack);
+          stageEl.innerHTML = `<div class="empty">${err.message || "Error while opening pack."}</div>`;
+        } finally {
+          window.openingPack = false;
+        }
+      }
+
+      function renderPacksPageReveal(data) {
+        const stageEl = document.getElementById("pack-reveal-stage");
+        if (!stageEl) return;
+
+        const drops = Array.isArray(data.drops) ? data.drops : [];
+        const revealItems = [];
+
+        drops.forEach((d) => {
+          // LAND
+          if (d.land) {
+            const landTier = String(d.land).toUpperCase();
+
+            let landTitle = "FRONTIER";
+            let landClass = "l1";
+            let landBadge = "L1";
+            let landLayoutHtml = `
         <div class="land-layout land-layout-1">
           <img src="assets/land-l1.png" class="land-tile" alt="L1 Frontier">
         </div>
       `;
 
-      if (landTier === "L2") {
-        landTitle = "ESTATE";
-        landClass = "l2";
-        landBadge = "L2";
-        landLayoutHtml = `
+            if (landTier === "L2") {
+              landTitle = "ESTATE";
+              landClass = "l2";
+              landBadge = "L2";
+              landLayoutHtml = `
           <div class="land-layout land-layout-2">
             <img src="assets/land-l2.png" class="land-tile" alt="L2 Estate">
             <img src="assets/land-l2.png" class="land-tile" alt="L2 Estate">
           </div>
         `;
-      }
+            }
 
-      if (landTier === "L3") {
-        landTitle = "INDUSTRIAL ZONE";
-        landClass = "l3";
-        landBadge = "L3";
-        landLayoutHtml = `
+            if (landTier === "L3") {
+              landTitle = "INDUSTRIAL ZONE";
+              landClass = "l3";
+              landBadge = "L3";
+              landLayoutHtml = `
           <div class="land-layout land-layout-3">
             <img src="assets/land-l3.png" class="land-tile land-top" alt="L3 Industrial Zone">
             <img src="assets/land-l3.png" class="land-tile land-bottom-left" alt="L3 Industrial Zone">
             <img src="assets/land-l3.png" class="land-tile land-bottom-right" alt="L3 Industrial Zone">
           </div>
         `;
-      }
+            }
 
-      revealItems.push(`
+            revealItems.push(`
         <div class="pack-reveal-item">
           <div class="pack-reveal-label">Land Unlocked</div>
           <div class="pack-reveal-nft-shell">
@@ -1172,16 +1424,16 @@ if (modal) modal.classList.remove("hidden");
           </div>
         </div>
       `);
-    }
+          }
 
-    // BLUEPRINT
-    if (d.blueprint) {
-      const raw = String(d.blueprint).toUpperCase();
-      const parts = raw.split("_");
-      const industry = parts[0] || "FOOD";
-      const tier = (parts[1] || "B1").toLowerCase();
+          // BLUEPRINT
+          if (d.blueprint) {
+            const raw = String(d.blueprint).toUpperCase();
+            const parts = raw.split("_");
+            const industry = parts[0] || "FOOD";
+            const tier = (parts[1] || "B1").toLowerCase();
 
-      revealItems.push(`
+            revealItems.push(`
         <div class="pack-reveal-item">
           <div class="pack-reveal-label">Blueprint Found</div>
           <div class="pack-reveal-nft-shell">
@@ -1197,11 +1449,11 @@ if (modal) modal.classList.remove("hidden");
           </div>
         </div>
       `);
-    }
+          }
 
-    // EMP
-    if (d.emp || d.emp === 0) {
-      revealItems.push(`
+          // EMP
+          if (d.emp || d.emp === 0) {
+            revealItems.push(`
         <div class="pack-reveal-item">
           <div class="pack-reveal-label">EMP Received</div>
           <div class="reveal-card emp-reveal-card">
@@ -1211,11 +1463,11 @@ if (modal) modal.classList.remove("hidden");
           </div>
         </div>
       `);
-    }
+          }
 
-    // BONUS EMP
-    if (d.bonus_emp) {
-      revealItems.push(`
+          // BONUS EMP
+          if (d.bonus_emp) {
+            revealItems.push(`
         <div class="pack-reveal-item">
           <div class="pack-reveal-label lucky">Lucky Drop</div>
           <div class="reveal-card emp-reveal-card bonus-reveal-card">
@@ -1226,16 +1478,16 @@ if (modal) modal.classList.remove("hidden");
           </div>
         </div>
       `);
-    }
+          }
 
-    // EXTRA BLUEPRINT
-    if (d.extra_blueprint) {
-      const raw = String(d.extra_blueprint).toUpperCase();
-      const parts = raw.split("_");
-      const industry = parts[0] || "FOOD";
-      const tier = (parts[1] || "B1").toLowerCase();
+          // EXTRA BLUEPRINT
+          if (d.extra_blueprint) {
+            const raw = String(d.extra_blueprint).toUpperCase();
+            const parts = raw.split("_");
+            const industry = parts[0] || "FOOD";
+            const tier = (parts[1] || "B1").toLowerCase();
 
-      revealItems.push(`
+            revealItems.push(`
         <div class="pack-reveal-item">
           <div class="pack-reveal-label lucky">Lucky Drop</div>
           <div class="pack-reveal-nft-shell">
@@ -1252,11 +1504,11 @@ if (modal) modal.classList.remove("hidden");
           </div>
         </div>
       `);
-    }
+          }
 
-    // RELIC
-    if (d.relic) {
-      revealItems.push(`
+          // RELIC
+          if (d.relic) {
+            revealItems.push(`
         <div class="pack-reveal-item">
           <div class="pack-reveal-label lucky">Lucky Drop</div>
           <div class="reveal-card relic-reveal-card bonus-reveal-card">
@@ -1265,15 +1517,15 @@ if (modal) modal.classList.remove("hidden");
           </div>
         </div>
       `);
-    }
-  });
+          }
+        });
 
-  if (!revealItems.length) {
-    stageEl.innerHTML = `<div class="empty">No drops returned.</div>`;
-    return;
-  }
+        if (!revealItems.length) {
+          stageEl.innerHTML = `<div class="empty">No drops returned.</div>`;
+          return;
+        }
 
-  stageEl.innerHTML = `
+        stageEl.innerHTML = `
     <div class="pack-reveal-wrap">
       <div class="pack-opened-banner">Pack Opened</div>
 
@@ -1295,314 +1547,327 @@ if (modal) modal.classList.remove("hidden");
     </div>
   `;
 
-  let currentIndex = 0;
-  const singleViewEl = document.getElementById("pack-reveal-single-view");
-  const counterEl = document.getElementById("pack-reveal-counter");
-  const nextBtn = document.getElementById("pack-reveal-next-btn");
-  const thumbsEl = document.getElementById("pack-reveal-thumbs");
+        let currentIndex = 0;
+        const singleViewEl = document.getElementById("pack-reveal-single-view");
+        const counterEl = document.getElementById("pack-reveal-counter");
+        const nextBtn = document.getElementById("pack-reveal-next-btn");
+        const thumbsEl = document.getElementById("pack-reveal-thumbs");
 
-  function renderThumbs() {
-    thumbsEl.innerHTML = revealItems
-      .map((_, i) => {
-        const active = i === currentIndex ? "active" : "";
-        const opened = i <= currentIndex ? "opened" : "";
-        return `<button type="button" class="pack-reveal-thumb ${active} ${opened}" data-index="${i}">${i + 1}</button>`;
-      })
-      .join("");
+        function renderThumbs() {
+          thumbsEl.innerHTML = revealItems
+            .map((_, i) => {
+              const active = i === currentIndex ? "active" : "";
+              const opened = i <= currentIndex ? "opened" : "";
+              return `<button type="button" class="pack-reveal-thumb ${active} ${opened}" data-index="${i}">${i + 1}</button>`;
+            })
+            .join("");
 
-    thumbsEl.querySelectorAll(".pack-reveal-thumb").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const idx = Number(btn.dataset.index);
-        currentIndex = idx;
+          thumbsEl.querySelectorAll(".pack-reveal-thumb").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const idx = Number(btn.dataset.index);
+              currentIndex = idx;
+              updateReveal();
+            });
+          });
+        }
+
+        function updateReveal() {
+          singleViewEl.innerHTML = revealItems[currentIndex];
+          counterEl.textContent = `${currentIndex + 1} / ${revealItems.length}`;
+
+          if (currentIndex >= revealItems.length - 1) {
+            nextBtn.textContent = "Close";
+            nextBtn.disabled = false;
+            nextBtn.onclick = closePackRevealModal;
+          } else {
+            nextBtn.textContent = "Reveal Next";
+            nextBtn.disabled = false;
+          }
+
+          renderThumbs();
+        }
+
+        nextBtn.addEventListener("click", () => {
+          if (currentIndex < revealItems.length - 1) {
+            currentIndex += 1;
+            updateReveal();
+          }
+        });
+
         updateReveal();
-      });
-    });
-  }
+      }
+      async function openPack(username, pack_id) {
+        if (!confirm(`Open Pack #${pack_id}?`)) return;
 
-  function updateReveal() {
-    singleViewEl.innerHTML = revealItems[currentIndex];
-    counterEl.textContent = `${currentIndex + 1} / ${revealItems.length}`;
+        try {
+          const r = await fetch(`${API_BASE}/open-pack`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username,
+              pack_id: pack_id,
+            }),
+          });
 
-    if (currentIndex >= revealItems.length - 1) {
-     nextBtn.textContent = "Close";
-nextBtn.disabled = false;
-nextBtn.onclick = closePackRevealModal;
-    } else {
-      nextBtn.textContent = "Reveal Next";
-      nextBtn.disabled = false;
-    }
+          const text = await r.text();
+          console.log("openPack raw response:", text);
 
-    renderThumbs();
-  }
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            alert("Open pack failed: server did not return JSON.");
+            return;
+          }
 
-  nextBtn.addEventListener("click", () => {
-    if (currentIndex < revealItems.length - 1) {
-      currentIndex += 1;
-      updateReveal();
-    }
-  });
+          if (!r.ok) {
+            alert(data.error || "Open pack failed.");
+            return;
+          }
 
-  updateReveal();
-} 
-async function openPack(username, pack_id) {
-  if (!confirm(`Open Pack #${pack_id}?`)) return;
+          const drops = data.drops || [];
 
-  try {
-    const r = await fetch(`${API_BASE}/open-pack`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username,
-        pack_id: pack_id
-      })
-    });
+          let landTier = "?";
+          let blueprintTier = "?";
+          const empAmount = data.totalEmp || 0;
 
-    const text = await r.text();
-    console.log("openPack raw response:", text);
+          if (drops.length > 0) {
+            landTier = drops[0].land || "?";
+            blueprintTier = drops[0].blueprint || "?";
+          }
 
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      alert("Open pack failed: server did not return JSON.");
-      return;
-    }
+          renderPacksPageReveal(data);
 
-    if (!r.ok) {
-      alert(data.error || "Open pack failed.");
-      return;
-    }
-
-   const drops = data.drops || [];
-
-let landTier = "?";
-let blueprintTier = "?";
-const empAmount = data.totalEmp || 0;
-
-if (drops.length > 0) {
-  landTier = drops[0].land || "?";
-  blueprintTier = drops[0].blueprint || "?";
-}
-
-renderPacksPageReveal(data);
-
-    // refresh sections
-    await loadUnopenedPacks(username);
-    await loadEmpireOverview(username);
-    await loadBlueprints(username);
-    await loadDashboardSummary(username);
-
-  } catch (e) {
-    console.error("openPack error:", e);
-    alert(e.message);
-  }
-}
-function getRequiredActiveDaysForUpgradeTier(blueprintTier) {
-  const t = String(blueprintTier || "").toUpperCase();
-
-  if (t.endsWith("_B1")) return 30;
-  if (t.endsWith("_B2")) return 60;
-  if (t.endsWith("_B3")) return 120;
-  if (t.endsWith("_B4")) return 240;
-
-  return null; // B5 or invalid
-}
-
-function getNextUpgradeLabel(blueprintTier) {
-  const t = String(blueprintTier || "").toUpperCase();
-
-  if (t.endsWith("_B1")) return "B2";
-  if (t.endsWith("_B2")) return "B3";
-  if (t.endsWith("_B3")) return "B4";
-  if (t.endsWith("_B4")) return "B5";
-
-  return null;
-}
-function hasValidMaintenance(factory) {
-  if (!factory || !factory.maintenance_ends_at) return false;
-
-  const end = new Date(factory.maintenance_ends_at);
-  if (isNaN(end.getTime())) return false;
-
-  return end > new Date();
-}
-
-function isTrulyActiveFactory(factory) {
-  const s = String(factory?.status || "").trim().toUpperCase();
-  return s === "ACTIVE" && hasValidMaintenance(factory);
-}
-    // ===== EMPIRE OVERVIEW =====
-   async function loadEmpireOverview() {
-  const landsContainer = document.getElementById("lands-container");
-  const errEl = document.getElementById("empire-error");
-
-  if (errEl) {
-    errEl.style.display = "none";
-    errEl.textContent = "";
-  }
-      try {
-        const res = await fetch(
-          apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/empire-overview`)
-        );
-        if (!res.ok) throw new Error("HTTP " + res.status);
-
-        const data = await res.json();
-        console.log("Empire overview:", data);
-
-        const lands = data.lands || [];
-        const totals = data.totals || {};
-        empireLands = lands;
-
-        // flatten factories
-        allFactoriesFlat = [];
-for (const land of lands) {
-  const factories = land.factories || [];
-  console.log(
-    "STATUS DEBUG (land",
-    land.land_id || "",
-    "):",
-    factories.map((f) => f.status)
-  );
-
-  for (const f of factories) {
-    allFactoriesFlat.push({
-      ...f,
-      land_id: land.land_id,
-      land_tier: land.land_tier
-    });
-  }
-}
-
-        // summary numbers
-        const totalLands = lands.length;
-        document.getElementById("summary-lands-total").textContent = totalLands;
-
-        let l1 = 0, l2 = 0, l3 = 0;
-        for (const land of lands) {
-          if (land.land_tier === "L1") l1++;
-          else if (land.land_tier === "L2") l2++;
-          else if (land.land_tier === "L3") l3++;
+          // refresh sections
+          await loadUnopenedPacks(username);
+          await loadEmpireOverview(username);
+          await loadBlueprints(username);
+          await loadDashboardSummary(username);
+        } catch (e) {
+          console.error("openPack error:", e);
+          alert(e.message);
         }
-        document.getElementById("summary-lands-breakdown").textContent =
-          `L1: ${l1} | L2: ${l2} | L3: ${l3}`;
+      }
+      function getRequiredActiveDaysForUpgradeTier(blueprintTier) {
+        const t = String(blueprintTier || "").toUpperCase();
 
-        if (typeof totals.totalFactories === "number") {
-          if (typeof totals.totalFactories === "number") {
-  document.getElementById("summary-factories-total").textContent = totals.totalFactories;
-}
-        }
+        if (t.endsWith("_B1")) return 30;
+        if (t.endsWith("_B2")) return 60;
+        if (t.endsWith("_B3")) return 120;
+        if (t.endsWith("_B4")) return 240;
 
-        renderLandsTab();
-        renderConstructionTab();
-        renderBuildFactorySection();
-        renderEmpirePreview();
-      } catch (err) {
-        console.error("Failed to load empire overview:", err);
+        return null; // B5 or invalid
+      }
+
+      function getNextUpgradeLabel(blueprintTier) {
+        const t = String(blueprintTier || "").toUpperCase();
+
+        if (t.endsWith("_B1")) return "B2";
+        if (t.endsWith("_B2")) return "B3";
+        if (t.endsWith("_B3")) return "B4";
+        if (t.endsWith("_B4")) return "B5";
+
+        return null;
+      }
+      function hasValidMaintenance(factory) {
+        if (!factory || !factory.maintenance_ends_at) return false;
+
+        const end = new Date(factory.maintenance_ends_at);
+        if (isNaN(end.getTime())) return false;
+
+        return end > new Date();
+      }
+
+      function isTrulyActiveFactory(factory) {
+        const s = String(factory?.status || "")
+          .trim()
+          .toUpperCase();
+        return s === "ACTIVE" && hasValidMaintenance(factory);
+      }
+      // ===== EMPIRE OVERVIEW =====
+      async function loadEmpireOverview() {
+        const landsContainer = document.getElementById("lands-container");
+        const errEl = document.getElementById("empire-error");
+
         if (errEl) {
-  errEl.textContent =
-    "Failed to load lands/factories from /player/:username/empire-overview.";
-  errEl.style.display = "block";
-}
+          errEl.style.display = "none";
+          errEl.textContent = "";
+        }
+        try {
+          const res = await fetch(
+            apiUrl(
+              `/player/${encodeURIComponent(PLAYER_USERNAME)}/empire-overview`,
+            ),
+          );
+          if (!res.ok) throw new Error("HTTP " + res.status);
 
-if (landsContainer) {
-  landsContainer.innerHTML =
-    '<p class="status-error">Could not load lands/factories.</p>';
-}
+          const data = await res.json();
+          console.log("Empire overview:", data);
+
+          const lands = data.lands || [];
+          const totals = data.totals || {};
+          empireLands = lands;
+
+          // flatten factories
+          allFactoriesFlat = [];
+          for (const land of lands) {
+            const factories = land.factories || [];
+            console.log(
+              "STATUS DEBUG (land",
+              land.land_id || "",
+              "):",
+              factories.map((f) => f.status),
+            );
+
+            for (const f of factories) {
+              allFactoriesFlat.push({
+                ...f,
+                land_id: land.land_id,
+                land_tier: land.land_tier,
+              });
+            }
+          }
+
+          // summary numbers
+          const totalLands = lands.length;
+          document.getElementById("summary-lands-total").textContent =
+            totalLands;
+
+          let l1 = 0,
+            l2 = 0,
+            l3 = 0;
+          for (const land of lands) {
+            if (land.land_tier === "L1") l1++;
+            else if (land.land_tier === "L2") l2++;
+            else if (land.land_tier === "L3") l3++;
+          }
+          document.getElementById("summary-lands-breakdown").textContent =
+            `L1: ${l1} | L2: ${l2} | L3: ${l3}`;
+
+          if (typeof totals.totalFactories === "number") {
+            if (typeof totals.totalFactories === "number") {
+              document.getElementById("summary-factories-total").textContent =
+                totals.totalFactories;
+            }
+          }
+
+          renderLandsTab();
+          renderConstructionTab();
+          renderBuildFactorySection();
+          renderEmpirePreview();
+        } catch (err) {
+          console.error("Failed to load empire overview:", err);
+          if (errEl) {
+            errEl.textContent =
+              "Failed to load lands/factories from /player/:username/empire-overview.";
+            errEl.style.display = "block";
+          }
+
+          if (landsContainer) {
+            landsContainer.innerHTML =
+              '<p class="status-error">Could not load lands/factories.</p>';
+          }
+        }
       }
-    }
-function factoryIndustryEmoji(factory) {
-  const raw =
-    (factory.blueprint_tier ||
-     factory.blueprintTier ||
-     factory.tier ||
-     factory.raw_tier ||
-     "").toString().toUpperCase();
+      function factoryIndustryEmoji(factory) {
+        const raw = (
+          factory.blueprint_tier ||
+          factory.blueprintTier ||
+          factory.tier ||
+          factory.raw_tier ||
+          ""
+        )
+          .toString()
+          .toUpperCase();
 
-  if (raw.includes("FOOD")) return "🌾";
-  if (raw.includes("TEXTILE")) return "🧵";
-  if (raw.includes("PHARMA")) return "Rx";
-  if (raw.includes("CHEMICAL")) return "⚗️";
-  if (raw.includes("SUPERMARKET")) return "🛒";
+        if (raw.includes("FOOD")) return "🌾";
+        if (raw.includes("TEXTILE")) return "🧵";
+        if (raw.includes("PHARMA")) return "Rx";
+        if (raw.includes("CHEMICAL")) return "⚗️";
+        if (raw.includes("SUPERMARKET")) return "🛒";
 
-  return "🏭";
-}
-
-function factoryStatusClass(factoryOrStatus) {
-  if (typeof factoryOrStatus === "object" && factoryOrStatus !== null) {
-    if (isTrulyActiveFactory(factoryOrStatus)) return "active";
-
-    const s = (factoryOrStatus.status || "").toString().trim().toUpperCase();
-    if (s === "BUILDING" || s === "UPGRADING") return "building";
-
-    const maintenanceEndsAt = factoryOrStatus.maintenance_ends_at;
-    if (maintenanceEndsAt) {
-      const end = new Date(maintenanceEndsAt);
-      const now = new Date();
-
-      if (!isNaN(end.getTime()) && end <= now) {
-        return "expired";
+        return "🏭";
       }
-    }
 
-    return "inactive";
-  }
+      function factoryStatusClass(factoryOrStatus) {
+        if (typeof factoryOrStatus === "object" && factoryOrStatus !== null) {
+          if (isTrulyActiveFactory(factoryOrStatus)) return "active";
 
-  const s = (factoryOrStatus || "").toString().trim().toUpperCase();
-  if (s === "ACTIVE") return "active";
-  if (s === "BUILDING" || s === "UPGRADING") return "building";
-  return "inactive";
-}
+          const s = (factoryOrStatus.status || "")
+            .toString()
+            .trim()
+            .toUpperCase();
+          if (s === "BUILDING" || s === "UPGRADING") return "building";
 
-function getFactoryBuildingImage(factory) {
-  const blueprintTier =
-    factory.blueprint_tier ??
-    factory.bp_tier ??
-    factory.blueprintTier ??
-    factory.blueprint ??
-    factory.tier ??
-    factory.raw_tier ??
-    factory.blueprint_level ??
-    factory.blueprintLevel ??
-    "";
+          const maintenanceEndsAt = factoryOrStatus.maintenance_ends_at;
+          if (maintenanceEndsAt) {
+            const end = new Date(maintenanceEndsAt);
+            const now = new Date();
 
-  const raw = String(blueprintTier).toUpperCase();
+            if (!isNaN(end.getTime()) && end <= now) {
+              return "expired";
+            }
+          }
 
-  if (raw.includes("FOOD")) return "assets/food.png";
-  if (raw.includes("TEXTILE")) return "assets/textile.png";
-  if (raw.includes("PHARMA")) return "assets/pharma.png";
-  if (raw.includes("CHEMICAL")) return "assets/chemical.png";
-  if (raw.includes("SUPERMARKET")) return "assets/supermarket.png";
+          return "inactive";
+        }
 
-  return null;
-}
+        const s = (factoryOrStatus || "").toString().trim().toUpperCase();
+        if (s === "ACTIVE") return "active";
+        if (s === "BUILDING" || s === "UPGRADING") return "building";
+        return "inactive";
+      }
 
-function renderTerritorySlots(factories, slotsTotal, landId) {
-  let html = `<div class="land-territory"><div class="land-territory-slots">`;
+      function getFactoryBuildingImage(factory) {
+        const blueprintTier =
+          factory.blueprint_tier ??
+          factory.bp_tier ??
+          factory.blueprintTier ??
+          factory.blueprint ??
+          factory.tier ??
+          factory.raw_tier ??
+          factory.blueprint_level ??
+          factory.blueprintLevel ??
+          "";
 
-  for (let i = 0; i < slotsTotal; i++) {
-    const factory = factories[i];
+        const raw = String(blueprintTier).toUpperCase();
 
-    if (factory) {
-      const statusClass = factoryStatusClass(factory);
-      const buildingImg = getFactoryBuildingImage(factory);
+        if (raw.includes("FOOD")) return "assets/food.png";
+        if (raw.includes("TEXTILE")) return "assets/textile.png";
+        if (raw.includes("PHARMA")) return "assets/pharma.png";
+        if (raw.includes("CHEMICAL")) return "assets/chemical.png";
+        if (raw.includes("SUPERMARKET")) return "assets/supermarket.png";
 
-      // ✅ Read blueprint/build tier, not factory level
-      const blueprintTierRaw =
-        factory.blueprint_tier ??
-        factory.bp_tier ??
-        factory.blueprintTier ??
-        factory.blueprint ??
-        factory.tier ??
-        factory.raw_tier ??
-        factory.blueprint_level ??
-        factory.blueprintLevel ??
-        "";
+        return null;
+      }
 
-      const blueprintTierText = String(blueprintTierRaw).toUpperCase();
-      const badgeMatch = blueprintTierText.match(/B[1-5]/);
-      const factoryBadge = badgeMatch ? badgeMatch[0] : "B1";
+      function renderTerritorySlots(factories, slotsTotal, landId) {
+        let html = `<div class="land-territory"><div class="land-territory-slots">`;
 
-      html += `
+        for (let i = 0; i < slotsTotal; i++) {
+          const factory = factories[i];
+
+          if (factory) {
+            const statusClass = factoryStatusClass(factory);
+            const buildingImg = getFactoryBuildingImage(factory);
+
+            // ✅ Read blueprint/build tier, not factory level
+            const blueprintTierRaw =
+              factory.blueprint_tier ??
+              factory.bp_tier ??
+              factory.blueprintTier ??
+              factory.blueprint ??
+              factory.tier ??
+              factory.raw_tier ??
+              factory.blueprint_level ??
+              factory.blueprintLevel ??
+              "";
+
+            const blueprintTierText = String(blueprintTierRaw).toUpperCase();
+            const badgeMatch = blueprintTierText.match(/B[1-5]/);
+            const factoryBadge = badgeMatch ? badgeMatch[0] : "B1";
+
+            html += `
         <div class="land-slot-pad filled ${statusClass}">
           <div class="land-slot-factory">
             ${
@@ -1619,161 +1884,177 @@ function renderTerritorySlots(factories, slotsTotal, landId) {
           </div>
         </div>
       `;
-    } else {
-      html += `
+          } else {
+            html += `
         <div
           class="land-slot-pad empty"
           data-build-land-id="${landId}"
           title="Build factory on this land"
         ></div>
       `;
-    }
-  }
+          }
+        }
 
-  html += `</div></div>`;
-  return html;
-}
-  function renderLandsTab() {
-  const landsContainer = document.getElementById("lands-container");
-  landsContainer.innerHTML = "";
+        html += `</div></div>`;
+        return html;
+      }
+      function renderLandsTab() {
+        const landsContainer = document.getElementById("lands-container");
+        landsContainer.innerHTML = "";
 
-  if (!empireLands || !empireLands.length) {
-    landsContainer.innerHTML =
-      '<p class="status-text">You don\'t own any lands yet. Buy and open packs to unlock lands.</p>';
-    return;
-  }
+        if (!empireLands || !empireLands.length) {
+          landsContainer.innerHTML =
+            '<p class="status-text">You don\'t own any lands yet. Buy and open packs to unlock lands.</p>';
+          return;
+        }
 
-  const normalize = (s) => (s || "").toString().trim().toUpperCase();
+        const normalize = (s) => (s || "").toString().trim().toUpperCase();
 
-  // Safe days helper (does NOT crash if date missing)
-  const safeDaysAgo = (dateStr) => {
-    if (!dateStr) return null;
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return null;
-    const diff = (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24);
-    return diff < 0 ? 0 : diff;
-  };
-empireLands.sort((a, b) => {
+        // Safe days helper (does NOT crash if date missing)
+        const safeDaysAgo = (dateStr) => {
+          if (!dateStr) return null;
+          const d = new Date(dateStr);
+          if (isNaN(d.getTime())) return null;
+          const diff = (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24);
+          return diff < 0 ? 0 : diff;
+        };
+        empireLands.sort((a, b) => {
+          const tierSlots = (tier) =>
+            tier === "L3" ? 3 : tier === "L2" ? 2 : 1;
 
-  const tierSlots = tier =>
-    tier === "L3" ? 3 :
-    tier === "L2" ? 2 :
-    1;
+          const aSlots = tierSlots(a.land_tier);
+          const bSlots = tierSlots(b.land_tier);
 
-  const aSlots = tierSlots(a.land_tier);
-  const bSlots = tierSlots(b.land_tier);
+          const aUsed = (a.factories || []).length;
+          const bUsed = (b.factories || []).length;
 
-  const aUsed = (a.factories || []).length;
-  const bUsed = (b.factories || []).length;
+          const aRatio = aUsed / aSlots;
+          const bRatio = bUsed / bSlots;
 
-  const aRatio = aUsed / aSlots;
-  const bRatio = bUsed / bSlots;
+          // fuller lands first
+          if (bRatio !== aRatio) return bRatio - aRatio;
 
-  // fuller lands first
-  if (bRatio !== aRatio) return bRatio - aRatio;
+          // more factories first
+          if (bUsed !== aUsed) return bUsed - aUsed;
 
-  // more factories first
-  if (bUsed !== aUsed) return bUsed - aUsed;
+          // larger lands first
+          return bSlots - aSlots;
+        });
+        for (let idx = 0; idx < empireLands.length; idx++) {
+          const land = empireLands[idx];
 
-  // larger lands first
-  return bSlots - aSlots;
-});
-  for (let idx = 0; idx < empireLands.length; idx++) {
-    const land = empireLands[idx];
+          const factories = land.factories || [];
+          const rawTier = land.land_tier;
 
-    const factories = land.factories || [];
-    const rawTier = land.land_tier;
+          // tier key
+          let landTierKey = "L1";
+          if (rawTier === 1 || rawTier === "1") landTierKey = "L1";
+          else if (rawTier === 2 || rawTier === "2") landTierKey = "L2";
+          else if (rawTier === 3 || rawTier === "3") landTierKey = "L3";
+          else if (
+            typeof rawTier === "string" &&
+            rawTier.toUpperCase().startsWith("L")
+          )
+            landTierKey = rawTier.toUpperCase();
 
-    // tier key
-    let landTierKey = "L1";
-    if (rawTier === 1 || rawTier === "1") landTierKey = "L1";
-    else if (rawTier === 2 || rawTier === "2") landTierKey = "L2";
-    else if (rawTier === 3 || rawTier === "3") landTierKey = "L3";
-    else if (typeof rawTier === "string" && rawTier.toUpperCase().startsWith("L")) landTierKey = rawTier.toUpperCase();
+          const borderColor =
+            (LAND_TIER_COLORS_BY_KEY && LAND_TIER_COLORS_BY_KEY[landTierKey]) ||
+            "#64748b";
 
-    const borderColor = (LAND_TIER_COLORS_BY_KEY && LAND_TIER_COLORS_BY_KEY[landTierKey]) || "#64748b";
+          const tierName = landTierLabel ? landTierLabel(rawTier) : landTierKey;
+          const shortLabel =
+            (LAND_TIER_SHORT_LABEL && LAND_TIER_SHORT_LABEL[landTierKey]) ||
+            tierName ||
+            "Land";
 
-    const tierName = landTierLabel ? landTierLabel(rawTier) : landTierKey;
-    const shortLabel = (LAND_TIER_SHORT_LABEL && LAND_TIER_SHORT_LABEL[landTierKey]) || tierName || "Land";
+          const slotsTotal = landSlotCount
+            ? landSlotCount(rawTier)
+            : landTierKey === "L3"
+              ? 3
+              : landTierKey === "L2"
+                ? 2
+                : 1;
+          const slotsUsed = factories.length;
 
-    const slotsTotal = landSlotCount ? landSlotCount(rawTier) : (landTierKey === "L3" ? 3 : landTierKey === "L2" ? 2 : 1);
-    const slotsUsed = factories.length;
+          // ===== status counts (strict + correct) =====
+          let activeCount = 0;
+          let upgradingCount = 0;
+          let buildingCount = 0;
+          let inactiveCount = 0;
 
-    // ===== status counts (strict + correct) =====
-   let activeCount = 0;
-let upgradingCount = 0;
-let buildingCount = 0;
-let inactiveCount = 0;
+          for (const f of factories) {
+            const s = normalize(f.status);
 
-for (const f of factories) {
-  const s = normalize(f.status);
+            if (isTrulyActiveFactory(f)) activeCount++;
+            else if (s === "UPGRADING") upgradingCount++;
+            else if (s === "BUILDING" || s === "CONSTRUCTING") buildingCount++;
+            else inactiveCount++;
+          }
 
-  if (isTrulyActiveFactory(f)) activeCount++;
-  else if (s === "UPGRADING") upgradingCount++;
-  else if (s === "BUILDING" || s === "CONSTRUCTING") buildingCount++;
-  else inactiveCount++;
-}
+          // ===== land production + unclaimed EP (ACTIVE only) =====
+          let landUnclaimedEP = 0;
+          let landRatePerDay = 0;
 
-  // ===== land production + unclaimed EP (ACTIVE only) =====
-let landUnclaimedEP = 0;
-let landRatePerDay = 0;
+          for (const f of factories) {
+            if (!isTrulyActiveFactory(f)) continue;
 
-for (const f of factories) {
-  if (!isTrulyActiveFactory(f)) continue;
+            const unclaimed = Number(f.ep_unclaimed ?? f.factoryEP ?? 0);
+            if (!isNaN(unclaimed)) {
+              landUnclaimedEP += unclaimed;
+            }
 
-  const unclaimed = Number(f.ep_unclaimed ?? f.factoryEP ?? 0);
-  if (!isNaN(unclaimed)) {
-    landUnclaimedEP += unclaimed;
-  }
+            const days = safeDaysAgo(f.last_claimed_at);
 
-  const days = safeDaysAgo(f.last_claimed_at);
+            if (days && days > 0) {
+              const rate = unclaimed / days;
+              if (!isNaN(rate)) {
+                landRatePerDay += rate;
+              }
+            }
+          }
 
-  if (days && days > 0) {
-    const rate = unclaimed / days;
-    if (!isNaN(rate)) {
-      landRatePerDay += rate;
-    }
-  }
-}
+          const landUnclaimedEPText = landUnclaimedEP.toFixed(2);
+          const landRatePerDayText = landRatePerDay.toFixed(2);
 
-const landUnclaimedEPText = landUnclaimedEP.toFixed(2);
-const landRatePerDayText = landRatePerDay.toFixed(2);
+          // ===== days info =====
+          // ✅ Claim info should only consider ACTIVE factories
+          let oldestClaimDays = null;
 
-    // ===== days info =====
-    // ✅ Claim info should only consider ACTIVE factories
-let oldestClaimDays = null;
+          for (const f of factories) {
+            const st = (f.status || "").toString().trim().toUpperCase();
+            if (st !== "ACTIVE") continue;
 
-for (const f of factories) {
-  const st = (f.status || "").toString().trim().toUpperCase();
-  if (st !== "ACTIVE") continue;
+            const da = safeDaysAgo(f.last_claimed_at);
+            if (da === null) continue;
 
-  const da = safeDaysAgo(f.last_claimed_at);
-  if (da === null) continue;
+            if (oldestClaimDays === null || da > oldestClaimDays) {
+              oldestClaimDays = da;
+            }
+          }
 
-  if (oldestClaimDays === null || da > oldestClaimDays) {
-    oldestClaimDays = da;
-  }
-}
+          const daysInfoText =
+            oldestClaimDays === null
+              ? "Claim info: not available yet"
+              : `Oldest unclaimed time: ~${oldestClaimDays.toFixed(1)}d`;
 
-const daysInfoText =
-  oldestClaimDays === null
-    ? "Claim info: not available yet"
-    : `Oldest unclaimed time: ~${oldestClaimDays.toFixed(1)}d`;
+          // ===== Build Land Row Card =====
+          const landCard = document.createElement("div");
+          landCard.className = `land-card-row land-tier-${landTierKey.toLowerCase()}`;
+          landCard.style.setProperty("--tier-border", borderColor);
 
-    // ===== Build Land Row Card =====
-    const landCard = document.createElement("div");
-    landCard.className = `land-card-row land-tier-${landTierKey.toLowerCase()}`;
-    landCard.style.setProperty("--tier-border", borderColor);
+          // Slot bar HTML
+          let slotBarHTML = "";
+          for (let i = 1; i <= slotsTotal; i++) {
+            slotBarHTML += `<div class="slot-pill ${i <= slotsUsed ? "filled" : "empty"}"></div>`;
+          }
+          const territoryHtml = renderTerritorySlots(
+            factories,
+            slotsTotal,
+            land.land_id,
+          );
+          // Matrix HTML (clean + compact)
 
-    // Slot bar HTML
-    let slotBarHTML = "";
-    for (let i = 1; i <= slotsTotal; i++) {
-      slotBarHTML += `<div class="slot-pill ${i <= slotsUsed ? "filled" : "empty"}"></div>`;
-    }
-const territoryHtml = renderTerritorySlots(factories, slotsTotal, land.land_id);
-    // Matrix HTML (clean + compact)
-    
-    landCard.innerHTML = `
+          landCard.innerHTML = `
      <div class="land-left">
   <div class="land-title-row">
     <div style="display:flex; align-items:center; gap:10px;">
@@ -1796,350 +2077,385 @@ const territoryHtml = renderTerritorySlots(factories, slotsTotal, land.land_id);
       </div>
     `;
 
-    // ===== Factories list (right column) =====
-const factoriesList = document.createElement("div");
-factoriesList.className = "factories-list";
+          // ===== Factories list (right column) =====
+          const factoriesList = document.createElement("div");
+          factoriesList.className = "factories-list";
 
-if (!factories.length) {
-  const emptyRow = document.createElement("div");
-  emptyRow.className = "factory-row";
-  emptyRow.innerHTML = `
+          if (!factories.length) {
+            const emptyRow = document.createElement("div");
+            emptyRow.className = "factory-row";
+            emptyRow.innerHTML = `
     <div class="factory-main">
       <div class="factory-title">No factory built yet</div>
       <div class="factory-sub">Use a blueprint to construct your first factory.</div>
     </div>
   `;
-  factoriesList.appendChild(emptyRow);
-} else {
-  for (const f of factories) {
-    const row = document.createElement("div");
-    row.className = "factory-row";
+            factoriesList.appendChild(emptyRow);
+          } else {
+            for (const f of factories) {
+              const row = document.createElement("div");
+              row.className = "factory-row";
 
-    // ✅ Normalize status
-    const st = (f.status || "UNKNOWN").toString().trim().toUpperCase();
+              // ✅ Normalize status
+              const st = (f.status || "UNKNOWN")
+                .toString()
+                .trim()
+                .toUpperCase();
 
-    // ✅ Robust blueprint tier fallback (fixes ? for most schemas)
-    const blueprintTier =
-      f.blueprint_tier ??
-      f.bp_tier ??
-      f.blueprintTier ??
-      f.blueprint ??
-      f.tier ??
-      f.blueprint_level ??
-      f.blueprintLevel ??
-      "?";
+              // ✅ Robust blueprint tier fallback (fixes ? for most schemas)
+              const blueprintTier =
+                f.blueprint_tier ??
+                f.bp_tier ??
+                f.blueprintTier ??
+                f.blueprint ??
+                f.tier ??
+                f.blueprint_level ??
+                f.blueprintLevel ??
+                "?";
 
-    // ✅ Level fallback
-    const levelText = f.level ?? f.factory_level ?? "?";
+              // ✅ Level fallback
+              const levelText = f.level ?? f.factory_level ?? "?";
 
-    // ✅ EP/day only if ACTIVE + number exists
-    const epRaw = f.factoryEP ?? f.ep ?? f.ep_per_day ?? f.production ?? null;
-const epNum = (typeof epRaw === "number") ? epRaw : null;
-const epText = (st === "ACTIVE" && epNum !== null) ? `${epNum.toFixed(2)} EP/day` : "—";
+              // ✅ EP/day only if ACTIVE + number exists
+              const epRaw =
+                f.factoryEP ?? f.ep ?? f.ep_per_day ?? f.production ?? null;
+              const epNum = typeof epRaw === "number" ? epRaw : null;
+              const epText =
+                st === "ACTIVE" && epNum !== null
+                  ? `${epNum.toFixed(2)} EP/day`
+                  : "—";
 
-    // ✅ Status pill class based on st (NOT undefined "status")
-    const statusCls = (typeof statusClass === "function") ? statusClass(st) : "";
+              // ✅ Status pill class based on st (NOT undefined "status")
+              const statusCls =
+                typeof statusClass === "function" ? statusClass(st) : "";
 
-    // ✅ Claim text ONLY for ACTIVE factories
-    let claimText = "";
-    if (st === "ACTIVE") {
-      const claimDays = safeDaysAgo(f.last_claimed_at);
-      claimText = (claimDays === null) ? "" : ` • ${claimDays.toFixed(1)}d since claim`;
-    }
+              // ✅ Claim text ONLY for ACTIVE factories
+              let claimText = "";
+              if (st === "ACTIVE") {
+                const claimDays = safeDaysAgo(f.last_claimed_at);
+                claimText =
+                  claimDays === null
+                    ? ""
+                    : ` • ${claimDays.toFixed(1)}d since claim`;
+              }
 
-    const factoryId = f.factory_id ?? f.id ?? "?";
-const factoryName =
-  (String(f.factory_name || "").trim()) || `Factory #${factoryId}`;
+              const factoryId = f.factory_id ?? f.id ?? "?";
+              const factoryName =
+                String(f.factory_name || "").trim() || `Factory #${factoryId}`;
 
-const status = (String(f.status || "").trim().toUpperCase());
-const canRename = status === "ACTIVE";
+              const status = String(f.status || "")
+                .trim()
+                .toUpperCase();
+              const canRename = status === "ACTIVE";
 
-const activeDays = Number(f.active_days || 0);
-const requiredDays = getRequiredActiveDaysForUpgradeTier(blueprintTier);
-const nextUpgradeLabel = getNextUpgradeLabel(blueprintTier);
-let maintenanceText = "";
+              const activeDays = Number(f.active_days || 0);
+              const requiredDays =
+                getRequiredActiveDaysForUpgradeTier(blueprintTier);
+              const nextUpgradeLabel = getNextUpgradeLabel(blueprintTier);
+              let maintenanceText = "";
 
-if (status === "BUILDING") {
-  maintenanceText = "Construction in progress • Maintenance starts after build completion";
-} else if (status === "UPGRADING") {
-  maintenanceText = "Upgrade in progress • Maintenance starts after upgrade completion";
-} else {
-  maintenanceText = getMaintenanceStatusText(f.maintenance_ends_at);
-}
-const isMaxTier = !requiredDays || !nextUpgradeLabel;
-const isReadyToUpgrade =
-  status === "ACTIVE" &&
-  !isMaxTier &&
-  activeDays >= requiredDays;
+              if (status === "BUILDING") {
+                maintenanceText =
+                  "Construction in progress • Maintenance starts after build completion";
+              } else if (status === "UPGRADING") {
+                maintenanceText =
+                  "Upgrade in progress • Maintenance starts after upgrade completion";
+              } else {
+                maintenanceText = getMaintenanceStatusText(
+                  f.maintenance_ends_at,
+                );
+              }
+              const isMaxTier = !requiredDays || !nextUpgradeLabel;
+              const isReadyToUpgrade =
+                status === "ACTIVE" && !isMaxTier && activeDays >= requiredDays;
 
-const canUpgrade = isReadyToUpgrade;
+              const canUpgrade = isReadyToUpgrade;
 
-let upgradeMatrix = "";
+              let upgradeMatrix = "";
 
-if (isMaxTier) {
-  upgradeMatrix = `✅ Max tier reached`;
-} else if (status !== "ACTIVE") {
-  upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Upgrade unavailable while ${status.toLowerCase()}`;
-} else if (isReadyToUpgrade) {
-  upgradeMatrix = `✅ Factory is ready to upgrade to ${nextUpgradeLabel}`;
-} else {
-  upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Needs ${requiredDays - activeDays} more day(s) for ${nextUpgradeLabel}`;
-}
+              if (isMaxTier) {
+                upgradeMatrix = `✅ Max tier reached`;
+              } else if (status !== "ACTIVE") {
+                upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Upgrade unavailable while ${status.toLowerCase()}`;
+              } else if (isReadyToUpgrade) {
+                upgradeMatrix = `✅ Factory is ready to upgrade to ${nextUpgradeLabel}`;
+              } else {
+                upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Needs ${requiredDays - activeDays} more day(s) for ${nextUpgradeLabel}`;
+              }
 
-let subLine = `Blueprint tier: ${blueprintTier}<br>${upgradeMatrix}<br>${maintenanceText}`;
+              let subLine = `Blueprint tier: ${blueprintTier}<br>${upgradeMatrix}<br>${maintenanceText}`;
 
-row.innerHTML = `
+              row.innerHTML = `
   <div class="factory-main">
     <div class="factory-title-row">
       <div class="factory-title">${factoryName}</div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
         ${canRename ? `<button class="rename-factory-btn" data-factory-id="${factoryId}">Rename</button>` : ""}
         ${canUpgrade ? `<button class="upgrade-factory-btn" data-factory-id="${factoryId}">Upgrade</button>` : ""}
-        ${status !== "BUILDING" && status !== "UPGRADING"
-  ? `<button class="maintenance-factory-btn" data-factory-id="${factoryId}">Pay Maintenance</button>`
-  : ""}
+        ${
+          status !== "BUILDING" && status !== "UPGRADING"
+            ? `<button class="maintenance-factory-btn" data-factory-id="${factoryId}">Pay Maintenance</button>`
+            : ""
+        }
       </div>
     </div>
     <div class="factory-sub">${subLine}</div>
   </div>
 `;
 
-const renameBtn = row.querySelector(".rename-factory-btn");
+              const renameBtn = row.querySelector(".rename-factory-btn");
 
-if (renameBtn) {
-  renameBtn.addEventListener("click", async (e) => {
-    e.stopPropagation();
+              if (renameBtn) {
+                renameBtn.addEventListener("click", async (e) => {
+                  e.stopPropagation();
 
-    const newName = prompt("Enter new factory name:", factoryName);
-    const clean = newName.trim();
-if (clean.length < 3) {
-  alert("Factory name must be at least 3 characters.");
-  return;
-}
+                  const newName = prompt(
+                    "Enter new factory name:",
+                    factoryName,
+                  );
+                  const clean = newName.trim();
+                  if (clean.length < 3) {
+                    alert("Factory name must be at least 3 characters.");
+                    return;
+                  }
 
-    try {
-      const res = await fetch(apiUrl("/factory/rename"), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          username: PLAYER_USERNAME,
-          factory_id: factoryId,
-          factory_name: newName
-        })
-      });
+                  try {
+                    const res = await fetch(apiUrl("/factory/rename"), {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        username: PLAYER_USERNAME,
+                        factory_id: factoryId,
+                        factory_name: newName,
+                      }),
+                    });
 
-      const data = await res.json();
+                    const data = await res.json();
 
-      if (!res.ok || !data.success) {
-        alert(data.error || "Rename failed.");
-        return;
+                    if (!res.ok || !data.success) {
+                      alert(data.error || "Rename failed.");
+                      return;
+                    }
+
+                    alert("Factory renamed successfully!");
+
+                    await loadEmpireOverview();
+                  } catch (err) {
+                    console.error("Rename error:", err);
+                    alert("Rename failed.");
+                  }
+                });
+              }
+
+              const upgradeBtn = row.querySelector(".upgrade-factory-btn");
+
+              if (upgradeBtn) {
+                upgradeBtn.addEventListener("click", async (e) => {
+                  e.stopPropagation();
+
+                  const ok = confirm(`Upgrade ${factoryName}?`);
+                  if (!ok) return;
+
+                  try {
+                    const res = await fetch(apiUrl("/factory/upgrade"), {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        username: PLAYER_USERNAME,
+                        factory_id: factoryId,
+                      }),
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok || !data.success) {
+                      alert(data.error || "Upgrade failed.");
+                      return;
+                    }
+
+                    alert(data.message || "Factory upgraded successfully!");
+
+                    await loadDashboardSummary();
+                    await loadRewardSummary();
+                    await loadEmpireOverview();
+                  } catch (err) {
+                    console.error("Upgrade error:", err);
+                    alert("Upgrade failed.");
+                  }
+                });
+              }
+              const maintenanceBtn = row.querySelector(
+                ".maintenance-factory-btn",
+              );
+
+              if (maintenanceBtn) {
+                maintenanceBtn.addEventListener("click", async (e) => {
+                  e.stopPropagation();
+
+                  const daysInput = prompt(
+                    "Enter maintenance days (1 to 7):",
+                    "1",
+                  );
+                  if (!daysInput) return;
+
+                  const days = parseInt(daysInput, 10);
+
+                  if (!days || days < 1 || days > 7) {
+                    alert("Please enter a number between 1 and 7.");
+                    return;
+                  }
+
+                  try {
+                    const res = await fetch(
+                      apiUrl("/factory/pay-maintenance"),
+                      {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          username: PLAYER_USERNAME,
+                          factory_id: factoryId,
+                          days,
+                        }),
+                      },
+                    );
+
+                    const data = await res.json();
+
+                    if (!res.ok || !data.success) {
+                      alert(data.error || "Maintenance payment failed.");
+                      return;
+                    }
+
+                    alert(
+                      `Maintenance paid successfully! Added ${data.days_added} day(s). EMP spent: ${data.emp_spent}`,
+                    );
+
+                    await loadDashboardSummary();
+                    await loadRewardSummary();
+                    await loadEmpireOverview();
+                  } catch (err) {
+                    console.error("Maintenance payment error:", err);
+                    alert("Maintenance payment failed.");
+                  }
+                });
+              }
+              factoriesList.appendChild(row);
+            }
+          }
+
+          const rightCol = landCard.querySelector(`#land-factories-${idx}`);
+          if (rightCol) rightCol.appendChild(factoriesList);
+
+          landsContainer.appendChild(landCard);
+        }
+        wireEmptySlotBuildActions();
       }
 
-      alert("Factory renamed successfully!");
+      function wireEmptySlotBuildActions() {
+        const slots = document.querySelectorAll(".land-slot-pad.empty");
 
-      await loadEmpireOverview();
+        slots.forEach((slot) => {
+          slot.addEventListener("click", () => {
+            const landId = slot.dataset.buildLandId;
+            if (!landId) return;
 
-    } catch (err) {
-      console.error("Rename error:", err);
-      alert("Rename failed.");
-    }
-  });
-}
+            window.selectedBuildLandId = landId;
 
-const upgradeBtn = row.querySelector(".upgrade-factory-btn");
+            setActiveTab("blueprints");
 
-if (upgradeBtn) {
-  upgradeBtn.addEventListener("click", async (e) => {
-    e.stopPropagation();
+            setTimeout(() => {
+              renderBuildFactorySection();
 
-    const ok = confirm(`Upgrade ${factoryName}?`);
-    if (!ok) return;
+              const landSelect = document.getElementById("build-land-select");
+              const bpSection = document.getElementById("blueprints-grid");
+              const nameInput = document.getElementById("build-factory-name");
 
-    try {
-      const res = await fetch(apiUrl("/factory/upgrade"), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          username: PLAYER_USERNAME,
-          factory_id: factoryId
-        })
-      });
+              if (landSelect) {
+                landSelect.value = String(landId);
+              }
 
-      const data = await res.json();
+              if (bpSection) {
+                bpSection.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }
 
-      if (!res.ok || !data.success) {
-        alert(data.error || "Upgrade failed.");
-        return;
+              if (nameInput) {
+                nameInput.focus();
+              }
+            }, 300);
+          });
+        });
       }
+      function renderConstructionTab() {
+        const container = document.getElementById("construction-grid");
+        if (!container) return;
 
-      alert(data.message || "Factory upgraded successfully!");
+        container.innerHTML = "";
 
-      await loadDashboardSummary();
-await loadRewardSummary();
-await loadEmpireOverview();
+        const underConstruction = (allFactoriesFlat || []).filter((f) => {
+          const s = String(f.status || "")
+            .trim()
+            .toUpperCase();
 
+          if (s !== "BUILDING" && s !== "UPGRADING") return false;
 
-    } catch (err) {
-      console.error("Upgrade error:", err);
-      alert("Upgrade failed.");
-    }
-  });
-}
-const maintenanceBtn = row.querySelector(".maintenance-factory-btn");
+          const readyAt =
+            f.upgrade_complete_at || f.build_complete_at || f.built_at;
+          if (!readyAt) return true;
 
-if (maintenanceBtn) {
-  maintenanceBtn.addEventListener("click", async (e) => {
-    e.stopPropagation();
+          const readyDate = new Date(readyAt);
+          if (isNaN(readyDate.getTime())) return true;
 
-    const daysInput = prompt("Enter maintenance days (1 to 7):", "1");
-    if (!daysInput) return;
+          // ✅ If time is already completed, do not show in construction tab
+          return readyDate.getTime() > Date.now();
+        });
 
-    const days = parseInt(daysInput, 10);
-
-    if (!days || days < 1 || days > 7) {
-      alert("Please enter a number between 1 and 7.");
-      return;
-    }
-
-    try {
-      const res = await fetch(apiUrl("/factory/pay-maintenance"), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          username: PLAYER_USERNAME,
-          factory_id: factoryId,
-          days
-        })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        alert(data.error || "Maintenance payment failed.");
-        return;
-      }
-
-      alert(`Maintenance paid successfully! Added ${data.days_added} day(s). EMP spent: ${data.emp_spent}`);
-
-      await loadDashboardSummary();
-await loadRewardSummary();
-await loadEmpireOverview();
-
-    } catch (err) {
-      console.error("Maintenance payment error:", err);
-      alert("Maintenance payment failed.");
-    }
-  });
-}
-factoriesList.appendChild(row);
-  }
-}
-
-    const rightCol = landCard.querySelector(`#land-factories-${idx}`);
-    if (rightCol) rightCol.appendChild(factoriesList);
-
-    landsContainer.appendChild(landCard);
-  }
-  wireEmptySlotBuildActions();
-}  
-
-
-function wireEmptySlotBuildActions() {
-  const slots = document.querySelectorAll(".land-slot-pad.empty");
-
-  slots.forEach(slot => {
-    slot.addEventListener("click", () => {
-      const landId = slot.dataset.buildLandId;
-      if (!landId) return;
-
-      window.selectedBuildLandId = landId;
-
-      setActiveTab("blueprints");
-
-      setTimeout(() => {
-        renderBuildFactorySection();
-
-        const landSelect = document.getElementById("build-land-select");
-        const bpSection = document.getElementById("blueprints-grid");
-        const nameInput = document.getElementById("build-factory-name");
-
-        if (landSelect) {
-          landSelect.value = String(landId);
+        if (!underConstruction.length) {
+          container.innerHTML =
+            '<p class="status-text">No factories under construction or inactive right now.</p>';
+          return;
         }
 
-        if (bpSection) {
-          bpSection.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+        for (const f of underConstruction) {
+          const card = document.createElement("div");
+          card.className = "factory-card";
 
-        if (nameInput) {
-          nameInput.focus();
-        }
-      }, 300);
-    });
-  });
-}
-    function renderConstructionTab() {
-  const container = document.getElementById("construction-grid");
-  if (!container) return;
+          const status = String(f.status || "UNKNOWN")
+            .trim()
+            .toUpperCase();
+          const canRename = status === "ACTIVE";
+          const statusCls = statusClass(status);
 
-  container.innerHTML = "";
+          const factoryId = f.id ?? f.factory_id ?? "?";
+          const factoryName =
+            String(f.factory_name || "").trim() || `Factory #${factoryId}`;
 
-  const underConstruction = (allFactoriesFlat || []).filter((f) => {
-  const s = String(f.status || "").trim().toUpperCase();
+          const landId = f.land_id ?? "?";
+          const landTier = f.land_tier || "";
+          const blueprintTier = f.blueprint_tier || "?";
+          const level = f.level || 1;
 
-  if (s !== "BUILDING" && s !== "UPGRADING") return false;
+          let timeText = "Not available";
 
-  const readyAt = f.upgrade_complete_at || f.build_complete_at || f.built_at;
-  if (!readyAt) return true;
+          const readyAt =
+            f.upgrade_complete_at || f.build_complete_at || f.built_at;
 
-  const readyDate = new Date(readyAt);
-  if (isNaN(readyDate.getTime())) return true;
+          if (readyAt) {
+            const readyDate = new Date(readyAt);
+            if (!isNaN(readyDate.getTime())) {
+              timeText = readyDate.toLocaleString();
+            }
+          }
 
-  // ✅ If time is already completed, do not show in construction tab
-  return readyDate.getTime() > Date.now();
-});
-
-  if (!underConstruction.length) {
-    container.innerHTML =
-      '<p class="status-text">No factories under construction or inactive right now.</p>';
-    return;
-  }
-
-  for (const f of underConstruction) {
-    const card = document.createElement("div");
-    card.className = "factory-card";
-
-    const status = String(f.status || "UNKNOWN").trim().toUpperCase();
-    const canRename = status === "ACTIVE";
-    const statusCls = statusClass(status);
-
-    const factoryId = f.id ?? f.factory_id ?? "?";
-    const factoryName =
-      (String(f.factory_name || "").trim()) || `Factory #${factoryId}`;
-
-    const landId = f.land_id ?? "?";
-    const landTier = f.land_tier || "";
-    const blueprintTier = f.blueprint_tier || "?";
-    const level = f.level || 1;
-
-    let timeText = "Not available";
-
-const readyAt = f.upgrade_complete_at || f.build_complete_at || f.built_at;
-
-if (readyAt) {
-  const readyDate = new Date(readyAt);
-  if (!isNaN(readyDate.getTime())) {
-    timeText = readyDate.toLocaleString();
-  }
-}
-
-    card.innerHTML = `
+          card.innerHTML = `
   <div class="factory-card-header">
     <div class="factory-card-title">${factoryName}</div>
 
@@ -2155,154 +2471,155 @@ if (readyAt) {
   <div class="factory-card-meta">Blueprint tier: ${blueprintTier} • Level: ${level}</div>
   <div class="factory-card-meta">Ready at: ${timeText}</div>
 `;
-const renameBtn = card.querySelector(".rename-factory-btn");
+          const renameBtn = card.querySelector(".rename-factory-btn");
 
-if (renameBtn) {
-  renameBtn.addEventListener("click", async () => {
+          if (renameBtn) {
+            renameBtn.addEventListener("click", async () => {
+              const newName = prompt("Enter new factory name:", factoryName);
+              if (!newName) return;
 
-    const newName = prompt("Enter new factory name:", factoryName);
-    if (!newName) return;
+              try {
+                const res = await fetch(apiUrl("/factory/rename"), {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    username: PLAYER_USERNAME,
+                    factory_id: factoryId,
+                    factory_name: newName,
+                  }),
+                });
 
-    try {
-      const res = await fetch(apiUrl("/factory/rename"), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          username: PLAYER_USERNAME,
-          factory_id: factoryId,
-          factory_name: newName
-        })
-      });
+                const data = await res.json();
 
-      const data = await res.json();
+                if (!res.ok || !data.success) {
+                  alert(data.error || "Rename failed.");
+                  return;
+                }
 
-      if (!res.ok || !data.success) {
-        alert(data.error || "Rename failed.");
-        return;
+                alert("Factory renamed successfully!");
+
+                await loadEmpireOverview();
+              } catch (err) {
+                console.error("Rename error:", err);
+                alert("Rename failed.");
+              }
+            });
+          }
+          container.appendChild(card);
+        }
       }
 
-      alert("Factory renamed successfully!");
+      // Small helpers for blueprint visuals
+      const BP_INDUSTRY_IMAGES = {
+        PHARMA: "assets/pharma.png",
+        FOOD: "assets/food.png",
+        TEXTILE: "assets/textile.png",
+        CHEMICAL: "assets/chemical.png",
+        SUPERMARKET: "assets/supermarket.png",
+      };
 
-      await loadEmpireOverview();
+      const BP_LEVEL_COLORS = {
+        1: "#22c55e", // B1 green
+        2: "#1565c0", // B2 blue
+        3: "#7e57c2", // B3 purple
+        4: "#ff8f00", // B4 orange
+        5: "#ffca28", // B5 gold
+      };
 
-    } catch (err) {
-      console.error("Rename error:", err);
-      alert("Rename failed.");
-    }
-
-  });
-}
-    container.appendChild(card);
-  }
-}
-     
-// Small helpers for blueprint visuals
-const BP_INDUSTRY_IMAGES = {
-  PHARMA:      "assets/pharma.png",
-  FOOD:        "assets/food.png",
-  TEXTILE:     "assets/textile.png",
-  CHEMICAL:    "assets/chemical.png",
-  SUPERMARKET: "assets/supermarket.png",
-};
-
-const BP_LEVEL_COLORS = {
-  1: "#22c55e", // B1 green
-  2: "#1565c0", // B2 blue
-  3: "#7e57c2", // B3 purple
-  4: "#ff8f00", // B4 orange
-  5: "#ffca28", // B5 gold
-};
-
- async function loadBlueprints() {
-  const grid = document.getElementById("blueprints-grid");
-  if (!grid) {
-    console.warn("blueprints-grid element not found");
-    return;
-  }
-
-  grid.innerHTML = '<p class="status-text">Loading blueprints…</p>';
-  console.log("loadBlueprints() start for", PLAYER_USERNAME);
-
-  try {
-    const res = await fetch(
-      apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/blueprints`)
-    );
-    if (!res.ok) throw new Error("HTTP " + res.status);
-
-    const data = await res.json();
-console.log("Blueprint inventory:", data);
-
-const blueprints = data.blueprints || [];
-playerBlueprints = blueprints;
-
-if (!blueprints.length) {
-  playerBlueprints = [];
-  renderBuildFactorySection();
-  grid.innerHTML =
-  '<p class="status-text">You do not have any factory blueprints recorded for this account.</p>';
-  return;
-}
-
-// ... existing blueprint rendering code ...
-
-renderBuildFactorySection();
-
-    grid.innerHTML = "";
-
-    blueprints.forEach((b) => {
-      try {
-        const card = document.createElement("div");
-        card.className = "factory-card blueprint-card";
-
-        // --- Industry (may be missing in current API) ---
-        const rawIndustry = (
-          b.industry ||
-          b.industry_name ||
-          b.industry_type ||
-          b.industry_code ||
-          b.blueprint_industry ||
-          ""
-        ).toString();
-
-        let industryCode = rawIndustry.trim().toUpperCase();
-
-        // If industry looks like a level code (B1–B5), treat as missing
-        if (/^B[1-5]$/i.test(industryCode)) {
-          industryCode = "";
+      async function loadBlueprints() {
+        const grid = document.getElementById("blueprints-grid");
+        if (!grid) {
+          console.warn("blueprints-grid element not found");
+          return;
         }
 
-        // If still missing, use a safe default for now
-        const industryLabel = industryCode || "PHARMA";
+        grid.innerHTML = '<p class="status-text">Loading blueprints…</p>';
+        console.log("loadBlueprints() start for", PLAYER_USERNAME);
 
-        const imgSrc =
-          BP_INDUSTRY_IMAGES[industryLabel] || BP_INDUSTRY_IMAGES.PHARMA;
+        try {
+          const res = await fetch(
+            apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/blueprints`),
+          );
+          if (!res.ok) throw new Error("HTTP " + res.status);
 
-        // --- Level: B1/B2/B3/B4/B5 → number + label ---
-        const rawTier = (b.raw_tier || b.tier || b.level || "").toString(); // e.g. "B4"
-        const levelNumber =
-          parseInt(rawTier.replace(/[^0-9]/g, ""), 10) || 1; // 4
-        const levelLabel = "B" + levelNumber; // "B4"
+          const data = await res.json();
+          console.log("Blueprint inventory:", data);
 
-        const borderColor = BP_LEVEL_COLORS[levelNumber] || "#d1d5db";
-        const bgColor = borderColor + "15";
-   
+          const blueprints = data.blueprints || [];
+          playerBlueprints = blueprints;
 
-        // Level multiplier: 1 + 0.25*(level-1)
-        const levelMult = 1 + 0.25 * (levelNumber - 1);
-        const levelMultText = levelMult.toFixed(2).replace(/\.00$/, ""); // "1", "1.25", ...
+          if (!blueprints.length) {
+            playerBlueprints = [];
+            renderBuildFactorySection();
+            grid.innerHTML =
+              '<p class="status-text">You do not have any factory blueprints recorded for this account.</p>';
+            return;
+          }
 
-        const eraText = (b.era || "GENESIS").toString().toUpperCase();
+          // ... existing blueprint rendering code ...
 
-        // ✅ Apply border color (if your card CSS supports it)
-        // If your blueprint card uses CSS var:
-        card.style.setProperty("--bp-border", borderColor);
-        // Or if it uses actual border directly:
-        card.style.borderColor = borderColor;
+          renderBuildFactorySection();
 
-        // ----- Render (adjust innerHTML to your final bp-mini design if needed) -----
-        card.innerHTML = `
+          grid.innerHTML = "";
+
+          blueprints.forEach((b) => {
+            try {
+              const card = document.createElement("div");
+              card.className = "factory-card blueprint-card";
+
+              // --- Industry (may be missing in current API) ---
+              const rawIndustry = (
+                b.industry ||
+                b.industry_name ||
+                b.industry_type ||
+                b.industry_code ||
+                b.blueprint_industry ||
+                ""
+              ).toString();
+
+              let industryCode = rawIndustry.trim().toUpperCase();
+
+              // If industry looks like a level code (B1–B5), treat as missing
+              if (/^B[1-5]$/i.test(industryCode)) {
+                industryCode = "";
+              }
+
+              // If still missing, use a safe default for now
+              const industryLabel = industryCode || "PHARMA";
+
+              const imgSrc =
+                BP_INDUSTRY_IMAGES[industryLabel] || BP_INDUSTRY_IMAGES.PHARMA;
+
+              // --- Level: B1/B2/B3/B4/B5 → number + label ---
+              const rawTier = (
+                b.raw_tier ||
+                b.tier ||
+                b.level ||
+                ""
+              ).toString(); // e.g. "B4"
+              const levelNumber =
+                parseInt(rawTier.replace(/[^0-9]/g, ""), 10) || 1; // 4
+              const levelLabel = "B" + levelNumber; // "B4"
+
+              const borderColor = BP_LEVEL_COLORS[levelNumber] || "#d1d5db";
+              const bgColor = borderColor + "15";
+
+              // Level multiplier: 1 + 0.25*(level-1)
+              const levelMult = 1 + 0.25 * (levelNumber - 1);
+              const levelMultText = levelMult.toFixed(2).replace(/\.00$/, ""); // "1", "1.25", ...
+
+              const eraText = (b.era || "GENESIS").toString().toUpperCase();
+
+              // ✅ Apply border color (if your card CSS supports it)
+              // If your blueprint card uses CSS var:
+              card.style.setProperty("--bp-border", borderColor);
+              // Or if it uses actual border directly:
+              card.style.borderColor = borderColor;
+
+              // ----- Render (adjust innerHTML to your final bp-mini design if needed) -----
+              card.innerHTML = `
           <div class="bp-mini-card" style="--bp-border:${borderColor}; --bp-bg:${bgColor};">
             <div class="bp-mini-badge" style="background:${borderColor};">${levelLabel}</div>
 
@@ -2322,545 +2639,581 @@ renderBuildFactorySection();
             </div>
           </div>
         `;
-card.style.cursor = "pointer";
+              card.style.cursor = "pointer";
 
-card.addEventListener("click", () => {
-  const selectedLandId = window.selectedBuildLandId;
+              card.addEventListener("click", () => {
+                const selectedLandId = window.selectedBuildLandId;
 
-  if (!selectedLandId) {
-    alert("Please select an empty land slot first.");
-    return;
-  }
+                if (!selectedLandId) {
+                  alert("Please select an empty land slot first.");
+                  return;
+                }
 
-  window.selectedBuildBlueprintId = b.blueprint_id;
+                window.selectedBuildBlueprintId = b.blueprint_id;
 
-  renderBuildFactorySection();
+                renderBuildFactorySection();
 
-  const blueprintSelect = document.getElementById("build-blueprint-select");
-  const nameInput = document.getElementById("build-factory-name");
+                const blueprintSelect = document.getElementById(
+                  "build-blueprint-select",
+                );
+                const nameInput = document.getElementById("build-factory-name");
 
-  if (blueprintSelect) {
-    blueprintSelect.value = String(b.blueprint_id);
-  }
+                if (blueprintSelect) {
+                  blueprintSelect.value = String(b.blueprint_id);
+                }
 
-  if (nameInput) {
-    nameInput.focus();
-  }
-});
-        grid.appendChild(card);
-      } catch (e) {
-        console.error("Blueprint render failed for item:", b, e);
+                if (nameInput) {
+                  nameInput.focus();
+                }
+              });
+              grid.appendChild(card);
+            } catch (e) {
+              console.error("Blueprint render failed for item:", b, e);
+            }
+          });
+        } catch (err) {
+          console.error("Failed to load blueprints:", err);
+          grid.innerHTML =
+            '<p class="status-error">Failed to load blueprints from backend.</p>';
+        }
+        updateSelectedBuildLandBox();
       }
-    });
-  } catch (err) {
-    console.error("Failed to load blueprints:", err);
-    grid.innerHTML =
-      '<p class="status-error">Failed to load blueprints from backend.</p>';
-  }
-  updateSelectedBuildLandBox();
-}
 
-    // ===== CLAIM PRODUCTION =====
-    async function claimAllProduction() {
-      const statusEl = document.getElementById("claim-status");
-      statusEl.textContent = "Claiming production...";
+      // ===== CLAIM PRODUCTION =====
+      async function claimAllProduction() {
+        const statusEl = document.getElementById("claim-status");
+        statusEl.textContent = "Claiming production...";
 
-      try {
-        const res = await fetch(apiUrl(`/claim-production-all`), {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: PLAYER_USERNAME }),
-        });
+        try {
+          const res = await fetch(apiUrl(`/claim-production-all`), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: PLAYER_USERNAME }),
+          });
 
-        if (!res.ok) throw new Error("HTTP " + res.status);
+          if (!res.ok) throw new Error("HTTP " + res.status);
 
-        const data = await res.json();
-        console.log("Claim all result:", data);
+          const data = await res.json();
+          console.log("Claim all result:", data);
 
-        if (!data.success) {
-          statusEl.textContent = data.error || "Claim failed.";
+          if (!data.success) {
+            statusEl.textContent = data.error || "Claim failed.";
+            return;
+          }
+
+          if (!data.totalEMPClaimed || data.totalEMPClaimed <= 0) {
+            statusEl.textContent =
+              data.message || "No production available to claim.";
+          } else {
+            statusEl.textContent = `Claimed ${data.totalEMPClaimed} EMP from ${data.factoryCountClaimed} factories.`;
+          }
+
+          await loadDashboardSummary();
+          await loadEmpireOverview();
+          loadBlueprints();
+        } catch (err) {
+          console.error("Failed to claim all production:", err);
+          statusEl.textContent = "Error while claiming production.";
+        }
+      }
+
+      function setupDashboardNavbar() {
+        const activeUser = (
+          new URLSearchParams(window.location.search).get("user") ||
+          localStorage.getItem("mde_username") ||
+          localStorage.getItem("hiveUsername") ||
+          localStorage.getItem("username") ||
+          ""
+        )
+          .replace("@", "")
+          .trim()
+          .toLowerCase();
+
+        const loginBtn = document.getElementById("appbarLoginBtn");
+        const accountWrap = document.getElementById("appbarAccountWrap");
+        const accountBtn = document.getElementById("appbarAccountBtn");
+        const dropdown = document.getElementById("appbarDropdown");
+        const dropdownHead = document.getElementById("appbarDropdownHead");
+        const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
+        const visitOtherEmpireBtn = document.getElementById(
+          "visitOtherEmpireBtn",
+        );
+        const logoutBtn = document.getElementById("appbarLogoutBtn");
+
+        if (activeUser) {
+          localStorage.setItem("mde_username", activeUser);
+          localStorage.setItem("hiveUsername", activeUser);
+          localStorage.setItem("username", activeUser);
+        }
+
+        if (!activeUser) {
+          if (loginBtn) loginBtn.style.display = "inline-flex";
+          if (accountWrap) accountWrap.style.display = "none";
           return;
         }
 
-        if (!data.totalEMPClaimed || data.totalEMPClaimed <= 0) {
-          statusEl.textContent =
-            data.message || "No production available to claim.";
-        } else {
-          statusEl.textContent =
-            `Claimed ${data.totalEMPClaimed} EMP from ${data.factoryCountClaimed} factories.`;
+        if (loginBtn) loginBtn.style.display = "none";
+        if (accountWrap) accountWrap.style.display = "block";
+        if (accountBtn) accountBtn.textContent = `@${activeUser} ▼`;
+        if (dropdownHead) dropdownHead.textContent = `@${activeUser}`;
+        if (visitMyEmpireLink) {
+          visitMyEmpireLink.href = `player-dashboard.html?user=${encodeURIComponent(activeUser)}`;
         }
 
-        await loadDashboardSummary();
-        await loadEmpireOverview();
-        loadBlueprints();
-      } catch (err) {
-        console.error("Failed to claim all production:", err);
-        statusEl.textContent = "Error while claiming production.";
+        if (accountBtn && dropdown) {
+          accountBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle("open");
+          });
+
+          document.addEventListener("click", () => {
+            dropdown.classList.remove("open");
+          });
+        }
+
+        if (visitOtherEmpireBtn) {
+          visitOtherEmpireBtn.addEventListener("click", () => {
+            const target = prompt("Enter Hive username to visit empire:");
+            const clean = String(target || "")
+              .replace("@", "")
+              .trim()
+              .toLowerCase();
+            if (!clean) return;
+            window.location.href = `player-dashboard.html?user=${encodeURIComponent(clean)}`;
+          });
+        }
+
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("mde_username");
+            localStorage.removeItem("hiveUsername");
+            localStorage.removeItem("username");
+            window.location.href = "index.html";
+          });
+        }
       }
-    
-    }
+      // ===== INIT =====
 
-   
-function setupDashboardNavbar() {
-  const activeUser = (
-    new URLSearchParams(window.location.search).get("user") ||
-    localStorage.getItem("mde_username") ||
-    localStorage.getItem("hiveUsername") ||
-    localStorage.getItem("username") ||
-    ""
-  ).replace("@", "").trim().toLowerCase();
+      function renderEmpirePreview() {
+        const grid = document.getElementById("empire-preview-grid");
+        if (!grid) return;
 
-  const loginBtn = document.getElementById("appbarLoginBtn");
-  const accountWrap = document.getElementById("appbarAccountWrap");
-  const accountBtn = document.getElementById("appbarAccountBtn");
-  const dropdown = document.getElementById("appbarDropdown");
-  const dropdownHead = document.getElementById("appbarDropdownHead");
-  const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
-  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
-  const logoutBtn = document.getElementById("appbarLogoutBtn");
+        if (!Array.isArray(empireLands) || empireLands.length === 0) {
+          grid.innerHTML = '<p class="status-text">No lands available yet.</p>';
+          return;
+        }
 
-  if (activeUser) {
-    localStorage.setItem("mde_username", activeUser);
-    localStorage.setItem("hiveUsername", activeUser);
-    localStorage.setItem("username", activeUser);
-  }
+        // Show only first 10 lands as preview
+        const previewLands = empireLands.slice(0, 10);
 
-  if (!activeUser) {
-    if (loginBtn) loginBtn.style.display = "inline-flex";
-    if (accountWrap) accountWrap.style.display = "none";
-    return;
-  }
+        grid.innerHTML = "";
 
-  if (loginBtn) loginBtn.style.display = "none";
-  if (accountWrap) accountWrap.style.display = "block";
-  if (accountBtn) accountBtn.textContent = `@${activeUser} ▼`;
-  if (dropdownHead) dropdownHead.textContent = `@${activeUser}`;
-  if (visitMyEmpireLink) {
-    visitMyEmpireLink.href = `player-dashboard.html?user=${encodeURIComponent(activeUser)}`;
-  }
+        for (const land of previewLands) {
+          const tier = (land.land_tier || "").toString().toUpperCase();
+          const factories = Array.isArray(land.factories)
+            ? land.factories.length
+            : 0;
 
-  if (accountBtn && dropdown) {
-    accountBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("open");
-    });
+          let maxSlots = 1;
+          if (tier === "L2" || tier === "2") maxSlots = 2;
+          else if (tier === "L3" || tier === "3") maxSlots = 3;
 
-    document.addEventListener("click", () => {
-      dropdown.classList.remove("open");
-    });
-  }
+          const needsAction = factories < maxSlots;
 
-  if (visitOtherEmpireBtn) {
-    visitOtherEmpireBtn.addEventListener("click", () => {
-      const target = prompt("Enter Hive username to visit empire:");
-      const clean = String(target || "").replace("@", "").trim().toLowerCase();
-      if (!clean) return;
-      window.location.href = `player-dashboard.html?user=${encodeURIComponent(clean)}`;
-    });
-  }
+          const tile = document.createElement("div");
+          tile.className =
+            "empire-tile " +
+            (tier === "L2" || tier === "2"
+              ? "l2"
+              : tier === "L3" || tier === "3"
+                ? "l3"
+                : "l1") +
+            (needsAction ? " needs-action" : "");
 
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("mde_username");
-      localStorage.removeItem("hiveUsername");
-      localStorage.removeItem("username");
-      window.location.href = "index.html";
-    });
-  }
-}
-    // ===== INIT =====
+          const tierLabel =
+            tier === "L2" || tier === "2"
+              ? "L2"
+              : tier === "L3" || tier === "3"
+                ? "L3"
+                : "L1";
 
-
- function renderEmpirePreview() {
-  const grid = document.getElementById("empire-preview-grid");
-  if (!grid) return;
-
-  if (!Array.isArray(empireLands) || empireLands.length === 0) {
-    grid.innerHTML = '<p class="status-text">No lands available yet.</p>';
-    return;
-  }
-
-  // Show only first 10 lands as preview
-  const previewLands = empireLands.slice(0, 10);
-
-  grid.innerHTML = "";
-
-  for (const land of previewLands) {
-    const tier = (land.land_tier || "").toString().toUpperCase();
-    const factories = Array.isArray(land.factories) ? land.factories.length : 0;
-
-    let maxSlots = 1;
-    if (tier === "L2" || tier === "2") maxSlots = 2;
-    else if (tier === "L3" || tier === "3") maxSlots = 3;
-
-    const needsAction = factories < maxSlots;
-
-    const tile = document.createElement("div");
-    tile.className =
-      "empire-tile " +
-      (tier === "L2" || tier === "2"
-        ? "l2"
-        : tier === "L3" || tier === "3"
-        ? "l3"
-        : "l1") +
-      (needsAction ? " needs-action" : "");
-
-    const tierLabel =
-      tier === "L2" || tier === "2"
-        ? "L2"
-        : tier === "L3" || tier === "3"
-        ? "L3"
-        : "L1";
-
-    tile.innerHTML = `
+          tile.innerHTML = `
   ${needsAction ? `<span class="empire-tile-alert">!</span>` : ""}
   <div class="empire-tile-label">${tierLabel}</div>
   <small class="empire-tile-meta">🏭 ${factories === maxSlots ? "Full" : `${factories}/${maxSlots}`}</small>
 `;
 
-    tile.title = `${tierLabel} • Factories: ${factories}/${maxSlots}`;
+          tile.title = `${tierLabel} • Factories: ${factories}/${maxSlots}`;
 
-    grid.appendChild(tile);
-  }
-}
-function getFreeBuildLands() {
-  if (!Array.isArray(empireLands)) return [];
+          grid.appendChild(tile);
+        }
+      }
+      function getFreeBuildLands() {
+        if (!Array.isArray(empireLands)) return [];
 
-  return empireLands.filter(land => {
-    const tier = String(land.land_tier || "").toUpperCase();
-    const maxSlots = landSlotCount(tier);
-    const used = Array.isArray(land.factories) ? land.factories.length : 0;
-    return used < maxSlots;
-  });
-}
+        return empireLands.filter((land) => {
+          const tier = String(land.land_tier || "").toUpperCase();
+          const maxSlots = landSlotCount(tier);
+          const used = Array.isArray(land.factories)
+            ? land.factories.length
+            : 0;
+          return used < maxSlots;
+        });
+      }
 
-function renderBuildFactorySection() {
-  const landSelect = document.getElementById("build-land-select");
-  const blueprintSelect = document.getElementById("build-blueprint-select");
-  const statusEl = document.getElementById("build-factory-status");
+      function renderBuildFactorySection() {
+        const landSelect = document.getElementById("build-land-select");
+        const blueprintSelect = document.getElementById(
+          "build-blueprint-select",
+        );
+        const statusEl = document.getElementById("build-factory-status");
 
-  if (!landSelect || !blueprintSelect || !statusEl) return;
+        if (!landSelect || !blueprintSelect || !statusEl) return;
 
-  const freeLands = getFreeBuildLands();
+        const freeLands = getFreeBuildLands();
 
-  // Lands
-  landSelect.innerHTML = "";
-  if (!freeLands.length) {
-    landSelect.innerHTML = `<option value="">No free land slots available</option>`;
-  } else {
-    landSelect.innerHTML = `<option value="">Select land</option>` + freeLands.map(land => {
-      const tier = String(land.land_tier || "").toUpperCase();
-      const maxSlots = landSlotCount(tier);
-      const used = Array.isArray(land.factories) ? land.factories.length : 0;
-      return `
+        // Lands
+        landSelect.innerHTML = "";
+        if (!freeLands.length) {
+          landSelect.innerHTML = `<option value="">No free land slots available</option>`;
+        } else {
+          landSelect.innerHTML =
+            `<option value="">Select land</option>` +
+            freeLands
+              .map((land) => {
+                const tier = String(land.land_tier || "").toUpperCase();
+                const maxSlots = landSlotCount(tier);
+                const used = Array.isArray(land.factories)
+                  ? land.factories.length
+                  : 0;
+                return `
         <option value="${land.land_id}">
           Land #${land.land_id} • ${landTierLabel(tier)} • Slots ${used}/${maxSlots}
         </option>
       `;
-    }).join("");
-  }
-  if (window.selectedBuildLandId) {
-  landSelect.value = String(window.selectedBuildLandId);
-}
+              })
+              .join("");
+        }
+        if (window.selectedBuildLandId) {
+          landSelect.value = String(window.selectedBuildLandId);
+        }
 
-  // Blueprints
-  blueprintSelect.innerHTML = "";
-  if (!Array.isArray(playerBlueprints) || !playerBlueprints.length) {
-    blueprintSelect.innerHTML = `<option value="">No blueprints available</option>`;
-  } else {
-    blueprintSelect.innerHTML = `<option value="">Select blueprint</option>` + playerBlueprints.map(bp => {
-      const label = `${bp.industry || "UNKNOWN"} ${bp.level || ""}`.trim();
-      return `
+        // Blueprints
+        blueprintSelect.innerHTML = "";
+        if (!Array.isArray(playerBlueprints) || !playerBlueprints.length) {
+          blueprintSelect.innerHTML = `<option value="">No blueprints available</option>`;
+        } else {
+          blueprintSelect.innerHTML =
+            `<option value="">Select blueprint</option>` +
+            playerBlueprints
+              .map((bp) => {
+                const label =
+                  `${bp.industry || "UNKNOWN"} ${bp.level || ""}`.trim();
+                return `
         <option value="${bp.blueprint_id}">
           #${bp.blueprint_id} • ${label}
         </option>
       `;
-    }).join("");
-  }
-if (window.selectedBuildBlueprintId) {
-  blueprintSelect.value = String(window.selectedBuildBlueprintId);
-}
-  statusEl.textContent = "Select a land and blueprint to begin.";
-}
+              })
+              .join("");
+        }
+        if (window.selectedBuildBlueprintId) {
+          blueprintSelect.value = String(window.selectedBuildBlueprintId);
+        }
+        statusEl.textContent = "Select a land and blueprint to begin.";
+      }
 
-async function buildFactoryFromUI() {
-
-  const landSelect = document.getElementById("build-land-select");
-  const blueprintSelect = document.getElementById("build-blueprint-select");
-  const nameInput = document.getElementById("build-factory-name");
-  const statusEl = document.getElementById("build-factory-status");
-  const btn = document.getElementById("build-factory-btn");
-
-  if (!landSelect || !blueprintSelect || !nameInput || !statusEl || !btn) return;
-
-  const landId = parseInt(landSelect.value, 10);
-  const blueprintId = parseInt(blueprintSelect.value, 10);
-  const factoryName = (nameInput.value || "").trim();
-  const useRelicBonus =
-  document.getElementById("build-use-relic")?.checked || false;
-
-  if (!landId) {
-    statusEl.textContent = "Please choose a land first.";
-    return;
-  }
-
-  if (!blueprintId) {
-    statusEl.textContent = "Please choose a blueprint first.";
-    return;
-  }
-
-  btn.disabled = true;
-  statusEl.textContent = "Building factory...";
-
-  try {
-   
-
-
-const payload = {
-  username: PLAYER_USERNAME,
-  land_id: parseInt(landSelect.value, 10),
-  blueprint_tier: blueprintSelect.value,
-  factory_name: nameInput.value.trim()
-};
-
-console.log("TEST BUILD", payload);
-
-const res = await fetch(apiUrl("/build-factory"), {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-  username: PLAYER_USERNAME,
-  factory_name: factoryName,
-  land_id: landId,
-  blueprint_id: blueprintId,
-  use_relic_bonus: useRelicBonus
-})
-});
-
-
-    const data = await res.json();
-   
-    console.log("Build factory result:", data);
-
-    if (!res.ok || !data.success) {
-      statusEl.textContent = data.error || "Factory build failed.";
-      btn.disabled = false;
-      return;
-    }
-
-    statusEl.textContent = data.used_relic_bonus
-  ? `Relic build activated! Cost: ${data.build_cost_emp} EMP • Factory is active instantly.`
-  : `Factory build started successfully! Cost: ${data.build_cost_emp} EMP • Time: ${data.build_days} day(s)`;
-
-    nameInput.value = "";
-    const relicCheckbox = document.getElementById("build-use-relic");
-if (relicCheckbox) relicCheckbox.checked = false;
-
-    await loadDashboardSummary();
-    await loadEmpireOverview();
-    await loadBlueprints();
-
-  } catch (err) {
-    console.error("Build factory error:", err);
-    statusEl.textContent = "Error while building factory.";
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-document
-  .getElementById("build-factory-btn")
-  .addEventListener("click", buildFactoryFromUI);
-function wireEmptySlotBuildActions() {
-  const slots = document.querySelectorAll(".land-slot-pad.empty");
-
-  slots.forEach(slot => {
-    slot.addEventListener("click", () => {
-      const landId = slot.dataset.buildLandId;
-      if (!landId) return;
-
-      window.selectedBuildLandId = landId;
-
-      setActiveTab("blueprints");
-
-      setTimeout(() => {
-        renderBuildFactorySection();
-
+      async function buildFactoryFromUI() {
         const landSelect = document.getElementById("build-land-select");
-        const bpSection = document.getElementById("blueprints-grid");
+        const blueprintSelect = document.getElementById(
+          "build-blueprint-select",
+        );
         const nameInput = document.getElementById("build-factory-name");
+        const statusEl = document.getElementById("build-factory-status");
+        const btn = document.getElementById("build-factory-btn");
 
-        if (landSelect) {
-          landSelect.value = String(landId);
+        if (!landSelect || !blueprintSelect || !nameInput || !statusEl || !btn)
+          return;
+
+        const landId = parseInt(landSelect.value, 10);
+        const blueprintId = parseInt(blueprintSelect.value, 10);
+        const factoryName = (nameInput.value || "").trim();
+        const useRelicBonus =
+          document.getElementById("build-use-relic")?.checked || false;
+
+        if (!landId) {
+          statusEl.textContent = "Please choose a land first.";
+          return;
         }
 
-        if (bpSection) {
-          bpSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (!blueprintId) {
+          statusEl.textContent = "Please choose a blueprint first.";
+          return;
         }
 
-        if (nameInput) {
-          nameInput.focus();
+        btn.disabled = true;
+        statusEl.textContent = "Building factory...";
+
+        try {
+          const payload = {
+            username: PLAYER_USERNAME,
+            land_id: parseInt(landSelect.value, 10),
+            blueprint_tier: blueprintSelect.value,
+            factory_name: nameInput.value.trim(),
+          };
+
+          console.log("TEST BUILD", payload);
+
+          const res = await fetch(apiUrl("/build-factory"), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: PLAYER_USERNAME,
+              factory_name: factoryName,
+              land_id: landId,
+              blueprint_id: blueprintId,
+              use_relic_bonus: useRelicBonus,
+            }),
+          });
+
+          const data = await res.json();
+
+          console.log("Build factory result:", data);
+
+          if (!res.ok || !data.success) {
+            statusEl.textContent = data.error || "Factory build failed.";
+            btn.disabled = false;
+            return;
+          }
+
+          statusEl.textContent = data.used_relic_bonus
+            ? `Relic build activated! Cost: ${data.build_cost_emp} EMP • Factory is active instantly.`
+            : `Factory build started successfully! Cost: ${data.build_cost_emp} EMP • Time: ${data.build_days} day(s)`;
+
+          nameInput.value = "";
+          const relicCheckbox = document.getElementById("build-use-relic");
+          if (relicCheckbox) relicCheckbox.checked = false;
+
+          await loadDashboardSummary();
+          await loadEmpireOverview();
+          await loadBlueprints();
+        } catch (err) {
+          console.error("Build factory error:", err);
+          statusEl.textContent = "Error while building factory.";
+        } finally {
+          btn.disabled = false;
+        }
+      }
+
+      document
+        .getElementById("build-factory-btn")
+        .addEventListener("click", buildFactoryFromUI);
+      function wireEmptySlotBuildActions() {
+        const slots = document.querySelectorAll(".land-slot-pad.empty");
+
+        slots.forEach((slot) => {
+          slot.addEventListener("click", () => {
+            const landId = slot.dataset.buildLandId;
+            if (!landId) return;
+
+            window.selectedBuildLandId = landId;
+
+            setActiveTab("blueprints");
+
+            setTimeout(() => {
+              renderBuildFactorySection();
+
+              const landSelect = document.getElementById("build-land-select");
+              const bpSection = document.getElementById("blueprints-grid");
+              const nameInput = document.getElementById("build-factory-name");
+
+              if (landSelect) {
+                landSelect.value = String(landId);
+              }
+
+              if (bpSection) {
+                bpSection.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }
+
+              if (nameInput) {
+                nameInput.focus();
+              }
+
+              updateSelectedBuildLandBox();
+            }, 300);
+          });
+        });
+      }
+
+      function updateSelectedBuildLandBox() {
+        const box = document.getElementById("selected-build-land-box");
+        if (!box) return;
+
+        const landId = window.selectedBuildLandId;
+
+        if (!landId) {
+          box.textContent = "No land selected yet.";
+          return;
         }
 
-        updateSelectedBuildLandBox();
-      }, 300);
-    });
-  });
-}
+        const land = (empireLands || []).find(
+          (l) => String(l.land_id) === String(landId),
+        );
 
-function updateSelectedBuildLandBox() {
-  const box = document.getElementById("selected-build-land-box");
-  if (!box) return;
+        if (!land) {
+          box.textContent = `Selected land: #${landId}`;
+          return;
+        }
 
-  const landId = window.selectedBuildLandId;
+        const tier = land.land_tier || "L1";
+        box.textContent = `Selected land for build: Land #${land.land_id} (${landTierLabel(tier)})`;
+      }
 
-  if (!landId) {
-    box.textContent = "No land selected yet.";
-    return;
-  }
+      async function upgradeFactory(username, factoryId) {
+        try {
+          const ok = confirm(`Upgrade Factory #${factoryId}?`);
+          if (!ok) return;
 
-  const land = (empireLands || []).find(l => String(l.land_id) === String(landId));
+          const r = await fetch(`${API_BASE}/factory/upgrade`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username,
+              factory_id: factoryId,
+            }),
+          });
 
-  if (!land) {
-    box.textContent = `Selected land: #${landId}`;
-    return;
-  }
+          const text = await r.text();
+          console.log("upgradeFactory raw response:", text);
 
-  const tier = land.land_tier || "L1";
-  box.textContent = `Selected land for build: Land #${land.land_id} (${landTierLabel(tier)})`;
-}
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            alert("Upgrade failed: server did not return JSON.");
+            return;
+          }
 
-async function upgradeFactory(username, factoryId) {
-  try {
-    const ok = confirm(`Upgrade Factory #${factoryId}?`);
-    if (!ok) return;
+          if (!r.ok || !data.success) {
+            alert(data.error || "Upgrade failed.");
+            return;
+          }
 
-    const r = await fetch(`${API_BASE}/factory/upgrade`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username,
-        factory_id: factoryId
-      })
-    });
+          alert(data.message || "Factory upgrade started successfully!");
 
-    const text = await r.text();
-    console.log("upgradeFactory raw response:", text);
+          await loadDashboardSummary(username);
+          await loadEmpireOverview(username);
+        } catch (err) {
+          console.error("upgradeFactory error:", err);
+          alert("Upgrade failed.");
+        }
+      }
 
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      alert("Upgrade failed: server did not return JSON.");
-      return;
-    }
+      function getMaintenanceStatusText(maintenanceEndsAt) {
+        if (!maintenanceEndsAt) {
+          return `<span style="color:#c62828; font-weight:600;">🔴 Maintenance: expired</span>`;
+        }
 
-    if (!r.ok || !data.success) {
-      alert(data.error || "Upgrade failed.");
-      return;
-    }
+        const end = new Date(maintenanceEndsAt);
+        const now = new Date();
 
-    alert(data.message || "Factory upgrade started successfully!");
+        if (isNaN(end.getTime())) {
+          return `<span style="color:#c62828; font-weight:600;">🔴 Maintenance: expired</span>`;
+        }
 
-    await loadDashboardSummary(username);
-    await loadEmpireOverview(username);
+        if (end <= now) {
+          return `<span style="color:#c62828; font-weight:600;">🔴 Maintenance: expired</span>`;
+        }
 
-  } catch (err) {
-    console.error("upgradeFactory error:", err);
-    alert("Upgrade failed.");
-  }
-}
+        const diffMs = end - now;
+        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
-function getMaintenanceStatusText(maintenanceEndsAt) {
-  if (!maintenanceEndsAt) {
-    return `<span style="color:#c62828; font-weight:600;">🔴 Maintenance: expired</span>`;
-  }
+        return `<span style="color:#2e7d32; font-weight:600;">🟢 Maintenance: active (${diffDays} day${diffDays === 1 ? "" : "s"} left)</span>`;
+      }
+      window.addEventListener("load", async () => {
+        try {
+          await loadDashboardSummary();
+          await loadRewardSummary();
+          await loadEmpireOverview();
+          await loadBlueprints();
+          await loadPacks();
+        } catch (err) {
+          console.error("Initial dashboard load failed:", err);
+        }
+      });
 
-  const end = new Date(maintenanceEndsAt);
-  const now = new Date();
+      function setupLoggedInNav() {
+        const nav = document.getElementById("loggedInNav");
+        const accountName = document.getElementById("nav-account-name");
 
-  if (isNaN(end.getTime())) {
-    return `<span style="color:#c62828; font-weight:600;">🔴 Maintenance: expired</span>`;
-  }
+        const storedUser =
+          localStorage.getItem("mde_username") ||
+          localStorage.getItem("username") ||
+          "";
 
-  if (end <= now) {
-    return `<span style="color:#c62828; font-weight:600;">🔴 Maintenance: expired</span>`;
-  }
+        const cleanUser = String(storedUser).replace("@", "").trim();
 
-  const diffMs = end - now;
-  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        if (cleanUser) {
+          if (nav) nav.style.display = "flex";
+          if (accountName) accountName.textContent = "@" + cleanUser;
+        } else {
+          if (nav) nav.style.display = "none";
+          if (accountName) accountName.textContent = "Guest";
+        }
+      }
 
-  return `<span style="color:#2e7d32; font-weight:600;">🟢 Maintenance: active (${diffDays} day${diffDays === 1 ? "" : "s"} left)</span>`;
-}
-window.addEventListener("load", async () => {
-  try {
-    await loadDashboardSummary();
-    await loadRewardSummary();
-    await loadEmpireOverview();
-    await loadBlueprints();
-    await loadPacks();
-  } catch (err) {
-    console.error("Initial dashboard load failed:", err);
-  }
-});
+      setupLoggedInNav();
+      document
+        .getElementById("claim-reward-btn")
+        ?.addEventListener("click", claimReward);
+    </script>
 
-function setupLoggedInNav() {
-  const nav = document.getElementById("loggedInNav");
-  const accountName = document.getElementById("nav-account-name");
+    <script src="js/appbar.js"></script>
 
-  const storedUser =
-    localStorage.getItem("mde_username") ||
-    localStorage.getItem("username") ||
-    "";
-
-  const cleanUser = String(storedUser).replace("@", "").trim();
-
-  if (cleanUser) {
-    if (nav) nav.style.display = "flex";
-    if (accountName) accountName.textContent = "@" + cleanUser;
-  } else {
-    if (nav) nav.style.display = "none";
-    if (accountName) accountName.textContent = "Guest";
-  }
-}
-
-setupLoggedInNav();
-document.getElementById("claim-reward-btn")?.addEventListener("click", claimReward);
-  </script>
-
-  <script src="js/appbar.js"></script>
-
-
-  <div id="blueprint-mint-modal" class="pack-modal hidden">
-  <div class="pack-modal-card">
-    <div class="pack-modal-title">🧾 Blueprint Minted</div>
-    <div id="blueprint-mint-modal-message" class="pack-modal-message"></div>
-    <button class="primary-button" onclick="hideBlueprintMintModal()">Close</button>
-  </div>
-</div>
-
- <div id="pack-open-modal" class="pack-modal hidden">
-  <div class="pack-modal-card">
-    <div class="pack-modal-title">🎁 Pack Opened</div>
-    <div id="pack-open-modal-message" class="pack-modal-message"></div>
-    <button id="pack-open-modal-close" class="primary-button">Close</button>
-  </div>
-</div> 
-  <!-- PACK REVEAL MODAL -->
-<div id="pack-reveal-modal" class="pack-reveal-modal hidden">
-  <div class="pack-reveal-modal-backdrop" onclick="closePackRevealModal()"></div>
-<div class="pack-reveal-modal-box">
-    <button class="pack-reveal-close" type="button" onclick="closePackRevealModal()">×</button>
-<div class="packs-board-head">
-      <h3>Pack Reveal</h3>
-      <div class="packs-board-note">Your rewards appear here</div>
+    <div id="blueprint-mint-modal" class="pack-modal hidden">
+      <div class="pack-modal-card">
+        <div class="pack-modal-title">🧾 Blueprint Minted</div>
+        <div id="blueprint-mint-modal-message" class="pack-modal-message"></div>
+        <button class="primary-button" onclick="hideBlueprintMintModal()">
+          Close
+        </button>
+      </div>
     </div>
- <div id="pack-reveal-stage" class="pack-reveal-stage">
-      <div class="empty">Open a pack to reveal rewards</div>
+
+    <div id="pack-open-modal" class="pack-modal hidden">
+      <div class="pack-modal-card">
+        <div class="pack-modal-title">🎁 Pack Opened</div>
+        <div id="pack-open-modal-message" class="pack-modal-message"></div>
+        <button id="pack-open-modal-close" class="primary-button">Close</button>
+      </div>
     </div>
-  </div>
-</div>
-</body>
+    <!-- PACK REVEAL MODAL -->
+    <div id="pack-reveal-modal" class="pack-reveal-modal hidden">
+      <div
+        class="pack-reveal-modal-backdrop"
+        onclick="closePackRevealModal()"
+      ></div>
+      <div class="pack-reveal-modal-box">
+        <button
+          class="pack-reveal-close"
+          type="button"
+          onclick="closePackRevealModal()"
+        >
+          ×
+        </button>
+        <div class="packs-board-head">
+          <h3>Pack Reveal</h3>
+          <div class="packs-board-note">Your rewards appear here</div>
+        </div>
+        <div id="pack-reveal-stage" class="pack-reveal-stage">
+          <div class="empty">Open a pack to reveal rewards</div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

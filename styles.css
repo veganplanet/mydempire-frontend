@@ -912,8 +912,14 @@ html,body{ height:100%; }
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background:var(--bg);
   color:var(--ink);
+  background:
+    radial-gradient(circle at 12% 14%, rgba(86, 104, 255, 0.16), transparent 20%),
+    radial-gradient(circle at 86% 12%, rgba(39, 174, 196, 0.14), transparent 18%),
+    radial-gradient(circle at 78% 72%, rgba(139, 92, 246, 0.13), transparent 22%),
+    radial-gradient(circle at 18% 82%, rgba(59, 130, 246, 0.10), transparent 18%),
+    linear-gradient(135deg, #f6f8fc 0%, #edf2f9 42%, #f3f0fa 72%, #eef7f7 100%);
+  background-attachment: fixed;
 }
 .wrap{
   max-width:1180px;
@@ -4158,6 +4164,10 @@ body {
   border-top:4px solid #0ea5e9;
   background:linear-gradient(180deg,#f0f9ff,#ffffff);
 }
+.card-lifetime {
+  border-top: 4px solid #d97706;
+  background: linear-gradient(180deg, #fff7ed, #ffffff);
+}
 /* ===== LOGGED-IN MAIN NAV ===== */
 .app-nav {
   display: flex;
@@ -7051,10 +7061,14 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   padding:4px;
   background:linear-gradient(145deg,var(--color),#0f172a,var(--color));
   -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
+  linear-gradient(#000 0 0) content-box,
+  linear-gradient(#000 0 0);
+mask:
+  linear-gradient(#000 0 0) content-box,
+  linear-gradient(#000 0 0);
+
+-webkit-mask-composite: xor;
+mask-composite: exclude;
 }
 
 #pack-reveal-stage .nft-card.land .nft-inner{
@@ -7666,4 +7680,61 @@ body.user-logged-in .appbar-link.auth-only.hidden-auth-link {
   color:#cbd6ff;
   font-size:0.95rem;
   margin-top:6px;
+}
+/* ============================= */
+/* FINAL GLOBAL BACKGROUND OVERRIDE */
+/* keep this at very end of styles.css */
+/* ============================= */
+
+body {
+  background:
+    radial-gradient(circle at 12% 14%, rgba(86, 104, 255, 0.16), transparent 20%),
+    radial-gradient(circle at 86% 12%, rgba(39, 174, 196, 0.14), transparent 18%),
+    radial-gradient(circle at 78% 72%, rgba(139, 92, 246, 0.13), transparent 22%),
+    radial-gradient(circle at 18% 82%, rgba(59, 130, 246, 0.10), transparent 18%),
+    linear-gradient(135deg, #f6f8fc 0%, #edf2f9 42%, #f3f0fa 72%, #eef7f7 100%) !important;
+  background-attachment: fixed !important;
+}
+/* ===== TEST: FORCE BACKGROUND ===== */
+html,
+body {
+  background: #dfe6ff !important;
+}
+
+body {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(80,120,255,0.08), transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(120,80,255,0.06), transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(80,255,200,0.05), transparent 40%),
+    #f6f8fb;
+}
+.status-dot {
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+  animation: statusPulse 2s infinite;
+}
+
+@keyframes statusPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34,197,94,0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(34,197,94,0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(34,197,94,0);
+  }
+}
+.leaderboard-row
+.leaderboard-top {
+  background: linear-gradient(180deg, #fffdf4 0%, #fff7e6 100%);
+  border-radius: 14px;
+}
+
+.leaderboard-rank {
+  font-size: 1.05rem;
 }
