@@ -514,66 +514,70 @@
           </div>
         </div>
       </section>
-     <section class="section tab-panel" data-tab-panel="leaderboard">
-  <div class="leaderboard-subnav">
-    <button
-      type="button"
-      class="leaderboard-subnav-btn leaderboard-subnav-btn-active"
-      data-lb-tab="empire"
-      onclick="setLeaderboardTab('empire')"
-    >
-      Empire
-    </button>
+      <section class="section tab-panel" data-tab-panel="leaderboard">
+        <div class="leaderboard-subnav">
+          <button
+            type="button"
+            class="leaderboard-subnav-btn leaderboard-subnav-btn-active"
+            data-lb-tab="empire"
+            onclick="setLeaderboardTab('empire')"
+          >
+            Empire
+          </button>
 
-    <button
-      type="button"
-      class="leaderboard-subnav-btn"
-      data-lb-tab="industry"
-      onclick="setLeaderboardTab('industry')"
-    >
-      Industry
-    </button>
-  </div>
+          <button
+            type="button"
+            class="leaderboard-subnav-btn"
+            data-lb-tab="industry"
+            onclick="setLeaderboardTab('industry')"
+          >
+            Industry
+          </button>
+        </div>
 
-  <div class="leaderboard-tab-panel leaderboard-tab-panel-active" data-lb-panel="empire">
-    <div class="section-header">
-      <h2>👑 Emperor Leaderboard</h2>
-      <small>Top empires ranked by lifetime EP</small>
-    </div>
+        <div
+          class="leaderboard-tab-panel leaderboard-tab-panel-active"
+          data-lb-panel="empire"
+        >
+          <div class="section-header">
+            <h2>👑 Emperor Leaderboard</h2>
+            <small>Top empires ranked by lifetime EP</small>
+          </div>
 
-    <div class="summary-card card-leaderboard">
-      <div class="leaderboard-shell">
-        <div class="leaderboard-topbar"></div>
-        <div class="leaderboard-body">
-          <div id="emperor-leaderboard-list" class="leaderboard-empty">
-            Leaderboard will appear once lifetime EP begins accumulating.
+          <div class="summary-card card-leaderboard">
+            <div class="leaderboard-shell">
+              <div class="leaderboard-topbar"></div>
+              <div class="leaderboard-body">
+                <div id="emperor-leaderboard-list" class="leaderboard-empty">
+                  Leaderboard will appear once lifetime EP begins accumulating.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="your-rank-row" class="your-rank-row" style="display: none">
+            Your rank will appear here.
           </div>
         </div>
-      </div>
-    </div>
-    <div id="your-rank-row" class="your-rank-row" style="display:none;">
-  Your rank will appear here.
-</div>
-  </div>
 
-  <div class="leaderboard-tab-panel" data-lb-panel="industry">
-    <div class="section-header">
-      <h2>🏭 Industry Leaders</h2>
-      <small>Top empire in each industry by lifetime EP</small>
-    </div>
+        <div class="leaderboard-tab-panel" data-lb-panel="industry">
+          <div class="section-header">
+            <h2>🏭 Industry Leaders</h2>
+            <small>Top empire in each industry by lifetime EP</small>
+          </div>
 
-    <div class="summary-card card-leaderboard">
-      <div class="leaderboard-shell">
-        <div class="leaderboard-topbar"></div>
-        <div class="leaderboard-body">
-          <div id="industry-leaderboard-list" class="leaderboard-empty">
-            Industry leaders will appear once lifetime industry EP begins accumulating.
+          <div class="summary-card card-leaderboard">
+            <div class="leaderboard-shell">
+              <div class="leaderboard-topbar"></div>
+              <div class="leaderboard-body">
+                <div id="industry-leaderboard-list" class="leaderboard-empty">
+                  Industry leaders will appear once lifetime industry EP begins
+                  accumulating.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
       <footer class="footer">MydEmpire • Genesis Era • Player Dashboard</footer>
     </div>
     <script>
@@ -743,34 +747,36 @@
           }
         });
         if (tabName === "leaderboard") {
-  setLeaderboardTab("empire");
-} {
-  loadEmperorLeaderboard();
-  loadIndustryLeaders();
-}      }
-function setLeaderboardTab(tabName) {
-  const buttons = document.querySelectorAll(".leaderboard-subnav-btn");
-  const panels = document.querySelectorAll(".leaderboard-tab-panel");
+          setLeaderboardTab("empire");
+        }
+        {
+          loadEmperorLeaderboard();
+          loadIndustryLeaders();
+        }
+      }
+      function setLeaderboardTab(tabName) {
+        const buttons = document.querySelectorAll(".leaderboard-subnav-btn");
+        const panels = document.querySelectorAll(".leaderboard-tab-panel");
 
-  buttons.forEach((btn) => {
-    if (btn.dataset.lbTab === tabName) {
-      btn.classList.add("leaderboard-subnav-btn-active");
-    } else {
-      btn.classList.remove("leaderboard-subnav-btn-active");
-    }
-  });
+        buttons.forEach((btn) => {
+          if (btn.dataset.lbTab === tabName) {
+            btn.classList.add("leaderboard-subnav-btn-active");
+          } else {
+            btn.classList.remove("leaderboard-subnav-btn-active");
+          }
+        });
 
-  panels.forEach((panel) => {
-    if (panel.dataset.lbPanel === tabName) {
-      panel.classList.add("leaderboard-tab-panel-active");
-    } else {
-      panel.classList.remove("leaderboard-tab-panel-active");
-    }
-  });
+        panels.forEach((panel) => {
+          if (panel.dataset.lbPanel === tabName) {
+            panel.classList.add("leaderboard-tab-panel-active");
+          } else {
+            panel.classList.remove("leaderboard-tab-panel-active");
+          }
+        });
 
-  if (tabName === "empire") loadEmperorLeaderboard();
-  if (tabName === "industry") loadIndustryLeaders();
-}
+        if (tabName === "empire") loadEmperorLeaderboard();
+        if (tabName === "industry") loadIndustryLeaders();
+      }
       async function loadEmperorLeaderboard() {
         try {
           const res = await fetch("/leaderboard/emperors");
@@ -784,23 +790,25 @@ function setLeaderboardTab(tabName) {
               "Leaderboard will appear once lifetime EP begins accumulating.";
             return;
           }
-function getPlayerTitle(rank) {
-  if (rank === 1) return "👑 Emperor";
-  if (rank <= 5) return "🏛 Grand Lord";
-  if (rank <= 20) return "⚙ Industrial Magnate";
-  return "🏗 Empire Builder";
-}
-        let html = `<div class="leaderboard-list">`;
+          function getPlayerTitle(rank) {
+            if (rank === 1) return "👑 Emperor";
+            if (rank <= 5) return "🏛 Grand Lord";
+            if (rank <= 20) return "⚙ Industrial Magnate";
+            return "🏗 Empire Builder";
+          }
+          let html = `<div class="leaderboard-list">`;
 
-data.leaders.forEach((row, index) => {
-  const rankLabel =
-    
-    index === 0 ? "🥇" :
-    index === 1 ? "🥈" :
-    index === 2 ? "🥉" :
-    `#${index + 1}`;
-const title = getPlayerTitle(index + 1);
-  html += `
+          data.leaders.forEach((row, index) => {
+            const rankLabel =
+              index === 0
+                ? "🥇"
+                : index === 1
+                  ? "🥈"
+                  : index === 2
+                    ? "🥉"
+                    : `#${index + 1}`;
+            const title = getPlayerTitle(index + 1);
+            html += `
     <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""}">
       <div class="leaderboard-rank">${rankLabel}</div>
      <div class="leaderboard-player">
@@ -810,86 +818,88 @@ const title = getPlayerTitle(index + 1);
       <div class="leaderboard-score">${Number(row.lifetime_ep).toFixed(2)} EP</div>
     </div>
   `;
-});
+          });
 
-html += `</div>`;
-container.innerHTML = html;
-const activeUser =
-  window.ACTIVE_PLAYER ||
-  localStorage.getItem("activePlayer") ||
-  localStorage.getItem("username") ||
-  "";
+          html += `</div>`;
+          container.innerHTML = html;
+          const activeUser =
+            window.ACTIVE_PLAYER ||
+            localStorage.getItem("activePlayer") ||
+            localStorage.getItem("username") ||
+            "";
 
-const yourRankEl = document.getElementById("your-rank-row");
+          const yourRankEl = document.getElementById("your-rank-row");
 
-if (yourRankEl && activeUser) {
-  const lowerActiveUser = String(activeUser).trim().toLowerCase();
+          if (yourRankEl && activeUser) {
+            const lowerActiveUser = String(activeUser).trim().toLowerCase();
 
-  const foundIndex = data.leaders.findIndex(
-    (row) => String(row.username).trim().toLowerCase() === lowerActiveUser
-  );
+            const foundIndex = data.leaders.findIndex(
+              (row) =>
+                String(row.username).trim().toLowerCase() === lowerActiveUser,
+            );
 
-  if (foundIndex >= 0) {
-    const rank = foundIndex + 1;
-    const title = getPlayerTitle(rank);
-    const ep = Number(data.leaders[foundIndex].lifetime_ep).toFixed(2);
+            if (foundIndex >= 0) {
+              const rank = foundIndex + 1;
+              const title = getPlayerTitle(rank);
+              const ep = Number(data.leaders[foundIndex].lifetime_ep).toFixed(
+                2,
+              );
 
-    yourRankEl.style.display = "block";
-    yourRankEl.textContent = `Your Rank: #${rank} • ${title} • ${ep} EP`;
-  } else {
-    yourRankEl.style.display = "none";
-  }
-}
-          
+              yourRankEl.style.display = "block";
+              yourRankEl.textContent = `Your Rank: #${rank} • ${title} • ${ep} EP`;
+            } else {
+              yourRankEl.style.display = "none";
+            }
+          }
         } catch (err) {
           console.error("Leaderboard error:", err);
         }
       }
       async function loadIndustryLeaders() {
-  try {
-    const res = await fetch("/leaderboard/industries");
-    const data = await res.json();
+        try {
+          const res = await fetch("/leaderboard/industries");
+          const data = await res.json();
 
-    const container = document.getElementById("industry-leaderboard-list");
-    if (!container) return;
+          const container = document.getElementById(
+            "industry-leaderboard-list",
+          );
+          if (!container) return;
 
-    if (!data.success || !data.leaders) {
-      container.innerHTML =
-        "Industry leaders will appear once lifetime industry EP begins accumulating.";
-      return;
-    }
+          if (!data.success || !data.leaders) {
+            container.innerHTML =
+              "Industry leaders will appear once lifetime industry EP begins accumulating.";
+            return;
+          }
 
-    const items = [
-      { label: "Food", key: "food" },
-      { label: "Textile", key: "textile" },
-      { label: "Pharma", key: "pharma" },
-      { label: "Chemical", key: "chemical" },
-      { label: "Supermarket", key: "supermarket" },
-    ];
+          const items = [
+            { label: "Food", key: "food" },
+            { label: "Textile", key: "textile" },
+            { label: "Pharma", key: "pharma" },
+            { label: "Chemical", key: "chemical" },
+            { label: "Supermarket", key: "supermarket" },
+          ];
 
-    let html = "";
+          let html = "";
 
-    items.forEach((item) => {
-      const leader = data.leaders[item.key];
+          items.forEach((item) => {
+            const leader = data.leaders[item.key];
 
-      html += `
+            html += `
         <div class="leaderboard-row">
           <div class="leaderboard-rank">${item.label}</div>
-          <div class="leaderboard-player">${
-            leader?.username ?? "—"
-          }</div>
+          <div class="leaderboard-player">${leader?.username ?? "—"}</div>
           <div class="leaderboard-score">${
             leader ? `${Number(leader.ep).toFixed(2)} EP` : "No leader yet"
           }</div>
         </div>
       `;
-    });
+          });
 
-    container.innerHTML = html;
-  } catch (err) {
-    console.error("Industry leaderboard error:", err);
-  }
-}
+          container.innerHTML = html;
+        } catch (err) {
+          console.error("Industry leaderboard error:", err);
+        }
+      }
       // ===== PLAYER SUMMARY =====
       async function loadDashboardSummary() {
         try {
@@ -2346,8 +2356,10 @@ if (yourRankEl && activeUser) {
         ${canRename ? `<button class="rename-factory-btn" data-factory-id="${factoryId}">Rename</button>` : ""}
         ${canUpgrade ? `<button class="upgrade-factory-btn" data-factory-id="${factoryId}">Upgrade</button>` : ""}
         ${
-          status !== "BUILDING" && status !== "UPGRADING"
-            ? `<button class="maintenance-factory-btn" data-factory-id="${factoryId}">Pay Maintenance</button>`
+          status !== "BUILDING" &&
+          status !== "UPGRADING" &&
+          Number(f.remaining_maintenance_days || 0) <= 2
+            ? `<button class="maintenance-factory-btn" data-factory-id="${factoryId}">Pay Maintenance (7 days)</button>`
             : ""
         }
       </div>
@@ -2449,18 +2461,7 @@ if (yourRankEl && activeUser) {
                 maintenanceBtn.addEventListener("click", async (e) => {
                   e.stopPropagation();
 
-                  const daysInput = prompt(
-                    "Enter maintenance days (1 to 7):",
-                    "1",
-                  );
-                  if (!daysInput) return;
-
-                  const days = parseInt(daysInput, 10);
-
-                  if (!days || days < 1 || days > 7) {
-                    alert("Please enter a number between 1 and 7.");
-                    return;
-                  }
+                  const days = 7;
 
                   try {
                     const res = await fetch(

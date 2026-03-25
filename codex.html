@@ -1,379 +1,516 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>MydEmpire — Codex</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>MydEmpire — Codex</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <svg style="display: none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Factory -->
+    <symbol id="icon-factory" viewBox="0 0 24 24">
+      <rect x="3" y="10" width="6" height="10"></rect>
+      <rect x="10" y="6" width="6" height="14"></rect>
+      <rect x="17" y="12" width="4" height="8"></rect>
+    </symbol>
 
-<body class="page-root">
+    <!-- Land -->
+    <symbol id="icon-land" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="7" height="7"></rect>
+      <rect x="14" y="3" width="7" height="7"></rect>
+      <rect x="3" y="14" width="7" height="7"></rect>
+      <rect x="14" y="14" width="7" height="7"></rect>
+    </symbol>
 
-<header class="appbar">
-  <div class="appbar-inner">
-    <div class="appbar-left">
-      <a href="index.html" class="appbar-logo" aria-label="MydEmpire Home">
-        <img src="assets/logo.png" alt="MydEmpire">
-      </a>
+    <!-- Blueprint -->
+    <symbol id="icon-blueprint" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="16" height="16"></rect>
+      <line x1="8" y1="8" x2="16" y2="8"></line>
+      <line x1="8" y1="12" x2="16" y2="12"></line>
+      <line x1="8" y1="16" x2="13" y2="16"></line>
+    </symbol>
 
-    <nav class="appbar-nav">
-  <a href="index.html" class="appbar-link">Home</a>
-  <a href="economy.html" class="appbar-link">Economy</a>
-  <a href="transparency.html" class="appbar-link">Transparency</a>
-  <a href="codex.html" class="appbar-link">Codex</a>
+    <!-- Maintenance -->
+    <symbol id="icon-maintenance" viewBox="0 0 24 24">
+      <path d="M21 7a5 5 0 0 1-6 6L7 21l-4-4 8-8a5 5 0 0 1 6-6"></path>
+    </symbol>
 
-  <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only hidden-auth-link">Dashboard</a>
-  <a href="shop.html" id="shopLink" class="appbar-link auth-only hidden-auth-link">Shop</a>
-  <a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only hidden-auth-link">Marketplace</a>
-</nav>
-    </div>
+    <!-- Upgrade -->
+    <symbol id="icon-upgrade" viewBox="0 0 24 24">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="6 11 12 5 18 11"></polyline>
+    </symbol>
 
-    <div class="appbar-right">
-      <button id="appbarLoginBtn" class="appbar-login-btn" type="button">Connect Wallet</button>
+    <!-- Reward -->
+    <symbol id="icon-reward" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8"></circle>
+      <line x1="12" y1="8" x2="12" y2="16"></line>
+      <line x1="9" y1="12" x2="15" y2="12"></line>
+    </symbol>
 
-      <div id="appbarAccountWrap" class="appbar-account-wrap" style="display:none;">
-        <button id="appbarAccountBtn" class="appbar-account-btn" type="button">@username ▼</button>
+    <!-- Market -->
+    <symbol id="icon-market" viewBox="0 0 24 24">
+      <polyline points="4 7 10 7 10 4"></polyline>
+      <polyline points="20 17 14 17 14 20"></polyline>
+      <line x1="10" y1="7" x2="20" y2="17"></line>
+      <line x1="4" y1="7" x2="14" y2="17"></line>
+    </symbol>
+  </svg>
 
-        <div id="appbarDropdown" class="appbar-dropdown">
-          <div id="appbarDropdownHead" class="appbar-dropdown-head">@username</div>
-          <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link">Visit My Empire</a>
-          <button id="visitOtherEmpireBtn" type="button" class="appbar-dropdown-link">Visit Other Empire</button>
-          <button id="appbarLogoutBtn" type="button" class="appbar-dropdown-link">Logout</button>
+  <body class="page-root">
+    <header class="appbar">
+      <div class="appbar-inner">
+        <div class="appbar-left">
+          <a href="index.html" class="appbar-logo" aria-label="MydEmpire Home">
+            <img src="assets/logo.png" alt="MydEmpire" />
+          </a>
+
+          <nav class="appbar-nav">
+            <a href="index.html" class="appbar-link">Home</a>
+            <a href="economy.html" class="appbar-link">Economy</a>
+            <a href="transparency.html" class="appbar-link">Transparency</a>
+            <a href="codex.html" class="appbar-link">Codex</a>
+
+            <a
+              href="player-dashboard.html"
+              id="dashboardLink"
+              class="appbar-link auth-only hidden-auth-link"
+              >Dashboard</a
+            >
+            <a
+              href="shop.html"
+              id="shopLink"
+              class="appbar-link auth-only hidden-auth-link"
+              >Shop</a
+            >
+            <a
+              href="marketplace.html"
+              id="marketplaceLink"
+              class="appbar-link auth-only hidden-auth-link"
+              >Marketplace</a
+            >
+          </nav>
+        </div>
+
+        <div class="appbar-right">
+          <button id="appbarLoginBtn" class="appbar-login-btn" type="button">
+            Connect Wallet
+          </button>
+
+          <div
+            id="appbarAccountWrap"
+            class="appbar-account-wrap"
+            style="display: none"
+          >
+            <button
+              id="appbarAccountBtn"
+              class="appbar-account-btn"
+              type="button"
+            >
+              @username ▼
+            </button>
+
+            <div id="appbarDropdown" class="appbar-dropdown">
+              <div id="appbarDropdownHead" class="appbar-dropdown-head">
+                @username
+              </div>
+              <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link"
+                >Visit My Empire</a
+              >
+              <button
+                id="visitOtherEmpireBtn"
+                type="button"
+                class="appbar-dropdown-link"
+              >
+                Visit Other Empire
+              </button>
+              <button
+                id="appbarLogoutBtn"
+                type="button"
+                class="appbar-dropdown-link"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</header>
+    </header>
 
-<main class="page-main">
-  <div class="page-inner">
-<div class="codex-layout">
+    <main class="page-main codex-page">
+      <div class="codex-shell">
+        <section class="codex-hero-v2">
+          <div class="codex-hero-copy">
+            <div class="codex-kicker">Genesis Rulebook</div>
+            <h1>The Codex of MydEmpire</h1>
+            <p>
+              This page explains how your empire actually works — from land
+              slots and blueprints to factory setup, maintenance, upgrades, EMP
+              utility, and reward share. The goal is simple: turn your assets
+              into a productive industrial network.
+            </p>
+          </div>
 
-    <!-- LEFT MENU -->
-    <aside class="codex-sidebar">
-      <div class="codex-sidebar-title">Codex</div>
+          <div class="codex-hero-panel">
+            <div class="codex-hero-stat">
+              <span class="codex-stat-label">Core Loop</span>
+              <strong>Pack → Build → Maintain → Upgrade → Earn</strong>
+            </div>
+            <div class="codex-hero-stat">
+              <span class="codex-stat-label">EMP Rate</span>
+              <strong>100 EMP = 1 HIVE</strong>
+            </div>
+            <div class="codex-hero-stat">
+              <span class="codex-stat-label">Maintenance Rhythm</span>
+              <strong>7-day cycle</strong>
+            </div>
+          </div>
+        </section>
 
-      <nav class="codex-menu">
-        <a href="#loop">Gameplay Loop</a>
-        <a href="#land">Land Rules</a>
-        <a href="#blueprint">Blueprints</a>
-        <a href="#factory">Factories</a>
-        <a href="#emp">EMP</a>
-        <a href="#relic">Relics</a>
-        <a href="#writ">Writ</a>
-        <a href="#ep">EP System</a>
-        <a href="#maintenance">Maintenance</a>
-        <a href="#upgrade">Upgrades</a>
-        <a href="#reward">Rewards</a>
-        <a href="#shop">Shop</a>
-        <a href="#market">Marketplace</a>
-        <a href="#p2p">P2P Transfer</a>
-        <a href="#start">New Player Guide</a>
-      </nav>
-    </aside>
+        <nav class="codex-pill-nav">
+          <a href="#loop">Loop</a>
+          <a href="#land">Land</a>
+          <a href="#blueprint">Blueprints</a>
+          <a href="#factory">Factories</a>
+          <a href="#maintenance">Maintenance</a>
+          <a href="#upgrade">Upgrades</a>
+          <a href="#reward">Rewards</a>
+          <a href="#market">Market</a>
+          <a href="#start">Guide</a>
+        </nav>
 
-    <!-- CONTENT -->
-    <div class="codex-content">
+        <section id="loop" class="codex-card-block">
+          <h2>Core Gameplay Loop</h2>
+          <div class="codex-flow-box">
+            Pack → Land + Blueprint + EMP → Build Factory → Generate EP →
+            Maintain Production → Upgrade Strategically → Earn Reward Share
+          </div>
+          <p>
+            MydEmpire is not about holding assets passively. Strength comes from
+            converting land slots and blueprints into active factories that keep
+            producing EP over time.
+          </p>
+        </section>
 
-      <!-- HERO -->
-      <section class="codex-hero">
-        <h1>The Codex of MydEmpire</h1>
-        <p>
-          This Codex defines how the empire truly works. Every asset, every rule,
-          and every system is part of a connected production network. 
-          Understanding this page means understanding how to build a stronger empire.
-        </p>
-      </section>
+        <div class="codex-grid-2">
+          <section id="land" class="codex-card-block">
+            <h2>
+              <svg class="codex-icon"><use href="#icon-land"></use></svg>
+              Land
+            </h2>
 
-      <!-- LOOP -->
-      <section id="loop" class="codex-section">
-        <h2>Core Gameplay Loop</h2>
+            <h3>Factory Slots</h3>
+            <ul>
+              <li><strong>L1 Frontier</strong> → 1 slot</li>
+              <li><strong>L2 Estate</strong> → 2 slots</li>
+              <li><strong>L3 Industrial Zone</strong> → 3 slots</li>
+            </ul>
 
-        <div class="codex-flow">
-          Pack → Land + Blueprint + EMP → Build Factory → Generate EP →
-          Maintain → Upgrade → Earn Share → Expand Empire
+            <h3>B5 Limitation</h3>
+            <p><strong>Each land can contain maximum 1 B5 factory.</strong></p>
+
+            <h3>Upgrade Behavior</h3>
+            <ul>
+              <li>
+                <strong>L1</strong> → direct high-tier build possible, but
+                low-start paths are more restricted
+              </li>
+              <li>
+                <strong>L2</strong> → supports two slots, but only one can reach
+                B5
+              </li>
+              <li>
+                <strong>L3</strong> → supports three slots, but only one can
+                reach B5
+              </li>
+            </ul>
+          </section>
+
+          <section id="blueprint" class="codex-card-block">
+            <h2>
+              <svg class="codex-icon"><use href="#icon-blueprint"></use></svg>
+              Blueprints
+            </h2>
+
+            <p>
+              Blueprints define both the industry type and the starting strength
+              of the factory you build. When used for construction, the
+              blueprint is consumed.
+            </p>
+
+            <h3>Blueprint Levels</h3>
+            <ul>
+              <li>B1 → Basic</li>
+              <li>B2 → Improved</li>
+              <li>B3 → Advanced</li>
+              <li>B4 → High</li>
+              <li>B5 → Elite</li>
+            </ul>
+
+            <h3>Extra Blueprint Minting</h3>
+            <p>
+              Extra blueprint minting is only allowed when your total available
+              land slots are greater than your current blueprint count. EMP
+              spent on this goes to treasury support.
+            </p>
+          </section>
         </div>
 
-        <p>
-          The goal is not collecting assets, but converting them into a working industrial system.
-        </p>
-      </section>
+        <section id="factory" class="codex-card-block">
+          <h2>
+            <svg class="codex-icon" viewBox="0 0 24 24">
+              <rect x="3" y="10" width="6" height="10"></rect>
+              <rect x="10" y="6" width="6" height="14"></rect>
+              <rect x="17" y="12" width="4" height="8"></rect>
+            </svg>
+            Factories
+          </h2>
 
-      <!-- LAND -->
-      <section id="land" class="codex-section">
-        <h2>Land Rules</h2>
+          <p>
+            A factory is created by combining one land slot, one blueprint, and
+            EMP. After construction, it becomes a persistent production asset
+            inside your empire.
+          </p>
 
-        <h3>Slots</h3>
-        <ul>
-          <li>L1 Frontier → 1 slot</li>
-          <li>L2 Estate → 2 slots</li>
-          <li>L3 Industrial Zone → 3 slots</li>
-        </ul>
+          <div class="codex-grid-3">
+            <div class="codex-mini-card">
+              <h3>Initial Factory Setup Cost</h3>
+              <ul>
+                <li>L1 Frontier → 40 EMP</li>
+                <li>L2 Estate → 80 EMP</li>
+                <li>L3 Industrial Zone → 150 EMP</li>
+              </ul>
+              <p class="codex-note">
+                Setup cost depends on land tier, not blueprint level.
+              </p>
+            </div>
 
-        <h3>B5 Limitation Rule</h3>
-        <p><strong>Each land can have maximum 1 B5 factory.</strong></p>
+            <div class="codex-mini-card">
+              <h3>Factory States</h3>
+              <ul>
+                <li><strong>Building</strong> → under construction</li>
+                <li><strong>Active</strong> → producing EP</li>
+                <li>
+                  <strong>Upgrading</strong> → temporarily paused for upgrade
+                </li>
+                <li>
+                  <strong>Inactive</strong> → no production until maintenance is
+                  restored
+                </li>
+              </ul>
+            </div>
 
-        <h3>Upgrade Behavior</h3>
-        <p>
-          Upgrade capability depends on how the factory started:
-        </p>
+            <div class="codex-mini-card">
+              <h3>Build Time</h3>
+              <ul>
+                <li>B1 → 1 day</li>
+                <li>B2 → 2 days</li>
+                <li>B3 → 3 days</li>
+                <li>B4 → 4 days</li>
+                <li>B5 → 5 days</li>
+              </ul>
+            </div>
+          </div>
+        </section>
 
-        <ul>
-          <li>L1:
+        <div class="codex-grid-2">
+          <section id="emp" class="codex-card-block">
+            <h2>EMP Utility</h2>
+            <p>EMP is the core internal utility resource used for:</p>
             <ul>
-              <li>Direct B4/B5 build allowed</li>
-              <li>If started B1/B2 → max upgrade B3</li>
+              <li>Factory setup</li>
+              <li>Upgrades</li>
+              <li>Maintenance</li>
+              <li>Extra blueprint minting</li>
             </ul>
-          </li>
+            <p>
+              EMP from packs is soulbound gameplay utility. EMP purchased
+              through the shop follows the fixed exchange reference of
+              <strong>100 EMP = 1 HIVE</strong>.
+            </p>
+          </section>
 
-          <li>L2:
+          <section id="ep" class="codex-card-block">
+            <h2>EP System</h2>
+            <p>
+              EP (Empire Power) measures the productive strength of your empire.
+            </p>
             <ul>
-              <li>Max 1 B5</li>
-              <li>If one B5 exists → other slot max B4</li>
-              <li>If both start low → both can go up to B4</li>
+              <li>Generated by active factories</li>
+              <li>Boosted by relics</li>
+              <li>Used to determine reward share</li>
             </ul>
-          </li>
-
-          <li>L3:
-            <ul>
-              <li>If one B5 → other 2 max B4</li>
-              <li>If all start low → 1 can reach B5, others B4</li>
-            </ul>
-          </li>
-        </ul>
-
-      </section>
-
-      <!-- BLUEPRINT -->
-      <section id="blueprint" class="codex-section">
-        <h2>Blueprints</h2>
-
-        <p>Blueprints define what industry can be built and are consumed during construction.</p>
-
-        <h3>Levels</h3>
-        <ul>
-          <li>B1 → Basic</li>
-          <li>B2 → Improved</li>
-          <li>B3 → Advanced</li>
-          <li>B4 → High</li>
-          <li>B5 → Elite</li>
-        </ul>
-
-        <h3>Extra Blueprint Mint</h3>
-        <p>
-          Allowed only when total blueprint count is lower than available slots.
-          EMP spent goes 100% to treasury.
-        </p>
-      </section>
-
-      <!-- FACTORY -->
-      <section id="factory" class="codex-section">
-        <h2>Factories</h2>
-
-        <p>
-          Factories are built using land + blueprint + EMP.
-        </p>
-
-        <h3>States</h3>
-        <ul>
-          <li>Building</li>
-          <li>Active</li>
-          <li>Upgrading</li>
-          <li>Inactive</li>
-        </ul>
-
-        <h3>Build Time</h3>
-        <ul>
-          <li>B1 → 1 day</li>
-          <li>B2 → 2 days</li>
-          <li>B3 → 3 days</li>
-          <li>B4 → 4 days</li>
-          <li>B5 → 5 days</li>
-        </ul>
-      </section>
-
-      <!-- EMP -->
-      <section id="emp" class="codex-section">
-        <h2>EMP</h2>
-
-        <p>
-          EMP is the core utility resource used for:
-        </p>
-
-        <ul>
-          <li>Building factories</li>
-          <li>Upgrades</li>
-          <li>Maintenance</li>
-          <li>Blueprint minting</li>
-        </ul>
-
-        <p>
-          EMP from packs is soulbound and intended for gameplay use.
-        </p>
-      </section>
-
-      <!-- RELIC -->
-      <section id="relic" class="codex-section">
-        <h2>Relics</h2>
-
-        <ul>
-          <li>+3% EP per relic</li>
-          <li>Max 2 counted</li>
-          <li>Total max boost = 6%</li>
-        </ul>
-
-        <h3>Special Ability</h3>
-        <p>
-          Relic holders can instantly upgrade factories by paying 25% extra cost
-          after required active days are completed.
-        </p>
-      </section>
-
-      <!-- WRIT -->
-      <section id="writ" class="codex-section">
-        <h2>Writ</h2>
-
-        <p>
-          Writ is a premium Genesis asset linked to Founder-level strategic value.
-          It represents special privilege within the ecosystem.
-        </p>
-      </section>
-
-      <!-- EP -->
-      <section id="ep" class="codex-section">
-        <h2>EP System</h2>
-
-        <p>
-          EP (Empire Power) represents total production strength.
-        </p>
-
-        <ul>
-          <li>Generated by active factories</li>
-          <li>Boosted by relics</li>
-          <li>Defines reward share</li>
-        </ul>
-
-        <p>
-          Production accumulates for maximum 7 days.
-        </p>
-      </section>
-
-      <!-- MAINTENANCE -->
-      <section id="maintenance" class="codex-section">
-        <h2>Maintenance</h2>
-
-        <ul>
-          <li>Cycle: 7 days</li>
-          <li>Cost: 5% of daily EP (rounded, no decimals)</li>
-          <li>Stops production if unpaid</li>
-          <li>No penalty beyond inactivity</li>
-        </ul>
-      </section>
-
-      <!-- UPGRADE -->
-      <section id="upgrade" class="codex-section">
-        <h2>Upgrades</h2>
-
-        <h3>Cost</h3>
-        <ul>
-          <li>B1 → B2: 50 EMP</li>
-          <li>B2 → B3: 100 EMP</li>
-          <li>B3 → B4: 200 EMP</li>
-          <li>B4 → B5: 400 EMP</li>
-        </ul>
-
-        <h3>Active Days Required</h3>
-        <ul>
-          <li>B1 → B2: 30 days</li>
-          <li>B2 → B3: 60 days</li>
-          <li>B3 → B4: 120 days</li>
-          <li>B4 → B5: 240 days</li>
-        </ul>
-      </section>
-
-      <!-- REWARD -->
-      <section id="reward" class="codex-section">
-        <h2>Rewards</h2>
-
-        <p>
-          Rewards are distributed based on EP share:
-        </p>
-
-        <div class="codex-flow">
-          Player Reward = (Player EP / Total EP) × Reward Pool
+            <p>
+              Production can accumulate for up to 7 days before claim efficiency
+              stops increasing.
+            </p>
+          </section>
         </div>
 
-        <ul>
-          <li>Max emission: 0.5% of treasury</li>
-          <li>Dynamic based on treasury health</li>
-          <li>No guaranteed returns</li>
-        </ul>
-      </section>
+        <section
+          id="maintenance"
+          class="codex-card-block codex-highlight-block"
+        >
+          <h2>
+            <svg class="codex-icon"><use href="#icon-maintenance"></use></svg>
+            Maintenance
+          </h2>
 
-      <!-- SHOP -->
-      <section id="shop" class="codex-section">
-        <h2>Shop</h2>
+          <div class="codex-grid-3">
+            <div class="codex-mini-card">
+              <h3>Cycle</h3>
+              <p>Each factory runs on a 7-day maintenance cycle.</p>
+            </div>
 
-        <ul>
-          <li>Buy sealed packs</li>
-          <li>Buy EMP (100 EMP = 1 HIVE)</li>
-          <li>Mint blueprint if eligible</li>
-        </ul>
-      </section>
+            <div class="codex-mini-card">
+              <h3>How Payment Works</h3>
+              <p>
+                Maintenance is paid factory-by-factory in EMP for a fixed 7-day
+                renewal. It is not a percentage claim on HIVE rewards.
+              </p>
+            </div>
 
-      <!-- MARKET -->
-      <section id="market" class="codex-section">
-        <h2>Marketplace</h2>
+            <div class="codex-mini-card">
+              <h3>Renewal Window</h3>
+              <p>
+                Renewal is allowed only in the final 2 days of the current
+                cycle, creating a practical maximum of 9 days of remaining
+                maintenance.
+              </p>
+            </div>
+          </div>
 
-        <ul>
-          <li>Tradable: EMP, Blueprint, Relic, Writ</li>
-          <li>Land trading in future phase</li>
-          <li>EMP fee: 3%</li>
-          <li>Other assets: 5%</li>
-          <li>Trades in HIVE</li>
-        </ul>
+          <ul>
+            <li>Factories stop producing when maintenance expires</li>
+            <li>No penalty beyond inactivity</li>
+            <li>Players must visit and renew factories individually</li>
+            <li>
+              Maintenance exists to support active empire management, not
+              passive automation
+            </li>
+          </ul>
+        </section>
 
-        <h3>EMP Rules</h3>
-        <ul>
-          <li>Minimum price: 75% floor</li>
-          <li>Must list in multiples of 100</li>
-        </ul>
-      </section>
+        <section id="upgrade" class="codex-card-block">
+          <h2>
+            <svg class="codex-icon">
+              <use href="#icon-upgrade"></use>
+            </svg>
+            Upgrades
+          </h2>
 
-      <!-- P2P -->
-      <section id="p2p" class="codex-section">
-        <h2>P2P Transfer</h2>
+          <div class="codex-grid-2">
+            <div class="codex-mini-card">
+              <h3>Upgrades cost</h3>
+              <ul>
+                <li>B1 → B2: 50 EMP</li>
+                <li>B2 → B3: 100 EMP</li>
+                <li>B3 → B4: 200 EMP</li>
+                <li>B4 → B5: 400 EMP</li>
+              </ul>
+            </div>
 
-        <ul>
-          <li>No platform fee</li>
-          <li>Direct transfer allowed</li>
-          <li>Platform not responsible for off-market deals</li>
-        </ul>
-      </section>
+            <div class="codex-mini-card">
+              <h3>Required Active Days</h3>
+              <ul>
+                <li>B1 → B2: 30 days</li>
+                <li>B2 → B3: 60 days</li>
+                <li>B3 → B4: 120 days</li>
+                <li>B4 → B5: 240 days</li>
+              </ul>
+            </div>
+          </div>
+        </section>
 
-      <!-- START -->
-      <section id="start" class="codex-section">
-        <h2>New Player Guide</h2>
+        <div class="codex-grid-2">
+          <section id="reward" class="codex-card-block">
+            <h2>
+              <svg class="codex-icon"><use href="#icon-reward"></use></svg>
+              Rewards
+            </h2>
+            <p>Rewards are distributed by EP share:</p>
+            <div class="codex-flow-box">
+              Player Reward = (Player EP / Total EP) × Reward Pool
+            </div>
+            <ul>
+              <li>Maximum emission can reach up to 0.5% of treasury</li>
+              <li>Actual emission is adjusted by treasury health</li>
+              <li>No guaranteed return is promised</li>
+            </ul>
+          </section>
 
-        <ul>
-          <li>Buy a Genesis Pack</li>
-          <li>Open and review assets</li>
-          <li>Build first factory</li>
-          <li>Maintain production</li>
-          <li>Upgrade strategically</li>
-          <li>Expand empire</li>
-        </ul>
-      </section>
-    </div>
-  </div>
-</div>
-</main>
+          <section id="relic" class="codex-card-block">
+            <h2>Relics</h2>
+            <ul>
+              <li>+3% EP per relic</li>
+              <li>Maximum 2 counted</li>
+              <li>Total relic boost cap = 6%</li>
+            </ul>
+            <p>
+              Relics are rare strategic boosters and can also unlock premium
+              convenience such as instant upgrade after active-day requirements
+              are met.
+            </p>
+          </section>
+        </div>
 
-<footer class="footer">
-  MydEmpire • Genesis Era • Codex
-</footer>
+        <div class="codex-grid-3">
+          <section id="writ" class="codex-card-block">
+            <h2>Writ</h2>
+            <p>
+              Writ is a Genesis strategic asset connected to Founder-level
+              status and long-term ecosystem privilege.
+            </p>
+          </section>
 
-<script src="js/appbar.js"></script>
+          <section id="shop" class="codex-card-block">
+            <h2>Shop</h2>
+            <ul>
+              <li>Buy sealed packs</li>
+              <li>Buy EMP</li>
+              <li>Mint eligible extra blueprints</li>
+            </ul>
+          </section>
 
-</body>
+          <section id="market" class="codex-card-block">
+            <h2>Marketplace</h2>
+            <ul>
+              <li>Tradable: EMP, Blueprint, Relic, Writ</li>
+              <li>Land trading in a future phase</li>
+              <li>EMP fee: 3%</li>
+              <li>Other assets: 5%</li>
+              <li>Trades in HIVE</li>
+            </ul>
+          </section>
+        </div>
+
+        <div class="codex-grid-2">
+          <section id="p2p" class="codex-card-block">
+            <h2>P2P Transfer</h2>
+            <ul>
+              <li>No platform fee</li>
+              <li>Direct transfer allowed</li>
+              <li>Platform is not responsible for off-market deals</li>
+            </ul>
+          </section>
+
+          <section id="start" class="codex-card-block">
+            <h2>New Player Guide</h2>
+            <ol>
+              <li>Buy a Genesis pack</li>
+              <li>Open and review your assets</li>
+              <li>Build your first factory</li>
+              <li>Maintain it regularly</li>
+              <li>Upgrade when eligible</li>
+              <li>Expand your empire slot by slot</li>
+            </ol>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">MydEmpire • Genesis Era • Codex</footer>
+
+    <script src="js/appbar.js"></script>
+  </body>
 </html>
