@@ -8380,3 +8380,8 @@ body {
 .global-footer{
   margin-top:60px;
 }
+.global-footer{
+  background: transparent;
+  text-align: center;
+  padding: 28px 0 50px;
+}
