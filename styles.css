@@ -8365,3 +8365,15 @@ body {
   stroke-width:2;
   fill:none;
 }
+.footer-icons{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:35px;
+  flex-direction:row;
+}
+.footer-social-icon:hover{
+  transform: translateY(-4px) scale(1.15);
+  opacity:1;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+}
