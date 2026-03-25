@@ -397,7 +397,7 @@ details[open] .faq-chevron {
 
 .site-footer {
   border-top: 1px solid var(--border-soft);
-  background: #ffffff;
+  background: transparent;
   padding: 14px 16px 18px;
   font-size: 14px;
   color: var(--text-muted);
