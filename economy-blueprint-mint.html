@@ -144,9 +144,15 @@
   </div>
 </main>
 
-<footer class="site-footer">
-  MydEmpire — Economic Paper • Genesis Era
-</footer>
+<div id="global-footer"></div>
+
+<script>
+  fetch("footer.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("global-footer").innerHTML = html;
+    });
+</script>
 
 </body>
 </html>
