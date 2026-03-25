@@ -255,10 +255,19 @@
       <button id="appbarLogoutBtn" type="button" class="appbar-dropdown-link">Logout</button>
     </div>
   </div>
-</div>
-  <script src="js/appbar.js"></script>
- 
+  </div>
+</main>
 
+<script src="js/appbar.js"></script>
 
+<div id="global-footer"></div>
+
+<script>
+  fetch("footer.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("global-footer").innerHTML = html;
+    });
+</script>
 </body>
 </html>
