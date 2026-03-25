@@ -8356,3 +8356,12 @@ body {
   stroke-width:2;
   fill:none;
 }
+.ui-icon{
+  width:22px;
+  height:22px;
+  vertical-align:-4px;
+  margin-right:6px;
+  stroke:#4a6cff;
+  stroke-width:2;
+  fill:none;
+}
