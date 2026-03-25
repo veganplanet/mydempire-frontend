@@ -3392,5 +3392,14 @@
         </div>
       </div>
     </div>
+    <div id="global-footer"></div>
+
+<script>
+  fetch("footer.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("global-footer").innerHTML = html;
+    });
+</script>
   </body>
 </html>
