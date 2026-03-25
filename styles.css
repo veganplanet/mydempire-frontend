@@ -395,14 +395,7 @@ details[open] .faq-chevron {
 /* Footer         */
 /* ============== */
 
-.site-footer {
-  border-top: 1px solid var(--border-soft);
-  background: transparent;
-  padding: 14px 16px 18px;
-  font-size: 14px;
-  color: var(--text-muted);
-  text-align: center;
-}
+
 
 /* ============== */
 /* Responsive     */
@@ -792,14 +785,7 @@ strong {
 
 /* Footer */
 
-.site-footer {
-  border-top: 1px solid var(--border-soft);
-  background: #ffffff;
-  padding: 14px 16px 18px;
-  font-size: 14px;
-  color: var(--text-muted);
-  text-align: center;
-}
+
 
 /* Responsive */
 
@@ -1248,6 +1234,7 @@ body{
 .footer-brand-center{
   width:100%;
   display:flex;
+  background: transparent;
   flex-direction:column;
   align-items:center;
   justify-content:center;
