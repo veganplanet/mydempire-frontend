@@ -1210,7 +1210,7 @@ body{
 }
 .industry-slide{
   display:none;
-  background:#ffffff;
+  background:transparent;
   border:1px solid var(--border);
   border-radius:20px;
   padding:14px;
