@@ -204,28 +204,14 @@ function setupUniversalNavbar() {
 
 </script>
 <script src="js/appbar.js"></script>
-  <footer class="global-footer">
+  <div id="global-footer"></div>
 
-  <div class="footer-icons">
-
-    <a href="https://discord.gg/npbnDpUe" target="_blank" rel="noopener noreferrer">
-      <img src="assets/discord.svg" alt="Discord" class="footer-social-icon">
-    </a>
-
-    <a href="https://x.com/my_d_empire" target="_blank" rel="noopener noreferrer">
-      <img src="assets/x.png" alt="X" class="footer-social-icon">
-    </a>
-
-    <a href="https://hive.blog/@mydempire" target="_blank" rel="noopener noreferrer">
-      <img src="assets/hive.png" alt="Hive Blog" class="footer-social-icon">
-    </a>
-
-  </div>
-
-  <div class="footer-copy">
-    © 2026 MydEmpire
-  </div>
-
-</footer>
+<script>
+  fetch("footer.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("global-footer").innerHTML = html;
+    });
+</script>
 </body>
 </html>
