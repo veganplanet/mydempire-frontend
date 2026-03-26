@@ -9165,10 +9165,10 @@ input[type="range"]::-moz-range-thumb{
     justify-content:center;
   }
 
-  .pack-stage-image-wrap{
-    width:180px;
-    height:180px;
-  }
+.pack-stage-image-wrap{
+  width:420px;
+  height:260px;
+}
 
   .pack-stage-image{
     width:126px;
