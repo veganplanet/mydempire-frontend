@@ -1797,12 +1797,13 @@ syncPackOpenUI();
         });
 
         if (!revealItems.length) {
-          stageEl.innerHTML = `<div class="empty">No drops returned.</div>`;
+          stageEl.innerHTML = `
+          <div class="empty">No drops returned.</div>`;
           return;
         }
 
-        stageEl.innerHTML = `
-    <div class="pack-reveal-wrap">
+       stageEl.innerHTML = `
+  <div class="pack-reveal-wrap">
       <div class="pack-opened-banner">Pack Opened</div>
 
       <div class="pack-reveal-progress">
