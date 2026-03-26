@@ -8372,3 +8372,67 @@ body {
   text-align: center;
   padding: 28px 0 50px;
 }
+.leader-name{
+  font-size:22px;
+  font-weight:700;
+  color:#1b2538;
+}
+
+.leader-title{
+  font-size:14px;
+  font-weight:500;
+  color:#6c7a92;
+  margin-top:4px;
+}
+.leaderboard-name{
+  font-size: 20px;
+  font-weight: 800;
+  color: #16233b;
+  line-height: 1.1;
+}
+
+.leaderboard-title{
+  font-size: 13px;
+  font-weight: 600;
+  color: #7a869a;
+  margin-top: 4px;
+}.leaderboard-title{
+  font-size: 13px;
+  font-weight: 600;
+  color: #7a869a;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.leaderboard-title-icon{
+  width: 16px;
+  height: 16px;
+  stroke: #6b7cff;
+  stroke-width: 2.2;
+  fill: none;
+  flex-shrink: 0;
+  display: inline-block;
+}
+.leaderboard-title{
+  font-size: 13px;
+  font-weight: 600;
+  color: #7a869a;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.leaderboard-title-icon{
+  flex-shrink: 0;
+}
+.leaderboard-rank-icon{
+  width:32px;
+  height:32px;
+  stroke:#f4a62a;
+  stroke-width:2.4;
+  fill:none;
+  display:block;
+}

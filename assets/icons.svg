@@ -103,3 +103,36 @@
 </symbol>
 
 </svg>
+<!-- Emperor -->
+<symbol id="icon-emperor-rank" viewBox="0 0 24 24">
+  <path d="M4 18h16l-1.5-8-4.5 3-2-6-2 6-4.5-3z"></path>
+  <line x1="4" y1="18" x2="20" y2="18"></line>
+</symbol>
+
+<!-- Grand Lord -->
+<symbol id="icon-grand-lord-rank" viewBox="0 0 24 24">
+  <path d="M4 18h16"></path>
+  <path d="M6 18V9l6-4 6 4v9"></path>
+  <path d="M9 18v-5h6v5"></path>
+</symbol>
+
+<!-- Industrial Magnate -->
+<symbol id="icon-magnate-rank" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="4"></circle>
+  <path d="M12 3v3"></path>
+  <path d="M12 18v3"></path>
+  <path d="M3 12h3"></path>
+  <path d="M18 12h3"></path>
+  <path d="M5.6 5.6l2.1 2.1"></path>
+  <path d="M16.3 16.3l2.1 2.1"></path>
+  <path d="M18.4 5.6l-2.1 2.1"></path>
+  <path d="M7.7 16.3l-2.1 2.1"></path>
+</symbol>
+
+<!-- Empire Builder -->
+<symbol id="icon-builder-rank" viewBox="0 0 24 24">
+  <path d="M3 19h18"></path>
+  <rect x="5" y="11" width="4" height="8"></rect>
+  <rect x="10" y="8" width="4" height="11"></rect>
+  <rect x="15" y="13" width="4" height="6"></rect>
+</symbol>

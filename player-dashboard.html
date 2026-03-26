@@ -199,20 +199,20 @@
           <div class="summary-grid snapshot-grid">
             <div class="summary-card card-emp">
               <div class="summary-label">
-  <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-emp"></use>
-  </svg>
-  EMP Balance
-</div>
+                <svg class="ui-icon">
+                  <use href="assets/icons.svg#icon-emp"></use>
+                </svg>
+                EMP Balance
+              </div>
               <div class="summary-value" id="summary-emp-balance">0</div>
               <div class="summary-sub">Total EMP you currently own</div>
             </div>
 
             <div class="summary-card card-land">
               <div class="summary-label">
-                 <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-land"></use>
-  </svg>Lands Owned
+                <svg class="ui-icon">
+                  <use href="assets/icons.svg#icon-land"></use></svg
+                >Lands Owned
               </div>
               <div class="summary-value" id="summary-lands-total">0</div>
               <div class="summary-sub" id="summary-lands-breakdown">
@@ -222,9 +222,9 @@
 
             <div class="summary-card card-factory">
               <div class="summary-label">
-                 <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-factory"></use>
-  </svg>Factories
+                <svg class="ui-icon">
+                  <use href="assets/icons.svg#icon-factory"></use></svg
+                >Factories
               </div>
               <div class="summary-value" id="summary-factories-total">0</div>
               <div class="summary-sub" id="summary-factories-breakdown">
@@ -235,8 +235,8 @@
             <div class="summary-card card-production">
               <div class="summary-label">
                 <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-ep"></use>
-  </svg>Production
+                  <use href="assets/icons.svg#icon-ep"></use></svg
+                >Production
               </div>
               <div class="summary-value" id="summary-production-rate">
                 0 EP/day
@@ -251,9 +251,9 @@
 
             <div class="summary-card card-ep">
               <div class="summary-label">
-               <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-ep"></use>
-  </svg>Empire Accumulated EP
+                <svg class="ui-icon">
+                  <use href="assets/icons.svg#icon-ep"></use></svg
+                >Empire Accumulated EP
               </div>
               <div class="summary-value" id="summary-total-empire-ep">0</div>
               <div class="summary-sub">
@@ -264,8 +264,8 @@
             <div class="summary-card card-reward">
               <div class="summary-label">
                 <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-reward"></use>
-  </svg>Claimable HIVE
+                  <use href="assets/icons.svg#icon-reward"></use></svg
+                >Claimable HIVE
               </div>
               <div class="summary-value" id="summary-claimable-hive">0.000</div>
               <button id="claim-reward-btn" class="secondary-btn">
@@ -282,8 +282,8 @@
             <div class="summary-card card-wallet">
               <div class="summary-label">
                 <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-wallet"></use>
-  </svg>Wallet HIVE
+                  <use href="assets/icons.svg#icon-wallet"></use></svg
+                >Wallet HIVE
               </div>
               <div class="summary-value" id="summary-wallet-hive">0.000</div>
               <div class="summary-sub">Claimed reward balance</div>
@@ -300,8 +300,8 @@
             <div class="summary-card card-withdraw">
               <div class="summary-label">
                 <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-withdraw"></use>
-  </svg>Withdraw Status
+                  <use href="assets/icons.svg#icon-withdraw"></use></svg
+                >Withdraw Status
               </div>
               <div class="summary-value" id="summary-withdraw-status">
                 Not Ready
@@ -313,8 +313,8 @@
             <div class="summary-card card-lifetime">
               <div class="summary-label">
                 <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-ep"></use>
-  </svg>Lifetime EP
+                  <use href="assets/icons.svg#icon-ep"></use></svg
+                >Lifetime EP
               </div>
               <div class="summary-value" id="lifetime-ep">0</div>
               <div class="summary-sub">All-time empire production</div>
@@ -322,8 +322,8 @@
             <div class="summary-card card-relic">
               <div class="summary-label">
                 <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-relic"></use>
-  </svg>Relic Boost
+                  <use href="assets/icons.svg#icon-relic"></use></svg
+                >Relic Boost
               </div>
               <div class="summary-value" id="summary-relic-boost">0%</div>
               <div class="summary-sub" id="summary-relic-count">
@@ -334,8 +334,8 @@
             <div class="summary-card card-writ">
               <div class="summary-label">
                 <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-writ"></use>
-  </svg>WRITs
+                  <use href="assets/icons.svg#icon-writ"></use></svg
+                >WRITs
               </div>
               <div class="summary-value" id="summary-writ-count">0</div>
               <div class="summary-sub">
@@ -802,7 +802,7 @@
       }
       async function loadEmperorLeaderboard() {
         try {
-          const res = await fetch("/leaderboard/emperors");
+          const res = await fetch(apiUrl("/leaderboard/emperors"));
           const data = await res.json();
 
           const container = document.getElementById("emperor-leaderboard-list");
@@ -814,10 +814,31 @@
             return;
           }
           function getPlayerTitle(rank) {
-            if (rank === 1) return "👑 Emperor";
-            if (rank <= 5) return "🏛 Grand Lord";
-            if (rank <= 20) return "⚙ Industrial Magnate";
-            return "🏗 Empire Builder";
+            if (rank === 1) {
+              return {
+                title: "Emperor",
+                icon: "icon-emperor-rank",
+              };
+            }
+
+            if (rank <= 5) {
+              return {
+                title: "Grand Lord",
+                icon: "icon-grand-lord-rank",
+              };
+            }
+
+            if (rank <= 20) {
+              return {
+                title: "Industrial Magnate",
+                icon: "icon-magnate-rank",
+              };
+            }
+
+            return {
+              title: "Empire Builder",
+              icon: "icon-builder-rank",
+            };
           }
           let html = `<div class="leaderboard-list">`;
 
@@ -830,14 +851,48 @@
                   : index === 2
                     ? "🥉"
                     : `#${index + 1}`;
-            const title = getPlayerTitle(index + 1);
+
+            const titleData = getPlayerTitle(index + 1);
+
             html += `
     <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""}">
-      <div class="leaderboard-rank">${rankLabel}</div>
-     <div class="leaderboard-player">
-  ${row.username}
-  <div class="leaderboard-title">${title}</div>
+      <div class="leaderboard-rank">
+  ${
+    index === 0
+      ? `
+        <svg class="leaderboard-rank-icon" viewBox="0 0 24 24">
+  <circle cx="12" cy="15" r="4"></circle>
+  <path d="M9 3l3 6 3-6"></path>
+</svg>
+      `
+      : index === 1
+        ? "🥈"
+        : index === 2
+          ? "🥉"
+          : `#${index + 1}`
+  }
 </div>
+      <div class="leaderboard-player">
+        <div class="leaderboard-name">${row.username}</div>
+        <div class="leaderboard-title">
+  <svg
+    class="leaderboard-title-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    stroke="#6b7cff"
+    stroke-width="2.2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M4 18h16l-1.5-8-4.5 3-2-6-2 6-4.5-3z"></path>
+    <line x1="4" y1="18" x2="20" y2="18"></line>
+  </svg>
+  ${titleData.title}
+</div>
+      </div>
       <div class="leaderboard-score">${Number(row.lifetime_ep).toFixed(2)} EP</div>
     </div>
   `;
@@ -863,13 +918,13 @@
 
             if (foundIndex >= 0) {
               const rank = foundIndex + 1;
-              const title = getPlayerTitle(rank);
+              const titleData = getPlayerTitle(rank);
               const ep = Number(data.leaders[foundIndex].lifetime_ep).toFixed(
                 2,
               );
 
               yourRankEl.style.display = "block";
-              yourRankEl.textContent = `Your Rank: #${rank} • ${title} • ${ep} EP`;
+              yourRankEl.textContent = `Your Rank: #${rank} • ${titleData.title} • ${ep} EP`;
             } else {
               yourRankEl.style.display = "none";
             }
@@ -880,7 +935,7 @@
       }
       async function loadIndustryLeaders() {
         try {
-          const res = await fetch("/leaderboard/industries");
+          const res = await fetch(apiUrl("/leaderboard/industries"));
           const data = await res.json();
 
           const container = document.getElementById(
@@ -902,22 +957,23 @@
             { label: "Supermarket", key: "supermarket" },
           ];
 
-          let html = "";
+          let html = `<div class="leaderboard-list leaderboard-industry-list">`;
 
           items.forEach((item) => {
             const leader = data.leaders[item.key];
 
             html += `
-        <div class="leaderboard-row">
-          <div class="leaderboard-rank">${item.label}</div>
-          <div class="leaderboard-player">${leader?.username ?? "—"}</div>
-          <div class="leaderboard-score">${
-            leader ? `${Number(leader.ep).toFixed(2)} EP` : "No leader yet"
-          }</div>
-        </div>
-      `;
+  <div class="leaderboard-row">
+    <div class="leaderboard-rank">${item.label}</div>
+    <div class="leaderboard-player">${leader?.username ?? "—"}</div>
+    <div class="leaderboard-score">
+      ${leader ? `${Number(leader.ep).toFixed(2)} EP` : "No leader yet"}
+    </div>
+  </div>
+`;
           });
 
+          html += `</div>`;
           container.innerHTML = html;
         } catch (err) {
           console.error("Industry leaderboard error:", err);
@@ -3394,12 +3450,12 @@
     </div>
     <div id="global-footer"></div>
 
-<script>
-  fetch("footer.html")
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById("global-footer").innerHTML = html;
-    });
-</script>
+    <script>
+      fetch("footer.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("global-footer").innerHTML = html;
+        });
+    </script>
   </body>
 </html>
