@@ -1238,7 +1238,17 @@ openBtn.onclick = function () {
   const count = Number(slider.value || 1);
   console.log("OPEN BUTTON WORKING, count =", count);
 
-  openPackFromPacksPage(count);
+  const stageImage = document.querySelector(".pack-stage-image");
+
+  if (stageImage) {
+    stageImage.style.animation = "none";
+    stageImage.offsetHeight; // force reflow
+    stageImage.style.animation = "mdePackBurst 0.45s ease";
+  }
+
+  setTimeout(() => {
+    openPackFromPacksPage(count);
+  }, 220);
 };
 
 syncPackOpenUI();
