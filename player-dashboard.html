@@ -1823,31 +1823,31 @@ syncPackOpenUI();
     </div>
   `;
 
-        let currentIndex = 0;
-        const singleViewEl = document.getElementById("pack-reveal-single-view");
-        const counterEl = document.getElementById("pack-reveal-counter");
-        const nextBtn = document.getElementById("pack-reveal-next-btn");
-        const thumbsEl = document.getElementById("pack-reveal-thumbs");
+       let currentIndex = 0;
+const singleViewEl = document.getElementById("pack-reveal-single-view");
+const counterEl = document.getElementById("pack-reveal-counter");
+const nextBtn = document.getElementById("pack-reveal-next-btn");
+const thumbsEl = document.getElementById("pack-reveal-thumbs");
 
-        function renderThumbs() {
-          thumbsEl.innerHTML = revealItems
-            .map((_, i) => {
-              const active = i === currentIndex ? "active" : "";
-              const opened = i <= currentIndex ? "opened" : "";
-              return `<button type="button" class="pack-reveal-thumb ${active} ${opened}" data-index="${i}">${i + 1}</button>`;
-            })
-            .join("");
+function renderThumbs() {
+  thumbsEl.innerHTML = revealItems
+    .map((_, i) => {
+      const active = i === currentIndex ? "active" : "";
+      const opened = i <= currentIndex ? "opened" : "";
+      return `<button type="button" class="pack-reveal-thumb ${active} ${opened}" data-index="${i}">${i + 1}</button>`;
+    })
+    .join("");
 
-          thumbsEl.querySelectorAll(".pack-reveal-thumb").forEach((btn) => {
-            btn.addEventListener("click", () => {
-              const idx = Number(btn.dataset.index);
-              currentIndex = idx;
-              updateReveal();
-            });
-          });
-        }
+  thumbsEl.querySelectorAll(".pack-reveal-thumb").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const idx = Number(btn.dataset.index);
+      currentIndex = idx;
+      updateReveal();
+    });
+  });
+}
 
-     function updateReveal() {
+function updateReveal() {
   singleViewEl.innerHTML = revealItems[currentIndex];
 
   const insertedItem = singleViewEl.querySelector(".pack-reveal-item");
@@ -1879,8 +1879,7 @@ nextBtn.addEventListener("click", () => {
   }
 });
 
-updateReveal();
-      async function openPack(username, pack_id) {
+updateReveal();      async function openPack(username, pack_id) {
         if (!confirm(`Open Pack #${pack_id}?`)) return;
 
         try {
