@@ -1173,37 +1173,39 @@
 
           const maxOpen = Math.min(5, total);
 
-         gridEl.innerHTML = `
-  <div class="sealed-pack-main">
-    <div class="sealed-pack-main-media">
-      <img src="assets/pack.png" class="sealed-pack-main-img" alt="Genesis Pack">
-    </div>
+        gridEl.innerHTML = `
+  <div class="pack-opening-stage">
+    <div class="pack-stage-glow"></div>
 
-    <div class="sealed-pack-main-content">
-      <div class="sealed-pack-main-top">
-        <div class="sealed-pack-main-title">Genesis Pack</div>
-        <div class="sealed-pack-chip">Available <strong>${total}</strong></div>
-        <div class="sealed-pack-chip">Open <strong><span id="pack-open-count-display">1</span></strong></div>
+    <div class="pack-stage-card">
+      <div class="pack-stage-top">
+        <div class="pack-stage-badge">Genesis Pack</div>
+        <div class="pack-stage-stock">Available: <strong>${total}</strong></div>
       </div>
 
-      <div class="sealed-pack-main-sub">
-        Open your sealed Genesis packs and reveal the core assets of your empire.
+      <div class="pack-stage-image-wrap">
+        <img src="assets/pack.png" class="pack-stage-image" alt="Genesis Pack">
       </div>
 
-      <div class="pack-open-label">
-        <span>Packs to Open</span>
-        <span class="pack-open-value" id="pack-open-count-display-secondary">1</span>
+      <div class="pack-stage-title">Open Your Pack</div>
+      <div class="pack-stage-subtitle">
+        Reveal the core assets of your empire from sealed Genesis packs.
       </div>
 
-      <input
-        type="range"
-        id="pack-open-count-slider"
-        min="1"
-        max="${maxOpen}"
-        value="1"
-      >
+      <div class="pack-stage-control">
+        <div class="pack-stage-count-row">
+          <span>Packs to Open</span>
+          <span id="pack-open-count-display">1</span>
+        </div>
 
-      <div class="pack-open-btn-wrap">
+        <input
+          type="range"
+          id="pack-open-count-slider"
+          min="1"
+          max="${maxOpen}"
+          value="1"
+        >
+
         <button
           type="button"
           id="open-selected-packs-btn"
