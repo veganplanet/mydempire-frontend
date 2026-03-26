@@ -3241,11 +3241,15 @@ updateReveal();
           };
 
           console.log("TEST BUILD", payload);
+          let buildCostEMP = 40;
+
+if (landTier === "L2") buildCostEMP = 80;
+if (landTier === "L3") buildCostEMP = 150;
 const confirmed = confirm(
-  `Build this factory?\n\n` +
-  `This will deduct EMP from your balance.\n` +
+  `Build ${factoryName}?\n\n` +
+  `Factory setup cost: ${buildCostEMP} EMP\n` +
   `Blueprint will be consumed permanently.\n\n` +
-  `Press OK to continue or Cancel to stop.`
+  `Press OK to start construction or Cancel to stop.`
 );
 
 if (!confirmed) return;
