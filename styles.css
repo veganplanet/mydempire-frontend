@@ -9260,3 +9260,6 @@ input[type="range"]::-moz-range-thumb{
     transform:translateY(0) scale(1);
   }
 }
+#pack-reveal-single-view{
+  transition: all 0.35s cubic-bezier(.2,.8,.2,1);
+}
