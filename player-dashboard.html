@@ -3241,7 +3241,15 @@ updateReveal();
           };
 
           console.log("TEST BUILD", payload);
+const confirmed = confirm(
+  `Build this factory?\n\n` +
+  `This will deduct ${buildCostEMP} EMP from your balance.\n` +
+  `Blueprint will be consumed permanently.\n` +
+  `Build time: ${buildDaysText}\n\n` +
+  `Press OK to continue or Cancel to stop.`
+);
 
+if (!confirmed) return;
           const res = await fetch(apiUrl("/build-factory"), {
             method: "POST",
             headers: {
