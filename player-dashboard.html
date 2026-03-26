@@ -3243,17 +3243,23 @@ window.selectedBuildLandTier = landTier;
             factory_name: nameInput.value.trim(),
           };
 
-          console.log("TEST BUILD", payload);
-          let buildCostEMP = 40;
+         console.log("TEST BUILD", payload);
+console.log("selectedBuildLandTier =", window.selectedBuildLandTier);
 
-if (window.selectedBuildLandTier === "L2") buildCostEMP = 80;
-if (window.selectedBuildLandTier === "L3") buildCostEMP = 150;
+let buildCostEMP = 40;
+const tierValue = String(window.selectedBuildLandTier || "").toUpperCase();
+
+if (tierValue === "L2" || tierValue === "2") buildCostEMP = 80;
+if (tierValue === "L3" || tierValue === "3") buildCostEMP = 150;
+
 const confirmed = confirm(
   `Build ${factoryName}?\n\n` +
   `Factory setup cost: ${buildCostEMP} EMP\n` +
   `Blueprint will be consumed permanently.\n\n` +
   `Press OK to start construction or Cancel to stop.`
 );
+
+if (!confirmed) return;
 
 if (!confirmed) return;
           const res = await fetch(apiUrl("/build-factory"), {
