@@ -2640,10 +2640,13 @@ updateReveal();
 
         slots.forEach((slot) => {
           slot.addEventListener("click", () => {
-            const landId = slot.dataset.buildLandId;
-            if (!landId) return;
+           const landId = slot.dataset.buildLandId;
+const landTier = slot.dataset.landTier;
 
-            window.selectedBuildLandId = landId;
+if (!landId) return;
+
+window.selectedBuildLandId = landId;
+window.selectedBuildLandTier = landTier;
 
             setActiveTab("blueprints");
 
@@ -3243,8 +3246,8 @@ updateReveal();
           console.log("TEST BUILD", payload);
           let buildCostEMP = 40;
 
-if (landTier === "L2") buildCostEMP = 80;
-if (landTier === "L3") buildCostEMP = 150;
+if (window.selectedBuildLandTier === "L2") buildCostEMP = 80;
+if (window.selectedBuildLandTier === "L3") buildCostEMP = 150;
 const confirmed = confirm(
   `Build ${factoryName}?\n\n` +
   `Factory setup cost: ${buildCostEMP} EMP\n` +
