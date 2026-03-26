@@ -1847,7 +1847,7 @@ syncPackOpenUI();
           });
         }
 
-      function updateReveal() {
+     function updateReveal() {
   singleViewEl.innerHTML = revealItems[currentIndex];
 
   const insertedItem = singleViewEl.querySelector(".pack-reveal-item");
@@ -1871,6 +1871,15 @@ syncPackOpenUI();
 
   renderThumbs();
 }
+
+nextBtn.addEventListener("click", () => {
+  if (currentIndex < revealItems.length - 1) {
+    currentIndex += 1;
+    updateReveal();
+  }
+});
+
+updateReveal();
       async function openPack(username, pack_id) {
         if (!confirm(`Open Pack #${pack_id}?`)) return;
 
