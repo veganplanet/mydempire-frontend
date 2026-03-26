@@ -1848,7 +1848,17 @@ syncPackOpenUI();
         }
 
         function updateReveal() {
-          singleViewEl.innerHTML = revealItems[currentIndex];
+          singleViewEl.style.opacity = "0";
+singleViewEl.style.transform = "scale(0.85)";
+
+setTimeout(() => {
+  singleViewEl.innerHTML = revealItems[currentIndex];
+
+  requestAnimationFrame(() => {
+    singleViewEl.style.opacity = "1";
+    singleViewEl.style.transform = "scale(1)";
+  });
+}, 120);
           counterEl.textContent = `${currentIndex + 1} / ${revealItems.length}`;
 
           if (currentIndex >= revealItems.length - 1) {
