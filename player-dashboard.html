@@ -1178,25 +1178,37 @@
 
           const maxOpen = Math.min(5, total);
 
-          gridEl.innerHTML = `
-      <div class="pack-open-simple">
-        <img src="assets/pack.png" class="pack-open-simple-img" alt="Genesis Pack">
+         gridEl.innerHTML = `
+  <div class="sealed-pack-main">
+    <div class="sealed-pack-main-media">
+      <img src="assets/pack.png" class="sealed-pack-main-img" alt="Genesis Pack">
+    </div>
 
-        <div class="pack-open-simple-title">Genesis Pack</div>
-        <div class="pack-open-simple-count">${total} Packs Available</div>
+    <div class="sealed-pack-main-content">
+      <div class="sealed-pack-main-top">
+        <div class="sealed-pack-main-title">Genesis Pack</div>
+        <div class="sealed-pack-chip">Available <strong>${total}</strong></div>
+        <div class="sealed-pack-chip">Open <strong><span id="pack-open-count-display">1</span></strong></div>
+      </div>
 
-        <label for="pack-open-count-slider" class="pack-open-simple-label">
-          Packs to Open: <span id="pack-open-count-display">1</span>
-        </label>
+      <div class="sealed-pack-main-sub">
+        Open your sealed Genesis packs and reveal the core assets of your empire.
+      </div>
 
-        <input
-          type="range"
-          id="pack-open-count-slider"
-          min="1"
-          max="${maxOpen}"
-          value="1"
-        >
+      <div class="pack-open-label">
+        <span>Packs to Open</span>
+        <span class="pack-open-value" id="pack-open-count-display-secondary">1</span>
+      </div>
 
+      <input
+        type="range"
+        id="pack-open-count-slider"
+        min="1"
+        max="${maxOpen}"
+        value="1"
+      >
+
+      <div class="pack-open-btn-wrap">
         <button
           type="button"
           id="open-selected-packs-btn"
@@ -1205,28 +1217,34 @@
           Open 1 Pack
         </button>
       </div>
-    `;
+    </div>
+  </div>
+`;
 
-          const slider = document.getElementById("pack-open-count-slider");
-          const display = document.getElementById("pack-open-count-display");
-          const openBtn = document.getElementById("open-selected-packs-btn");
+        const slider = document.getElementById("pack-open-count-slider");
+const display = document.getElementById("pack-open-count-display");
+const displaySecondary = document.getElementById("pack-open-count-display-secondary");
+const openBtn = document.getElementById("open-selected-packs-btn");
 
-          function syncPackOpenUI() {
-            const count = Number(slider.value || 1);
-            display.textContent = count;
-            openBtn.textContent = `Open ${count} Pack${count === 1 ? "" : "s"}`;
-          }
+function syncPackOpenUI() {
+  const count = Number(slider.value || 1);
 
-          slider.addEventListener("input", syncPackOpenUI);
+  if (display) display.textContent = count;
+  if (displaySecondary) displaySecondary.textContent = count;
 
-          openBtn.onclick = function () {
-            const count = Number(slider.value || 1);
-            console.log("OPEN BUTTON WORKING, count =", count);
+  openBtn.textContent = `Open ${count} Pack${count === 1 ? "" : "s"}`;
+}
 
-            openPackFromPacksPage(count);
-          };
+slider.addEventListener("input", syncPackOpenUI);
 
-          syncPackOpenUI();
+openBtn.onclick = function () {
+  const count = Number(slider.value || 1);
+  console.log("OPEN BUTTON WORKING, count =", count);
+
+  openPackFromPacksPage(count);
+};
+
+syncPackOpenUI();
         } catch (err) {
           console.error("Failed to load packs:", err);
         }
