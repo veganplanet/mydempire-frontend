@@ -9263,3 +9263,25 @@ input[type="range"]::-moz-range-thumb{
 #pack-reveal-single-view{
   transition: all 0.35s cubic-bezier(.2,.8,.2,1);
 }
+
+.pack-reveal-item.reveal-pop{
+  animation: packRevealPop 0.45s cubic-bezier(.22,.9,.24,1);
+}
+
+@keyframes packRevealPop{
+  0%{
+    opacity:0;
+    transform:scale(0.82) translateY(18px);
+    filter:blur(2px);
+  }
+  60%{
+    opacity:1;
+    transform:scale(1.04) translateY(-2px);
+    filter:blur(0);
+  }
+  100%{
+    opacity:1;
+    transform:scale(1) translateY(0);
+    filter:blur(0);
+  }
+}
