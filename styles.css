@@ -9199,7 +9199,8 @@ input[type="range"]::-moz-range-thumb{
 }
 
 .pack-stage-image{
-  width:115px;
+  width:340px;
+  max-width:90%;
 }
 
 .pack-stage-title{
