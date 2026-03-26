@@ -8716,3 +8716,7 @@ input[type="range"]::-moz-range-thumb{
     width:96px !important;
   }
 }
+/* Remove heavy Sealed Packs header */
+.packs-board-head{
+  display:none;
+}
