@@ -9126,3 +9126,9 @@ input[type="range"]::-moz-range-thumb{
     font-size:22px;
   }
 }
+@keyframes mdePackBurst{
+  0%   { transform:scale(1) rotate(0deg); }
+  30%  { transform:scale(1.10) rotate(-4deg); }
+  60%  { transform:scale(1.16) rotate(4deg); }
+  100% { transform:scale(1) rotate(0deg); }
+}
