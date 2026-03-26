@@ -1256,89 +1256,98 @@ syncPackOpenUI();
           console.error("Failed to load packs:", err);
         }
       }
-      function renderPackReveal(data) {
-        console.log("REVEAL DATA:", data);
-        const stage = document.getElementById("pack-reveal-stage");
-        if (!stage) return;
+    function renderPackReveal(data) {
+  console.log("REVEAL DATA:", data);
 
-        const drops = Array.isArray(data.drops) ? data.drops : [];
+  const stage = document.getElementById("pack-reveal-stage");
+  if (!stage) return;
 
-        const findDrop = (type) => drops.find((d) => d.type === type);
-        const filterDrops = (type) => drops.filter((d) => d.type === type);
+  const drops = Array.isArray(data.drops) ? data.drops : [];
 
-        const land = findDrop("land");
-        const blueprint = findDrop("blueprint");
-        const emp = findDrop("emp");
-        const bonusEmp = findDrop("bonus_emp");
-        const extraBlueprints = filterDrops("extra_blueprint");
-        const relic = findDrop("relic");
+  const findDrop = (type) => drops.find((d) => d.type === type);
+  const filterDrops = (type) => drops.filter((d) => d.type === type);
 
-        const rewardCards = [];
+  const land = findDrop("land");
+  const blueprint = findDrop("blueprint");
+  const emp = findDrop("emp");
+  const bonusEmp = findDrop("bonus_emp");
+  const extraBlueprints = filterDrops("extra_blueprint");
+  const relic = findDrop("relic");
 
-        if (land) {
-          rewardCards.push(`
-      <div class="reveal-card">
+  const rewardCards = [];
+
+  if (land) {
+    rewardCards.push(`
+      <div class="reveal-card reveal-card-land">
+        <div class="reveal-card-glow"></div>
         <div class="reveal-card-label">LAND</div>
         <div class="reveal-card-value">${land.tier || "LAND"}</div>
       </div>
     `);
-        }
+  }
 
-        if (blueprint) {
-          rewardCards.push(`
-      <div class="reveal-card">
+  if (blueprint) {
+    rewardCards.push(`
+      <div class="reveal-card reveal-card-blueprint">
+        <div class="reveal-card-glow"></div>
         <div class="reveal-card-label">BLUEPRINT</div>
         <div class="reveal-card-value">${blueprint.blueprint_tier || blueprint.tier || "BLUEPRINT"}</div>
         <div class="reveal-card-sub">${blueprint.industry || ""}</div>
       </div>
     `);
-        }
+  }
 
-        if (emp) {
-          rewardCards.push(`
-      <div class="reveal-card">
+  if (emp) {
+    rewardCards.push(`
+      <div class="reveal-card reveal-card-emp">
+        <div class="reveal-card-glow"></div>
         <div class="reveal-card-label">EMP</div>
         <div class="reveal-card-value">${emp.amount ?? 0}</div>
       </div>
     `);
-        }
+  }
 
-        if (bonusEmp) {
-          rewardCards.push(`
+  if (bonusEmp) {
+    rewardCards.push(`
       <div class="reveal-card reveal-card-bonus">
+        <div class="reveal-card-glow"></div>
         <div class="reveal-card-label">BONUS EMP</div>
         <div class="reveal-card-value">${bonusEmp.amount ?? 0}</div>
       </div>
     `);
-        }
+  }
 
-        extraBlueprints.forEach((bp) => {
-          rewardCards.push(`
+  extraBlueprints.forEach((bp) => {
+    rewardCards.push(`
       <div class="reveal-card reveal-card-bonus">
+        <div class="reveal-card-glow"></div>
         <div class="reveal-card-label">EXTRA BLUEPRINT</div>
         <div class="reveal-card-value">${bp.blueprint_tier || bp.tier || "BLUEPRINT"}</div>
         <div class="reveal-card-sub">${bp.industry || ""}</div>
       </div>
     `);
-        });
+  });
 
-        if (relic) {
-          rewardCards.push(`
+  if (relic) {
+    rewardCards.push(`
       <div class="reveal-card reveal-card-relic">
+        <div class="reveal-card-glow"></div>
         <div class="reveal-card-label">RELIC</div>
         <div class="reveal-card-value">Genesis Relic</div>
       </div>
     `);
-        }
+  }
 
-        stage.innerHTML = `
+  stage.innerHTML = `
     <div class="pack-opened-banner">Pack Opened</div>
-    <div class="reveal-grid">
+    <div class="pack-reveal-title">Your Rewards</div>
+    <div class="pack-reveal-subtitle">Genesis pack contents successfully revealed</div>
+
+    <div class="reveal-grid premium-reveal-grid">
       ${rewardCards.join("")}
     </div>
   `;
-      }
-
+}
       async function claimReward() {
         const statusEl = document.getElementById("claim-reward-status");
 
