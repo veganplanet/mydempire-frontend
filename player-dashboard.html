@@ -1879,7 +1879,10 @@ nextBtn.addEventListener("click", () => {
   }
 });
 
-updateReveal();      async function openPack(username, pack_id) {
+updateReveal();
+}
+        
+        async function openPack(username, pack_id) {
         if (!confirm(`Open Pack #${pack_id}?`)) return;
 
         try {
