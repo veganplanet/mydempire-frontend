@@ -9285,3 +9285,10 @@ input[type="range"]::-moz-range-thumb{
     filter:blur(0);
   }
 }
+.summary-icon{
+  width:18px;
+  height:18px;
+  margin-right:6px;
+  vertical-align:middle;
+  opacity:0.9;
+}
