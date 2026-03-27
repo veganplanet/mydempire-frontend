@@ -975,112 +975,151 @@
         }
       }
       // ===== PLAYER SUMMARY =====
-      async function loadDashboardSummary() {
-        try {
-          const res = await fetch(
-            apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/dashboard`),
-          );
-          if (!res.ok) throw new Error("HTTP " + res.status);
+     async function loadDashboardSummary() {
+  try {
+    const username = encodeURIComponent(PLAYER_USERNAME);
 
-          const data = await res.json();
-          console.log("Dashboard summary:", data);
+    const [dashboardRes, overviewRes, blueprintsRes] = await Promise.all([
+      fetch(apiUrl(`/player/${username}/dashboard`)),
+      fetch(apiUrl(`/player/${username}/empire-overview`)),
+      fetch(apiUrl(`/player/${username}/blueprints`)),
+    ]);
 
-          const setText = (id, value) => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = value;
-          };
+    if (!dashboardRes.ok) throw new Error("HTTP " + dashboardRes.status);
+    if (!overviewRes.ok) throw new Error("HTTP " + overviewRes.status);
+    if (!blueprintsRes.ok) throw new Error("HTTP " + blueprintsRes.status);
 
-          const usernameFromApi = data.username || PLAYER_USERNAME;
-          setText("player-username-display", usernameFromApi);
-          setText("player-username-raw", PLAYER_USERNAME);
-          setText("last-updated", new Date().toLocaleString());
-          const statusEl = document.getElementById("empire-status-pulse");
+    const data = await dashboardRes.json();
+    const overviewData = await overviewRes.json();
+    const blueprintsData = await blueprintsRes.json();
 
-          if (statusEl) {
-            statusEl.innerHTML =
-              data.empireStatus ??
-              data.totals?.empireStatus ??
-              "<span class='status-dot'></span>All factories running smoothly.";
-          }
+    console.log("Dashboard summary:", data);
+    console.log("Empire overview summary:", overviewData);
+    console.log("Blueprint summary:", blueprintsData);
 
-          const emp = Number(data.empBalance ?? 0);
-          setText(
-            "summary-emp-balance",
-            emp.toLocaleString(undefined, {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 2,
-            }),
-          );
+    const setText = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    };
 
-          const totalFactories = Number(
-            data.totalFactories ?? data.totals?.totalFactories ?? 0,
-          );
-          const activeFactories = Number(
-            data.activeFactories ?? data.totals?.activeFactories ?? 0,
-          );
-          const buildingFactories = Number(
-            data.buildingFactories ?? data.totals?.buildingFactories ?? 0,
-          );
-          const inactiveFactories = Number(
-            data.inactiveFactories ?? data.totals?.inactiveFactories ?? 0,
-          );
+    const usernameFromApi = data.username || PLAYER_USERNAME;
+    setText("player-username-display", usernameFromApi);
+    setText("player-username-raw", PLAYER_USERNAME);
+    setText("last-updated", new Date().toLocaleString());
 
-          setText("summary-factories-total", totalFactories);
-          setText(
-            "summary-factories-breakdown",
-            `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories}`,
-          );
+    const statusEl = document.getElementById("empire-status-pulse");
+    if (statusEl) {
+      statusEl.innerHTML =
+        data.empireStatus ??
+        data.totals?.empireStatus ??
+        "<span class='status-dot'></span>All factories running smoothly.";
+    }
 
-          const relicCount = Number(data.relicCount ?? 0);
-          const activeRelicBoost = Number(data.activeRelicBoost ?? 0);
+    // ===== EMP =====
+    const emp = Number(data.empBalance ?? 0);
+    setText(
+      "summary-emp-balance",
+      emp.toLocaleString(undefined, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      })
+    );
 
-          setText("summary-relic-boost", `${activeRelicBoost}%`);
-          setText(
-            "summary-relic-count",
-            `Relics owned: ${relicCount} (max boost: 6%)`,
-          );
+    // ===== FACTORIES =====
+    const totalFactories = Number(
+      data.totalFactories ?? data.totals?.totalFactories ?? 0
+    );
+    const activeFactories = Number(
+      data.activeFactories ?? data.totals?.activeFactories ?? 0
+    );
+    const buildingFactories = Number(
+      data.buildingFactories ?? data.totals?.buildingFactories ?? 0
+    );
+    const inactiveFactories = Number(
+      data.inactiveFactories ?? data.totals?.inactiveFactories ?? 0
+    );
 
-          const totalBaseEP = Number(
-            data.totalBaseEP ?? data.totals?.totalBaseEP ?? 0,
-          );
-          const totalBoostedEP = Number(
-            data.totalBoostedEP ?? data.totals?.totalBoostedEP ?? totalBaseEP,
-          );
-          const totalClaimableEP = Number(
-            data.totalClaimableEP ?? data.totals?.totalClaimableEP ?? 0,
-          );
-          const lifetimeEP = Number(
-            data.lifetimeEP ?? data.totals?.lifetimeEP ?? 0,
-          );
-          console.log("Lifetime EP:", lifetimeEP);
+    // ===== LANDS / SLOTS from empire-overview =====
+    const lands = Array.isArray(overviewData.lands) ? overviewData.lands : [];
 
-          // Production card
-          setText(
-            "summary-production-rate",
-            `${totalBoostedEP.toFixed(2)} EP/day`,
-          );
-          setText(
-            "summary-production-sub",
-            "Empire production including relic boosts",
-          );
-          setText("lifetime-ep", lifetimeEP.toFixed(2));
+    let totalSlots = 0;
+    let usedSlots = 0;
+    let l1 = 0;
+    let l2 = 0;
+    let l3 = 0;
 
-          // Empire Accumulated EP card
-          setText("summary-total-empire-ep", totalClaimableEP.toFixed(2));
+    for (const land of lands) {
+      const tier = String(land.land_tier || land.tier || "").toUpperCase();
+      const factories = Array.isArray(land.factories) ? land.factories : [];
 
-          // If old accumulated EP line still exists anywhere, update it too
-          const claimableEpEl = document.getElementById("summary-claimable-ep");
-          if (claimableEpEl) {
-            claimableEpEl.textContent = `Accumulated EP: ${totalClaimableEP.toFixed(2)}`;
-          }
-
-          setText("relics-owned", relicCount);
-          setText("relics-boost", `${activeRelicBoost}%`);
-        } catch (err) {
-          console.error("Failed to load dashboard summary:", err);
-        }
+      if (tier === "L1") {
+        l1++;
+        totalSlots += 1;
+      } else if (tier === "L2") {
+        l2++;
+        totalSlots += 2;
+      } else if (tier === "L3") {
+        l3++;
+        totalSlots += 3;
       }
 
+      usedSlots += factories.length;
+    }
+
+    const totalLands =
+      Number(data.totalLands ?? data.totals?.totalLands ?? 0) ||
+      lands.length ||
+      l1 + l2 + l3;
+
+    const emptySlots = Math.max(totalSlots - usedSlots, 0);
+
+    setText("summary-lands-total", totalLands);
+    setText(
+      "summary-lands-breakdown",
+      `L1: ${l1} | L2: ${l2} | L3: ${l3} | Slots: ${totalSlots} | Empty: ${emptySlots}`
+    );
+
+    // ===== BLUEPRINTS =====
+    const totalBlueprints = Array.isArray(blueprintsData.blueprints)
+      ? blueprintsData.blueprints.length
+      : 0;
+
+    setText("summary-factories-total", totalFactories);
+    setText(
+      "summary-factories-breakdown",
+      `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories} | Blueprints: ${totalBlueprints}`
+    );
+
+    // ===== RELICS =====
+    const relicCount = Number(data.relicCount ?? 0);
+    const activeRelicBoost = Number(data.activeRelicBoost ?? 0);
+
+    setText("summary-relic-boost", `${activeRelicBoost}%`);
+    setText(
+      "summary-relic-count",
+      `Relics owned: ${relicCount} (max boost: 6%)`
+    );
+
+    // ===== WRITS =====
+    const writCount = Number(data.writCount ?? 0);
+    setText("summary-writ-count", writCount);
+
+    // ===== PRODUCTION =====
+    const totalBoostedEP = Number(data.totalBoostedEP ?? 0);
+    const totalClaimableEP = Number(data.totalClaimableEP ?? 0);
+    const totalEmpireEP = Number(data.totalEmpireEP ?? totalClaimableEP ?? 0);
+
+    setText("summary-production-rate", `${totalBoostedEP.toFixed(2)} EP/day`);
+    setText("summary-claimable-ep", `Accumulated EP: ${totalClaimableEP.toFixed(2)}`);
+    setText("summary-total-empire-ep", totalEmpireEP.toFixed(2));
+
+    // ===== LIFETIME EP =====
+    const lifetimeEP = Number(data.lifetimeEP ?? 0);
+    setText("lifetime-ep", lifetimeEP.toFixed(2));
+  } catch (err) {
+    console.error("Failed to load dashboard summary:", err);
+  }
+}
       async function loadRewardSummary() {
         try {
           const res = await fetch(
