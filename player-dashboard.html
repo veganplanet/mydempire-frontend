@@ -3528,10 +3528,16 @@ if (!confirmed) return;
      async function loadGlobalHealth() {
   try {
 
-    const res = await fetch(apiUrl("/global-health"));
-    if (!res.ok) throw new Error("HTTP " + res.status);
+    const [healthRes, statsRes] = await Promise.all([
+      fetch(apiUrl("/global-health")),
+      fetch(apiUrl("/global-stats"))
+    ]);
 
-    const data = await res.json();
+    if (!healthRes.ok) throw new Error("Global health HTTP " + healthRes.status);
+    if (!statsRes.ok) throw new Error("Global stats HTTP " + statsRes.status);
+
+    const data = await healthRes.json();
+    const stats = await statsRes.json();
 
     const setText = (id, value) => {
       const el = document.getElementById(id);
@@ -3552,6 +3558,11 @@ if (!confirmed) return;
 
     const liveGlobalEP = Number(ep.liveGlobalEP || 0);
     const rewardCycleEP = Number(ep.rewardCycleEP || 0);
+
+    const totalFactories = Number(stats.totalFactories || 0);
+    const activeFactories = Number(stats.activeFactories || 0);
+    const buildingFactories = Number(stats.buildingFactories || 0);
+    const inactiveFactories = Number(stats.inactiveFactories || 0);
 
     // Global production
     setText(
@@ -3578,6 +3589,14 @@ if (!confirmed) return;
     setText(
       "treasury-cycle-sub",
       `Based on latest daily reward cycle (${cycleDate})`
+    );
+
+    // Global factories
+    setText("global-factories-total", totalFactories);
+
+    setText(
+      "global-factories-sub",
+      `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories}`
     );
 
   } catch (err) {
