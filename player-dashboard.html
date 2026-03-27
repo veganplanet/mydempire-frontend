@@ -2642,6 +2642,8 @@ updateReveal();
           slot.addEventListener("click", () => {
            const landId = slot.dataset.buildLandId;
 const landTier = slot.dataset.landTier;
+console.log("slot.dataset.buildLandId =", slot.dataset.buildLandId);
+console.log("slot.dataset.landTier =", slot.dataset.landTier);
 
 if (!landId) return;
 
@@ -3244,13 +3246,17 @@ window.selectedBuildLandTier = landTier;
           };
 
          console.log("TEST BUILD", payload);
-console.log("selectedBuildLandTier =", window.selectedBuildLandTier);
+const selectedLand = (empireLands || []).find(
+  (l) => String(l.land_id) === String(landId)
+);
+
+const tierValue = String(selectedLand?.land_tier || "L1").toUpperCase();
 
 let buildCostEMP = 40;
-const tierValue = String(window.selectedBuildLandTier || "").toUpperCase();
+if (tierValue === "L2") buildCostEMP = 80;
+if (tierValue === "L3") buildCostEMP = 150;
 
-if (tierValue === "L2" || tierValue === "2") buildCostEMP = 80;
-if (tierValue === "L3" || tierValue === "3") buildCostEMP = 150;
+console.log("selected land tier =", tierValue);
 
 const confirmed = confirm(
   `Build ${factoryName}?\n\n` +
@@ -3261,7 +3267,7 @@ const confirmed = confirm(
 
 if (!confirmed) return;
 
-if (!confirmed) return;
+
           const res = await fetch(apiUrl("/build-factory"), {
             method: "POST",
             headers: {
