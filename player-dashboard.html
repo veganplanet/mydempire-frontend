@@ -3504,28 +3504,27 @@ if (!confirmed) return;
 
         return `<span style="color:#2e7d32; font-weight:600;">🟢 Maintenance: active (${diffDays} day${diffDays === 1 ? "" : "s"} left)</span>`;
       }
-      async function loadGlobalHealth() {
+     async function loadGlobalHealth() {
   try {
+
     const res = await fetch(apiUrl("/global-health"));
     if (!res.ok) throw new Error("HTTP " + res.status);
 
     const data = await res.json();
-    console.log("Global health:", data);
 
     const setText = (id, value) => {
       const el = document.getElementById(id);
       if (el) el.textContent = value;
     };
 
-    const totalEmpSupply = Number(data.totalEmpSupply || 0);
     const treasury = data.treasury || {};
     const ep = data.ep || {};
 
     const treasuryBalance = Number(treasury.balance || 0);
     const emissionPercent = Number(treasury.emissionPercent || 0);
     const rewardPool = Number(treasury.rewardPool || 0);
-    const sustainabilityDays = Number(treasury.sustainabilityDays || 0);
     const healthLabel = treasury.healthLabel || "-";
+
     const cycleDate = treasury.cycleDate
       ? new Date(treasury.cycleDate).toLocaleDateString()
       : "N/A";
@@ -3533,30 +3532,33 @@ if (!confirmed) return;
     const liveGlobalEP = Number(ep.liveGlobalEP || 0);
     const rewardCycleEP = Number(ep.rewardCycleEP || 0);
 
+    // Global production
     setText(
-      "global-emp",
-      totalEmpSupply.toLocaleString(undefined, {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2,
-      })
+      "global-production",
+      `${liveGlobalEP.toFixed(2)} EP/day`
     );
 
-   setText(
-  "global-emp-sub",
-  `Live Global Production: ${liveGlobalEP.toFixed(2)} EP/day | Today's Reward Cycle Base: ${rewardCycleEP.toFixed(2)} EP`
-);
+    setText(
+      "global-production-cycle-sub",
+      `Today's reward cycle base: ${rewardCycleEP.toFixed(2)} EP`
+    );
 
-    setText("treasury-balance", `${treasuryBalance.toFixed(3)} HIVE`);
+    // Treasury
+    setText(
+      "treasury-balance",
+      `${treasuryBalance.toFixed(3)} HIVE`
+    );
 
     setText(
       "treasury-health-sub",
-      `Emission: ${emissionPercent.toFixed(2)}% | Reward pool: ${rewardPool.toFixed(3)} HIVE | Sustainability: ${sustainabilityDays} days | Status: ${healthLabel}`
+      `Emission: ${emissionPercent.toFixed(2)}% | Today's reward pool: ${rewardPool.toFixed(3)} HIVE | Status: ${healthLabel}`
     );
 
     setText(
       "treasury-cycle-sub",
       `Based on latest daily reward cycle (${cycleDate})`
     );
+
   } catch (err) {
     console.error("Failed to load global health:", err);
   }
