@@ -500,13 +500,14 @@
         <path d="M12 3a12 12 0 0 1 0 18"></path>
         <path d="M12 3a12 12 0 0 0 0 18"></path>
       </svg>
-      Global Economy
+      GLOBAL EMP SUPPLY
     </div>
 
     <div class="summary-value" id="global-emp">0</div>
 
     <div class="summary-sub" id="global-emp-sub">
-      Total EMP held across all player balances
+      Total EMP currently held across all player balances.
+      Live Global Production: 457.50 EP/day | Today's Reward Cycle Base: 80.00 EP
     </div>
   </div>
 
@@ -3540,10 +3541,10 @@ if (!confirmed) return;
       })
     );
 
-    setText(
-      "global-emp-sub",
-      `Live Global Base EP/day: ${liveGlobalEP.toFixed(2)} | Today's Reward Cycle EP: ${rewardCycleEP.toFixed(2)}`
-    );
+   setText(
+  "global-emp-sub",
+  `Live Global Production: ${liveGlobalEP.toFixed(2)} EP/day | Today's Reward Cycle Base: ${rewardCycleEP.toFixed(2)} EP`
+);
 
     setText("treasury-balance", `${treasuryBalance.toFixed(3)} HIVE`);
 
