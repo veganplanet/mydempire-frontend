@@ -2059,7 +2059,7 @@ updateReveal();
           document.getElementById("summary-lands-total").textContent =
             totalLands;
 
-          let l1 = 0,
+                  let l1 = 0,
             l2 = 0,
             l3 = 0;
           for (const land of lands) {
@@ -2067,8 +2067,9 @@ updateReveal();
             else if (land.land_tier === "L2") l2++;
             else if (land.land_tier === "L3") l3++;
           }
-          document.getElementById("summary-lands-breakdown").textContent =
-            `L1: ${l1} | L2: ${l2} | L3: ${l3}`;
+
+          // Do not overwrite summary-lands-breakdown here.
+          // loadDashboardSummary() now handles the richer land summary text.
 
           if (typeof totals.totalFactories === "number") {
             if (typeof totals.totalFactories === "number") {
