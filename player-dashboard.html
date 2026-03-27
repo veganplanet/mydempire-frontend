@@ -484,44 +484,50 @@
       </section>
 
       <!-- ===== TAB: GLOBAL HEALTH ===== -->
-      <section class="section tab-panel" data-tab-panel="global">
-        <div class="section-header">
-          <h2>Global Game Health</h2>
-          <small>Layout ready — live stats will be wired to backend</small>
-        </div>
-
-        <div class="summary-grid">
-         <div class="summary-label">
-  <img src="assets/icon.svg" class="summary-icon" alt="Global Economy">
-  Global Economy
-</div>
-
-  <div class="summary-value" id="global-emp">0</div>
-
-  <div class="summary-sub" id="global-emp-sub">
-    Total EMP held across all player balances
-  </div>
-</div>
-
-
-<div class="summary-card">
- <div class="summary-label">
-  <svg class="summary-icon" aria-hidden="true">
-    <use xlink:href="assets/icon.svg#icon-treasury"></use>
-  </svg>
-  Treasury Health
-</div>
-
-  <div class="summary-value" id="treasury-balance">0.000 HIVE</div>
-
-  <div class="summary-sub" id="treasury-health-sub">
-    Emission: 0.00% | Reward pool: 0.000 HIVE | Sustainability: 0 days | Status: -
+<section class="section tab-panel" data-tab-panel="global">
+  <div class="section-header">
+    <h2>Global Game Health</h2>
+    <small>Live Genesis-wide stats pulled from backend</small>
   </div>
 
-  <div class="summary-sub" id="treasury-cycle-sub">
-    Based on latest daily reward cycle
+  <div class="summary-grid">
+
+    <div class="summary-card">
+      <div class="summary-label">
+        <svg class="summary-icon" aria-hidden="true">
+          <use href="assets/icon.svg#icon-global"></use>
+        </svg>
+        Global Economy
+      </div>
+
+      <div class="summary-value" id="global-emp">0</div>
+
+      <div class="summary-sub" id="global-emp-sub">
+        Total EMP held across all player balances
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">
+        <svg class="summary-icon" aria-hidden="true">
+          <use href="assets/icon.svg#icon-treasury"></use>
+        </svg>
+        Treasury Health
+      </div>
+
+      <div class="summary-value" id="treasury-balance">0.000 HIVE</div>
+
+      <div class="summary-sub" id="treasury-health-sub">
+        Emission: 0.00% | Reward pool: 0.000 HIVE | Sustainability: 0 days | Status: -
+      </div>
+
+      <div class="summary-sub" id="treasury-cycle-sub">
+        Based on latest daily reward cycle
+      </div>
+    </div>
+
   </div>
-</div>
+</section>
 
           <div class="summary-card">
             <div class="summary-label">
