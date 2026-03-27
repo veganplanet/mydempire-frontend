@@ -823,11 +823,18 @@ async function loadBlueprintMintInfo() {
       else if (tier === "L3") totalSlots += 3;
     }
 
-    const totalBlueprints = Array.isArray(blueprintsData.blueprints)
+        const totalBlueprints = Array.isArray(blueprintsData.blueprints)
       ? blueprintsData.blueprints.length
       : 0;
 
-    const eligibleMints = Math.max(totalSlots - totalBlueprints, 0);
+    let totalFactories = 0;
+    for (const land of lands) {
+      const factories = Array.isArray(land.factories) ? land.factories : [];
+      totalFactories += factories.length;
+    }
+
+    const emptySlots = Math.max(totalSlots - totalFactories, 0);
+    const eligibleMints = Math.max(emptySlots - totalBlueprints, 0);
 
     if (costEl) costEl.textContent = "150 EMP";
 
@@ -835,7 +842,7 @@ async function loadBlueprintMintInfo() {
       eligibilityEl.textContent =
         eligibleMints > 0
           ? `Eligible empty slots: ${eligibleMints}`
-          : "All current land slots are already covered by blueprints.";
+          : "All current empty slots are already covered by blueprints.";
     }
 
     if (btn) btn.disabled = eligibleMints <= 0;
