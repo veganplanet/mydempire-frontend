@@ -3502,14 +3502,71 @@ if (!confirmed) return;
 
         return `<span style="color:#2e7d32; font-weight:600;">🟢 Maintenance: active (${diffDays} day${diffDays === 1 ? "" : "s"} left)</span>`;
       }
-    window.addEventListener("load", async () => {
+      async function loadGlobalHealth() {
+  try {
+    const res = await fetch(apiUrl("/global-health"));
+    if (!res.ok) throw new Error("HTTP " + res.status);
+
+    const data = await res.json();
+    console.log("Global health:", data);
+
+    const setText = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    };
+
+    const totalEmpSupply = Number(data.totalEmpSupply || 0);
+    const treasury = data.treasury || {};
+    const ep = data.ep || {};
+
+    const treasuryBalance = Number(treasury.balance || 0);
+    const emissionPercent = Number(treasury.emissionPercent || 0);
+    const rewardPool = Number(treasury.rewardPool || 0);
+    const sustainabilityDays = Number(treasury.sustainabilityDays || 0);
+    const healthLabel = treasury.healthLabel || "-";
+    const cycleDate = treasury.cycleDate
+      ? new Date(treasury.cycleDate).toLocaleDateString()
+      : "N/A";
+
+    const liveGlobalEP = Number(ep.liveGlobalEP || 0);
+    const rewardCycleEP = Number(ep.rewardCycleEP || 0);
+
+    setText(
+      "global-emp",
+      totalEmpSupply.toLocaleString(undefined, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      })
+    );
+
+    setText(
+      "global-emp-sub",
+      `Live Global Base EP/day: ${liveGlobalEP.toFixed(2)} | Today's Reward Cycle EP: ${rewardCycleEP.toFixed(2)}`
+    );
+
+    setText("treasury-balance", `${treasuryBalance.toFixed(3)} HIVE`);
+
+    setText(
+      "treasury-health-sub",
+      `Emission: ${emissionPercent.toFixed(2)}% | Reward pool: ${rewardPool.toFixed(3)} HIVE | Sustainability: ${sustainabilityDays} days | Status: ${healthLabel}`
+    );
+
+    setText(
+      "treasury-cycle-sub",
+      `Based on latest daily reward cycle (${cycleDate})`
+    );
+  } catch (err) {
+    console.error("Failed to load global health:", err);
+  }
+}
+   window.addEventListener("load", async () => {
   try {
     await loadDashboardSummary();
     await loadRewardSummary();
+    await loadGlobalHealth();
     await loadEmpireOverview();
     await loadBlueprints();
     await loadPacks();
-    await loadGlobalHealth();   
   } catch (err) {
     console.error("Initial dashboard load failed:", err);
   }
