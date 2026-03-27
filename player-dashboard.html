@@ -484,6 +484,7 @@
       </section>
 
       <!-- ===== TAB: GLOBAL HEALTH ===== -->
+<!-- ===== TAB: GLOBAL HEALTH ===== -->
 <section class="section tab-panel" data-tab-panel="global">
   <div class="section-header">
     <h2>Global Game Health</h2>
@@ -492,48 +493,47 @@
 
   <div class="summary-grid">
 
-  <div class="summary-card">
-    <div class="summary-label">
-      <svg class="summary-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="12" r="9"></circle>
-        <path d="M3 12h18"></path>
-        <path d="M12 3a12 12 0 0 1 0 18"></path>
-        <path d="M12 3a12 12 0 0 0 0 18"></path>
-      </svg>
-      GLOBAL EMP SUPPLY
+    <div class="summary-card">
+      <div class="summary-label">
+        <svg class="summary-icon summary-icon-blue" viewBox="0 0 24 24" aria-hidden="true">
+          <polygon points="13 2 3 14 11 14 9 22 21 8 13 8"></polygon>
+        </svg>
+        Global Production
+      </div>
+
+      <div class="summary-value" id="global-production">0.00 EP/day</div>
+
+      <div class="summary-sub" id="global-production-sub">
+        Live global production across all currently active factories
+      </div>
+
+      <div class="summary-sub" id="global-production-cycle-sub">
+        Today's reward cycle base: 0.00 EP
+      </div>
     </div>
 
-    <div class="summary-value" id="global-emp">0</div>
+    <div class="summary-card">
+      <div class="summary-label">
+        <svg class="summary-icon summary-icon-blue" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4" y="7" width="16" height="12" rx="2" ry="2"></rect>
+          <path d="M7 7V5h10v2"></path>
+          <circle cx="16.5" cy="13" r="1.5"></circle>
+        </svg>
+        Treasury Health
+      </div>
 
-    <div class="summary-sub" id="global-emp-sub">
-      Total EMP currently held across all player balances.
-      Live Global Production: 457.50 EP/day | Today's Reward Cycle Base: 80.00 EP
+      <div class="summary-value" id="treasury-balance">0.000 HIVE</div>
+
+      <div class="summary-sub" id="treasury-health-sub">
+        Emission: 0.00% | Today's reward pool: 0.000 HIVE | Status: -
+      </div>
+
+      <div class="summary-sub" id="treasury-cycle-sub">
+        Based on latest daily reward cycle
+      </div>
     </div>
+
   </div>
-
-  <div class="summary-card">
-    <div class="summary-label">
-      <svg class="summary-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="4" y="7" width="16" height="12" rx="2" ry="2"></rect>
-        <path d="M7 7V5h10v2"></path>
-        <circle cx="16.5" cy="13" r="1.5"></circle>
-      </svg>
-      Treasury Health
-    </div>
-
-    <div class="summary-value" id="treasury-balance">0.000 HIVE</div>
-
-    <div class="summary-sub" id="treasury-health-sub">
-      <div class="summary-sub" id="treasury-health-badge-wrap"></div>
-      Emission: 0.00% | Reward pool: 0.000 HIVE | Sustainability: 0 days | Status: -
-    </div>
-
-    <div class="summary-sub" id="treasury-cycle-sub">
-      Based on latest daily reward cycle
-    </div>
-  </div>
-
-</div>
 </section>
 
           <div class="summary-card">
