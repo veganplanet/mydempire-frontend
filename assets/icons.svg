@@ -1,138 +1,156 @@
-<svg xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+
+  <!-- Global -->
+  <symbol id="icon-global" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9"></circle>
+    <path d="M3 12h18"></path>
+    <path d="M12 3a12 12 0 0 1 0 18"></path>
+    <path d="M12 3a12 12 0 0 0 0 18"></path>
+  </symbol>
+
+  <!-- Treasury -->
+  <symbol id="icon-treasury" viewBox="0 0 24 24">
+    <rect x="4" y="7" width="16" height="12" rx="2" ry="2"></rect>
+    <path d="M7 7V5h10v2"></path>
+    <circle cx="16.5" cy="13" r="1.5"></circle>
+  </symbol>
 
   <!-- Land -->
   <symbol id="icon-land" viewBox="0 0 24 24">
-    <rect x="3" y="3" width="7" height="7" />
-    <rect x="14" y="3" width="7" height="7" />
-    <rect x="3" y="14" width="7" height="7" />
-    <rect x="14" y="14" width="7" height="7" />
+    <rect x="3" y="3" width="7" height="7"></rect>
+    <rect x="14" y="3" width="7" height="7"></rect>
+    <rect x="3" y="14" width="7" height="7"></rect>
+    <rect x="14" y="14" width="7" height="7"></rect>
   </symbol>
 
   <!-- Blueprint -->
   <symbol id="icon-blueprint" viewBox="0 0 24 24">
-    <rect x="4" y="4" width="16" height="16" />
-    <line x1="8" y1="8" x2="16" y2="8" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-    <line x1="8" y1="16" x2="13" y2="16" />
+    <rect x="4" y="4" width="16" height="16"></rect>
+    <line x1="8" y1="8" x2="16" y2="8"></line>
+    <line x1="8" y1="12" x2="16" y2="12"></line>
+    <line x1="8" y1="16" x2="13" y2="16"></line>
   </symbol>
 
   <!-- Factory -->
   <symbol id="icon-factory" viewBox="0 0 24 24">
-    <rect x="3" y="10" width="6" height="10" />
-    <rect x="10" y="6" width="6" height="14" />
-    <rect x="17" y="12" width="4" height="8" />
+    <rect x="3" y="10" width="6" height="10"></rect>
+    <rect x="10" y="6" width="6" height="14"></rect>
+    <rect x="17" y="12" width="4" height="8"></rect>
   </symbol>
 
   <!-- Maintenance -->
   <symbol id="icon-maintenance" viewBox="0 0 24 24">
-    <path d="M21 7a5 5 0 0 1-6 6L7 21l-4-4 8-8a5 5 0 0 1 6-6" />
+    <path d="M21 7a5 5 0 0 1-6 6L7 21l-4-4 8-8a5 5 0 0 1 6-6"></path>
   </symbol>
 
   <!-- Upgrade -->
   <symbol id="icon-upgrade" viewBox="0 0 24 24">
-    <line x1="12" y1="19" x2="12" y2="5" />
-    <polyline points="6 11 12 5 18 11" />
+    <line x1="12" y1="19" x2="12" y2="5"></line>
+    <polyline points="6 11 12 5 18 11"></polyline>
   </symbol>
 
   <!-- Reward -->
   <symbol id="icon-reward" viewBox="0 0 24 24">
-    <circle cx="12" cy="12" r="8" />
-    <line x1="12" y1="8" x2="12" y2="16" />
-    <line x1="9" y1="12" x2="15" y2="12" />
+    <circle cx="12" cy="12" r="8"></circle>
+    <line x1="12" y1="8" x2="12" y2="16"></line>
+    <line x1="9" y1="12" x2="15" y2="12"></line>
   </symbol>
 
   <!-- EMP -->
   <symbol id="icon-emp" viewBox="0 0 24 24">
-    <polygon points="12,2 20,7 20,17 12,22 4,17 4,7" />
+    <polygon points="12,2 20,7 20,17 12,22 4,17 4,7"></polygon>
   </symbol>
 
   <!-- EP -->
   <symbol id="icon-ep" viewBox="0 0 24 24">
-    <polygon points="13 2 3 14 11 14 9 22 21 8 13 8" />
+    <polygon points="13 2 3 14 11 14 9 22 21 8 13 8"></polygon>
   </symbol>
 
   <!-- Relic -->
   <symbol id="icon-relic" viewBox="0 0 24 24">
-    <polygon points="12,3 18,10 12,21 6,10" />
+    <polygon points="12,3 18,10 12,21 6,10"></polygon>
   </symbol>
 
   <!-- Writ -->
   <symbol id="icon-writ" viewBox="0 0 24 24">
-    <rect x="6" y="4" width="12" height="16" />
-    <line x1="9" y1="8" x2="15" y2="8" />
-    <line x1="9" y1="12" x2="15" y2="12" />
+    <rect x="6" y="4" width="12" height="16"></rect>
+    <line x1="9" y1="8" x2="15" y2="8"></line>
+    <line x1="9" y1="12" x2="15" y2="12"></line>
   </symbol>
 
   <!-- Shop -->
   <symbol id="icon-shop" viewBox="0 0 24 24">
-    <rect x="3" y="7" width="18" height="14" />
-    <line x1="3" y1="7" x2="12" y2="2" />
-    <line x1="21" y1="7" x2="12" y2="2" />
+    <rect x="3" y="7" width="18" height="14"></rect>
+    <line x1="3" y1="7" x2="12" y2="2"></line>
+    <line x1="21" y1="7" x2="12" y2="2"></line>
   </symbol>
 
   <!-- Marketplace -->
   <symbol id="icon-market" viewBox="0 0 24 24">
-    <polyline points="4 7 10 7 10 4" />
-    <polyline points="20 17 14 17 14 20" />
-    <line x1="10" y1="7" x2="20" y2="17" />
-    <line x1="4" y1="7" x2="14" y2="17" />
+    <polyline points="4 7 10 7 10 4"></polyline>
+    <polyline points="20 17 14 17 14 20"></polyline>
+    <line x1="10" y1="7" x2="20" y2="17"></line>
+    <line x1="4" y1="7" x2="14" y2="17"></line>
   </symbol>
 
   <!-- P2P Transfer -->
   <symbol id="icon-transfer" viewBox="0 0 24 24">
-    <polyline points="7 7 3 11 7 15" />
-    <polyline points="17 7 21 11 17 15" />
+    <polyline points="7 7 3 11 7 15"></polyline>
+    <polyline points="17 7 21 11 17 15"></polyline>
   </symbol>
 
   <!-- Guide / Codex -->
   <symbol id="icon-guide" viewBox="0 0 24 24">
-    <rect x="4" y="4" width="16" height="16" />
-    <line x1="8" y1="8" x2="16" y2="8" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-    <line x1="8" y1="16" x2="13" y2="16" />
+    <rect x="4" y="4" width="16" height="16"></rect>
+    <line x1="8" y1="8" x2="16" y2="8"></line>
+    <line x1="8" y1="12" x2="16" y2="12"></line>
+    <line x1="8" y1="16" x2="13" y2="16"></line>
   </symbol>
-<!-- Wallet / Codex -->
+
+  <!-- Wallet -->
   <symbol id="icon-wallet" viewBox="0 0 24 24">
-  <rect x="3" y="7" width="18" height="12"></rect>
-  <circle cx="17" cy="13" r="1.5"></circle>
-</symbol>
-  <!-- Withdraw / Codex -->
+    <rect x="3" y="7" width="18" height="12"></rect>
+    <circle cx="17" cy="13" r="1.5"></circle>
+  </symbol>
+
+  <!-- Withdraw -->
   <symbol id="icon-withdraw" viewBox="0 0 24 24">
-  <line x1="12" y1="3" x2="12" y2="17"></line>
-  <polyline points="6 11 12 17 18 11"></polyline>
-</symbol>
+    <line x1="12" y1="3" x2="12" y2="17"></line>
+    <polyline points="6 11 12 17 18 11"></polyline>
+  </symbol>
+
+  <!-- Emperor -->
+  <symbol id="icon-emperor-rank" viewBox="0 0 24 24">
+    <path d="M4 18h16l-1.5-8-4.5 3-2-6-2 6-4.5-3z"></path>
+    <line x1="4" y1="18" x2="20" y2="18"></line>
+  </symbol>
+
+  <!-- Grand Lord -->
+  <symbol id="icon-grand-lord-rank" viewBox="0 0 24 24">
+    <path d="M4 18h16"></path>
+    <path d="M6 18V9l6-4 6 4v9"></path>
+    <path d="M9 18v-5h6v5"></path>
+  </symbol>
+
+  <!-- Industrial Magnate -->
+  <symbol id="icon-magnate-rank" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 3v3"></path>
+    <path d="M12 18v3"></path>
+    <path d="M3 12h3"></path>
+    <path d="M18 12h3"></path>
+    <path d="M5.6 5.6l2.1 2.1"></path>
+    <path d="M16.3 16.3l2.1 2.1"></path>
+    <path d="M18.4 5.6l-2.1 2.1"></path>
+    <path d="M7.7 16.3l-2.1 2.1"></path>
+  </symbol>
+
+  <!-- Empire Builder -->
+  <symbol id="icon-builder-rank" viewBox="0 0 24 24">
+    <path d="M3 19h18"></path>
+    <rect x="5" y="11" width="4" height="8"></rect>
+    <rect x="10" y="8" width="4" height="11"></rect>
+    <rect x="15" y="13" width="4" height="6"></rect>
+  </symbol>
 
 </svg>
-<!-- Emperor -->
-<symbol id="icon-emperor-rank" viewBox="0 0 24 24">
-  <path d="M4 18h16l-1.5-8-4.5 3-2-6-2 6-4.5-3z"></path>
-  <line x1="4" y1="18" x2="20" y2="18"></line>
-</symbol>
-
-<!-- Grand Lord -->
-<symbol id="icon-grand-lord-rank" viewBox="0 0 24 24">
-  <path d="M4 18h16"></path>
-  <path d="M6 18V9l6-4 6 4v9"></path>
-  <path d="M9 18v-5h6v5"></path>
-</symbol>
-
-<!-- Industrial Magnate -->
-<symbol id="icon-magnate-rank" viewBox="0 0 24 24">
-  <circle cx="12" cy="12" r="4"></circle>
-  <path d="M12 3v3"></path>
-  <path d="M12 18v3"></path>
-  <path d="M3 12h3"></path>
-  <path d="M18 12h3"></path>
-  <path d="M5.6 5.6l2.1 2.1"></path>
-  <path d="M16.3 16.3l2.1 2.1"></path>
-  <path d="M18.4 5.6l-2.1 2.1"></path>
-  <path d="M7.7 16.3l-2.1 2.1"></path>
-</symbol>
-
-<!-- Empire Builder -->
-<symbol id="icon-builder-rank" viewBox="0 0 24 24">
-  <path d="M3 19h18"></path>
-  <rect x="5" y="11" width="4" height="8"></rect>
-  <rect x="10" y="8" width="4" height="11"></rect>
-  <rect x="15" y="13" width="4" height="6"></rect>
-</symbol>
