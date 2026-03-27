@@ -492,24 +492,35 @@
 
         <div class="summary-grid">
           <div class="summary-card">
-            <div class="summary-label">
-              <span class="summary-emoji">🌐</span>Global EMP
-            </div>
-            <div class="summary-value" id="global-emp">coming soon</div>
-            <div class="summary-sub">
-              Total EMP across all players (will read from global EMP endpoint)
-            </div>
-          </div>
+  <div class="summary-label">
+    <img src="assets/icon.svg" class="summary-icon" alt="Global Economy">
+    Global Economy
+  </div>
 
-          <div class="summary-card">
-            <div class="summary-label">
-              <span class="summary-emoji">🏦</span>Treasury Health
-            </div>
-            <div class="summary-value" id="treasury-balance">coming soon</div>
-            <div class="summary-sub">
-              Sum of @mydempire-vault and @mydempire-pay used for daily rewards
-            </div>
-          </div>
+  <div class="summary-value" id="global-emp">0</div>
+
+  <div class="summary-sub" id="global-emp-sub">
+    Total EMP held across all player balances
+  </div>
+</div>
+
+
+<div class="summary-card">
+  <div class="summary-label">
+    <img src="assets/icon.svg" class="summary-icon" alt="Treasury">
+    Treasury Health
+  </div>
+
+  <div class="summary-value" id="treasury-balance">0.000 HIVE</div>
+
+  <div class="summary-sub" id="treasury-health-sub">
+    Emission: 0.00% | Reward pool: 0.000 HIVE | Sustainability: 0 days | Status: -
+  </div>
+
+  <div class="summary-sub" id="treasury-cycle-sub">
+    Based on latest daily reward cycle
+  </div>
+</div>
 
           <div class="summary-card">
             <div class="summary-label">
