@@ -9302,7 +9302,11 @@ input[type="range"]::-moz-range-thumb{
   stroke-width:1.8;
   stroke-linecap:round;
   stroke-linejoin:round;
-  opacity:0.9;
+  opacity:0.95;
+}
+
+.summary-icon-blue{
+  color:#4f6fff;
 }
 .health-badge{
   display:inline-block;
