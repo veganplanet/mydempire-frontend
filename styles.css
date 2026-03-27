@@ -9304,4 +9304,30 @@ input[type="range"]::-moz-range-thumb{
   stroke-linejoin:round;
   opacity:0.9;
 }
+.health-badge{
+  display:inline-block;
+  margin-top:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:0.04em;
+}
 
+.health-badge.green{
+  background:rgba(34,197,94,0.12);
+  color:#15803d;
+  border:1px solid rgba(34,197,94,0.35);
+}
+
+.health-badge.yellow{
+  background:rgba(234,179,8,0.12);
+  color:#a16207;
+  border:1px solid rgba(234,179,8,0.35);
+}
+
+.health-badge.red{
+  background:rgba(239,68,68,0.12);
+  color:#b91c1c;
+  border:1px solid rgba(239,68,68,0.35);
+}
