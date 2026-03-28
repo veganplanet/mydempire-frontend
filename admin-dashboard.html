@@ -205,6 +205,17 @@
         />
         <button id="player-search-btn">Inspect Player</button>
       </div>
+      <div class="section">
+  <h2>Withdrawal Requests</h2>
+
+  <div class="row">
+    <button id="load-withdrawals-btn">Load Withdrawals</button>
+  </div>
+
+  <div id="withdrawals-box">
+    <div class="kv"><span>Status</span><span>No data loaded yet.</span></div>
+  </div>
+</div>
 
       <div id="player-inspector-box" class="player-box">
         <div class="kv"><span>Player</span><span>--</span></div>
@@ -399,7 +410,92 @@
         alert("Error distributing revenue.");
       }
     }
+async function loadWithdrawals() {
+  if (!ADMIN_KEY) {
+    alert("Connect Admin first");
+    return;
+  }
 
+  try {
+    const r = await fetch(`${API_BASE}/admin/withdrawals`, {
+      headers: {
+        "x-admin-key": ADMIN_KEY
+      }
+    });
+
+    const data = await r.json();
+    console.log("withdrawals:", data);
+
+    if (!data.success) {
+      alert(data.error || "Failed to load withdrawals");
+      return;
+    }
+
+    const box = document.getElementById("withdrawals-box");
+
+    if (!data.withdrawals || !data.withdrawals.length) {
+      box.innerHTML = `<div class="kv"><span>Status</span><span>No withdrawal requests found.</span></div>`;
+      return;
+    }
+
+    box.innerHTML = data.withdrawals
+      .map(
+        (w) => `
+          <div class="kv">
+            <span>
+              #${w.id} • @${w.username} • ${Number(w.amount).toFixed(3)} HIVE • ${w.status}
+            </span>
+            <span>
+              ${
+                w.status === "pending"
+                  ? `<button onclick="completeWithdrawal(${w.id})">Mark Completed</button>`
+                  : "Completed"
+              }
+            </span>
+          </div>
+        `
+      )
+      .join("");
+  } catch (err) {
+    console.error(err);
+    alert("Error loading withdrawals.");
+  }
+}
+
+async function completeWithdrawal(id) {
+  if (!ADMIN_KEY) {
+    alert("Connect Admin first");
+    return;
+  }
+
+  const txid = prompt("Optional: enter Hive transaction id, or leave blank");
+  if (txid === null) return;
+
+  try {
+    const r = await fetch(`${API_BASE}/admin/withdrawals/${id}/complete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY
+      },
+      body: JSON.stringify({ txid })
+    });
+
+    const data = await r.json();
+    console.log("complete withdrawal:", data);
+
+    if (!data.success) {
+      alert(data.error || "Failed to complete withdrawal");
+      return;
+    }
+
+    alert("Withdrawal marked as completed.");
+    loadWithdrawals();
+  } catch (err) {
+    console.error(err);
+    alert("Error completing withdrawal.");
+  }
+}
     document
       .getElementById("connect-admin-btn")
       .addEventListener("click", connectAdmin);
