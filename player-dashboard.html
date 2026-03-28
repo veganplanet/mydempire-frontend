@@ -1184,7 +1184,7 @@
     EXACT_WALLET_HIVE = walletHive;
 
     setText("summary-claimable-hive", claimableHive.toFixed(3));
-    setText("summary-wallet-hive", walletHive.toFixed(3));
+    setText("summary-wallet-hive", Math.max(0, walletHive).toFixed(3));
 
     if (walletHive >= 1) {
       setText("summary-withdraw-status", "Ready");
