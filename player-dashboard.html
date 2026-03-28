@@ -3620,6 +3620,12 @@ if (!confirmed) return;
       document
         .getElementById("claim-reward-btn")
         ?.addEventListener("click", claimReward);
+      document.addEventListener("DOMContentLoaded", () => {
+  const withdrawBtn = document.getElementById("withdraw-hive-btn");
+  if (withdrawBtn) {
+    withdrawBtn.addEventListener("click", requestWithdrawHive);
+  }
+});
     </script>
 
     <script src="js/appbar.js"></script>
