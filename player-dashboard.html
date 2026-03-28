@@ -1147,104 +1147,100 @@
     console.error("Failed to load dashboard summary:", err);
   }
 }
-      async function loadRewardSummary() {
-        try {
-          const res = await fetch(
-            apiUrl(
-              `/player/${encodeURIComponent(PLAYER_USERNAME)}/reward-summary`,
-            ),
-          );
-
-          if (!res.ok) throw new Error("HTTP " + res.status);
-
-          const data = await res.json();
-          console.log("Reward summary:", data);
-
-          const setText = (id, value) => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = value;
-          };
-
-          const claimableHive = Number(
-            data.claimable_hive ?? data.claimable_amount ?? 0,
-          );
-
-          const walletHive = Number(
-            data.wallet_hive ?? data.wallet_balance ?? 0,
-          );
-          const pendingWithdrawAmount = Number(data.pending_withdraw_amount ?? 0);
-const pendingWithdrawCount = Number(data.pending_withdraw_count ?? 0);
-EXACT_WALLET_HIVE = walletHive;
-          setText("summary-claimable-hive", claimableHive.toFixed(3));
-          setText("summary-wallet-hive", walletHive.toFixed(3));
-
-        if (pendingWithdrawCount > 0) {
-  setText("summary-withdraw-status", "Pending");
-  setText(
-    "summary-withdraw-sub",
-    `Waiting for admin approval • ${pendingWithdrawAmount.toFixed(3)} HIVE`
-  );
-if (walletHive >= 1) {
-  setText("summary-withdraw-status", "Ready");
-
-  if (pendingWithdrawCount > 0) {
-    setText(
-      "summary-withdraw-sub",
-      `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
+    async function loadRewardSummary() {
+  try {
+    const res = await fetch(
+      apiUrl(
+        `/player/${encodeURIComponent(PLAYER_USERNAME)}/reward-summary`,
+      ),
     );
-  } else {
-    setText("summary-withdraw-sub", "You can request withdrawal now.");
-  }
 
-} else {
+    if (!res.ok) throw new Error("HTTP " + res.status);
 
-  if (pendingWithdrawCount > 0) {
-    setText("summary-withdraw-status", "Pending");
-    setText(
-      "summary-withdraw-sub",
-      `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
+    const data = await res.json();
+    console.log("Reward summary:", data);
+
+    const setText = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    };
+
+    const claimableHive = Number(
+      data.claimable_hive ?? data.claimable_amount ?? 0,
     );
-  } else {
-    setText("summary-withdraw-status", "Not Ready");
-    setText("summary-withdraw-sub", "Minimum withdrawal is 1.000 HIVE");
+
+    const walletHive = Number(
+      data.wallet_hive ?? data.wallet_balance ?? 0,
+    );
+
+    const pendingWithdrawAmount = Number(
+      data.pending_withdraw_amount ?? 0,
+    );
+
+    const pendingWithdrawCount = Number(
+      data.pending_withdraw_count ?? 0,
+    );
+
+    EXACT_WALLET_HIVE = walletHive;
+
+    setText("summary-claimable-hive", claimableHive.toFixed(3));
+    setText("summary-wallet-hive", walletHive.toFixed(3));
+
+    if (walletHive >= 1) {
+      setText("summary-withdraw-status", "Ready");
+
+      if (pendingWithdrawCount > 0) {
+        setText(
+          "summary-withdraw-sub",
+          `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`,
+        );
+      } else {
+        setText("summary-withdraw-sub", "You can request withdrawal now.");
+      }
+    } else {
+      if (pendingWithdrawCount > 0) {
+        setText("summary-withdraw-status", "Pending");
+        setText(
+          "summary-withdraw-sub",
+          `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`,
+        );
+      } else {
+        setText("summary-withdraw-status", "Not Ready");
+        setText("summary-withdraw-sub", "Minimum withdrawal is 1.000 HIVE");
+      }
+    }
+
+    const claimRewardStatus = document.getElementById(
+      "claim-reward-status",
+    );
+
+    if (claimRewardStatus) {
+      claimRewardStatus.textContent =
+        claimableHive > 0
+          ? `${claimableHive.toFixed(3)} HIVE available to claim`
+          : "No reward available to claim.";
+    }
+
+    const withdrawHiveStatus = document.getElementById(
+      "withdraw-hive-status",
+    );
+
+    if (withdrawHiveStatus) {
+      if (walletHive >= 1) {
+        withdrawHiveStatus.textContent =
+          pendingWithdrawCount > 0
+            ? `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
+            : `${walletHive.toFixed(3)} HIVE available for withdrawal request`;
+      } else {
+        withdrawHiveStatus.textContent =
+          pendingWithdrawCount > 0
+            ? `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
+            : "Withdrawal not ready yet.";
+      }
+    }
+  } catch (err) {
+    console.error("Failed to load reward summary:", err);
   }
-
-}
-
-          const claimRewardStatus = document.getElementById(
-            "claim-reward-status",
-          );
-          if (claimRewardStatus) {
-            claimRewardStatus.textContent =
-              claimableHive > 0
-                ? `${claimableHive.toFixed(3)} HIVE available to claim`
-                : "No reward available to claim.";
-          }
-
-         const pendingWithdrawAmount = Number(data.pending_withdraw_amount ?? 0);
-const pendingWithdrawCount = Number(data.pending_withdraw_count ?? 0);
-
-const withdrawHiveStatus = document.getElementById(
-  "withdraw-hive-status",
-);
-if (withdrawHiveStatus) {
-  if (walletHive >= 1) {
-    withdrawHiveStatus.textContent =
-      pendingWithdrawCount > 0
-        ? `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
-        : `${walletHive.toFixed(3)} HIVE available for withdrawal request`;
-  } else {
-    withdrawHiveStatus.textContent =
-      pendingWithdrawCount > 0
-        ? `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
-        : "Withdrawal not ready yet.";
-  }
-}
-
-} catch (err) {
-  console.error("Failed to load reward summary:", err);
-}
-
 }
       async function loadPacks() {
         try {
