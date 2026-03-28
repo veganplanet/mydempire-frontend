@@ -1172,17 +1172,25 @@
           const walletHive = Number(
             data.wallet_hive ?? data.wallet_balance ?? 0,
           );
+          const pendingWithdrawAmount = Number(data.pending_withdraw_amount ?? 0);
+const pendingWithdrawCount = Number(data.pending_withdraw_count ?? 0);
 EXACT_WALLET_HIVE = walletHive;
           setText("summary-claimable-hive", claimableHive.toFixed(3));
           setText("summary-wallet-hive", walletHive.toFixed(3));
 
-          if (walletHive >= 1) {
-            setText("summary-withdraw-status", "Ready");
-            setText("summary-withdraw-sub", "You can request withdrawal now.");
-          } else {
-            setText("summary-withdraw-status", "Not Ready");
-            setText("summary-withdraw-sub", "Minimum withdrawal is 1.000 HIVE");
-          }
+        if (pendingWithdrawCount > 0) {
+  setText("summary-withdraw-status", "Pending");
+  setText(
+    "summary-withdraw-sub",
+    `Waiting for admin approval • ${pendingWithdrawAmount.toFixed(3)} HIVE`
+  );
+} else if (walletHive >= 1) {
+  setText("summary-withdraw-status", "Ready");
+  setText("summary-withdraw-sub", "You can request withdrawal now.");
+} else {
+  setText("summary-withdraw-status", "Not Ready");
+  setText("summary-withdraw-sub", "Minimum withdrawal is 1.000 HIVE");
+}
 
           const claimRewardStatus = document.getElementById(
             "claim-reward-status",
