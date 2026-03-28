@@ -1221,15 +1221,25 @@ if (walletHive >= 1) {
                 : "No reward available to claim.";
           }
 
-          const withdrawHiveStatus = document.getElementById(
-            "withdraw-hive-status",
-          );
-          if (withdrawHiveStatus) {
-            withdrawHiveStatus.textContent =
-              walletHive >= 1
-                ? `${walletHive.toFixed(3)} HIVE available for withdrawal request`
-                : "Withdrawal not ready yet.";
-          }
+         const pendingWithdrawAmount = Number(data.pending_withdraw_amount ?? 0);
+const pendingWithdrawCount = Number(data.pending_withdraw_count ?? 0);
+
+const withdrawHiveStatus = document.getElementById(
+  "withdraw-hive-status",
+);
+if (withdrawHiveStatus) {
+  if (walletHive >= 1) {
+    withdrawHiveStatus.textContent =
+      pendingWithdrawCount > 0
+        ? `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
+        : `${walletHive.toFixed(3)} HIVE available for withdrawal request`;
+  } else {
+    withdrawHiveStatus.textContent =
+      pendingWithdrawCount > 0
+        ? `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
+        : "Withdrawal not ready yet.";
+  }
+}
         } catch (err) {
           console.error("Failed to load reward summary:", err);
         }
