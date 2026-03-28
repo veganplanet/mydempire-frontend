@@ -645,6 +645,7 @@
       console.log("Dashboard loading for:", username);
 
       let ACTIVE_USER = null;
+      let EXACT_WALLET_HIVE = 0;
 
       function getActiveUser() {
         const u = (localStorage.getItem("hiveUsername") || "").trim();
@@ -1171,7 +1172,7 @@
           const walletHive = Number(
             data.wallet_hive ?? data.wallet_balance ?? 0,
           );
-
+EXACT_WALLET_HIVE = walletHive;
           setText("summary-claimable-hive", claimableHive.toFixed(3));
           setText("summary-wallet-hive", walletHive.toFixed(3));
 
@@ -1452,10 +1453,7 @@ syncPackOpenUI();
         const statusEl = document.getElementById("withdraw-hive-status");
 
         try {
-          const walletText =
-            document.getElementById("summary-wallet-hive")?.textContent || "0";
-
-          const walletAmount = Number(walletText);
+         const walletAmount = Number(EXACT_WALLET_HIVE || 0);
 
           if (!Number.isFinite(walletAmount) || walletAmount < 1) {
             if (statusEl) {
