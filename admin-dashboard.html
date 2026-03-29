@@ -497,6 +497,8 @@ async function loadWithdrawals() {
 
    const withdrawals = data.withdrawals || data.requests || [];
 
+const withdrawals = data.withdrawals || data.requests || [];
+
 if (!withdrawals.length) {
   box.innerHTML = `<div class="kv"><span>Status</span><span>No withdrawal requests found.</span></div>`;
   return;
@@ -579,6 +581,9 @@ async function completeWithdrawal(id) {
     document
       .getElementById("distribute-btn")
       .addEventListener("click", distributeRevenue);
+    document
+  .getElementById("load-withdrawals-btn")
+  .addEventListener("click", loadWithdrawals);
     // RUN DAILY REWARDS
 document
   .getElementById("run-rewards-btn")
