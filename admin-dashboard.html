@@ -181,32 +181,54 @@
     <div class="section">
       <h2>Overview</h2>
       <div class="metrics">
-        <div class="card">
-          <div class="label">Genesis Packs Sold</div>
-          <div class="value" id="metric-packs-sold">--</div>
-          <div class="small" id="metric-packs-remaining">Remaining: --</div>
-        </div>
+  <div class="card">
+    <div class="label">Genesis Packs Sold</div>
+    <div class="value" id="metric-packs-sold">--</div>
+    <div class="small" id="metric-packs-remaining">Remaining: --</div>
+  </div>
 
-        <div class="card">
-          <div class="label">Treasury Balance</div>
-          <div class="value" id="metric-treasury">--</div>
-        </div>
+  <div class="card">
+    <div class="label">Pre-Genesis Packs Sold</div>
+    <div class="value" id="metric-pregen-sold">--</div>
+    <div class="small">Closed test phase progress</div>
+  </div>
 
-        <div class="card">
-          <div class="label">EMP Supply</div>
-          <div class="value" id="metric-emp">--</div>
-        </div>
+  <div class="card">
+    <div class="label">Treasury Balance</div>
+    <div class="value" id="metric-treasury">--</div>
+    <div class="small" id="metric-treasury-updated">Updated: --</div>
+  </div>
 
-        <div class="card">
-          <div class="label">Factories</div>
-          <div class="value" id="metric-factories">--</div>
-        </div>
+  <div class="card">
+    <div class="label">EMP Supply</div>
+    <div class="value" id="metric-emp">--</div>
+    <div class="small">Total EMP across all players</div>
+  </div>
 
-        <div class="card">
-          <div class="label">Active Players</div>
-          <div class="value" id="metric-players">--</div>
-        </div>
-      </div>
+  <div class="card">
+    <div class="label">Total Factories</div>
+    <div class="value" id="metric-factories">--</div>
+    <div class="small" id="metric-factory-breakdown">A: -- | U/B: -- | I: --</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Active Players</div>
+    <div class="value" id="metric-players">--</div>
+    <div class="small">Players seen in orders/assets/factories</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Pack Sales Status</div>
+    <div class="value" id="metric-pack-sales-flag">--</div>
+    <div class="small" id="metric-pack-sales-updated">Updated: --</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Current Phase</div>
+    <div class="value" id="metric-phase">--</div>
+    <div class="small">Live backend game phase</div>
+  </div>
+</div>
 
       <div class="status" id="admin-status">Not connected yet.</div>
     </div>
@@ -290,26 +312,49 @@
           return;
         }
 
-        document.getElementById("metric-packs-sold").textContent =
-          data.packs.genesis_sold;
+       document.getElementById("metric-packs-sold").textContent =
+  Number(data.packs.genesis_sold || 0);
 
-        document.getElementById("metric-packs-remaining").textContent =
-          "Remaining: " + data.packs.genesis_remaining;
+document.getElementById("metric-packs-remaining").textContent =
+  "Remaining: " + Number(data.packs.genesis_remaining || 0);
 
-        document.getElementById("metric-emp").textContent =
-          data.emp.total_supply;
+document.getElementById("metric-pregen-sold").textContent =
+  Number(data.packs.pre_genesis_sold || 0);
 
-        document.getElementById("metric-factories").textContent =
-          data.factories.total;
+document.getElementById("metric-emp").textContent =
+  Number(data.emp.total_supply || 0).toLocaleString();
 
-        document.getElementById("metric-players").textContent =
-          data.players.active;
+document.getElementById("metric-factories").textContent =
+  Number(data.factories.total || 0);
 
-        document.getElementById("metric-treasury").textContent =
-          data.treasury.balance;
+document.getElementById("metric-factory-breakdown").textContent =
+  "A: " + Number(data.factories.active || 0) +
+  " | U/B: " + Number(data.factories.upgrading || 0) +
+  " | I: " + Number(data.factories.inactive || 0);
 
-        document.getElementById("phase-pill").textContent =
-          "Game Phase: " + data.phase;
+document.getElementById("metric-players").textContent =
+  Number(data.players.active || 0);
+
+document.getElementById("metric-treasury").textContent =
+  Number(data.treasury.balance || 0).toFixed(3) + " HIVE";
+
+document.getElementById("metric-treasury-updated").textContent =
+  "Updated: " + (data.treasury.updated_at || "--");
+
+document.getElementById("metric-phase").textContent =
+  data.phase || "--";
+
+document.getElementById("phase-pill").textContent =
+  "Game Phase: " + (data.phase || "--");
+
+const packSalesFlag = data.flags?.pack_sales_enabled?.value;
+const packSalesUpdated = data.flags?.pack_sales_enabled?.updated_at;
+
+document.getElementById("metric-pack-sales-flag").textContent =
+  String(packSalesFlag) === "true" ? "ENABLED" : "DISABLED";
+
+document.getElementById("metric-pack-sales-updated").textContent =
+  "Updated: " + (packSalesUpdated || "--");
 
         setStatus("Overview loaded successfully.");
       } catch (err) {
