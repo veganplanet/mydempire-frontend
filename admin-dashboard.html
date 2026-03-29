@@ -152,12 +152,29 @@
     <h1>MydEmpire — Admin Dashboard</h1>
     <div class="sub">Economy control center for Genesis / Pre-Genesis</div>
 
-    <div class="top-row">
-      <button id="connect-admin-btn" class="primary">Connect Admin</button>
-      <button id="distribute-btn">Distribute Revenue</button>
-      <button id="pause-pack-sales-btn" class="danger">Pause Pack Sales</button>
-      <button id="resume-pack-sales-btn">Resume Pack Sales</button>
-    </div>
+   <div class="top-row">
+  <button id="connect-admin-btn" class="primary">Connect Admin</button>
+
+  <button id="run-rewards-btn" class="primary">
+    Run Daily Rewards
+  </button>
+
+  <button id="reset-cycle-btn" class="danger">
+    Reset Today Reward Cycle
+  </button>
+
+  <button id="distribute-btn">
+    Distribute Revenue
+  </button>
+
+  <button id="pause-pack-sales-btn" class="danger">
+    Pause Pack Sales
+  </button>
+
+  <button id="resume-pack-sales-btn">
+    Resume Pack Sales
+  </button>
+</div>
 
     <div class="pill" id="phase-pill">Game Phase: --</div>
 
@@ -515,6 +532,74 @@ async function completeWithdrawal(id) {
     document
       .getElementById("distribute-btn")
       .addEventListener("click", distributeRevenue);
+    // RUN DAILY REWARDS
+document
+  .getElementById("run-rewards-btn")
+  .addEventListener("click", async () => {
+
+    const confirmRun = confirm(
+      "Run Daily Rewards now?"
+    );
+
+    if (!confirmRun) return;
+
+    try {
+
+      const res = await fetch(
+        "/admin/test-run-daily-rewards"
+      );
+
+      const data = await res.json();
+
+      alert(
+        "Reward engine executed.\n\n" +
+        JSON.stringify(data, null, 2)
+      );
+
+    } catch (err) {
+
+      alert("Error running rewards");
+
+      console.error(err);
+
+    }
+
+  });
+
+
+// RESET TODAY REWARD CYCLE
+document
+  .getElementById("reset-cycle-btn")
+  .addEventListener("click", async () => {
+
+    const confirmReset = confirm(
+      "Delete today's reward cycle?\n\nThis will allow rewards to be rebuilt."
+    );
+
+    if (!confirmReset) return;
+
+    try {
+
+      const res = await fetch(
+        "/admin/reset-today-reward-cycle"
+      );
+
+      const data = await res.json();
+
+      alert(
+        "Cycle reset result:\n\n" +
+        JSON.stringify(data, null, 2)
+      );
+
+    } catch (err) {
+
+      alert("Error resetting cycle");
+
+      console.error(err);
+
+    }
+
+  });
   </script>
 </body>
 </html>
