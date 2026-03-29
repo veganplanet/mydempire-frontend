@@ -495,12 +495,14 @@ async function loadWithdrawals() {
 
     const box = document.getElementById("withdrawals-box");
 
-    if (!data.withdrawals || !data.withdrawals.length) {
-      box.innerHTML = `<div class="kv"><span>Status</span><span>No withdrawal requests found.</span></div>`;
-      return;
-    }
+   const withdrawals = data.withdrawals || data.requests || [];
 
-    box.innerHTML = data.withdrawals
+if (!withdrawals.length) {
+  box.innerHTML = `<div class="kv"><span>Status</span><span>No withdrawal requests found.</span></div>`;
+  return;
+}
+
+box.innerHTML = withdrawals
       .map(
         (w) => `
           <div class="kv">
@@ -645,6 +647,9 @@ document
     }
 
   });
+    document
+  .getElementById("load-withdrawals-btn")
+  .addEventListener("click", loadWithdrawals);
   </script>
 </body>
 </html>
