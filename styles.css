@@ -9335,3 +9335,16 @@ input[type="range"]::-moz-range-thumb{
   color:#b91c1c;
   border:1px solid rgba(239,68,68,0.35);
 }
+.status-dot{
+  display:inline-block;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  margin-right:6px;
+  vertical-align:middle;
+}
+
+.status-ready{ background:#22c55e; }      /* green */
+.status-pending{ background:#f59e0b; }    /* amber */
+.status-completed{ background:#3b82f6; }  /* blue */
+.status-notready{ background:#ef4444; }   /* red */
