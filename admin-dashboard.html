@@ -592,9 +592,7 @@ document
 
     try {
 
-      const res = await fetch(
-        "/admin/test-run-daily-rewards"
-      );
+      const res = await fetch(`${API_BASE}/admin/test-run-daily-rewards`);
 
       const data = await res.json();
 
@@ -626,9 +624,8 @@ document
     if (!confirmReset) return;
 
     try {
-
       const res = await fetch(
-        "/admin/reset-today-reward-cycle"
+        `${API_BASE}/admin/reset-todays-reward-cycle`
       );
 
       const data = await res.json();
@@ -639,13 +636,9 @@ document
       );
 
     } catch (err) {
-
       alert("Error resetting cycle");
-
       console.error(err);
-
     }
-
   });
     document
   .getElementById("load-withdrawals-btn")
