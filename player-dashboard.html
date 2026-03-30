@@ -1184,9 +1184,12 @@ const lastCompletedWithdrawId = Number(data.last_completed_withdraw_id ?? 0);
     setText("summary-claimable-hive", claimableHive.toFixed(3));
     setText("summary-wallet-hive", Math.max(0, walletHive).toFixed(3));
 
-    if (pendingWithdrawCount > 0) {
+  if (pendingWithdrawCount > 0) {
 
   setText("summary-withdraw-status", "Pending");
+  document.getElementById("summary-withdraw-status").innerHTML =
+    `<span class="status-dot status-pending"></span>Pending`;
+
   setText(
     "summary-withdraw-sub",
     `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
@@ -1194,7 +1197,9 @@ const lastCompletedWithdrawId = Number(data.last_completed_withdraw_id ?? 0);
 
 } else if (lastCompletedWithdrawId > 0 && lastCompletedWithdrawAmount > 0) {
 
-  setText("summary-withdraw-status", "Completed");
+  document.getElementById("summary-withdraw-status").innerHTML =
+    `<span class="status-dot status-completed"></span>Completed`;
+
   setText(
     "summary-withdraw-sub",
     `${lastCompletedWithdrawAmount.toFixed(3)} HIVE withdrawal completed`
@@ -1202,12 +1207,16 @@ const lastCompletedWithdrawId = Number(data.last_completed_withdraw_id ?? 0);
 
 } else if (walletHive >= 1) {
 
-  setText("summary-withdraw-status", "Ready");
+  document.getElementById("summary-withdraw-status").innerHTML =
+    `<span class="status-dot status-ready"></span>Ready`;
+
   setText("summary-withdraw-sub", "You can request withdrawal now.");
 
 } else {
 
-  setText("summary-withdraw-status", "Not Ready");
+  document.getElementById("summary-withdraw-status").innerHTML =
+    `<span class="status-dot status-notready"></span>Not Ready`;
+
   setText("summary-withdraw-sub", "Minimum withdrawal is 1.000 HIVE");
 
 }
