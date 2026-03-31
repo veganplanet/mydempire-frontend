@@ -329,18 +329,18 @@ async function connectWallet() {
           return;
         }
 
-        if (!checkData.allow_login) {
-          localStorage.removeItem("mde_username");
-          localStorage.removeItem("hiveUsername");
-          localStorage.removeItem("username");
+       if (!checkData.allow_login) {
+  localStorage.removeItem("mde_username");
+  localStorage.removeItem("hiveUsername");
+  localStorage.removeItem("username");
 
-          if (typeof showWhitelistPopup === "function") {
-            showWhitelistPopup();
-          } else {
-            alert("Invite only phase. Your wallet is not approved for PRE-GENESIS.");
-          }
-          return;
-        }
+  if (typeof showWhitelistPopup === "function") {
+    showWhitelistPopup();
+  } else {
+    alert("Invite only phase. Your wallet is not approved for PRE-GENESIS.");
+  }
+  return;
+}
 
         localStorage.setItem("mde_username", username);
         localStorage.setItem("hiveUsername", username);
