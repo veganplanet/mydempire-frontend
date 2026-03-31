@@ -236,10 +236,11 @@ function getStoredUser() {
 }
 
 function showLoggedOutNav() {
-  document.querySelectorAll(".auth-only").forEach(link => {
-    link.classList.remove("show-auth-link");
-    link.style.display = "none";
-  });
+
+document.querySelectorAll(".auth-only").forEach(link => {
+  link.classList.remove("show-auth-link");
+  link.style.display = "none";  // hide tabs when logged out
+});
 
   const loginBtn = document.getElementById("appbarLoginBtn");
   const accountWrap = document.getElementById("appbarAccountWrap");
@@ -248,6 +249,7 @@ function showLoggedOutNav() {
   if (loginBtn) loginBtn.style.display = "none";
   if (accountWrap) accountWrap.style.display = "none";
   if (dropdown) dropdown.classList.remove("open");
+
 }
 
 function showLoggedInNav(username) {
