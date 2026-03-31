@@ -261,6 +261,10 @@ function showLoggedInNav(username) {
     link.classList.add("show-auth-link");
     link.style.display = "inline-flex";
   });
+  document.querySelectorAll(".auth-only").forEach(link => {
+  link.classList.add("show-auth-link");
+  link.style.display = "inline-flex";  // force show tabs
+});
 
   if (dashboard) {
     dashboard.href = "player-dashboard.html?user=" + encodeURIComponent(username);
