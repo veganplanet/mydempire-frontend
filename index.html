@@ -282,7 +282,18 @@ function redirectToDashboard(username) {
   window.location.href = "player-dashboard.html?user=" + encodeURIComponent(username);
 }
 
-function connectWallet() {
+<script>
+function getApiBase() {
+  const isLocal =
+    location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1";
+
+  return isLocal
+    ? "http://localhost:10000"
+    : "https://mydempire-backend-1.onrender.com";
+}
+
+async function connectWallet() {
   if (!window.hive_keychain) {
     alert("Hive Keychain not installed");
     return;
@@ -300,18 +311,51 @@ function connectWallet() {
     username,
     "MydEmpire Login " + Date.now(),
     "Posting",
-    function(res) {
+    async function(res) {
       if (!res || !res.success) {
         alert("Login cancelled");
         return;
       }
 
-      localStorage.setItem("mde_username", username);
-      showLoggedInNav(username);
-      redirectToDashboard(username);
+      try {
+        const apiBase = getApiBase();
+        const checkRes = await fetch(
+          apiBase + "/auth/check-whitelist/" + encodeURIComponent(username)
+        );
+        const checkData = await checkRes.json();
+
+        if (!checkRes.ok || !checkData.success) {
+          alert(checkData.error || "Whitelist check failed.");
+          return;
+        }
+
+        if (!checkData.allow_login) {
+          localStorage.removeItem("mde_username");
+          localStorage.removeItem("hiveUsername");
+          localStorage.removeItem("username");
+
+          if (typeof showWhitelistPopup === "function") {
+            showWhitelistPopup();
+          } else {
+            alert("Invite only phase. Your wallet is not approved for PRE-GENESIS.");
+          }
+          return;
+        }
+
+        localStorage.setItem("mde_username", username);
+        localStorage.setItem("hiveUsername", username);
+        localStorage.setItem("username", username);
+
+        showLoggedInNav(username);
+        redirectToDashboard(username);
+      } catch (err) {
+        console.error("Whitelist login check error:", err);
+        alert("Unable to verify invite access right now.");
+      }
     }
   );
 }
+</script>
 
 function disconnectWallet() {
   localStorage.removeItem("mde_username");
