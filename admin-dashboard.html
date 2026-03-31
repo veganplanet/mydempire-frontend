@@ -244,6 +244,31 @@
         />
         <button id="player-search-btn">Inspect Player</button>
       </div>
+      </div>
+
+<!-- ============================= -->
+<!-- WHITELIST MANAGER -->
+<!-- ============================= -->
+
+<div class="section">
+  <h2>Whitelist Manager</h2>
+
+  <div class="row">
+    <input
+      type="text"
+      id="whitelist-username-input"
+      placeholder="Enter Hive username"
+    />
+    <button id="add-whitelist-btn" class="primary">Add to Whitelist</button>
+    <button id="load-whitelist-btn">Load Whitelist</button>
+  </div>
+
+  <div class="status" id="whitelist-status">No action yet.</div>
+
+  <div id="whitelist-users-box" class="player-box" style="margin-top:12px;">
+    <div class="small">Whitelist users will appear here.</div>
+  </div>
+</div>
       <div class="section">
   <h2>Withdrawal Requests</h2>
 
@@ -643,6 +668,113 @@ document
     document
   .getElementById("load-withdrawals-btn")
   .addEventListener("click", loadWithdrawals);
+    // =============================
+// WHITELIST MANAGER
+// =============================
+
+async function loadWhitelistUsers() {
+  try {
+    const res = await fetch(`${API_BASE}/admin/whitelist-users`, {
+      headers: { "x-admin-key": ADMIN_KEY },
+    });
+
+    const data = await res.json();
+    const box = document.getElementById("whitelist-users-box");
+
+    if (!data.success) {
+      document.getElementById("whitelist-status").textContent =
+        data.error || "Failed to load whitelist users.";
+      return;
+    }
+
+    if (!data.users.length) {
+      box.innerHTML = `<div class="small">No whitelisted users found.</div>`;
+      return;
+    }
+
+    box.innerHTML = data.users
+      .map(
+        (user) => `
+      <div class="kv">
+        <span>@${user.username}</span>
+        <button onclick="removeWhitelistUser('${user.username}')">
+          Remove
+        </button>
+      </div>
+    `,
+      )
+      .join("");
+  } catch (err) {
+    console.error("Whitelist load error:", err);
+  }
+}
+
+async function addWhitelistUser() {
+  const input = document.getElementById("whitelist-username-input");
+  const username = input.value.trim().replace("@", "").toLowerCase();
+
+  if (!username) {
+    document.getElementById("whitelist-status").textContent =
+      "Enter username first.";
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/whitelist-user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY,
+      },
+      body: JSON.stringify({ username }),
+    });
+
+    const data = await res.json();
+
+    document.getElementById("whitelist-status").textContent =
+      data.message || data.error;
+
+    if (data.success) {
+      input.value = "";
+      loadWhitelistUsers();
+    }
+  } catch (err) {
+    console.error("Whitelist add error:", err);
+  }
+}
+
+async function removeWhitelistUser(username) {
+  try {
+    const res = await fetch(`${API_BASE}/admin/remove-whitelist-user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY,
+      },
+      body: JSON.stringify({ username }),
+    });
+
+    const data = await res.json();
+
+    document.getElementById("whitelist-status").textContent =
+      data.message || data.error;
+
+    if (data.success) {
+      loadWhitelistUsers();
+    }
+  } catch (err) {
+    console.error("Whitelist remove error:", err);
+  }
+}
+
+// button bindings
+document
+  .getElementById("add-whitelist-btn")
+  ?.addEventListener("click", addWhitelistUser);
+
+document
+  .getElementById("load-whitelist-btn")
+  ?.addEventListener("click", loadWhitelistUsers);
   </script>
 </body>
 </html>
