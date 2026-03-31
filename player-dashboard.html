@@ -118,6 +118,14 @@
           Overview
         </button>
         <button
+  type="button"
+  class="subnav-btn"
+  data-tab="assets"
+  onclick="setActiveTab('assets')"
+>
+  Empire Assets
+</button>
+        <button
           type="button"
           class="subnav-btn"
           data-tab="packs"
@@ -169,9 +177,7 @@
 
       <!-- ===== TAB: OVERVIEW ===== -->
       <section
-        class="section tab-panel tab-panel-active"
-        data-tab-panel="overview"
-      >
+        class="section tab-panel tab-panel-active"data-tab-panel="overview">
         <div class="section-header">
           <h2>Overview</h2>
           <small>Your Genesis EMP, lands, factories and boosts</small>
@@ -471,6 +477,51 @@
           <p class="status-text">Loading blueprints…</p>
         </div>
       </section>
+      <!--Empire Assets-->
+      <section class="section tab-panel" data-tab-panel="assets">
+  <div class="section-header">
+    <h2>Empire Assets</h2>
+    <small>A complete summary of your lands, blueprints, packs, relics and writs</small>
+  </div>
+
+  <div id="assets-tab-content">
+
+  <div class="metrics-grid">
+
+    <div class="metric-card">
+      <div class="metric-label">Lands</div>
+      <div class="metric-value" id="asset-lands">0</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">Blueprints</div>
+      <div class="metric-value" id="asset-blueprints">0</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">Factories</div>
+      <div class="metric-value" id="asset-factories">0</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">Packs</div>
+      <div class="metric-value" id="asset-packs">0</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">Relics</div>
+      <div class="metric-value" id="asset-relics">0</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">WRITs</div>
+      <div class="metric-value" id="asset-writs">0</div>
+    </div>
+
+  </div>
+
+</div>
+</section>
       <!-- ===== TAB: UNDER CONSTRUCTION ===== -->
       <section class="section tab-panel" data-tab-panel="construction">
         <div class="section-header">

@@ -9343,6 +9343,55 @@ input[type="range"]::-moz-range-thumb{
   margin-right:6px;
   vertical-align:middle;
 }
+.assets-block{
+  margin-top:30px;
+}
+
+.assets-title{
+  font-weight:700;
+  margin-bottom:12px;
+  font-size:18px;
+}
+
+.assets-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:18px;
+}
+
+.asset-card{
+  position:relative;
+  text-align:center;
+}
+
+.asset-card img{
+  width:100%;
+}
+
+.asset-qty{
+  position:absolute;
+  top:6px;
+  right:8px;
+  background:#1e293b;
+  color:white;
+  padding:2px 8px;
+  border-radius:10px;
+  font-size:12px;
+}
+
+.asset-land-card{
+  text-align:center;
+}
+
+.asset-image{
+  width:100%;
+}
+
+.asset-info{
+  font-size:13px;
+  margin-top:6px;
+  color:#475569;
+}
 
 .status-ready{ background:#22c55e; }      /* green */
 .status-pending{ background:#f59e0b; }    /* amber */
