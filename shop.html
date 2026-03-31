@@ -1230,5 +1230,57 @@ if (whitelistPopup) {
       document.getElementById("global-footer").innerHTML = html;
     });
 </script>
+  <script>
+(function () {
+  function getApiBase() {
+    const isLocal =
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1";
+
+    return isLocal
+      ? "http://localhost:10000"
+      : "https://mydempire-backend-1.onrender.com";
+  }
+
+  async function enforceWhitelistAccess() {
+    const username = (
+      localStorage.getItem("hiveUsername") ||
+      localStorage.getItem("mde_username") ||
+      localStorage.getItem("username") ||
+      ""
+    )
+      .replace("@", "")
+      .trim()
+      .toLowerCase();
+
+    if (!username) {
+      window.location.href = "index.html";
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        getApiBase() + "/auth/check-whitelist/" + encodeURIComponent(username)
+      );
+      const data = await res.json();
+
+      if (!res.ok || !data.success || !data.allow_login) {
+        localStorage.removeItem("mde_username");
+        localStorage.removeItem("hiveUsername");
+        localStorage.removeItem("username");
+        alert("Pre-Genesis is invite only. Your wallet is not approved yet.");
+        window.location.href = "index.html";
+        return;
+      }
+    } catch (err) {
+      console.error("Whitelist access check failed:", err);
+      alert("Unable to verify access right now. Please try again.");
+      window.location.href = "index.html";
+    }
+  }
+
+  enforceWhitelistAccess();
+})();
+</script>
   </body>
 </html>
