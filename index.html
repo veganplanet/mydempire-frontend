@@ -293,14 +293,18 @@ function getApiBase() {
     : "https://mydempire-backend-1.onrender.com";
 }
 
-async function connectWallet() {
+<script>
+function connectWallet() {
   if (!window.hive_keychain) {
     alert("Hive Keychain not installed");
     return;
   }
 
   const entered = prompt("Enter your Hive username:");
-  const username = String(entered || "").replace("@", "").trim().toLowerCase();
+  const username = String(entered || "")
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
 
   if (!username) {
     alert("Please enter your Hive username first.");
@@ -311,50 +315,22 @@ async function connectWallet() {
     username,
     "MydEmpire Login " + Date.now(),
     "Posting",
-    async function(res) {
+    function (res) {
       if (!res || !res.success) {
         alert("Login cancelled");
         return;
       }
 
-      try {
-        const apiBase = getApiBase();
-        const checkRes = await fetch(
-          apiBase + "/auth/check-whitelist/" + encodeURIComponent(username)
-        );
-        const checkData = await checkRes.json();
+      localStorage.setItem("mde_username", username);
+      localStorage.setItem("hiveUsername", username);
+      localStorage.setItem("username", username);
 
-        if (!checkRes.ok || !checkData.success) {
-          alert(checkData.error || "Whitelist check failed.");
-          return;
-        }
-
-       if (!checkData.allow_login) {
-  localStorage.removeItem("mde_username");
-  localStorage.removeItem("hiveUsername");
-  localStorage.removeItem("username");
-
-  if (typeof showWhitelistPopup === "function") {
-    showWhitelistPopup();
-  } else {
-    alert("Invite only phase. Your wallet is not approved for PRE-GENESIS.");
-  }
-  return;
-}
-
-        localStorage.setItem("mde_username", username);
-        localStorage.setItem("hiveUsername", username);
-        localStorage.setItem("username", username);
-
-        showLoggedInNav(username);
-        redirectToDashboard(username);
-      } catch (err) {
-        console.error("Whitelist login check error:", err);
-        alert("Unable to verify invite access right now.");
-      }
+      showLoggedInNav(username);
+      redirectToDashboard(username);
     }
   );
 }
+</script>
 </script>
 
 function disconnectWallet() {
