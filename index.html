@@ -1,133 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>MydEmpire</title>
-
-<style>
-body{
-  font-family: Arial, sans-serif;
-  background:#0b0b0b;
-  color:white;
-  text-align:center;
-  padding-top:100px;
-}
-
-nav{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  height:60px;
-  background:#111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  font-size:20px;
-}
-
-.login-box{
-  background:#161616;
-  padding:30px;
-  width:320px;
-  margin:auto;
-  border-radius:8px;
-}
-
-input{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border:none;
-  border-radius:4px;
-}
-
-button{
-  width:100%;
-  padding:12px;
-  margin-top:15px;
-  background:#3a7cff;
-  border:none;
-  color:white;
-  font-weight:bold;
-  border-radius:4px;
-  cursor:pointer;
-}
-
-button:hover{
-  background:#2d63cc;
-}
-
-#error{
-  color:#ff5252;
-  margin-top:10px;
-}
-</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MydEmpire — Pre Genesis</title>
+<link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
 
-<nav>
-MYDEMPIRE
-</nav>
+<div class="wrap">
 
-<div class="login-box">
+<header class="appbar">
+  <div class="appbar-inner">
 
-<h2>Login</h2>
+    <div class="appbar-left">
+      <a href="index.html" class="appbar-logo">
+        <img src="assets/logo.png" alt="MydEmpire">
+      </a>
 
-<input id="username" placeholder="Hive Username">
+      <nav class="appbar-nav">
+        <a href="index.html" class="appbar-link">Home</a>
+        <a href="economy.html" class="appbar-link">Economy</a>
+        <a href="transparency.html" class="appbar-link">Transparency</a>
+        <a href="codex.html" class="appbar-link">Codex</a>
 
-<button onclick="login()">Enter Empire</button>
+        <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only hidden-auth-link">Dashboard</a>
+        <a href="shop.html" id="shopLink" class="appbar-link auth-only hidden-auth-link">Shop</a>
+        <a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only hidden-auth-link">Marketplace</a>
+      </nav>
+    </div>
 
-<div id="error"></div>
+    <div class="appbar-right">
+
+      <!-- LOGIN BUTTON -->
+      <button id="appbarLoginBtn" class="appbar-login-btn" type="button">
+        Login
+      </button>
+
+      <!-- ACCOUNT MENU -->
+      <div id="appbarAccountWrap" class="appbar-account-wrap" style="display:none;">
+        <button id="appbarAccountBtn" class="appbar-account-btn" type="button">
+          @username ▼
+        </button>
+
+        <div id="appbarDropdown" class="appbar-dropdown">
+          <div id="appbarDropdownHead" class="appbar-dropdown-head">@username</div>
+
+          <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link">
+            Visit My Empire
+          </a>
+
+          <button id="visitOtherEmpireBtn" class="appbar-dropdown-link">
+            Visit Other Empire
+          </button>
+
+          <button id="appbarLogoutBtn" class="appbar-dropdown-link">
+            Logout
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</header>
+
+
+<div class="hero">
+  <img class="heroImg" src="assets/mydempire-hero.png" alt="MydEmpire hero">
+
+  <div class="heroBelow">
+    <img class="nameLogo" src="assets/logo.png" alt="MydEmpire">
+
+    <div class="tags">
+      <span class="tag phase-tag">🚧 Pre-Genesis Live</span>
+      <span class="tag">🔐 Keychain Verified</span>
+      <span class="tag">📦 Sealed Packs</span>
+      <span class="tag">🧪 Invite-Only Test</span>
+      <span class="tag">🧾 Max 10 packs/wallet</span>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- LOGIN BOX -->
+
+<div class="home-login-box">
+
+  <div class="home-login-title">
+    Enter Closed Testing
+  </div>
+
+  <div class="home-login-text">
+    Connect your Hive wallet to access the invite-only Pre-Genesis phase.
+  </div>
+
+  <button id="homeConnectWalletBtn" class="home-login-btn">
+    Login
+  </button>
+
+  <div class="home-login-note">
+    Invite-only access
+  </div>
 
 </div>
 
+
+<div id="global-footer"></div>
+
+
 <script>
 
-async function login(){
+/* =============================
+   API BASE
+============================= */
 
-const username = document.getElementById("username").value
-.trim()
-.replace("@","")
-.toLowerCase()
+function getApiBase() {
 
-if(!username){
-document.getElementById("error").innerText = "Enter username"
-return
+  const isLocal =
+    location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1";
+
+  return isLocal
+    ? "http://localhost:10000"
+    : "https://mydempire-backend-1.onrender.com";
 }
 
-try{
 
-const res = await fetch("/login",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({username})
+/* =============================
+   SESSION
+============================= */
+
+function getStoredUser() {
+
+  return (
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    ""
+  )
+  .replace("@","")
+  .trim()
+  .toLowerCase();
+
+}
+
+
+/* =============================
+   NAV STATE
+============================= */
+
+function showLoggedOutNav(){
+
+  document.querySelectorAll(".auth-only").forEach(link=>{
+    link.classList.remove("show-auth-link")
+  })
+
+  document.getElementById("appbarLoginBtn").style.display="inline-flex"
+  document.getElementById("appbarAccountWrap").style.display="none"
+
+}
+
+
+function showLoggedInNav(username){
+
+  document.querySelectorAll(".auth-only").forEach(link=>{
+    link.classList.add("show-auth-link")
+  })
+
+  document.getElementById("appbarLoginBtn").style.display="none"
+  document.getElementById("appbarAccountWrap").style.display="block"
+
+  document.getElementById("appbarAccountBtn").innerText="@" + username + " ▼"
+  document.getElementById("appbarDropdownHead").innerText="@" + username
+
+  document.getElementById("visitMyEmpireLink").href =
+    "player-dashboard.html?user=" + username
+
+}
+
+
+/* =============================
+   LOGIN
+============================= */
+
+function login(){
+
+  const entered = prompt("Enter Hive username")
+
+  const username = String(entered || "")
+    .replace("@","")
+    .trim()
+    .toLowerCase()
+
+  if(!username){
+    alert("Enter username")
+    return
+  }
+
+  fetch(getApiBase() + "/auth/check-whitelist/" + username)
+
+  .then(r=>r.json())
+
+  .then(data=>{
+
+    if(!data.success || !data.allow_login){
+
+      alert("Wallet not approved for Pre-Genesis")
+      return
+
+    }
+
+    localStorage.setItem("mde_username",username)
+    localStorage.setItem("username",username)
+
+    showLoggedInNav(username)
+
+    window.location.href =
+      "player-dashboard.html?user=" + username
+
+  })
+
+  .catch(err=>{
+    console.error(err)
+    alert("Login error")
+  })
+
+}
+
+
+/* =============================
+   LOGOUT
+============================= */
+
+function logout(){
+
+  localStorage.removeItem("mde_username")
+  localStorage.removeItem("username")
+
+  showLoggedOutNav()
+
+  window.location.href="index.html"
+
+}
+
+
+/* =============================
+   PAGE LOAD
+============================= */
+
+window.addEventListener("DOMContentLoaded",()=>{
+
+  const user = getStoredUser()
+
+  if(user){
+    showLoggedInNav(user)
+  }else{
+    showLoggedOutNav()
+  }
+
+  document
+    .getElementById("appbarLoginBtn")
+    .addEventListener("click",login)
+
+  document
+    .getElementById("homeConnectWalletBtn")
+    .addEventListener("click",login)
+
+  document
+    .getElementById("appbarLogoutBtn")
+    .addEventListener("click",logout)
+
 })
 
-const data = await res.json()
-
-if(!data.success){
-document.getElementById("error").innerText = "Wallet not whitelisted"
-return
-}
-
-localStorage.setItem("username",username)
-
-window.location.href="/player"
-
-}catch(e){
-
-document.getElementById("error").innerText="Server error"
-
-}
-
-}
-
 </script>
+
+
+</div>
 
 </body>
 </html>
