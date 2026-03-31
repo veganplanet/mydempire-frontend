@@ -29,7 +29,7 @@
     </div>
 
     <div class="appbar-right">
-      <button id="appbarLoginBtn" class="appbar-login-btn" type="button" style="display:none;">Connect Wallet</button>
+     <button id="appbarLoginBtn" class="appbar-login-btn" type="button" style="display:none;"></button>
 
       <div id="appbarAccountWrap" class="appbar-account-wrap" style="display:none;">
         <button id="appbarAccountBtn" class="appbar-account-btn" type="button">@username ▼</button>
@@ -236,6 +236,7 @@ function getStoredUser() {
 }
 
 function showLoggedOutNav() {
+
   document.querySelectorAll(".auth-only").forEach(link => {
     link.classList.remove("show-auth-link");
   });
@@ -244,7 +245,7 @@ function showLoggedOutNav() {
   const accountWrap = document.getElementById("appbarAccountWrap");
   const dropdown = document.getElementById("appbarDropdown");
 
-  if (loginBtn) loginBtn.style.display = "inline-flex";
+  if (loginBtn) loginBtn.style.display = "none";   // hide connect wallet
   if (accountWrap) accountWrap.style.display = "none";
   if (dropdown) dropdown.classList.remove("open");
 }
