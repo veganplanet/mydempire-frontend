@@ -17,15 +17,15 @@
       </a>
 
       <nav class="appbar-nav">
-  <a href="index.html" class="appbar-link">Home</a>
-  <a href="economy.html" class="appbar-link">Economy</a>
-  <a href="transparency.html" class="appbar-link">Transparency</a>
-  <a href="codex.html" class="appbar-link">Codex</a>
+        <a href="index.html" class="appbar-link">Home</a>
+        <a href="economy.html" class="appbar-link">Economy</a>
+        <a href="transparency.html" class="appbar-link">Transparency</a>
+        <a href="codex.html" class="appbar-link">Codex</a>
 
-  <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only hidden-auth-link">Dashboard</a>
-  <a href="shop.html" id="shopLink" class="appbar-link auth-only hidden-auth-link">Shop</a>
-  <a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only hidden-auth-link">Marketplace</a>
-</nav>
+        <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only hidden-auth-link">Dashboard</a>
+        <a href="shop.html" id="shopLink" class="appbar-link auth-only hidden-auth-link">Shop</a>
+        <a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only hidden-auth-link">Marketplace</a>
+      </nav>
     </div>
 
     <div class="appbar-right">
@@ -49,13 +49,13 @@
   <img class="heroImg" src="assets/mydempire-hero.png" alt="MydEmpire hero">
   <div class="heroBelow">
     <img class="nameLogo" src="assets/logo.png" alt="MydEmpire">
-   <div class="tags">
-  <span class="tag phase-tag">🚧 Pre-Genesis Live</span>
-  <span class="tag">🔐 Keychain Verified</span>
-  <span class="tag">📦 Sealed Packs</span>
-  <span class="tag">🧪 Invite-Only Test</span>
-  <span class="tag">🧾 Max 10 packs/wallet</span>
-</div>
+    <div class="tags">
+      <span class="tag phase-tag">🚧 Pre-Genesis Live</span>
+      <span class="tag">🔐 Keychain Verified</span>
+      <span class="tag">📦 Sealed Packs</span>
+      <span class="tag">🧪 Invite-Only Test</span>
+      <span class="tag">🧾 Max 10 packs/wallet</span>
+    </div>
   </div>
 </div>
 
@@ -160,7 +160,6 @@
 
     <div class="founder-box">
       <h4>Why Early Players Matter</h4>
-
       <div class="founder-item">🌱 Establish the first generation of industrial empires</div>
       <div class="founder-item">⚙️ Build factories and shape your long-term strategy</div>
       <div class="founder-item">💎 Discover ultra-rare relic opportunities</div>
@@ -203,21 +202,13 @@
 <div id="global-footer"></div>
 
 <script>
-  fetch("footer.html")
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById("global-footer").innerHTML = html;
-    });
-</script>
-    
+fetch("footer.html")
+  .then(res => res.text())
+  .then(html => {
+    const footerHost = document.getElementById("global-footer");
+    if (footerHost) footerHost.innerHTML = html;
+  });
 
-
-
-<script src="js/hive.js"></script>
-<script src="js/nav-auth.js"></script>
-<script src="js/home.js?v=6"></script>
-
-<script>
 function getStoredUser() {
   return (
     localStorage.getItem("mde_username") ||
@@ -282,18 +273,6 @@ function redirectToDashboard(username) {
   window.location.href = "player-dashboard.html?user=" + encodeURIComponent(username);
 }
 
-<script>
-function getApiBase() {
-  const isLocal =
-    location.hostname === "localhost" ||
-    location.hostname === "127.0.0.1";
-
-  return isLocal
-    ? "http://localhost:10000"
-    : "https://mydempire-backend-1.onrender.com";
-}
-
-<script>
 function connectWallet() {
   if (!window.hive_keychain) {
     alert("Hive Keychain not installed");
@@ -330,8 +309,6 @@ function connectWallet() {
     }
   );
 }
-</script>
-</script>
 
 function disconnectWallet() {
   localStorage.removeItem("mde_username");
@@ -351,9 +328,36 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   const loginBtn = document.getElementById("appbarLoginBtn");
-
   if (loginBtn) {
     loginBtn.addEventListener("click", connectWallet);
+  }
+
+  const logoutBtn = document.getElementById("appbarLogoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", disconnectWallet);
+  }
+
+  const accountBtn = document.getElementById("appbarAccountBtn");
+  const dropdown = document.getElementById("appbarDropdown");
+  if (accountBtn && dropdown) {
+    accountBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      dropdown.classList.toggle("open");
+    });
+
+    document.addEventListener("click", function () {
+      dropdown.classList.remove("open");
+    });
+  }
+
+  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
+  if (visitOtherEmpireBtn) {
+    visitOtherEmpireBtn.addEventListener("click", function () {
+      const entered = prompt("Enter Hive username to visit:");
+      const username = String(entered || "").replace("@", "").trim().toLowerCase();
+      if (!username) return;
+      window.location.href = "player-dashboard.html?user=" + encodeURIComponent(username);
+    });
   }
 
   const slides = Array.from(document.querySelectorAll(".industry-slide"));
@@ -364,7 +368,9 @@ window.addEventListener("DOMContentLoaded", () => {
   function showSlides(index) {
     slides.forEach(slide => slide.classList.remove("active"));
     if (!slides.length) return;
+
     slides[index % slides.length].classList.add("active");
+
     if (window.innerWidth > 640 && slides.length > 1) {
       slides[(index + 1) % slides.length].classList.add("active");
     }
@@ -386,6 +392,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
-<script src="js/appbar.js"></script>
+
+</div>
 </body>
 </html>
