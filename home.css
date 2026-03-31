@@ -532,6 +532,53 @@ a {
   .steps {
     grid-template-columns: 1fr;
   }
+  .home-login-box{
+  margin-top:18px;
+  padding:16px;
+  border-radius:16px;
+  border:1px solid #e5e7eb;
+  background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+  box-shadow:0 8px 18px rgba(15,23,42,0.06);
+}
+
+.home-login-title{
+  font-size:16px;
+  font-weight:900;
+  color:#0f172a;
+  margin-bottom:8px;
+}
+
+.home-login-text{
+  font-size:13px;
+  line-height:1.6;
+  color:#475569;
+  margin-bottom:14px;
+}
+
+.home-login-btn{
+  width:100%;
+  padding:12px 14px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(180deg,#2563eb,#1d4ed8);
+  color:#ffffff;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 10px 20px rgba(37,99,235,0.18);
+}
+
+.home-login-btn:hover{
+  filter:brightness(1.03);
+}
+
+.home-login-note{
+  margin-top:10px;
+  font-size:12px;
+  color:#64748b;
+  text-align:center;
+  font-weight:700;
+}
 
   .step {
     min-height: auto;
