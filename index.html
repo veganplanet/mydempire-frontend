@@ -410,5 +410,14 @@ window.addEventListener("DOMContentLoaded", () => {
 </script>
 
 </div>
+  <script>
+window.addEventListener("DOMContentLoaded", () => {
+  const homeLoginBtn = document.getElementById("homeConnectWalletBtn");
+
+  if (homeLoginBtn) {
+    homeLoginBtn.addEventListener("click", connectWallet);
+  }
+});
+</script>
 </body>
 </html>
