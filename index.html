@@ -319,7 +319,15 @@ function showInviteOnlyPopup() {
 
 showWhitelistPopup();
 }
+function showWhitelistPopup() {
+  const popup = document.getElementById("whitelist-popup");
+  if (popup) popup.classList.remove("hidden");
+}
 
+function closeWhitelistPopup() {
+  const popup = document.getElementById("whitelist-popup");
+  if (popup) popup.classList.add("hidden");
+}
 function connectWallet() {
   const entered = prompt("Enter your Hive username:");
   const username = String(entered || "")
@@ -344,7 +352,7 @@ function connectWallet() {
         localStorage.removeItem("mde_username");
         localStorage.removeItem("hiveUsername");
         localStorage.removeItem("username");
-        showInviteOnlyPopup();
+        showWhitelistPopup();
         return;
       }
 
