@@ -236,16 +236,16 @@ function getStoredUser() {
 }
 
 function showLoggedOutNav() {
-
   document.querySelectorAll(".auth-only").forEach(link => {
     link.classList.remove("show-auth-link");
+    link.style.display = "none";
   });
 
   const loginBtn = document.getElementById("appbarLoginBtn");
   const accountWrap = document.getElementById("appbarAccountWrap");
   const dropdown = document.getElementById("appbarDropdown");
 
-  if (loginBtn) loginBtn.style.display = "none";   // hide connect wallet
+  if (loginBtn) loginBtn.style.display = "none";
   if (accountWrap) accountWrap.style.display = "none";
   if (dropdown) dropdown.classList.remove("open");
 }
@@ -257,18 +257,22 @@ function showLoggedInNav(username) {
 
   document.querySelectorAll(".auth-only").forEach(link => {
     link.classList.add("show-auth-link");
+    link.style.display = "inline-flex";
   });
 
   if (dashboard) {
     dashboard.href = "player-dashboard.html?user=" + encodeURIComponent(username);
+    dashboard.style.display = "inline-flex";
   }
 
   if (shop) {
     shop.href = "shop.html?user=" + encodeURIComponent(username);
+    shop.style.display = "inline-flex";
   }
 
   if (marketplace) {
     marketplace.href = "marketplace.html?user=" + encodeURIComponent(username);
+    marketplace.style.display = "inline-flex";
   }
 
   const loginBtn = document.getElementById("appbarLoginBtn");
