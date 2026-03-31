@@ -317,9 +317,7 @@ function showInviteOnlyPopup() {
     return;
   }
 
-  alert(
-    "Pre-Genesis is invite only.\n\nYour wallet is not approved for closed testing yet."
-  );
+showWhitelistPopup();
 }
 
 function connectWallet() {
@@ -468,6 +466,35 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+</div>
+  <div id="whitelist-popup" class="hidden">
+  <div class="whitelist-popup-box">
+
+    <h2>You’re Early 👑</h2>
+
+    <p>
+      MydEmpire is currently in a <b>PRE-GENESIS invite-only testing phase</b>.
+    </p>
+
+    <p>
+      Your wallet isn’t on the tester list yet — which simply means  
+      you arrived <b>before the gates fully open</b>.
+    </p>
+
+    <p>
+      Join our Discord to request access and become one of the first  
+      <b>Empire Builders</b> shaping the future of MydEmpire.
+    </p>
+
+    <a href="https://discord.gg/cDyCjh57" target="_blank" class="discord-btn">
+      Join Discord
+    </a>
+
+    <button class="popup-ok-btn" onclick="closeWhitelistPopup()">
+      Got it
+    </button>
+
+  </div>
 </div>
 </body>
 </html>
