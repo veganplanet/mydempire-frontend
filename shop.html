@@ -1230,7 +1230,7 @@ if (whitelistPopup) {
       document.getElementById("global-footer").innerHTML = html;
     });
 </script>
-  <script>
+<script>
 (function () {
   function getApiBase() {
     const isLocal =
@@ -1253,8 +1253,8 @@ if (whitelistPopup) {
       .trim()
       .toLowerCase();
 
+    // No login yet → stay on page, let Connect Wallet remain active
     if (!username) {
-      window.location.href = "index.html";
       return;
     }
 
@@ -1268,14 +1268,19 @@ if (whitelistPopup) {
         localStorage.removeItem("mde_username");
         localStorage.removeItem("hiveUsername");
         localStorage.removeItem("username");
-        alert("Pre-Genesis is invite only. Your wallet is not approved yet.");
-        window.location.href = "index.html";
-        return;
+
+        if (typeof showWhitelistPopup === "function") {
+          showWhitelistPopup();
+        } else {
+          alert("Pre-Genesis is invite only. Your wallet is not approved yet.");
+        }
+
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 300);
       }
     } catch (err) {
       console.error("Whitelist access check failed:", err);
-      alert("Unable to verify access right now. Please try again.");
-      window.location.href = "index.html";
     }
   }
 
