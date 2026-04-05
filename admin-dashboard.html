@@ -795,10 +795,11 @@ async function loadChainEvents(limit = 20) {
   TX:
   ${
     evt.tx_id
-      ? `<a href="https://hiveblocks.com/tx/${evt.tx_id}" target="_blank" rel="noopener noreferrer" style="color:#2563eb; font-weight:700; text-decoration:none;">${evt.tx_id}</a>`
+      ? `<a href="https://hivehub.dev/tx/${evt.tx_id}" target="_blank" rel="noopener noreferrer" style="color:#2563eb; font-weight:700; text-decoration:none;">${evt.tx_id}</a>`
       : "Not broadcasted yet"
   }
-</div>          <div style="margin-top:6px; color:#6b7280;">Created: ${evt.created_at || "--"}</div>
+</div>      
+<div style="margin-top:6px; color:#6b7280;">Created: ${evt.created_at || "--"}</div>
           ${
             evt.error_message
               ? `<div style="margin-top:6px; color:#b91c1c;">Error: ${evt.error_message}</div>`
