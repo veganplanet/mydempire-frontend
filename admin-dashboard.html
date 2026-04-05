@@ -791,8 +791,14 @@ async function loadChainEvents(limit = 20) {
         <div class="kv" style="display:block; margin-bottom:10px;">
           <div><b>#${evt.id}</b> • <b>${evt.event_type}</b> • <b>${evt.status}</b></div>
           <div style="margin-top:6px; color:#374151;">User: ${evt.username || "--"} | Asset: ${evt.asset_type || "--"} #${evt.asset_id || "--"}</div>
-          <div style="margin-top:6px; color:#6b7280;">TX: ${evt.tx_id || "Not broadcasted yet"}</div>
-          <div style="margin-top:6px; color:#6b7280;">Created: ${evt.created_at || "--"}</div>
+          <div style="margin-top:6px; color:#6b7280;">
+  TX:
+  ${
+    evt.tx_id
+      ? `<a href="https://hiveblocks.com/tx/${evt.tx_id}" target="_blank" rel="noopener noreferrer" style="color:#2563eb; font-weight:700; text-decoration:none;">${evt.tx_id}</a>`
+      : "Not broadcasted yet"
+  }
+</div>          <div style="margin-top:6px; color:#6b7280;">Created: ${evt.created_at || "--"}</div>
           ${
             evt.error_message
               ? `<div style="margin-top:6px; color:#b91c1c;">Error: ${evt.error_message}</div>`
