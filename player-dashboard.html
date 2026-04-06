@@ -3120,6 +3120,9 @@ window.selectedBuildLandTier = landTier;
                   nameInput.focus();
                 }
               });
+                            card.style.maxWidth = "360px";
+              card.style.margin = "0 auto";
+              card.style.width = "100%";
               grid.appendChild(card);
             } catch (e) {
               console.error("Blueprint render failed for item:", b, e);
