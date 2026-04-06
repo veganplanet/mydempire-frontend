@@ -9629,3 +9629,7 @@ cursor:pointer;
   color: #0f172a;
   transform: scale(1.1);
 }
+.bp-card-menu-btn:hover{
+  background: rgba(0,0,0,0.05);
+  border-radius: 6px;
+}
