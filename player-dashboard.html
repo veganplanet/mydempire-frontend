@@ -3750,6 +3750,19 @@ if (!confirmed) return;
     withdrawBtn.addEventListener("click", requestWithdrawHive);
   }
 });
+      function toggleBlueprintCardMenu(btn) {
+  const menu = btn.nextElementSibling;
+
+  document.querySelectorAll(".bp-card-menu").forEach((m) => {
+    if (m !== menu) m.classList.remove("open");
+  });
+
+  menu.classList.toggle("open");
+}
+
+function tradeBlueprint(id) {
+  window.location.href = `marketplace.html?blueprint=${id}`;
+}
     </script>
 
     <script src="js/appbar.js"></script>
