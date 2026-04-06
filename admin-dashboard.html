@@ -608,16 +608,22 @@ async function completeWithdrawal(id) {
 document
   .getElementById("run-rewards-btn")
   .addEventListener("click", async () => {
+    if (!ADMIN_KEY) {
+      alert("Connect Admin first");
+      return;
+    }
 
-    const confirmRun = confirm(
-      "Run Daily Rewards now?"
-    );
-
-    if (!confirmRun) return;
+    const today = new Date().toISOString().slice(0, 10);
 
     try {
-
-      const res = await fetch(`${API_BASE}/admin/test-run-daily-rewards`);
+      const res = await fetch(
+        `${API_BASE}/admin/test-run-daily-rewards?date=${today}`,
+        {
+          headers: {
+            "x-admin-key": ADMIN_KEY
+          }
+        }
+      );
 
       const data = await res.json();
 
@@ -627,15 +633,10 @@ document
       );
 
     } catch (err) {
-
       alert("Error running rewards");
-
       console.error(err);
-
     }
-
   });
-
 
 // RESET TODAY REWARD CYCLE
 document
