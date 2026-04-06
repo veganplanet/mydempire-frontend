@@ -3063,7 +3063,7 @@ window.selectedBuildLandTier = landTier;
               card.style.borderColor = borderColor;
 
               // ----- Render (adjust innerHTML to your final bp-mini design if needed) -----
-              card.innerHTML = `
+                           card.innerHTML = `
           <div class="bp-mini-card" style="--bp-border:${borderColor}; --bp-bg:${bgColor};">
             <div class="bp-mini-badge" style="background:${borderColor};">${levelLabel}</div>
 
@@ -3080,8 +3080,19 @@ window.selectedBuildLandTier = landTier;
                 <span class="bp-mini-label">Production (EMP/day)</span>
                 <span class="bp-mini-value">10 × Land × ${levelMultText}</span>
               </div>
+
+              <div class="bp-mini-row" style="margin-top:10px; justify-content:center;">
+                <button
+                  type="button"
+                  class="secondary-button"
+                  onclick="event.stopPropagation(); transferNFT(${b.blueprint_id}, 'BLUEPRINT');"
+                >
+                  Transfer
+                </button>
+              </div>
             </div>
           </div>
+        `;          </div>
         `;
               card.style.cursor = "pointer";
 
@@ -3773,20 +3784,25 @@ if (!confirmed) return;
         .then((html) => {
           document.getElementById("global-footer").innerHTML = html;
         });
-      async function transferNFT(nftId) {
-
-  const toUser = prompt("Enter Hive username to transfer NFT:");
+     async function transferNFT(nftId, nftType) {
+  const toUser = prompt(`Enter Hive username to transfer this ${nftType} to:`);
 
   if (!toUser) return;
 
-  const confirmTransfer = confirm(
-    "Transfer NFT #" + nftId + " to @" + toUser + " ?"
+  const cleanToUser = String(toUser).trim().replace("@", "").toLowerCase();
+
+  if (!cleanToUser) {
+    alert("Recipient username is required.");
+    return;
+  }
+
+  const confirmed = confirm(
+    `Transfer ${nftType} #${nftId} to @${cleanToUser}?`
   );
 
-  if (!confirmTransfer) return;
+  if (!confirmed) return;
 
   try {
-
     const res = await fetch(apiUrl("/transfer-nft"), {
       method: "POST",
       headers: {
@@ -3794,22 +3810,24 @@ if (!confirmed) return;
       },
       body: JSON.stringify({
         from_username: PLAYER_USERNAME,
-        to_username: toUser,
+        to_username: cleanToUser,
         nft_id: nftId,
       }),
     });
 
     const data = await res.json();
 
-    if (data.success) {
-      alert("Transfer successful!");
-      location.reload();
-    } else {
-      alert(data.error || "Transfer failed");
+    if (!data.success) {
+      alert(data.error || "Transfer failed.");
+      return;
     }
 
+    alert("NFT transferred successfully.");
+    await loadBlueprints();
+    await loadDashboardSummary();
   } catch (err) {
-    alert("Transfer error");
+    console.error("Transfer NFT error:", err);
+    alert("Transfer request failed.");
   }
 }
     </script>
