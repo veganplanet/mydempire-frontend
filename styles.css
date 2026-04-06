@@ -9611,3 +9611,6 @@ cursor:pointer;
 .bp-card-menu button:hover{
   background: #f8fafc;
 }
+.bp-mini-card{
+  position: relative;
+}
