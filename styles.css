@@ -9614,3 +9614,18 @@ cursor:pointer;
 .bp-mini-card{
   position: relative;
 }
+.bp-card-menu-btn{
+  background: none;
+  border: none;
+  color: #1f2937;
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+}
+
+.bp-card-menu-btn:hover{
+  color: #0f172a;
+  transform: scale(1.1);
+}
