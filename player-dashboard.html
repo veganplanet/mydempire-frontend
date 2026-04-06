@@ -3773,6 +3773,45 @@ if (!confirmed) return;
         .then((html) => {
           document.getElementById("global-footer").innerHTML = html;
         });
+      async function transferNFT(nftId) {
+
+  const toUser = prompt("Enter Hive username to transfer NFT:");
+
+  if (!toUser) return;
+
+  const confirmTransfer = confirm(
+    "Transfer NFT #" + nftId + " to @" + toUser + " ?"
+  );
+
+  if (!confirmTransfer) return;
+
+  try {
+
+    const res = await fetch(apiUrl("/transfer-nft"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from_username: PLAYER_USERNAME,
+        to_username: toUser,
+        nft_id: nftId,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("Transfer successful!");
+      location.reload();
+    } else {
+      alert(data.error || "Transfer failed");
+    }
+
+  } catch (err) {
+    alert("Transfer error");
+  }
+}
     </script>
        
   </body>
