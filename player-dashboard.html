@@ -3081,7 +3081,7 @@ window.selectedBuildLandTier = landTier;
                 <span class="bp-mini-value">10 × Land × ${levelMultText}</span>
               </div>
 
-              <div class="bp-card-actions">
+            <div class="bp-card-actions">
   <button
     type="button"
     class="bp-card-menu-btn"
@@ -3090,23 +3090,13 @@ window.selectedBuildLandTier = landTier;
     ⋯
   </button>
 
- <div class="bp-card-menu">
-
-  <button
-    type="button"
-    onclick="event.stopPropagation(); transferNFT(${b.blueprint_id}, 'BLUEPRINT');"
-  >
-    Transfer
-  </button>
-
-  <button
-    type="button"
-    onclick="event.stopPropagation(); tradeBlueprint(${b.blueprint_id});"
-  >
-    Trade on Marketplace
-  </button>
-
-</div>
+  <div class="bp-card-menu">
+    <button
+      type="button"
+      onclick="event.stopPropagation(); transferNFT(${b.blueprint_id}, 'BLUEPRINT');"
+    >
+      Transfer
+    </button>
 
     <button
       type="button"
@@ -3118,7 +3108,7 @@ window.selectedBuildLandTier = landTier;
 </div>
             </div>
           </div>
-        `;          
+        `;
               card.style.cursor = "pointer";
 
               card.addEventListener("click", () => {
