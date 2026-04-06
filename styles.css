@@ -9549,3 +9549,65 @@ cursor:pointer;
 .bp-card-menu{
   display: none;
 }
+/* ============================= */
+/* BLUEPRINT CARD ACTION MENU */
+/* ============================= */
+
+.blueprint-card{
+  position: relative;
+}
+
+.bp-card-actions{
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 30;
+}
+
+.bp-card-menu-btn{
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.78);
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+}
+
+.bp-card-menu{
+  display: none;
+  position: absolute;
+  top: 42px;
+  right: 0;
+  min-width: 190px;
+  background: #ffffff;
+  border: 1px solid #dbe3ef;
+  border-radius: 14px;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.16);
+  padding: 8px;
+}
+
+.bp-card-menu.open{
+  display: block;
+}
+
+.bp-card-menu button{
+  width: 100%;
+  border: none;
+  background: #ffffff;
+  color: #0f172a;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bp-card-menu button:hover{
+  background: #f8fafc;
+}
