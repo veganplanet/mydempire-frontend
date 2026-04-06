@@ -9546,3 +9546,6 @@ cursor:pointer;
 .card-menu button:hover {
   background: #f5f5f5;
 }
+.bp-card-menu{
+  display: none;
+}
