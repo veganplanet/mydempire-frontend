@@ -1222,8 +1222,11 @@
 
     setText("asset-packs", `x ${unopenedPacks}`);
     setText("asset-relics", `x ${relicCount}`);
-    setText("asset-writs", `x ${writCount}`);
-    async function loadRewardSummary() {
+   setText("asset-writs", `x ${writCount}`);
+
+}
+
+async function loadRewardSummary() {
   try {
     const res = await fetch(
       apiUrl(
