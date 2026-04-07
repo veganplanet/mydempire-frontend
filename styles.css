@@ -9683,3 +9683,6 @@ cursor:pointer;
 .factory-card.b3{ border:3px solid #8b5cf6; }
 .factory-card.b4{ border:3px solid #f97316; }
 .factory-card.b5{ border:3px solid #eab308; }
+.asset-card-wrap{
+  position: relative;
+}
