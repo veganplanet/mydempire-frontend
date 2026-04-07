@@ -1304,12 +1304,38 @@
       console.error("Failed to load packs for assets tab:", e);
     }
 
-   setText("asset-lands", `x ${totalLands}`);
-setText("asset-blueprints", `x ${totalBlueprints}`);
-setText("asset-factories", `x ${totalFactories}`);
-setText("asset-packs", `x ${unopenedPacks}`);
-setText("asset-relics", `x ${relicCount}`);
-setText("asset-writs", `x ${writCount}`);
+       // ===== EMPIRE ASSETS INVENTORY =====
+    let bpFood = 0;
+    let bpTextile = 0;
+    let bpPharma = 0;
+    let bpChemical = 0;
+    let bpSupermarket = 0;
+
+    if (Array.isArray(blueprintsData.blueprints)) {
+      for (const bp of blueprintsData.blueprints) {
+        const tierRaw = String(bp.tier || bp.blueprint_tier || "").toUpperCase();
+
+        if (tierRaw.startsWith("FOOD_")) bpFood++;
+        else if (tierRaw.startsWith("TEXTILE_")) bpTextile++;
+        else if (tierRaw.startsWith("PHARMA_")) bpPharma++;
+        else if (tierRaw.startsWith("CHEMICAL_")) bpChemical++;
+        else if (tierRaw.startsWith("SUPERMARKET_")) bpSupermarket++;
+      }
+    }
+
+    setText("asset-land-l1", `x ${l1}`);
+    setText("asset-land-l2", `x ${l2}`);
+    setText("asset-land-l3", `x ${l3}`);
+
+    setText("asset-bp-food", `x ${bpFood}`);
+    setText("asset-bp-textile", `x ${bpTextile}`);
+    setText("asset-bp-pharma", `x ${bpPharma}`);
+    setText("asset-bp-chemical", `x ${bpChemical}`);
+    setText("asset-bp-supermarket", `x ${bpSupermarket}`);
+
+    setText("asset-packs", `x ${unopenedPacks}`);
+    setText("asset-relics", `x ${relicCount}`);
+    setText("asset-writs", `x ${writCount}`);
   } catch (err) {
     console.error("Failed to load dashboard summary:", err);
   }
