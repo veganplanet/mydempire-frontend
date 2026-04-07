@@ -478,62 +478,140 @@
         </div>
       </section>
      <!-- ===== TAB: EMPIRE ASSETS ===== -->
+<!-- ===== TAB: EMPIRE ASSETS ===== -->
 <section class="section tab-panel" data-tab-panel="assets">
   <div class="section-header">
     <h2>Empire Assets</h2>
-    <small>Your complete visual asset summary</small>
+    <small>Your visual inventory of core empire assets</small>
   </div>
 
-  <div class="assets-visual-grid">
+  <div class="assets-inventory-grid">
 
-    <div class="asset-visual-card">
-      <div class="asset-visual-art">
-        <img src="assets/land-l1.png" alt="Lands">
+    <!-- ===== LANDS ===== -->
+    <div class="inventory-item-card land l1">
+      <div class="inventory-count-badge" id="asset-land-l1">x 0</div>
+      <div class="inventory-inner">
+        <div class="inventory-title">FRONTIER</div>
+        <div class="land-layout land-layout-1">
+          <img src="assets/land-l1.png" class="land-tile" alt="L1 Frontier">
+        </div>
+        <div class="inventory-tier-badge">L1</div>
       </div>
-      <div class="asset-visual-name">Lands</div>
-      <div class="asset-visual-count" id="asset-lands">x 0</div>
     </div>
 
-    <div class="asset-visual-card">
-      <div class="asset-visual-art">
-        <img src="assets/food.png" alt="Blueprints">
+    <div class="inventory-item-card land l2">
+      <div class="inventory-count-badge" id="asset-land-l2">x 0</div>
+      <div class="inventory-inner">
+        <div class="inventory-title">ESTATE</div>
+        <div class="land-layout land-layout-2">
+          <img src="assets/land-l2.png" class="land-tile" alt="L2 Estate">
+          <img src="assets/land-l2.png" class="land-tile" alt="L2 Estate">
+        </div>
+        <div class="inventory-tier-badge">L2</div>
       </div>
-      <div class="asset-visual-name">Blueprints</div>
-      <div class="asset-visual-count" id="asset-blueprints">x 0</div>
     </div>
 
-    <div class="asset-visual-card">
-      <div class="asset-visual-art">
-        <img src="assets/pack.png" alt="Packs">
+    <div class="inventory-item-card land l3">
+      <div class="inventory-count-badge" id="asset-land-l3">x 0</div>
+      <div class="inventory-inner">
+        <div class="inventory-title">INDUSTRIAL ZONE</div>
+        <div class="land-layout land-layout-3">
+          <img src="assets/land-l3.png" class="land-tile land-top" alt="L3 Industrial Zone">
+          <img src="assets/land-l3.png" class="land-tile land-bottom-left" alt="L3 Industrial Zone">
+          <img src="assets/land-l3.png" class="land-tile land-bottom-right" alt="L3 Industrial Zone">
+        </div>
+        <div class="inventory-tier-badge">L3</div>
       </div>
-      <div class="asset-visual-name">Packs</div>
-      <div class="asset-visual-count" id="asset-packs">x 0</div>
     </div>
 
-    <div class="asset-visual-card">
-      <div class="asset-visual-art">
-        <img src="assets/relic.png" alt="Relics">
+    <!-- ===== BLUEPRINTS ===== -->
+    <div class="inventory-item-card blueprint b1">
+      <div class="inventory-count-badge" id="asset-bp-food">x 0</div>
+      <div class="inventory-inner">
+        <div class="inventory-title">FOOD</div>
+        <div class="inventory-art">
+          <img src="assets/food.png" alt="Food Blueprint">
+        </div>
+        <div class="inventory-tier-badge">BP</div>
       </div>
-      <div class="asset-visual-name">Relics</div>
-      <div class="asset-visual-count" id="asset-relics">x 0</div>
     </div>
 
-    <div class="asset-visual-card">
-      <div class="asset-visual-art">
-        <img src="assets/writ.png" alt="WRITs">
+    <div class="inventory-item-card blueprint b2">
+      <div class="inventory-count-badge" id="asset-bp-textile">x 0</div>
+      <div class="inventory-inner">
+        <div class="inventory-title">TEXTILE</div>
+        <div class="inventory-art">
+          <img src="assets/textile.png" alt="Textile Blueprint">
+        </div>
+        <div class="inventory-tier-badge">BP</div>
       </div>
-      <div class="asset-visual-name">WRITs</div>
-      <div class="asset-visual-count" id="asset-writs">x 0</div>
     </div>
 
-    <div class="asset-visual-card">
-      <div class="asset-visual-art asset-visual-icon-box">
-        <svg class="asset-factory-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3 21V10h5l3-4v4h4l3-3v14H3z"></path>
-        </svg>
+    <div class="inventory-item-card blueprint b3">
+      <div class="inventory-count-badge" id="asset-bp-pharma">x 0</div>
+      <div class="inventory-inner">
+        <div class="inventory-title">PHARMA</div>
+        <div class="inventory-art">
+          <img src="assets/pharma.png" alt="Pharma Blueprint">
+        </div>
+        <div class="inventory-tier-badge">BP</div>
       </div>
-      <div class="asset-visual-name">Factories</div>
-      <div class="asset-visual-count" id="asset-factories">x 0</div>
+    </div>
+
+    <div class="inventory-item-card blueprint b4">
+      <div class="inventory-count-badge" id="asset-bp-chemical">x 0</div>
+      <div class="inventory-inner">
+        <div class="inventory-title">CHEMICAL</div>
+        <div class="inventory-art">
+          <img src="assets/chemical.png" alt="Chemical Blueprint">
+        </div>
+        <div class="inventory-tier-badge">BP</div>
+      </div>
+    </div>
+
+    <div class="inventory-item-card blueprint b5">
+      <div class="inventory-count-badge" id="asset-bp-supermarket">x 0</div>
+      <div class="inventory-inner">
+        <div class="inventory-title">SUPERMARKET</div>
+        <div class="inventory-art">
+          <img src="assets/supermarket.png" alt="Supermarket Blueprint">
+        </div>
+        <div class="inventory-tier-badge">BP</div>
+      </div>
+    </div>
+
+    <!-- ===== OTHER ASSETS ===== -->
+    <div class="inventory-item-card pack-card-style">
+      <div class="inventory-count-badge" id="asset-packs">x 0</div>
+      <div class="inventory-inner">
+        <div class="inventory-title">PACK</div>
+        <div class="inventory-art">
+          <img src="assets/pack.png" alt="Pack">
+        </div>
+        <div class="inventory-tier-badge">SEALED</div>
+      </div>
+    </div>
+
+    <div class="inventory-item-card relic-card-style">
+      <div class="inventory-count-badge" id="asset-relics">x 0</div>
+      <div class="inventory-inner">
+        <div class="inventory-title">RELIC</div>
+        <div class="inventory-art">
+          <img src="assets/relic.png" alt="Relic">
+        </div>
+        <div class="inventory-tier-badge">RARE</div>
+      </div>
+    </div>
+
+    <div class="inventory-item-card writ-card-style">
+      <div class="inventory-count-badge" id="asset-writs">x 0</div>
+      <div class="inventory-inner">
+        <div class="inventory-title">WRIT</div>
+        <div class="inventory-art">
+          <img src="assets/writ.png" alt="WRIT">
+        </div>
+        <div class="inventory-tier-badge">FOUNDER</div>
+      </div>
     </div>
 
   </div>
