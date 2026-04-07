@@ -1394,13 +1394,13 @@
     const lifetimeEP = Number(data.lifetimeEP ?? 0);
     setText("lifetime-ep", lifetimeEP.toFixed(2));
         // ===== EMPIRE ASSETS TAB =====
+    // ===== EMPIRE ASSETS =====
     let unopenedPacks = 0;
 
     try {
       const packsRes = await fetch(
         apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/packs`)
       );
-
       if (packsRes.ok) {
         const packsData = await packsRes.json();
         unopenedPacks = Array.isArray(packsData.packs) ? packsData.packs.length : 0;
@@ -1409,22 +1409,20 @@
       console.error("Failed to load packs for assets tab:", e);
     }
 
-       // ===== EMPIRE ASSETS INVENTORY =====
-    let bpFood = 0;
-    let bpTextile = 0;
-    let bpPharma = 0;
-    let bpChemical = 0;
-    let bpSupermarket = 0;
+    const bpCounts = {
+      FOOD_B1: 0, FOOD_B2: 0, FOOD_B3: 0, FOOD_B4: 0, FOOD_B5: 0,
+      TEXTILE_B1: 0, TEXTILE_B2: 0, TEXTILE_B3: 0, TEXTILE_B4: 0, TEXTILE_B5: 0,
+      PHARMA_B1: 0, PHARMA_B2: 0, PHARMA_B3: 0, PHARMA_B4: 0, PHARMA_B5: 0,
+      CHEMICAL_B1: 0, CHEMICAL_B2: 0, CHEMICAL_B3: 0, CHEMICAL_B4: 0, CHEMICAL_B5: 0,
+      SUPERMARKET_B1: 0, SUPERMARKET_B2: 0, SUPERMARKET_B3: 0, SUPERMARKET_B4: 0, SUPERMARKET_B5: 0
+    };
 
     if (Array.isArray(blueprintsData.blueprints)) {
       for (const bp of blueprintsData.blueprints) {
-        const tierRaw = String(bp.tier || bp.blueprint_tier || "").toUpperCase();
-
-        if (tierRaw.startsWith("FOOD_")) bpFood++;
-        else if (tierRaw.startsWith("TEXTILE_")) bpTextile++;
-        else if (tierRaw.startsWith("PHARMA_")) bpPharma++;
-        else if (tierRaw.startsWith("CHEMICAL_")) bpChemical++;
-        else if (tierRaw.startsWith("SUPERMARKET_")) bpSupermarket++;
+        const tierRaw = String(bp.tier || bp.blueprint_tier || "").toUpperCase().trim();
+        if (bpCounts.hasOwnProperty(tierRaw)) {
+          bpCounts[tierRaw]++;
+        }
       }
     }
 
@@ -1432,19 +1430,39 @@
     setText("asset-land-l2", `x ${l2}`);
     setText("asset-land-l3", `x ${l3}`);
 
-    setText("asset-bp-food", `x ${bpFood}`);
-    setText("asset-bp-textile", `x ${bpTextile}`);
-    setText("asset-bp-pharma", `x ${bpPharma}`);
-    setText("asset-bp-chemical", `x ${bpChemical}`);
-    setText("asset-bp-supermarket", `x ${bpSupermarket}`);
+    setText("asset-bp-food-b1", `x ${bpCounts.FOOD_B1}`);
+    setText("asset-bp-food-b2", `x ${bpCounts.FOOD_B2}`);
+    setText("asset-bp-food-b3", `x ${bpCounts.FOOD_B3}`);
+    setText("asset-bp-food-b4", `x ${bpCounts.FOOD_B4}`);
+    setText("asset-bp-food-b5", `x ${bpCounts.FOOD_B5}`);
+
+    setText("asset-bp-textile-b1", `x ${bpCounts.TEXTILE_B1}`);
+    setText("asset-bp-textile-b2", `x ${bpCounts.TEXTILE_B2}`);
+    setText("asset-bp-textile-b3", `x ${bpCounts.TEXTILE_B3}`);
+    setText("asset-bp-textile-b4", `x ${bpCounts.TEXTILE_B4}`);
+    setText("asset-bp-textile-b5", `x ${bpCounts.TEXTILE_B5}`);
+
+    setText("asset-bp-pharma-b1", `x ${bpCounts.PHARMA_B1}`);
+    setText("asset-bp-pharma-b2", `x ${bpCounts.PHARMA_B2}`);
+    setText("asset-bp-pharma-b3", `x ${bpCounts.PHARMA_B3}`);
+    setText("asset-bp-pharma-b4", `x ${bpCounts.PHARMA_B4}`);
+    setText("asset-bp-pharma-b5", `x ${bpCounts.PHARMA_B5}`);
+
+    setText("asset-bp-chemical-b1", `x ${bpCounts.CHEMICAL_B1}`);
+    setText("asset-bp-chemical-b2", `x ${bpCounts.CHEMICAL_B2}`);
+    setText("asset-bp-chemical-b3", `x ${bpCounts.CHEMICAL_B3}`);
+    setText("asset-bp-chemical-b4", `x ${bpCounts.CHEMICAL_B4}`);
+    setText("asset-bp-chemical-b5", `x ${bpCounts.CHEMICAL_B5}`);
+
+    setText("asset-bp-supermarket-b1", `x ${bpCounts.SUPERMARKET_B1}`);
+    setText("asset-bp-supermarket-b2", `x ${bpCounts.SUPERMARKET_B2}`);
+    setText("asset-bp-supermarket-b3", `x ${bpCounts.SUPERMARKET_B3}`);
+    setText("asset-bp-supermarket-b4", `x ${bpCounts.SUPERMARKET_B4}`);
+    setText("asset-bp-supermarket-b5", `x ${bpCounts.SUPERMARKET_B5}`);
 
     setText("asset-packs", `x ${unopenedPacks}`);
     setText("asset-relics", `x ${relicCount}`);
     setText("asset-writs", `x ${writCount}`);
-  } catch (err) {
-    console.error("Failed to load dashboard summary:", err);
-  }
-}
     async function loadRewardSummary() {
   try {
     const res = await fetch(
