@@ -9999,3 +9999,51 @@ cursor:pointer;
     max-height:130px;
   }
 }
+/* Blueprint Level Colors */
+
+.factory-tier-badge.b1{
+  background:#22c55e;
+  color:white;
+}
+
+.factory-tier-badge.b2{
+  background:#3b82f6;
+  color:white;
+}
+
+.factory-tier-badge.b3{
+  background:#8b5cf6;
+  color:white;
+}
+
+.factory-tier-badge.b4{
+  background:#f97316;
+  color:white;
+}
+
+.factory-tier-badge.b5{
+  background:#eab308;
+  color:#1f2937;
+}
+
+/* Card border color */
+
+.factory-card.b1{
+  border:3px solid #22c55e;
+}
+
+.factory-card.b2{
+  border:3px solid #3b82f6;
+}
+
+.factory-card.b3{
+  border:3px solid #8b5cf6;
+}
+
+.factory-card.b4{
+  border:3px solid #f97316;
+}
+
+.factory-card.b5{
+  border:3px solid #eab308;
+}
