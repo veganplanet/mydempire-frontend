@@ -477,50 +477,66 @@
           <p class="status-text">Loading blueprints…</p>
         </div>
       </section>
-      <!--Empire Assets-->
-      <section class="section tab-panel" data-tab-panel="assets">
+     <!-- ===== TAB: EMPIRE ASSETS ===== -->
+<section class="section tab-panel" data-tab-panel="assets">
   <div class="section-header">
     <h2>Empire Assets</h2>
-    <small>A complete summary of your lands, blueprints, packs, relics and writs</small>
+    <small>Your complete visual asset summary</small>
   </div>
 
-  <div id="assets-tab-content">
+  <div class="assets-visual-grid">
 
-  <div class="metrics-grid">
-
-    <div class="metric-card">
-      <div class="metric-label">Lands</div>
-      <div class="metric-value" id="asset-lands">0</div>
+    <div class="asset-visual-card">
+      <div class="asset-visual-art">
+        <img src="assets/land-l1.png" alt="Lands">
+      </div>
+      <div class="asset-visual-name">Lands</div>
+      <div class="asset-visual-count" id="asset-lands">x 0</div>
     </div>
 
-    <div class="metric-card">
-      <div class="metric-label">Blueprints</div>
-      <div class="metric-value" id="asset-blueprints">0</div>
+    <div class="asset-visual-card">
+      <div class="asset-visual-art">
+        <img src="assets/food.png" alt="Blueprints">
+      </div>
+      <div class="asset-visual-name">Blueprints</div>
+      <div class="asset-visual-count" id="asset-blueprints">x 0</div>
     </div>
 
-    <div class="metric-card">
-      <div class="metric-label">Factories</div>
-      <div class="metric-value" id="asset-factories">0</div>
+    <div class="asset-visual-card">
+      <div class="asset-visual-art">
+        <img src="assets/pack.png" alt="Packs">
+      </div>
+      <div class="asset-visual-name">Packs</div>
+      <div class="asset-visual-count" id="asset-packs">x 0</div>
     </div>
 
-    <div class="metric-card">
-      <div class="metric-label">Packs</div>
-      <div class="metric-value" id="asset-packs">0</div>
+    <div class="asset-visual-card">
+      <div class="asset-visual-art">
+        <img src="assets/relic.png" alt="Relics">
+      </div>
+      <div class="asset-visual-name">Relics</div>
+      <div class="asset-visual-count" id="asset-relics">x 0</div>
     </div>
 
-    <div class="metric-card">
-      <div class="metric-label">Relics</div>
-      <div class="metric-value" id="asset-relics">0</div>
+    <div class="asset-visual-card">
+      <div class="asset-visual-art">
+        <img src="assets/writ.png" alt="WRITs">
+      </div>
+      <div class="asset-visual-name">WRITs</div>
+      <div class="asset-visual-count" id="asset-writs">x 0</div>
     </div>
 
-    <div class="metric-card">
-      <div class="metric-label">WRITs</div>
-      <div class="metric-value" id="asset-writs">0</div>
+    <div class="asset-visual-card">
+      <div class="asset-visual-art asset-visual-icon-box">
+        <svg class="asset-factory-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 21V10h5l3-4v4h4l3-3v14H3z"></path>
+        </svg>
+      </div>
+      <div class="asset-visual-name">Factories</div>
+      <div class="asset-visual-count" id="asset-factories">x 0</div>
     </div>
 
   </div>
-
-</div>
 </section>
       <!-- ===== TAB: UNDER CONSTRUCTION ===== -->
       <section class="section tab-panel" data-tab-panel="construction">
@@ -1210,12 +1226,12 @@
       console.error("Failed to load packs for assets tab:", e);
     }
 
-    setText("asset-lands", totalLands);
-    setText("asset-blueprints", totalBlueprints);
-    setText("asset-factories", totalFactories);
-    setText("asset-packs", unopenedPacks);
-    setText("asset-relics", relicCount);
-    setText("asset-writs", writCount);
+   setText("asset-lands", `x ${totalLands}`);
+setText("asset-blueprints", `x ${totalBlueprints}`);
+setText("asset-factories", `x ${totalFactories}`);
+setText("asset-packs", `x ${unopenedPacks}`);
+setText("asset-relics", `x ${relicCount}`);
+setText("asset-writs", `x ${writCount}`);
   } catch (err) {
     console.error("Failed to load dashboard summary:", err);
   }
