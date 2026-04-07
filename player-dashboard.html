@@ -3846,14 +3846,7 @@ function tradeBlueprint(id) {
 function tradeBlueprint(id){
   window.location.href = "/marketplace.html?blueprint=" + id;
 }
-   
-      fetch("footer.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("global-footer").innerHTML = html;
-        });
-       </script>
-     async function transferNFT(nftId, nftType) {
+    async function transferNFT(nftId, nftType) {
   const toUser = prompt(`Enter Hive username to transfer this ${nftType} to:`);
 
   if (!toUser) return;
@@ -3899,6 +3892,13 @@ function tradeBlueprint(id){
     alert("Transfer request failed.");
   }
 }
+      fetch("footer.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("global-footer").innerHTML = html;
+        });
+       </script>
+    
     </script>
        
   </body>
