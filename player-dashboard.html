@@ -1220,10 +1220,13 @@
     setText("asset-bp-supermarket-b4", `x ${bpCounts.SUPERMARKET_B4}`);
     setText("asset-bp-supermarket-b5", `x ${bpCounts.SUPERMARKET_B5}`);
 
-    setText("asset-packs", `x ${unopenedPacks}`);
-    setText("asset-relics", `x ${relicCount}`);
-   setText("asset-writs", `x ${writCount}`);
+   setText("asset-packs", `x ${unopenedPacks}`);
+setText("asset-relics", `x ${relicCount}`);
+setText("asset-writs", `x ${writCount}`);
 
+  } catch (err) {
+    console.error("Failed to load dashboard summary:", err);
+  }
 }
      
 
