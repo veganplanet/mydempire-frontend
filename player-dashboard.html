@@ -1194,6 +1194,28 @@
     // ===== LIFETIME EP =====
     const lifetimeEP = Number(data.lifetimeEP ?? 0);
     setText("lifetime-ep", lifetimeEP.toFixed(2));
+        // ===== EMPIRE ASSETS TAB =====
+    let unopenedPacks = 0;
+
+    try {
+      const packsRes = await fetch(
+        apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/packs`)
+      );
+
+      if (packsRes.ok) {
+        const packsData = await packsRes.json();
+        unopenedPacks = Array.isArray(packsData.packs) ? packsData.packs.length : 0;
+      }
+    } catch (e) {
+      console.error("Failed to load packs for assets tab:", e);
+    }
+
+    setText("asset-lands", totalLands);
+    setText("asset-blueprints", totalBlueprints);
+    setText("asset-factories", totalFactories);
+    setText("asset-packs", unopenedPacks);
+    setText("asset-relics", relicCount);
+    setText("asset-writs", writCount);
   } catch (err) {
     console.error("Failed to load dashboard summary:", err);
   }
