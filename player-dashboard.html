@@ -3842,15 +3842,17 @@ function tradeBlueprint(id) {
       </div>
     </div>
     <div id="global-footer"></div>
+     <script>
 function tradeBlueprint(id){
   window.location.href = "/marketplace.html?blueprint=" + id;
 }
-    <script>
+   
       fetch("footer.html")
         .then((res) => res.text())
         .then((html) => {
           document.getElementById("global-footer").innerHTML = html;
         });
+       </script>
      async function transferNFT(nftId, nftType) {
   const toUser = prompt(`Enter Hive username to transfer this ${nftType} to:`);
 
