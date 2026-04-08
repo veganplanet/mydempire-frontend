@@ -3199,7 +3199,40 @@ window.selectedBuildLandTier = landTier;
 
           const blueprints = data.blueprints || [];
           playerBlueprints = blueprints;
+const blueprintsRes = await fetch(
+  apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/blueprints`)
+);
 
+const blueprintsData = await blueprintsRes.json();
+
+
+// PASTE STEP 3 CODE HERE
+
+
+const bpBreakdown = {
+  FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+};
+
+if (Array.isArray(blueprintsData.blueprints)) {
+  for (const bp of blueprintsData.blueprints) {
+
+    const tierRaw = String(bp.tier || bp.blueprint_tier || "")
+      .toUpperCase()
+      .trim();
+
+    const parts = tierRaw.split("_");
+    const industry = parts[0];
+    const level = parts[1];
+
+    if (bpBreakdown[industry] && bpBreakdown[industry][level] !== undefined) {
+      bpBreakdown[industry][level]++;
+    }
+  }
+}
           if (!blueprints.length) {
             playerBlueprints = [];
             renderBuildFactorySection();
