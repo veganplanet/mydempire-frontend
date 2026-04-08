@@ -9855,3 +9855,43 @@ cursor:pointer;
     max-height:48px;
   }
 }
+/* ===== EMPIRE ASSETS - SAFE REBUILD ===== */
+.empire-assets-wrap{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+.empire-assets-group-title{
+  margin:0 0 12px;
+  font-size:18px;
+  font-weight:800;
+  color:#0f172a;
+}
+
+.empire-assets-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+  gap:14px;
+}
+
+.empire-asset-box{
+  background:#ffffff;
+  border:1px solid #dbe3ee;
+  border-radius:16px;
+  padding:18px 16px;
+  box-shadow:0 8px 20px rgba(15,23,42,0.08);
+}
+
+.empire-asset-label{
+  font-size:14px;
+  font-weight:700;
+  color:#475569;
+  margin-bottom:8px;
+}
+
+.empire-asset-value{
+  font-size:28px;
+  font-weight:900;
+  color:#0f172a;
+}
