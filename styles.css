@@ -9810,3 +9810,22 @@ cursor:pointer;
   height: auto;
   object-fit: contain;
 }
+/* Fix shop card background inside dashboard */
+.assets-copy-grid .nft-card.land .nft-inner{
+  background:
+    linear-gradient(180deg,#dfe4ea 0%,#cfd6dd 100%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(0,0,0,0.015) 0px,
+      rgba(0,0,0,0.015) 1px,
+      transparent 1px,
+      transparent 6px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0,0,0,0.015) 0px,
+      rgba(0,0,0,0.015) 1px,
+      transparent 1px,
+      transparent 6px
+    );
+}
