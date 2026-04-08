@@ -9717,3 +9717,19 @@ cursor:pointer;
   font-weight:900;
   color:#0f172a;
 }
+.asset-card-wrap{
+  position:relative;
+}
+
+.asset-count-badge{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:#1f2937;
+  color:#fff;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  z-index:5;
+}
