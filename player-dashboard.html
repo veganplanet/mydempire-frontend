@@ -3212,16 +3212,13 @@ const bpBreakdown = {
 
 if (Array.isArray(blueprintsData.blueprints)) {
   for (const bp of blueprintsData.blueprints) {
+    const industry = String(bp.industry || "").toUpperCase().trim();
+    const level = String(bp.level || "").toUpperCase().trim();
 
-    const tierRaw = String(bp.tier || bp.blueprint_tier || "")
-      .toUpperCase()
-      .trim();
-
-    const parts = tierRaw.split("_");
-    const industry = parts[0];
-    const level = parts[1];
-
-    if (bpBreakdown[industry] && bpBreakdown[industry][level] !== undefined) {
+    if (
+      bpBreakdown[industry] &&
+      bpBreakdown[industry][level] !== undefined
+    ) {
       bpBreakdown[industry][level]++;
     }
   }
