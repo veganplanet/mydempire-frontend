@@ -9701,3 +9701,39 @@ cursor:pointer;
   position:relative;
   max-width:260px;
 }
+.assets-tab-shell{
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+}
+
+.assets-group-title{
+  font-size:18px;
+  font-weight:800;
+  color:#0f172a;
+  margin-bottom:14px;
+}
+
+.asset-card-wrap{
+  position:relative;
+}
+
+.asset-count-badge{
+  position:absolute;
+  top:10px;
+  right:10px;
+  z-index:5;
+  min-width:42px;
+  height:24px;
+  padding:0 8px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#1f2937;
+  color:#ffffff;
+  font-size:12px;
+  font-weight:800;
+  line-height:1;
+  box-shadow:0 4px 10px rgba(0,0,0,0.18);
+}
