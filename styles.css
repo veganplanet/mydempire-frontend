@@ -9733,20 +9733,61 @@ cursor:pointer;
   font-weight:700;
   z-index:5;
 }
+/* LAND TILE SIZE */
 .assets-dashboard-scope .land-tile{
   width:60px;
   height:auto;
-  object-fit:contain;
 }
 
+/* LAND CARD INNER LAYOUT */
 .assets-dashboard-scope .land-layout{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  margin-top:40px;
+  position:relative;
+  width:100%;
+  height:120px;
+  margin-top:30px;
 }
 
-.assets-dashboard-scope .land-layout-3{
-  flex-direction:column;
+/* L1 */
+.assets-dashboard-scope .land-layout-1 .land-tile{
+  position:absolute;
+  left:50%;
+  top:35px;
+  transform:translateX(-50%);
+}
+
+/* L2 */
+.assets-dashboard-scope .land-layout-2 .land-tile:nth-child(1){
+  position:absolute;
+  left:35%;
+  top:35px;
+  transform:translateX(-50%);
+}
+
+.assets-dashboard-scope .land-layout-2 .land-tile:nth-child(2){
+  position:absolute;
+  left:65%;
+  top:35px;
+  transform:translateX(-50%);
+}
+
+/* L3 triangle */
+.assets-dashboard-scope .land-layout-3 .land-top{
+  position:absolute;
+  left:50%;
+  top:0;
+  transform:translateX(-50%);
+}
+
+.assets-dashboard-scope .land-layout-3 .land-bottom-left{
+  position:absolute;
+  left:35%;
+  top:55px;
+  transform:translateX(-50%);
+}
+
+.assets-dashboard-scope .land-layout-3 .land-bottom-right{
+  position:absolute;
+  left:65%;
+  top:55px;
+  transform:translateX(-50%);
 }
