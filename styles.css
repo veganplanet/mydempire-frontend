@@ -9740,9 +9740,10 @@ cursor:pointer;
 /* ===== EMPIRE ASSETS USE SHOP CARD STYLES ===== */
 .assets-shop-scope .pack-showcase-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
+  grid-template-columns:repeat(auto-fit, 220px);
   gap:20px;
   align-items:start;
+  justify-content:start;
 }
 
 .assets-shop-scope .asset-card-wrap{
@@ -9750,9 +9751,9 @@ cursor:pointer;
 }
 
 .assets-shop-scope .nft-card{
-  width:100%;
+  width:220px;
   max-width:220px;
-  margin:0 auto;
+  margin:0;
 }
 
 .assets-shop-scope .nft-card.land.l1{ --color:#22c55e; }
