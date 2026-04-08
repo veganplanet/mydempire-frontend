@@ -9733,3 +9733,20 @@ cursor:pointer;
   font-weight:700;
   z-index:5;
 }
+.assets-dashboard-scope .land-tile{
+  width:60px;
+  height:auto;
+  object-fit:contain;
+}
+
+.assets-dashboard-scope .land-layout{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-top:40px;
+}
+
+.assets-dashboard-scope .land-layout-3{
+  flex-direction:column;
+}
