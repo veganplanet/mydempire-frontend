@@ -9855,7 +9855,7 @@ cursor:pointer;
     max-height:48px;
   }
 }
-/* ===== EMPIRE ASSETS - SAFE REBUILD ===== */
+/* ===== EMPIRE ASSETS - IMAGE GRID ===== */
 .empire-assets-wrap{
   display:flex;
   flex-direction:column;
@@ -9871,27 +9871,53 @@ cursor:pointer;
 
 .empire-assets-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
   gap:14px;
 }
 
-.empire-asset-box{
+.empire-asset-card{
+  position:relative;
   background:#ffffff;
   border:1px solid #dbe3ee;
   border-radius:16px;
-  padding:18px 16px;
+  padding:14px 12px 12px;
   box-shadow:0 8px 20px rgba(15,23,42,0.08);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:190px;
 }
 
-.empire-asset-label{
-  font-size:14px;
-  font-weight:700;
-  color:#475569;
-  margin-bottom:8px;
+.empire-asset-count{
+  position:absolute;
+  top:10px;
+  right:10px;
+  min-width:36px;
+  height:24px;
+  padding:0 8px;
+  border-radius:999px;
+  background:#0f172a;
+  color:#ffffff;
+  font-size:12px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-.empire-asset-value{
-  font-size:28px;
-  font-weight:900;
-  color:#0f172a;
+.empire-asset-img{
+  width:100%;
+  max-width:95px;
+  max-height:95px;
+  object-fit:contain;
+  margin-bottom:10px;
+}
+
+.empire-asset-name{
+  text-align:center;
+  font-size:13px;
+  font-weight:800;
+  color:#334155;
+  line-height:1.35;
 }
