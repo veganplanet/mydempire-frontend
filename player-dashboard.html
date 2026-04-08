@@ -1164,7 +1164,7 @@
         }
       }
       // ===== PLAYER SUMMARY =====
-     async function loadDashboardSummary() {
+    async function loadDashboardSummary() {
   try {
     const username = encodeURIComponent(PLAYER_USERNAME);
 
@@ -1185,33 +1185,7 @@
     console.log("Dashboard summary:", data);
     console.log("Empire overview summary:", overviewData);
     console.log("Blueprint summary:", blueprintsData);
-const bpBreakdown = {
-  FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-};
 
-if (Array.isArray(blueprintsData.blueprints)) {
-  for (const bp of blueprintsData.blueprints) {
-    const tierRaw = String(bp.tier || bp.blueprint_tier || "")
-      .toUpperCase()
-      .trim();
-
-    const parts = tierRaw.split("_");
-    const industry = parts[0];
-    const level = parts[1];
-
-    if (bpBreakdown[industry] && bpBreakdown[industry][level] !== undefined) {
-      bpBreakdown[industry][level]++;
-    }
-  }
-}
-
-function totalBp(obj) {
-  return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
-}
     const setText = (id, value) => {
       const el = document.getElementById(id);
       if (el) el.textContent = value;
@@ -1325,108 +1299,98 @@ function totalBp(obj) {
     const totalEmpireEP = Number(data.totalEmpireEP ?? totalClaimableEP ?? 0);
 
     setText("summary-production-rate", `${totalBoostedEP.toFixed(2)} EP/day`);
-    setText("summary-claimable-ep", `Accumulated EP: ${totalClaimableEP.toFixed(2)}`);
+    setText(
+      "summary-claimable-ep",
+      `Accumulated EP: ${totalClaimableEP.toFixed(2)}`
+    );
     setText("summary-total-empire-ep", totalEmpireEP.toFixed(2));
 
     // ===== LIFETIME EP =====
     const lifetimeEP = Number(data.lifetimeEP ?? 0);
     setText("lifetime-ep", lifetimeEP.toFixed(2));
-      // ===== EMPIRE ASSETS TAB =====
 
-let unopenedPacks = 0;
+    // ===== EMPIRE ASSETS =====
+    let unopenedPacks = 0;
 
-try {
-  const packsRes = await fetch(
-    apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/packs`)
-  );
-
-  if (packsRes.ok) {
-    const packsData = await packsRes.json();
-    unopenedPacks = Array.isArray(packsData.packs)
-      ? packsData.packs.length
-      : 0;
-  }
-} catch (e) {
-  console.error("Failed to load packs for assets tab:", e);
-}
-
-/* ===== Blueprint breakdown ===== */
-
-const bpBreakdown = {
-  FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-};
-
-if (Array.isArray(blueprintsData.blueprints)) {
-  for (const bp of blueprintsData.blueprints) {
-    const tierRaw = String(bp.tier || bp.blueprint_tier || "")
-      .toUpperCase()
-      .trim();
-
-    const parts = tierRaw.split("_");
-    const industry = parts[0];
-    const level = parts[1];
-
-    if (bpBreakdown[industry] && bpBreakdown[industry][level] !== undefined) {
-      bpBreakdown[industry][level]++;
+    try {
+      const packsRes = await fetch(
+        apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/packs`)
+      );
+      if (packsRes.ok) {
+        const packsData = await packsRes.json();
+        unopenedPacks = Array.isArray(packsData.packs)
+          ? packsData.packs.length
+          : 0;
+      }
+    } catch (e) {
+      console.error("Failed to load packs for assets tab:", e);
     }
-  }
-}
 
-function totalBp(obj) {
-  return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
-}
+    const bpBreakdown = {
+      FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+      TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+      PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+      CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+      SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+    };
 
-/* ===== Lands ===== */
+    if (Array.isArray(blueprintsData.blueprints)) {
+      for (const bp of blueprintsData.blueprints) {
+        const tierRaw = String(bp.tier || bp.blueprint_tier || "")
+          .toUpperCase()
+          .trim();
 
-setText("asset-land-l1", `x ${l1}`);
-setText("asset-land-l2", `x ${l2}`);
-setText("asset-land-l3", `x ${l3}`);
+        const parts = tierRaw.split("_");
+        const industry = parts[0];
+        const level = parts[1];
 
-/* ===== Blueprint totals ===== */
+        if (
+          bpBreakdown[industry] &&
+          bpBreakdown[industry][level] !== undefined
+        ) {
+          bpBreakdown[industry][level]++;
+        }
+      }
+    }
 
-setText("asset-bp-food", `x ${totalBp(bpBreakdown.FOOD)}`);
-setText("asset-bp-textile", `x ${totalBp(bpBreakdown.TEXTILE)}`);
-setText("asset-bp-pharma", `x ${totalBp(bpBreakdown.PHARMA)}`);
-setText("asset-bp-chemical", `x ${totalBp(bpBreakdown.CHEMICAL)}`);
-setText("asset-bp-supermarket", `x ${totalBp(bpBreakdown.SUPERMARKET)}`);
+    function totalBp(obj) {
+      return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
+    }
 
-/* ===== Blueprint levels ===== */
+    setText("asset-land-l1", `x ${l1}`);
+    setText("asset-land-l2", `x ${l2}`);
+    setText("asset-land-l3", `x ${l3}`);
 
-setText(
-  "asset-bp-food-levels",
-  `B1: ${bpBreakdown.FOOD.B1} | B2: ${bpBreakdown.FOOD.B2} | B3: ${bpBreakdown.FOOD.B3} | B4: ${bpBreakdown.FOOD.B4} | B5: ${bpBreakdown.FOOD.B5}`
-);
+    setText("asset-bp-food", `x ${totalBp(bpBreakdown.FOOD)}`);
+    setText("asset-bp-textile", `x ${totalBp(bpBreakdown.TEXTILE)}`);
+    setText("asset-bp-pharma", `x ${totalBp(bpBreakdown.PHARMA)}`);
+    setText("asset-bp-chemical", `x ${totalBp(bpBreakdown.CHEMICAL)}`);
+    setText("asset-bp-supermarket", `x ${totalBp(bpBreakdown.SUPERMARKET)}`);
 
-setText(
-  "asset-bp-textile-levels",
-  `B1: ${bpBreakdown.TEXTILE.B1} | B2: ${bpBreakdown.TEXTILE.B2} | B3: ${bpBreakdown.TEXTILE.B3} | B4: ${bpBreakdown.TEXTILE.B4} | B5: ${bpBreakdown.TEXTILE.B5}`
-);
+    setText(
+      "asset-bp-food-levels",
+      `B1: ${bpBreakdown.FOOD.B1} | B2: ${bpBreakdown.FOOD.B2} | B3: ${bpBreakdown.FOOD.B3} | B4: ${bpBreakdown.FOOD.B4} | B5: ${bpBreakdown.FOOD.B5}`
+    );
+    setText(
+      "asset-bp-textile-levels",
+      `B1: ${bpBreakdown.TEXTILE.B1} | B2: ${bpBreakdown.TEXTILE.B2} | B3: ${bpBreakdown.TEXTILE.B3} | B4: ${bpBreakdown.TEXTILE.B4} | B5: ${bpBreakdown.TEXTILE.B5}`
+    );
+    setText(
+      "asset-bp-pharma-levels",
+      `B1: ${bpBreakdown.PHARMA.B1} | B2: ${bpBreakdown.PHARMA.B2} | B3: ${bpBreakdown.PHARMA.B3} | B4: ${bpBreakdown.PHARMA.B4} | B5: ${bpBreakdown.PHARMA.B5}`
+    );
+    setText(
+      "asset-bp-chemical-levels",
+      `B1: ${bpBreakdown.CHEMICAL.B1} | B2: ${bpBreakdown.CHEMICAL.B2} | B3: ${bpBreakdown.CHEMICAL.B3} | B4: ${bpBreakdown.CHEMICAL.B4} | B5: ${bpBreakdown.CHEMICAL.B5}`
+    );
+    setText(
+      "asset-bp-supermarket-levels",
+      `B1: ${bpBreakdown.SUPERMARKET.B1} | B2: ${bpBreakdown.SUPERMARKET.B2} | B3: ${bpBreakdown.SUPERMARKET.B3} | B4: ${bpBreakdown.SUPERMARKET.B4} | B5: ${bpBreakdown.SUPERMARKET.B5}`
+    );
 
-setText(
-  "asset-bp-pharma-levels",
-  `B1: ${bpBreakdown.PHARMA.B1} | B2: ${bpBreakdown.PHARMA.B2} | B3: ${bpBreakdown.PHARMA.B3} | B4: ${bpBreakdown.PHARMA.B4} | B5: ${bpBreakdown.PHARMA.B5}`
-);
-
-setText(
-  "asset-bp-chemical-levels",
-  `B1: ${bpBreakdown.CHEMICAL.B1} | B2: ${bpBreakdown.CHEMICAL.B2} | B3: ${bpBreakdown.CHEMICAL.B3} | B4: ${bpBreakdown.CHEMICAL.B4} | B5: ${bpBreakdown.CHEMICAL.B5}`
-);
-
-setText(
-  "asset-bp-supermarket-levels",
-  `B1: ${bpBreakdown.SUPERMARKET.B1} | B2: ${bpBreakdown.SUPERMARKET.B2} | B3: ${bpBreakdown.SUPERMARKET.B3} | B4: ${bpBreakdown.SUPERMARKET.B4} | B5: ${bpBreakdown.SUPERMARKET.B5}`
-);
-
-/* ===== Other assets ===== */
-
-setText("asset-packs", `x ${unopenedPacks}`);
-setText("asset-relics", `x ${relicCount}`);
-setText("asset-writs", `x ${writCount}`);
-
+    setText("asset-packs", `x ${unopenedPacks}`);
+    setText("asset-relics", `x ${relicCount}`);
+    setText("asset-writs", `x ${writCount}`);
   } catch (err) {
     console.error("Failed to load dashboard summary:", err);
   }
