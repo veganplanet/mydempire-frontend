@@ -9803,3 +9803,43 @@ cursor:pointer;
   background:transparent;
   overflow:hidden;
 }
+.empire-inventory{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  margin-top:18px;
+}
+
+.inventory-card{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px 16px;
+  background:#ffffff;
+  border-radius:14px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 6px 18px rgba(0,0,0,0.06);
+}
+
+.inventory-icon{
+  width:46px;
+  height:46px;
+  object-fit:contain;
+}
+
+.inventory-info{
+  display:flex;
+  flex-direction:column;
+}
+
+.inventory-title{
+  font-weight:700;
+  font-size:14px;
+  color:#1e293b;
+}
+
+.inventory-count{
+  font-size:22px;
+  font-weight:800;
+  color:#0f172a;
+}
