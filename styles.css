@@ -9843,3 +9843,10 @@ cursor:pointer;
   font-weight:800;
   color:#0f172a;
 }
+.inventory-subcount{
+  font-size:12px;
+  font-weight:600;
+  color:#64748b;
+  margin-top:4px;
+  line-height:1.5;
+}
