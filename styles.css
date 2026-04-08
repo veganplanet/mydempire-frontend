@@ -9829,3 +9829,80 @@ cursor:pointer;
       transparent 6px
     );
 }
+/* ===================================
+   LAND NFT CARD (same as Lands page)
+=================================== */
+
+.nft-card.land{
+  position:relative;
+  width:220px;
+  height:300px;
+  border-radius:20px;
+  overflow:hidden;
+  background:#d9dee6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* land level colors */
+
+.nft-card.land.l1 .nft-badge{
+  background:linear-gradient(90deg,#b7e7c9,#45c47a);
+}
+
+.nft-card.land.l2 .nft-badge{
+  background:linear-gradient(90deg,#f4e6a1,#f0c23c);
+}
+
+.nft-card.land.l3 .nft-badge{
+  background:linear-gradient(90deg,#f5b5b5,#e45757);
+}
+
+/* land layout */
+
+.land-layout{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+}
+
+.land-layout-1 img{
+  width:90px;
+}
+
+.land-layout-2 img{
+  width:80px;
+}
+
+.land-layout-3{
+  flex-direction:column;
+}
+
+.land-layout-3 img{
+  width:70px;
+}
+
+/* title */
+
+.nft-title{
+  position:absolute;
+  top:12px;
+  width:100%;
+  text-align:center;
+  font-size:14px;
+  letter-spacing:1px;
+}
+
+/* level badge */
+
+.nft-badge{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  padding:10px;
+  text-align:center;
+  font-weight:600;
+  color:#fff;
+}
