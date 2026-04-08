@@ -9689,3 +9689,15 @@ cursor:pointer;
   line-height:1;
   box-shadow:0 4px 10px rgba(0,0,0,0.18);
 }
+/* Empire Assets Grid */
+.assets-card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+  gap:18px;
+  align-items:start;
+}
+
+.asset-card-wrap{
+  position:relative;
+  max-width:260px;
+}
