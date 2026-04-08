@@ -9748,3 +9748,65 @@ cursor:pointer;
 .assets-copy-grid .asset-card-wrap{
   width:190px;
 }
+/* ===== EMPIRE ASSETS: USE SHOP CARD SIZE EXACTLY ===== */
+.assets-copy-grid .land-layout{
+  position: relative;
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assets-copy-grid .land-layout-1 .land-tile{
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.assets-copy-grid .land-layout-2{
+  gap: 10px;
+}
+
+.assets-copy-grid .land-layout-2 .land-tile{
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.assets-copy-grid .land-layout-3{
+  position: relative;
+  height: 170px;
+}
+
+.assets-copy-grid .land-layout-3 .land-tile{
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  position: absolute;
+}
+
+.assets-copy-grid .land-layout-3 .land-top{
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.assets-copy-grid .land-layout-3 .land-bottom-left{
+  bottom: 18px;
+  left: 28%;
+  transform: translateX(-50%);
+}
+
+.assets-copy-grid .land-layout-3 .land-bottom-right{
+  bottom: 18px;
+  left: 72%;
+  transform: translateX(-50%);
+}
+
+.assets-copy-grid .pack-art-img,
+.assets-copy-grid .relic-art-img,
+.assets-copy-grid .writ-art-img{
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
