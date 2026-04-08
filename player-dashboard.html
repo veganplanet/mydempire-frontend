@@ -1331,96 +1331,99 @@ function totalBp(obj) {
     // ===== LIFETIME EP =====
     const lifetimeEP = Number(data.lifetimeEP ?? 0);
     setText("lifetime-ep", lifetimeEP.toFixed(2));
-        // ===== EMPIRE ASSETS TAB =====
-    // ===== EMPIRE ASSETS =====
-    let unopenedPacks = 0;
+      // ===== EMPIRE ASSETS TAB =====
 
-    try {
-      const packsRes = await fetch(
-        apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/packs`)
-      );
-      if (packsRes.ok) {
-        const packsData = await packsRes.json();
-        unopenedPacks = Array.isArray(packsData.packs) ? packsData.packs.length : 0;
-      }
-    } catch (e) {
-      console.error("Failed to load packs for assets tab:", e);
-    }
+let unopenedPacks = 0;
 
-    const bpCounts = {
-      FOOD_B1: 0, FOOD_B2: 0, FOOD_B3: 0, FOOD_B4: 0, FOOD_B5: 0,
-      TEXTILE_B1: 0, TEXTILE_B2: 0, TEXTILE_B3: 0, TEXTILE_B4: 0, TEXTILE_B5: 0,
-      PHARMA_B1: 0, PHARMA_B2: 0, PHARMA_B3: 0, PHARMA_B4: 0, PHARMA_B5: 0,
-      CHEMICAL_B1: 0, CHEMICAL_B2: 0, CHEMICAL_B3: 0, CHEMICAL_B4: 0, CHEMICAL_B5: 0,
-      SUPERMARKET_B1: 0, SUPERMARKET_B2: 0, SUPERMARKET_B3: 0, SUPERMARKET_B4: 0, SUPERMARKET_B5: 0
-    };
+try {
+  const packsRes = await fetch(
+    apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/packs`)
+  );
 
-    if (Array.isArray(blueprintsData.blueprints)) {
-      for (const bp of blueprintsData.blueprints) {
-        const tierRaw = String(bp.tier || bp.blueprint_tier || "").toUpperCase().trim();
-        if (bpCounts.hasOwnProperty(tierRaw)) {
-          bpCounts[tierRaw]++;
-        }
-      }
-    }
+  if (packsRes.ok) {
+    const packsData = await packsRes.json();
+    unopenedPacks = Array.isArray(packsData.packs)
+      ? packsData.packs.length
+      : 0;
+  }
+} catch (e) {
+  console.error("Failed to load packs for assets tab:", e);
+}
 
-    setText("asset-land-l1", `x ${l1}`);
-    setText("asset-land-l2", `x ${l2}`);
-    setText("asset-land-l3", `x ${l3}`);
+/* ===== Blueprint breakdown ===== */
 
-    setText("asset-bp-food-b1", `x ${bpCounts.FOOD_B1}`);
-    setText("asset-bp-food-b2", `x ${bpCounts.FOOD_B2}`);
-    setText("asset-bp-food-b3", `x ${bpCounts.FOOD_B3}`);
-    setText("asset-bp-food-b4", `x ${bpCounts.FOOD_B4}`);
-    setText("asset-bp-food-b5", `x ${bpCounts.FOOD_B5}`);
-
-    setText("asset-bp-textile-b1", `x ${bpCounts.TEXTILE_B1}`);
-    setText("asset-bp-textile-b2", `x ${bpCounts.TEXTILE_B2}`);
-    setText("asset-bp-textile-b3", `x ${bpCounts.TEXTILE_B3}`);
-    setText("asset-bp-textile-b4", `x ${bpCounts.TEXTILE_B4}`);
-    setText("asset-bp-textile-b5", `x ${bpCounts.TEXTILE_B5}`);
-
-    setText("asset-bp-pharma-b1", `x ${bpCounts.PHARMA_B1}`);
-    setText("asset-bp-pharma-b2", `x ${bpCounts.PHARMA_B2}`);
-    setText("asset-bp-pharma-b3", `x ${bpCounts.PHARMA_B3}`);
-    setText("asset-bp-pharma-b4", `x ${bpCounts.PHARMA_B4}`);
-    setText("asset-bp-pharma-b5", `x ${bpCounts.PHARMA_B5}`);
-
-    setText("asset-bp-chemical-b1", `x ${bpCounts.CHEMICAL_B1}`);
-    setText("asset-bp-chemical-b2", `x ${bpCounts.CHEMICAL_B2}`);
-    setText("asset-bp-chemical-b3", `x ${bpCounts.CHEMICAL_B3}`);
-    setText("asset-bp-chemical-b4", `x ${bpCounts.CHEMICAL_B4}`);
-    setText("asset-bp-chemical-b5", `x ${bpCounts.CHEMICAL_B5}`);
-
-    setText("asset-bp-supermarket-b1", `x ${bpCounts.SUPERMARKET_B1}`);
-    setText("asset-bp-supermarket-b2", `x ${bpCounts.SUPERMARKET_B2}`);
-    setText("asset-bp-supermarket-b3", `x ${bpCounts.SUPERMARKET_B3}`);
-    setText("asset-bp-supermarket-b4", `x ${bpCounts.SUPERMARKET_B4}`);
-    setText("asset-bp-supermarket-b5", `x ${bpCounts.SUPERMARKET_B5}`);
-let bpFood = 0;
-let bpTextile = 0;
-let bpPharma = 0;
-let bpChemical = 0;
-let bpSupermarket = 0;
+const bpBreakdown = {
+  FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+};
 
 if (Array.isArray(blueprintsData.blueprints)) {
   for (const bp of blueprintsData.blueprints) {
-    const tierRaw = String(bp.tier || bp.blueprint_tier || "").toUpperCase();
+    const tierRaw = String(bp.tier || bp.blueprint_tier || "")
+      .toUpperCase()
+      .trim();
 
-    if (tierRaw.startsWith("FOOD_")) bpFood++;
-    else if (tierRaw.startsWith("TEXTILE_")) bpTextile++;
-    else if (tierRaw.startsWith("PHARMA_")) bpPharma++;
-    else if (tierRaw.startsWith("CHEMICAL_")) bpChemical++;
-    else if (tierRaw.startsWith("SUPERMARKET_")) bpSupermarket++;
+    const parts = tierRaw.split("_");
+    const industry = parts[0];
+    const level = parts[1];
+
+    if (bpBreakdown[industry] && bpBreakdown[industry][level] !== undefined) {
+      bpBreakdown[industry][level]++;
+    }
   }
 }
 
-setText("asset-bp-food", `x ${bpFood}`);
-setText("asset-bp-textile", `x ${bpTextile}`);
-setText("asset-bp-pharma", `x ${bpPharma}`);
-setText("asset-bp-chemical", `x ${bpChemical}`);
-setText("asset-bp-supermarket", `x ${bpSupermarket}`);
-   setText("asset-packs", `x ${unopenedPacks}`);
+function totalBp(obj) {
+  return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
+}
+
+/* ===== Lands ===== */
+
+setText("asset-land-l1", `x ${l1}`);
+setText("asset-land-l2", `x ${l2}`);
+setText("asset-land-l3", `x ${l3}`);
+
+/* ===== Blueprint totals ===== */
+
+setText("asset-bp-food", `x ${totalBp(bpBreakdown.FOOD)}`);
+setText("asset-bp-textile", `x ${totalBp(bpBreakdown.TEXTILE)}`);
+setText("asset-bp-pharma", `x ${totalBp(bpBreakdown.PHARMA)}`);
+setText("asset-bp-chemical", `x ${totalBp(bpBreakdown.CHEMICAL)}`);
+setText("asset-bp-supermarket", `x ${totalBp(bpBreakdown.SUPERMARKET)}`);
+
+/* ===== Blueprint levels ===== */
+
+setText(
+  "asset-bp-food-levels",
+  `B1: ${bpBreakdown.FOOD.B1} | B2: ${bpBreakdown.FOOD.B2} | B3: ${bpBreakdown.FOOD.B3} | B4: ${bpBreakdown.FOOD.B4} | B5: ${bpBreakdown.FOOD.B5}`
+);
+
+setText(
+  "asset-bp-textile-levels",
+  `B1: ${bpBreakdown.TEXTILE.B1} | B2: ${bpBreakdown.TEXTILE.B2} | B3: ${bpBreakdown.TEXTILE.B3} | B4: ${bpBreakdown.TEXTILE.B4} | B5: ${bpBreakdown.TEXTILE.B5}`
+);
+
+setText(
+  "asset-bp-pharma-levels",
+  `B1: ${bpBreakdown.PHARMA.B1} | B2: ${bpBreakdown.PHARMA.B2} | B3: ${bpBreakdown.PHARMA.B3} | B4: ${bpBreakdown.PHARMA.B4} | B5: ${bpBreakdown.PHARMA.B5}`
+);
+
+setText(
+  "asset-bp-chemical-levels",
+  `B1: ${bpBreakdown.CHEMICAL.B1} | B2: ${bpBreakdown.CHEMICAL.B2} | B3: ${bpBreakdown.CHEMICAL.B3} | B4: ${bpBreakdown.CHEMICAL.B4} | B5: ${bpBreakdown.CHEMICAL.B5}`
+);
+
+setText(
+  "asset-bp-supermarket-levels",
+  `B1: ${bpBreakdown.SUPERMARKET.B1} | B2: ${bpBreakdown.SUPERMARKET.B2} | B3: ${bpBreakdown.SUPERMARKET.B3} | B4: ${bpBreakdown.SUPERMARKET.B4} | B5: ${bpBreakdown.SUPERMARKET.B5}`
+);
+
+/* ===== Other assets ===== */
+
+setText("asset-packs", `x ${unopenedPacks}`);
 setText("asset-relics", `x ${relicCount}`);
 setText("asset-writs", `x ${writCount}`);
 
