@@ -1185,7 +1185,33 @@
     console.log("Dashboard summary:", data);
     console.log("Empire overview summary:", overviewData);
     console.log("Blueprint summary:", blueprintsData);
+const bpBreakdown = {
+  FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+};
 
+if (Array.isArray(blueprintsData.blueprints)) {
+  for (const bp of blueprintsData.blueprints) {
+    const tierRaw = String(bp.tier || bp.blueprint_tier || "")
+      .toUpperCase()
+      .trim();
+
+    const parts = tierRaw.split("_");
+    const industry = parts[0];
+    const level = parts[1];
+
+    if (bpBreakdown[industry] && bpBreakdown[industry][level] !== undefined) {
+      bpBreakdown[industry][level]++;
+    }
+  }
+}
+
+function totalBp(obj) {
+  return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
+}
     const setText = (id, value) => {
       const el = document.getElementById(id);
       if (el) el.textContent = value;
