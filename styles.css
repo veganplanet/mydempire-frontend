@@ -9739,10 +9739,9 @@ cursor:pointer;
 }
 .assets-copy-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, 190px);
-  gap:18px;
-  justify-content:start;
-  align-items:start;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:28px;
+  margin-top:16px;
 }
 
 .assets-copy-grid .asset-card-wrap{
