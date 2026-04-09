@@ -9850,3 +9850,68 @@ cursor:pointer;
   margin-top:4px;
   line-height:1.5;
 }
+.land-grid{
+  display:grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap:14px !important;
+}
+
+@media (max-width: 980px){
+  .land-grid{
+    grid-template-columns: 1fr !important;
+  }
+}
+/* ===== LAND GRID IMPROVEMENT ===== */
+
+.land-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:20px;
+}
+
+/* cleaner card spacing */
+.land-card{
+  background:#ffffff;
+  border-radius:16px;
+  padding:18px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 6px 16px rgba(0,0,0,0.06);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* title row */
+.land-card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-weight:700;
+  font-size:16px;
+}
+
+/* factory slots area */
+.land-card-slots{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+/* slot icons cleaner alignment */
+.land-slot{
+  width:90px;
+  height:90px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f9fafb;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+}
+
+/* mobile responsiveness */
+@media (max-width:900px){
+  .land-grid{
+    grid-template-columns:1fr;
+  }
+}

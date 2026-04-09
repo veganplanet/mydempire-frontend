@@ -5,7 +5,6 @@
     <title>MydEmpire — Player Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="shop.css" />
   </head>
   <body data-requires-login="true">
     <header class="appbar">
@@ -119,13 +118,13 @@
           Overview
         </button>
         <button
-  type="button"
-  class="subnav-btn"
-  data-tab="assets"
-  onclick="setActiveTab('assets')"
->
-  Empire Assets
-</button>
+          type="button"
+          class="subnav-btn"
+          data-tab="assets"
+          onclick="setActiveTab('assets')"
+        >
+          Empire Assets
+        </button>
         <button
           type="button"
           class="subnav-btn"
@@ -178,7 +177,9 @@
 
       <!-- ===== TAB: OVERVIEW ===== -->
       <section
-        class="section tab-panel tab-panel-active"data-tab-panel="overview">
+        class="section tab-panel tab-panel-active"
+        data-tab-panel="overview"
+      >
         <div class="section-header">
           <h2>Overview</h2>
           <small>Your Genesis EMP, lands, factories and boosts</small>
@@ -373,15 +374,10 @@
 
       <!-- ===== TAB: PACKS ===== -->
       <section class="section tab-panel" data-tab-panel="packs">
-        <div class="page-header">
-          
-         
-        </div>
+        <div class="page-header"></div>
 
         <div class="packs-layout">
           <section class="packs-hero-section packs-open-section">
-           
-
             <div id="packs-grid" class="packs-grid"></div>
           </section>
         </div>
@@ -478,117 +474,124 @@
           <p class="status-text">Loading blueprints…</p>
         </div>
       </section>
-    
-<!-- ===== TAB: EMPIRE ASSETS ===== -->
-<section class="section tab-panel" data-tab-panel="assets">
-  <div class="section-header">
-    <h2>Empire Assets</h2>
-    <small>Your complete visual inventory</small>
-  </div>
 
-<div class="empire-inventory">
+      <!-- ===== TAB: EMPIRE ASSETS ===== -->
+      <section class="section tab-panel" data-tab-panel="assets">
+        <div class="section-header">
+          <h2>Empire Assets</h2>
+          <small>Your complete visual inventory</small>
+        </div>
 
-  <div class="inventory-card">
-    <img src="assets/land-l1.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">L1 Frontier</div>
-      <div class="inventory-count" id="asset-land-l1">0</div>
-    </div>
-  </div>
+        <div class="empire-inventory">
+          <div class="inventory-card">
+            <img src="assets/land-l1.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">L1 Frontier</div>
+              <div class="inventory-count" id="asset-land-l1">0</div>
+            </div>
+          </div>
 
-  <div class="inventory-card">
-    <img src="assets/land-l2.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">L2 Estate</div>
-      <div class="inventory-count" id="asset-land-l2">0</div>
-    </div>
-  </div>
+          <div class="inventory-card">
+            <img src="assets/land-l2.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">L2 Estate</div>
+              <div class="inventory-count" id="asset-land-l2">0</div>
+            </div>
+          </div>
 
-  <div class="inventory-card">
-    <img src="assets/land-l3.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">L3 Industrial Zone</div>
-      <div class="inventory-count" id="asset-land-l3">0</div>
-    </div>
-  </div>
+          <div class="inventory-card">
+            <img src="assets/land-l3.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">L3 Industrial Zone</div>
+              <div class="inventory-count" id="asset-land-l3">0</div>
+            </div>
+          </div>
 
-  <div class="inventory-card">
-    <img src="assets/pack.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">Packs</div>
-      <div class="inventory-count" id="asset-packs">0</div>
-    </div>
-  </div>
+          <div class="inventory-card">
+            <img src="assets/pack.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Packs</div>
+              <div class="inventory-count" id="asset-packs">0</div>
+            </div>
+          </div>
 
-  <div class="inventory-card">
-    <img src="assets/relic.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">Relics</div>
-      <div class="inventory-count" id="asset-relics">0</div>
-    </div>
-  </div>
+          <div class="inventory-card">
+            <img src="assets/relic.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Relics</div>
+              <div class="inventory-count" id="asset-relics">0</div>
+            </div>
+          </div>
 
-  <div class="inventory-card">
-    <img src="assets/writ.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">WRITs</div>
-      <div class="inventory-count" id="asset-writs">0</div>
-    </div>
-  </div>
+          <div class="inventory-card">
+            <img src="assets/writ.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">WRITs</div>
+              <div class="inventory-count" id="asset-writs">0</div>
+            </div>
+          </div>
+        </div>
 
-</div>
+        <h3 style="margin: 24px 0 12px">Blueprints</h3>
 
-<h3 style="margin:24px 0 12px;">Blueprints</h3>
+        <div class="empire-inventory">
+          <div class="inventory-card">
+            <img src="assets/food.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Food</div>
+              <div class="inventory-count" id="asset-bp-food">0</div>
+              <div class="inventory-subcount" id="asset-bp-food-levels">
+                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
+              </div>
+            </div>
+          </div>
 
-<div class="empire-inventory">
+          <div class="inventory-card">
+            <img src="assets/textile.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Textile</div>
+              <div class="inventory-count" id="asset-bp-textile">0</div>
+              <div class="inventory-subcount" id="asset-bp-textile-levels">
+                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
+              </div>
+            </div>
+          </div>
 
-  <div class="inventory-card">
-    <img src="assets/food.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">Food</div>
-      <div class="inventory-count" id="asset-bp-food">0</div>
-      <div class="inventory-subcount" id="asset-bp-food-levels">B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0</div>
-    </div>
-  </div>
+          <div class="inventory-card">
+            <img src="assets/pharma.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Pharma</div>
+              <div class="inventory-count" id="asset-bp-pharma">0</div>
+              <div class="inventory-subcount" id="asset-bp-pharma-levels">
+                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
+              </div>
+            </div>
+          </div>
 
-  <div class="inventory-card">
-    <img src="assets/textile.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">Textile</div>
-      <div class="inventory-count" id="asset-bp-textile">0</div>
-      <div class="inventory-subcount" id="asset-bp-textile-levels">B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0</div>
-    </div>
-  </div>
+          <div class="inventory-card">
+            <img src="assets/chemical.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Chemical</div>
+              <div class="inventory-count" id="asset-bp-chemical">0</div>
+              <div class="inventory-subcount" id="asset-bp-chemical-levels">
+                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
+              </div>
+            </div>
+          </div>
 
-  <div class="inventory-card">
-    <img src="assets/pharma.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">Pharma</div>
-      <div class="inventory-count" id="asset-bp-pharma">0</div>
-      <div class="inventory-subcount" id="asset-bp-pharma-levels">B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0</div>
-    </div>
-  </div>
-
-  <div class="inventory-card">
-    <img src="assets/chemical.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">Chemical</div>
-      <div class="inventory-count" id="asset-bp-chemical">0</div>
-      <div class="inventory-subcount" id="asset-bp-chemical-levels">B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0</div>
-    </div>
-  </div>
-
-  <div class="inventory-card">
-    <img src="assets/supermarket.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">Supermarket</div>
-      <div class="inventory-count" id="asset-bp-supermarket">0</div>
-      <div class="inventory-subcount" id="asset-bp-supermarket-levels">B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0</div>
-    </div>
-  </div>
-
-</div>
-  <!-- ===== TAB: UNDER CONSTRUCTION ===== -->
+          <div class="inventory-card">
+            <img src="assets/supermarket.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Supermarket</div>
+              <div class="inventory-count" id="asset-bp-supermarket">0</div>
+              <div class="inventory-subcount" id="asset-bp-supermarket-levels">
+                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ===== TAB: UNDER CONSTRUCTION ===== -->
       <section class="section tab-panel" data-tab-panel="construction">
         <div class="section-header">
           <h2>Factories under Construction / Inactive</h2>
@@ -598,128 +601,91 @@
         <div id="construction-grid" class="factory-grid">
           <p class="status-text">Loading factories…</p>
         </div>
-        <h3 style="margin-top:24px;">Blueprints</h3>
-
-<div class="empire-inventory">
-
-  <div class="inventory-card">
-    <img src="assets/food.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">Food Industry</div>
-      <div class="inventory-count" id="asset-bp-food">0</div>
-    </div>
-  </div>
-
-  <div class="inventory-card">
-    <img src="assets/textile.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">Textile Industry</div>
-      <div class="inventory-count" id="asset-bp-textile">0</div>
-    </div>
-  </div>
-
-  <div class="inventory-card">
-    <img src="assets/pharma.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">Pharma Industry</div>
-      <div class="inventory-count" id="asset-bp-pharma">0</div>
-    </div>
-  </div>
-
-  <div class="inventory-card">
-    <img src="assets/chemical.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">Chemical Industry</div>
-      <div class="inventory-count" id="asset-bp-chemical">0</div>
-    </div>
-  </div>
-
-  <div class="inventory-card">
-    <img src="assets/supermarket.png" class="inventory-icon">
-    <div class="inventory-info">
-      <div class="inventory-title">Supermarket</div>
-      <div class="inventory-count" id="asset-bp-supermarket">0</div>
-    </div>
-  </div>
-
-</div>
       </section>
 
-  
-<!-- ===== TAB: GLOBAL HEALTH ===== -->
-<section class="section tab-panel" data-tab-panel="global">
-  <div class="section-header">
-    <h2>Global Game Health</h2>
-    <small>Live Genesis-wide stats pulled from backend</small>
-  </div>
+      <!-- ===== TAB: GLOBAL HEALTH ===== -->
+      <section class="section tab-panel" data-tab-panel="global">
+        <div class="section-header">
+          <h2>Global Game Health</h2>
+          <small>Live Genesis-wide stats pulled from backend</small>
+        </div>
 
-  <div class="summary-grid">
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-label">
+              <svg
+                class="summary-icon summary-icon-blue"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <polygon points="13 2 3 14 11 14 9 22 21 8 13 8"></polygon>
+              </svg>
+              Global Production
+            </div>
 
-    <div class="summary-card">
-      <div class="summary-label">
-        <svg class="summary-icon summary-icon-blue" viewBox="0 0 24 24" aria-hidden="true">
-          <polygon points="13 2 3 14 11 14 9 22 21 8 13 8"></polygon>
-        </svg>
-        Global Production
-      </div>
+            <div class="summary-value" id="global-production">0.00 EP/day</div>
 
-      <div class="summary-value" id="global-production">0.00 EP/day</div>
+            <div class="summary-sub" id="global-production-sub">
+              Live global production across all currently active factories
+            </div>
 
-      <div class="summary-sub" id="global-production-sub">
-        Live global production across all currently active factories
-      </div>
+            <div class="summary-sub" id="global-production-cycle-sub">
+              Today's reward cycle base: 0.00 EP
+            </div>
+          </div>
 
-      <div class="summary-sub" id="global-production-cycle-sub">
-        Today's reward cycle base: 0.00 EP
-      </div>
-    </div>
+          <div class="summary-card">
+            <div class="summary-label">
+              <svg
+                class="summary-icon summary-icon-blue"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <rect x="4" y="7" width="16" height="12" rx="2" ry="2"></rect>
+                <path d="M7 7V5h10v2"></path>
+                <circle cx="16.5" cy="13" r="1.5"></circle>
+              </svg>
+              Treasury Health
+            </div>
 
-    <div class="summary-card">
-      <div class="summary-label">
-        <svg class="summary-icon summary-icon-blue" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="4" y="7" width="16" height="12" rx="2" ry="2"></rect>
-          <path d="M7 7V5h10v2"></path>
-          <circle cx="16.5" cy="13" r="1.5"></circle>
-        </svg>
-        Treasury Health
-      </div>
+            <div class="summary-value" id="treasury-balance">0.000 HIVE</div>
 
-      <div class="summary-value" id="treasury-balance">0.000 HIVE</div>
+            <div class="summary-sub" id="treasury-health-sub">
+              Emission: 0.00% | Today's reward pool: 0.000 HIVE | Status: -
+            </div>
 
-      <div class="summary-sub" id="treasury-health-sub">
-        Emission: 0.00% | Today's reward pool: 0.000 HIVE | Status: -
-      </div>
+            <div class="summary-sub" id="treasury-cycle-sub">
+              Based on latest daily reward cycle
+            </div>
+          </div>
 
-      <div class="summary-sub" id="treasury-cycle-sub">
-        Based on latest daily reward cycle
-      </div>
-    </div>
+          <div class="summary-card">
+            <div class="summary-label">
+              <svg
+                class="summary-icon summary-icon-blue"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <rect x="3" y="10" width="6" height="10"></rect>
+                <rect x="10" y="6" width="6" height="14"></rect>
+                <rect x="17" y="12" width="4" height="8"></rect>
+              </svg>
+              Global Factories
+            </div>
 
-    <div class="summary-card">
-      <div class="summary-label">
-        <svg class="summary-icon summary-icon-blue" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="3" y="10" width="6" height="10"></rect>
-          <rect x="10" y="6" width="6" height="14"></rect>
-          <rect x="17" y="12" width="4" height="8"></rect>
-        </svg>
-        Global Factories
-      </div>
+            <div class="summary-value" id="global-factories-total">0</div>
 
-      <div class="summary-value" id="global-factories-total">0</div>
+            <div class="summary-sub" id="global-factories-sub">
+              Active: 0 | Building: 0 | Inactive: 0
+            </div>
 
-      <div class="summary-sub" id="global-factories-sub">
-        Active: 0 | Building: 0 | Inactive: 0
-      </div>
+            <div class="summary-sub" id="global-factories-note">
+              Total factories currently existing across all empires
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <div class="summary-sub" id="global-factories-note">
-        Total factories currently existing across all empires
-      </div>
-    </div>
-
-  </div>
-</section>
-
-        
       <section class="section tab-panel" data-tab-panel="leaderboard">
         <div class="leaderboard-subnav">
           <button
@@ -1164,345 +1130,360 @@
         }
       }
       // ===== PLAYER SUMMARY =====
-    async function loadDashboardSummary() {
-  try {
-    const username = encodeURIComponent(PLAYER_USERNAME);
+      async function loadDashboardSummary() {
+        try {
+          const username = encodeURIComponent(PLAYER_USERNAME);
 
-    const [dashboardRes, overviewRes, blueprintsRes] = await Promise.all([
-      fetch(apiUrl(`/player/${username}/dashboard`)),
-      fetch(apiUrl(`/player/${username}/empire-overview`)),
-      fetch(apiUrl(`/player/${username}/blueprints`)),
-    ]);
+          const [dashboardRes, overviewRes, blueprintsRes] = await Promise.all([
+            fetch(apiUrl(`/player/${username}/dashboard`)),
+            fetch(apiUrl(`/player/${username}/empire-overview`)),
+            fetch(apiUrl(`/player/${username}/blueprints`)),
+          ]);
 
-    if (!dashboardRes.ok) throw new Error("HTTP " + dashboardRes.status);
-    if (!overviewRes.ok) throw new Error("HTTP " + overviewRes.status);
-    if (!blueprintsRes.ok) throw new Error("HTTP " + blueprintsRes.status);
+          if (!dashboardRes.ok) throw new Error("HTTP " + dashboardRes.status);
+          if (!overviewRes.ok) throw new Error("HTTP " + overviewRes.status);
+          if (!blueprintsRes.ok)
+            throw new Error("HTTP " + blueprintsRes.status);
 
-    const data = await dashboardRes.json();
-    const overviewData = await overviewRes.json();
-    const blueprintsData = await blueprintsRes.json();
+          const data = await dashboardRes.json();
+          const overviewData = await overviewRes.json();
+          const blueprintsData = await blueprintsRes.json();
 
-    console.log("Dashboard summary:", data);
-    console.log("Empire overview summary:", overviewData);
-    console.log("Blueprint summary:", blueprintsData);
+          console.log("Dashboard summary:", data);
+          console.log("Empire overview summary:", overviewData);
+          console.log("Blueprint summary:", blueprintsData);
 
-    const setText = (id, value) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = value;
-    };
+          const setText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+          };
 
-    const usernameFromApi = data.username || PLAYER_USERNAME;
-    setText("player-username-display", usernameFromApi);
-    setText("player-username-raw", PLAYER_USERNAME);
-    setText("last-updated", new Date().toLocaleString());
+          const usernameFromApi = data.username || PLAYER_USERNAME;
+          setText("player-username-display", usernameFromApi);
+          setText("player-username-raw", PLAYER_USERNAME);
+          setText("last-updated", new Date().toLocaleString());
 
-    const statusEl = document.getElementById("empire-status-pulse");
-    if (statusEl) {
-      statusEl.innerHTML =
-        data.empireStatus ??
-        data.totals?.empireStatus ??
-        "<span class='status-dot'></span>All factories running smoothly.";
-    }
+          const statusEl = document.getElementById("empire-status-pulse");
+          if (statusEl) {
+            statusEl.innerHTML =
+              data.empireStatus ??
+              data.totals?.empireStatus ??
+              "<span class='status-dot'></span>All factories running smoothly.";
+          }
 
-    // ===== EMP =====
-    const emp = Number(data.empBalance ?? 0);
-    setText(
-      "summary-emp-balance",
-      emp.toLocaleString(undefined, {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2,
-      })
-    );
+          // ===== EMP =====
+          const emp = Number(data.empBalance ?? 0);
+          setText(
+            "summary-emp-balance",
+            emp.toLocaleString(undefined, {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2,
+            }),
+          );
 
-    // ===== FACTORIES =====
-    const totalFactories = Number(
-      data.totalFactories ?? data.totals?.totalFactories ?? 0
-    );
-    const activeFactories = Number(
-      data.activeFactories ?? data.totals?.activeFactories ?? 0
-    );
-    const buildingFactories = Number(
-      data.buildingFactories ?? data.totals?.buildingFactories ?? 0
-    );
-    const inactiveFactories = Number(
-      data.inactiveFactories ?? data.totals?.inactiveFactories ?? 0
-    );
+          // ===== FACTORIES =====
+          const totalFactories = Number(
+            data.totalFactories ?? data.totals?.totalFactories ?? 0,
+          );
+          const activeFactories = Number(
+            data.activeFactories ?? data.totals?.activeFactories ?? 0,
+          );
+          const buildingFactories = Number(
+            data.buildingFactories ?? data.totals?.buildingFactories ?? 0,
+          );
+          const inactiveFactories = Number(
+            data.inactiveFactories ?? data.totals?.inactiveFactories ?? 0,
+          );
 
-    // ===== LANDS / SLOTS from empire-overview =====
-    const lands = Array.isArray(overviewData.lands) ? overviewData.lands : [];
+          // ===== LANDS / SLOTS from empire-overview =====
+          const lands = Array.isArray(overviewData.lands)
+            ? overviewData.lands
+            : [];
 
-    let totalSlots = 0;
-    let usedSlots = 0;
-    let l1 = 0;
-    let l2 = 0;
-    let l3 = 0;
+          let totalSlots = 0;
+          let usedSlots = 0;
+          let l1 = 0;
+          let l2 = 0;
+          let l3 = 0;
 
-    for (const land of lands) {
-      const tier = String(land.land_tier || land.tier || "").toUpperCase();
-      const factories = Array.isArray(land.factories) ? land.factories : [];
+          for (const land of lands) {
+            const tier = String(
+              land.land_tier || land.tier || "",
+            ).toUpperCase();
+            const factories = Array.isArray(land.factories)
+              ? land.factories
+              : [];
 
-      if (tier === "L1") {
-        l1++;
-        totalSlots += 1;
-      } else if (tier === "L2") {
-        l2++;
-        totalSlots += 2;
-      } else if (tier === "L3") {
-        l3++;
-        totalSlots += 3;
-      }
+            if (tier === "L1") {
+              l1++;
+              totalSlots += 1;
+            } else if (tier === "L2") {
+              l2++;
+              totalSlots += 2;
+            } else if (tier === "L3") {
+              l3++;
+              totalSlots += 3;
+            }
 
-      usedSlots += factories.length;
-    }
+            usedSlots += factories.length;
+          }
 
-    const totalLands =
-      Number(data.totalLands ?? data.totals?.totalLands ?? 0) ||
-      lands.length ||
-      l1 + l2 + l3;
+          const totalLands =
+            Number(data.totalLands ?? data.totals?.totalLands ?? 0) ||
+            lands.length ||
+            l1 + l2 + l3;
 
-    const emptySlots = Math.max(totalSlots - usedSlots, 0);
+          const emptySlots = Math.max(totalSlots - usedSlots, 0);
 
-    setText("summary-lands-total", totalLands);
-    setText(
-      "summary-lands-breakdown",
-      `L1: ${l1} | L2: ${l2} | L3: ${l3} | Slots: ${totalSlots} | Empty: ${emptySlots}`
-    );
+          setText("summary-lands-total", totalLands);
+          setText(
+            "summary-lands-breakdown",
+            `L1: ${l1} | L2: ${l2} | L3: ${l3} | Slots: ${totalSlots} | Empty: ${emptySlots}`,
+          );
 
-    // ===== BLUEPRINTS =====
-    const totalBlueprints = Array.isArray(blueprintsData.blueprints)
-      ? blueprintsData.blueprints.length
-      : 0;
+          // ===== BLUEPRINTS =====
+          const totalBlueprints = Array.isArray(blueprintsData.blueprints)
+            ? blueprintsData.blueprints.length
+            : 0;
 
-    setText("summary-factories-total", totalFactories);
-    setText(
-      "summary-factories-breakdown",
-      `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories} | Blueprints: ${totalBlueprints}`
-    );
+          setText("summary-factories-total", totalFactories);
+          setText(
+            "summary-factories-breakdown",
+            `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories} | Blueprints: ${totalBlueprints}`,
+          );
 
-    // ===== RELICS =====
-    const relicCount = Number(data.relicCount ?? 0);
-    const activeRelicBoost = Number(data.activeRelicBoost ?? 0);
+          // ===== RELICS =====
+          const relicCount = Number(data.relicCount ?? 0);
+          const activeRelicBoost = Number(data.activeRelicBoost ?? 0);
 
-    setText("summary-relic-boost", `${activeRelicBoost}%`);
-    setText(
-      "summary-relic-count",
-      `Relics owned: ${relicCount} (max boost: 6%)`
-    );
+          setText("summary-relic-boost", `${activeRelicBoost}%`);
+          setText(
+            "summary-relic-count",
+            `Relics owned: ${relicCount} (max boost: 6%)`,
+          );
 
-    // ===== WRITS =====
-    const writCount = Number(data.writCount ?? 0);
-    setText("summary-writ-count", writCount);
+          // ===== WRITS =====
+          const writCount = Number(data.writCount ?? 0);
+          setText("summary-writ-count", writCount);
 
-    // ===== PRODUCTION =====
-    const totalBoostedEP = Number(data.totalBoostedEP ?? 0);
-    const totalClaimableEP = Number(data.totalClaimableEP ?? 0);
-    const totalEmpireEP = Number(data.totalEmpireEP ?? totalClaimableEP ?? 0);
+          // ===== PRODUCTION =====
+          const totalBoostedEP = Number(data.totalBoostedEP ?? 0);
+          const totalClaimableEP = Number(data.totalClaimableEP ?? 0);
+          const totalEmpireEP = Number(
+            data.totalEmpireEP ?? totalClaimableEP ?? 0,
+          );
 
-    setText("summary-production-rate", `${totalBoostedEP.toFixed(2)} EP/day`);
-    setText(
-      "summary-claimable-ep",
-      `Accumulated EP: ${totalClaimableEP.toFixed(2)}`
-    );
-    setText("summary-total-empire-ep", totalEmpireEP.toFixed(2));
+          setText(
+            "summary-production-rate",
+            `${totalBoostedEP.toFixed(2)} EP/day`,
+          );
+          setText(
+            "summary-claimable-ep",
+            `Accumulated EP: ${totalClaimableEP.toFixed(2)}`,
+          );
+          setText("summary-total-empire-ep", totalEmpireEP.toFixed(2));
 
-    // ===== LIFETIME EP =====
-    const lifetimeEP = Number(data.lifetimeEP ?? 0);
-    setText("lifetime-ep", lifetimeEP.toFixed(2));
+          // ===== LIFETIME EP =====
+          const lifetimeEP = Number(data.lifetimeEP ?? 0);
+          setText("lifetime-ep", lifetimeEP.toFixed(2));
 
-    // ===== EMPIRE ASSETS =====
-    let unopenedPacks = 0;
+          // ===== EMPIRE ASSETS =====
+          let unopenedPacks = 0;
 
-    try {
-      const packsRes = await fetch(
-        apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/packs`)
-      );
-      if (packsRes.ok) {
-        const packsData = await packsRes.json();
-        unopenedPacks = Array.isArray(packsData.packs)
-          ? packsData.packs.length
-          : 0;
-      }
-    } catch (e) {
-      console.error("Failed to load packs for assets tab:", e);
-    }
+          try {
+            const packsRes = await fetch(
+              apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/packs`),
+            );
+            if (packsRes.ok) {
+              const packsData = await packsRes.json();
+              unopenedPacks = Array.isArray(packsData.packs)
+                ? packsData.packs.length
+                : 0;
+            }
+          } catch (e) {
+            console.error("Failed to load packs for assets tab:", e);
+          }
 
-    const bpBreakdown = {
-      FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-      TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-      PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-      CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-      SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-    };
+          const bpBreakdown = {
+            FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+            TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+            PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+            CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+            SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+          };
 
-    if (Array.isArray(blueprintsData.blueprints)) {
-      for (const bp of blueprintsData.blueprints) {
-        const tierRaw = String(bp.tier || bp.blueprint_tier || "")
-          .toUpperCase()
-          .trim();
+          if (Array.isArray(blueprintsData.blueprints)) {
+            for (const bp of blueprintsData.blueprints) {
+              const tierRaw = String(bp.tier || bp.blueprint_tier || "")
+                .toUpperCase()
+                .trim();
 
-        const parts = tierRaw.split("_");
-        const industry = parts[0];
-        const level = parts[1];
+              const parts = tierRaw.split("_");
+              const industry = parts[0];
+              const level = parts[1];
 
-        if (
-          bpBreakdown[industry] &&
-          bpBreakdown[industry][level] !== undefined
-        ) {
-          bpBreakdown[industry][level]++;
+              if (
+                bpBreakdown[industry] &&
+                bpBreakdown[industry][level] !== undefined
+              ) {
+                bpBreakdown[industry][level]++;
+              }
+            }
+          }
+
+          function totalBp(obj) {
+            return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
+          }
+
+          setText("asset-land-l1", `x ${l1}`);
+          setText("asset-land-l2", `x ${l2}`);
+          setText("asset-land-l3", `x ${l3}`);
+
+          setText("asset-bp-food", `x ${totalBp(bpBreakdown.FOOD)}`);
+          setText("asset-bp-textile", `x ${totalBp(bpBreakdown.TEXTILE)}`);
+          setText("asset-bp-pharma", `x ${totalBp(bpBreakdown.PHARMA)}`);
+          setText("asset-bp-chemical", `x ${totalBp(bpBreakdown.CHEMICAL)}`);
+          setText(
+            "asset-bp-supermarket",
+            `x ${totalBp(bpBreakdown.SUPERMARKET)}`,
+          );
+
+          setText(
+            "asset-bp-food-levels",
+            `B1: ${bpBreakdown.FOOD.B1} | B2: ${bpBreakdown.FOOD.B2} | B3: ${bpBreakdown.FOOD.B3} | B4: ${bpBreakdown.FOOD.B4} | B5: ${bpBreakdown.FOOD.B5}`,
+          );
+          setText(
+            "asset-bp-textile-levels",
+            `B1: ${bpBreakdown.TEXTILE.B1} | B2: ${bpBreakdown.TEXTILE.B2} | B3: ${bpBreakdown.TEXTILE.B3} | B4: ${bpBreakdown.TEXTILE.B4} | B5: ${bpBreakdown.TEXTILE.B5}`,
+          );
+          setText(
+            "asset-bp-pharma-levels",
+            `B1: ${bpBreakdown.PHARMA.B1} | B2: ${bpBreakdown.PHARMA.B2} | B3: ${bpBreakdown.PHARMA.B3} | B4: ${bpBreakdown.PHARMA.B4} | B5: ${bpBreakdown.PHARMA.B5}`,
+          );
+          setText(
+            "asset-bp-chemical-levels",
+            `B1: ${bpBreakdown.CHEMICAL.B1} | B2: ${bpBreakdown.CHEMICAL.B2} | B3: ${bpBreakdown.CHEMICAL.B3} | B4: ${bpBreakdown.CHEMICAL.B4} | B5: ${bpBreakdown.CHEMICAL.B5}`,
+          );
+          setText(
+            "asset-bp-supermarket-levels",
+            `B1: ${bpBreakdown.SUPERMARKET.B1} | B2: ${bpBreakdown.SUPERMARKET.B2} | B3: ${bpBreakdown.SUPERMARKET.B3} | B4: ${bpBreakdown.SUPERMARKET.B4} | B5: ${bpBreakdown.SUPERMARKET.B5}`,
+          );
+
+          setText("asset-packs", `x ${unopenedPacks}`);
+          setText("asset-relics", `x ${relicCount}`);
+          setText("asset-writs", `x ${writCount}`);
+        } catch (err) {
+          console.error("Failed to load dashboard summary:", err);
         }
       }
-    }
 
-    function totalBp(obj) {
-      return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
-    }
+      async function loadRewardSummary() {
+        try {
+          const res = await fetch(
+            apiUrl(
+              `/player/${encodeURIComponent(PLAYER_USERNAME)}/reward-summary`,
+            ),
+          );
 
-    setText("asset-land-l1", `x ${l1}`);
-    setText("asset-land-l2", `x ${l2}`);
-    setText("asset-land-l3", `x ${l3}`);
+          if (!res.ok) throw new Error("HTTP " + res.status);
 
-    setText("asset-bp-food", `x ${totalBp(bpBreakdown.FOOD)}`);
-    setText("asset-bp-textile", `x ${totalBp(bpBreakdown.TEXTILE)}`);
-    setText("asset-bp-pharma", `x ${totalBp(bpBreakdown.PHARMA)}`);
-    setText("asset-bp-chemical", `x ${totalBp(bpBreakdown.CHEMICAL)}`);
-    setText("asset-bp-supermarket", `x ${totalBp(bpBreakdown.SUPERMARKET)}`);
+          const data = await res.json();
+          console.log("Reward summary:", data);
 
-    setText(
-      "asset-bp-food-levels",
-      `B1: ${bpBreakdown.FOOD.B1} | B2: ${bpBreakdown.FOOD.B2} | B3: ${bpBreakdown.FOOD.B3} | B4: ${bpBreakdown.FOOD.B4} | B5: ${bpBreakdown.FOOD.B5}`
-    );
-    setText(
-      "asset-bp-textile-levels",
-      `B1: ${bpBreakdown.TEXTILE.B1} | B2: ${bpBreakdown.TEXTILE.B2} | B3: ${bpBreakdown.TEXTILE.B3} | B4: ${bpBreakdown.TEXTILE.B4} | B5: ${bpBreakdown.TEXTILE.B5}`
-    );
-    setText(
-      "asset-bp-pharma-levels",
-      `B1: ${bpBreakdown.PHARMA.B1} | B2: ${bpBreakdown.PHARMA.B2} | B3: ${bpBreakdown.PHARMA.B3} | B4: ${bpBreakdown.PHARMA.B4} | B5: ${bpBreakdown.PHARMA.B5}`
-    );
-    setText(
-      "asset-bp-chemical-levels",
-      `B1: ${bpBreakdown.CHEMICAL.B1} | B2: ${bpBreakdown.CHEMICAL.B2} | B3: ${bpBreakdown.CHEMICAL.B3} | B4: ${bpBreakdown.CHEMICAL.B4} | B5: ${bpBreakdown.CHEMICAL.B5}`
-    );
-    setText(
-      "asset-bp-supermarket-levels",
-      `B1: ${bpBreakdown.SUPERMARKET.B1} | B2: ${bpBreakdown.SUPERMARKET.B2} | B3: ${bpBreakdown.SUPERMARKET.B3} | B4: ${bpBreakdown.SUPERMARKET.B4} | B5: ${bpBreakdown.SUPERMARKET.B5}`
-    );
+          const setText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+          };
 
-    setText("asset-packs", `x ${unopenedPacks}`);
-    setText("asset-relics", `x ${relicCount}`);
-    setText("asset-writs", `x ${writCount}`);
-  } catch (err) {
-    console.error("Failed to load dashboard summary:", err);
-  }
-}
-     
+          const claimableHive = Number(
+            data.claimable_hive ?? data.claimable_amount ?? 0,
+          );
 
-async function loadRewardSummary() {
-  try {
-    const res = await fetch(
-      apiUrl(
-        `/player/${encodeURIComponent(PLAYER_USERNAME)}/reward-summary`,
-      ),
-    );
+          const walletHive = Number(
+            data.wallet_hive ?? data.wallet_balance ?? 0,
+          );
 
-    if (!res.ok) throw new Error("HTTP " + res.status);
+          const pendingWithdrawAmount = Number(
+            data.pending_withdraw_amount ?? 0,
+          );
+          const pendingWithdrawCount = Number(data.pending_withdraw_count ?? 0);
 
-    const data = await res.json();
-    console.log("Reward summary:", data);
+          const lastCompletedWithdrawAmount = Number(
+            data.last_completed_withdraw_amount ?? 0,
+          );
+          const lastCompletedWithdrawId = Number(
+            data.last_completed_withdraw_id ?? 0,
+          );
 
-    const setText = (id, value) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = value;
-    };
+          EXACT_WALLET_HIVE = walletHive;
 
-    const claimableHive = Number(
-      data.claimable_hive ?? data.claimable_amount ?? 0,
-    );
+          setText("summary-claimable-hive", claimableHive.toFixed(3));
+          setText("summary-wallet-hive", Math.max(0, walletHive).toFixed(3));
 
-    const walletHive = Number(
-      data.wallet_hive ?? data.wallet_balance ?? 0,
-    );
+          if (pendingWithdrawCount > 0) {
+            setText("summary-withdraw-status", "Pending");
+            document.getElementById("summary-withdraw-status").innerHTML =
+              `<span class="status-dot status-pending"></span>Pending`;
 
-   const pendingWithdrawAmount = Number(data.pending_withdraw_amount ?? 0);
-const pendingWithdrawCount = Number(data.pending_withdraw_count ?? 0);
+            setText(
+              "summary-withdraw-sub",
+              `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`,
+            );
+          } else if (
+            lastCompletedWithdrawId > 0 &&
+            lastCompletedWithdrawAmount > 0
+          ) {
+            document.getElementById("summary-withdraw-status").innerHTML =
+              `<span class="status-dot status-completed"></span>Completed`;
 
-const lastCompletedWithdrawAmount = Number(data.last_completed_withdraw_amount ?? 0);
-const lastCompletedWithdrawId = Number(data.last_completed_withdraw_id ?? 0);
+            setText(
+              "summary-withdraw-sub",
+              `${lastCompletedWithdrawAmount.toFixed(3)} HIVE withdrawal completed`,
+            );
+          } else if (walletHive >= 1) {
+            document.getElementById("summary-withdraw-status").innerHTML =
+              `<span class="status-dot status-ready"></span>Ready`;
 
-    EXACT_WALLET_HIVE = walletHive;
+            setText("summary-withdraw-sub", "You can request withdrawal now.");
+          } else {
+            document.getElementById("summary-withdraw-status").innerHTML =
+              `<span class="status-dot status-notready"></span>Not Ready`;
 
-    setText("summary-claimable-hive", claimableHive.toFixed(3));
-    setText("summary-wallet-hive", Math.max(0, walletHive).toFixed(3));
+            setText("summary-withdraw-sub", "Minimum withdrawal is 1.000 HIVE");
+          }
 
-  if (pendingWithdrawCount > 0) {
+          const claimRewardStatus = document.getElementById(
+            "claim-reward-status",
+          );
 
-  setText("summary-withdraw-status", "Pending");
-  document.getElementById("summary-withdraw-status").innerHTML =
-    `<span class="status-dot status-pending"></span>Pending`;
+          if (claimRewardStatus) {
+            claimRewardStatus.textContent =
+              claimableHive > 0
+                ? `${claimableHive.toFixed(3)} HIVE available to claim`
+                : "No reward available to claim.";
+          }
 
-  setText(
-    "summary-withdraw-sub",
-    `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
-  );
+          const withdrawHiveStatus = document.getElementById(
+            "withdraw-hive-status",
+          );
 
-} else if (lastCompletedWithdrawId > 0 && lastCompletedWithdrawAmount > 0) {
-
-  document.getElementById("summary-withdraw-status").innerHTML =
-    `<span class="status-dot status-completed"></span>Completed`;
-
-  setText(
-    "summary-withdraw-sub",
-    `${lastCompletedWithdrawAmount.toFixed(3)} HIVE withdrawal completed`
-  );
-
-} else if (walletHive >= 1) {
-
-  document.getElementById("summary-withdraw-status").innerHTML =
-    `<span class="status-dot status-ready"></span>Ready`;
-
-  setText("summary-withdraw-sub", "You can request withdrawal now.");
-
-} else {
-
-  document.getElementById("summary-withdraw-status").innerHTML =
-    `<span class="status-dot status-notready"></span>Not Ready`;
-
-  setText("summary-withdraw-sub", "Minimum withdrawal is 1.000 HIVE");
-
-}
-
-    const claimRewardStatus = document.getElementById(
-      "claim-reward-status",
-    );
-
-    if (claimRewardStatus) {
-      claimRewardStatus.textContent =
-        claimableHive > 0
-          ? `${claimableHive.toFixed(3)} HIVE available to claim`
-          : "No reward available to claim.";
-    }
-
-    const withdrawHiveStatus = document.getElementById(
-      "withdraw-hive-status",
-    );
-
-    if (withdrawHiveStatus) {
-      if (walletHive >= 1) {
-        withdrawHiveStatus.textContent =
-          pendingWithdrawCount > 0
-            ? `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
-            : `${walletHive.toFixed(3)} HIVE available for withdrawal request`;
-      } else {
-        withdrawHiveStatus.textContent =
-          pendingWithdrawCount > 0
-            ? `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
-            : "Withdrawal not ready yet.";
+          if (withdrawHiveStatus) {
+            if (walletHive >= 1) {
+              withdrawHiveStatus.textContent =
+                pendingWithdrawCount > 0
+                  ? `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
+                  : `${walletHive.toFixed(3)} HIVE available for withdrawal request`;
+            } else {
+              withdrawHiveStatus.textContent =
+                pendingWithdrawCount > 0
+                  ? `${pendingWithdrawCount} pending request(s) • ${pendingWithdrawAmount.toFixed(3)} HIVE awaiting admin approval`
+                  : "Withdrawal not ready yet.";
+            }
+          }
+        } catch (err) {
+          console.error("Failed to load reward summary:", err);
+        }
       }
-    }
-  } catch (err) {
-    console.error("Failed to load reward summary:", err);
-  }
-}
       async function loadPacks() {
         try {
           if (!PLAYER_USERNAME) return;
@@ -1535,7 +1516,7 @@ const lastCompletedWithdrawId = Number(data.last_completed_withdraw_id ?? 0);
 
           const maxOpen = Math.min(5, total);
 
-        gridEl.innerHTML = `
+          gridEl.innerHTML = `
   <div class="pack-opening-stage">
     <div class="pack-stage-glow"></div>
 
@@ -1580,76 +1561,78 @@ const lastCompletedWithdrawId = Number(data.last_completed_withdraw_id ?? 0);
   </div>
 `;
 
-        const slider = document.getElementById("pack-open-count-slider");
-const display = document.getElementById("pack-open-count-display");
-const displaySecondary = document.getElementById("pack-open-count-display-secondary");
-const openBtn = document.getElementById("open-selected-packs-btn");
+          const slider = document.getElementById("pack-open-count-slider");
+          const display = document.getElementById("pack-open-count-display");
+          const displaySecondary = document.getElementById(
+            "pack-open-count-display-secondary",
+          );
+          const openBtn = document.getElementById("open-selected-packs-btn");
 
-function syncPackOpenUI() {
-  const count = Number(slider.value || 1);
+          function syncPackOpenUI() {
+            const count = Number(slider.value || 1);
 
-  if (display) display.textContent = count;
-  if (displaySecondary) displaySecondary.textContent = count;
+            if (display) display.textContent = count;
+            if (displaySecondary) displaySecondary.textContent = count;
 
-  openBtn.textContent = `Open ${count} Pack${count === 1 ? "" : "s"}`;
-}
+            openBtn.textContent = `Open ${count} Pack${count === 1 ? "" : "s"}`;
+          }
 
-slider.addEventListener("input", syncPackOpenUI);
+          slider.addEventListener("input", syncPackOpenUI);
 
-openBtn.onclick = function () {
-  const count = Number(slider.value || 1);
-  console.log("OPEN BUTTON WORKING, count =", count);
+          openBtn.onclick = function () {
+            const count = Number(slider.value || 1);
+            console.log("OPEN BUTTON WORKING, count =", count);
 
-  const stageImage = document.querySelector(".pack-stage-image");
+            const stageImage = document.querySelector(".pack-stage-image");
 
-  if (stageImage) {
-    stageImage.style.animation = "none";
-    stageImage.offsetHeight; // force reflow
-    stageImage.style.animation = "mdePackBurst 0.45s ease";
-  }
+            if (stageImage) {
+              stageImage.style.animation = "none";
+              stageImage.offsetHeight; // force reflow
+              stageImage.style.animation = "mdePackBurst 0.45s ease";
+            }
 
-  setTimeout(() => {
-    openPackFromPacksPage(count);
-  }, 220);
-};
+            setTimeout(() => {
+              openPackFromPacksPage(count);
+            }, 220);
+          };
 
-syncPackOpenUI();
+          syncPackOpenUI();
         } catch (err) {
           console.error("Failed to load packs:", err);
         }
       }
-    function renderPackReveal(data) {
-  console.log("REVEAL DATA:", data);
+      function renderPackReveal(data) {
+        console.log("REVEAL DATA:", data);
 
-  const stage = document.getElementById("pack-reveal-stage");
-  if (!stage) return;
+        const stage = document.getElementById("pack-reveal-stage");
+        if (!stage) return;
 
-  const drops = Array.isArray(data.drops) ? data.drops : [];
+        const drops = Array.isArray(data.drops) ? data.drops : [];
 
-  const findDrop = (type) => drops.find((d) => d.type === type);
-  const filterDrops = (type) => drops.filter((d) => d.type === type);
+        const findDrop = (type) => drops.find((d) => d.type === type);
+        const filterDrops = (type) => drops.filter((d) => d.type === type);
 
-  const land = findDrop("land");
-  const blueprint = findDrop("blueprint");
-  const emp = findDrop("emp");
-  const bonusEmp = findDrop("bonus_emp");
-  const extraBlueprints = filterDrops("extra_blueprint");
-  const relic = findDrop("relic");
+        const land = findDrop("land");
+        const blueprint = findDrop("blueprint");
+        const emp = findDrop("emp");
+        const bonusEmp = findDrop("bonus_emp");
+        const extraBlueprints = filterDrops("extra_blueprint");
+        const relic = findDrop("relic");
 
-  const rewardCards = [];
+        const rewardCards = [];
 
-  if (land) {
-    rewardCards.push(`
+        if (land) {
+          rewardCards.push(`
       <div class="reveal-card reveal-card-land">
         <div class="reveal-card-glow"></div>
         <div class="reveal-card-label">LAND</div>
         <div class="reveal-card-value">${land.tier || "LAND"}</div>
       </div>
     `);
-  }
+        }
 
-  if (blueprint) {
-    rewardCards.push(`
+        if (blueprint) {
+          rewardCards.push(`
       <div class="reveal-card reveal-card-blueprint">
         <div class="reveal-card-glow"></div>
         <div class="reveal-card-label">BLUEPRINT</div>
@@ -1657,30 +1640,30 @@ syncPackOpenUI();
         <div class="reveal-card-sub">${blueprint.industry || ""}</div>
       </div>
     `);
-  }
+        }
 
-  if (emp) {
-    rewardCards.push(`
+        if (emp) {
+          rewardCards.push(`
       <div class="reveal-card reveal-card-emp">
         <div class="reveal-card-glow"></div>
         <div class="reveal-card-label">EMP</div>
         <div class="reveal-card-value">${emp.amount ?? 0}</div>
       </div>
     `);
-  }
+        }
 
-  if (bonusEmp) {
-    rewardCards.push(`
+        if (bonusEmp) {
+          rewardCards.push(`
       <div class="reveal-card reveal-card-bonus">
         <div class="reveal-card-glow"></div>
         <div class="reveal-card-label">BONUS EMP</div>
         <div class="reveal-card-value">${bonusEmp.amount ?? 0}</div>
       </div>
     `);
-  }
+        }
 
-  extraBlueprints.forEach((bp) => {
-    rewardCards.push(`
+        extraBlueprints.forEach((bp) => {
+          rewardCards.push(`
       <div class="reveal-card reveal-card-bonus">
         <div class="reveal-card-glow"></div>
         <div class="reveal-card-label">EXTRA BLUEPRINT</div>
@@ -1688,19 +1671,19 @@ syncPackOpenUI();
         <div class="reveal-card-sub">${bp.industry || ""}</div>
       </div>
     `);
-  });
+        });
 
-  if (relic) {
-    rewardCards.push(`
+        if (relic) {
+          rewardCards.push(`
       <div class="reveal-card reveal-card-relic">
         <div class="reveal-card-glow"></div>
         <div class="reveal-card-label">RELIC</div>
         <div class="reveal-card-value">Genesis Relic</div>
       </div>
     `);
-  }
+        }
 
-  stage.innerHTML = `
+        stage.innerHTML = `
     <div class="pack-opened-banner">Pack Opened</div>
     <div class="pack-reveal-title">Your Rewards</div>
     <div class="pack-reveal-subtitle">Genesis pack contents successfully revealed</div>
@@ -1709,7 +1692,7 @@ syncPackOpenUI();
       ${rewardCards.join("")}
     </div>
   `;
-}
+      }
       async function claimReward() {
         const statusEl = document.getElementById("claim-reward-status");
 
@@ -1749,7 +1732,7 @@ syncPackOpenUI();
         const statusEl = document.getElementById("withdraw-hive-status");
 
         try {
-         const walletAmount = Number(EXACT_WALLET_HIVE || 0);
+          const walletAmount = Number(EXACT_WALLET_HIVE || 0);
 
           if (!Number.isFinite(walletAmount) || walletAmount < 1) {
             if (statusEl) {
@@ -2161,7 +2144,7 @@ syncPackOpenUI();
           return;
         }
 
-       stageEl.innerHTML = `
+        stageEl.innerHTML = `
   <div class="pack-reveal-wrap">
       <div class="pack-opened-banner">Pack Opened</div>
 
@@ -2183,66 +2166,66 @@ syncPackOpenUI();
     </div>
   `;
 
-       let currentIndex = 0;
-const singleViewEl = document.getElementById("pack-reveal-single-view");
-const counterEl = document.getElementById("pack-reveal-counter");
-const nextBtn = document.getElementById("pack-reveal-next-btn");
-const thumbsEl = document.getElementById("pack-reveal-thumbs");
+        let currentIndex = 0;
+        const singleViewEl = document.getElementById("pack-reveal-single-view");
+        const counterEl = document.getElementById("pack-reveal-counter");
+        const nextBtn = document.getElementById("pack-reveal-next-btn");
+        const thumbsEl = document.getElementById("pack-reveal-thumbs");
 
-function renderThumbs() {
-  thumbsEl.innerHTML = revealItems
-    .map((_, i) => {
-      const active = i === currentIndex ? "active" : "";
-      const opened = i <= currentIndex ? "opened" : "";
-      return `<button type="button" class="pack-reveal-thumb ${active} ${opened}" data-index="${i}">${i + 1}</button>`;
-    })
-    .join("");
+        function renderThumbs() {
+          thumbsEl.innerHTML = revealItems
+            .map((_, i) => {
+              const active = i === currentIndex ? "active" : "";
+              const opened = i <= currentIndex ? "opened" : "";
+              return `<button type="button" class="pack-reveal-thumb ${active} ${opened}" data-index="${i}">${i + 1}</button>`;
+            })
+            .join("");
 
-  thumbsEl.querySelectorAll(".pack-reveal-thumb").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const idx = Number(btn.dataset.index);
-      currentIndex = idx;
-      updateReveal();
-    });
-  });
-}
+          thumbsEl.querySelectorAll(".pack-reveal-thumb").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const idx = Number(btn.dataset.index);
+              currentIndex = idx;
+              updateReveal();
+            });
+          });
+        }
 
-function updateReveal() {
-  singleViewEl.innerHTML = revealItems[currentIndex];
+        function updateReveal() {
+          singleViewEl.innerHTML = revealItems[currentIndex];
 
-  const insertedItem = singleViewEl.querySelector(".pack-reveal-item");
-  if (insertedItem) {
-    insertedItem.classList.remove("reveal-pop");
-    void insertedItem.offsetWidth;
-    insertedItem.classList.add("reveal-pop");
-  }
+          const insertedItem = singleViewEl.querySelector(".pack-reveal-item");
+          if (insertedItem) {
+            insertedItem.classList.remove("reveal-pop");
+            void insertedItem.offsetWidth;
+            insertedItem.classList.add("reveal-pop");
+          }
 
-  counterEl.textContent = `${currentIndex + 1} / ${revealItems.length}`;
+          counterEl.textContent = `${currentIndex + 1} / ${revealItems.length}`;
 
-  if (currentIndex >= revealItems.length - 1) {
-    nextBtn.textContent = "Close";
-    nextBtn.disabled = false;
-    nextBtn.onclick = closePackRevealModal;
-  } else {
-    nextBtn.textContent = "Reveal Next";
-    nextBtn.disabled = false;
-    nextBtn.onclick = null;
-  }
+          if (currentIndex >= revealItems.length - 1) {
+            nextBtn.textContent = "Close";
+            nextBtn.disabled = false;
+            nextBtn.onclick = closePackRevealModal;
+          } else {
+            nextBtn.textContent = "Reveal Next";
+            nextBtn.disabled = false;
+            nextBtn.onclick = null;
+          }
 
-  renderThumbs();
-}
+          renderThumbs();
+        }
 
-nextBtn.addEventListener("click", () => {
-  if (currentIndex < revealItems.length - 1) {
-    currentIndex += 1;
-    updateReveal();
-  }
-});
+        nextBtn.addEventListener("click", () => {
+          if (currentIndex < revealItems.length - 1) {
+            currentIndex += 1;
+            updateReveal();
+          }
+        });
 
-updateReveal();
-}
-        
-        async function openPack(username, pack_id) {
+        updateReveal();
+      }
+
+      async function openPack(username, pack_id) {
         if (!confirm(`Open Pack #${pack_id}?`)) return;
 
         try {
@@ -2379,7 +2362,7 @@ updateReveal();
           document.getElementById("summary-lands-total").textContent =
             totalLands;
 
-                  let l1 = 0,
+          let l1 = 0,
             l2 = 0,
             l3 = 0;
           for (const land of lands) {
@@ -3000,15 +2983,15 @@ updateReveal();
 
         slots.forEach((slot) => {
           slot.addEventListener("click", () => {
-           const landId = slot.dataset.buildLandId;
-const landTier = slot.dataset.landTier;
-console.log("slot.dataset.buildLandId =", slot.dataset.buildLandId);
-console.log("slot.dataset.landTier =", slot.dataset.landTier);
+            const landId = slot.dataset.buildLandId;
+            const landTier = slot.dataset.landTier;
+            console.log("slot.dataset.buildLandId =", slot.dataset.buildLandId);
+            console.log("slot.dataset.landTier =", slot.dataset.landTier);
 
-if (!landId) return;
+            if (!landId) return;
 
-window.selectedBuildLandId = landId;
-window.selectedBuildLandTier = landTier;
+            window.selectedBuildLandId = landId;
+            window.selectedBuildLandTier = landTier;
 
             setActiveTab("blueprints");
 
@@ -3192,37 +3175,39 @@ window.selectedBuildLandTier = landTier;
 
           const blueprints = data.blueprints || [];
           playerBlueprints = blueprints;
-const blueprintsRes = await fetch(
-  apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/blueprints`)
-);
+          const blueprintsRes = await fetch(
+            apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/blueprints`),
+          );
 
-const blueprintsData = await blueprintsRes.json();
+          const blueprintsData = await blueprintsRes.json();
 
+          // PASTE STEP 3 CODE HERE
 
-// PASTE STEP 3 CODE HERE
+          const bpBreakdown = {
+            FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+            TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+            PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+            CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+            SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+          };
 
+          if (Array.isArray(blueprintsData.blueprints)) {
+            for (const bp of blueprintsData.blueprints) {
+              const industry = String(bp.industry || "")
+                .toUpperCase()
+                .trim();
+              const level = String(bp.level || "")
+                .toUpperCase()
+                .trim();
 
-const bpBreakdown = {
-  FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-};
-
-if (Array.isArray(blueprintsData.blueprints)) {
-  for (const bp of blueprintsData.blueprints) {
-    const industry = String(bp.industry || "").toUpperCase().trim();
-    const level = String(bp.level || "").toUpperCase().trim();
-
-    if (
-      bpBreakdown[industry] &&
-      bpBreakdown[industry][level] !== undefined
-    ) {
-      bpBreakdown[industry][level]++;
-    }
-  }
-}
+              if (
+                bpBreakdown[industry] &&
+                bpBreakdown[industry][level] !== undefined
+              ) {
+                bpBreakdown[industry][level]++;
+              }
+            }
+          }
           if (!blueprints.length) {
             playerBlueprints = [];
             renderBuildFactorySection();
@@ -3292,7 +3277,7 @@ if (Array.isArray(blueprintsData.blueprints)) {
               card.style.borderColor = borderColor;
 
               // ----- Render (adjust innerHTML to your final bp-mini design if needed) -----
-                                        card.innerHTML = `
+              card.innerHTML = `
           <div class="bp-mini-card" style="--bp-border:${borderColor}; --bp-bg:${bgColor};">
 
             <div class="bp-card-actions">
@@ -3367,7 +3352,7 @@ if (Array.isArray(blueprintsData.blueprints)) {
                   nameInput.focus();
                 }
               });
-                            card.style.maxWidth = "360px";
+              card.style.maxWidth = "360px";
               card.style.margin = "0 auto";
               card.style.width = "100%";
               grid.appendChild(card);
@@ -3666,28 +3651,29 @@ if (Array.isArray(blueprintsData.blueprints)) {
             factory_name: nameInput.value.trim(),
           };
 
-         console.log("TEST BUILD", payload);
-const selectedLand = (empireLands || []).find(
-  (l) => String(l.land_id) === String(landId)
-);
+          console.log("TEST BUILD", payload);
+          const selectedLand = (empireLands || []).find(
+            (l) => String(l.land_id) === String(landId),
+          );
 
-const tierValue = String(selectedLand?.land_tier || "L1").toUpperCase();
+          const tierValue = String(
+            selectedLand?.land_tier || "L1",
+          ).toUpperCase();
 
-let buildCostEMP = 40;
-if (tierValue === "L2") buildCostEMP = 80;
-if (tierValue === "L3") buildCostEMP = 150;
+          let buildCostEMP = 40;
+          if (tierValue === "L2") buildCostEMP = 80;
+          if (tierValue === "L3") buildCostEMP = 150;
 
-console.log("selected land tier =", tierValue);
+          console.log("selected land tier =", tierValue);
 
-const confirmed = confirm(
-  `Build ${factoryName}?\n\n` +
-  `Factory setup cost: ${buildCostEMP} EMP\n` +
-  `Blueprint will be consumed permanently.\n\n` +
-  `Press OK to start construction or Cancel to stop.`
-);
+          const confirmed = confirm(
+            `Build ${factoryName}?\n\n` +
+              `Factory setup cost: ${buildCostEMP} EMP\n` +
+              `Blueprint will be consumed permanently.\n\n` +
+              `Press OK to start construction or Cancel to stop.`,
+          );
 
-if (!confirmed) return;
-
+          if (!confirmed) return;
 
           const res = await fetch(apiUrl("/build-factory"), {
             method: "POST",
@@ -3860,96 +3846,90 @@ if (!confirmed) return;
 
         return `<span style="color:#2e7d32; font-weight:600;">🟢 Maintenance: active (${diffDays} day${diffDays === 1 ? "" : "s"} left)</span>`;
       }
-     async function loadGlobalHealth() {
-  try {
+      async function loadGlobalHealth() {
+        try {
+          const [healthRes, statsRes] = await Promise.all([
+            fetch(apiUrl("/global-health")),
+            fetch(apiUrl("/global-stats")),
+          ]);
 
-    const [healthRes, statsRes] = await Promise.all([
-      fetch(apiUrl("/global-health")),
-      fetch(apiUrl("/global-stats"))
-    ]);
+          if (!healthRes.ok)
+            throw new Error("Global health HTTP " + healthRes.status);
+          if (!statsRes.ok)
+            throw new Error("Global stats HTTP " + statsRes.status);
 
-    if (!healthRes.ok) throw new Error("Global health HTTP " + healthRes.status);
-    if (!statsRes.ok) throw new Error("Global stats HTTP " + statsRes.status);
+          const data = await healthRes.json();
+          const stats = await statsRes.json();
 
-    const data = await healthRes.json();
-    const stats = await statsRes.json();
+          const setText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+          };
 
-    const setText = (id, value) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = value;
-    };
+          const treasury = data.treasury || {};
+          const ep = data.ep || {};
 
-    const treasury = data.treasury || {};
-    const ep = data.ep || {};
+          const treasuryBalance = Number(treasury.balance || 0);
+          const emissionPercent = Number(treasury.emissionPercent || 0);
+          const rewardPool = Number(treasury.rewardPool || 0);
+          const healthLabel = treasury.healthLabel || "-";
 
-    const treasuryBalance = Number(treasury.balance || 0);
-    const emissionPercent = Number(treasury.emissionPercent || 0);
-    const rewardPool = Number(treasury.rewardPool || 0);
-    const healthLabel = treasury.healthLabel || "-";
+          const cycleDate = treasury.cycleDate
+            ? new Date(treasury.cycleDate).toLocaleDateString()
+            : "N/A";
 
-    const cycleDate = treasury.cycleDate
-      ? new Date(treasury.cycleDate).toLocaleDateString()
-      : "N/A";
+          const liveGlobalEP = Number(ep.liveGlobalEP || 0);
+          const rewardCycleEP = Number(ep.rewardCycleEP || 0);
 
-    const liveGlobalEP = Number(ep.liveGlobalEP || 0);
-    const rewardCycleEP = Number(ep.rewardCycleEP || 0);
+          const totalFactories = Number(stats.totalFactories || 0);
+          const activeFactories = Number(stats.activeFactories || 0);
+          const buildingFactories = Number(stats.buildingFactories || 0);
+          const inactiveFactories = Number(stats.inactiveFactories || 0);
 
-    const totalFactories = Number(stats.totalFactories || 0);
-    const activeFactories = Number(stats.activeFactories || 0);
-    const buildingFactories = Number(stats.buildingFactories || 0);
-    const inactiveFactories = Number(stats.inactiveFactories || 0);
+          // Global production
+          setText("global-production", `${liveGlobalEP.toFixed(2)} EP/day`);
 
-    // Global production
-    setText(
-      "global-production",
-      `${liveGlobalEP.toFixed(2)} EP/day`
-    );
+          setText(
+            "global-production-cycle-sub",
+            `Today's reward cycle base: ${rewardCycleEP.toFixed(2)} EP`,
+          );
 
-    setText(
-      "global-production-cycle-sub",
-      `Today's reward cycle base: ${rewardCycleEP.toFixed(2)} EP`
-    );
+          // Treasury
+          setText("treasury-balance", `${treasuryBalance.toFixed(3)} HIVE`);
 
-    // Treasury
-    setText(
-      "treasury-balance",
-      `${treasuryBalance.toFixed(3)} HIVE`
-    );
+          setText(
+            "treasury-health-sub",
+            `Emission: ${emissionPercent.toFixed(2)}% | Today's reward pool: ${rewardPool.toFixed(3)} HIVE | Status: ${healthLabel}`,
+          );
 
-    setText(
-      "treasury-health-sub",
-      `Emission: ${emissionPercent.toFixed(2)}% | Today's reward pool: ${rewardPool.toFixed(3)} HIVE | Status: ${healthLabel}`
-    );
+          setText(
+            "treasury-cycle-sub",
+            `Based on latest daily reward cycle (${cycleDate})`,
+          );
 
-    setText(
-      "treasury-cycle-sub",
-      `Based on latest daily reward cycle (${cycleDate})`
-    );
+          // Global factories
+          setText("global-factories-total", totalFactories);
 
-    // Global factories
-    setText("global-factories-total", totalFactories);
-
-    setText(
-      "global-factories-sub",
-      `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories}`
-    );
-
-  } catch (err) {
-    console.error("Failed to load global health:", err);
-  }
-}
-   window.addEventListener("load", async () => {
-  try {
-    await loadDashboardSummary();
-    await loadRewardSummary();
-    await loadGlobalHealth();
-    await loadEmpireOverview();
-    await loadBlueprints();
-    await loadPacks();
-  } catch (err) {
-    console.error("Initial dashboard load failed:", err);
-  }
-});
+          setText(
+            "global-factories-sub",
+            `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories}`,
+          );
+        } catch (err) {
+          console.error("Failed to load global health:", err);
+        }
+      }
+      window.addEventListener("load", async () => {
+        try {
+          await loadDashboardSummary();
+          await loadRewardSummary();
+          await loadGlobalHealth();
+          await loadEmpireOverview();
+          await loadBlueprints();
+          await loadPacks();
+        } catch (err) {
+          console.error("Initial dashboard load failed:", err);
+        }
+      });
 
       function setupLoggedInNav() {
         const nav = document.getElementById("loggedInNav");
@@ -3976,27 +3956,29 @@ if (!confirmed) return;
         .getElementById("claim-reward-btn")
         ?.addEventListener("click", claimReward);
       document.addEventListener("DOMContentLoaded", () => {
-  const withdrawBtn = document.getElementById("withdraw-hive-btn");
-  if (withdrawBtn) {
-    withdrawBtn.addEventListener("click", requestWithdrawHive);
-  }
-});
+        const withdrawBtn = document.getElementById("withdraw-hive-btn");
+        if (withdrawBtn) {
+          withdrawBtn.addEventListener("click", requestWithdrawHive);
+        }
+      });
       function toggleBlueprintCardMenu(btn) {
-  const menu = btn.nextElementSibling;
+        const menu = btn.nextElementSibling;
 
-  document.querySelectorAll(".bp-card-menu").forEach((m) => {
-    if (m !== menu) m.classList.remove("open");
-  });
+        document.querySelectorAll(".bp-card-menu").forEach((m) => {
+          if (m !== menu) m.classList.remove("open");
+        });
 
-  menu.classList.toggle("open");
-}
+        menu.classList.toggle("open");
+      }
 
-function tradeBlueprint(id) {
-  window.location.href = "marketplace.html?blueprint=" + id;
-}
+      function tradeBlueprint(id) {
+        window.location.href = "marketplace.html?blueprint=" + id;
+      }
     </script>
 
-    <script> src="js/appbar.js"></script>
+    <script>
+      src="js/appbar.js">
+    </script>
 
     <div id="blueprint-mint-modal" class="pack-modal hidden">
       <div class="pack-modal-card">
@@ -4039,64 +4021,67 @@ function tradeBlueprint(id) {
       </div>
     </div>
     <div id="global-footer"></div>
-     <script>
-function tradeBlueprint(id){
-  window.location.href = "/marketplace.html?blueprint=" + id;
-}
-    async function transferNFT(nftId, nftType) {
-  const toUser = prompt(`Enter Hive username to transfer this ${nftType} to:`);
+    <script>
+      function tradeBlueprint(id) {
+        window.location.href = "/marketplace.html?blueprint=" + id;
+      }
+      async function transferNFT(nftId, nftType) {
+        const toUser = prompt(
+          `Enter Hive username to transfer this ${nftType} to:`,
+        );
 
-  if (!toUser) return;
+        if (!toUser) return;
 
-  const cleanToUser = String(toUser).trim().replace("@", "").toLowerCase();
+        const cleanToUser = String(toUser)
+          .trim()
+          .replace("@", "")
+          .toLowerCase();
 
-  if (!cleanToUser) {
-    alert("Recipient username is required.");
-    return;
-  }
+        if (!cleanToUser) {
+          alert("Recipient username is required.");
+          return;
+        }
 
-  const confirmed = confirm(
-    `Transfer ${nftType} #${nftId} to @${cleanToUser}?`
-  );
+        const confirmed = confirm(
+          `Transfer ${nftType} #${nftId} to @${cleanToUser}?`,
+        );
 
-  if (!confirmed) return;
+        if (!confirmed) return;
 
-  try {
-    const res = await fetch(apiUrl("/transfer-nft"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from_username: PLAYER_USERNAME,
-        to_username: cleanToUser,
-        nft_id: nftId,
-      }),
-    });
+        try {
+          const res = await fetch(apiUrl("/transfer-nft"), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              from_username: PLAYER_USERNAME,
+              to_username: cleanToUser,
+              nft_id: nftId,
+            }),
+          });
 
-    const data = await res.json();
+          const data = await res.json();
 
-    if (!data.success) {
-      alert(data.error || "Transfer failed.");
-      return;
-    }
+          if (!data.success) {
+            alert(data.error || "Transfer failed.");
+            return;
+          }
 
-    alert("NFT transferred successfully.");
-    await loadBlueprints();
-    await loadDashboardSummary();
-  } catch (err) {
-    console.error("Transfer NFT error:", err);
-    alert("Transfer request failed.");
-  }
-}
+          alert("NFT transferred successfully.");
+          await loadBlueprints();
+          await loadDashboardSummary();
+        } catch (err) {
+          console.error("Transfer NFT error:", err);
+          alert("Transfer request failed.");
+        }
+      }
       fetch("footer.html")
         .then((res) => res.text())
         .then((html) => {
-          document.getElementById("global-footer").innerHTML = html;
+          const footerEl = document.getElementById("global-footer");
+          if (footerEl) footerEl.innerHTML = html;
         });
-       </script>
-    
     </script>
-       
   </body>
 </html>
