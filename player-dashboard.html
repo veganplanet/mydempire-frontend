@@ -3422,16 +3422,17 @@ if (Array.isArray(blueprintsData.blueprints)) {
       }
 
       function setupDashboardNavbar() {
-        const activeUser = (
-          new URLSearchParams(window.location.search).get("user") ||
-          localStorage.getItem("mde_username") ||
-          localStorage.getItem("hiveUsername") ||
-          localStorage.getItem("username") ||
-          ""
-        )
-          .replace("@", "")
-          .trim()
-          .toLowerCase();
+       const activeUser = (
+  new URLSearchParams(window.location.search).get("user") ||
+  localStorage.getItem("mde_username") ||
+  localStorage.getItem("hiveUsername") ||
+  localStorage.getItem("username") ||
+  window.PLAYER_USERNAME ||
+  ""
+)
+  .replace("@", "")
+  .trim()
+  .toLowerCase();
 
         const loginBtn = document.getElementById("appbarLoginBtn");
         const accountWrap = document.getElementById("appbarAccountWrap");
@@ -3449,6 +3450,10 @@ if (Array.isArray(blueprintsData.blueprints)) {
           localStorage.setItem("hiveUsername", activeUser);
           localStorage.setItem("username", activeUser);
         }
+        document.querySelectorAll(".auth-only").forEach((link) => {
+  link.classList.add("show-auth-link");
+  link.style.display = "inline-flex";
+});
 
       if (!activeUser) {
   if (loginBtn) loginBtn.style.display = "none";
