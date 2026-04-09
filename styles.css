@@ -10010,3 +10010,40 @@ cursor:pointer;
   line-height:1.6;
   color:#64748b;
 }
+/* ===== AUTO COLOR FOR EMPIRE ASSETS ===== */
+
+.inventory-card:has(img[src*="land"]){
+  border-top:4px solid #22c55e;
+}
+
+.inventory-card:has(img[src*="pack"]){
+  border-top:4px solid #8b5cf6;
+}
+
+.inventory-card:has(img[src*="relic"]){
+  border-top:4px solid #f59e0b;
+}
+
+.inventory-card:has(img[src*="writ"]){
+  border-top:4px solid #3b82f6;
+}
+
+.inventory-card:has(img[src*="food"]){
+  border-top:4px solid #22c55e;
+}
+
+.inventory-card:has(img[src*="textile"]){
+  border-top:4px solid #8b5cf6;
+}
+
+.inventory-card:has(img[src*="pharma"]){
+  border-top:4px solid #ef4444;
+}
+
+.inventory-card:has(img[src*="chemical"]){
+  border-top:4px solid #06b6d4;
+}
+
+.inventory-card:has(img[src*="supermarket"]){
+  border-top:4px solid #f59e0b;
+}
