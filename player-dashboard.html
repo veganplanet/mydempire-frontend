@@ -1312,24 +1312,43 @@
             SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
           };
 
-          if (Array.isArray(blueprintsData.blueprints)) {
-            for (const bp of blueprintsData.blueprints) {
-              const tierRaw = String(bp.tier || bp.blueprint_tier || "")
-                .toUpperCase()
-                .trim();
+         if (Array.isArray(blueprintsData.blueprints)) {
+  for (const bp of blueprintsData.blueprints) {
+    const rawIndustry = String(
+      bp.industry ||
+      bp.industry_name ||
+      bp.industry_type ||
+      bp.industry_code ||
+      bp.blueprint_industry ||
+      ""
+    ).toUpperCase().trim();
 
-              const parts = tierRaw.split("_");
-              const industry = parts[0];
-              const level = parts[1];
+    const rawTier = String(
+      bp.raw_tier ||
+      bp.tier ||
+      bp.level ||
+      bp.blueprint_tier ||
+      ""
+    ).toUpperCase().trim();
 
-              if (
-                bpBreakdown[industry] &&
-                bpBreakdown[industry][level] !== undefined
-              ) {
-                bpBreakdown[industry][level]++;
-              }
-            }
-          }
+    let industry = rawIndustry;
+    let level = rawTier;
+
+    if ((!industry || !level || !/^B[1-5]$/.test(level)) && rawTier.includes("_")) {
+      const parts = rawTier.split("_");
+      industry = parts[0] || industry;
+      level = parts[1] || level;
+    }
+
+    if (
+      bpBreakdown[industry] &&
+      bpBreakdown[industry][level] !== undefined
+    ) {
+      bpBreakdown[industry][level]++;
+    }
+  }
+}
+          console.log("Assets blueprint breakdown:", bpBreakdown, blueprintsData.blueprints);
 
           function totalBp(obj) {
             return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
