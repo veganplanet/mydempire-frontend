@@ -351,9 +351,10 @@
       if (tabName === "blueprints") {
         loadBlueprintInventory();
         loadBlueprintListings();
-      } else if (tabName === "packs") {
-        loadPacks();
-      }
+     } else if (tabName === "packs") {
+  loadPackInventorySelect();
+  loadPackListings();
+}
     }
 
     document.querySelectorAll("[data-market-tab]").forEach((btn) => {
@@ -1136,9 +1137,9 @@ async function buyEmpListing(listingId) {
     );
     const data = await res.json();
 
-    if (!res.ok || !data.success) {
-      throw new Error(data.error || "Failed to load packs.");
-    }
+   if (!res.ok) {
+  throw new Error(data.error || "Failed to load packs.");
+}
 
     const packs = (data.packs || []).filter(
       (p) =>
