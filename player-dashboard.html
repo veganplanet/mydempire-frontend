@@ -3422,15 +3422,17 @@ if (Array.isArray(blueprintsData.blueprints)) {
       }
 
       function setupDashboardNavbar() {
-       const activeUser = (
+      const activeUser = (
   new URLSearchParams(window.location.search).get("user") ||
   localStorage.getItem("mde_username") ||
   localStorage.getItem("hiveUsername") ||
   localStorage.getItem("username") ||
-  window.PLAYER_USERNAME ||
+  document.getElementById("player-username-raw")?.textContent ||
+  document.getElementById("player-username-display")?.textContent ||
   ""
 )
   .replace("@", "")
+  .replace("loading…", "")
   .trim()
   .toLowerCase();
 
@@ -3450,9 +3452,8 @@ if (Array.isArray(blueprintsData.blueprints)) {
           localStorage.setItem("hiveUsername", activeUser);
           localStorage.setItem("username", activeUser);
         }
-        document.querySelectorAll(".auth-only").forEach((link) => {
+       document.querySelectorAll(".auth-only").forEach((link) => {
   link.classList.add("show-auth-link");
-  link.style.display = "inline-flex";
 });
 
       if (!activeUser) {
