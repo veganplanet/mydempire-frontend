@@ -351,8 +351,8 @@
       if (tabName === "blueprints") {
         loadBlueprintInventory();
         loadBlueprintListings();
-     } else if (tabName === "packs") {
-  loadPackInventorySelect();
+    } else if (tabName === "packs") {
+  loadPacks();
   loadPackListings();
 }
     }
@@ -1044,6 +1044,26 @@ async function buyEmpListing(listingId) {
         }
 
         const packs = data.packs || [];
+        const packSelect = document.getElementById("pack-select");
+if (packSelect) {
+  packSelect.innerHTML = "";
+
+  if (!packs.length) {
+    packSelect.innerHTML = `<option value="">No sealed packs available</option>`;
+  } else {
+    const firstOpt = document.createElement("option");
+    firstOpt.value = "";
+    firstOpt.textContent = "Choose a sealed pack";
+    packSelect.appendChild(firstOpt);
+
+    packs.forEach((pack) => {
+      const opt = document.createElement("option");
+      opt.value = pack.id;
+      opt.textContent = `Pack #${pack.id} • ${pack.era || "GENESIS"} • ${pack.tier || "SEALED"}`;
+      packSelect.appendChild(opt);
+    });
+  }
+}
         document.getElementById("packs-count-pill").textContent = `${packs.length} Pack${packs.length === 1 ? "" : "s"}`;
 
         if (!packs.length) {
@@ -1370,7 +1390,7 @@ async function cancelPackListing(listingId) {
 
 /* ADD THIS BELOW */
 
-loadPackInventorySelect();
+loadPacks();
 loadPackListings();
  
 
