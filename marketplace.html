@@ -172,10 +172,50 @@
    <!-- PACKS -->
 <section class="market-tab-panel" data-market-tab-panel="packs">
   <div class="stack">
-    <div class="card">
-      <div class="market-header">
-        <div class="market-header-left">
-          <h2>Unopened Packs</h2>
+   <div class="card">
+  <div class="market-header">
+    <div class="market-header-left">
+      <h2>Pack Marketplace</h2>
+      <div class="market-header-sub">List sealed packs and manage pack listings.</div>
+    </div>
+    <div class="pill">Marketplace</div>
+  </div>
+
+  <div class="market-toolbar">
+
+    <div class="field">
+      <label>View</label>
+      <select id="pack-view-select" onchange="loadPackListings()">
+        <option value="market">Market Listings</option>
+        <option value="mine">My Listings</option>
+        <option value="inventory">My Pack Inventory</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Select Pack</label>
+      <select id="pack-select">
+        <option value="">Loading packs...</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Price (HIVE)</label>
+      <input id="pack-price-hive" type="number" step="0.001" placeholder="1.000">
+    </div>
+
+    <button class="primary-btn" onclick="createPackListing()">
+      Create Listing
+    </button>
+
+    <button class="secondary-btn" onclick="loadPackListings()">
+      Refresh
+    </button>
+
+  </div>
+
+  <div id="pack-market-status" class="status"></div>
+</div>
           <div class="market-header-sub">Simple pack inventory view for sealed packs only.</div>
         </div>
         <div class="pill" id="packs-count-pill">0 Packs</div>
