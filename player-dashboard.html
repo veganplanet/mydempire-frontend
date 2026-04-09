@@ -3450,12 +3450,11 @@ if (Array.isArray(blueprintsData.blueprints)) {
           localStorage.setItem("username", activeUser);
         }
 
-        if (!activeUser) {
-          if (loginBtn) loginBtn.style.display = "inline-flex";
-          if (accountWrap) accountWrap.style.display = "none";
-          return;
-        }
-
+      if (!activeUser) {
+  if (loginBtn) loginBtn.style.display = "none";
+  if (accountWrap) accountWrap.style.display = "none";
+  return;
+}
         if (loginBtn) loginBtn.style.display = "none";
         if (accountWrap) accountWrap.style.display = "block";
         if (accountBtn) accountBtn.textContent = `@${activeUser} ▼`;
