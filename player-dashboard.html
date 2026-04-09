@@ -3937,18 +3937,20 @@ if (Array.isArray(blueprintsData.blueprints)) {
           console.error("Failed to load global health:", err);
         }
       }
-      window.addEventListener("load", async () => {
-        try {
-          await loadDashboardSummary();
-          await loadRewardSummary();
-          await loadGlobalHealth();
-          await loadEmpireOverview();
-          await loadBlueprints();
-          await loadPacks();
-        } catch (err) {
-          console.error("Initial dashboard load failed:", err);
-        }
-      });
+     window.addEventListener("load", async () => {
+  try {
+    setupDashboardNavbar();
+
+    await loadDashboardSummary();
+    await loadRewardSummary();
+    await loadGlobalHealth();
+    await loadEmpireOverview();
+    await loadBlueprints();
+    await loadPacks();
+  } catch (err) {
+    console.error("Initial dashboard load failed:", err);
+  }
+});
 
       function setupLoggedInNav() {
         const nav = document.getElementById("loggedInNav");
