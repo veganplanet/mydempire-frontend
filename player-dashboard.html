@@ -3938,7 +3938,7 @@ if (Array.isArray(blueprintsData.blueprints)) {
           console.error("Failed to load global health:", err);
         }
       }
-     window.addEventListener("load", async () => {
+    window.addEventListener("load", async () => {
   try {
     setupDashboardNavbar();
 
@@ -3948,6 +3948,8 @@ if (Array.isArray(blueprintsData.blueprints)) {
     await loadEmpireOverview();
     await loadBlueprints();
     await loadPacks();
+
+    setupDashboardNavbar(); // run again after data is loaded
   } catch (err) {
     console.error("Initial dashboard load failed:", err);
   }
