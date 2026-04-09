@@ -10047,3 +10047,12 @@ cursor:pointer;
 .inventory-card:has(img[src*="supermarket"]){
   border-top:4px solid #f59e0b;
 }
+.inventory-land{border-top:4px solid #22c55e !important;}
+.inventory-pack{border-top:4px solid #8b5cf6 !important;}
+.inventory-relic{border-top:4px solid #f59e0b !important;}
+.inventory-writ{border-top:4px solid #3b82f6 !important;}
+.inventory-food{border-top:4px solid #22c55e !important;}
+.inventory-textile{border-top:4px solid #8b5cf6 !important;}
+.inventory-pharma{border-top:4px solid #ef4444 !important;}
+.inventory-chemical{border-top:4px solid #06b6d4 !important;}
+.inventory-supermarket{border-top:4px solid #f59e0b !important;}
