@@ -901,67 +901,89 @@ async function buyEmpListing(listingId) {
     }
 
     async function buyBlueprintListing(listingId) {
-      try {
-        if (!ACTIVE_USER) {
-          alert("No active user found.");
-          return;
-        }
-
-        const initRes = await fetch(apiUrl("/marketplace/blueprint/buy-init"), {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: ACTIVE_USER, listing_id: listingId })
-        });
-
-        const initData = await initRes.json();
-
-        if (!initRes.ok || !initData.success) {
-          throw new Error(initData.error || "Failed to initialize blueprint purchase.");
-        }
-
-        const session = initData.session;
-
-        const confirmText =
-          `Buy Blueprint?\n\n` +
-          `Seller payment: ${session.seller_payment.amount} HIVE to @${session.seller_payment.to}\n` +
-          `Fee payment: ${session.fee_payment.amount} HIVE to @${session.fee_payment.to}`;
-
-        const ok = confirm(confirmText);
-        if (!ok) return;
-
-        const sellerTransfer = await hiveTransfer(
-  ACTIVE_USER,
-  session.seller_payment.to,
-  session.seller_payment.amount,
-  session.seller_payment.memo
-);
-
-console.log("sellerTransfer =", sellerTransfer);
-console.log("payment tx id =", sellerTransfer?.tx_id || sellerTransfer?.id);
-
-const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    username: ACTIVE_USER,
-    session_id: session.id,
-    payment_tx_id: sellerTransfer?.tx_id || sellerTransfer?.id
-  })
-});
-        const finalizeData = await finalizeRes.json();
-
-        if (!finalizeRes.ok || !finalizeData.success) {
-          throw new Error(finalizeData.error || "Failed to finalize blueprint trade.");
-        }
-
-        alert("✅ Blueprint trade completed successfully.");
-        await loadBlueprintInventory();
-        await loadBlueprintListings();
-      } catch (err) {
-        console.error("buyBlueprintListing error:", err);
-        alert(err.message || "Blueprint purchase failed.");
-      }
+  try {
+    if (!ACTIVE_USER) {
+      alert("No active user found.");
+      return;
     }
+
+    const initRes = await fetch(apiUrl("/marketplace/blueprint/buy-init"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: ACTIVE_USER,
+        listing_id: listingId
+      })
+    });
+
+    const initData = await initRes.json();
+
+    if (!initRes.ok || !initData.success) {
+      throw new Error(initData.error || "Failed to initialize blueprint purchase.");
+    }
+
+    const session = initData.session;
+
+    const confirmText =
+      `Buy Blueprint?\n\n` +
+      `Seller payment: ${session.seller_payment.amount} HIVE to @${session.seller_payment.to}\n` +
+      `Fee payment: ${session.fee_payment.amount} HIVE to @${session.fee_payment.to}`;
+
+    const ok = confirm(confirmText);
+    if (!ok) return;
+
+    const sellerTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      session.seller_payment.to,
+      session.seller_payment.amount,
+      session.seller_payment.memo
+    );
+
+    const feeTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      session.fee_payment.to,
+      session.fee_payment.amount,
+      session.fee_payment.memo
+    );
+
+    console.log("sellerTransfer =", sellerTransfer);
+    console.log("feeTransfer =", feeTransfer);
+
+    const paymentTxId =
+      feeTransfer?.tx_id ||
+      feeTransfer?.id ||
+      sellerTransfer?.tx_id ||
+      sellerTransfer?.id ||
+      null;
+
+    if (!paymentTxId) {
+      throw new Error("Transaction ID not returned by Keychain.");
+    }
+
+    const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: ACTIVE_USER,
+        session_id: session.id,
+        payment_tx_id: paymentTxId
+      })
+    });
+
+    const finalizeData = await finalizeRes.json();
+
+    if (!finalizeRes.ok || !finalizeData.success) {
+      throw new Error(finalizeData.error || "Failed to finalize blueprint trade.");
+    }
+
+    alert("✅ Blueprint trade completed successfully.");
+    await loadBlueprintInventory();
+    await loadBlueprintListings();
+  } catch (err) {
+    console.error("buyBlueprintListing error:", err);
+    alert(err.message || "Blueprint purchase failed.");
+  }
+}
 
     /* PACKS */
     async function loadPacks() {
