@@ -3452,8 +3452,10 @@ if (Array.isArray(blueprintsData.blueprints)) {
           localStorage.setItem("hiveUsername", activeUser);
           localStorage.setItem("username", activeUser);
         }
-       document.querySelectorAll(".auth-only").forEach((link) => {
+      document.querySelectorAll(".auth-only").forEach((link) => {
+  link.classList.remove("hidden-auth-link");
   link.classList.add("show-auth-link");
+  link.style.display = "inline-flex";
 });
 
       if (!activeUser) {
