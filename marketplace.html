@@ -1084,6 +1084,255 @@ async function buyEmpListing(listingId) {
     .then(html => {
       document.getElementById("global-footer").innerHTML = html;
     });
+  async function loadPackInventorySelect() {
+  try {
+    const select = document.getElementById("pack-select");
+    if (!select) return;
+
+    select.innerHTML = `<option value="">Loading packs...</option>`;
+
+    const res = await fetch(
+      apiUrl(`/player/${encodeURIComponent(ACTIVE_USER)}/packs`)
+    );
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to load packs.");
+    }
+
+    const packs = (data.packs || []).filter(
+      (p) =>
+        String(p.type || "").toUpperCase() === "PACK" &&
+        String(p.tier || "").toUpperCase() === "SEALED"
+    );
+
+    if (!packs.length) {
+      select.innerHTML = `<option value="">No sealed packs available</option>`;
+      return;
+    }
+
+    select.innerHTML = `<option value="">Choose a sealed pack</option>`;
+    packs.forEach((p) => {
+      const opt = document.createElement("option");
+      opt.value = p.id;
+      opt.textContent = `Pack #${p.id} • ${p.era || "GENESIS"} • ${p.tier || "SEALED"}`;
+      select.appendChild(opt);
+    });
+  } catch (err) {
+    console.error("loadPackInventorySelect error:", err);
+    const select = document.getElementById("pack-select");
+    if (select) {
+      select.innerHTML = `<option value="">Failed to load packs</option>`;
+    }
+  }
+}
+
+async function createPackListing() {
+  const statusEl = document.getElementById("pack-market-status");
+
+  try {
+    const packId = Number(document.getElementById("pack-select")?.value);
+    const totalPriceHive = Number(document.getElementById("pack-price-hive")?.value);
+
+    if (!ACTIVE_USER) throw new Error("No active user found.");
+    if (!Number.isInteger(packId) || packId <= 0) {
+      throw new Error("Please choose a sealed pack.");
+    }
+    if (!Number.isFinite(totalPriceHive) || totalPriceHive <= 0) {
+      throw new Error("Please enter a valid HIVE price.");
+    }
+
+    if (statusEl) statusEl.textContent = "Creating pack listing...";
+
+    const res = await fetch(apiUrl("/marketplace/pack/list"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: ACTIVE_USER,
+        pack_id: packId,
+        total_price_hive: totalPriceHive
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to create pack listing.");
+    }
+
+    if (statusEl) statusEl.textContent = "Pack listing created successfully.";
+    document.getElementById("pack-price-hive").value = "";
+    await loadPackInventorySelect();
+    await loadPackListings();
+  } catch (err) {
+    console.error("createPackListing error:", err);
+    if (statusEl) statusEl.textContent = err.message || "Pack listing failed.";
+    alert(err.message || "Pack listing failed.");
+  }
+}
+
+async function loadPackListings() {
+  const box = document.getElementById("pack-listings-box");
+  const feed = document.getElementById("packs-feed");
+  const pill = document.getElementById("packs-count-pill");
+  const view = document.getElementById("pack-view-select")?.value || "market";
+
+  try {
+    if (box) box.innerHTML = "";
+    if (feed) feed.innerHTML = "";
+    if (pill) pill.textContent = "Loading...";
+
+    if (view === "inventory") {
+      const res = await fetch(
+        apiUrl(`/player/${encodeURIComponent(ACTIVE_USER)}/packs`)
+      );
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Failed to load pack inventory.");
+      }
+
+      const packs = (data.packs || []).filter(
+        (p) =>
+          String(p.type || "").toUpperCase() === "PACK" &&
+          String(p.tier || "").toUpperCase() === "SEALED"
+      );
+
+      if (pill) pill.textContent = `${packs.length} Packs`;
+
+      if (!packs.length) {
+        if (feed) {
+          feed.innerHTML = `<div class="empty">No sealed packs in inventory.</div>`;
+        }
+        return;
+      }
+
+      if (feed) {
+        feed.innerHTML = packs
+          .map(
+            (p) => `
+              <div class="pack-card">
+                <div class="pack-title">Sealed Pack #${p.id}</div>
+                <div class="listing-meta">
+                  Era: ${p.era || "GENESIS"}<br>
+                  Tier: ${p.tier || "SEALED"}
+                </div>
+              </div>
+            `
+          )
+          .join("");
+      }
+
+      return;
+    }
+
+    let url = apiUrl("/marketplace/pack/listings");
+    if (view === "mine") {
+      url = apiUrl(
+        `/marketplace/pack/listings?mode=mine&username=${encodeURIComponent(ACTIVE_USER)}`
+      );
+    }
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to load pack listings.");
+    }
+
+    const listings = data.listings || [];
+    if (pill) pill.textContent = `${listings.length} Listings`;
+
+    if (!listings.length) {
+      if (box) {
+        box.innerHTML = `<div class="empty">No pack listings found.</div>`;
+      }
+      return;
+    }
+
+    if (box) {
+      box.innerHTML = listings
+        .map((l) => {
+          const mine =
+            String(l.seller_username || "").toLowerCase() === String(ACTIVE_USER || "").toLowerCase();
+
+          return `
+            <div class="listing-card ${mine ? "mine" : ""}">
+              <div class="listing-top">
+                <div>
+                  <div class="listing-title">Sealed Pack #${l.asset_id}</div>
+                  <div class="listing-meta">
+                    Seller: @${l.seller_username}<br>
+                    Status: ${l.status}<br>
+                    Created: ${new Date(l.created_at).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+
+              <div class="kv-grid">
+                <div class="kv">
+                  <div class="k">Total Price</div>
+                  <div class="v">${Number(l.total_price_hive || 0).toFixed(3)} HIVE</div>
+                </div>
+                <div class="kv">
+                  <div class="k">Fee</div>
+                  <div class="v">${Number(l.fee_amount_hive || 0).toFixed(3)} HIVE</div>
+                </div>
+              </div>
+
+              ${
+                mine && ["active", "reserved"].includes(String(l.status || "").toLowerCase())
+                  ? `<button class="danger-btn" type="button" onclick="cancelPackListing(${l.id})">Cancel Listing</button>`
+                  : ``
+              }
+            </div>
+          `;
+        })
+        .join("");
+    }
+  } catch (err) {
+    console.error("loadPackListings error:", err);
+    if (box) {
+      box.innerHTML = `<div class="empty">${err.message || "Failed to load pack listings."}</div>`;
+    }
+  }
+}
+
+async function cancelPackListing(listingId) {
+  try {
+    const res = await fetch(apiUrl("/marketplace/pack/cancel"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: ACTIVE_USER,
+        listing_id: listingId
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to cancel pack listing.");
+    }
+
+    alert("Pack listing cancelled successfully.");
+    await loadPackInventorySelect();
+    await loadPackListings();
+  } catch (err) {
+    console.error("cancelPackListing error:", err);
+    alert(err.message || "Failed to cancel pack listing.");
+  }
+}
+  async function cancelPackListing(listingId) {
+  ...
+}
+
+/* ADD THIS BELOW */
+
+loadPackInventorySelect();
+loadPackListings();
+
+</script>
 </script>
  
 </body>
