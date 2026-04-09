@@ -475,122 +475,134 @@
         </div>
       </section>
 
-      <!-- ===== TAB: EMPIRE ASSETS ===== -->
-      <section class="section tab-panel" data-tab-panel="assets">
-        <div class="section-header">
-          <h2>Empire Assets</h2>
-          <small>Your complete visual inventory</small>
+     <!-- ===== TAB: EMPIRE ASSETS ===== -->
+<section class="section tab-panel" data-tab-panel="assets">
+
+  <div class="section-header">
+    <h2>Empire Assets</h2>
+    <small>Overview of all assets in your empire</small>
+  </div>
+
+  <div class="empire-inventory">
+
+    <!-- LAND -->
+    <div class="inventory-card inventory-land">
+      <img src="assets/land-l1.png" class="inventory-icon">
+      <div class="inventory-info">
+        <div class="inventory-title">Lands Owned</div>
+        <div class="inventory-count" id="asset-land-count">0</div>
+        <div class="inventory-subcount">
+          Frontier: <span id="asset-land-l1">0</span> |
+          Estate: <span id="asset-land-l2">0</span> |
+          Industrial: <span id="asset-land-l3">0</span>
         </div>
+      </div>
+    </div>
 
-        <div class="empire-inventory">
-          <div class="inventory-card">
-            <img src="assets/land-l1.png" class="inventory-icon" />
-            <div class="inventory-info">
-              <div class="inventory-title">L1 Frontier</div>
-              <div class="inventory-count" id="asset-land-l1">0</div>
-            </div>
-          </div>
+    <!-- PACK -->
+    <div class="inventory-card inventory-pack">
+      <img src="assets/pack.png" class="inventory-icon">
+      <div class="inventory-info">
+        <div class="inventory-title">Unopened Packs</div>
+        <div class="inventory-count" id="asset-pack-count">0</div>
+      </div>
+    </div>
 
-          <div class="inventory-card">
-            <img src="assets/land-l2.png" class="inventory-icon" />
-            <div class="inventory-info">
-              <div class="inventory-title">L2 Estate</div>
-              <div class="inventory-count" id="asset-land-l2">0</div>
-            </div>
-          </div>
+    <!-- RELIC -->
+    <div class="inventory-card inventory-relic">
+      <img src="assets/relic.png" class="inventory-icon">
+      <div class="inventory-info">
+        <div class="inventory-title">Relics</div>
+        <div class="inventory-count" id="asset-relic-count">0</div>
+      </div>
+    </div>
 
-          <div class="inventory-card">
-            <img src="assets/land-l3.png" class="inventory-icon" />
-            <div class="inventory-info">
-              <div class="inventory-title">L3 Industrial Zone</div>
-              <div class="inventory-count" id="asset-land-l3">0</div>
-            </div>
-          </div>
+    <!-- WRIT -->
+    <div class="inventory-card inventory-writ">
+      <img src="assets/writ.png" class="inventory-icon">
+      <div class="inventory-info">
+        <div class="inventory-title">Writs</div>
+        <div class="inventory-count" id="asset-writ-count">0</div>
+      </div>
+    </div>
 
-          <div class="inventory-card">
-            <img src="assets/pack.png" class="inventory-icon" />
-            <div class="inventory-info">
-              <div class="inventory-title">Packs</div>
-              <div class="inventory-count" id="asset-packs">0</div>
-            </div>
-          </div>
-
-          <div class="inventory-card">
-            <img src="assets/relic.png" class="inventory-icon" />
-            <div class="inventory-info">
-              <div class="inventory-title">Relics</div>
-              <div class="inventory-count" id="asset-relics">0</div>
-            </div>
-          </div>
-
-          <div class="inventory-card">
-            <img src="assets/writ.png" class="inventory-icon" />
-            <div class="inventory-info">
-              <div class="inventory-title">WRITs</div>
-              <div class="inventory-count" id="asset-writs">0</div>
-            </div>
-          </div>
+    <!-- FOOD BLUEPRINT -->
+    <div class="inventory-card inventory-food">
+      <img src="assets/food.png" class="inventory-icon">
+      <div class="inventory-info">
+        <div class="inventory-title">Food Blueprints</div>
+        <div class="inventory-subcount">
+          B1: <span id="asset-food-b1">0</span> |
+          B2: <span id="asset-food-b2">0</span> |
+          B3: <span id="asset-food-b3">0</span> |
+          B4: <span id="asset-food-b4">0</span> |
+          B5: <span id="asset-food-b5">0</span>
         </div>
+      </div>
+    </div>
 
-        <h3 style="margin: 24px 0 12px">Blueprints</h3>
-
-        <div class="empire-inventory">
-          <div class="inventory-card">
-            <img src="assets/food.png" class="inventory-icon" />
-            <div class="inventory-info">
-              <div class="inventory-title">Food</div>
-              <div class="inventory-count" id="asset-bp-food">0</div>
-              <div class="inventory-subcount" id="asset-bp-food-levels">
-                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
-              </div>
-            </div>
-          </div>
-
-          <div class="inventory-card">
-            <img src="assets/textile.png" class="inventory-icon" />
-            <div class="inventory-info">
-              <div class="inventory-title">Textile</div>
-              <div class="inventory-count" id="asset-bp-textile">0</div>
-              <div class="inventory-subcount" id="asset-bp-textile-levels">
-                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
-              </div>
-            </div>
-          </div>
-
-          <div class="inventory-card">
-            <img src="assets/pharma.png" class="inventory-icon" />
-            <div class="inventory-info">
-              <div class="inventory-title">Pharma</div>
-              <div class="inventory-count" id="asset-bp-pharma">0</div>
-              <div class="inventory-subcount" id="asset-bp-pharma-levels">
-                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
-              </div>
-            </div>
-          </div>
-
-          <div class="inventory-card">
-            <img src="assets/chemical.png" class="inventory-icon" />
-            <div class="inventory-info">
-              <div class="inventory-title">Chemical</div>
-              <div class="inventory-count" id="asset-bp-chemical">0</div>
-              <div class="inventory-subcount" id="asset-bp-chemical-levels">
-                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
-              </div>
-            </div>
-          </div>
-
-          <div class="inventory-card">
-            <img src="assets/supermarket.png" class="inventory-icon" />
-            <div class="inventory-info">
-              <div class="inventory-title">Supermarket</div>
-              <div class="inventory-count" id="asset-bp-supermarket">0</div>
-              <div class="inventory-subcount" id="asset-bp-supermarket-levels">
-                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
-              </div>
-            </div>
-          </div>
+    <!-- TEXTILE BLUEPRINT -->
+    <div class="inventory-card inventory-textile">
+      <img src="assets/textile.png" class="inventory-icon">
+      <div class="inventory-info">
+        <div class="inventory-title">Textile Blueprints</div>
+        <div class="inventory-subcount">
+          B1: <span id="asset-textile-b1">0</span> |
+          B2: <span id="asset-textile-b2">0</span> |
+          B3: <span id="asset-textile-b3">0</span> |
+          B4: <span id="asset-textile-b4">0</span> |
+          B5: <span id="asset-textile-b5">0</span>
         </div>
-      </section>
+      </div>
+    </div>
+
+    <!-- PHARMA BLUEPRINT -->
+    <div class="inventory-card inventory-pharma">
+      <img src="assets/pharma.png" class="inventory-icon">
+      <div class="inventory-info">
+        <div class="inventory-title">Pharma Blueprints</div>
+        <div class="inventory-subcount">
+          B1: <span id="asset-pharma-b1">0</span> |
+          B2: <span id="asset-pharma-b2">0</span> |
+          B3: <span id="asset-pharma-b3">0</span> |
+          B4: <span id="asset-pharma-b4">0</span> |
+          B5: <span id="asset-pharma-b5">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHEMICAL BLUEPRINT -->
+    <div class="inventory-card inventory-chemical">
+      <img src="assets/chemical.png" class="inventory-icon">
+      <div class="inventory-info">
+        <div class="inventory-title">Chemical Blueprints</div>
+        <div class="inventory-subcount">
+          B1: <span id="asset-chemical-b1">0</span> |
+          B2: <span id="asset-chemical-b2">0</span> |
+          B3: <span id="asset-chemical-b3">0</span> |
+          B4: <span id="asset-chemical-b4">0</span> |
+          B5: <span id="asset-chemical-b5">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPERMARKET BLUEPRINT -->
+    <div class="inventory-card inventory-supermarket">
+      <img src="assets/supermarket.png" class="inventory-icon">
+      <div class="inventory-info">
+        <div class="inventory-title">Supermarket Blueprints</div>
+        <div class="inventory-subcount">
+          B1: <span id="asset-supermarket-b1">0</span> |
+          B2: <span id="asset-supermarket-b2">0</span> |
+          B3: <span id="asset-supermarket-b3">0</span> |
+          B4: <span id="asset-supermarket-b4">0</span> |
+          B5: <span id="asset-supermarket-b5">0</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
       <!-- ===== TAB: UNDER CONSTRUCTION ===== -->
       <section class="section tab-panel" data-tab-panel="construction">
         <div class="section-header">
