@@ -10056,3 +10056,71 @@ cursor:pointer;
 .inventory-pharma{border-top:4px solid #ef4444 !important;}
 .inventory-chemical{border-top:4px solid #06b6d4 !important;}
 .inventory-supermarket{border-top:4px solid #f59e0b !important;}
+.compact-listing{
+  display:grid;
+  grid-template-columns: 1.4fr 2fr auto;
+  gap:14px;
+  align-items:center;
+  padding:14px 16px;
+}
+
+.compact-main{
+  min-width:0;
+}
+
+.compact-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:4px;
+}
+
+.compact-meta{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.4;
+}
+
+.compact-stats{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(90px, 1fr));
+  gap:10px;
+}
+
+.compact-stats div{
+  background:#f8fafc;
+  border:1px solid #edf2f7;
+  border-radius:12px;
+  padding:8px 10px;
+}
+
+.compact-stats span{
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:3px;
+}
+
+.compact-stats strong{
+  font-size:14px;
+  font-weight:800;
+  color:var(--text);
+}
+
+.compact-actions{
+  display:flex;
+  justify-content:flex-end;
+}
+
+@media (max-width: 900px){
+  .compact-listing{
+    grid-template-columns: 1fr;
+  }
+
+  .compact-stats{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .compact-actions{
+    justify-content:flex-start;
+  }
+}
