@@ -1316,7 +1316,7 @@ async function loadPackListings() {
 
     const listings = (data.listings || []).sort(
   (a, b) => Number(b.unit_price_hive || 0) - Number(a.unit_price_hive || 0)
-);
+); 
     if (pill) pill.textContent = `${listings.length} Listings`;
 
     if (!listings.length) {
