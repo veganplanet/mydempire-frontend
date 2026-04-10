@@ -1113,7 +1113,6 @@ if (packSelect) {
       renderBlueprintFeed();
     });
 
-    document.getElementById("refresh-packs-btn").addEventListener("click", loadPacks);
 
     /* init */
     loadEmpListings();
@@ -1383,9 +1382,6 @@ async function cancelPackListing(listingId) {
     console.error("cancelPackListing error:", err);
     alert(err.message || "Failed to cancel pack listing.");
   }
-}
-  async function cancelPackListing(listingId) {
-  ...
 }
 
 /* ADD THIS BELOW */
