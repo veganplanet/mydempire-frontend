@@ -1405,7 +1405,77 @@ loadPacks();
 loadPackListings();
  
 
+async function buyPackListing(listingId) {
+  try {
+    if (!ACTIVE_USER) {
+      alert("No active user found.");
+      return;
+    }
 
+    const initRes = await fetch(apiUrl("/marketplace/pack/buy-init"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: ACTIVE_USER,
+        listing_id: listingId
+      })
+    });
+
+    const initData = await initRes.json();
+
+    if (!initRes.ok || !initData.success) {
+      throw new Error(initData.error || "Failed to initialize pack purchase.");
+    }
+
+    const session = initData.session;
+
+    const confirmText =
+      `Buy ${Number(session.quantity || 0)} sealed pack(s)?\n\n` +
+      `Total payment: ${session.total_payment.amount} HIVE to @${session.total_payment.to}`;
+
+    const ok = confirm(confirmText);
+    if (!ok) return;
+
+    const paymentTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      session.total_payment.to,
+      session.total_payment.amount,
+      session.total_payment.memo
+    );
+
+    const paymentTxId =
+      paymentTransfer?.tx_id ||
+      paymentTransfer?.id ||
+      null;
+
+    if (!paymentTxId) {
+      throw new Error("Transaction ID not returned by Keychain.");
+    }
+
+    const finalizeRes = await fetch(apiUrl("/marketplace/pack/buy-finalize"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: ACTIVE_USER,
+        session_id: session.id,
+        payment_tx_id: paymentTxId
+      })
+    });
+
+    const finalizeData = await finalizeRes.json();
+
+    if (!finalizeRes.ok || !finalizeData.success) {
+      throw new Error(finalizeData.error || "Failed to finalize pack trade.");
+    }
+
+    alert(`✅ Pack trade completed successfully. ${Number(finalizeData.trade?.quantity || session.quantity || 0)} pack(s) received.`);
+    await loadPacks();
+    await loadPackListings();
+  } catch (err) {
+    console.error("buyPackListing error:", err);
+    alert(err.message || "Pack purchase failed.");
+  }
+}
 </script>
  
 </body>
