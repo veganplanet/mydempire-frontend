@@ -193,16 +193,15 @@
     </div>
 
     <div class="field">
-      <label>Select Pack</label>
-      <select id="pack-select">
-        <option value="">Loading packs...</option>
-      </select>
-    </div>
+  <label>Quantity</label>
+  <input id="pack-quantity" type="number" min="1" step="1" placeholder="1">
+  <div class="hint">System will automatically use this many sealed packs.</div>
+</div>
 
-    <div class="field">
-      <label>Price (HIVE)</label>
-      <input id="pack-price-hive" type="number" step="0.001" placeholder="1.000">
-    </div>
+<div class="field">
+  <label>Price per Pack (HIVE)</label>
+  <input id="pack-unit-price-hive" type="number" min="0.001" step="0.001" placeholder="1.000">
+</div>
 
     <button class="primary-btn" onclick="createPackListing()">
       Create Listing
@@ -1191,15 +1190,15 @@ async function createPackListing() {
   const statusEl = document.getElementById("pack-market-status");
 
   try {
-    const packId = Number(document.getElementById("pack-select")?.value);
-    const totalPriceHive = Number(document.getElementById("pack-price-hive")?.value);
+    const quantity = Number(document.getElementById("pack-quantity")?.value);
+    const unitPriceHive = Number(document.getElementById("pack-unit-price-hive")?.value);
 
     if (!ACTIVE_USER) throw new Error("No active user found.");
-    if (!Number.isInteger(packId) || packId <= 0) {
-      throw new Error("Please choose a sealed pack.");
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+      throw new Error("Please enter a valid pack quantity.");
     }
-    if (!Number.isFinite(totalPriceHive) || totalPriceHive <= 0) {
-      throw new Error("Please enter a valid HIVE price.");
+    if (!Number.isFinite(unitPriceHive) || unitPriceHive <= 0) {
+      throw new Error("Please enter a valid HIVE price per pack.");
     }
 
     if (statusEl) statusEl.textContent = "Creating pack listing...";
@@ -1209,8 +1208,8 @@ async function createPackListing() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         username: ACTIVE_USER,
-        pack_id: packId,
-        total_price_hive: totalPriceHive
+        quantity: quantity,
+        unit_price_hive: unitPriceHive
       })
     });
 
@@ -1220,9 +1219,15 @@ async function createPackListing() {
       throw new Error(data.error || "Failed to create pack listing.");
     }
 
-    if (statusEl) statusEl.textContent = "Pack listing created successfully.";
-    document.getElementById("pack-price-hive").value = "";
-    await loadPackInventorySelect();
+    if (statusEl) {
+      statusEl.textContent =
+        `Pack listing created successfully. Quantity: ${quantity} pack(s).`;
+    }
+
+    document.getElementById("pack-quantity").value = "";
+    document.getElementById("pack-unit-price-hive").value = "";
+
+    await loadPacks();
     await loadPackListings();
   } catch (err) {
     console.error("createPackListing error:", err);
