@@ -408,8 +408,40 @@
       }
       return allEmpListings;
     }
+function renderCompactListingCard({
+  mine = false,
+  title = "",
+  meta = "",
+  stats = [],
+  actionHtml = "",
+}) {
+  return `
+    <div class="listing-card compact-listing ${mine ? "mine" : ""}">
+      <div class="compact-main">
+        <div class="compact-title">${title}</div>
+        <div class="compact-meta">${meta}</div>
+      </div>
 
-    function renderEmpMarket() {
+      <div class="compact-stats">
+        ${stats
+          .map(
+            (item) => `
+              <div>
+                <span>${item.label}</span>
+                <strong>${item.value}</strong>
+              </div>
+            `
+          )
+          .join("")}
+      </div>
+
+      <div class="compact-actions">
+        ${actionHtml}
+      </div>
+    </div>
+  `;
+}
+   function renderEmpMarket() {
   const box = document.getElementById("emp-market-list");
   const list = getFilteredEmpListings();
   const countPill = document.getElementById("emp-market-count-pill");
@@ -428,34 +460,34 @@
 
   box.innerHTML = list
     .map((listing) => {
-      const mine =
-        ACTIVE_USER && listing.seller_username === ACTIVE_USER;
+      const mine = ACTIVE_USER && listing.seller_username === ACTIVE_USER;
 
-      return `
-        <div class="listing-card compact-listing ${mine ? "mine" : ""}">
-          <div class="compact-main">
-            <div class="compact-title">${Number(listing.quantity).toLocaleString()} EMP</div>
-            <div class="compact-meta">
-              Seller: @${listing.seller_username} • Listing #${listing.id}
-            </div>
-          </div>
-
-          <div class="compact-stats">
-            <div><span>Per EMP</span><strong>${Number(listing.unit_price_hive).toFixed(4)} HIVE</strong></div>
-            <div><span>Qty</span><strong>${Number(listing.quantity).toLocaleString()}</strong></div>
-            <div><span>Total</span><strong>${Number(listing.total_price_hive).toFixed(3)} HIVE</strong></div>
-            <div><span>Fee</span><strong>${Number(listing.fee_amount_hive).toFixed(3)} HIVE</strong></div>
-          </div>
-
-          <div class="compact-actions">
-            ${
-              mine
-                ? `<button class="danger-btn" onclick="cancelEmpListing(${listing.id})">Cancel</button>`
-                : `<button class="primary-btn" onclick="buyEmpListing(${listing.id})">Buy EMP</button>`
-            }
-          </div>
-        </div>
-      `;
+      return renderCompactListingCard({
+        mine,
+        title: `${Number(listing.quantity).toLocaleString()} EMP`,
+        meta: `Seller: @${listing.seller_username} • Listing #${listing.id}`,
+        stats: [
+          {
+            label: "Per EMP",
+            value: `${Number(listing.unit_price_hive).toFixed(4)} HIVE`,
+          },
+          {
+            label: "Qty",
+            value: `${Number(listing.quantity).toLocaleString()}`,
+          },
+          {
+            label: "Total",
+            value: `${Number(listing.total_price_hive).toFixed(3)} HIVE`,
+          },
+          {
+            label: "Fee",
+            value: `${Number(listing.fee_amount_hive).toFixed(3)} HIVE`,
+          },
+        ],
+        actionHtml: mine
+          ? `<button class="danger-btn" onclick="cancelEmpListing(${listing.id})">Cancel</button>`
+          : `<button class="primary-btn" onclick="buyEmpListing(${listing.id})">Buy EMP</button>`,
+      });
     })
     .join("");
 }
@@ -759,57 +791,49 @@ async function buyEmpListing(listingId) {
       return allBlueprintListings;
     }
 
-    function renderBlueprintListingFeed() {
-      const feed = document.getElementById("blueprint-feed");
-      const listings = getFilteredBlueprintListings();
-      const countPill = document.getElementById("blueprint-market-count-pill");
+  function renderBlueprintListingFeed() {
+  const feed = document.getElementById("blueprint-feed");
+  const listings = getFilteredBlueprintListings();
+  const countPill = document.getElementById("blueprint-market-count-pill");
 
-      updateBlueprintFeedHeader();
-      countPill.textContent = `${listings.length} Listing${listings.length === 1 ? "" : "s"}`;
+  updateBlueprintFeedHeader();
+  countPill.textContent = `${listings.length} Listing${listings.length === 1 ? "" : "s"}`;
 
-      if (!listings.length) {
-        feed.innerHTML = `<div class="empty">${currentBlueprintView === "mine" ? "You have no active blueprint listings." : "No active blueprint listings found."}</div>`;
-        return;
-      }
+  if (!listings.length) {
+    feed.innerHTML = `<div class="empty">${
+      currentBlueprintView === "mine"
+        ? "You have no active blueprint listings."
+        : "No active blueprint listings found."
+    }</div>`;
+    return;
+  }
 
-      feed.innerHTML = `
-        <div class="listing-list">
-          ${listings.map((listing) => {
-            const mine = ACTIVE_USER && listing.seller_username === ACTIVE_USER;
-            const tier = listing.blueprint?.tier || "B1";
-            const edition = listing.blueprint?.edition || "--";
-            const era = listing.blueprint?.era || "GENESIS";
+  feed.innerHTML = listings
+    .map((listing) => {
+      const mine =
+        ACTIVE_USER && listing.seller_username === ACTIVE_USER;
 
-            return `
-              <div class="listing-card ${mine ? "mine" : ""}">
-                <div class="listing-top">
-                  <div>
-                    <div class="listing-title">Blueprint #${listing.asset_id}</div>
-                    <div class="listing-meta">Seller: @${listing.seller_username} • Listing #${listing.id}</div>
-                  </div>
-                  <div class="pill">${mine ? "Your Listing" : "Active Listing"}</div>
-                </div>
+      const tier = listing.blueprint?.tier || "B1";
+      const edition = listing.blueprint?.edition || "--";
+      const era = listing.blueprint?.era || "GENESIS";
 
-                <div class="kv-grid">
-                  <div class="kv"><div class="k">Tier</div><div class="v">${tier}</div></div>
-                  <div class="kv"><div class="k">Edition</div><div class="v">${edition}</div></div>
-                  <div class="kv"><div class="k">Era</div><div class="v">${era}</div></div>
-                  <div class="kv"><div class="k">Price</div><div class="v">${Number(listing.total_price_hive).toFixed(3)} HIVE</div></div>
-                </div>
-
-                <div class="button-row">
-                  ${
-                    mine
-                      ? `<button class="danger-btn" onclick="cancelBlueprintListing(${listing.id})">Cancel Listing</button>`
-                      : `<button class="primary-btn" onclick="buyBlueprintListing(${listing.id})">Buy Blueprint</button>`
-                  }
-                </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      `;
-    }
+      return renderCompactListingCard({
+        mine,
+        title: `Blueprint #${listing.asset_id}`,
+        meta: `Seller: @${listing.seller_username} • Listing #${listing.id}`,
+        stats: [
+          { label: "Tier", value: `${tier}` },
+          { label: "Edition", value: `${edition}` },
+          { label: "Era", value: `${era}` },
+          { label: "Price", value: `${Number(listing.total_price_hive).toFixed(3)} HIVE` },
+        ],
+        actionHtml: mine
+          ? `<button class="danger-btn" onclick="cancelBlueprintListing(${listing.id})">Cancel</button>`
+          : `<button class="primary-btn" onclick="buyBlueprintListing(${listing.id})">Buy</button>`,
+      });
+    })
+    .join("");
+}
 
     function renderBlueprintFeed() {
       if (currentBlueprintView === "inventory") {
@@ -1298,51 +1322,40 @@ async function loadPackListings() {
             String(l.seller_username || "").toLowerCase() ===
             String(ACTIVE_USER || "").toLowerCase();
 
-          const qty = Number(l.quantity || 1);
           const remainingQty = Number(l.remaining_quantity ?? l.quantity ?? 1);
           const unitPrice = Number(l.unit_price_hive || 0);
           const totalPrice = Number(l.total_price_hive || 0);
           const fee = Number(l.fee_amount_hive || 0);
 
-          return `
-            <div class="listing-card compact-listing ${mine ? "mine" : ""}">
-              <div class="compact-main">
-                <div class="compact-title">${remainingQty} Sealed Pack${remainingQty > 1 ? "s" : ""}</div>
-                <div class="compact-meta">
-                  Seller: @${l.seller_username} • Status: ${l.status}
-                </div>
-              </div>
-
-              <div class="compact-stats">
-                <div><span>Per Pack</span><strong>${unitPrice.toFixed(3)} HIVE</strong></div>
-                <div><span>Remaining</span><strong>${remainingQty}</strong></div>
-                <div><span>Total</span><strong>${totalPrice.toFixed(3)} HIVE</strong></div>
-                <div><span>Fee</span><strong>${fee.toFixed(3)} HIVE</strong></div>
-              </div>
-
-              <div class="compact-actions">
-                ${
-                  mine && ["active", "reserved"].includes(String(l.status || "").toLowerCase())
-                    ? `<button class="danger-btn" type="button" onclick="cancelPackListing(${l.id})">Cancel</button>`
-                   : `
-<div style="display:flex; gap:8px; align-items:center;">
-  <input
-    id="buy-pack-qty-${l.id}"
-    type="number"
-    min="1"
-    max="${remainingQty}"
-    value="1"
-    style="width:70px; padding:6px; border:1px solid #ccc; border-radius:6px;"
-  />
-  <button class="primary-btn" type="button" onclick="buyPackListing(${l.id})">
-    Buy Packs
-  </button>
-</div>
-`
-                }
-              </div>
-            </div>
-          `;
+          return renderCompactListingCard({
+            mine,
+            title: `${remainingQty} Sealed Pack${remainingQty > 1 ? "s" : ""}`,
+            meta: `Seller: @${l.seller_username} • Status: ${l.status}`,
+            stats: [
+              { label: "Per Pack", value: `${unitPrice.toFixed(3)} HIVE` },
+              { label: "Remaining", value: `${remainingQty}` },
+              { label: "Total", value: `${totalPrice.toFixed(3)} HIVE` },
+              { label: "Fee", value: `${fee.toFixed(3)} HIVE` },
+            ],
+            actionHtml:
+              mine && ["active", "reserved"].includes(String(l.status || "").toLowerCase())
+                ? `<button class="danger-btn" type="button" onclick="cancelPackListing(${l.id})">Cancel</button>`
+                : `
+                  <div style="display:flex; gap:8px; align-items:center;">
+                    <input
+                      id="buy-pack-qty-${l.id}"
+                      type="number"
+                      min="1"
+                      max="${remainingQty}"
+                      value="1"
+                      style="width:70px; padding:6px; border:1px solid #ccc; border-radius:6px;"
+                    />
+                    <button class="primary-btn" type="button" onclick="buyPackListing(${l.id})">
+                      Buy Packs
+                    </button>
+                  </div>
+                `,
+          });
         })
         .join("");
     }
@@ -1444,6 +1457,7 @@ async function buyPackListing(listingId) {
     alert(err.message || "Pack purchase failed.");
   }
 }
+  
 </script>
  
 </body>
