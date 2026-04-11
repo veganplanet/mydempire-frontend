@@ -410,43 +410,55 @@
     }
 
     function renderEmpMarket() {
-      const box = document.getElementById("emp-market-list");
-      const list = getFilteredEmpListings();
-      const countPill = document.getElementById("emp-market-count-pill");
+  const box = document.getElementById("emp-market-list");
+  const list = getFilteredEmpListings();
+  const countPill = document.getElementById("emp-market-count-pill");
 
-      updateEmpFeedHeader();
-      countPill.textContent = `${list.length} Listing${list.length === 1 ? "" : "s"}`;
+  updateEmpFeedHeader();
+  countPill.textContent = `${list.length} Listing${list.length === 1 ? "" : "s"}`;
 
-      if (!list.length) {
-        box.innerHTML = `<div class="empty">${currentEmpView === "mine" ? "You have no active EMP listings." : "No active EMP listings found."}</div>`;
-       return `
-  <div class="listing-card compact-listing ${mine ? "mine" : ""}">
-    <div class="compact-main">
-      <div class="compact-title">${Number(listing.quantity).toLocaleString()} EMP</div>
-      <div class="compact-meta">
-        Seller: @${listing.seller_username} • Listing #${listing.id}
-      </div>
-    </div>
+  if (!list.length) {
+    box.innerHTML = `<div class="empty">${
+      currentEmpView === "mine"
+        ? "You have no active EMP listings."
+        : "No active EMP listings found."
+    }</div>`;
+    return;
+  }
 
-    <div class="compact-stats">
-      <div><span>Per EMP</span><strong>${Number(listing.unit_price_hive).toFixed(4)} HIVE</strong></div>
-      <div><span>Qty</span><strong>${Number(listing.quantity).toLocaleString()}</strong></div>
-      <div><span>Total</span><strong>${Number(listing.total_price_hive).toFixed(3)} HIVE</strong></div>
-      <div><span>Fee</span><strong>${Number(listing.fee_amount_hive).toFixed(3)} HIVE</strong></div>
-    </div>
+  box.innerHTML = list
+    .map((listing) => {
+      const mine =
+        ACTIVE_USER && listing.seller_username === ACTIVE_USER;
 
-    <div class="compact-actions">
-      ${
-        mine
-          ? `<button class="danger-btn" onclick="cancelEmpListing(${listing.id})">Cancel</button>`
-          : `<button class="primary-btn" onclick="buyEmpListing(${listing.id})">Buy EMP</button>`
-      }
-    </div>
-  </div>
-`;
-      }).join("");
-    }
+      return `
+        <div class="listing-card compact-listing ${mine ? "mine" : ""}">
+          <div class="compact-main">
+            <div class="compact-title">${Number(listing.quantity).toLocaleString()} EMP</div>
+            <div class="compact-meta">
+              Seller: @${listing.seller_username} • Listing #${listing.id}
+            </div>
+          </div>
 
+          <div class="compact-stats">
+            <div><span>Per EMP</span><strong>${Number(listing.unit_price_hive).toFixed(4)} HIVE</strong></div>
+            <div><span>Qty</span><strong>${Number(listing.quantity).toLocaleString()}</strong></div>
+            <div><span>Total</span><strong>${Number(listing.total_price_hive).toFixed(3)} HIVE</strong></div>
+            <div><span>Fee</span><strong>${Number(listing.fee_amount_hive).toFixed(3)} HIVE</strong></div>
+          </div>
+
+          <div class="compact-actions">
+            ${
+              mine
+                ? `<button class="danger-btn" onclick="cancelEmpListing(${listing.id})">Cancel</button>`
+                : `<button class="primary-btn" onclick="buyEmpListing(${listing.id})">Buy EMP</button>`
+            }
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
     async function loadEmpListings() {
       try {
         const res = await fetch(apiUrl("/marketplace/emp"));
