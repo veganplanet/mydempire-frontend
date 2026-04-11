@@ -1318,7 +1318,21 @@ async function loadPackListings() {
                 ${
                   mine && ["active", "reserved"].includes(String(l.status || "").toLowerCase())
                     ? `<button class="danger-btn" type="button" onclick="cancelPackListing(${l.id})">Cancel</button>`
-                    : `<button class="primary-btn" type="button" onclick="buyPackListing(${l.id})">Buy Packs</button>`
+                   : `
+<div style="display:flex; gap:8px; align-items:center;">
+  <input
+    id="buy-pack-qty-${l.id}"
+    type="number"
+    min="1"
+    max="${remainingQty}"
+    value="1"
+    style="width:70px; padding:6px; border:1px solid #ccc; border-radius:6px;"
+  />
+  <button class="primary-btn" type="button" onclick="buyPackListing(${l.id})">
+    Buy Packs
+  </button>
+</div>
+`
                 }
               </div>
             </div>
@@ -1348,12 +1362,20 @@ async function buyPackListing(listingId) {
       return;
     }
 
+    const qtyInput = document.getElementById(`buy-pack-qty-${listingId}`);
+    const buyQuantity = Number(qtyInput?.value || 0);
+
+    if (!Number.isInteger(buyQuantity) || buyQuantity <= 0) {
+      throw new Error("Please enter a valid buy quantity.");
+    }
+
     const initRes = await fetch(apiUrl("/marketplace/pack/buy-init"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         username: ACTIVE_USER,
-        listing_id: listingId
+        listing_id: listingId,
+        buy_quantity: buyQuantity
       })
     });
 
@@ -1367,6 +1389,7 @@ async function buyPackListing(listingId) {
 
     const confirmText =
       `Buy ${Number(session.quantity || 0)} sealed pack(s)?\n\n` +
+      `Price per pack: ${Number(session.total_price_hive || 0) / Number(session.quantity || 1)} HIVE\n` +
       `Total payment: ${session.total_payment.amount} HIVE to @${session.total_payment.to}`;
 
     const ok = confirm(confirmText);
@@ -1404,9 +1427,12 @@ async function buyPackListing(listingId) {
       throw new Error(finalizeData.error || "Failed to finalize pack trade.");
     }
 
-    alert(`✅ Pack trade completed successfully. ${Number(finalizeData.trade?.quantity || session.quantity || 0)} pack(s) received.`);
-  loadPackInventorySelect();
-loadPackListings();
+    alert(
+      `✅ Pack trade completed successfully. ${Number(finalizeData.trade?.quantity || session.quantity || 0)} pack(s) received.`
+    );
+
+    await loadPackListings();
+    await loadPackInventorySelect();
   } catch (err) {
     console.error("buyPackListing error:", err);
     alert(err.message || "Pack purchase failed.");
