@@ -10749,3 +10749,45 @@ cursor:pointer;
     grid-template-columns:1fr !important;
   }
 }
+/* ===== EXACT MARKET TOOLBAR ALIGN FIX ===== */
+
+.page .market-toolbar{
+  display: grid !important;
+  grid-template-columns: 1.2fr 1fr 1fr auto auto !important;
+  gap: 12px !important;
+  align-items: start !important;
+}
+
+.page .market-toolbar .field{
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+}
+
+.page .market-toolbar .field label{
+  display: block !important;
+  height: 18px !important;
+  margin-bottom: 6px !important;
+}
+
+.page .market-toolbar .field input,
+.page .market-toolbar .field select{
+  height: 44px !important;
+  box-sizing: border-box !important;
+}
+
+.page .market-toolbar .field .hint{
+  display: block !important;
+  min-height: 16px !important;
+  margin-top: 4px !important;
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+  color: #64748b !important;
+}
+
+.page .market-toolbar > .primary-btn,
+.page .market-toolbar > .secondary-btn{
+  height: 44px !important;
+  align-self: start !important;
+  margin-top: 24px !important;
+}
