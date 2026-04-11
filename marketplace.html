@@ -169,71 +169,73 @@
       </div>
     </section>
 
-   <!-- PACKS -->
+ <!-- PACKS -->
 <section class="market-tab-panel" data-market-tab-panel="packs">
   <div class="stack">
-   <div class="card">
-  <div class="market-header">
-    <div class="market-header-left">
-      <h2>Pack Marketplace</h2>
-      <div class="market-header-sub">List sealed packs and manage pack listings.</div>
-    </div>
-    <div class="pill">Marketplace</div>
-  </div>
 
-  <div class="market-toolbar">
-
-    <div class="field">
-      <label>View</label>
-      <select id="pack-view-select" onchange="loadPackListings()">
-        <option value="market">Market Listings</option>
-        <option value="mine">My Listings</option>
-        <option value="inventory">My Pack Inventory</option>
-      </select>
-    </div>
-
-    <div class="field">
-  <label>Quantity</label>
-  <input id="pack-quantity" type="number" min="1" step="1" placeholder="1">
-  <div class="hint">System will automatically use this many sealed packs.</div>
-</div>
-
-<div class="field">
-  <label>Price per Pack (HIVE)</label>
-  <input id="pack-unit-price-hive" type="number" min="0.001" step="0.001" placeholder="1.000">
-</div>
-
-    <button class="primary-btn" onclick="createPackListing()">
-      Create Listing
-    </button>
-
-    <button class="secondary-btn" onclick="loadPackListings()">
-      Refresh
-    </button>
- </div>
- <div id="pack-market-status" class="status"></div>
-</div>
-  </div>
-<div class="card">
-  <div class="market-header">
-    <div class="market-header-left">
-      <h2>Pack Feed</h2>
-     
-    </div>
-    
-  </div>
-
-  <div id="pack-listings-box" class="listing-list"></div>
- 
-</div>
-      
-
-      
-    </div>
-
+    <!-- Pack Marketplace Controls -->
     <div class="card">
-      <div id="packs-feed" class="pack-grid"></div>
+      <div class="market-header">
+        <div class="market-header-left">
+          <h2>Pack Marketplace</h2>
+          <div class="market-header-sub">
+            List sealed packs and manage pack listings.
+          </div>
+        </div>
+        <div class="pill">Marketplace</div>
+      </div>
+
+      <div class="market-toolbar">
+        <div class="field">
+          <label>View</label>
+          <select id="pack-view-select" onchange="loadPackListings()">
+            <option value="market">Market Listings</option>
+            <option value="mine">My Listings</option>
+            <option value="inventory">My Pack Inventory</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Quantity</label>
+          <input id="pack-quantity" type="number" min="1" step="1" placeholder="1">
+          <div class="hint">System will automatically use this many sealed packs.</div>
+        </div>
+
+        <div class="field">
+          <label>Price per Pack (HIVE)</label>
+          <input id="pack-unit-price-hive" type="number" min="0.001" step="0.001" placeholder="1.000">
+        </div>
+
+        <button class="primary-btn" type="button" onclick="createPackListing()">
+          Create Listing
+        </button>
+
+        <button class="secondary-btn" type="button" onclick="loadPackListings()">
+          Refresh
+        </button>
+      </div>
+
+      <div id="pack-market-status" class="status"></div>
     </div>
+
+    <!-- Pack Feed -->
+    <div class="card">
+      <div class="market-header">
+        <div class="market-header-left">
+          <h2>Pack Feed</h2>
+          <div class="market-header-sub">
+            Market listings and your active pack listings.
+          </div>
+        </div>
+        <div class="pill" id="packs-count-pill">0 Packs</div>
+      </div>
+
+      <div id="pack-listings-box" class="listing-list"></div>
+
+      <!-- keep this hidden so old pack inventory grid does not appear -->
+      <div id="packs-feed" class="pack-grid" style="display:none;"></div>
+    </div>
+
   </div>
 </section>
   </div>
@@ -1479,8 +1481,8 @@ async function buyPackListing(listingId) {
     }
 
     alert(`✅ Pack trade completed successfully. ${Number(finalizeData.trade?.quantity || session.quantity || 0)} pack(s) received.`);
-    await loadPacks();
-    await loadPackListings();
+  loadPackInventorySelect();
+loadPackListings();
   } catch (err) {
     console.error("buyPackListing error:", err);
     alert(err.message || "Pack purchase failed.");
