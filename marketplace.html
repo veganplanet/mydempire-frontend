@@ -1244,56 +1244,18 @@ async function createPackListing() {
 
 async function loadPackListings() {
   const box = document.getElementById("pack-listings-box");
-  const feed = document.getElementById("packs-feed");
   const pill = document.getElementById("packs-count-pill");
   const view = document.getElementById("pack-view-select")?.value || "market";
 
   try {
     if (box) box.innerHTML = "";
-    if (feed) feed.innerHTML = "";
     if (pill) pill.textContent = "Loading...";
 
     if (view === "inventory") {
-      const res = await fetch(
-        apiUrl(`/player/${encodeURIComponent(ACTIVE_USER)}/packs`)
-      );
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || "Failed to load pack inventory.");
+      if (box) {
+        box.innerHTML = `<div class="empty">Pack inventory is managed through the quantity listing form above.</div>`;
       }
-
-      const packs = (data.packs || []).filter(
-        (p) =>
-          String(p.type || "").toUpperCase() === "PACK" &&
-          String(p.tier || "").toUpperCase() === "SEALED"
-      );
-
-      if (pill) pill.textContent = `${packs.length} Packs`;
-
-      if (!packs.length) {
-        if (feed) {
-          feed.innerHTML = `<div class="empty">No sealed packs in inventory.</div>`;
-        }
-        return;
-      }
-
-      if (feed) {
-        feed.innerHTML = packs
-          .map(
-            (p) => `
-              <div class="pack-card">
-                <div class="pack-title">Sealed Pack #${p.id}</div>
-                <div class="listing-meta">
-                  Era: ${p.era || "GENESIS"}<br>
-                  Tier: ${p.tier || "SEALED"}
-                </div>
-              </div>
-            `
-          )
-          .join("");
-      }
-
+      if (pill) pill.textContent = "Inventory";
       return;
     }
 
@@ -1312,7 +1274,9 @@ async function loadPackListings() {
     }
 
     const listings = data.listings || [];
-    if (pill) pill.textContent = `${listings.length} Listings`;
+    if (pill) {
+      pill.textContent = `${listings.length} Listing${listings.length === 1 ? "" : "s"}`;
+    }
 
     if (!listings.length) {
       if (box) {
@@ -1321,93 +1285,53 @@ async function loadPackListings() {
       return;
     }
 
-   if (box) {
-  box.innerHTML = listings
-    .map((l) => {
-      const mine =
-        String(l.seller_username || "").toLowerCase() === String(ACTIVE_USER || "").toLowerCase();
+    if (box) {
+      box.innerHTML = listings
+        .map((l) => {
+          const mine =
+            String(l.seller_username || "").toLowerCase() ===
+            String(ACTIVE_USER || "").toLowerCase();
 
-      const qty = Number(l.quantity || 1);
-      const unitPrice = Number(l.unit_price_hive || 0);
-      const totalPrice = Number(l.total_price_hive || 0);
-      const fee = Number(l.fee_amount_hive || 0);
+          const qty = Number(l.quantity || 1);
+          const remainingQty = Number(l.remaining_quantity ?? l.quantity ?? 1);
+          const unitPrice = Number(l.unit_price_hive || 0);
+          const totalPrice = Number(l.total_price_hive || 0);
+          const fee = Number(l.fee_amount_hive || 0);
 
-     return `
-  <div class="listing-card compact-listing ${mine ? "mine" : ""}">
-    <div class="compact-main">
-      <div class="compact-title">${remainingQty} Sealed Pack${remainingQty > 1 ? "s" : ""}</div>
-      <div class="compact-meta">
-        Seller: @${l.seller_username} • Status: ${l.status}
-      </div>
-    </div>
+          return `
+            <div class="listing-card compact-listing ${mine ? "mine" : ""}">
+              <div class="compact-main">
+                <div class="compact-title">${remainingQty} Sealed Pack${remainingQty > 1 ? "s" : ""}</div>
+                <div class="compact-meta">
+                  Seller: @${l.seller_username} • Status: ${l.status}
+                </div>
+              </div>
 
-    <div class="compact-stats">
-      <div><span>Per Pack</span><strong>${unitPrice.toFixed(3)} HIVE</strong></div>
-      <div><span>Remaining</span><strong>${remainingQty}</strong></div>
-      <div><span>Total</span><strong>${totalPrice.toFixed(3)} HIVE</strong></div>
-      <div><span>Fee</span><strong>${fee.toFixed(3)} HIVE</strong></div>
-    </div>
+              <div class="compact-stats">
+                <div><span>Per Pack</span><strong>${unitPrice.toFixed(3)} HIVE</strong></div>
+                <div><span>Remaining</span><strong>${remainingQty}</strong></div>
+                <div><span>Total</span><strong>${totalPrice.toFixed(3)} HIVE</strong></div>
+                <div><span>Fee</span><strong>${fee.toFixed(3)} HIVE</strong></div>
+              </div>
 
-    <div class="compact-actions">
-    ${
-  mine && ["active", "reserved"].includes(String(l.status || "").toLowerCase())
-    ? `<button class="danger-btn" type="button" onclick="cancelPackListing(${l.id})">Cancel</button>`
-    : `
-      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-        <input
-          id="buy-pack-qty-${l.id}"
-          type="number"
-          min="1"
-          max="${remainingQty}"
-          value="1"
-          style="width:90px; padding:10px 12px; border:1px solid #d1d5db; border-radius:10px;"
-        />
-        <button class="primary-btn" type="button" onclick="buyPackListing(${l.id})">Buy Packs</button>
-      </div>
-    `
-}
-    </div>
-  </div>
-`;
-    })
-    const qty = Number(l.quantity || 1);
-const remainingQty = Number(l.remaining_quantity ?? l.quantity ?? 1);
-const unitPrice = Number(l.unit_price_hive || 0);
-const totalPrice = Number(l.total_price_hive || 0);
-const fee = Number(l.fee_amount_hive || 0);
-    .join("");
-}
+              <div class="compact-actions">
+                ${
+                  mine && ["active", "reserved"].includes(String(l.status || "").toLowerCase())
+                    ? `<button class="danger-btn" type="button" onclick="cancelPackListing(${l.id})">Cancel</button>`
+                    : `<button class="primary-btn" type="button" onclick="buyPackListing(${l.id})">Buy Packs</button>`
+                }
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
   } catch (err) {
     console.error("loadPackListings error:", err);
     if (box) {
       box.innerHTML = `<div class="empty">${err.message || "Failed to load pack listings."}</div>`;
     }
-  }
-}
-
-async function cancelPackListing(listingId) {
-  try {
-    const res = await fetch(apiUrl("/marketplace/pack/cancel"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: ACTIVE_USER,
-        listing_id: listingId
-      })
-    });
-
-    const data = await res.json();
-
-    if (!res.ok || !data.success) {
-      throw new Error(data.error || "Failed to cancel pack listing.");
-    }
-
-    alert("Pack listing cancelled successfully.");
-    await loadPackInventorySelect();
-    await loadPackListings();
-  } catch (err) {
-    console.error("cancelPackListing error:", err);
-    alert(err.message || "Failed to cancel pack listing.");
+    if (pill) pill.textContent = "Error";
   }
 }
 
