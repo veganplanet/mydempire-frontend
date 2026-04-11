@@ -1338,7 +1338,7 @@ async function loadPackListings() {
      return `
   <div class="listing-card compact-listing ${mine ? "mine" : ""}">
     <div class="compact-main">
-      <div class="compact-title">${qty} Sealed Pack${qty > 1 ? "s" : ""}</div>
+      <div class="compact-title">${remainingQty} Sealed Pack${remainingQty > 1 ? "s" : ""}</div>
       <div class="compact-meta">
         Seller: @${l.seller_username} • Status: ${l.status}
       </div>
@@ -1346,21 +1346,38 @@ async function loadPackListings() {
 
     <div class="compact-stats">
       <div><span>Per Pack</span><strong>${unitPrice.toFixed(3)} HIVE</strong></div>
-      <div><span>Qty</span><strong>${qty}</strong></div>
+      <div><span>Remaining</span><strong>${remainingQty}</strong></div>
       <div><span>Total</span><strong>${totalPrice.toFixed(3)} HIVE</strong></div>
       <div><span>Fee</span><strong>${fee.toFixed(3)} HIVE</strong></div>
     </div>
 
     <div class="compact-actions">
-     ${
+    ${
   mine && ["active", "reserved"].includes(String(l.status || "").toLowerCase())
     ? `<button class="danger-btn" type="button" onclick="cancelPackListing(${l.id})">Cancel</button>`
-    : `<button class="primary-btn" type="button" onclick="buyPackListing(${l.id})">Buy Packs</button>`
+    : `
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <input
+          id="buy-pack-qty-${l.id}"
+          type="number"
+          min="1"
+          max="${remainingQty}"
+          value="1"
+          style="width:90px; padding:10px 12px; border:1px solid #d1d5db; border-radius:10px;"
+        />
+        <button class="primary-btn" type="button" onclick="buyPackListing(${l.id})">Buy Packs</button>
+      </div>
+    `
 }
     </div>
   </div>
 `;
     })
+    const qty = Number(l.quantity || 1);
+const remainingQty = Number(l.remaining_quantity ?? l.quantity ?? 1);
+const unitPrice = Number(l.unit_price_hive || 0);
+const totalPrice = Number(l.total_price_hive || 0);
+const fee = Number(l.fee_amount_hive || 0);
     .join("");
 }
   } catch (err) {
