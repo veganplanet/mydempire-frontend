@@ -419,37 +419,31 @@
 
       if (!list.length) {
         box.innerHTML = `<div class="empty">${currentEmpView === "mine" ? "You have no active EMP listings." : "No active EMP listings found."}</div>`;
-        return;
+       return `
+  <div class="listing-card compact-listing ${mine ? "mine" : ""}">
+    <div class="compact-main">
+      <div class="compact-title">${Number(listing.quantity).toLocaleString()} EMP</div>
+      <div class="compact-meta">
+        Seller: @${listing.seller_username} • Listing #${listing.id}
+      </div>
+    </div>
+
+    <div class="compact-stats">
+      <div><span>Per EMP</span><strong>${Number(listing.unit_price_hive).toFixed(4)} HIVE</strong></div>
+      <div><span>Qty</span><strong>${Number(listing.quantity).toLocaleString()}</strong></div>
+      <div><span>Total</span><strong>${Number(listing.total_price_hive).toFixed(3)} HIVE</strong></div>
+      <div><span>Fee</span><strong>${Number(listing.fee_amount_hive).toFixed(3)} HIVE</strong></div>
+    </div>
+
+    <div class="compact-actions">
+      ${
+        mine
+          ? `<button class="danger-btn" onclick="cancelEmpListing(${listing.id})">Cancel</button>`
+          : `<button class="primary-btn" onclick="buyEmpListing(${listing.id})">Buy EMP</button>`
       }
-
-      box.innerHTML = list.map((listing) => {
-        const mine = ACTIVE_USER && listing.seller_username === ACTIVE_USER;
-        return `
-          <div class="listing-card ${mine ? "mine" : ""}">
-            <div class="listing-top">
-              <div>
-                <div class="listing-title">${Number(listing.quantity).toLocaleString()} EMP</div>
-                <div class="listing-meta">Seller: @${listing.seller_username} • Listing #${listing.id}</div>
-              </div>
-              <div class="pill">${mine ? "Your Listing" : "Active Listing"}</div>
-            </div>
-
-            <div class="kv-grid">
-              <div class="kv"><div class="k">Price / EMP</div><div class="v">${Number(listing.unit_price_hive).toFixed(4)} HIVE</div></div>
-              <div class="kv"><div class="k">Total</div><div class="v">${Number(listing.total_price_hive).toFixed(3)} HIVE</div></div>
-              <div class="kv"><div class="k">Fee</div><div class="v">${Number(listing.fee_amount_hive).toFixed(3)} HIVE</div></div>
-              <div class="kv"><div class="k">Seller Receives</div><div class="v">${Number(listing.seller_amount_hive).toFixed(3)} HIVE</div></div>
-            </div>
-
-            <div class="button-row">
-              ${
-                mine
-                  ? `<button class="danger-btn" onclick="cancelEmpListing(${listing.id})">Cancel Listing</button>`
-                  : `<button class="primary-btn" onclick="buyEmpListing(${listing.id})">Buy EMP</button>`
-              }
-            </div>
-          </div>
-        `;
+    </div>
+  </div>
+`;
       }).join("");
     }
 
