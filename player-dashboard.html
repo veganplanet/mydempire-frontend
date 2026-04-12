@@ -3482,17 +3482,10 @@ if (Array.isArray(blueprintsData.blueprints)) {
           });
         }
 
-        if (visitOtherEmpireBtn) {
-          visitOtherEmpireBtn.addEventListener("click", () => {
-            const target = prompt("Enter Hive username to visit empire:");
-            const clean = String(target || "")
-              .replace("@", "")
-              .trim()
-              .toLowerCase();
-            if (!clean) return;
-            window.location.href = `player-dashboard.html?user=${encodeURIComponent(clean)}`;
-          });
-        }
+    if (visitOtherEmpireBtn) {
+  // Temporarily disable Visit Other Empire feature for security
+  visitOtherEmpireBtn.style.display = "none";
+}
 
         if (logoutBtn) {
           logoutBtn.addEventListener("click", () => {
