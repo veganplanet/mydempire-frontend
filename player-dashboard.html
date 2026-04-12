@@ -3944,12 +3944,12 @@ if (Array.isArray(blueprintsData.blueprints)) {
           console.error("Failed to load global health:", err);
         }
       }
-      function applyReadOnlyEmpireMode() {
+     function applyReadOnlyEmpireMode() {
   if (isOwnEmpireView()) return;
 
   const viewed = getViewedUser();
 
-  // show notice
+  // update top message
   const header = document.querySelector(".header-subline");
   if (header) {
     header.innerHTML =
@@ -3957,24 +3957,52 @@ if (Array.isArray(blueprintsData.blueprints)) {
       `You are in <strong>read-only mode</strong>.`;
   }
 
-  // disable all buttons
-  document.querySelectorAll("button").forEach((btn) => {
+  // disable only action buttons, not navigation tabs
+  const actionSelectors = [
+    "#claim-reward-btn",
+    "#withdraw-hive-btn",
+    "#build-factory-btn",
+    "#appbarLoginBtn",
+    "#appbarLogoutBtn",
+    ".rename-factory-btn",
+    ".upgrade-factory-btn",
+    ".maintenance-factory-btn",
+    ".pack-open-btn",
+    ".open-pack-btn",
+    ".trade-btn",
+    ".transfer-btn",
+    ".bp-card-menu-btn",
+    ".bp-card-menu button",
+    ".secondary-button",
+    ".primary-button"
+  ];
+
+  document.querySelectorAll(actionSelectors.join(",")).forEach((btn) => {
     btn.disabled = true;
     btn.style.opacity = "0.6";
     btn.style.cursor = "not-allowed";
     btn.title = "Read-only mode";
   });
 
-  // disable clickable links used as buttons
-  document.querySelectorAll("a.button, a.primary-button").forEach((a) => {
-    a.style.pointerEvents = "none";
-    a.style.opacity = "0.6";
-    a.title = "Read-only mode";
+  // disable only action form fields
+  const inputSelectors = [
+    "#build-land-select",
+    "#build-blueprint-select",
+    "#build-factory-name",
+    "#build-use-relic"
+  ];
+
+  document.querySelectorAll(inputSelectors.join(",")).forEach((el) => {
+    el.disabled = true;
+    el.style.opacity = "0.6";
+    el.title = "Read-only mode";
   });
 
-  // disable inputs
-  document.querySelectorAll("input, select, textarea").forEach((el) => {
-    el.disabled = true;
+  // disable empty land slots for build action
+  document.querySelectorAll(".land-slot-pad.empty").forEach((slot) => {
+    slot.style.pointerEvents = "none";
+    slot.style.opacity = "0.7";
+    slot.title = "Read-only mode";
   });
 }
     window.addEventListener("load", async () => {
