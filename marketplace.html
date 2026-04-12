@@ -251,23 +251,49 @@
       return API_BASE + path;
     }
 
-    function getUsernameFromURL() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get("user");
-    }
+   function getMarketplaceViewedUser() {
+  const params = new URLSearchParams(window.location.search);
+  return String(params.get("user") || "")
+    .trim()
+    .replace("@", "")
+    .toLowerCase();
+}
+function getActorHeaders(extra = {}) {
+  return {
+    "Content-Type": "application/json",
+    "x-mde-actor": getMarketplaceLoggedInUser(),
+    ...extra
+  };
+}
 
-    function getActiveUser() {
-      const fromUrl = (getUsernameFromURL() || "").trim().toLowerCase();
-      if (fromUrl) {
-        localStorage.setItem("hiveUsername", fromUrl);
-        return fromUrl;
-      }
-      return (localStorage.getItem("hiveUsername") || "").trim().toLowerCase();
-    }
+function ensureOwnMarketplaceAction() {
+  if (!isOwnMarketplaceView()) {
+    alert("Read-only mode. Marketplace actions are disabled while viewing another player.");
+    return false;
+  }
+  return true;
+}
+function getMarketplaceLoggedInUser() {
+  return String(
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("username") ||
+    ""
+  )
+    .trim()
+    .replace("@", "")
+    .toLowerCase();
+}
 
-    const ACTIVE_USER = getActiveUser();
-    document.getElementById("active-username").textContent = ACTIVE_USER || "--";
+function isOwnMarketplaceView() {
+  const viewed = getMarketplaceViewedUser();
+  const loggedIn = getMarketplaceLoggedInUser();
+  return !viewed || viewed === loggedIn;
+}
 
+const ACTIVE_USER = getMarketplaceLoggedInUser();
+const VIEWED_USER = getMarketplaceViewedUser() || ACTIVE_USER;
+    document.getElementById("active-username").textContent = VIEWED_USER || "--";
     function setStatus(id, text, isError = false) {
       const el = document.getElementById(id);
       if (!el) return;
