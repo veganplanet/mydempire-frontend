@@ -200,11 +200,7 @@
     <div class="small">Closed test phase progress</div>
   </div>
 
-  <div class="card">
-    <div class="label">Treasury Balance</div>
-    <div class="value" id="metric-treasury">--</div>
-    <div class="small" id="metric-treasury-updated">Updated: --</div>
-  </div>
+  
 
   <div class="card">
     <div class="label">EMP Supply</div>
@@ -395,6 +391,7 @@
       setStatus("Admin connected. Loading overview...");
 
       await loadAdminOverview();
+      await loadWalletBalances();
     }
 
     async function loadAdminOverview() {
@@ -437,11 +434,7 @@ document.getElementById("metric-factory-breakdown").textContent =
 document.getElementById("metric-players").textContent =
   Number(data.players.active || 0);
 
-document.getElementById("metric-treasury").textContent =
-  Number(data.treasury.balance || 0).toFixed(3) + " HIVE";
 
-document.getElementById("metric-treasury-updated").textContent =
-  "Updated: " + (data.treasury.updated_at || "--");
 
 document.getElementById("metric-phase").textContent =
   data.phase || "--";
@@ -687,6 +680,7 @@ async function completeWithdrawal(id) {
     document
       .getElementById("distribute-btn")
       .addEventListener("click", distributeRevenue);
+      
   
     // RUN DAILY REWARDS
 document
@@ -1001,16 +995,25 @@ document
   </script>
   <script>
 async function loadWalletBalances() {
+  if (!ADMIN_KEY) {
+    document.getElementById("wallet-balances-status").textContent =
+      "Connect admin first.";
+    return;
+  }
+
   try {
-    const res = await fetch(apiUrl("/admin/wallet-balances"), {
+    document.getElementById("wallet-balances-status").textContent =
+      "Loading wallet balances...";
+
+    const res = await fetch(`${API_BASE}/admin/wallet-balances`, {
       headers: {
-        "x-admin-key": ADMIN_SECRET,
+        "x-admin-key": ADMIN_KEY,
       },
     });
 
     const data = await res.json();
 
-    if (!data.success) {
+    if (!res.ok || !data.success) {
       document.getElementById("wallet-balances-status").textContent =
         data.error || "Failed to load wallet balances.";
       return;
@@ -1019,10 +1022,10 @@ async function loadWalletBalances() {
     const wallets = data.wallets || {};
     const totals = data.totals || {};
 
-    const setText = (id, value) => {
+    function setText(id, value) {
       const el = document.getElementById(id);
       if (el) el.textContent = value;
-    };
+    }
 
     setText(
       "wallet-revenue-balance",
@@ -1073,13 +1076,11 @@ async function loadWalletBalances() {
       "wallet-treasury-system-total",
       `${Number(totals.treasurySystem || 0).toFixed(3)} HIVE`
     );
-document
-  .getElementById("refresh-wallet-balances-btn")
-  .addEventListener("click", loadWalletBalances);
+
     document.getElementById("wallet-balances-status").textContent =
       `Updated: ${new Date(data.updatedAt).toLocaleString()}`;
   } catch (err) {
-    console.error("Load wallet balances error:", err);
+    console.error("loadWalletBalances error:", err);
     document.getElementById("wallet-balances-status").textContent =
       "Failed to load wallet balances.";
   }
