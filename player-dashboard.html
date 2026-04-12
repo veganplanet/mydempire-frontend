@@ -748,6 +748,13 @@
       <footer class="footer"></footer>
     </div>
     <script>
+      function getActorHeaders(extra = {}) {
+  return {
+    "Content-Type": "application/json",
+    "x-mde-actor": getLoggedInUser(),
+    ...extra
+  };
+}
       function setText(id, value) {
         const el = document.getElementById(id);
         if (el) el.textContent = value;
@@ -1922,7 +1929,7 @@ if (!isOwnEmpireView()) {
         try {
           const res = await fetch(apiUrl(`/open-pack`), {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: getActorHeaders(),
             body: JSON.stringify({
               username: PLAYER_USERNAME,
               count: count,
