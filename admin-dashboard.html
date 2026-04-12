@@ -259,7 +259,57 @@
       </div>
     </div>
     </div>
+<div class="section">
+  <h2>Live Wallet Balances</h2>
 
+  <div class="row">
+    <button id="refresh-wallet-balances-btn" class="primary">
+      Refresh Wallet Balances
+    </button>
+  </div>
+
+  <div class="metrics">
+    <div class="card">
+      <div class="label">Revenue Wallet</div>
+      <div class="value" id="wallet-revenue-balance">--</div>
+      <div class="small" id="wallet-revenue-account">@mydempiregain</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Treasury Wallet</div>
+      <div class="value" id="wallet-treasury-balance">--</div>
+      <div class="small" id="wallet-treasury-account">@mydempire-vault</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Reward Wallet</div>
+      <div class="value" id="wallet-reward-balance">--</div>
+      <div class="small" id="wallet-reward-account">@mydempire-reward</div>
+    </div>
+
+    <div class="card">
+      <div class="label">DAO Wallet</div>
+      <div class="value" id="wallet-dao-balance">--</div>
+      <div class="small" id="wallet-dao-account">@mydempire-dao</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Founder Wallet</div>
+      <div class="value" id="wallet-founder-balance">--</div>
+      <div class="small" id="wallet-founder-account">@mydempire-owner</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Treasury System Total</div>
+      <div class="value" id="wallet-treasury-system-total">--</div>
+      <div class="small">Vault + Reward wallets</div>
+    </div>
+  </div>
+
+  <div class="status" id="wallet-balances-status">
+    Wallet balances not loaded yet.
+  </div>
+</div>
     <div class="section">
       <h2>Player Inspector</h2>
 
@@ -517,8 +567,15 @@ document.getElementById("metric-pack-sales-updated").textContent =
           return;
         }
 
-        alert("Revenue distributed successfully.");
-        loadAdminOverview();
+        alert(
+  `Revenue distributed successfully.\n\n` +
+  `Total: ${Number(data.distributed || 0).toFixed(3)} HIVE\n` +
+  `Treasury: ${Number(data.splits?.treasury || 0).toFixed(3)} HIVE\n` +
+  `DAO: ${Number(data.splits?.dao || 0).toFixed(3)} HIVE\n` +
+  `Founder: ${Number(data.splits?.founder || 0).toFixed(3)} HIVE`
+);
+await loadWalletBalances();    
+loadAdminOverview();
       } catch (err) {
         console.error(err);
         alert("Error distributing revenue.");
@@ -940,6 +997,93 @@ document
 document
   .getElementById("load-whitelist-btn")
   ?.addEventListener("click", loadWhitelistUsers);
+  
   </script>
+  <script>
+async function loadWalletBalances() {
+  try {
+    const res = await fetch(apiUrl("/admin/wallet-balances"), {
+      headers: {
+        "x-admin-key": ADMIN_SECRET,
+      },
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      document.getElementById("wallet-balances-status").textContent =
+        data.error || "Failed to load wallet balances.";
+      return;
+    }
+
+    const wallets = data.wallets || {};
+    const totals = data.totals || {};
+
+    const setText = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    };
+
+    setText(
+      "wallet-revenue-balance",
+      `${Number(wallets.revenue?.balance || 0).toFixed(3)} HIVE`
+    );
+    setText(
+      "wallet-revenue-account",
+      wallets.revenue?.account || "@mydempiregain"
+    );
+
+    setText(
+      "wallet-treasury-balance",
+      `${Number(wallets.treasury?.balance || 0).toFixed(3)} HIVE`
+    );
+    setText(
+      "wallet-treasury-account",
+      wallets.treasury?.account || "@mydempire-vault"
+    );
+
+    setText(
+      "wallet-reward-balance",
+      `${Number(wallets.reward?.balance || 0).toFixed(3)} HIVE`
+    );
+    setText(
+      "wallet-reward-account",
+      wallets.reward?.account || "@mydempire-reward"
+    );
+
+    setText(
+      "wallet-dao-balance",
+      `${Number(wallets.dao?.balance || 0).toFixed(3)} HIVE`
+    );
+    setText(
+      "wallet-dao-account",
+      wallets.dao?.account || "@mydempire-dao"
+    );
+
+    setText(
+      "wallet-founder-balance",
+      `${Number(wallets.founder?.balance || 0).toFixed(3)} HIVE`
+    );
+    setText(
+      "wallet-founder-account",
+      wallets.founder?.account || "@mydempire-owner"
+    );
+
+    setText(
+      "wallet-treasury-system-total",
+      `${Number(totals.treasurySystem || 0).toFixed(3)} HIVE`
+    );
+document
+  .getElementById("refresh-wallet-balances-btn")
+  .addEventListener("click", loadWalletBalances);
+    document.getElementById("wallet-balances-status").textContent =
+      `Updated: ${new Date(data.updatedAt).toLocaleString()}`;
+  } catch (err) {
+    console.error("Load wallet balances error:", err);
+    document.getElementById("wallet-balances-status").textContent =
+      "Failed to load wallet balances.";
+  }
+}
+</script>
 </body>
 </html>
