@@ -1535,11 +1535,20 @@ function getPlayerUsername() {
           const gridEl = document.getElementById("packs-grid");
           if (!gridEl) return;
 
-          if (!total) {
-            gridEl.innerHTML = `<div class="empty">No unopened packs.</div>`;
-            return;
-          }
+        if (!total) {
+  gridEl.innerHTML = `<div class="empty">No unopened packs.</div>`;
+  return;
+}
 
+if (!isOwnEmpireView()) {
+  gridEl.innerHTML = `
+    <div class="empty">
+      You are viewing @${PLAYER_USERNAME}'s empire in read-only mode.<br>
+      Pack opening is available only for your own empire.
+    </div>
+  `;
+  return;
+}
           const maxOpen = Math.min(5, total);
 
           gridEl.innerHTML = `
