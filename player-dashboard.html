@@ -3944,6 +3944,39 @@ if (Array.isArray(blueprintsData.blueprints)) {
           console.error("Failed to load global health:", err);
         }
       }
+      function applyReadOnlyEmpireMode() {
+  if (isOwnEmpireView()) return;
+
+  const viewed = getViewedUser();
+
+  // show notice
+  const header = document.querySelector(".header-subline");
+  if (header) {
+    header.innerHTML =
+      `Viewing empire of <strong>@${viewed}</strong>. ` +
+      `You are in <strong>read-only mode</strong>.`;
+  }
+
+  // disable all buttons
+  document.querySelectorAll("button").forEach((btn) => {
+    btn.disabled = true;
+    btn.style.opacity = "0.6";
+    btn.style.cursor = "not-allowed";
+    btn.title = "Read-only mode";
+  });
+
+  // disable clickable links used as buttons
+  document.querySelectorAll("a.button, a.primary-button").forEach((a) => {
+    a.style.pointerEvents = "none";
+    a.style.opacity = "0.6";
+    a.title = "Read-only mode";
+  });
+
+  // disable inputs
+  document.querySelectorAll("input, select, textarea").forEach((el) => {
+    el.disabled = true;
+  });
+}
     window.addEventListener("load", async () => {
   try {
     setupDashboardNavbar();
@@ -3954,6 +3987,7 @@ if (Array.isArray(blueprintsData.blueprints)) {
     await loadEmpireOverview();
     await loadBlueprints();
     await loadPacks();
+    applyReadOnlyEmpireMode();
 
     setupDashboardNavbar(); // run again after data is loaded
   } catch (err) {
