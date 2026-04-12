@@ -748,6 +748,13 @@
       <footer class="footer"></footer>
     </div>
     <script>
+      function getActorHeaders(extra = {}) {
+  return {
+    "Content-Type": "application/json",
+    "x-mde-actor": getLoggedInUser(),
+    ...extra
+  };
+}
       function setText(id, value) {
         const el = document.getElementById(id);
         if (el) el.textContent = value;
@@ -834,25 +841,37 @@
       }
       // ===== BUY EMP FRONTEND =====
 
-      function getPlayerUsername() {
-        const params = new URLSearchParams(window.location.search);
+     function getLoggedInUser() {
+  return String(
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("username") ||
+    ""
+  )
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+}
 
-        let fromUrl = params.get("user");
-        if (fromUrl && fromUrl.trim().length > 0) {
-          fromUrl = fromUrl.trim().replace("@", "").toLowerCase();
-          localStorage.setItem("hiveUsername", fromUrl);
-          localStorage.setItem("mde_username", fromUrl);
-          return fromUrl;
-        }
+function getViewedUser() {
+  const params = new URLSearchParams(window.location.search);
+  const fromUrl = String(params.get("user") || "")
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
 
-        const stored =
-          localStorage.getItem("mde_username") ||
-          localStorage.getItem("hiveUsername") ||
-          localStorage.getItem("username") ||
-          "";
+  return fromUrl || getLoggedInUser();
+}
 
-        return String(stored).trim().replace("@", "").toLowerCase();
-      }
+function isOwnEmpireView() {
+  const loggedIn = getLoggedInUser();
+  const viewed = getViewedUser();
+  return !!loggedIn && !!viewed && loggedIn === viewed;
+}
+
+function getPlayerUsername() {
+  return getViewedUser();
+}
       const PLAYER_USERNAME = getPlayerUsername();
 
       let empireLands = [];
@@ -1523,11 +1542,20 @@
           const gridEl = document.getElementById("packs-grid");
           if (!gridEl) return;
 
-          if (!total) {
-            gridEl.innerHTML = `<div class="empty">No unopened packs.</div>`;
-            return;
-          }
+        if (!total) {
+  gridEl.innerHTML = `<div class="empty">No unopened packs.</div>`;
+  return;
+}
 
+if (!isOwnEmpireView()) {
+  gridEl.innerHTML = `
+    <div class="empty">
+      You are viewing @${PLAYER_USERNAME}'s empire in read-only mode.<br>
+      Pack opening is available only for your own empire.
+    </div>
+  `;
+  return;
+}
           const maxOpen = Math.min(5, total);
 
           gridEl.innerHTML = `
@@ -1901,7 +1929,7 @@
         try {
           const res = await fetch(apiUrl(`/open-pack`), {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: getActorHeaders(),
             body: JSON.stringify({
               username: PLAYER_USERNAME,
               count: count,
@@ -3422,87 +3450,70 @@ if (Array.isArray(blueprintsData.blueprints)) {
       }
 
       function setupDashboardNavbar() {
-      const activeUser = (
-  new URLSearchParams(window.location.search).get("user") ||
-  localStorage.getItem("mde_username") ||
-  localStorage.getItem("hiveUsername") ||
-  localStorage.getItem("username") ||
-  document.getElementById("player-username-raw")?.textContent ||
-  document.getElementById("player-username-display")?.textContent ||
-  ""
-)
-  .replace("@", "")
-  .replace("loading…", "")
-  .trim()
-  .toLowerCase();
+  const loggedInUser = getLoggedInUser();
+  const viewedUser = getViewedUser();
+  const ownView = isOwnEmpireView();
 
-        const loginBtn = document.getElementById("appbarLoginBtn");
-        const accountWrap = document.getElementById("appbarAccountWrap");
-        const accountBtn = document.getElementById("appbarAccountBtn");
-        const dropdown = document.getElementById("appbarDropdown");
-        const dropdownHead = document.getElementById("appbarDropdownHead");
-        const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
-        const visitOtherEmpireBtn = document.getElementById(
-          "visitOtherEmpireBtn",
-        );
-        const logoutBtn = document.getElementById("appbarLogoutBtn");
+  const loginBtn = document.getElementById("appbarLoginBtn");
+  const accountWrap = document.getElementById("appbarAccountWrap");
+  const accountBtn = document.getElementById("appbarAccountBtn");
+  const dropdown = document.getElementById("appbarDropdown");
+  const dropdownHead = document.getElementById("appbarDropdownHead");
+  const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
+  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
+  const logoutBtn = document.getElementById("appbarLogoutBtn");
 
-        if (activeUser) {
-          localStorage.setItem("mde_username", activeUser);
-          localStorage.setItem("hiveUsername", activeUser);
-          localStorage.setItem("username", activeUser);
-        }
-      document.querySelectorAll(".auth-only").forEach((link) => {
-  link.classList.remove("hidden-auth-link");
-  link.classList.add("show-auth-link");
-  link.style.display = "inline-flex";
-});
+  document.querySelectorAll(".auth-only").forEach((link) => {
+    link.classList.remove("hidden-auth-link");
+    link.classList.add("show-auth-link");
+    link.style.display = "inline-flex";
+  });
 
-      if (!activeUser) {
+  if (!loggedInUser) {
+    if (loginBtn) loginBtn.style.display = "none";
+    if (accountWrap) accountWrap.style.display = "none";
+    return;
+  }
+
   if (loginBtn) loginBtn.style.display = "none";
-  if (accountWrap) accountWrap.style.display = "none";
-  return;
+  if (accountWrap) accountWrap.style.display = "block";
+
+  if (accountBtn) accountBtn.textContent = `@${loggedInUser} ▼`;
+  if (dropdownHead) dropdownHead.textContent = `@${loggedInUser}`;
+
+  if (visitMyEmpireLink) {
+    visitMyEmpireLink.href = `player-dashboard.html?user=${encodeURIComponent(loggedInUser)}`;
+  }
+
+  if (accountBtn && dropdown) {
+    accountBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle("open");
+    });
+
+    document.addEventListener("click", () => {
+      dropdown.classList.remove("open");
+    });
+  }
+
+  if (visitOtherEmpireBtn) {
+    visitOtherEmpireBtn.style.display = "none";
+  }
+
+  const pageHeader = document.querySelector(".header-subline");
+  if (pageHeader && viewedUser && !ownView) {
+    pageHeader.innerHTML = `Viewing empire of <strong>@${viewedUser}</strong>. Logged in as <strong>@${loggedInUser}</strong>.`;
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("mde_username");
+      localStorage.removeItem("hiveUsername");
+      localStorage.removeItem("username");
+      window.location.href = "index.html";
+    });
+  }
 }
-        if (loginBtn) loginBtn.style.display = "none";
-        if (accountWrap) accountWrap.style.display = "block";
-        if (accountBtn) accountBtn.textContent = `@${activeUser} ▼`;
-        if (dropdownHead) dropdownHead.textContent = `@${activeUser}`;
-        if (visitMyEmpireLink) {
-          visitMyEmpireLink.href = `player-dashboard.html?user=${encodeURIComponent(activeUser)}`;
-        }
-
-        if (accountBtn && dropdown) {
-          accountBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            dropdown.classList.toggle("open");
-          });
-
-          document.addEventListener("click", () => {
-            dropdown.classList.remove("open");
-          });
-        }
-
-        if (visitOtherEmpireBtn) {
-          visitOtherEmpireBtn.addEventListener("click", () => {
-            const target = prompt("Enter Hive username to visit empire:");
-            const clean = String(target || "")
-              .replace("@", "")
-              .trim()
-              .toLowerCase();
-            if (!clean) return;
-            window.location.href = `player-dashboard.html?user=${encodeURIComponent(clean)}`;
-          });
-        }
-
-        if (logoutBtn) {
-          logoutBtn.addEventListener("click", () => {
-            localStorage.removeItem("mde_username");
-            localStorage.removeItem("hiveUsername");
-            localStorage.removeItem("username");
-            window.location.href = "index.html";
-          });
-        }
-      }
       // ===== INIT =====
 
       function renderEmpirePreview() {
@@ -3940,6 +3951,67 @@ if (Array.isArray(blueprintsData.blueprints)) {
           console.error("Failed to load global health:", err);
         }
       }
+     function applyReadOnlyEmpireMode() {
+  if (isOwnEmpireView()) return;
+
+  const viewed = getViewedUser();
+
+  // update top message
+  const header = document.querySelector(".header-subline");
+  if (header) {
+    header.innerHTML =
+      `Viewing empire of <strong>@${viewed}</strong>. ` +
+      `You are in <strong>read-only mode</strong>.`;
+  }
+
+  // disable only action buttons, not navigation tabs
+  const actionSelectors = [
+    "#claim-reward-btn",
+    "#withdraw-hive-btn",
+    "#build-factory-btn",
+    "#appbarLoginBtn",
+    "#appbarLogoutBtn",
+    ".rename-factory-btn",
+    ".upgrade-factory-btn",
+    ".maintenance-factory-btn",
+    ".pack-open-btn",
+    ".open-pack-btn",
+    ".trade-btn",
+    ".transfer-btn",
+    ".bp-card-menu-btn",
+    ".bp-card-menu button",
+    ".secondary-button",
+    ".primary-button"
+  ];
+
+  document.querySelectorAll(actionSelectors.join(",")).forEach((btn) => {
+    btn.disabled = true;
+    btn.style.opacity = "0.6";
+    btn.style.cursor = "not-allowed";
+    btn.title = "Read-only mode";
+  });
+
+  // disable only action form fields
+  const inputSelectors = [
+    "#build-land-select",
+    "#build-blueprint-select",
+    "#build-factory-name",
+    "#build-use-relic"
+  ];
+
+  document.querySelectorAll(inputSelectors.join(",")).forEach((el) => {
+    el.disabled = true;
+    el.style.opacity = "0.6";
+    el.title = "Read-only mode";
+  });
+
+  // disable empty land slots for build action
+  document.querySelectorAll(".land-slot-pad.empty").forEach((slot) => {
+    slot.style.pointerEvents = "none";
+    slot.style.opacity = "0.7";
+    slot.title = "Read-only mode";
+  });
+}
     window.addEventListener("load", async () => {
   try {
     setupDashboardNavbar();
@@ -3950,6 +4022,7 @@ if (Array.isArray(blueprintsData.blueprints)) {
     await loadEmpireOverview();
     await loadBlueprints();
     await loadPacks();
+    applyReadOnlyEmpireMode();
 
     setupDashboardNavbar(); // run again after data is loaded
   } catch (err) {
