@@ -250,7 +250,21 @@
     function apiUrl(path) {
       return API_BASE + path;
     }
+function secureFetch(url, options = {}) {
 
+  // block actions when visiting another empire
+  if (!isOwnMarketplaceView()) {
+
+    // allow GET requests (viewing data)
+    if (options.method && options.method.toUpperCase() !== "GET") {
+      alert("Read-only mode. Marketplace actions are disabled while viewing another empire.");
+      return Promise.reject(new Error("Read-only mode"));
+    }
+
+  }
+
+  return fetch(url, options);
+}
    function getMarketplaceViewedUser() {
   const params = new URLSearchParams(window.location.search);
   return String(params.get("user") || "")
@@ -546,7 +560,7 @@ function renderCompactListingCard({
 
         setStatus("create-listing-status", "Creating EMP listing...");
 
-        const res = await fetch(apiUrl("/marketplace/emp/list"), {
+        const res = await secureFetch(apiUrl("/marketplace/emp/list"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: ACTIVE_USER, quantity, unit_price_hive })
