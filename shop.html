@@ -646,7 +646,20 @@ async function createEmpOrder(username, hiveAmount) {
     })
   });
 
-  const data = await res.json();
+  let data = {};
+  try {
+    data = await res.json();
+  } catch (e) {
+    data = {};
+  }
+
+  alert(
+    "EMP create-order status: " + res.status +
+    "\nSuccess: " + String(data.success) +
+    "\nError: " + (data.error || "none") +
+    "\nUser: " + username +
+    "\nAmount: " + hiveAmount
+  );
 
   if (!res.ok || !data.success) {
     throw new Error(data.error || "Failed to create EMP order.");
