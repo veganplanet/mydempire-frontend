@@ -677,7 +677,20 @@ function requestHiveKeychainTransfer({ from, to, amount, memo }) {
     );
   });
 }
+function setEmpBuyStatus(message, type = "idle") {
+  const el = document.getElementById("emp-buy-status");
+  if (!el) return;
 
+  el.textContent = message;
+
+  if (type === "success") {
+    el.style.color = "#15803d";
+  } else if (type === "error") {
+    el.style.color = "#b91c1c";
+  } else {
+    el.style.color = "#64748b";
+  }
+}
 async function buyEmp(hiveAmount) {
   try {
     const activeUser = getShopActiveUser();
