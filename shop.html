@@ -573,7 +573,13 @@ function getShopActiveUser() {
     ""
   ).trim().replace("@", "").toLowerCase();
 }
-
+function getShopActorHeaders(extra = {}) {
+  return {
+    "Content-Type": "application/json",
+    "x-mde-actor": getShopActiveUser(),
+    ...extra
+  };
+}
 async function buyEmp(hiveAmount) {
   try {
     const activeUser = getShopActiveUser();
@@ -1074,14 +1080,14 @@ async function buyPacks() {
 
     // 🧾 CREATE ORDER
     console.log("LOCAL CREATE-ORDER CHECK 21-MARCH");
-    const orderRes = await fetch(shopApiUrl("/create-order"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: activeUser,
-        packs
-      })
-    });
+   const orderRes = await fetch(shopApiUrl("/create-order"), {
+  method: "POST",
+  headers: getShopActorHeaders(),
+  body: JSON.stringify({
+    username: activeUser,
+    packs
+  })
+});
 
     let orderData = {};
 try {
