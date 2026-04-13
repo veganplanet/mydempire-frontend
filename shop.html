@@ -694,7 +694,7 @@ function setEmpBuyStatus(message, type = "idle") {
 async function buyEmp(hiveAmount) {
   try {
     const activeUser = getShopActiveUser();
-    alert("EMP flow started for user: " + activeUser + " | amount: " + hiveAmount);
+   
 
     if (!activeUser) {
       setEmpBuyStatus("Please connect wallet first.", "error");
@@ -705,7 +705,7 @@ async function buyEmp(hiveAmount) {
     setEmpBuyStatus(`Creating EMP order for ${hiveAmount} HIVE...`, "progress");
 
     const orderData = await createEmpOrder(activeUser, hiveAmount);
-    alert("EMP order created successfully. Moving to Keychain.");
+    
 
     const order = orderData.order;
     const payment = orderData.payment;
@@ -737,7 +737,7 @@ async function buyEmp(hiveAmount) {
 
   } catch (err) {
     console.error("EMP buy error:", err);
-    alert("EMP error: " + (err.message || "Unknown EMP error"));
+   
     setEmpBuyStatus(err.message || "EMP purchase failed.", "error");
   } finally {
     setEmpBuyButtonDisabled(false);
@@ -750,7 +750,7 @@ function setEmpBuyButtonDisabled(disabled) {
 }
 
 async function createEmpOrder(username, hiveAmount) {
-  alert("Calling backend to create EMP order...");
+ 
 
   const res = await fetch(shopApiUrl("/create-emp-order"), {
     method: "POST",
@@ -768,11 +768,7 @@ async function createEmpOrder(username, hiveAmount) {
     data = {};
   }
 
-  alert(
-    "EMP create-order status: " + res.status +
-    "\nSuccess: " + String(data.success) +
-    "\nError: " + (data.error || "none")
-  );
+  
 
   if (!res.ok || !data.success) {
     throw new Error(data.error || "Failed to create EMP order.");
@@ -799,11 +795,7 @@ async function confirmEmpPayment(orderId, txid) {
     data = {};
   }
 
-  alert(
-    "EMP confirm status: " + res.status +
-    "\nSuccess: " + String(data.success) +
-    "\nError: " + (data.error || "none")
-  );
+ 
 
   if (!res.ok || !data.success) {
     throw new Error(data.error || "Failed to confirm EMP payment.");
