@@ -158,7 +158,8 @@
 
   <!-- Pack sale progress -->
   <div class="pack-progress-card">
-    <div class="pack-progress-top">
+   <div id="genesis-progress-section">
+  <div class="pack-progress-top">
       <div>
         <div class="pack-progress-label">Genesis Pack Sale Progress</div>
         <div class="pack-progress-sub">5000 total Genesis packs</div>
@@ -1304,6 +1305,30 @@ if (whitelistPopup) {
     });
   }
 }
+  async function handlePhaseDisplay() {
+
+  try {
+
+    const res = await fetch(apiUrl("/game-phase"));
+    const data = await res.json();
+
+    if (data.phase === "PRE_GENESIS") {
+
+      const section = document.getElementById("genesis-progress-section");
+
+      if (section) {
+        section.style.display = "none";
+      }
+
+    }
+
+  } catch (err) {
+    console.error("Phase check failed:", err);
+  }
+
+}
+
+handlePhaseDisplay();
 </script>
 
   </body>
