@@ -1362,26 +1362,14 @@ if (visitOtherEmpireBtn) {
   }
 }
   async function handlePhaseDisplay() {
-
   try {
-
-    const res = await fetch(apiUrl("/game-phase"));
-    const data = await res.json();
-
-    if (data.phase === "PRE_GENESIS") {
-
-      const section = document.getElementById("genesis-progress-section");
-
-      if (section) {
-        section.style.display = "none";
-      }
-
+    const section = document.getElementById("genesis-progress-section");
+    if (section) {
+      section.style.display = "none";
     }
-
   } catch (err) {
     console.error("Phase check failed:", err);
   }
-
 }
 
 handlePhaseDisplay();
