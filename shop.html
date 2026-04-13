@@ -637,14 +637,14 @@ function setEmpBuyButtonDisabled(disabled) {
 }
 
 async function createEmpOrder(username, hiveAmount) {
- const res = await fetch(shopApiUrl("/create-emp-order"), {
-  method: "POST",
-  headers: getShopActorHeaders(),
-  body: JSON.stringify({
-    username,
-    hive_amount: hiveAmount
-  })
-});
+  const res = await fetch(shopApiUrl("/create-emp-order"), {
+    method: "POST",
+    headers: getShopActorHeaders(),
+    body: JSON.stringify({
+      username,
+      hive_amount: hiveAmount
+    })
+  });
 
   const data = await res.json();
 
@@ -656,15 +656,15 @@ async function createEmpOrder(username, hiveAmount) {
 }
 
 async function confirmEmpPayment(orderId, txid) {
- const res = await fetch(shopApiUrl("/confirm-emp-payment"), {
-  method: "POST",
-  headers: getShopActorHeaders(),
-  body: JSON.stringify({
-    orderId,
-    txid,
-    username: getShopActiveUser()
-  })
-});
+  const res = await fetch(shopApiUrl("/confirm-emp-payment"), {
+    method: "POST",
+    headers: getShopActorHeaders(),
+    body: JSON.stringify({
+      orderId,
+      txid,
+      username: getShopActiveUser()
+    })
+  });
 
   const data = await res.json();
 
