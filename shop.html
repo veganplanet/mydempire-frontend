@@ -589,6 +589,7 @@ function setEmpBuyButtonDisabled(disabled) {
 }
 
 async function createEmpOrder(username, hiveAmount) {
+  alert("Calling backend to create EMP order...");
   const res = await fetch(shopApiUrl("/create-emp-order"), {
     method: "POST",
     headers: getShopActorHeaders(),
