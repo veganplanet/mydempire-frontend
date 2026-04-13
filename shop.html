@@ -1141,7 +1141,7 @@ try {
           return;
         }
 
-      const confirmRes = await fetch(shopApiUrl("/confirm-payment"), {
+     const confirmRes = await fetch(shopApiUrl("/confirm-payment"), {
   method: "POST",
   headers: getShopActorHeaders(),
   body: JSON.stringify({
@@ -1151,12 +1151,23 @@ try {
   })
 });
 
-        const confirmData = await confirmRes.json();
+let confirmData = {};
+try {
+  confirmData = await confirmRes.json();
+} catch (e) {
+  confirmData = {};
+}
 
-        if (!confirmRes.ok || !confirmData.success) {
-          alert(confirmData.error || "Payment confirmation failed.");
-          return;
-        }
+alert(
+  "Confirm status: " + confirmRes.status +
+  "\nSuccess: " + String(confirmData.success) +
+  "\nError: " + (confirmData.error || "none") +
+  "\nTxid: " + txid
+);
+
+if (!confirmRes.ok || !confirmData.success) {
+  return;
+}
 
         alert("✅ Packs minted successfully!");
         await loadGenesisPackProgress();
