@@ -158,28 +158,29 @@
 
   <!-- Pack sale progress -->
   <div class="pack-progress-card">
-   <div id="genesis-progress-section">
+   <div id="genesis-progress-section" class="pack-progress-card">
   <div class="pack-progress-top">
-      <div>
-        <div class="pack-progress-label">Genesis Pack Sale Progress</div>
-        <div class="pack-progress-sub">5000 total Genesis packs</div>
-      </div>
-      <div class="pack-progress-stats">
-        <span id="packs-sold-count">0</span>
-        <span class="pack-progress-divider">/</span>
-        <span>5000</span>
-      </div>
+    <div>
+      <div class="pack-progress-label">Genesis Pack Sale Progress</div>
+      <div class="pack-progress-sub">5000 total Genesis packs</div>
     </div>
 
-    <div class="pack-progress-bar">
-      <div id="pack-progress-fill" class="pack-progress-fill" style="width:0%;"></div>
-    </div>
-
-    <div class="pack-progress-foot">
-      <span id="pack-progress-percent">0%</span>
-      <span id="packs-remaining-count">5000 packs remaining</span>
+    <div class="pack-progress-stats">
+      <span id="packs-sold-count">0</span>
+      <span class="pack-progress-divider">/</span>
+      <span>5000</span>
     </div>
   </div>
+
+  <div class="pack-progress-bar">
+    <div id="pack-progress-fill" class="pack-progress-fill" style="width:0%;"></div>
+  </div>
+
+  <div class="pack-progress-foot">
+    <span id="pack-progress-percent">0%</span>
+    <span id="packs-remaining-count">5000 packs remaining</span>
+  </div>
+</div>
 
  
    
@@ -1330,6 +1331,20 @@ if (whitelistPopup) {
 
 handlePhaseDisplay();
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res = await fetch(shopApiUrl("/game-phase"));
+    const data = await res.json();
 
+    if (data.phase === "PRE_GENESIS") {
+      const section = document.getElementById("genesis-progress-section");
+      if (section) section.style.display = "none";
+    }
+  } catch (err) {
+    console.error("Phase check failed:", err);
+  }
+});
+</script>
   </body>
 </html>
