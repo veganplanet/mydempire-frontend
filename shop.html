@@ -656,7 +656,7 @@ async function createEmpOrder(username, hiveAmount) {
 }
 
 async function confirmEmpPayment(orderId, txid) {
-  const res = await fetch(shopApiUrl("/confirm-emp-payment"), {
+ const res = await fetch(shopApiUrl("/confirm-emp-payment"), {
   method: "POST",
   headers: getShopActorHeaders(),
   body: JSON.stringify({
@@ -1082,7 +1082,7 @@ async function buyPacks() {
 
     // 🧾 CREATE ORDER
     console.log("LOCAL CREATE-ORDER CHECK 21-MARCH");
- const orderRes = await fetch(shopApiUrl("/create-order"), {
+const orderRes = await fetch(shopApiUrl("/create-order"), {
   method: "POST",
   headers: getShopActorHeaders(),
   body: JSON.stringify({
@@ -1141,7 +1141,7 @@ try {
           return;
         }
 
-     const confirmRes = await fetch(shopApiUrl("/confirm-payment"), {
+    const confirmRes = await fetch(shopApiUrl("/confirm-payment"), {
   method: "POST",
   headers: getShopActorHeaders(),
   body: JSON.stringify({
