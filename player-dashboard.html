@@ -1990,7 +1990,7 @@ if (!isOwnEmpireView()) {
 
           const res = await fetch(apiUrl("/open-pack"), {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: getActorHeaders(),
             body: JSON.stringify({
               username: PLAYER_USERNAME,
               count: safeCount,
