@@ -584,7 +584,7 @@ function getShopActorHeaders(extra = {}) {
 async function buyEmp(hiveAmount) {
   try {
     const activeUser = getShopActiveUser();
-
+alert("EMP flow started for user: " + activeUser + " | amount: " + hiveAmount);
     if (!activeUser) {
       setEmpBuyStatus("Please connect wallet first.", "error");
       return;
@@ -594,6 +594,7 @@ async function buyEmp(hiveAmount) {
     setEmpBuyStatus(`Creating EMP order for ${hiveAmount} HIVE...`, "progress");
 
     const orderData = await createEmpOrder(activeUser, hiveAmount);
+    alert("EMP order created successfully. Moving to Keychain.");
     const order = orderData.order;
     const payment = orderData.payment;
 
