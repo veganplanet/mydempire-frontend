@@ -573,6 +573,7 @@ function getShopActiveUser() {
     ""
   ).trim().replace("@", "").toLowerCase();
 }
+  
 function getShopActorHeaders(extra = {}) {
   return {
     "Content-Type": "application/json",
@@ -636,14 +637,14 @@ function setEmpBuyButtonDisabled(disabled) {
 }
 
 async function createEmpOrder(username, hiveAmount) {
-  const res = await fetch(shopApiUrl("/create-emp-order"), {
-    method: "POST",
-    headers: getShopActorHeaders(),
-    body: JSON.stringify({
-      username,
-      hive_amount: hiveAmount
-    })
-  });
+ const res = await fetch(shopApiUrl("/create-emp-order"), {
+  method: "POST",
+  headers: getShopActorHeaders(),
+  body: JSON.stringify({
+    username,
+    hive_amount: hiveAmount
+  })
+});
 
   const data = await res.json();
 
@@ -656,14 +657,14 @@ async function createEmpOrder(username, hiveAmount) {
 
 async function confirmEmpPayment(orderId, txid) {
   const res = await fetch(shopApiUrl("/confirm-emp-payment"), {
-    method: "POST",
-    headers: getShopActorHeaders(),
-    body: JSON.stringify({
-      orderId,
-      txid,
-      username: getShopActiveUser()
-    })
-  });
+  method: "POST",
+  headers: getShopActorHeaders(),
+  body: JSON.stringify({
+    orderId,
+    txid,
+    username: getShopActiveUser()
+  })
+});
 
   const data = await res.json();
 
@@ -1081,7 +1082,7 @@ async function buyPacks() {
 
     // 🧾 CREATE ORDER
     console.log("LOCAL CREATE-ORDER CHECK 21-MARCH");
-   const orderRes = await fetch(shopApiUrl("/create-order"), {
+ const orderRes = await fetch(shopApiUrl("/create-order"), {
   method: "POST",
   headers: getShopActorHeaders(),
   body: JSON.stringify({
@@ -1140,7 +1141,7 @@ try {
           return;
         }
 
-       const confirmRes = await fetch(shopApiUrl("/confirm-payment"), {
+      const confirmRes = await fetch(shopApiUrl("/confirm-payment"), {
   method: "POST",
   headers: getShopActorHeaders(),
   body: JSON.stringify({
@@ -1166,7 +1167,8 @@ try {
     console.error("Pack buy error:", err);
     alert(err.message || "Pack purchase failed.");
   }
-}document.addEventListener("DOMContentLoaded", () => {
+}
+  document.addEventListener("DOMContentLoaded", () => {
   const buyBtn = document.getElementById("buy-packs-btn");
   if (buyBtn) {
     buyBtn.addEventListener("click", buyPacks);
