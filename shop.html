@@ -697,6 +697,7 @@ async function buyEmp(hiveAmount) {
     const order = orderData.order;
     const payment = orderData.payment;
 
+    function initEmpBuyButtons() {
     setEmpBuyStatus("Waiting for Hive Keychain confirmation...", "progress");
 
     const txid = await requestHiveKeychainTransfer({
