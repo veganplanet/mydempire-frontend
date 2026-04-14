@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MydEmpire Marketplace</title>
    <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="assets/favicon.png">
 </head>
  <body>
 <header class="appbar">
@@ -1497,7 +1498,52 @@ async function buyPackListing(listingId) {
     alert(err.message || "Pack purchase failed.");
   }
 }
-  
+async function cancelPackListing(listingId) {
+  try {
+    if (!ACTIVE_USER) {
+      alert("No active user found.");
+      return;
+    }
+
+    const ok = confirm(`Cancel pack listing #${listingId}?`);
+    if (!ok) return;
+
+    const res = await fetch(apiUrl("/marketplace/pack/cancel"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: ACTIVE_USER,
+        listing_id: listingId
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to cancel pack listing.");
+    }
+
+    alert("Pack listing cancelled successfully.");
+   await loadPackListings();
+
+document.querySelectorAll(".tab-btn").forEach((btn) => {
+  btn.classList.remove("active");
+});
+
+document.querySelectorAll(".market-tab-panel").forEach((panel) => {
+  panel.classList.remove("active");
+});
+
+document.querySelector('[data-market-tab="packs"]')?.classList.add("active");
+document.querySelector('[data-market-tab-panel="packs"]')?.classList.add("active");
+
+  } catch (err) {
+    console.error("cancelPackListing error:", err);
+    alert(err.message || "Server error cancelling listing.");
+  }
+}
 </script>
  
 </body>

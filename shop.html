@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="shop.css" />
+  <link rel="icon" href="assets/favicon.png">
 </head>
 
 <body class="page-root" data-requires-login="true">
@@ -1198,12 +1199,7 @@ try {
   confirmData = {};
 }
 
-alert(
-  "Confirm status: " + confirmRes.status +
-  "\nSuccess: " + String(confirmData.success) +
-  "\nError: " + (confirmData.error || "none") +
-  "\nTxid: " + txid
-);
+
 
 if (!confirmRes.ok || !confirmData.success) {
   return;
