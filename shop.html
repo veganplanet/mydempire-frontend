@@ -1198,12 +1198,7 @@ try {
   confirmData = {};
 }
 
-alert(
-  "Confirm status: " + confirmRes.status +
-  "\nSuccess: " + String(confirmData.success) +
-  "\nError: " + (confirmData.error || "none") +
-  "\nTxid: " + txid
-);
+
 
 if (!confirmRes.ok || !confirmData.success) {
   return;
