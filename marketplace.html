@@ -1497,7 +1497,35 @@ async function buyPackListing(listingId) {
     alert(err.message || "Pack purchase failed.");
   }
 }
-  
+ async function cancelPackListing(listingId) {
+  try {
+    const username = localStorage.getItem("username");
+
+    const res = await fetch("/cancel-listing", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        listing_id: listingId,
+        username: username,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("Listing cancelled successfully.");
+      location.reload();
+    } else {
+      alert(data.error || "Failed to cancel listing.");
+    }
+
+  } catch (err) {
+    console.error("Cancel listing error:", err);
+    alert("Server error cancelling listing.");
+  }
+} 
 </script>
  
 </body>
