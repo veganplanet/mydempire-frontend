@@ -1,508 +1,641 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MydEmpire — Pre Genesis</title>
-<link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-<div class="wrap">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MydEmpire — Pre Genesis</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="appbar">
+        <div class="appbar-inner">
+          <div class="appbar-left">
+            <a
+              href="index.html"
+              class="appbar-logo"
+              aria-label="MydEmpire Home"
+            >
+              <img src="assets/logo.png" alt="MydEmpire" />
+            </a>
 
-<header class="appbar">
-  <div class="appbar-inner">
-    <div class="appbar-left">
-      <a href="index.html" class="appbar-logo" aria-label="MydEmpire Home">
-        <img src="assets/logo.png" alt="MydEmpire">
-      </a>
+            <nav class="appbar-nav">
+              <a href="/" class="appbar-link">Home</a>
+              <a href="economy.html" class="appbar-link">Economy</a>
+              <a href="transparency.html" class="appbar-link">Transparency</a>
+              <a href="codex.html" class="appbar-link">Codex</a>
 
-      <nav class="appbar-nav">
-        <a href="/" class="appbar-link">Home</a>
-        <a href="economy.html" class="appbar-link">Economy</a>
-        <a href="transparency.html" class="appbar-link">Transparency</a>
-        <a href="codex.html" class="appbar-link">Codex</a>
+              <a
+                href="player-dashboard.html"
+                id="dashboardLink"
+                class="appbar-link auth-only"
+                >Dashboard</a
+              >
+              <a href="shop.html" id="shopLink" class="appbar-link auth-only"
+                >Shop</a
+              >
+              <a
+                href="marketplace.html"
+                id="marketplaceLink"
+                class="appbar-link auth-only"
+                >Marketplace</a
+              >
+            </nav>
+          </div>
 
-       <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only">Dashboard</a>
-<a href="shop.html" id="shopLink" class="appbar-link auth-only">Shop</a>
-<a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only">Marketplace</a>
-      </nav>
-    </div>
+          <div class="appbar-right">
+            <button
+              id="appbarLoginBtn"
+              class="appbar-login-btn"
+              type="button"
+              style="display: none"
+            ></button>
 
-    <div class="appbar-right">
-     <button id="appbarLoginBtn" class="appbar-login-btn" type="button" style="display:none;"></button>
+            <div
+              id="appbarAccountWrap"
+              class="appbar-account-wrap"
+              style="display: none"
+            >
+              <button
+                id="appbarAccountBtn"
+                class="appbar-account-btn"
+                type="button"
+              >
+                @username ▼
+              </button>
 
-      <div id="appbarAccountWrap" class="appbar-account-wrap" style="display:none;">
-        <button id="appbarAccountBtn" class="appbar-account-btn" type="button">@username ▼</button>
-
-        <div id="appbarDropdown" class="appbar-dropdown">
-          <div id="appbarDropdownHead" class="appbar-dropdown-head">@username</div>
-          <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link">Visit My Empire</a>
-          <button id="visitOtherEmpireBtn" type="button" class="appbar-dropdown-link">Visit Other Empire</button>
-          <button id="appbarLogoutBtn" type="button" class="appbar-dropdown-link">Logout</button>
+              <div id="appbarDropdown" class="appbar-dropdown">
+                <div id="appbarDropdownHead" class="appbar-dropdown-head">
+                  @username
+                </div>
+                <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link"
+                  >Visit My Empire</a
+                >
+                <button
+                  id="visitOtherEmpireBtn"
+                  type="button"
+                  class="appbar-dropdown-link"
+                >
+                  Visit Other Empire
+                </button>
+                <button
+                  id="appbarLogoutBtn"
+                  type="button"
+                  class="appbar-dropdown-link"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</header>
+      </header>
 
-<div class="hero">
-  <img class="heroImg" src="assets/mydempire-hero.png" alt="MydEmpire hero">
-  <div class="heroBelow">
-    <img class="nameLogo" src="assets/logo.png" alt="MydEmpire">
-    <div class="tags">
-      <span class="tag phase-tag">🚧 Pre-Genesis Live</span>
-      <span class="tag">🔐 Hive Keychain Login</span>
-      <span class="tag">📦 Sealed Packs</span>
-      <span class="tag">🧪 Invite-Only Test</span>
-      <span class="tag">🧾 Max 10 packs/wallet</span>
-    </div>
-  </div>
-</div>
-
-<div class="mainGrid">
-  <div class="card">
-    <h2 class="hTitle">PRE-GENESIS Pack Sale (Closed Testing)</h2>
-    <p class="hText">
-      Pre-Genesis is a controlled live test designed to validate core gameplay, payments, minting,
-      and platform stability before the Genesis launch. Packs stay sealed after purchase and will
-      appear inside your Dashboard for opening.
-    </p>
-    <p class="hText">
-      <b>Price:</b> 3 HIVE per pack · <b>Cap:</b> 10 packs per wallet · <b>Phase:</b> Invite-only
-    </p>
-
-    <div class="empire-path-card">
-      <div class="empire-path-head">
-        <div class="empire-path-eyebrow">Genesis Progression</div>
-        <h2 class="empire-path-title">From First Pack to Industrial Empire</h2>
-        <p class="empire-path-subtitle">
-          Secure land, deploy blueprints, establish factories, generate EMP, and expand your economic network step by step.
-        </p>
-      </div>
-
-      <div class="empire-path-grid">
-        <div class="empire-path-step">
-          <div class="empire-step-badge">01</div>
-          <div class="empire-step-icon">PACK</div>
-          <div class="empire-step-title">Acquire Packs</div>
-          <div class="empire-step-text">Begin your journey by securing pre-genesis packs.</div>
-        </div>
-
-        <div class="empire-path-step">
-          <div class="empire-step-badge">02</div>
-          <div class="empire-step-icon">LAND</div>
-          <div class="empire-step-title">Unlock Territory</div>
-          <div class="empire-step-text">Reveal lands and prepare the foundation of your empire.</div>
-        </div>
-
-        <div class="empire-path-step">
-          <div class="empire-step-badge">03</div>
-          <div class="empire-step-icon">BUILD</div>
-          <div class="empire-step-title">Construct Industry</div>
-          <div class="empire-step-text">Use blueprints to establish factories across your slots.</div>
-        </div>
-
-        <div class="empire-path-step">
-          <div class="empire-step-badge">04</div>
-          <div class="empire-step-icon">EMP</div>
-          <div class="empire-step-title">Generate Power</div>
-          <div class="empire-step-text">Produce EMP and strengthen your long-term industrial output.</div>
-        </div>
-
-        <div class="empire-path-step">
-          <div class="empire-step-badge">05</div>
-          <div class="empire-step-icon">GROW</div>
-          <div class="empire-step-title">Expand Strategically</div>
-          <div class="empire-step-text">Upgrade, optimize, and grow into a larger economic force.</div>
+      <div class="hero">
+        <img
+          class="heroImg"
+          src="assets/mydempire-hero.png"
+          alt="MydEmpire hero"
+        />
+        <div class="heroBelow">
+          <img class="nameLogo" src="assets/logo.png" alt="MydEmpire" />
+          <div class="tags">
+            <span class="tag phase-tag">🚧 Pre-Genesis Live</span>
+            <span class="tag">🔐 Hive Keychain Login</span>
+            <span class="tag">📦 Sealed Packs</span>
+            <span class="tag">🧪 Invite-Only Test</span>
+            <span class="tag">🧾 Max 10 packs/wallet</span>
+          </div>
         </div>
       </div>
 
-      <div class="empire-path-footer">
-        <div class="empire-path-highlight">Ultra-rare Relics can grant elite strategic advantages to fortunate founders.</div>
-        <div class="empire-path-note">Every empire begins with a single move.</div>
+      <div class="mainGrid">
+        <div class="card">
+          <h2 class="hTitle">PRE-GENESIS Pack Sale (Closed Testing)</h2>
+          <p class="hText">
+            Pre-Genesis is a controlled live test designed to validate core
+            gameplay, payments, minting, and platform stability before the
+            Genesis launch. Packs stay sealed after purchase and will appear
+            inside your Dashboard for opening.
+          </p>
+          <p class="hText">
+            <b>Price:</b> 3 HIVE per pack · <b>Cap:</b> 10 packs per wallet ·
+            <b>Phase:</b> Invite-only
+          </p>
+
+          <div class="empire-path-card">
+            <div class="empire-path-head">
+              <div class="empire-path-eyebrow">Genesis Progression</div>
+              <h2 class="empire-path-title">
+                From First Pack to Industrial Empire
+              </h2>
+              <p class="empire-path-subtitle">
+                Secure land, deploy blueprints, establish factories, generate
+                EMP, and expand your economic network step by step.
+              </p>
+            </div>
+
+            <div class="empire-path-grid">
+              <div class="empire-path-step">
+                <div class="empire-step-badge">01</div>
+                <div class="empire-step-icon">PACK</div>
+                <div class="empire-step-title">Acquire Packs</div>
+                <div class="empire-step-text">
+                  Begin your journey by securing pre-genesis packs.
+                </div>
+              </div>
+
+              <div class="empire-path-step">
+                <div class="empire-step-badge">02</div>
+                <div class="empire-step-icon">LAND</div>
+                <div class="empire-step-title">Unlock Territory</div>
+                <div class="empire-step-text">
+                  Reveal lands and prepare the foundation of your empire.
+                </div>
+              </div>
+
+              <div class="empire-path-step">
+                <div class="empire-step-badge">03</div>
+                <div class="empire-step-icon">BUILD</div>
+                <div class="empire-step-title">Construct Industry</div>
+                <div class="empire-step-text">
+                  Use blueprints to establish factories across your slots.
+                </div>
+              </div>
+
+              <div class="empire-path-step">
+                <div class="empire-step-badge">04</div>
+                <div class="empire-step-icon">EMP</div>
+                <div class="empire-step-title">Generate Power</div>
+                <div class="empire-step-text">
+                  Produce EMP and strengthen your long-term industrial output.
+                </div>
+              </div>
+
+              <div class="empire-path-step">
+                <div class="empire-step-badge">05</div>
+                <div class="empire-step-icon">GROW</div>
+                <div class="empire-step-title">Expand Strategically</div>
+                <div class="empire-step-text">
+                  Upgrade, optimize, and grow into a larger economic force.
+                </div>
+              </div>
+            </div>
+
+            <div class="empire-path-footer">
+              <div class="empire-path-highlight">
+                Ultra-rare Relics can grant elite strategic advantages to
+                fortunate founders.
+              </div>
+              <div class="empire-path-note">
+                Every empire begins with a single move.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="hTitle">Enter the World of MydEmpire</h2>
+          <p class="hText">
+            MydEmpire is a strategy-driven blockchain game where players develop
+            land, deploy blueprints, and build industrial strength step by step.
+          </p>
+          <p class="hText">
+            Instead of focusing only on buying, the game is built around
+            progression, planning, and long-term empire growth inside a limited
+            early world.
+          </p>
+
+          <div class="home-login-box">
+            <div class="home-login-title">Enter Closed Testing</div>
+
+            <div class="home-login-text">
+              Connect your Hive wallet to access the invite-only Pre-Genesis
+              phase. Only approved wallets can enter during closed testing.
+            </div>
+
+            <button
+              id="homeConnectWalletBtn"
+              class="home-login-btn"
+              type="button"
+            >
+              Connect Wallet
+            </button>
+
+            <div class="home-login-note">
+              Invite-only access • Closed testing
+            </div>
+          </div>
+
+          <div class="inside-pack-mini">
+            <div class="inside-pack-mini-title">Inside a Genesis Pack</div>
+            <div class="inside-pack-mini-grid">
+              <div class="inside-pack-mini-item land">
+                <div class="inside-pack-mini-icon">🌍</div>
+                <div class="inside-pack-mini-name">Land</div>
+              </div>
+              <div class="inside-pack-mini-item blueprint">
+                <div class="inside-pack-mini-icon">📜</div>
+                <div class="inside-pack-mini-name">Blueprint</div>
+              </div>
+              <div class="inside-pack-mini-item emp">
+                <div class="inside-pack-mini-icon">⚡</div>
+                <div class="inside-pack-mini-name">EMP</div>
+              </div>
+              <div class="inside-pack-mini-item relic">
+                <div class="inside-pack-mini-icon">💎</div>
+                <div class="inside-pack-mini-name">Relic</div>
+              </div>
+            </div>
+            <div class="inside-pack-mini-note">
+              Land, blueprints, EMP, and a tiny chance of an ultra-rare relic.
+            </div>
+          </div>
+
+          <div class="founder-box">
+            <h4>Why Early Players Matter</h4>
+            <div class="founder-item">
+              🌱 Establish the first generation of industrial empires
+            </div>
+            <div class="founder-item">
+              ⚙️ Build factories and shape your long-term strategy
+            </div>
+            <div class="founder-item">
+              💎 Discover ultra-rare relic opportunities
+            </div>
+            <div class="founder-item">
+              🏛 Become part of the earliest MydEmpire world
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="card">
-    <h2 class="hTitle">Enter the World of MydEmpire</h2>
-    <p class="hText">
-      MydEmpire is a strategy-driven blockchain game where players develop land, deploy blueprints,
-      and build industrial strength step by step.
-    </p>
-    <p class="hText">
-      Instead of focusing only on buying, the game is built around progression, planning, and
-      long-term empire growth inside a limited early world.
-    </p>
-
-    <div class="home-login-box">
-      <div class="home-login-title">Enter Closed Testing</div>
-
-      <div class="home-login-text">
-        Connect your Hive wallet to access the invite-only Pre-Genesis phase.
-        Only approved wallets can enter during closed testing.
+      <div class="factorySection">
+        <section class="industry-showcase">
+          <div class="industry-slider-wrap">
+            <button type="button" class="slider-btn" id="industry-prev-btn">
+              ‹
+            </button>
+            <div class="industry-slider">
+              <div class="industry-slide active">
+                <img
+                  src="assets/food.png"
+                  alt="Food Industry"
+                  class="industry-slide-img"
+                />
+                <div class="industry-label">🌾 Food</div>
+              </div>
+              <div class="industry-slide active">
+                <img
+                  src="assets/textile.png"
+                  alt="Textile Industry"
+                  class="industry-slide-img"
+                />
+                <div class="industry-label">🧵 Textile</div>
+              </div>
+              <div class="industry-slide">
+                <img
+                  src="assets/pharma.png"
+                  alt="Pharma Industry"
+                  class="industry-slide-img"
+                />
+                <div class="industry-label">
+                  <span class="pharma-rx">Rx</span
+                  ><span class="industry-name-text">Pharma</span>
+                </div>
+              </div>
+              <div class="industry-slide">
+                <img
+                  src="assets/chemical.png"
+                  alt="Chemical Industry"
+                  class="industry-slide-img"
+                />
+                <div class="industry-label">⚗ Chemical</div>
+              </div>
+              <div class="industry-slide">
+                <img
+                  src="assets/supermarket.png"
+                  alt="Supermarket Industry"
+                  class="industry-slide-img"
+                />
+                <div class="industry-label">🛒 Supermarket</div>
+              </div>
+            </div>
+            <button type="button" class="slider-btn" id="industry-next-btn">
+              ›
+            </button>
+          </div>
+        </section>
       </div>
 
-      <button id="homeConnectWalletBtn" class="home-login-btn" type="button">
-        Connect Wallet
-      </button>
+      <div id="global-footer"></div>
 
-      <div class="home-login-note">
-        Invite-only access • Closed testing
-      </div>
-    </div>
+      <script>
+        fetch("footer.html")
+          .then((res) => res.text())
+          .then((html) => {
+            const footerHost = document.getElementById("global-footer");
+            if (footerHost) footerHost.innerHTML = html;
+          });
 
-    <div class="inside-pack-mini">
-      <div class="inside-pack-mini-title">Inside a Genesis Pack</div>
-      <div class="inside-pack-mini-grid">
-        <div class="inside-pack-mini-item land">
-          <div class="inside-pack-mini-icon">🌍</div>
-          <div class="inside-pack-mini-name">Land</div>
-        </div>
-        <div class="inside-pack-mini-item blueprint">
-          <div class="inside-pack-mini-icon">📜</div>
-          <div class="inside-pack-mini-name">Blueprint</div>
-        </div>
-        <div class="inside-pack-mini-item emp">
-          <div class="inside-pack-mini-icon">⚡</div>
-          <div class="inside-pack-mini-name">EMP</div>
-        </div>
-        <div class="inside-pack-mini-item relic">
-          <div class="inside-pack-mini-icon">💎</div>
-          <div class="inside-pack-mini-name">Relic</div>
-        </div>
-      </div>
-      <div class="inside-pack-mini-note">Land, blueprints, EMP, and a tiny chance of an ultra-rare relic.</div>
-    </div>
+        function getStoredUser() {
+          return (
+            localStorage.getItem("mde_username") ||
+            localStorage.getItem("hiveUsername") ||
+            localStorage.getItem("username") ||
+            ""
+          )
+            .replace("@", "")
+            .trim()
+            .toLowerCase();
+        }
 
-    <div class="founder-box">
-      <h4>Why Early Players Matter</h4>
-      <div class="founder-item">🌱 Establish the first generation of industrial empires</div>
-      <div class="founder-item">⚙️ Build factories and shape your long-term strategy</div>
-      <div class="founder-item">💎 Discover ultra-rare relic opportunities</div>
-      <div class="founder-item">🏛 Become part of the earliest MydEmpire world</div>
-    </div>
-  </div>
-</div>
+        function showLoggedOutNav() {
+          document.querySelectorAll(".auth-only").forEach((link) => {
+            link.classList.remove("show-auth-link");
+            link.style.display = "none"; // hide tabs when logged out
+          });
 
-<div class="factorySection">
-  <section class="industry-showcase">
-    <div class="industry-slider-wrap">
-      <button type="button" class="slider-btn" id="industry-prev-btn">‹</button>
-      <div class="industry-slider">
-        <div class="industry-slide active">
-          <img src="assets/food.png" alt="Food Industry" class="industry-slide-img" />
-          <div class="industry-label">🌾 Food</div>
-        </div>
-        <div class="industry-slide active">
-          <img src="assets/textile.png" alt="Textile Industry" class="industry-slide-img" />
-          <div class="industry-label">🧵 Textile</div>
-        </div>
-        <div class="industry-slide">
-          <img src="assets/pharma.png" alt="Pharma Industry" class="industry-slide-img" />
-          <div class="industry-label"><span class="pharma-rx">Rx</span><span class="industry-name-text">Pharma</span></div>
-        </div>
-        <div class="industry-slide">
-          <img src="assets/chemical.png" alt="Chemical Industry" class="industry-slide-img" />
-          <div class="industry-label">⚗ Chemical</div>
-        </div>
-        <div class="industry-slide">
-          <img src="assets/supermarket.png" alt="Supermarket Industry" class="industry-slide-img" />
-          <div class="industry-label">🛒 Supermarket</div>
-        </div>
-      </div>
-      <button type="button" class="slider-btn" id="industry-next-btn">›</button>
-    </div>
-  </section>
-</div>
+          const loginBtn = document.getElementById("appbarLoginBtn");
+          const accountWrap = document.getElementById("appbarAccountWrap");
+          const dropdown = document.getElementById("appbarDropdown");
 
-<div id="global-footer"></div>
+          if (loginBtn) loginBtn.style.display = "none";
+          if (accountWrap) accountWrap.style.display = "none";
+          if (dropdown) dropdown.classList.remove("open");
+        }
 
-<script>
-fetch("footer.html")
-  .then(res => res.text())
-  .then(html => {
-    const footerHost = document.getElementById("global-footer");
-    if (footerHost) footerHost.innerHTML = html;
-  });
+        function showLoggedInNav(username) {
+          const dashboard = document.getElementById("dashboardLink");
+          const shop = document.getElementById("shopLink");
+          const marketplace = document.getElementById("marketplaceLink");
 
-function getStoredUser() {
-  return (
-    localStorage.getItem("mde_username") ||
-    localStorage.getItem("hiveUsername") ||
-    localStorage.getItem("username") ||
-    ""
-  ).replace("@", "").trim().toLowerCase();
-}
+          document.querySelectorAll(".auth-only").forEach((link) => {
+            link.classList.add("show-auth-link");
+            link.style.display = "inline-flex";
+          });
+          document.querySelectorAll(".auth-only").forEach((link) => {
+            link.classList.add("show-auth-link");
+            link.style.display = "inline-flex"; // force show tabs
+          });
 
-function showLoggedOutNav() {
+          if (dashboard) {
+            dashboard.href =
+              "player-dashboard.html?user=" + encodeURIComponent(username);
+            dashboard.style.display = "inline-flex";
+          }
 
-document.querySelectorAll(".auth-only").forEach(link => {
-  link.classList.remove("show-auth-link");
-  link.style.display = "none";  // hide tabs when logged out
-});
+          if (shop) {
+            shop.href = "shop.html?user=" + encodeURIComponent(username);
+            shop.style.display = "inline-flex";
+          }
 
-  const loginBtn = document.getElementById("appbarLoginBtn");
-  const accountWrap = document.getElementById("appbarAccountWrap");
-  const dropdown = document.getElementById("appbarDropdown");
+          if (marketplace) {
+            marketplace.href =
+              "marketplace.html?user=" + encodeURIComponent(username);
+            marketplace.style.display = "inline-flex";
+          }
 
-  if (loginBtn) loginBtn.style.display = "none";
-  if (accountWrap) accountWrap.style.display = "none";
-  if (dropdown) dropdown.classList.remove("open");
+          const loginBtn = document.getElementById("appbarLoginBtn");
+          const accountWrap = document.getElementById("appbarAccountWrap");
+          const accountBtn = document.getElementById("appbarAccountBtn");
+          const dropdownHead = document.getElementById("appbarDropdownHead");
+          const visitMyEmpireLink =
+            document.getElementById("visitMyEmpireLink");
 
-}
+          if (loginBtn) loginBtn.style.display = "none";
+          if (accountWrap) accountWrap.style.display = "block";
+          if (accountBtn) accountBtn.textContent = "@" + username + " ▼";
+          if (dropdownHead) dropdownHead.textContent = "@" + username;
 
-function showLoggedInNav(username) {
-  const dashboard = document.getElementById("dashboardLink");
-  const shop = document.getElementById("shopLink");
-  const marketplace = document.getElementById("marketplaceLink");
+          if (visitMyEmpireLink) {
+            visitMyEmpireLink.href =
+              "player-dashboard.html?user=" + encodeURIComponent(username);
+          }
+        }
 
-  document.querySelectorAll(".auth-only").forEach(link => {
-    link.classList.add("show-auth-link");
-    link.style.display = "inline-flex";
-  });
-  document.querySelectorAll(".auth-only").forEach(link => {
-  link.classList.add("show-auth-link");
-  link.style.display = "inline-flex";  // force show tabs
-});
+        function redirectToDashboard(username) {
+          window.location.href =
+            "player-dashboard.html?user=" + encodeURIComponent(username);
+        }
 
-  if (dashboard) {
-    dashboard.href = "player-dashboard.html?user=" + encodeURIComponent(username);
-    dashboard.style.display = "inline-flex";
-  }
+        function getApiBase() {
+          const isLocal =
+            location.hostname === "localhost" ||
+            location.hostname === "127.0.0.1";
 
-  if (shop) {
-    shop.href = "shop.html?user=" + encodeURIComponent(username);
-    shop.style.display = "inline-flex";
-  }
+          return isLocal
+            ? "http://localhost:10000"
+            : "https://mydempire-backend-1.onrender.com";
+        }
 
-  if (marketplace) {
-    marketplace.href = "marketplace.html?user=" + encodeURIComponent(username);
-    marketplace.style.display = "inline-flex";
-  }
-
-  const loginBtn = document.getElementById("appbarLoginBtn");
-  const accountWrap = document.getElementById("appbarAccountWrap");
-  const accountBtn = document.getElementById("appbarAccountBtn");
-  const dropdownHead = document.getElementById("appbarDropdownHead");
-  const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
-
-  if (loginBtn) loginBtn.style.display = "none";
-  if (accountWrap) accountWrap.style.display = "block";
-  if (accountBtn) accountBtn.textContent = "@" + username + " ▼";
-  if (dropdownHead) dropdownHead.textContent = "@" + username;
-
-  if (visitMyEmpireLink) {
-    visitMyEmpireLink.href = "player-dashboard.html?user=" + encodeURIComponent(username);
-  }
-}
-
-function redirectToDashboard(username) {
-  window.location.href = "player-dashboard.html?user=" + encodeURIComponent(username);
-}
-
-function getApiBase() {
-  const isLocal =
-    location.hostname === "localhost" ||
-    location.hostname === "127.0.0.1";
-
-  return isLocal
-    ? "http://localhost:10000"
-    : "https://mydempire-backend-1.onrender.com";
-}
-
-function showInviteOnlyPopup() {
-  if (typeof showWhitelistPopup === "function") {
-    showWhitelistPopup();
-    return;
-  }
-
-showWhitelistPopup();
-}
-function showWhitelistPopup() {
-  const popup = document.getElementById("whitelist-popup");
-  if (popup) popup.classList.remove("hidden");
-}
-
-function closeWhitelistPopup() {
-  const popup = document.getElementById("whitelist-popup");
-  if (popup) popup.classList.add("hidden");
-}
-function connectWallet() {
-  const entered = prompt("Enter your Hive username:");
-  const username = String(entered || "")
-    .replace("@", "")
-    .trim()
-    .toLowerCase();
-
-  if (!username) {
-    alert("Please enter your Hive username first.");
-    return;
-  }
-
-  fetch(getApiBase() + "/auth/check-whitelist/" + encodeURIComponent(username))
-    .then(async (res) => {
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || "Whitelist check failed.");
-      }
-
-      if (!data.allow_login) {
-        localStorage.removeItem("mde_username");
-        localStorage.removeItem("hiveUsername");
-        localStorage.removeItem("username");
-        showWhitelistPopup();
-        return;
-      }
-
-      if (!window.hive_keychain) {
-        alert("Hive Keychain not installed");
-        return;
-      }
-
-      window.hive_keychain.requestSignBuffer(
-        username,
-        "MydEmpire Login " + Date.now(),
-        "Posting",
-        function (res) {
-          if (!res || !res.success) {
-            alert("Login cancelled");
+        function showInviteOnlyPopup() {
+          if (typeof showWhitelistPopup === "function") {
+            showWhitelistPopup();
             return;
           }
 
-          localStorage.setItem("mde_username", username);
-          localStorage.setItem("hiveUsername", username);
-          localStorage.setItem("username", username);
-
-          showLoggedInNav(username);
-          redirectToDashboard(username);
+          showWhitelistPopup();
         }
-      );
-    })
-    .catch((err) => {
-      console.error("Whitelist login error:", err);
-      alert(err.message || "Unable to verify invite access right now.");
-    });
-}
+        function showWhitelistPopup() {
+          const popup = document.getElementById("whitelist-popup");
+          if (popup) popup.classList.remove("hidden");
+        }
 
-function disconnectWallet() {
-  localStorage.removeItem("mde_username");
-  localStorage.removeItem("hiveUsername");
-  localStorage.removeItem("username");
-  showLoggedOutNav();
-  window.location.href = "index.html";
-}
+        function closeWhitelistPopup() {
+          const popup = document.getElementById("whitelist-popup");
+          if (popup) popup.classList.add("hidden");
+        }
+        function connectWallet() {
+          const entered = prompt("Enter your Hive username:");
+          const username = String(entered || "")
+            .replace("@", "")
+            .trim()
+            .toLowerCase();
 
-window.addEventListener("DOMContentLoaded", () => {
-  const storedUser = getStoredUser();
+          if (!username) {
+            alert("Please enter your Hive username first.");
+            return;
+          }
 
-  if (storedUser) {
-    showLoggedInNav(storedUser);
-  } else {
-    showLoggedOutNav();
-  }
+          fetch(
+            getApiBase() +
+              "/auth/check-whitelist/" +
+              encodeURIComponent(username),
+          )
+            .then(async (res) => {
+              const data = await res.json();
 
-  const loginBtn = document.getElementById("appbarLoginBtn");
-  if (loginBtn) {
-    loginBtn.addEventListener("click", connectWallet);
-  }
+              if (!res.ok || !data.success) {
+                throw new Error(data.error || "Whitelist check failed.");
+              }
 
-  const logoutBtn = document.getElementById("appbarLogoutBtn");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", disconnectWallet);
-  }
+              if (!data.allow_login) {
+                localStorage.removeItem("mde_username");
+                localStorage.removeItem("hiveUsername");
+                localStorage.removeItem("username");
+                showWhitelistPopup();
+                return;
+              }
 
-  const accountBtn = document.getElementById("appbarAccountBtn");
-  const dropdown = document.getElementById("appbarDropdown");
-  if (accountBtn && dropdown) {
-    accountBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      dropdown.classList.toggle("open");
-    });
+              if (!window.hive_keychain) {
+                alert("Hive Keychain not installed");
+                return;
+              }
 
-    document.addEventListener("click", function () {
-      dropdown.classList.remove("open");
-    });
-  }
+              window.hive_keychain.requestSignBuffer(
+                username,
+                "MydEmpire Login " + Date.now(),
+                "Posting",
+                function (res) {
+                  if (!res || !res.success) {
+                    alert("Login cancelled");
+                    return;
+                  }
 
-  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
-  if (visitOtherEmpireBtn) {
-    visitOtherEmpireBtn.addEventListener("click", function () {
-      const entered = prompt("Enter Hive username to visit:");
-      const username = String(entered || "").replace("@", "").trim().toLowerCase();
-      if (!username) return;
-      window.location.href = "player-dashboard.html?user=" + encodeURIComponent(username);
-    });
-  }
+                  localStorage.setItem("mde_username", username);
+                  localStorage.setItem("hiveUsername", username);
+                  localStorage.setItem("username", username);
 
-  const slides = Array.from(document.querySelectorAll(".industry-slide"));
-  const prevBtn = document.getElementById("industry-prev-btn");
-  const nextBtn = document.getElementById("industry-next-btn");
-  let startIndex = 0;
+                  showLoggedInNav(username);
+                  redirectToDashboard(username);
+                },
+              );
+            })
+            .catch((err) => {
+              console.error("Whitelist login error:", err);
+              alert(err.message || "Unable to verify invite access right now.");
+            });
+        }
 
-  function showSlides(index) {
-    slides.forEach(slide => slide.classList.remove("active"));
-    if (!slides.length) return;
+        function disconnectWallet() {
+          localStorage.removeItem("mde_username");
+          localStorage.removeItem("hiveUsername");
+          localStorage.removeItem("username");
+          showLoggedOutNav();
+          window.location.href = "index.html";
+        }
 
-    slides[index % slides.length].classList.add("active");
+        window.addEventListener("DOMContentLoaded", () => {
+          const storedUser = getStoredUser();
 
-    if (window.innerWidth > 640 && slides.length > 1) {
-      slides[(index + 1) % slides.length].classList.add("active");
-    }
-  }
+          if (storedUser) {
+            showLoggedInNav(storedUser);
+          } else {
+            showLoggedOutNav();
+          }
 
-  if (prevBtn && nextBtn && slides.length) {
-    prevBtn.addEventListener("click", () => {
-      startIndex = (startIndex - 1 + slides.length) % slides.length;
-      showSlides(startIndex);
-    });
+          const loginBtn = document.getElementById("appbarLoginBtn");
+          if (loginBtn) {
+            loginBtn.addEventListener("click", connectWallet);
+          }
 
-    nextBtn.addEventListener("click", () => {
-      startIndex = (startIndex + 1) % slides.length;
-      showSlides(startIndex);
-    });
+          const logoutBtn = document.getElementById("appbarLogoutBtn");
+          if (logoutBtn) {
+            logoutBtn.addEventListener("click", disconnectWallet);
+          }
 
-    showSlides(startIndex);
-    window.addEventListener("resize", () => showSlides(startIndex));
-  }
+          const accountBtn = document.getElementById("appbarAccountBtn");
+          const dropdown = document.getElementById("appbarDropdown");
+          if (accountBtn && dropdown) {
+            accountBtn.addEventListener("click", function (e) {
+              e.stopPropagation();
+              dropdown.classList.toggle("open");
+            });
 
-  const homeLoginBtn = document.getElementById("homeConnectWalletBtn");
-  if (homeLoginBtn) {
-    homeLoginBtn.addEventListener("click", connectWallet);
-  }
-});
-</script>
+            document.addEventListener("click", function () {
+              dropdown.classList.remove("open");
+            });
+          }
 
-</div>
-  <div id="whitelist-popup" class="hidden">
-  <div class="whitelist-popup-box">
+          const visitOtherEmpireBtn = document.getElementById(
+            "visitOtherEmpireBtn",
+          );
+          if (visitOtherEmpireBtn) {
+            visitOtherEmpireBtn.addEventListener("click", function () {
+              const entered = prompt("Enter Hive username to visit:");
+              const username = String(entered || "")
+                .replace("@", "")
+                .trim()
+                .toLowerCase();
+              if (!username) return;
+              window.location.href =
+                "player-dashboard.html?user=" + encodeURIComponent(username);
+            });
+          }
 
-    <h2>You’re Early 👑</h2>
+          const slides = Array.from(
+            document.querySelectorAll(".industry-slide"),
+          );
+          const prevBtn = document.getElementById("industry-prev-btn");
+          const nextBtn = document.getElementById("industry-next-btn");
+          let startIndex = 0;
 
-    <p>
-      MydEmpire is currently in a <b>PRE-GENESIS invite-only testing phase</b>.
-    </p>
+          function showSlides(index) {
+            slides.forEach((slide) => slide.classList.remove("active"));
+            if (!slides.length) return;
 
-    <p>
-      Your wallet isn’t on the tester list yet — which simply means  
-      you arrived <b>before the gates fully open</b>.
-    </p>
+            slides[index % slides.length].classList.add("active");
 
-    <p>
-      Join our Discord to request access and become one of the first  
-      <b>Empire Builders</b> shaping the future of MydEmpire.
-    </p>
+            if (window.innerWidth > 640 && slides.length > 1) {
+              slides[(index + 1) % slides.length].classList.add("active");
+            }
+          }
 
-    <a href="https://discord.gg/u7gJnR2uCd" target="_blank" class="discord-btn">
-      Join Discord
-    </a>
+          if (prevBtn && nextBtn && slides.length) {
+            prevBtn.addEventListener("click", () => {
+              startIndex = (startIndex - 1 + slides.length) % slides.length;
+              showSlides(startIndex);
+            });
 
-    <button class="popup-ok-btn" onclick="closeWhitelistPopup()">
-      Got it
-    </button>
+            nextBtn.addEventListener("click", () => {
+              startIndex = (startIndex + 1) % slides.length;
+              showSlides(startIndex);
+            });
 
-  </div>
-</div>
-</body>
+            showSlides(startIndex);
+            window.addEventListener("resize", () => showSlides(startIndex));
+          }
+
+          const homeLoginBtn = document.getElementById("homeConnectWalletBtn");
+          if (homeLoginBtn) {
+            homeLoginBtn.addEventListener("click", connectWallet);
+          }
+        });
+      </script>
+    </div>
+    <div id="whitelist-popup" class="hidden">
+      <div class="whitelist-popup-box">
+        <h2>You’re Early 👑</h2>
+
+        <p>
+          MydEmpire is currently in a
+          <b>PRE-GENESIS invite-only testing phase</b>.
+        </p>
+
+        <p>
+          Your wallet isn’t on the tester list yet — which simply means you
+          arrived <b>before the gates fully open</b>.
+        </p>
+
+        <p>
+          Join our Discord to request access and become one of the first
+          <b>Empire Builders</b> shaping the future of MydEmpire.
+        </p>
+
+        <a
+          href="https://discord.gg/u7gJnR2uCd"
+          target="_blank"
+          class="discord-btn"
+        >
+          Join Discord
+        </a>
+
+        <button class="popup-ok-btn" onclick="closeWhitelistPopup()">
+          Got it
+        </button>
+      </div>
+    </div>
+  </body>
 </html>
