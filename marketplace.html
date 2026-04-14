@@ -1525,7 +1525,18 @@ async function cancelPackListing(listingId) {
     }
 
     alert("Pack listing cancelled successfully.");
-    location.reload();
+   await loadPackListings();
+
+document.querySelectorAll(".tab-btn").forEach((btn) => {
+  btn.classList.remove("active");
+});
+
+document.querySelectorAll(".market-tab-panel").forEach((panel) => {
+  panel.classList.remove("active");
+});
+
+document.querySelector('[data-market-tab="packs"]')?.classList.add("active");
+document.querySelector('[data-market-tab-panel="packs"]')?.classList.add("active");
 
   } catch (err) {
     console.error("cancelPackListing error:", err);
