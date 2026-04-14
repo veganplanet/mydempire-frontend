@@ -1499,33 +1499,38 @@ async function buyPackListing(listingId) {
 }
  async function cancelPackListing(listingId) {
   try {
-    const username = localStorage.getItem("username");
+    if (!ACTIVE_USER) {
+      alert("No active user found.");
+      return;
+    }
 
-    const res = await fetch("/cancel-listing", {
+    const ok = confirm(`Cancel listing #${listingId}?`);
+    if (!ok) return;
+
+    const res = await fetch(apiUrl("/marketplace/emp/cancel"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        listing_id: listingId,
-        username: username,
-      }),
+        username: ACTIVE_USER,
+        listing_id: listingId
+      })
     });
 
     const data = await res.json();
 
-    if (data.success) {
-      alert("Listing cancelled successfully.");
-      location.reload();
-    } else {
-      alert(data.error || "Failed to cancel listing.");
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to cancel listing.");
     }
 
+    alert("✅ Listing cancelled successfully.");
+    await loadEmpListings();
+    await loadActiveUserEmpBalance();
+
   } catch (err) {
-    console.error("Cancel listing error:", err);
-    alert("Server error cancelling listing.");
+    console.error("cancelPackListing error:", err);
+    alert(err.message || "Server error cancelling listing.");
   }
-} 
+}
 </script>
  
 </body>
