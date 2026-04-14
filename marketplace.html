@@ -1497,19 +1497,21 @@ async function buyPackListing(listingId) {
     alert(err.message || "Pack purchase failed.");
   }
 }
- async function cancelPackListing(listingId) {
+async function cancelPackListing(listingId) {
   try {
     if (!ACTIVE_USER) {
       alert("No active user found.");
       return;
     }
 
-    const ok = confirm(`Cancel listing #${listingId}?`);
+    const ok = confirm(`Cancel pack listing #${listingId}?`);
     if (!ok) return;
 
-    const res = await fetch(apiUrl("/marketplace/emp/cancel"), {
+    const res = await fetch(apiUrl("/marketplace/pack/cancel"), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
         username: ACTIVE_USER,
         listing_id: listingId
@@ -1519,12 +1521,11 @@ async function buyPackListing(listingId) {
     const data = await res.json();
 
     if (!res.ok || !data.success) {
-      throw new Error(data.error || "Failed to cancel listing.");
+      throw new Error(data.error || "Failed to cancel pack listing.");
     }
 
-    alert("✅ Listing cancelled successfully.");
-    await loadEmpListings();
-    await loadActiveUserEmpBalance();
+    alert("Pack listing cancelled successfully.");
+    location.reload();
 
   } catch (err) {
     console.error("cancelPackListing error:", err);
