@@ -5,7 +5,7 @@
     <title>MydEmpire — Player Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="assets/favicon.png">
+    <link rel="icon" href="assets/favicon.png" />
   </head>
   <body data-requires-login="true">
     <header class="appbar">
@@ -43,9 +43,14 @@
         </div>
 
         <div class="appbar-right">
-         <button id="appbarLoginBtn" class="appbar-login-btn" type="button" style="display:none;">
-  Connect Wallet
-</button>
+          <button
+            id="appbarLoginBtn"
+            class="appbar-login-btn"
+            type="button"
+            style="display: none"
+          >
+            Connect Wallet
+          </button>
 
           <div
             id="appbarAccountWrap"
@@ -437,7 +442,7 @@
                 id="build-factory-name"
                 type="text"
                 maxlength="30"
-                placeholder="Example: Name your company you like"
+                placeholder="Example: Choose a name for your company"
                 class="build-input"
               />
             </div>
@@ -477,116 +482,122 @@
       </section>
 
       <!-- ===== TAB: EMPIRE ASSETS ===== -->
-<section class="section tab-panel" data-tab-panel="assets">
-  <div class="section-header">
-    <h2>Empire Assets</h2>
-    <small>Your complete visual inventory</small>
-  </div>
+      <section class="section tab-panel" data-tab-panel="assets">
+        <div class="section-header">
+          <h2>Empire Assets</h2>
+          <small>Your complete visual inventory</small>
+        </div>
 
-  <div class="empire-inventory">
+        <div class="empire-inventory">
+          <div class="inventory-card inventory-land">
+            <img src="assets/land-l1.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">L1 Frontier</div>
+              <div class="inventory-count" id="asset-land-l1">0</div>
+            </div>
+          </div>
 
-    <div class="inventory-card inventory-land">
-      <img src="assets/land-l1.png" class="inventory-icon">
-      <div class="inventory-info">
-        <div class="inventory-title">L1 Frontier</div>
-        <div class="inventory-count" id="asset-land-l1">0</div>
-      </div>
-    </div>
+          <div class="inventory-card inventory-land">
+            <img src="assets/land-l2.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">L2 Estate</div>
+              <div class="inventory-count" id="asset-land-l2">0</div>
+            </div>
+          </div>
 
-    <div class="inventory-card inventory-land">
-      <img src="assets/land-l2.png" class="inventory-icon">
-      <div class="inventory-info">
-        <div class="inventory-title">L2 Estate</div>
-        <div class="inventory-count" id="asset-land-l2">0</div>
-      </div>
-    </div>
+          <div class="inventory-card inventory-land">
+            <img src="assets/land-l3.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">L3 Industrial Zone</div>
+              <div class="inventory-count" id="asset-land-l3">0</div>
+            </div>
+          </div>
 
-    <div class="inventory-card inventory-land">
-      <img src="assets/land-l3.png" class="inventory-icon">
-      <div class="inventory-info">
-        <div class="inventory-title">L3 Industrial Zone</div>
-        <div class="inventory-count" id="asset-land-l3">0</div>
-      </div>
-    </div>
+          <div class="inventory-card inventory-pack">
+            <img src="assets/pack.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Packs</div>
+              <div class="inventory-count" id="asset-packs">0</div>
+            </div>
+          </div>
 
-    <div class="inventory-card inventory-pack">
-      <img src="assets/pack.png" class="inventory-icon">
-      <div class="inventory-info">
-        <div class="inventory-title">Packs</div>
-        <div class="inventory-count" id="asset-packs">0</div>
-      </div>
-    </div>
+          <div class="inventory-card inventory-relic">
+            <img src="assets/relic.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Relics</div>
+              <div class="inventory-count" id="asset-relics">0</div>
+            </div>
+          </div>
 
-    <div class="inventory-card inventory-relic">
-      <img src="assets/relic.png" class="inventory-icon">
-      <div class="inventory-info">
-        <div class="inventory-title">Relics</div>
-        <div class="inventory-count" id="asset-relics">0</div>
-      </div>
-    </div>
+          <div class="inventory-card inventory-writ">
+            <img src="assets/writ.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">WRITs</div>
+              <div class="inventory-count" id="asset-writs">0</div>
+            </div>
+          </div>
+        </div>
 
-    <div class="inventory-card inventory-writ">
-      <img src="assets/writ.png" class="inventory-icon">
-      <div class="inventory-info">
-        <div class="inventory-title">WRITs</div>
-        <div class="inventory-count" id="asset-writs">0</div>
-      </div>
-    </div>
+        <h3 style="margin: 24px 0 12px">Blueprints</h3>
 
-  </div>
+        <div class="empire-inventory">
+          <div class="inventory-card inventory-food">
+            <img src="assets/food.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Food</div>
+              <div class="inventory-count" id="asset-bp-food">0</div>
+              <div class="inventory-subcount" id="asset-bp-food-levels">
+                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
+              </div>
+            </div>
+          </div>
 
-  <h3 style="margin:24px 0 12px;">Blueprints</h3>
+          <div class="inventory-card inventory-textile">
+            <img src="assets/textile.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Textile</div>
+              <div class="inventory-count" id="asset-bp-textile">0</div>
+              <div class="inventory-subcount" id="asset-bp-textile-levels">
+                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
+              </div>
+            </div>
+          </div>
 
-  <div class="empire-inventory">
+          <div class="inventory-card inventory-pharma">
+            <img src="assets/pharma.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Pharma</div>
+              <div class="inventory-count" id="asset-bp-pharma">0</div>
+              <div class="inventory-subcount" id="asset-bp-pharma-levels">
+                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
+              </div>
+            </div>
+          </div>
 
-    <div class="inventory-card inventory-food">
-      <img src="assets/food.png" class="inventory-icon">
-      <div class="inventory-info">
-        <div class="inventory-title">Food</div>
-        <div class="inventory-count" id="asset-bp-food">0</div>
-        <div class="inventory-subcount" id="asset-bp-food-levels">B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0</div>
-      </div>
-    </div>
+          <div class="inventory-card inventory-chemical">
+            <img src="assets/chemical.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Chemical</div>
+              <div class="inventory-count" id="asset-bp-chemical">0</div>
+              <div class="inventory-subcount" id="asset-bp-chemical-levels">
+                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
+              </div>
+            </div>
+          </div>
 
-    <div class="inventory-card inventory-textile">
-      <img src="assets/textile.png" class="inventory-icon">
-      <div class="inventory-info">
-        <div class="inventory-title">Textile</div>
-        <div class="inventory-count" id="asset-bp-textile">0</div>
-        <div class="inventory-subcount" id="asset-bp-textile-levels">B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0</div>
-      </div>
-    </div>
+          <div class="inventory-card inventory-supermarket">
+            <img src="assets/supermarket.png" class="inventory-icon" />
+            <div class="inventory-info">
+              <div class="inventory-title">Supermarket</div>
+              <div class="inventory-count" id="asset-bp-supermarket">0</div>
+              <div class="inventory-subcount" id="asset-bp-supermarket-levels">
+                B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    <div class="inventory-card inventory-pharma">
-      <img src="assets/pharma.png" class="inventory-icon">
-      <div class="inventory-info">
-        <div class="inventory-title">Pharma</div>
-        <div class="inventory-count" id="asset-bp-pharma">0</div>
-        <div class="inventory-subcount" id="asset-bp-pharma-levels">B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0</div>
-      </div>
-    </div>
-
-    <div class="inventory-card inventory-chemical">
-      <img src="assets/chemical.png" class="inventory-icon">
-      <div class="inventory-info">
-        <div class="inventory-title">Chemical</div>
-        <div class="inventory-count" id="asset-bp-chemical">0</div>
-        <div class="inventory-subcount" id="asset-bp-chemical-levels">B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0</div>
-      </div>
-    </div>
-
-    <div class="inventory-card inventory-supermarket">
-      <img src="assets/supermarket.png" class="inventory-icon">
-      <div class="inventory-info">
-        <div class="inventory-title">Supermarket</div>
-        <div class="inventory-count" id="asset-bp-supermarket">0</div>
-        <div class="inventory-subcount" id="asset-bp-supermarket-levels">B1: 0 | B2: 0 | B3: 0 | B4: 0 | B5: 0</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-    
       <!-- ===== TAB: UNDER CONSTRUCTION ===== -->
       <section class="section tab-panel" data-tab-panel="construction">
         <div class="section-header">
@@ -750,12 +761,12 @@
     </div>
     <script>
       function getActorHeaders(extra = {}) {
-  return {
-    "Content-Type": "application/json",
-    "x-mde-actor": getLoggedInUser(),
-    ...extra
-  };
-}
+        return {
+          "Content-Type": "application/json",
+          "x-mde-actor": getLoggedInUser(),
+          ...extra,
+        };
+      }
       function setText(id, value) {
         const el = document.getElementById(id);
         if (el) el.textContent = value;
@@ -842,37 +853,37 @@
       }
       // ===== BUY EMP FRONTEND =====
 
-     function getLoggedInUser() {
-  return String(
-    localStorage.getItem("mde_username") ||
-    localStorage.getItem("hiveUsername") ||
-    localStorage.getItem("username") ||
-    ""
-  )
-    .replace("@", "")
-    .trim()
-    .toLowerCase();
-}
+      function getLoggedInUser() {
+        return String(
+          localStorage.getItem("mde_username") ||
+            localStorage.getItem("hiveUsername") ||
+            localStorage.getItem("username") ||
+            "",
+        )
+          .replace("@", "")
+          .trim()
+          .toLowerCase();
+      }
 
-function getViewedUser() {
-  const params = new URLSearchParams(window.location.search);
-  const fromUrl = String(params.get("user") || "")
-    .replace("@", "")
-    .trim()
-    .toLowerCase();
+      function getViewedUser() {
+        const params = new URLSearchParams(window.location.search);
+        const fromUrl = String(params.get("user") || "")
+          .replace("@", "")
+          .trim()
+          .toLowerCase();
 
-  return fromUrl || getLoggedInUser();
-}
+        return fromUrl || getLoggedInUser();
+      }
 
-function isOwnEmpireView() {
-  const loggedIn = getLoggedInUser();
-  const viewed = getViewedUser();
-  return !!loggedIn && !!viewed && loggedIn === viewed;
-}
+      function isOwnEmpireView() {
+        const loggedIn = getLoggedInUser();
+        const viewed = getViewedUser();
+        return !!loggedIn && !!viewed && loggedIn === viewed;
+      }
 
-function getPlayerUsername() {
-  return getViewedUser();
-}
+      function getPlayerUsername() {
+        return getViewedUser();
+      }
       const PLAYER_USERNAME = getPlayerUsername();
 
       let empireLands = [];
@@ -1327,43 +1338,50 @@ function getPlayerUsername() {
             SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
           };
 
-         if (Array.isArray(blueprintsData.blueprints)) {
-  for (const bp of blueprintsData.blueprints) {
-    const rawIndustry = String(
-      bp.industry ||
-      bp.industry_name ||
-      bp.industry_type ||
-      bp.industry_code ||
-      bp.blueprint_industry ||
-      ""
-    ).toUpperCase().trim();
+          if (Array.isArray(blueprintsData.blueprints)) {
+            for (const bp of blueprintsData.blueprints) {
+              const rawIndustry = String(
+                bp.industry ||
+                  bp.industry_name ||
+                  bp.industry_type ||
+                  bp.industry_code ||
+                  bp.blueprint_industry ||
+                  "",
+              )
+                .toUpperCase()
+                .trim();
 
-    const rawTier = String(
-      bp.raw_tier ||
-      bp.tier ||
-      bp.level ||
-      bp.blueprint_tier ||
-      ""
-    ).toUpperCase().trim();
+              const rawTier = String(
+                bp.raw_tier || bp.tier || bp.level || bp.blueprint_tier || "",
+              )
+                .toUpperCase()
+                .trim();
 
-    let industry = rawIndustry;
-    let level = rawTier;
+              let industry = rawIndustry;
+              let level = rawTier;
 
-    if ((!industry || !level || !/^B[1-5]$/.test(level)) && rawTier.includes("_")) {
-      const parts = rawTier.split("_");
-      industry = parts[0] || industry;
-      level = parts[1] || level;
-    }
+              if (
+                (!industry || !level || !/^B[1-5]$/.test(level)) &&
+                rawTier.includes("_")
+              ) {
+                const parts = rawTier.split("_");
+                industry = parts[0] || industry;
+                level = parts[1] || level;
+              }
 
-    if (
-      bpBreakdown[industry] &&
-      bpBreakdown[industry][level] !== undefined
-    ) {
-      bpBreakdown[industry][level]++;
-    }
-  }
-}
-          console.log("Assets blueprint breakdown:", bpBreakdown, blueprintsData.blueprints);
+              if (
+                bpBreakdown[industry] &&
+                bpBreakdown[industry][level] !== undefined
+              ) {
+                bpBreakdown[industry][level]++;
+              }
+            }
+          }
+          console.log(
+            "Assets blueprint breakdown:",
+            bpBreakdown,
+            blueprintsData.blueprints,
+          );
 
           function totalBp(obj) {
             return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
@@ -1543,20 +1561,20 @@ function getPlayerUsername() {
           const gridEl = document.getElementById("packs-grid");
           if (!gridEl) return;
 
-        if (!total) {
-  gridEl.innerHTML = `<div class="empty">No unopened packs.</div>`;
-  return;
-}
+          if (!total) {
+            gridEl.innerHTML = `<div class="empty">No unopened packs.</div>`;
+            return;
+          }
 
-if (!isOwnEmpireView()) {
-  gridEl.innerHTML = `
+          if (!isOwnEmpireView()) {
+            gridEl.innerHTML = `
     <div class="empty">
       You are viewing @${PLAYER_USERNAME}'s empire in read-only mode.<br>
       Pack opening is available only for your own empire.
     </div>
   `;
-  return;
-}
+            return;
+          }
           const maxOpen = Math.min(5, total);
 
           gridEl.innerHTML = `
@@ -3227,31 +3245,33 @@ if (!isOwnEmpireView()) {
           // PASTE STEP 3 CODE HERE
 
           const bpBreakdown = {
-  FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-  SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-};
+            FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+            TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+            PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+            CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+            SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+          };
 
-if (Array.isArray(blueprintsData.blueprints)) {
-  for (const bp of blueprintsData.blueprints) {
-    const tierRaw = String(
-      bp.tier || bp.raw_tier || bp.blueprint_tier || ""
-    ).toUpperCase().trim();
+          if (Array.isArray(blueprintsData.blueprints)) {
+            for (const bp of blueprintsData.blueprints) {
+              const tierRaw = String(
+                bp.tier || bp.raw_tier || bp.blueprint_tier || "",
+              )
+                .toUpperCase()
+                .trim();
 
-    const parts = tierRaw.split("_");
-    const industry = parts[0];
-    const level = parts[1];
+              const parts = tierRaw.split("_");
+              const industry = parts[0];
+              const level = parts[1];
 
-    if (
-      bpBreakdown[industry] &&
-      bpBreakdown[industry][level] !== undefined
-    ) {
-      bpBreakdown[industry][level]++;
-    }
-  }
-}
+              if (
+                bpBreakdown[industry] &&
+                bpBreakdown[industry][level] !== undefined
+              ) {
+                bpBreakdown[industry][level]++;
+              }
+            }
+          }
           if (!blueprints.length) {
             playerBlueprints = [];
             renderBuildFactorySection();
@@ -3451,82 +3471,84 @@ if (Array.isArray(blueprintsData.blueprints)) {
       }
 
       function setupDashboardNavbar() {
-  const loggedInUser = getLoggedInUser();
-  const viewedUser = getViewedUser();
-  const ownView = isOwnEmpireView();
+        const loggedInUser = getLoggedInUser();
+        const viewedUser = getViewedUser();
+        const ownView = isOwnEmpireView();
 
-  const loginBtn = document.getElementById("appbarLoginBtn");
-  const accountWrap = document.getElementById("appbarAccountWrap");
-  const accountBtn = document.getElementById("appbarAccountBtn");
-  const dropdown = document.getElementById("appbarDropdown");
-  const dropdownHead = document.getElementById("appbarDropdownHead");
-  const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
-  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
-  const logoutBtn = document.getElementById("appbarLogoutBtn");
+        const loginBtn = document.getElementById("appbarLoginBtn");
+        const accountWrap = document.getElementById("appbarAccountWrap");
+        const accountBtn = document.getElementById("appbarAccountBtn");
+        const dropdown = document.getElementById("appbarDropdown");
+        const dropdownHead = document.getElementById("appbarDropdownHead");
+        const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
+        const visitOtherEmpireBtn = document.getElementById(
+          "visitOtherEmpireBtn",
+        );
+        const logoutBtn = document.getElementById("appbarLogoutBtn");
 
-  document.querySelectorAll(".auth-only").forEach((link) => {
-    link.classList.remove("hidden-auth-link");
-    link.classList.add("show-auth-link");
-    link.style.display = "inline-flex";
-  });
+        document.querySelectorAll(".auth-only").forEach((link) => {
+          link.classList.remove("hidden-auth-link");
+          link.classList.add("show-auth-link");
+          link.style.display = "inline-flex";
+        });
 
-  if (!loggedInUser) {
-    if (loginBtn) loginBtn.style.display = "none";
-    if (accountWrap) accountWrap.style.display = "none";
-    return;
-  }
+        if (!loggedInUser) {
+          if (loginBtn) loginBtn.style.display = "none";
+          if (accountWrap) accountWrap.style.display = "none";
+          return;
+        }
 
-  if (loginBtn) loginBtn.style.display = "none";
-  if (accountWrap) accountWrap.style.display = "block";
+        if (loginBtn) loginBtn.style.display = "none";
+        if (accountWrap) accountWrap.style.display = "block";
 
-  if (accountBtn) accountBtn.textContent = `@${loggedInUser} ▼`;
-  if (dropdownHead) dropdownHead.textContent = `@${loggedInUser}`;
+        if (accountBtn) accountBtn.textContent = `@${loggedInUser} ▼`;
+        if (dropdownHead) dropdownHead.textContent = `@${loggedInUser}`;
 
-  if (visitMyEmpireLink) {
-    visitMyEmpireLink.href = `player-dashboard.html?user=${encodeURIComponent(loggedInUser)}`;
-  }
+        if (visitMyEmpireLink) {
+          visitMyEmpireLink.href = `player-dashboard.html?user=${encodeURIComponent(loggedInUser)}`;
+        }
 
-  if (accountBtn && dropdown) {
-    accountBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("open");
-    });
+        if (accountBtn && dropdown) {
+          accountBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle("open");
+          });
 
-    document.addEventListener("click", () => {
-      dropdown.classList.remove("open");
-    });
-  }
+          document.addEventListener("click", () => {
+            dropdown.classList.remove("open");
+          });
+        }
 
- if (visitOtherEmpireBtn) {
-  visitOtherEmpireBtn.style.display = "block";
+        if (visitOtherEmpireBtn) {
+          visitOtherEmpireBtn.style.display = "block";
 
-  visitOtherEmpireBtn.onclick = () => {
-    const target = prompt("Enter Hive username to visit empire:");
-    const clean = String(target || "")
-      .replace("@", "")
-      .trim()
-      .toLowerCase();
+          visitOtherEmpireBtn.onclick = () => {
+            const target = prompt("Enter Hive username to visit empire:");
+            const clean = String(target || "")
+              .replace("@", "")
+              .trim()
+              .toLowerCase();
 
-    if (!clean) return;
+            if (!clean) return;
 
-    window.location.href = `player-dashboard.html?user=${encodeURIComponent(clean)}`;
-  };
-}
+            window.location.href = `player-dashboard.html?user=${encodeURIComponent(clean)}`;
+          };
+        }
 
-  const pageHeader = document.querySelector(".header-subline");
-  if (pageHeader && viewedUser && !ownView) {
-    pageHeader.innerHTML = `Viewing empire of <strong>@${viewedUser}</strong>. Logged in as <strong>@${loggedInUser}</strong>.`;
-  }
+        const pageHeader = document.querySelector(".header-subline");
+        if (pageHeader && viewedUser && !ownView) {
+          pageHeader.innerHTML = `Viewing empire of <strong>@${viewedUser}</strong>. Logged in as <strong>@${loggedInUser}</strong>.`;
+        }
 
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("mde_username");
-      localStorage.removeItem("hiveUsername");
-      localStorage.removeItem("username");
-      window.location.href = "index.html";
-    });
-  }
-}
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("mde_username");
+            localStorage.removeItem("hiveUsername");
+            localStorage.removeItem("username");
+            window.location.href = "index.html";
+          });
+        }
+      }
       // ===== INIT =====
 
       function renderEmpirePreview() {
@@ -3964,84 +3986,84 @@ if (Array.isArray(blueprintsData.blueprints)) {
           console.error("Failed to load global health:", err);
         }
       }
-     function applyReadOnlyEmpireMode() {
-  if (isOwnEmpireView()) return;
+      function applyReadOnlyEmpireMode() {
+        if (isOwnEmpireView()) return;
 
-  const viewed = getViewedUser();
+        const viewed = getViewedUser();
 
-  // update top message
-  const header = document.querySelector(".header-subline");
-  if (header) {
-    header.innerHTML =
-      `Viewing empire of <strong>@${viewed}</strong>. ` +
-      `You are in <strong>read-only mode</strong>.`;
-  }
+        // update top message
+        const header = document.querySelector(".header-subline");
+        if (header) {
+          header.innerHTML =
+            `Viewing empire of <strong>@${viewed}</strong>. ` +
+            `You are in <strong>read-only mode</strong>.`;
+        }
 
-  // disable only action buttons, not navigation tabs
-  const actionSelectors = [
-    "#claim-reward-btn",
-    "#withdraw-hive-btn",
-    "#build-factory-btn",
-    "#appbarLoginBtn",
-    "#appbarLogoutBtn",
-    ".rename-factory-btn",
-    ".upgrade-factory-btn",
-    ".maintenance-factory-btn",
-    ".pack-open-btn",
-    ".open-pack-btn",
-    ".trade-btn",
-    ".transfer-btn",
-    ".bp-card-menu-btn",
-    ".bp-card-menu button",
-    ".secondary-button",
-    ".primary-button"
-  ];
+        // disable only action buttons, not navigation tabs
+        const actionSelectors = [
+          "#claim-reward-btn",
+          "#withdraw-hive-btn",
+          "#build-factory-btn",
+          "#appbarLoginBtn",
+          "#appbarLogoutBtn",
+          ".rename-factory-btn",
+          ".upgrade-factory-btn",
+          ".maintenance-factory-btn",
+          ".pack-open-btn",
+          ".open-pack-btn",
+          ".trade-btn",
+          ".transfer-btn",
+          ".bp-card-menu-btn",
+          ".bp-card-menu button",
+          ".secondary-button",
+          ".primary-button",
+        ];
 
-  document.querySelectorAll(actionSelectors.join(",")).forEach((btn) => {
-    btn.disabled = true;
-    btn.style.opacity = "0.6";
-    btn.style.cursor = "not-allowed";
-    btn.title = "Read-only mode";
-  });
+        document.querySelectorAll(actionSelectors.join(",")).forEach((btn) => {
+          btn.disabled = true;
+          btn.style.opacity = "0.6";
+          btn.style.cursor = "not-allowed";
+          btn.title = "Read-only mode";
+        });
 
-  // disable only action form fields
-  const inputSelectors = [
-    "#build-land-select",
-    "#build-blueprint-select",
-    "#build-factory-name",
-    "#build-use-relic"
-  ];
+        // disable only action form fields
+        const inputSelectors = [
+          "#build-land-select",
+          "#build-blueprint-select",
+          "#build-factory-name",
+          "#build-use-relic",
+        ];
 
-  document.querySelectorAll(inputSelectors.join(",")).forEach((el) => {
-    el.disabled = true;
-    el.style.opacity = "0.6";
-    el.title = "Read-only mode";
-  });
+        document.querySelectorAll(inputSelectors.join(",")).forEach((el) => {
+          el.disabled = true;
+          el.style.opacity = "0.6";
+          el.title = "Read-only mode";
+        });
 
-  // disable empty land slots for build action
-  document.querySelectorAll(".land-slot-pad.empty").forEach((slot) => {
-    slot.style.pointerEvents = "none";
-    slot.style.opacity = "0.7";
-    slot.title = "Read-only mode";
-  });
-}
-    window.addEventListener("load", async () => {
-  try {
-    setupDashboardNavbar();
+        // disable empty land slots for build action
+        document.querySelectorAll(".land-slot-pad.empty").forEach((slot) => {
+          slot.style.pointerEvents = "none";
+          slot.style.opacity = "0.7";
+          slot.title = "Read-only mode";
+        });
+      }
+      window.addEventListener("load", async () => {
+        try {
+          setupDashboardNavbar();
 
-    await loadDashboardSummary();
-    await loadRewardSummary();
-    await loadGlobalHealth();
-    await loadEmpireOverview();
-    await loadBlueprints();
-    await loadPacks();
-    applyReadOnlyEmpireMode();
+          await loadDashboardSummary();
+          await loadRewardSummary();
+          await loadGlobalHealth();
+          await loadEmpireOverview();
+          await loadBlueprints();
+          await loadPacks();
+          applyReadOnlyEmpireMode();
 
-    setupDashboardNavbar(); // run again after data is loaded
-  } catch (err) {
-    console.error("Initial dashboard load failed:", err);
-  }
-});
+          setupDashboardNavbar(); // run again after data is loaded
+        } catch (err) {
+          console.error("Initial dashboard load failed:", err);
+        }
+      });
 
       function setupLoggedInNav() {
         const nav = document.getElementById("loggedInNav");
@@ -4063,7 +4085,7 @@ if (Array.isArray(blueprintsData.blueprints)) {
         }
       }
 
-     // setupLoggedInNav();
+      // setupLoggedInNav();
       document
         .getElementById("claim-reward-btn")
         ?.addEventListener("click", claimReward);
