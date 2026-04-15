@@ -352,6 +352,51 @@
     </table>
   </div>
 </div>
+      <div class="section">
+  <h2>EMP Purchase Log</h2>
+
+  <div class="row">
+    <button id="load-emp-sales-btn" class="primary">
+      Load EMP Purchase Log
+    </button>
+  </div>
+
+  <div class="status" id="emp-sales-status">
+    EMP purchase log not loaded yet.
+  </div>
+
+  <div style="overflow-x:auto;">
+    <table
+      style="
+        width:100%;
+        border-collapse:collapse;
+        margin-top:12px;
+        background:#fff;
+        border:1px solid #e5e7eb;
+        border-radius:12px;
+        overflow:hidden;
+      "
+    >
+      <thead style="background:#f9fafb;">
+        <tr>
+          <th style="padding:10px; text-align:left;">Username</th>
+          <th style="padding:10px; text-align:left;">HIVE</th>
+          <th style="padding:10px; text-align:left;">EMP</th>
+          <th style="padding:10px; text-align:left;">Status</th>
+          <th style="padding:10px; text-align:left;">TXID</th>
+          <th style="padding:10px; text-align:left;">Created</th>
+        </tr>
+      </thead>
+      <tbody id="emp-sales-body">
+        <tr>
+          <td colspan="6" style="padding:12px; color:#6b7280;">
+            No EMP purchase log loaded yet.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
      <h2>Player Inspector</h2>
 <div class="row">
   <input
@@ -1204,6 +1249,78 @@ async function loadWalletBalances() {
       ).textContent = "Error loading assets.";
     }
 });
+ async function loadEmpSales() {
+  if (!ADMIN_KEY) {
+    document.getElementById("emp-sales-status").textContent =
+      "Connect Admin first.";
+    return;
+  }
+
+  try {
+    document.getElementById("emp-sales-status").textContent =
+      "Loading EMP purchase log...";
+
+    const res = await fetch(`${API_BASE}/admin/emp-sales`, {
+      headers: {
+        "x-admin-key": ADMIN_KEY,
+      },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      document.getElementById("emp-sales-status").textContent =
+        data.error || "Failed to load EMP purchase log.";
+      return;
+    }
+
+    const body = document.getElementById("emp-sales-body");
+    body.innerHTML = "";
+
+    const sales = data.sales || [];
+
+    if (!sales.length) {
+      body.innerHTML = `
+        <tr>
+          <td colspan="6" style="padding:12px;color:#6b7280;">
+            No EMP purchase records found.
+          </td>
+        </tr>
+      `;
+      document.getElementById("emp-sales-status").textContent =
+        "No EMP purchase records found.";
+      return;
+    }
+
+    for (const sale of sales) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td style="padding:10px;">@${sale.username}</td>
+        <td style="padding:10px;">${Number(sale.hive_amount || 0).toFixed(3)}</td>
+        <td style="padding:10px;">${Number(sale.emp_amount || 0)}</td>
+        <td style="padding:10px;">${sale.status || "--"}</td>
+        <td style="padding:10px;">${sale.txid || "--"}</td>
+        <td style="padding:10px;">${
+          sale.created_at
+            ? new Date(sale.created_at).toLocaleString()
+            : "--"
+        }</td>
+      `;
+      body.appendChild(tr);
+    }
+
+    document.getElementById("emp-sales-status").textContent =
+      `Loaded ${sales.length} EMP purchase records.`;
+
+  } catch (err) {
+    console.error("loadEmpSales error:", err);
+    document.getElementById("emp-sales-status").textContent =
+      "Failed to load EMP purchase log.";
+  }
+}   
+    document
+  .getElementById("load-emp-sales-btn")
+  .addEventListener("click", loadEmpSales);
 </script>
 </body>
 </html>
