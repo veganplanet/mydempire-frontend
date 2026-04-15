@@ -307,18 +307,69 @@
   </div>
 </div>
     <div class="section">
-      <h2>Player Inspector</h2>
+      <div class="section">
+  <h2>All Players</h2>
 
-      <div class="row">
-        <input
-          type="text"
-          id="player-search-input"
-          placeholder="Enter Hive username"
-        />
-        <button id="player-search-btn">Inspect Player</button>
-      </div>
-      </div>
+  <div class="row">
+    <button id="load-all-players-btn" class="primary">
+      Load All Players
+    </button>
+  </div>
 
+  <div class="status" id="all-players-status">
+    Players list not loaded yet.
+  </div>
+
+  <div style="overflow-x:auto;">
+    <table
+      style="
+        width:100%;
+        border-collapse:collapse;
+        margin-top:12px;
+        background:#fff;
+        border:1px solid #e5e7eb;
+        border-radius:12px;
+        overflow:hidden;
+      "
+    >
+      <thead style="background:#f9fafb;">
+        <tr>
+          <th style="padding:10px; text-align:left;">Username</th>
+          <th style="padding:10px; text-align:left;">EMP</th>
+          <th style="padding:10px; text-align:left;">Packs Bought</th>
+          <th style="padding:10px; text-align:left;">Factories</th>
+          <th style="padding:10px; text-align:left;">Lands</th>
+          <th style="padding:10px; text-align:left;">Blueprints</th>
+        </tr>
+      </thead>
+      <tbody id="all-players-body">
+        <tr>
+          <td colspan="6" style="padding:12px; color:#6b7280;">
+            No players loaded yet.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+     <h2>Player Inspector</h2>
+<div class="row">
+  <input
+    type="text"
+    id="player-search-input"
+    placeholder="Enter Hive username"
+  />
+  <button id="player-search-btn">Inspect Player</button>
+</div>
+<div class="row" style="margin-top:10px;">
+  <button id="admin-view-assets-btn">View Assets</button>
+  <button id="admin-give-emp-btn" class="primary">Give EMP</button>
+  <button id="admin-reset-factories-btn" class="danger">Reset Factories</button>
+</div>
+<div class="status" id="admin-player-action-status">
+  No player action yet.
+</div>
+<div id="player-inspector-result" style="margin-top:15px;"></div>
 <!-- ============================= -->
 <!-- WHITELIST MANAGER -->
 <!-- ============================= -->
@@ -1085,6 +1136,74 @@ async function loadWalletBalances() {
       "Failed to load wallet balances.";
   }
 }
+    document
+  .getElementById("load-all-players-btn")
+  .addEventListener("click", loadAllPlayers);
+    document
+  .getElementById("admin-view-assets-btn")
+  .addEventListener("click", async () => {
+
+    const username = document
+      .getElementById("player-search-input")
+      .value.trim();
+
+    if (!username) {
+      document.getElementById(
+        "admin-player-action-status"
+      ).textContent = "Enter a username first.";
+      return;
+    }
+
+    try {
+      document.getElementById(
+        "admin-player-action-status"
+      ).textContent = "Loading player assets...";
+
+      const res = await fetch(
+        `${API_BASE}/admin/player/${encodeURIComponent(username)}`,
+        {
+          headers: {
+            "x-admin-key": ADMIN_KEY
+          }
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        document.getElementById(
+          "admin-player-action-status"
+        ).textContent = data.error || "Failed to load assets.";
+        return;
+      }
+
+      const resultDiv = document.getElementById(
+        "player-inspector-result"
+      );
+
+      resultDiv.innerHTML = `
+        <div class="shop-card">
+          <h3>@${username} Assets</h3>
+          <p><strong>EMP Balance:</strong> ${data.emp_balance}</p>
+          <p><strong>Factories:</strong> ${data.factories.length}</p>
+          <p><strong>Lands:</strong> ${data.lands.length}</p>
+          <p><strong>Blueprints:</strong> ${data.blueprints.length}</p>
+          <p><strong>Relics:</strong> ${data.relics.length}</p>
+          <p><strong>WRITs:</strong> ${data.writs.length}</p>
+        </div>
+      `;
+
+      document.getElementById(
+        "admin-player-action-status"
+      ).textContent = "Assets loaded successfully.";
+
+    } catch (err) {
+      console.error(err);
+      document.getElementById(
+        "admin-player-action-status"
+      ).textContent = "Error loading assets.";
+    }
+});
 </script>
 </body>
 </html>
