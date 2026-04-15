@@ -364,7 +364,35 @@
   <div class="status" id="emp-sales-status">
     EMP purchase log not loaded yet.
   </div>
+<div class="status" id="emp-sales-status">
+  EMP purchase log not loaded yet.
+</div>
 
+<div class="metrics" style="margin-top:12px;">
+  <div class="card">
+    <div class="label">Total EMP Orders</div>
+    <div class="value" id="emp-sales-total-orders">--</div>
+    <div class="small">All recorded EMP purchase orders</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Completed EMP Orders</div>
+    <div class="value" id="emp-sales-completed-orders">--</div>
+    <div class="small">Successful EMP purchases</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Completed HIVE Revenue</div>
+    <div class="value" id="emp-sales-total-hive">--</div>
+    <div class="small">Total HIVE received from EMP sales</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Completed EMP Credited</div>
+    <div class="value" id="emp-sales-total-emp">--</div>
+    <div class="small">Total EMP delivered to players</div>
+  </div>
+</div>
   <div style="overflow-x:auto;">
     <table
       style="
@@ -1274,10 +1302,25 @@ async function loadWalletBalances() {
       return;
     }
 
+    const summary = data.summary || {};
+    const sales = data.sales || [];
+
+    // ===== Fill summary cards =====
+    document.getElementById("emp-sales-total-orders").textContent =
+      Number(summary.total_orders || 0);
+
+    document.getElementById("emp-sales-completed-orders").textContent =
+      Number(summary.completed_orders || 0);
+
+    document.getElementById("emp-sales-total-hive").textContent =
+      `${Number(summary.total_hive_completed || 0).toFixed(3)} HIVE`;
+
+    document.getElementById("emp-sales-total-emp").textContent =
+      Number(summary.total_emp_completed || 0).toFixed(0);
+
+    // ===== Fill sales table =====
     const body = document.getElementById("emp-sales-body");
     body.innerHTML = "";
-
-    const sales = data.sales || [];
 
     if (!sales.length) {
       body.innerHTML = `
@@ -1297,7 +1340,7 @@ async function loadWalletBalances() {
       tr.innerHTML = `
         <td style="padding:10px;">@${sale.username}</td>
         <td style="padding:10px;">${Number(sale.hive_amount || 0).toFixed(3)}</td>
-        <td style="padding:10px;">${Number(sale.emp_amount || 0)}</td>
+        <td style="padding:10px;">${Number(sale.emp_amount || 0).toFixed(0)}</td>
         <td style="padding:10px;">${sale.status || "--"}</td>
         <td style="padding:10px;">${sale.txid || "--"}</td>
         <td style="padding:10px;">${
@@ -1311,7 +1354,6 @@ async function loadWalletBalances() {
 
     document.getElementById("emp-sales-status").textContent =
       `Loaded ${sales.length} EMP purchase records.`;
-
   } catch (err) {
     console.error("loadEmpSales error:", err);
     document.getElementById("emp-sales-status").textContent =
