@@ -1391,13 +1391,12 @@ body{
   object-fit: contain;
 }
 
-.appbar-nav{
+.appbar-nav {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 14px;
   flex-wrap: wrap;
 }
-
 .appbar-link{
   display: inline-flex;
   align-items: center;
@@ -10790,4 +10789,381 @@ cursor:pointer;
   height: 44px !important;
   align-self: start !important;
   margin-top: 24px !important;
+}
+/* ============================= */
+/* INDEX PAGE MOBILE FIXES */
+/* ============================= */
+
+@media (max-width: 900px) {
+  .wrap {
+    padding: 12px 12px 40px;
+  }
+
+  .heroImg {
+    height: 240px;
+  }
+
+  .heroBelow {
+    padding: 12px;
+  }
+
+  .nameLogo {
+    height: 44px;
+  }
+
+  .tags {
+    gap: 8px;
+  }
+
+  .tag {
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+
+  .mainGrid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .buyGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .empire-path-title {
+    font-size: 24px;
+  }
+
+  .empire-path-subtitle {
+    font-size: 14px;
+  }
+
+  .empire-path-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .empire-path-grid::before {
+    display: none;
+  }
+
+  .inside-pack-mini-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .heroImg {
+    height: 200px;
+  }
+
+  .nameLogo {
+    height: 40px;
+  }
+
+  .tag {
+    font-size: 11px;
+    padding: 6px 9px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .buyGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .empire-path-card {
+    padding: 16px;
+  }
+
+  .empire-path-title {
+    font-size: 21px;
+  }
+
+  .empire-step-title {
+    font-size: 15px;
+  }
+
+  .empire-step-text {
+    font-size: 13px;
+  }
+
+  .inside-pack-mini-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 900px) {
+
+  .appbar-nav {
+    gap: 10px;
+  }
+
+  .appbar-link {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+}
+@media (max-width: 900px) {
+  .appbar-inner {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .appbar-left {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .appbar-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .appbar-account-btn,
+  .appbar-login-btn {
+    font-size: 14px;
+    padding: 0 10px;
+    min-height: 36px;
+    max-width: 100%;
+  }
+}
+@media (max-width: 900px) {
+  .appbar-account-btn {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+@media (max-width: 900px) {
+  .appbar {
+    height: auto;
+    min-height: 88px;
+    padding: 10px 0;
+  }
+
+  .appbar-inner {
+    height: auto;
+    align-items: flex-start;
+  }
+
+  body {
+    padding-top: 150px;
+  }
+}
+@media (max-width: 640px) {
+  body {
+    padding-top: 185px;
+  }
+}
+@media (max-width: 900px) {
+  .appbar-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+  }
+
+  .appbar-left {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .appbar-nav {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .appbar-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 900px) {
+  body {
+    padding-top: 220px;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding-top: 250px;
+  }
+}
+@media (max-width: 900px) {
+  .appbar-nav {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .appbar-link {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  .appbar-account-btn,
+  .appbar-login-btn {
+    font-size: 14px;
+    min-height: 36px;
+    padding: 0 10px;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+@media (max-width: 900px) {
+  .appbar-inner {
+    flex-wrap: wrap;
+  }
+
+  .appbar-left {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .appbar-right {
+    flex: 1 1 100%;
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 6px;
+  }
+}
+@media (max-width: 900px) {
+  body {
+    padding-top: 130px;
+  }
+}
+@media (max-width: 900px) {
+  .appbar {
+    position: static !important;
+    transform: none !important;
+  }
+
+  body {
+    padding-top: 0 !important;
+  }
+}
+@media (max-width: 900px) {
+  .appbar-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    height: auto !important;
+    padding: 12px 14px;
+  }
+
+  .appbar-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .appbar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 8px;
+    justify-content: flex-start;
+  }
+
+  .appbar-logo img {
+    height: 56px;
+    width: auto;
+  }
+}
+@media (max-width: 900px) {
+  .appbar-left {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .appbar-nav {
+    width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .appbar-link {
+    font-size: 14px !important;
+    padding: 6px 10px !important;
+  }
+}
+@media (max-width: 900px) {
+
+  .appbar-nav {
+    display: none;
+    width: 100%;
+  }
+
+  
+
+  .appbar-inner {
+    justify-content: center;
+  }
+
+}
+@media (max-width: 640px) {
+
+  .heroImg {
+    height: auto;
+    border-radius: 16px;
+  }
+
+  .heroBelow {
+    padding: 10px;
+  }
+
+  .nameLogo {
+    height: 38px;
+  }
+
+}
+@media (max-width: 640px) {
+
+  .heroImg {
+    max-height: 260px;
+    object-fit: cover;
+  }
+
+}
+@media (max-width: 640px) {
+
+  .appbar {
+    padding: 6px 0;
+  }
+
+  .appbar-logo img {
+    height: 42px;
+  }
+
+}
+@media (max-width: 640px) {
+  .tags {
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .tag {
+    width: fit-content;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .buyGrid {
+    grid-template-columns: 1fr;
+  }
 }
