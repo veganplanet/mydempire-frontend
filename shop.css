@@ -2969,3 +2969,21 @@
   color:white;
   cursor:pointer;
 }
+@media (max-width: 640px) {
+  .shop-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .shop-buy-dominant {
+    grid-template-columns: 1fr;
+    padding: 18px;
+    gap: 16px;
+  }
+
+  .pack-cards-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+}
