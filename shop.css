@@ -3037,3 +3037,57 @@
     padding: 14px;
   }
 }
+/* ============================= */
+/* SHOP MOBILE POLISH */
+/* ============================= */
+
+@media (max-width: 640px) {
+
+  .shop-hero {
+    padding: 20px 16px;
+  }
+
+  .shop-hero h1 {
+    font-size: 28px;
+    line-height: 1.1;
+  }
+
+  .shop-hero p {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .shop-section h2 {
+    font-size: 24px;
+  }
+
+  .shop-section-sub {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .shop-buy-title {
+    font-size: 24px;
+    line-height: 1.15;
+  }
+
+  .shop-buy-text {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .shop-buy-dominant-right input,
+  .shop-buy-main-btn {
+    width: 100%;
+  }
+
+  .shop-buy-main-btn {
+    padding: 13px 16px;
+    font-size: 15px;
+  }
+
+  .shop-info-box {
+    padding: 14px;
+  }
+
+}
