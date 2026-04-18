@@ -1444,32 +1444,48 @@ async function buyPackListing(listingId) {
       })
     });
 
-    const initData = await initRes.json();
+       const session = initData.session;
 
-    if (!initRes.ok || !initData.success) {
-      throw new Error(initData.error || "Failed to initialize pack purchase.");
-    }
+    const pricePerPack =
+      Number(session.quantity || 0) > 0
+        ? Number(session.total_price_hive || 0) / Number(session.quantity || 1)
+        : 0;
 
-    const session = initData.session;
+    const sellerAmount = Number(session.seller_payment?.amount || 0).toFixed(3);
+    const feeAmount = Number(session.fee_payment?.amount || 0).toFixed(3);
+    const sellerTo = session.seller_payment?.to;
+    const feeTo = session.fee_payment?.to;
+    const sellerMemo = session.seller_payment?.memo;
+    const feeMemo = session.fee_payment?.memo;
 
     const confirmText =
       `Buy ${Number(session.quantity || 0)} sealed pack(s)?\n\n` +
-      `Price per pack: ${Number(session.total_price_hive || 0) / Number(session.quantity || 1)} HIVE\n` +
-      `Total payment: ${session.total_payment.amount} HIVE to @${session.total_payment.to}`;
+      `Price per pack: ${pricePerPack} HIVE\n` +
+      `Seller payment: ${sellerAmount} HIVE to @${sellerTo}\n` +
+      `Fee payment: ${feeAmount} HIVE to @${feeTo}`;
 
     const ok = confirm(confirmText);
     if (!ok) return;
 
-    const paymentTransfer = await hiveTransfer(
+    const sellerTransfer = await hiveTransfer(
       ACTIVE_USER,
-      session.total_payment.to,
-      session.total_payment.amount,
-      session.total_payment.memo
+      sellerTo,
+      sellerAmount,
+      sellerMemo
+    );
+
+    const feeTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      feeTo,
+      feeAmount,
+      feeMemo
     );
 
     const paymentTxId =
-      paymentTransfer?.tx_id ||
-      paymentTransfer?.id ||
+      sellerTransfer?.tx_id ||
+      sellerTransfer?.id ||
+      feeTransfer?.tx_id ||
+      feeTransfer?.id ||
       null;
 
     if (!paymentTxId) {
