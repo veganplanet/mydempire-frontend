@@ -100,18 +100,32 @@
           <div class="status" id="create-listing-status"></div>
         </div>
 
-        <div class="card">
-          <div class="market-header">
-            <div class="market-header-left">
-              <h2 id="emp-feed-title">EMP Market Listings</h2>
-              <div class="market-header-sub" id="emp-feed-subtitle">Browse active EMP listings.</div>
-            </div>
-            <div class="pill" id="emp-market-count-pill">0 Listings</div>
-          </div>
+       <div class="card">
+  <div class="market-header">
+    <div class="market-header-left">
+      <h2 id="emp-feed-title">EMP Market Listings</h2>
+      <div class="market-header-sub" id="emp-feed-subtitle">Browse active EMP listings.</div>
+    </div>
+    <div class="pill" id="emp-market-count-pill">0 Listings</div>
+  </div>
 
-          <div id="emp-market-list" class="listing-list"></div>
-        </div>
-      </div>
+  <div id="emp-market-list" class="listing-list">
+    <div class="empty">Loading EMP listings...</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="market-header">
+    <div class="market-header-left">
+      <h2>Recent EMP Trade History</h2>
+      <div class="market-header-sub">Last 10 completed EMP trades</div>
+    </div>
+  </div>
+
+  <div id="emp-history-list" class="listing-list">
+    <div class="empty">No EMP trade history yet.</div>
+  </div>
+</div>
     </section>
 
     <!-- BLUEPRINTS -->
@@ -156,18 +170,30 @@
           <div class="status" id="blueprint-create-status"></div>
         </div>
 
-        <div class="card">
-          <div class="market-header">
-            <div class="market-header-left">
-              <h2 id="blueprint-feed-title">Blueprint Market Listings</h2>
-              <div class="market-header-sub" id="blueprint-feed-subtitle">Browse active blueprint listings.</div>
-            </div>
-            <div class="pill" id="blueprint-market-count-pill">0 Items</div>
-          </div>
+      <div class="card">
+  <div class="market-header">
+    <div class="market-header-left">
+      <h2 id="blueprint-feed-title">Blueprint Market Listings</h2>
+      <div class="market-header-sub" id="blueprint-feed-subtitle">Browse active blueprint listings.</div>
+    </div>
+    <div class="pill" id="blueprint-market-count-pill">0 Items</div>
+  </div>
 
-          <div id="blueprint-feed"></div>
-        </div>
-      </div>
+  <div id="blueprint-feed"></div>
+</div>
+
+<div class="card">
+  <div class="market-header">
+    <div class="market-header-left">
+      <h2>Recent Blueprint Trade History</h2>
+      <div class="market-header-sub">Last 10 completed blueprint trades</div>
+    </div>
+  </div>
+
+  <div id="blueprint-history-list" class="listing-list">
+    <div class="empty">No blueprint trade history yet.</div>
+  </div>
+</div>
     </section>
 
  <!-- PACKS -->
@@ -236,7 +262,20 @@
       <!-- keep this hidden so old pack inventory grid does not appear -->
       <div id="packs-feed" class="pack-grid" style="display:none;"></div>
     </div>
+<div class="card">
+  <div class="market-header">
+    <div class="market-header-left">
+      <h2>Recent Pack Trade History</h2>
+      <div class="market-header-sub">
+        Last 10 completed pack trades
+      </div>
+    </div>
+  </div>
 
+  <div id="pack-history-list" class="listing-list">
+    <div class="empty">No pack trade history yet.</div>
+  </div>
+</div>
   </div>
 </section>
   </div>
@@ -652,45 +691,50 @@ async function buyEmpListing(listingId) {
       throw new Error(initData.error || "Failed to initialize EMP purchase.");
     }
 
-    const session = initData.session;
+       const session = initData.session;
 
-    const rawTotalAmount =
-      session.total_price_hive ??
-      session.total_payment?.amount ??
-      session.total_payment_hive;
+    const sellerAmount = Number(session.seller_payment?.amount || 0).toFixed(3);
+    const feeAmount = Number(session.fee_payment?.amount || 0).toFixed(3);
+    const sellerTo = session.seller_payment?.to;
+    const feeTo = session.fee_payment?.to;
+    const sellerMemo = session.seller_payment?.memo;
+    const feeMemo = session.fee_payment?.memo;
 
-    const numericTotal = Number(rawTotalAmount);
-    if (!Number.isFinite(numericTotal) || numericTotal <= 0) {
-      throw new Error("Invalid total payment amount returned by server.");
-    }
-
-    const totalAmount = numericTotal.toFixed(3);
-    const paymentTo = session.total_payment?.to || "mydempiregain";
-    const paymentMemo = session.total_payment?.memo || `MDE_EMPBUY_${session.id}_${ACTIVE_USER}`;
     const reserveUntil = session.reservation_expires_at
       ? new Date(session.reservation_expires_at).toLocaleString()
       : "shortly";
 
     const ok = confirm(
       `Buy ${Number(session.quantity).toLocaleString()} EMP?\n\n` +
-      `Total payment: ${totalAmount} HIVE to @${paymentTo}\n` +
+      `Seller payment: ${sellerAmount} HIVE to @${sellerTo}\n` +
+      `Fee payment: ${feeAmount} HIVE to @${feeTo}\n\n` +
       `Reservation valid until: ${reserveUntil}`
     );
     if (!ok) return;
 
-    const paymentTransfer = await hiveTransfer(
+    const sellerTransfer = await hiveTransfer(
       ACTIVE_USER,
-      paymentTo,
-      totalAmount,
-      paymentMemo
+      sellerTo,
+      sellerAmount,
+      sellerMemo
     );
 
-    const paymentTxId = paymentTransfer?.tx_id || paymentTransfer?.id;
+    const feeTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      feeTo,
+      feeAmount,
+      feeMemo
+    );
+
+    const paymentTxId =
+      sellerTransfer?.tx_id ||
+      sellerTransfer?.id ||
+      feeTransfer?.tx_id ||
+      feeTransfer?.id;
 
     if (!paymentTxId) {
       throw new Error("Payment transfer did not return a transaction id.");
     }
-
     const finalizeRes = await fetch(apiUrl("/marketplace/emp/buy-finalize"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1439,32 +1483,48 @@ async function buyPackListing(listingId) {
       })
     });
 
-    const initData = await initRes.json();
+       const session = initData.session;
 
-    if (!initRes.ok || !initData.success) {
-      throw new Error(initData.error || "Failed to initialize pack purchase.");
-    }
+    const pricePerPack =
+      Number(session.quantity || 0) > 0
+        ? Number(session.total_price_hive || 0) / Number(session.quantity || 1)
+        : 0;
 
-    const session = initData.session;
+    const sellerAmount = Number(session.seller_payment?.amount || 0).toFixed(3);
+    const feeAmount = Number(session.fee_payment?.amount || 0).toFixed(3);
+    const sellerTo = session.seller_payment?.to;
+    const feeTo = session.fee_payment?.to;
+    const sellerMemo = session.seller_payment?.memo;
+    const feeMemo = session.fee_payment?.memo;
 
     const confirmText =
       `Buy ${Number(session.quantity || 0)} sealed pack(s)?\n\n` +
-      `Price per pack: ${Number(session.total_price_hive || 0) / Number(session.quantity || 1)} HIVE\n` +
-      `Total payment: ${session.total_payment.amount} HIVE to @${session.total_payment.to}`;
+      `Price per pack: ${pricePerPack} HIVE\n` +
+      `Seller payment: ${sellerAmount} HIVE to @${sellerTo}\n` +
+      `Fee payment: ${feeAmount} HIVE to @${feeTo}`;
 
     const ok = confirm(confirmText);
     if (!ok) return;
 
-    const paymentTransfer = await hiveTransfer(
+    const sellerTransfer = await hiveTransfer(
       ACTIVE_USER,
-      session.total_payment.to,
-      session.total_payment.amount,
-      session.total_payment.memo
+      sellerTo,
+      sellerAmount,
+      sellerMemo
+    );
+
+    const feeTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      feeTo,
+      feeAmount,
+      feeMemo
     );
 
     const paymentTxId =
-      paymentTransfer?.tx_id ||
-      paymentTransfer?.id ||
+      sellerTransfer?.tx_id ||
+      sellerTransfer?.id ||
+      feeTransfer?.tx_id ||
+      feeTransfer?.id ||
       null;
 
     if (!paymentTxId) {
@@ -1544,6 +1604,164 @@ document.querySelector('[data-market-tab-panel="packs"]')?.classList.add("active
     alert(err.message || "Server error cancelling listing.");
   }
 }
+  function formatHistoryTime(raw) {
+  if (!raw) return "--";
+  const d = new Date(raw);
+  if (isNaN(d.getTime())) return "--";
+  return d.toLocaleString();
+}
+
+function renderEmpHistory(history) {
+  const box = document.getElementById("emp-history-list");
+  if (!box) return;
+
+  if (!history || !history.length) {
+    box.innerHTML = `<div class="empty">No EMP trade history yet.</div>`;
+    return;
+  }
+
+  box.innerHTML = history.map((item) => `
+    <div class="listing-card">
+      <div class="listing-top">
+        <div>
+          <div class="listing-title">${Number(item.quantity || 0).toLocaleString()} EMP</div>
+          <div class="listing-meta">
+            Seller: @${item.seller_username || "--"} • Buyer: @${item.buyer_username || "--"}
+          </div>
+        </div>
+        <div class="pill">Completed</div>
+      </div>
+
+      <div class="kv-grid">
+        <div class="kv">
+          <div class="k">Total Price</div>
+          <div class="v">${Number(item.total_price_hive || 0).toFixed(3)} HIVE</div>
+        </div>
+        <div class="kv">
+          <div class="k">Fee</div>
+          <div class="v">${Number(item.fee_amount_hive || 0).toFixed(3)} HIVE</div>
+        </div>
+        <div class="kv">
+          <div class="k">Seller Received</div>
+          <div class="v">${Number(item.seller_amount_hive || 0).toFixed(3)} HIVE</div>
+        </div>
+        <div class="kv">
+          <div class="k">Price / EMP</div>
+          <div class="v">${Number(item.unit_price_hive || 0).toFixed(4)} HIVE</div>
+        </div>
+      </div>
+
+      <div class="listing-meta">
+        Session #${item.id} • ${formatHistoryTime(item.completed_at)}
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderBlueprintHistory(history) {
+  const box = document.getElementById("blueprint-history-list");
+  if (!box) return;
+
+  if (!history || !history.length) {
+    box.innerHTML = `<div class="empty">No blueprint trade history yet.</div>`;
+    return;
+  }
+
+  box.innerHTML = history.map((item) => `
+    <div class="listing-card">
+      <div class="listing-top">
+        <div>
+          <div class="listing-title">Blueprint #${item.asset_id || "--"}</div>
+          <div class="listing-meta">
+            Seller: @${item.seller_username || "--"} • Buyer: @${item.buyer_username || "--"}
+          </div>
+        </div>
+        <div class="pill">Completed</div>
+      </div>
+
+      <div class="kv-grid">
+        <div class="kv">
+          <div class="k">Tier</div>
+          <div class="v">${item.nft_tier || "--"}</div>
+        </div>
+        <div class="kv">
+          <div class="k">Era</div>
+          <div class="v">${item.nft_era || "--"}</div>
+        </div>
+        <div class="kv">
+          <div class="k">Price</div>
+          <div class="v">${Number(item.total_price_hive || 0).toFixed(3)} HIVE</div>
+        </div>
+      </div>
+
+      <div class="listing-meta">
+        Session #${item.id} • ${formatHistoryTime(item.completed_at)}
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderPackHistory(history) {
+  const box = document.getElementById("pack-history-list");
+  if (!box) return;
+
+  if (!history || !history.length) {
+    box.innerHTML = `<div class="empty">No pack trade history yet.</div>`;
+    return;
+  }
+
+  box.innerHTML = history.map((item) => `
+    <div class="listing-card">
+      <div class="listing-top">
+        <div>
+          <div class="listing-title">Pack #${item.asset_id || "--"}</div>
+          <div class="listing-meta">
+            Seller: @${item.seller_username || "--"} • Buyer: @${item.buyer_username || "--"}
+          </div>
+        </div>
+        <div class="pill">Completed</div>
+      </div>
+
+      <div class="kv-grid">
+        <div class="kv">
+          <div class="k">Price</div>
+          <div class="v">${Number(item.total_price_hive || 0).toFixed(3)} HIVE</div>
+        </div>
+        <div class="kv">
+          <div class="k">Seller Received</div>
+          <div class="v">${Number(item.seller_amount_hive || 0).toFixed(3)} HIVE</div>
+        </div>
+      </div>
+
+      <div class="listing-meta">
+        Session #${item.id} • ${formatHistoryTime(item.completed_at)}
+      </div>
+    </div>
+  `).join("");
+}
+
+async function loadMarketplaceHistory(assetType, renderFn, boxId) {
+  const box = document.getElementById(boxId);
+  if (!box) return;
+
+  try {
+    const res = await fetch(apiUrl(`/marketplace/history?asset_type=${assetType}&limit=10`));
+    const data = await res.json();
+
+    if (!res.ok || !data.success) throw new Error();
+
+    renderFn(data.history || []);
+  } catch (err) {
+    box.innerHTML = `<div class="empty">Failed to load history.</div>`;
+  }
+}
+
+async function loadAllMarketplaceHistory() {
+  await loadMarketplaceHistory("EMP", renderEmpHistory, "emp-history-list");
+  await loadMarketplaceHistory("BLUEPRINT", renderBlueprintHistory, "blueprint-history-list");
+  await loadMarketplaceHistory("PACK", renderPackHistory, "pack-history-list");
+}
+  loadAllMarketplaceHistory();
 </script>
  
 </body>
