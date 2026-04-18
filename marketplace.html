@@ -652,45 +652,50 @@ async function buyEmpListing(listingId) {
       throw new Error(initData.error || "Failed to initialize EMP purchase.");
     }
 
-    const session = initData.session;
+       const session = initData.session;
 
-    const rawTotalAmount =
-      session.total_price_hive ??
-      session.total_payment?.amount ??
-      session.total_payment_hive;
+    const sellerAmount = Number(session.seller_payment?.amount || 0).toFixed(3);
+    const feeAmount = Number(session.fee_payment?.amount || 0).toFixed(3);
+    const sellerTo = session.seller_payment?.to;
+    const feeTo = session.fee_payment?.to;
+    const sellerMemo = session.seller_payment?.memo;
+    const feeMemo = session.fee_payment?.memo;
 
-    const numericTotal = Number(rawTotalAmount);
-    if (!Number.isFinite(numericTotal) || numericTotal <= 0) {
-      throw new Error("Invalid total payment amount returned by server.");
-    }
-
-    const totalAmount = numericTotal.toFixed(3);
-    const paymentTo = session.total_payment?.to || "mydempiregain";
-    const paymentMemo = session.total_payment?.memo || `MDE_EMPBUY_${session.id}_${ACTIVE_USER}`;
     const reserveUntil = session.reservation_expires_at
       ? new Date(session.reservation_expires_at).toLocaleString()
       : "shortly";
 
     const ok = confirm(
       `Buy ${Number(session.quantity).toLocaleString()} EMP?\n\n` +
-      `Total payment: ${totalAmount} HIVE to @${paymentTo}\n` +
+      `Seller payment: ${sellerAmount} HIVE to @${sellerTo}\n` +
+      `Fee payment: ${feeAmount} HIVE to @${feeTo}\n\n` +
       `Reservation valid until: ${reserveUntil}`
     );
     if (!ok) return;
 
-    const paymentTransfer = await hiveTransfer(
+    const sellerTransfer = await hiveTransfer(
       ACTIVE_USER,
-      paymentTo,
-      totalAmount,
-      paymentMemo
+      sellerTo,
+      sellerAmount,
+      sellerMemo
     );
 
-    const paymentTxId = paymentTransfer?.tx_id || paymentTransfer?.id;
+    const feeTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      feeTo,
+      feeAmount,
+      feeMemo
+    );
+
+    const paymentTxId =
+      sellerTransfer?.tx_id ||
+      sellerTransfer?.id ||
+      feeTransfer?.tx_id ||
+      feeTransfer?.id;
 
     if (!paymentTxId) {
       throw new Error("Payment transfer did not return a transaction id.");
     }
-
     const finalizeRes = await fetch(apiUrl("/marketplace/emp/buy-finalize"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
