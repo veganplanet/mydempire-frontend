@@ -286,10 +286,11 @@
     const host = window.location.hostname;
     const isLocal = host === "localhost" || host === "127.0.0.1";
     const API_BASE = isLocal ? LOCAL_API : PROD_API;
-
+console.log("BUY PACK LISTING NEW FILE LOADED");
     function apiUrl(path) {
       return API_BASE + path;
     }
+    
 function secureFetch(url, options = {}) {
 
   // block actions when visiting another empire
@@ -525,7 +526,7 @@ function renderCompactListingCard({
   const box = document.getElementById("emp-market-list");
   const list = getFilteredEmpListings();
   const countPill = document.getElementById("emp-market-count-pill");
-
+console.log("EMP sample listing:", list[0]);
   updateEmpFeedHeader();
   countPill.textContent = `${list.length} Listing${list.length === 1 ? "" : "s"}`;
 
@@ -538,38 +539,48 @@ function renderCompactListingCard({
     return;
   }
 
-  box.innerHTML = list
-    .map((listing) => {
-      const mine = ACTIVE_USER && listing.seller_username === ACTIVE_USER;
+  box.innerHTML = `
+<div class="compact-list">
+${list.map((listing) => {
 
-      return renderCompactListingCard({
-        mine,
-        title: `${Number(listing.quantity).toLocaleString()} EMP`,
-        meta: `Seller: @${listing.seller_username} • Listing #${listing.id}`,
-        stats: [
-          {
-            label: "Per EMP",
-            value: `${Number(listing.unit_price_hive).toFixed(4)} HIVE`,
-          },
-          {
-            label: "Qty",
-            value: `${Number(listing.quantity).toLocaleString()}`,
-          },
-          {
-            label: "Total",
-            value: `${Number(listing.total_price_hive).toFixed(3)} HIVE`,
-          },
-          {
-            label: "Fee",
-            value: `${Number(listing.fee_amount_hive).toFixed(3)} HIVE`,
-          },
-        ],
-        actionHtml: mine
-          ? `<button class="danger-btn" onclick="cancelEmpListing(${listing.id})">Cancel</button>`
-          : `<button class="primary-btn" onclick="buyEmpListing(${listing.id})">Buy EMP</button>`,
-      });
-    })
-    .join("");
+  const mine =
+    String(listing.seller_username || "").toLowerCase() ===
+    String(ACTIVE_USER || "").toLowerCase();
+
+  return `
+  <div class="compact-row">
+
+    <div class="compact-cell">
+      <div class="compact-asset-title">${Number(listing.quantity).toLocaleString()} EMP</div>
+      <div class="compact-asset-sub">EMP Listing</div>
+    </div>
+
+    <div class="compact-cell">
+      <div class="compact-seller">@${listing.seller_username}</div>
+      <div class="compact-asset-sub">Listing #${listing.id}</div>
+    </div>
+
+    <div class="compact-cell compact-details">
+      <strong>Price:</strong> ${Number(listing.unit_price_hive || 0).toFixed(3)} HIVE / EMP
+    </div>
+
+    <div class="compact-cell compact-price">
+      ${Number(listing.total_price_hive).toFixed(3)} HIVE
+    </div>
+
+    <div class="compact-cell compact-action">
+      ${
+        mine
+          ? `<button class="compact-cancel-btn" onclick="cancelEmpListing(${listing.id})">Cancel</button>`
+          : `<button class="compact-buy-btn" onclick="buyEmpListing(${listing.id})">Buy</button>`
+      }
+    </div>
+
+  </div>
+  `;
+}).join("")}
+</div>
+`;
 }
     async function loadEmpListings() {
       try {
@@ -883,6 +894,7 @@ async function buyEmpListing(listingId) {
 
   updateBlueprintFeedHeader();
   countPill.textContent = `${listings.length} Listing${listings.length === 1 ? "" : "s"}`;
+  console.log("Blueprint sample listing:", listings[0]);
 
   if (!listings.length) {
     feed.innerHTML = `<div class="empty">${
@@ -893,31 +905,45 @@ async function buyEmpListing(listingId) {
     return;
   }
 
-  feed.innerHTML = listings
-    .map((listing) => {
+  feed.innerHTML = `
+  <div class="compact-list">
+    ${listings.map((listing) => {
       const mine =
-        ACTIVE_USER && listing.seller_username === ACTIVE_USER;
+        String(listing.seller_username || "").toLowerCase() ===
+        String(ACTIVE_USER || "").toLowerCase();
 
-      const tier = listing.blueprint?.tier || "B1";
-      const edition = listing.blueprint?.edition || "--";
-      const era = listing.blueprint?.era || "GENESIS";
+      return `
+        <div class="compact-row">
+          <div class="compact-cell">
+            <div class="compact-asset-title">Blueprint #${listing.asset_id || "--"}</div>
+<div class="compact-asset-sub">${listing.blueprint?.tier || "--"}</div>
+          </div>
 
-      return renderCompactListingCard({
-        mine,
-        title: `Blueprint #${listing.asset_id}`,
-        meta: `Seller: @${listing.seller_username} • Listing #${listing.id}`,
-        stats: [
-          { label: "Tier", value: `${tier}` },
-          { label: "Edition", value: `${edition}` },
-          { label: "Era", value: `${era}` },
-          { label: "Price", value: `${Number(listing.total_price_hive).toFixed(3)} HIVE` },
-        ],
-        actionHtml: mine
-          ? `<button class="danger-btn" onclick="cancelBlueprintListing(${listing.id})">Cancel</button>`
-          : `<button class="primary-btn" onclick="buyBlueprintListing(${listing.id})">Buy</button>`,
-      });
-    })
-    .join("");
+          <div class="compact-cell">
+            <div class="compact-seller">@${listing.seller_username || "--"}</div>
+            <div class="compact-asset-sub">Listing #${listing.id || "--"}</div>
+          </div>
+
+          <div class="compact-cell compact-details">
+  <strong>Era:</strong> GENESIS
+</div>
+
+          <div class="compact-cell compact-price">
+            ${Number(listing.total_price_hive || 0).toFixed(3)} HIVE
+          </div>
+
+          <div class="compact-cell compact-action">
+            ${
+              mine
+                ? `<button class="compact-cancel-btn" onclick="cancelBlueprintListing(${listing.id})">Cancel</button>`
+                : `<button class="compact-buy-btn" onclick="buyBlueprintListing(${listing.id})">Buy</button>`
+            }
+          </div>
+        </div>
+      `;
+    }).join("")}
+  </div>
+`;
 }
 
     function renderBlueprintFeed() {
@@ -1401,49 +1427,65 @@ async function loadPackListings() {
     }
 
     if (box) {
-      box.innerHTML = listings
-        .map((l) => {
-          const mine =
-            String(l.seller_username || "").toLowerCase() ===
-            String(ACTIVE_USER || "").toLowerCase();
+  box.innerHTML = `
+    <div class="compact-list">
+      ${listings.map((l) => {
+        const mine =
+          String(l.seller_username || "").toLowerCase() ===
+          String(ACTIVE_USER || "").toLowerCase();
 
-          const remainingQty = Number(l.remaining_quantity ?? l.quantity ?? 1);
-          const unitPrice = Number(l.unit_price_hive || 0);
-          const totalPrice = Number(l.total_price_hive || 0);
-          const fee = Number(l.fee_amount_hive || 0);
+        const remainingQty = Number(l.remaining_quantity ?? l.quantity ?? 1);
+        const unitPrice = Number(l.unit_price_hive || 0);
+        const totalPrice = Number(l.total_price_hive || 0);
 
-          return renderCompactListingCard({
-            mine,
-            title: `${remainingQty} Sealed Pack${remainingQty > 1 ? "s" : ""}`,
-            meta: `Seller: @${l.seller_username} • Status: ${l.status}`,
-            stats: [
-              { label: "Per Pack", value: `${unitPrice.toFixed(3)} HIVE` },
-              { label: "Remaining", value: `${remainingQty}` },
-              { label: "Total", value: `${totalPrice.toFixed(3)} HIVE` },
-              { label: "Fee", value: `${fee.toFixed(3)} HIVE` },
-            ],
-            actionHtml:
-              mine && ["active", "reserved"].includes(String(l.status || "").toLowerCase())
-                ? `<button class="danger-btn" type="button" onclick="cancelPackListing(${l.id})">Cancel</button>`
-                : `
-                  <div style="display:flex; gap:8px; align-items:center;">
-                    <input
-                      id="buy-pack-qty-${l.id}"
-                      type="number"
-                      min="1"
-                      max="${remainingQty}"
-                      value="1"
-                      style="width:70px; padding:6px; border:1px solid #ccc; border-radius:6px;"
-                    />
-                    <button class="primary-btn" type="button" onclick="buyPackListing(${l.id})">
-                      Buy Packs
-                    </button>
-                  </div>
-                `,
-          });
-        })
-        .join("");
-    }
+        return `
+          <div class="compact-row">
+            <div class="compact-cell">
+              <div class="compact-asset-title">${remainingQty} Sealed Pack${remainingQty > 1 ? "s" : ""}</div>
+              <div class="compact-asset-sub">Genesis Pack</div>
+            </div>
+
+            <div class="compact-cell">
+              <div class="compact-seller">@${l.seller_username || "--"}</div>
+              <div class="compact-asset-sub">Listing #${l.id || "--"}</div>
+            </div>
+
+            <div class="compact-cell compact-details">
+              <strong>Era:</strong> GENESIS<br>
+              <strong>Price / Pack:</strong> ${unitPrice.toFixed(3)} HIVE
+            </div>
+
+            <div class="compact-cell compact-price">
+              ${totalPrice.toFixed(3)} HIVE
+            </div>
+
+            <div class="compact-cell compact-action">
+              ${
+                mine && ["active", "reserved"].includes(String(l.status || "").toLowerCase())
+                  ? `<button class="compact-cancel-btn" type="button" onclick="cancelPackListing(${l.id})">Cancel</button>`
+                  : `
+                    <div style="display:flex; gap:8px; align-items:center; justify-content:flex-end;">
+                      <input
+                        id="buy-pack-qty-${l.id}"
+                        type="number"
+                        min="1"
+                        max="${remainingQty}"
+                        value="1"
+                        style="width:70px; padding:6px; border:1px solid #ccc; border-radius:6px;"
+                      />
+                      <button class="compact-buy-btn" type="button" onclick="buyPackListing(${l.id})">
+                        Buy
+                      </button>
+                    </div>
+                  `
+              }
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
   } catch (err) {
     console.error("loadPackListings error:", err);
     if (box) {
@@ -1482,8 +1524,11 @@ async function buyPackListing(listingId) {
         buy_quantity: buyQuantity
       })
     });
-
-       const session = initData.session;
+const data = await initRes.json();
+if (!initRes.ok || !data.success) {
+  throw new Error(data.error || "Failed to initialize marketplace purchase.");
+}
+       const session = data.session;
 
     const pricePerPack =
       Number(session.quantity || 0) > 0
@@ -1611,133 +1656,148 @@ document.querySelector('[data-market-tab-panel="packs"]')?.classList.add("active
   return d.toLocaleString();
 }
 
-function renderEmpHistory(history) {
-  const box = document.getElementById("emp-history-list");
+function renderEmpHistory(history, box) {
   if (!box) return;
 
-  if (!history || !history.length) {
-    box.innerHTML = `<div class="empty">No EMP trade history yet.</div>`;
+  if (!Array.isArray(history) || !history.length) {
+    box.innerHTML = `<div class="empty">No EMP trade history found.</div>`;
     return;
   }
 
-  box.innerHTML = history.map((item) => `
-    <div class="listing-card">
-      <div class="listing-top">
-        <div>
-          <div class="listing-title">${Number(item.quantity || 0).toLocaleString()} EMP</div>
-          <div class="listing-meta">
-            Seller: @${item.seller_username || "--"} • Buyer: @${item.buyer_username || "--"}
+  box.innerHTML = `
+    <div class="trade-tape">
+      ${history.map((item, index) => {
+
+        const qty = Number(item.quantity || 0);
+        const total = Number(item.total_price_hive || 0);
+        const seller = item.seller_username || "--";
+        const buyer = item.buyer_username || "--";
+        const time = formatHistoryTime(item.completed_at || item.created_at);
+
+        return `
+          <div class="trade-row ${index % 2 === 0 ? "trade-row-even" : "trade-row-odd"}">
+
+            <div class="trade-col trade-asset">
+              ${qty.toLocaleString()} EMP
+            </div>
+
+            <div class="trade-col trade-users">
+              @${seller} → @${buyer}
+            </div>
+
+            <div class="trade-col trade-total">
+              ${total.toFixed(3)} HIVE
+            </div>
+
+            <div class="trade-col trade-time">
+              ${time}
+            </div>
+
           </div>
-        </div>
-        <div class="pill">Completed</div>
-      </div>
-
-      <div class="kv-grid">
-        <div class="kv">
-          <div class="k">Total Price</div>
-          <div class="v">${Number(item.total_price_hive || 0).toFixed(3)} HIVE</div>
-        </div>
-        <div class="kv">
-          <div class="k">Fee</div>
-          <div class="v">${Number(item.fee_amount_hive || 0).toFixed(3)} HIVE</div>
-        </div>
-        <div class="kv">
-          <div class="k">Seller Received</div>
-          <div class="v">${Number(item.seller_amount_hive || 0).toFixed(3)} HIVE</div>
-        </div>
-        <div class="kv">
-          <div class="k">Price / EMP</div>
-          <div class="v">${Number(item.unit_price_hive || 0).toFixed(4)} HIVE</div>
-        </div>
-      </div>
-
-      <div class="listing-meta">
-        Session #${item.id} • ${formatHistoryTime(item.completed_at)}
-      </div>
+        `;
+      }).join("")}
     </div>
-  `).join("");
+  `;
 }
 
-function renderBlueprintHistory(history) {
-  const box = document.getElementById("blueprint-history-list");
+function renderBlueprintHistory(history, box) {
   if (!box) return;
 
-  if (!history || !history.length) {
-    box.innerHTML = `<div class="empty">No blueprint trade history yet.</div>`;
+  if (!Array.isArray(history) || !history.length) {
+    box.innerHTML = `<div class="empty">No blueprint trade history found.</div>`;
     return;
   }
 
-  box.innerHTML = history.map((item) => `
-    <div class="listing-card">
-      <div class="listing-top">
-        <div>
-          <div class="listing-title">Blueprint #${item.asset_id || "--"}</div>
-          <div class="listing-meta">
-            Seller: @${item.seller_username || "--"} • Buyer: @${item.buyer_username || "--"}
+  box.innerHTML = `
+    <div class="trade-tape">
+      ${history.map((item, index) => {
+
+        const blueprint = item.blueprint_type || item.industry || "Blueprint";
+        const level = item.blueprint_level || "";
+        const price = Number(item.total_price_hive || 0);
+
+        const seller = item.seller_username || "--";
+        const buyer = item.buyer_username || "--";
+        const time = formatHistoryTime(item.completed_at || item.created_at);
+
+        return `
+          <div class="trade-row ${index % 2 === 0 ? "trade-row-even" : "trade-row-odd"}">
+
+            <div class="trade-col trade-asset">
+              ${blueprint} ${level}
+            </div>
+
+            <div class="trade-col trade-users">
+              @${seller} → @${buyer}
+            </div>
+
+            <div class="trade-col trade-total">
+              ${price.toFixed(3)} HIVE
+            </div>
+
+            <div class="trade-col trade-time">
+              ${time}
+            </div>
+
           </div>
-        </div>
-        <div class="pill">Completed</div>
-      </div>
-
-      <div class="kv-grid">
-        <div class="kv">
-          <div class="k">Tier</div>
-          <div class="v">${item.nft_tier || "--"}</div>
-        </div>
-        <div class="kv">
-          <div class="k">Era</div>
-          <div class="v">${item.nft_era || "--"}</div>
-        </div>
-        <div class="kv">
-          <div class="k">Price</div>
-          <div class="v">${Number(item.total_price_hive || 0).toFixed(3)} HIVE</div>
-        </div>
-      </div>
-
-      <div class="listing-meta">
-        Session #${item.id} • ${formatHistoryTime(item.completed_at)}
-      </div>
+        `;
+      }).join("")}
     </div>
-  `).join("");
+  `;
 }
+function formatHistoryTime(ts) {
+  if (!ts) return "--";
 
-function renderPackHistory(history) {
-  const box = document.getElementById("pack-history-list");
-  if (!box) return;
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return "--";
 
+  return d.toLocaleString(undefined, {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+function renderPackHistory(history, box) {
   if (!history || !history.length) {
-    box.innerHTML = `<div class="empty">No pack trade history yet.</div>`;
+    box.innerHTML = `<div class="empty">No pack trade history found.</div>`;
     return;
   }
 
-  box.innerHTML = history.map((item) => `
-    <div class="listing-card">
-      <div class="listing-top">
-        <div>
-          <div class="listing-title">Pack #${item.asset_id || "--"}</div>
-          <div class="listing-meta">
-            Seller: @${item.seller_username || "--"} • Buyer: @${item.buyer_username || "--"}
+  box.innerHTML = `
+    <div class="trade-tape">
+      ${history.map((item, index) => {
+        const qty = Number(item.quantity || 0);
+        const total = Number(item.total_price_hive || 0);
+        const pricePerPack = qty > 0 ? (total / qty).toFixed(3) : "0.000";
+        const time = formatHistoryTime(item.completed_at || item.created_at);
+
+        return `
+          <div class="trade-row ${index % 2 === 0 ? "trade-row-even" : "trade-row-odd"}">
+            <div class="trade-col trade-asset">
+              ${qty} Pack${qty === 1 ? "" : "s"}
+            </div>
+
+            <div class="trade-col trade-users">
+              @${item.seller_username || "--"} → @${item.buyer_username || "--"}
+            </div>
+
+            <div class="trade-col trade-price">
+              ${pricePerPack} HIVE/pack
+            </div>
+
+            <div class="trade-col trade-total">
+              ${total.toFixed(3)} HIVE
+            </div>
+
+            <div class="trade-col trade-time">
+              ${time}
+            </div>
           </div>
-        </div>
-        <div class="pill">Completed</div>
-      </div>
-
-      <div class="kv-grid">
-        <div class="kv">
-          <div class="k">Price</div>
-          <div class="v">${Number(item.total_price_hive || 0).toFixed(3)} HIVE</div>
-        </div>
-        <div class="kv">
-          <div class="k">Seller Received</div>
-          <div class="v">${Number(item.seller_amount_hive || 0).toFixed(3)} HIVE</div>
-        </div>
-      </div>
-
-      <div class="listing-meta">
-        Session #${item.id} • ${formatHistoryTime(item.completed_at)}
-      </div>
+        `;
+      }).join("")}
     </div>
-  `).join("");
+  `;
 }
 
 async function loadMarketplaceHistory(assetType, renderFn, boxId) {
@@ -1750,7 +1810,7 @@ async function loadMarketplaceHistory(assetType, renderFn, boxId) {
 
     if (!res.ok || !data.success) throw new Error();
 
-    renderFn(data.history || []);
+    renderFn(data.history || [], box);
   } catch (err) {
     box.innerHTML = `<div class="empty">Failed to load history.</div>`;
   }

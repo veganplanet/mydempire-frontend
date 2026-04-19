@@ -955,7 +955,12 @@ body{
   flex-wrap:wrap;
   gap:12px;
 }
-.nameLogo{ height:62px; }
+.nameLogo{
+  height:124px;   /* 2x bigger */
+  width:auto;
+  position:relative;
+  top:30px;
+}
 .tags{ display:flex; gap:10px; flex-wrap:wrap; }
 .tag{
   padding:8px 12px;
@@ -1344,8 +1349,10 @@ body{
   --appbar-height:86px;
 }
 
-body{
-  padding-top: var(--appbar-height);
+@media (max-width:900px){
+  body{
+    padding-top: 0 !important;
+  }
 }
 
 .appbar{
@@ -1391,12 +1398,13 @@ body{
   object-fit: contain;
 }
 
-.appbar-nav {
+.appbar-nav{
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 6px;
   flex-wrap: wrap;
 }
+
 .appbar-link{
   display: inline-flex;
   align-items: center;
@@ -10790,380 +10798,428 @@ cursor:pointer;
   align-self: start !important;
   margin-top: 24px !important;
 }
+
 /* ============================= */
-/* INDEX PAGE MOBILE FIXES */
+/* SAFE MOBILE MENU */
 /* ============================= */
 
-@media (max-width: 900px) {
-  .wrap {
-    padding: 12px 12px 40px;
+#mobileNavToggle{
+  display:none;
+}
+
+/* ============================= */
+/* MOBILE */
+/* ============================= */
+
+@media (max-width:900px){
+
+  #mobileNavToggle{
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
+
+    min-height:36px;
+    padding:6px 12px;
+    margin-left:10px;
+
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.2);
+
+    background:#7c3aed;
+    color:#ffffff;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
   }
 
-  .heroImg {
-    height: 240px;
+  .appbar-nav{
+    display:none !important;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:8px;
+    padding:10px 16px;
   }
 
-  .heroBelow {
-    padding: 12px;
+  .appbar-nav.mobile-open{
+    display:flex !important;
   }
 
-  .nameLogo {
-    height: 44px;
+}
+
+/* ============================= */
+/* DESKTOP */
+/* ============================= */
+
+@media (min-width:901px){
+
+  #mobileNavToggle{
+    display:none !important;
   }
 
-  .tags {
-    gap: 8px;
+  .appbar-nav{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  gap:32px !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+
+  .appbar-left{
+    width:auto !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:40px !important;
+    flex-direction:row !important;
   }
 
-  .tag {
-    font-size: 12px;
-    padding: 7px 10px;
+}
+/* Fix hero spacing under navbar */
+
+.hero{
+  margin-top:0 !important;
+}
+
+@media (max-width:900px){
+  .hero{
+    margin-top:4px !important;
+  }
+}
+@media (max-width:900px){
+  .appbar{
+    margin-bottom: 0 !important;
   }
 
-  .mainGrid {
+  .wrap{
+    margin-top: 0 !important;
+  }
+
+  .hero{
+    margin-top: 0 !important;
+  }
+}
+.hero img{
+  display:block;
+  margin-top:-40px;
+}
+/* Fix hero spacing */
+
+.hero{
+  margin-top:0 !important;
+  padding-top:0 !important;
+}
+.heroImg{
+  display:block;
+  width:100%;
+  margin-top:0 !important;
+}
+@media (max-width:900px){
+
+  .hero{
+    margin-top:-40px !important;
+    position:relative;
+    z-index:1;
+  }
+
+  .appbar{
+    position:relative;
+    z-index:5;
+  }
+
+}
+@media (max-width:900px){
+  .heroBelow{
+    position:relative;
+    z-index:2;
+    margin-top:6px;
+  }
+
+  .nameLogo{
+    position:relative;
+    z-index:2;
+  }
+}
+@media (max-width:900px){
+
+  .hero img + img{
+    margin-top:60px !important;
+  }
+
+}
+/* ============================= */
+/* DESKTOP HERO POSITION FIX */
+/* ============================= */
+
+@media (min-width:901px){
+
+  .hero{
+    margin-top:-50px !important;
+    position:relative;
+    z-index:1;
+  }
+
+  .appbar{
+    position:relative;
+    z-index:5;
+  }
+
+}
+/* push small logo below hero */
+
+@media (min-width:901px){
+
+  .inside-pack-mini{
+    margin-top:20px !important;
+  }
+
+}
+/* Pull the mini logo section downward */
+
+.inside-pack-mini{
+  margin-top:70px !important;
+}
+/* pull small logo below hero downward */
+.nameLogo{
+  position: relative;
+  top: 22px;
+}
+.appbar-logo img{
+  height:84px;
+  width:auto;
+  display:block;
+  object-fit:contain;
+  margin-right:12px;
+}
+.trade-row{
+  display:grid;
+  grid-template-columns: 140px 1.8fr 140px 170px 120px 140px;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px;
+  border:1px solid #dbe3f0;
+  border-radius:14px;
+  margin-bottom:10px;
+  font-size:14px;
+}
+
+.trade-row-even{
+  background:#f8fbff;
+}
+
+.trade-row-odd{
+  background:#eef4ff;
+}
+
+.trade-col{
+  min-width:0;
+  color:#334155;
+}
+
+.trade-pack strong{
+  font-size:16px;
+  color:#0f172a;
+}
+
+.trade-price,
+.trade-seller{
+  font-weight:800;
+  color:#0f172a;
+}
+
+.trade-session{
+  color:#64748b;
+}
+
+.trade-status{
+  text-align:right;
+}
+
+.trade-status-pill{
+  display:inline-block;
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid #bfd3f8;
+  background:#edf4ff;
+  color:#2563eb;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+
+@media (max-width: 1100px){
+  .trade-row{
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap:8px;
   }
 
-  .buyGrid {
+  .trade-status{
+    text-align:left;
+  }
+}
+.trade-tape{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.trade-row{
+  display:grid;
+  grid-template-columns: 110px 1.8fr 140px 130px 120px;
+  align-items:center;
+  gap:12px;
+  padding:10px 14px;
+  border:1px solid #dbe4f0;
+  border-radius:12px;
+  font-size:13px;
+  line-height:1.35;
+}
+
+.trade-row-even{
+  background:#f8fbff;
+}
+
+.trade-row-odd{
+  background:#eef4ff;
+}
+
+.trade-col{
+  min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:#334155;
+}
+
+.trade-asset{
+  font-weight:800;
+  color:#0f172a;
+}
+
+.trade-users{
+  font-weight:600;
+}
+
+.trade-price,
+.trade-total{
+  font-weight:700;
+  color:#0f172a;
+}
+
+.trade-time{
+  text-align:right;
+  color:#64748b;
+  font-size:12px;
+}
+
+@media (max-width: 980px){
+  .trade-row{
     grid-template-columns: 1fr;
+    gap:6px;
   }
 
-  .empire-path-title {
-    font-size: 24px;
-  }
-
-  .empire-path-subtitle {
-    font-size: 14px;
-  }
-
-  .empire-path-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .empire-path-grid::before {
-    display: none;
-  }
-
-  .inside-pack-mini-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .trade-time{
+    text-align:left;
   }
 }
+/* ============================= */
+/* COMPACT MARKET LISTINGS */
+/* ============================= */
 
-@media (max-width: 640px) {
-  .heroImg {
-    height: 200px;
-  }
-
-  .nameLogo {
-    height: 40px;
-  }
-
-  .tag {
-    font-size: 11px;
-    padding: 6px 9px;
-  }
-
-  .card {
-    padding: 14px;
-  }
-
-  .buyGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .empire-path-card {
-    padding: 16px;
-  }
-
-  .empire-path-title {
-    font-size: 21px;
-  }
-
-  .empire-step-title {
-    font-size: 15px;
-  }
-
-  .empire-step-text {
-    font-size: 13px;
-  }
-
-  .inside-pack-mini-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-@media (max-width: 900px) {
-
-  .appbar-nav {
-    gap: 10px;
-  }
-
-  .appbar-link {
-    font-size: 14px;
-    padding: 6px 10px;
-  }
-
-}
-@media (max-width: 900px) {
-  .appbar-inner {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 10px;
-  }
-
-  .appbar-left {
-    width: 100%;
-    flex-wrap: wrap;
-  }
-
-  .appbar-right {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .appbar-account-btn,
-  .appbar-login-btn {
-    font-size: 14px;
-    padding: 0 10px;
-    min-height: 36px;
-    max-width: 100%;
-  }
-}
-@media (max-width: 900px) {
-  .appbar-account-btn {
-    max-width: 220px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-@media (max-width: 900px) {
-  .appbar {
-    height: auto;
-    min-height: 88px;
-    padding: 10px 0;
-  }
-
-  .appbar-inner {
-    height: auto;
-    align-items: flex-start;
-  }
-
-  body {
-    padding-top: 150px;
-  }
-}
-@media (max-width: 640px) {
-  body {
-    padding-top: 185px;
-  }
-}
-@media (max-width: 900px) {
-  .appbar-inner {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 12px;
-    padding: 12px 14px;
-  }
-
-  .appbar-left {
-    width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .appbar-nav {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .appbar-right {
-    width: 100%;
-    justify-content: flex-start;
-  }
-}
-@media (max-width: 900px) {
-  body {
-    padding-top: 220px;
-  }
+.compact-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
 }
 
-@media (max-width: 640px) {
-  body {
-    padding-top: 250px;
-  }
+.compact-row{
+  display:grid;
+  grid-template-columns: 220px 190px 1.6fr 150px 110px;
+  gap:12px;
+  align-items:center;
+  padding:14px 16px;
+  border:1px solid #dbe4f0;
+  border-radius:16px;
+  background:#f8fbff;
 }
-@media (max-width: 900px) {
-  .appbar-nav {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
 
-  .appbar-link {
-    font-size: 14px;
-    padding: 6px 10px;
-  }
-
-  .appbar-account-btn,
-  .appbar-login-btn {
-    font-size: 14px;
-    min-height: 36px;
-    padding: 0 10px;
-    max-width: 220px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+.compact-row:nth-child(even){
+  background:#eef4ff;
 }
-@media (max-width: 900px) {
-  .appbar-inner {
-    flex-wrap: wrap;
-  }
 
-  .appbar-left {
-    flex: 1 1 100%;
-    min-width: 100%;
-  }
-
-  .appbar-right {
-    flex: 1 1 100%;
-    width: 100%;
-    justify-content: flex-start;
-    margin-top: 6px;
-  }
+.compact-cell{
+  min-width:0;
 }
-@media (max-width: 900px) {
-  body {
-    padding-top: 130px;
-  }
+
+.compact-asset-title{
+  font-size:15px;
+  font-weight:800;
+  color:#0f172a;
+  margin-bottom:4px;
 }
-@media (max-width: 900px) {
-  .appbar {
-    position: static !important;
-    transform: none !important;
-  }
 
-  body {
-    padding-top: 0 !important;
-  }
+.compact-asset-sub{
+  font-size:13px;
+  color:#64748b;
+  line-height:1.4;
 }
-@media (max-width: 900px) {
-  .appbar-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    height: auto !important;
-    padding: 12px 14px;
-  }
 
-  .appbar-left {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    gap: 10px;
-  }
-
-  .appbar-nav {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    gap: 8px;
-    justify-content: flex-start;
-  }
-
-  .appbar-logo img {
-    height: 56px;
-    width: auto;
-  }
+.compact-seller{
+  font-size:14px;
+  font-weight:700;
+  color:#334155;
 }
-@media (max-width: 900px) {
-  .appbar-left {
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 10px !important;
-  }
 
-  .appbar-nav {
-    width: 100% !important;
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: flex-start !important;
-    gap: 8px !important;
-  }
-
-  .appbar-link {
-    font-size: 14px !important;
-    padding: 6px 10px !important;
-  }
+.compact-details{
+  font-size:14px;
+  color:#334155;
+  line-height:1.5;
 }
-@media (max-width: 900px) {
 
-  .appbar-nav {
-    display: none;
-    width: 100%;
-  }
-
-  
-
-  .appbar-inner {
-    justify-content: center;
-  }
-
+.compact-details strong{
+  color:#0f172a;
 }
-@media (max-width: 640px) {
 
-  .heroImg {
-    height: auto;
-    border-radius: 16px;
-  }
-
-  .heroBelow {
-    padding: 10px;
-  }
-
-  .nameLogo {
-    height: 38px;
-  }
-
+.compact-price{
+  font-size:18px;
+  font-weight:900;
+  color:#0f172a;
+  white-space:nowrap;
 }
-@media (max-width: 640px) {
 
-  .heroImg {
-    max-height: 260px;
-    object-fit: cover;
-  }
-
+.compact-action{
+  text-align:right;
 }
-@media (max-width: 640px) {
 
-  .appbar {
-    padding: 6px 0;
-  }
-
-  .appbar-logo img {
-    height: 42px;
-  }
-
+.compact-buy-btn,
+.compact-cancel-btn{
+  min-width:90px;
+  padding:10px 14px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  font-weight:800;
+  cursor:pointer;
 }
-@media (max-width: 640px) {
-  .tags {
-    justify-content: center;
-    gap: 10px;
+
+.compact-buy-btn{
+  background:linear-gradient(180deg,#3b82f6,#2563eb);
+  color:#fff;
+}
+
+.compact-cancel-btn{
+  background:#fee2e2;
+  color:#b91c1c;
+  border:1px solid #fecaca;
+}
+
+@media (max-width: 1100px){
+  .compact-row{
+    grid-template-columns:1fr;
+    gap:8px;
   }
 
-  .tag {
-    width: fit-content;
-    max-width: 100%;
-    text-align: center;
-  }
-
-  .buyGrid {
-    grid-template-columns: 1fr;
+  .compact-action{
+    text-align:left;
   }
 }

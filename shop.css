@@ -1160,7 +1160,7 @@
   align-items:center;
   justify-content:center;
 }
-<div class="land-icon">🏞️</div>
+
 .land-icon{
   font-size:22px;
   margin-bottom:8px;
@@ -2430,14 +2430,19 @@
   inset:0;
   border-radius:22px;
   padding:4px;
+
   background:linear-gradient(145deg,var(--color),#0f172a,var(--color));
+
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite:exclude;
+
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
-  mask-composite:exclude;
 }
-
 .pack-showcase-slide .nft-inner{
   position:absolute;
   inset:8px;
@@ -2969,16 +2974,11 @@
   color:white;
   cursor:pointer;
 }
+/* SHOP MOBILE GRID FIX */
 @media (max-width: 640px) {
-  .shop-table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
 
   .shop-buy-dominant {
     grid-template-columns: 1fr;
-    padding: 18px;
     gap: 16px;
   }
 
@@ -2986,108 +2986,45 @@
     grid-template-columns: 1fr 1fr;
     gap: 14px;
   }
-}
-@media (max-width: 640px) {
-  .shop-hero {
-    padding: 20px 16px;
-  }
 
-  .shop-hero h1 {
-    font-size: 28px;
-    line-height: 1.1;
-  }
-
-  .shop-hero p {
-    font-size: 15px;
-    line-height: 1.6;
-  }
-
-  .shop-section h2 {
-    font-size: 24px;
-  }
-
-  .shop-section-sub {
-    font-size: 14px;
-    line-height: 1.6;
-  }
-
-  .shop-buy-title {
-    font-size: 24px;
-    line-height: 1.15;
-  }
-
-  .shop-buy-text {
-    font-size: 14px;
-    line-height: 1.6;
-  }
-}
-@media (max-width: 640px) {
-  .shop-buy-dominant-right input,
-  .shop-buy-main-btn {
-    width: 100%;
-  }
-
-  .shop-buy-main-btn {
-    padding: 13px 16px;
-    font-size: 15px;
-  }
-}
-@media (max-width: 640px) {
-  .shop-info-box {
-    padding: 14px;
-  }
 }
 /* ============================= */
-/* SHOP MOBILE POLISH */
+/* MOBILE MENU BUTTON - SAFE TEST */
 /* ============================= */
 
-@media (max-width: 640px) {
+#mobileNavToggle{
+  display:none;
+}
 
-  .shop-hero {
-    padding: 20px 16px;
+@media (max-width:900px){
+  #mobileNavToggle{
+    display:flex !important;
+    width:fit-content;
+    margin:10px auto 10px auto;
+    align-items:center;
+    justify-content:center;
+    min-height:38px;
+    padding:0 12px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.2);
+    background:#7c3aed;
+    color:#ffffff;
+    font-weight:800;
+    font-size:14px;
+    cursor:pointer;
+  }
+}
+@media (max-width:900px){
+
+  .appbar-nav{
+    display:none;
+    flex-direction:column;
+    gap:8px;
+    padding:10px 16px;
   }
 
-  .shop-hero h1 {
-    font-size: 28px;
-    line-height: 1.1;
-  }
-
-  .shop-hero p {
-    font-size: 15px;
-    line-height: 1.6;
-  }
-
-  .shop-section h2 {
-    font-size: 24px;
-  }
-
-  .shop-section-sub {
-    font-size: 14px;
-    line-height: 1.6;
-  }
-
-  .shop-buy-title {
-    font-size: 24px;
-    line-height: 1.15;
-  }
-
-  .shop-buy-text {
-    font-size: 14px;
-    line-height: 1.6;
-  }
-
-  .shop-buy-dominant-right input,
-  .shop-buy-main-btn {
-    width: 100%;
-  }
-
-  .shop-buy-main-btn {
-    padding: 13px 16px;
-    font-size: 15px;
-  }
-
-  .shop-info-box {
-    padding: 14px;
+  .appbar-nav.mobile-open{
+    display:flex;
   }
 
 }

@@ -6,12 +6,18 @@
     <title>MydEmpire — Pre Genesis</title>
     <link rel="icon" type="image/png" href="assets/favicon.png" />
     <link rel="stylesheet" href="styles.css" />
+   <style>
+  
+</style> 
   </head>
 
   <body>
     <div class="wrap">
       <header class="appbar">
-        <div class="appbar-inner">
+  
+
+  <div class="appbar-inner">
+
           <div class="appbar-left">
             <a
               href="index.html"
@@ -48,6 +54,8 @@
           </div>
 
           <div class="appbar-right">
+            
+            
             <button
               id="appbarLoginBtn"
               class="appbar-login-btn"
@@ -92,10 +100,13 @@
               </div>
             </div>
           </div>
+          <button id="mobileNavToggle" type="button">☰ Menu</button>
         </div>
-      </header>
+             
+</div>
+</header>
 
-      <div class="hero">
+<div class="hero">
         <img
           class="heroImg"
           src="assets/mydempire-hero.png"
@@ -640,5 +651,24 @@
         </button>
       </div>
     </div>
+   <script>
+  const menuBtn = document.getElementById("mobileNavToggle");
+  const nav = document.querySelector(".appbar-nav");
+
+  if (menuBtn && nav) {
+    menuBtn.addEventListener("click", () => {
+      if (window.innerWidth <= 900) {
+        nav.classList.toggle("mobile-open");
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 900) {
+        nav.classList.remove("mobile-open");
+      }
+    });
+  }
+</script>
+
   </body>
 </html>

@@ -3509,17 +3509,15 @@
         }
 
         if (accountBtn && dropdown) {
-    accountBtn.onclick = (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("open");
-    };
+          accountBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle("open");
+          });
 
-    document.onclick = (e) => {
-      if (!dropdown.contains(e.target) && e.target !== accountBtn) {
-        dropdown.classList.remove("open");
-      }
-    };
-  }
+          document.addEventListener("click", () => {
+            dropdown.classList.remove("open");
+          });
+        }
 
         if (visitOtherEmpireBtn) {
           visitOtherEmpireBtn.style.display = "block";
