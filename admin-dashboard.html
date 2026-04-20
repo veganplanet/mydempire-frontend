@@ -145,6 +145,19 @@
       border: 1px solid #bfdbfe;
       margin-bottom: 10px;
     }
+    .scroll-box {
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 6px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
+  padding: 10px;
+}
+
+.scroll-box .kv {
+  margin-bottom: 10px;
+}
   </style>
 </head>
 <body>
@@ -250,9 +263,9 @@
         No chain event action yet.
       </div>
 
-      <div id="chain-events-box">
-        <div class="kv"><span>Status</span><span>No chain events loaded yet.</span></div>
-      </div>
+      <div id="chain-events-box" class="scroll-box">
+  <div class="kv"><span>Status</span><span>No chain events loaded yet.</span></div>
+</div>
     </div>
     </div>
 <div class="section">
@@ -747,6 +760,9 @@ document
     document
   .getElementById("load-withdrawals-btn")
   .addEventListener("click", loadWithdrawals);
+    document
+  .getElementById("refresh-wallet-balances-btn")
+  .addEventListener("click", loadWalletBalances);
     // =============================
 // CHAIN EVENTS
 // =============================
