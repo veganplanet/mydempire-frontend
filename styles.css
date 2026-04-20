@@ -11223,3 +11223,82 @@ cursor:pointer;
     text-align:left;
   }
 }
+.card-crate {
+  border: 1px solid rgba(255,215,0,0.35);
+}
+/* ===============================
+   IMPERIAL SUPPLY CRATE MODAL
+================================ */
+
+.card-crate{
+  border:1px solid rgba(201,162,39,0.35);
+  background: linear-gradient(180deg, #fffdf6 0%, #fff8e6 100%);
+}
+
+#crate-modal{
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 16px;
+}
+
+.crate-modal-box{
+  width: 100%;
+  max-width: 460px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+  padding: 22px 20px;
+  position: relative;
+}
+
+.modal-close-btn{
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #111827;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal-close-btn:hover{
+  background: #e5e7eb;
+}
+
+.crate-modal-header{
+  font-size: 22px;
+  font-weight: 900;
+  color: #111827;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.crate-modal-body{
+  font-size: 15px;
+  line-height: 1.7;
+  color: #475569;
+  text-align: center;
+}
+
+.crate-modal-note{
+  color: #6b7280;
+}
+
+.crate-modal-actions{
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}

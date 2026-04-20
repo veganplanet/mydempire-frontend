@@ -1,218 +1,271 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>MydEmpire — A Colorful Strategy Economy on Hive</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="assets/favicon.png">
-</head>
-<body class="page-root">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MydEmpire — A Colorful Strategy Economy on Hive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="assets/favicon.png" />
+  </head>
+  <body class="page-root">
+    <header class="appbar">
+      <div class="appbar-inner">
+        <div class="appbar-left">
+          <a href="index.html" class="appbar-logo" aria-label="MydEmpire Home">
+            <img src="assets/logo.png" alt="MydEmpire" />
+          </a>
 
-<header class="appbar">
-  <div class="appbar-inner">
-    <div class="appbar-left">
-      <a href="index.html" class="appbar-logo" aria-label="MydEmpire Home">
-        <img src="assets/logo.png" alt="MydEmpire">
-      </a>
+          <nav class="appbar-nav">
+            <a href="index.html" class="appbar-link">Home</a>
+            <a href="economy.html" class="appbar-link">Economy</a>
+            <a href="transparency.html" class="appbar-link">Transparency</a>
+            <a href="codex.html" class="appbar-link">Codex</a>
 
-    <nav class="appbar-nav">
-  <a href="/" class="appbar-link">Home</a>
-  <a href="economy.html" class="appbar-link">Economy</a>
-  <a href="transparency.html" class="appbar-link">Transparency</a>
-  <a href="codex.html" class="appbar-link">Codex</a>
+            <a
+              href="player-dashboard.html"
+              id="dashboardLink"
+              class="appbar-link auth-only hidden-auth-link"
+              >Dashboard</a
+            >
+            <a
+              href="shop.html"
+              id="shopLink"
+              class="appbar-link auth-only hidden-auth-link"
+              >Shop</a
+            >
+            <a
+              href="marketplace.html"
+              id="marketplaceLink"
+              class="appbar-link auth-only hidden-auth-link"
+              >Marketplace</a
+            >
+          </nav>
+        </div>
 
-  <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only hidden-auth-link">Dashboard</a>
-  <a href="shop.html" id="shopLink" class="appbar-link auth-only hidden-auth-link">Shop</a>
-  <a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only hidden-auth-link">Marketplace</a>
-</nav>
-    </div>
+        <div class="appbar-right">
+          <button id="appbarLoginBtn" class="appbar-login-btn" type="button">
+            Connect Wallet
+          </button>
 
-   <div class="appbar-right">
-  <button id="appbarLoginBtn" class="appbar-login-btn" type="button">Connect Wallet</button>
+          <div
+            id="appbarAccountWrap"
+            class="appbar-account-wrap"
+            style="display: none"
+          >
+            <button
+              id="appbarAccountBtn"
+              class="appbar-account-btn"
+              type="button"
+            >
+              @username ▼
+            </button>
 
-  <div id="appbarAccountWrap" class="appbar-account-wrap" style="display:none;">
-    <button id="appbarAccountBtn" class="appbar-account-btn" type="button">@username ▼</button>
-
-    <div id="appbarDropdown" class="appbar-dropdown">
-      <div id="appbarDropdownHead" class="appbar-dropdown-head">@username</div>
-      <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link">Visit My Empire</a>
-      <button id="visitOtherEmpireBtn" type="button" class="appbar-dropdown-link">Visit Other Empire</button>
-      <button id="appbarLogoutBtn" type="button" class="appbar-dropdown-link">Logout</button>
-    </div>
-  </div>
-</div> 
-  </div>
-</header>
-
-<main class="page-main">
-  <div class="page-inner">
-
-    <div class="game-card feature-card purple">
-      <div class="game-card-icon">🏛️</div>
-      <div class="game-card-title">MydEmpire Economy</div>
-      <div class="game-card-text">
-        The MydEmpire economy is designed as a <strong>closed strategic loop</strong>.
-        Packs create assets, assets build production, production creates EP,
-        and EP connects players to a treasury-backed reward system.
-        It is built around progression, planning and empire expansion —
-        not endless inflation.
-      </div>
-    </div>
-
-    <div class="card-grid">
-
-      <div class="game-card purple">
-        <div class="game-card-icon">📦</div>
-        <div class="game-card-title">Genesis Packs</div>
-        <div class="game-card-text">
-          Genesis Packs are the first gateway into the economy. They open into
-          strategic assets including <strong>Land</strong>, <strong>Blueprint</strong> and <strong>EMP</strong>,
-          with rare chances for special items.
+            <div id="appbarDropdown" class="appbar-dropdown">
+              <div id="appbarDropdownHead" class="appbar-dropdown-head">
+                @username
+              </div>
+              <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link"
+                >Visit My Empire</a
+              >
+              <button
+                id="visitOtherEmpireBtn"
+                type="button"
+                class="appbar-dropdown-link"
+              >
+                Visit Other Empire
+              </button>
+              <button
+                id="appbarLogoutBtn"
+                type="button"
+                class="appbar-dropdown-link"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+    </header>
 
-      <div class="game-card green">
-        <div class="game-card-icon">🌍</div>
-        <div class="game-card-title">Land & Slots</div>
-        <div class="game-card-text">
-          Land defines your empire’s industrial capacity. Higher-tier land gives
-          more slots, which means more room for future factories and stronger long-term growth.
+    <main class="page-main">
+      <div class="page-inner">
+        <div class="game-card feature-card purple">
+          <div class="game-card-icon">🏛️</div>
+          <div class="game-card-title">MydEmpire Economy</div>
+          <div class="game-card-text">
+            The MydEmpire economy is designed as a
+            <strong>closed strategic loop</strong>. Packs create assets, assets
+            build production, production creates EP, and EP connects players to
+            a treasury-backed reward system. It is built around progression,
+            planning and empire expansion — not endless inflation.
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <div class="game-card purple">
+            <div class="game-card-icon">📦</div>
+            <div class="game-card-title">Genesis Packs</div>
+            <div class="game-card-text">
+              Genesis Packs are the first gateway into the economy. They open
+              into strategic assets including <strong>Land</strong>,
+              <strong>Blueprint</strong> and <strong>EMP</strong>, with rare
+              chances for special items.
+            </div>
+          </div>
+
+          <div class="game-card green">
+            <div class="game-card-icon">🌍</div>
+            <div class="game-card-title">Land & Slots</div>
+            <div class="game-card-text">
+              Land defines your empire’s industrial capacity. Higher-tier land
+              gives more slots, which means more room for future factories and
+              stronger long-term growth.
+            </div>
+          </div>
+
+          <div class="game-card blue">
+            <div class="game-card-icon">📜</div>
+            <div class="game-card-title">Blueprints</div>
+            <div class="game-card-text">
+              Blueprints are construction assets. They decide what type of
+              industry can be built and are consumed during development, making
+              them strategically valuable.
+            </div>
+          </div>
+
+          <div class="game-card gold">
+            <div class="game-card-icon">🏭</div>
+            <div class="game-card-title">Factories & EP</div>
+            <div class="game-card-text">
+              Factories are your production core. Active factories generate
+              <strong>EP</strong>, and EP represents your economic weight in the
+              empire.
+            </div>
+          </div>
+
+          <div class="game-card red">
+            <div class="game-card-icon">⚡</div>
+            <div class="game-card-title">EMP Utility</div>
+            <div class="game-card-text">
+              EMP powers important in-game decisions such as maintenance, growth
+              and upgrades. It is a working utility layer, not just a passive
+              balance number.
+            </div>
+          </div>
+
+          <div class="game-card purple">
+            <div class="game-card-icon">💎</div>
+            <div class="game-card-title">Treasury & Rewards</div>
+            <div class="game-card-text">
+              Rewards are supported by treasury logic rather than uncontrolled
+              inflation. This keeps the economy more disciplined and ties value
+              to ecosystem health.
+            </div>
+          </div>
+
+          <div class="game-card blue">
+            <div class="game-card-icon">🛒</div>
+            <div class="game-card-title">Marketplace Activity</div>
+            <div class="game-card-text">
+              The marketplace enables trade between players and adds an extra
+              strategic layer beyond simple pack opening and asset holding.
+            </div>
+          </div>
+
+          <div class="game-card green">
+            <div class="game-card-icon">👑</div>
+            <div class="game-card-title">Long-Term Design</div>
+            <div class="game-card-text">
+              MydEmpire is not only about collecting NFTs. It is about building
+              an industrial network, expanding influence, and developing a
+              stronger empire over time.
+            </div>
+          </div>
         </div>
       </div>
+    </main>
+    <script>
+      function setupUniversalNavbar() {
+        const activeUser = (
+          localStorage.getItem("mde_username") ||
+          localStorage.getItem("hiveUsername") ||
+          localStorage.getItem("username") ||
+          ""
+        )
+          .replace("@", "")
+          .trim()
+          .toLowerCase();
 
-      <div class="game-card blue">
-        <div class="game-card-icon">📜</div>
-        <div class="game-card-title">Blueprints</div>
-        <div class="game-card-text">
-          Blueprints are construction assets. They decide what type of industry
-          can be built and are consumed during development, making them strategically valuable.
-        </div>
-      </div>
+        const loginBtn = document.getElementById("appbarLoginBtn");
+        const accountWrap = document.getElementById("appbarAccountWrap");
+        const accountBtn = document.getElementById("appbarAccountBtn");
+        const dropdown = document.getElementById("appbarDropdown");
+        const dropdownHead = document.getElementById("appbarDropdownHead");
+        const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
+        const visitOtherEmpireBtn = document.getElementById(
+          "visitOtherEmpireBtn",
+        );
+        const logoutBtn = document.getElementById("appbarLogoutBtn");
 
-      <div class="game-card gold">
-        <div class="game-card-icon">🏭</div>
-        <div class="game-card-title">Factories & EP</div>
-        <div class="game-card-text">
-          Factories are your production core. Active factories generate <strong>EP</strong>,
-          and EP represents your economic weight in the empire.
-        </div>
-      </div>
+        if (!activeUser) {
+          if (loginBtn) loginBtn.style.display = "inline-flex";
+          if (accountWrap) accountWrap.style.display = "none";
+          return;
+        }
 
-      <div class="game-card red">
-        <div class="game-card-icon">⚡</div>
-        <div class="game-card-title">EMP Utility</div>
-        <div class="game-card-text">
-          EMP powers important in-game decisions such as maintenance, growth and upgrades.
-          It is a working utility layer, not just a passive balance number.
-        </div>
-      </div>
+        if (loginBtn) loginBtn.style.display = "none";
+        if (accountWrap) accountWrap.style.display = "block";
+        if (accountBtn) accountBtn.textContent = "@" + activeUser + " ▼";
+        if (dropdownHead) dropdownHead.textContent = "@" + activeUser;
 
-      <div class="game-card purple">
-        <div class="game-card-icon">💎</div>
-        <div class="game-card-title">Treasury & Rewards</div>
-        <div class="game-card-text">
-          Rewards are supported by treasury logic rather than uncontrolled inflation.
-          This keeps the economy more disciplined and ties value to ecosystem health.
-        </div>
-      </div>
+        if (visitMyEmpireLink) {
+          visitMyEmpireLink.href =
+            "player-dashboard.html?user=" + encodeURIComponent(activeUser);
+        }
 
-      <div class="game-card blue">
-        <div class="game-card-icon">🛒</div>
-        <div class="game-card-title">Marketplace Activity</div>
-        <div class="game-card-text">
-          The marketplace enables trade between players and adds an extra strategic layer
-          beyond simple pack opening and asset holding.
-        </div>
-      </div>
+        if (accountBtn && dropdown) {
+          accountBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle("open");
+          });
 
-      <div class="game-card green">
-        <div class="game-card-icon">👑</div>
-        <div class="game-card-title">Long-Term Design</div>
-        <div class="game-card-text">
-          MydEmpire is not only about collecting NFTs. It is about building an industrial network,
-          expanding influence, and developing a stronger empire over time.
-        </div>
-      </div>
+          document.addEventListener("click", () => {
+            dropdown.classList.remove("open");
+          });
+        }
 
-    </div>
+        if (visitOtherEmpireBtn) {
+          visitOtherEmpireBtn.addEventListener("click", () => {
+            const target = prompt("Enter Hive username to visit empire:");
+            const clean = String(target || "")
+              .replace("@", "")
+              .trim()
+              .toLowerCase();
+            if (!clean) return;
+            window.location.href =
+              "player-dashboard.html?user=" + encodeURIComponent(clean);
+          });
+        }
 
-  </div>
-</main>
-<script>
-function setupUniversalNavbar() {
-  const activeUser = (
-    localStorage.getItem("mde_username") ||
-    localStorage.getItem("hiveUsername") ||
-    localStorage.getItem("username") ||
-    ""
-  ).replace("@", "").trim().toLowerCase();
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("mde_username");
+            localStorage.removeItem("hiveUsername");
+            localStorage.removeItem("username");
+            window.location.href = "index.html";
+          });
+        }
+      }
+    </script>
+    <script src="js/appbar.js"></script>
+    <div id="global-footer"></div>
 
-  const loginBtn = document.getElementById("appbarLoginBtn");
-  const accountWrap = document.getElementById("appbarAccountWrap");
-  const accountBtn = document.getElementById("appbarAccountBtn");
-  const dropdown = document.getElementById("appbarDropdown");
-  const dropdownHead = document.getElementById("appbarDropdownHead");
-  const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
-  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
-  const logoutBtn = document.getElementById("appbarLogoutBtn");
-
-  if (!activeUser) {
-    if (loginBtn) loginBtn.style.display = "inline-flex";
-    if (accountWrap) accountWrap.style.display = "none";
-    return;
-  }
-
-  if (loginBtn) loginBtn.style.display = "none";
-  if (accountWrap) accountWrap.style.display = "block";
-  if (accountBtn) accountBtn.textContent = "@" + activeUser + " ▼";
-  if (dropdownHead) dropdownHead.textContent = "@" + activeUser;
-
-  if (visitMyEmpireLink) {
-    visitMyEmpireLink.href = "player-dashboard.html?user=" + encodeURIComponent(activeUser);
-  }
-
-  if (accountBtn && dropdown) {
-    accountBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("open");
-    });
-
-    document.addEventListener("click", () => {
-      dropdown.classList.remove("open");
-    });
-  }
-
-  if (visitOtherEmpireBtn) {
-    visitOtherEmpireBtn.addEventListener("click", () => {
-      const target = prompt("Enter Hive username to visit empire:");
-      const clean = String(target || "").replace("@", "").trim().toLowerCase();
-      if (!clean) return;
-      window.location.href = "player-dashboard.html?user=" + encodeURIComponent(clean);
-    });
-  }
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("mde_username");
-      localStorage.removeItem("hiveUsername");
-      localStorage.removeItem("username");
-      window.location.href = "index.html";
-    });
-  }
-}
-
-
-</script>
-<script src="js/appbar.js"></script>
-  <div id="global-footer"></div>
-
-<script>
-  fetch("footer.html")
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById("global-footer").innerHTML = html;
-    });
-</script>
-</body>
+    <script>
+      fetch("footer.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("global-footer").innerHTML = html;
+        });
+    </script>
+  </body>
 </html>

@@ -1,745 +1,884 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>MydEmpire — On-Chain vs Off-Chain</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <meta charset="UTF-8" />
+    <title>MydEmpire — On-Chain vs Off-Chain</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css" />
 
-  <style>
-    /* ============================= */
-    /* TRANSPARENCY PAGE ONLY */
-    /* ============================= */
+    <style>
+      /* ============================= */
+      /* TRANSPARENCY PAGE ONLY */
+      /* ============================= */
 
-    .transparency-page{
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 34px 20px 30px;
-    }
-
-    .transparency-hero{
-      background: linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(139,92,246,0.12) 100%);
-      border: 1px solid rgba(148,163,184,0.22);
-      border-radius: 26px;
-      padding: 34px 30px;
-      box-shadow: 0 14px 30px rgba(15,23,42,0.06);
-      margin-bottom: 28px;
-    }
-
-    .transparency-eyebrow{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.65);
-      color: #475569;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    .transparency-hero h1{
-      margin: 0 0 12px;
-      font-size: 42px;
-      line-height: 1.08;
-      color: #0f172a;
-    }
-
-    .transparency-hero p{
-      margin: 0;
-      max-width: 900px;
-      font-size: 17px;
-      line-height: 1.8;
-      color: #475569;
-    }
-
-    .pill-row{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .pill{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 800;
-      border: 1px solid transparent;
-    }
-
-    .pill.onchain{
-      background: rgba(34,197,94,0.10);
-      color: #166534;
-      border-color: rgba(34,197,94,0.22);
-    }
-
-    .pill.offchain{
-      background: rgba(59,130,246,0.10);
-      color: #1d4ed8;
-      border-color: rgba(59,130,246,0.20);
-    }
-
-    .transparency-grid{
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 20px;
-      margin-bottom: 22px;
-    }
-
-    .summary-card{
-      background: rgba(255,255,255,0.74);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(148,163,184,0.18);
-      border-radius: 24px;
-      padding: 24px 22px;
-      box-shadow: 0 12px 24px rgba(15,23,42,0.05);
-    }
-
-    .summary-card.onchain{
-      border-top: 5px solid #22c55e;
-    }
-
-    .summary-card.offchain{
-      border-top: 5px solid #3b82f6;
-    }
-
-    .summary-icon{
-      font-size: 28px;
-      margin-bottom: 12px;
-    }
-
-    .summary-card h2{
-      margin: 0 0 10px;
-      font-size: 28px;
-      color: #0f172a;
-    }
-
-    .summary-card p{
-      margin: 0 0 14px;
-      color: #475569;
-      line-height: 1.75;
-      font-size: 16px;
-    }
-
-    .summary-list{
-      margin: 0;
-      padding-left: 20px;
-      color: #334155;
-    }
-
-    .summary-list li{
-      margin-bottom: 10px;
-      line-height: 1.7;
-    }
-
-   .transparency-section{
-  background: rgba(255,255,255,0.72);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(148,163,184,0.18);
-  border-radius: 24px;
-  padding: 26px 22px;
-  box-shadow: 0 14px 28px rgba(15,23,42,0.06);
-  margin-bottom: 22px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-    .transparency-section:hover{
-  transform: translateY(-4px);
-  box-shadow: 0 18px 36px rgba(15,23,42,0.10);
-}
-
-    .transparency-section h2{
-      margin: 0 0 12px;
-      font-size: 28px;
-      color: #0f172a;
-    }
-
-    .transparency-section p{
-      margin: 0 0 14px;
-      color: #475569;
-      line-height: 1.8;
-      font-size: 16px;
-    }
-
-    .highlight-box{
-      margin-top: 16px;
-      padding: 16px 18px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.72) 0%, rgba(240,249,255,0.82) 100%);
-      border: 1px solid rgba(59,130,246,0.14);
-      color: #334155;
-      line-height: 1.75;
-    }
-
-    .transparency-table-wrap{
-      margin-top: 18px;
-      overflow-x: auto;
-      border-radius: 20px;
-      border: 1px solid rgba(148,163,184,0.16);
-      background: rgba(255,255,255,0.84);
-      box-shadow: 0 8px 20px rgba(15,23,42,0.04);
-    }
-
-    .transparency-table{
-      width: 100%;
-      min-width: 920px;
-      border-collapse: collapse;
-    }
-
-    .transparency-table thead th{
-      background: linear-gradient(90deg,#334155,#475569);
-      color: #ffffff;
-      text-align: left;
-      padding: 16px 14px;
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .transparency-table tbody td{
-      padding: 15px 14px;
-      font-size: 14px;
-      line-height: 1.65;
-      color: #334155;
-      border-bottom: 1px solid rgba(148,163,184,0.14);
-      vertical-align: top;
-    }
-
-    .transparency-table tbody tr:nth-child(odd){
-      background: rgba(248,250,252,0.80);
-    }
-
-    .transparency-table tbody tr:nth-child(even){
-      background: rgba(255,255,255,0.90);
-    }
-
-    .badge{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      white-space: nowrap;
-    }
-
-    .badge.on{
-      background: rgba(34,197,94,0.12);
-      color: #166534;
-      border: 1px solid rgba(34,197,94,0.20);
-    }
-
-    .badge.off{
-      background: rgba(59,130,246,0.12);
-      color: #1d4ed8;
-      border: 1px solid rgba(59,130,246,0.18);
-    }
-
-    .why-grid{
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 20px;
-    }
-
-    .mini-card{
-      background: rgba(255,255,255,0.68);
-      border: 1px solid rgba(148,163,184,0.16);
-      border-radius: 20px;
-      padding: 20px 18px;
-    }
-
-    .mini-card h3{
-      margin: 0 0 10px;
-      font-size: 22px;
-      color: #0f172a;
-    }
-
-    .mini-card ul{
-      margin: 0;
-      padding-left: 20px;
-      color: #334155;
-    }
-
-    .mini-card li{
-      margin-bottom: 10px;
-      line-height: 1.7;
-    }
-
-    .site-footer{
-      background: transparent !important;
-      border-top: none !important;
-      box-shadow: none !important;
-    }
-
-    @media (max-width: 980px){
-      .transparency-grid,
-      .why-grid{
-        grid-template-columns: 1fr;
+      .transparency-page {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 34px 20px 30px;
       }
 
-      .transparency-hero{
-        padding: 28px 20px;
+      .transparency-hero {
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.12) 0%,
+          rgba(139, 92, 246, 0.12) 100%
+        );
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 26px;
+        padding: 34px 30px;
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
+        margin-bottom: 28px;
       }
 
-      .transparency-hero h1{
-        font-size: 34px;
+      .transparency-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.65);
+        color: #475569;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 14px;
       }
-    }
 
-    @media (max-width: 640px){
-      .transparency-page{
-        padding: 22px 14px 24px;
+      .transparency-hero h1 {
+        margin: 0 0 12px;
+        font-size: 42px;
+        line-height: 1.08;
+        color: #0f172a;
       }
 
-      .transparency-hero h1{
+      .transparency-hero p {
+        margin: 0;
+        max-width: 900px;
+        font-size: 17px;
+        line-height: 1.8;
+        color: #475569;
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 800;
+        border: 1px solid transparent;
+      }
+
+      .pill.onchain {
+        background: rgba(34, 197, 94, 0.1);
+        color: #166534;
+        border-color: rgba(34, 197, 94, 0.22);
+      }
+
+      .pill.offchain {
+        background: rgba(59, 130, 246, 0.1);
+        color: #1d4ed8;
+        border-color: rgba(59, 130, 246, 0.2);
+      }
+
+      .transparency-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+        margin-bottom: 22px;
+      }
+
+      .summary-card {
+        background: rgba(255, 255, 255, 0.74);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 24px;
+        padding: 24px 22px;
+        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.05);
+      }
+
+      .summary-card.onchain {
+        border-top: 5px solid #22c55e;
+      }
+
+      .summary-card.offchain {
+        border-top: 5px solid #3b82f6;
+      }
+
+      .summary-icon {
         font-size: 28px;
+        margin-bottom: 12px;
       }
 
-      .summary-card,
-      .transparency-section,
-      .mini-card{
-        padding: 20px 16px;
+      .summary-card h2 {
+        margin: 0 0 10px;
+        font-size: 28px;
+        color: #0f172a;
       }
 
-      .transparency-section h2,
-      .summary-card h2{
-        font-size: 24px;
+      .summary-card p {
+        margin: 0 0 14px;
+        color: #475569;
+        line-height: 1.75;
+        font-size: 16px;
       }
-    }
-    .badge {
-padding:4px 8px;
-border-radius:6px;
-font-size:12px;
-font-weight:600;
-}
 
-.badge.on {
-background:#1f9d55;
-color:white;
-}
+      .summary-list {
+        margin: 0;
+        padding-left: 20px;
+        color: #334155;
+      }
 
-.badge.hybrid {
-background:#d69e2e;
-color:white;
-}
+      .summary-list li {
+        margin-bottom: 10px;
+        line-height: 1.7;
+      }
 
-.badge.off {
-background:#718096;
-color:white;
-}
-  </style>
-  <link rel="icon" href="assets/favicon.png">
-</head>
+      .transparency-section {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 24px;
+        padding: 26px 22px;
+        box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
+        margin-bottom: 22px;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+      .transparency-section:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 36px rgba(15, 23, 42, 0.1);
+      }
 
-<body class="page-root" data-requires-login="true">
+      .transparency-section h2 {
+        margin: 0 0 12px;
+        font-size: 28px;
+        color: #0f172a;
+      }
 
-  <!-- ===== NAVBAR ===== -->
-  <header class="appbar">
-    <div class="appbar-inner">
+      .transparency-section p {
+        margin: 0 0 14px;
+        color: #475569;
+        line-height: 1.8;
+        font-size: 16px;
+      }
 
-      <div class="appbar-left">
-        <a href="index.html" class="appbar-logo" aria-label="MydEmpire Home">
-          <img src="assets/logo.png" alt="MydEmpire">
-        </a>
+      .highlight-box {
+        margin-top: 16px;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.72) 0%,
+          rgba(240, 249, 255, 0.82) 100%
+        );
+        border: 1px solid rgba(59, 130, 246, 0.14);
+        color: #334155;
+        line-height: 1.75;
+      }
 
-        <nav class="appbar-nav">
-          <a href="/" class="appbar-link">Home</a>
-          <a href="economy.html" class="appbar-link">Economy</a>
-          <a href="transparency.html" class="appbar-link active">Transparency</a>
-          <a href="codex.html" class="appbar-link">Codex</a>
+      .transparency-table-wrap {
+        margin-top: 18px;
+        overflow-x: auto;
+        border-radius: 20px;
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        background: rgba(255, 255, 255, 0.84);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+      }
 
-          <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only hidden-auth-link">Dashboard</a>
-          <a href="shop.html" id="shopLink" class="appbar-link auth-only hidden-auth-link">Shop</a>
-          <a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only hidden-auth-link">Marketplace</a>
-        </nav>
-      </div>
+      .transparency-table {
+        width: 100%;
+        min-width: 920px;
+        border-collapse: collapse;
+      }
 
-      <div class="appbar-right">
-        <button id="appbarLoginBtn" class="appbar-login-btn" type="button" style="display:none;">Connect Wallet</button>
+      .transparency-table thead th {
+        background: linear-gradient(90deg, #334155, #475569);
+        color: #ffffff;
+        text-align: left;
+        padding: 16px 14px;
+        font-size: 14px;
+        font-weight: 800;
+      }
 
-        <div id="appbarAccountWrap" class="appbar-account-wrap" style="display:none;">
-          <button id="appbarAccountBtn" class="appbar-account-btn" type="button">@username ▼</button>
+      .transparency-table tbody td {
+        padding: 15px 14px;
+        font-size: 14px;
+        line-height: 1.65;
+        color: #334155;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+        vertical-align: top;
+      }
 
-          <div id="appbarDropdown" class="appbar-dropdown">
-            <div id="appbarDropdownHead" class="appbar-dropdown-head">@username</div>
-            <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link">Visit My Empire</a>
-            <button id="visitOtherEmpireBtn" type="button" class="appbar-dropdown-link">Visit Other Empire</button>
-            <button id="appbarLogoutBtn" type="button" class="appbar-dropdown-link">Logout</button>
+      .transparency-table tbody tr:nth-child(odd) {
+        background: rgba(248, 250, 252, 0.8);
+      }
+
+      .transparency-table tbody tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+      }
+
+      .badge.on {
+        background: rgba(34, 197, 94, 0.12);
+        color: #166534;
+        border: 1px solid rgba(34, 197, 94, 0.2);
+      }
+
+      .badge.off {
+        background: rgba(59, 130, 246, 0.12);
+        color: #1d4ed8;
+        border: 1px solid rgba(59, 130, 246, 0.18);
+      }
+
+      .why-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .mini-card {
+        background: rgba(255, 255, 255, 0.68);
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        border-radius: 20px;
+        padding: 20px 18px;
+      }
+
+      .mini-card h3 {
+        margin: 0 0 10px;
+        font-size: 22px;
+        color: #0f172a;
+      }
+
+      .mini-card ul {
+        margin: 0;
+        padding-left: 20px;
+        color: #334155;
+      }
+
+      .mini-card li {
+        margin-bottom: 10px;
+        line-height: 1.7;
+      }
+
+      .site-footer {
+        background: transparent !important;
+        border-top: none !important;
+        box-shadow: none !important;
+      }
+
+      @media (max-width: 980px) {
+        .transparency-grid,
+        .why-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .transparency-hero {
+          padding: 28px 20px;
+        }
+
+        .transparency-hero h1 {
+          font-size: 34px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .transparency-page {
+          padding: 22px 14px 24px;
+        }
+
+        .transparency-hero h1 {
+          font-size: 28px;
+        }
+
+        .summary-card,
+        .transparency-section,
+        .mini-card {
+          padding: 20px 16px;
+        }
+
+        .transparency-section h2,
+        .summary-card h2 {
+          font-size: 24px;
+        }
+      }
+      .badge {
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .badge.on {
+        background: #1f9d55;
+        color: white;
+      }
+
+      .badge.hybrid {
+        background: #d69e2e;
+        color: white;
+      }
+
+      .badge.off {
+        background: #718096;
+        color: white;
+      }
+    </style>
+    <link rel="icon" href="assets/favicon.png" />
+  </head>
+
+  <body class="page-root" data-requires-login="true">
+    <!-- ===== NAVBAR ===== -->
+    <header class="appbar">
+      <div class="appbar-inner">
+        <div class="appbar-left">
+          <a href="index.html" class="appbar-logo" aria-label="MydEmpire Home">
+            <img src="assets/logo.png" alt="MydEmpire" />
+          </a>
+
+          <nav class="appbar-nav">
+            <a href="index.html" class="appbar-link">Home</a>
+            <a href="economy.html" class="appbar-link">Economy</a>
+            <a href="transparency.html" class="appbar-link active"
+              >Transparency</a
+            >
+            <a href="codex.html" class="appbar-link">Codex</a>
+
+            <a
+              href="player-dashboard.html"
+              id="dashboardLink"
+              class="appbar-link auth-only hidden-auth-link"
+              >Dashboard</a
+            >
+            <a
+              href="shop.html"
+              id="shopLink"
+              class="appbar-link auth-only hidden-auth-link"
+              >Shop</a
+            >
+            <a
+              href="marketplace.html"
+              id="marketplaceLink"
+              class="appbar-link auth-only hidden-auth-link"
+              >Marketplace</a
+            >
+          </nav>
+        </div>
+
+        <div class="appbar-right">
+          <button
+            id="appbarLoginBtn"
+            class="appbar-login-btn"
+            type="button"
+            style="display: none"
+          >
+            Connect Wallet
+          </button>
+
+          <div
+            id="appbarAccountWrap"
+            class="appbar-account-wrap"
+            style="display: none"
+          >
+            <button
+              id="appbarAccountBtn"
+              class="appbar-account-btn"
+              type="button"
+            >
+              @username ▼
+            </button>
+
+            <div id="appbarDropdown" class="appbar-dropdown">
+              <div id="appbarDropdownHead" class="appbar-dropdown-head">
+                @username
+              </div>
+              <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link"
+                >Visit My Empire</a
+              >
+              <button
+                id="visitOtherEmpireBtn"
+                type="button"
+                class="appbar-dropdown-link"
+              >
+                Visit Other Empire
+              </button>
+              <button
+                id="appbarLogoutBtn"
+                type="button"
+                class="appbar-dropdown-link"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>
+    </header>
 
-    </div>
-  </header>
-
-  <!-- ===== PAGE ===== -->
-  <main class="page-main">
-    <div class="transparency-page">
-
-      <section class="transparency-hero">
-        <div class="transparency-eyebrow">Genesis Era · Transparency First</div>
-        <h1>On-Chain vs Off-Chain</h1>
-        <p>
-          MydEmpire is built to stay transparent without making gameplay slow or annoying.
-          Whenever real HIVE moves between wallets, that action is on-chain.
-          Gameplay actions that need speed, comfort, and frequent updates are handled inside the game server.
-        </p>
-
-        <div class="pill-row">
-          <span class="pill onchain">✅ On-Chain = Hive wallet / Keychain action</span>
-          <span class="pill offchain">⚙️ Off-Chain = game logic / database action</span>
-        </div>
-      </section>
-
-      <section class="transparency-grid">
-        <div class="summary-card onchain">
-          <div class="summary-icon">⛓️</div>
-          <h2>On-Chain</h2>
+    <!-- ===== PAGE ===== -->
+    <main class="page-main">
+      <div class="transparency-page">
+        <section class="transparency-hero">
+          <div class="transparency-eyebrow">
+            Genesis Era · Transparency First
+          </div>
+          <h1>On-Chain vs Off-Chain</h1>
           <p>
-            These actions involve real HIVE, real wallet movement, or treasury transfers.
-            Players should expect Hive Keychain confirmation when these happen.
+            MydEmpire is built to stay transparent without making gameplay slow
+            or annoying. Whenever real HIVE moves between wallets, that action
+            is on-chain. Gameplay actions that need speed, comfort, and frequent
+            updates are handled inside the game server.
           </p>
-          <ul class="summary-list">
-            <li>Buying Genesis Packs with HIVE</li>
-            <li>Buying EMP with HIVE</li>
-            <li>Selling EMP back for HIVE</li>
-            <li>NFT marketplace trades involving HIVE</li>
-            <li>Revenue split and treasury movements between MydEmpire wallets</li>
-          </ul>
-        </div>
 
-        <div class="summary-card offchain">
-          <div class="summary-icon">🏗️</div>
-          <h2>Off-Chain</h2>
-          <p>
-            These are gameplay systems that run inside MydEmpire for speed and better user experience.
-            No wallet popup is needed for these actions.
-          </p>
-          <ul class="summary-list">
-            <li>Opening packs and receiving in-game assets</li>
-            <li>Building and upgrading factories</li>
-            <li>EMP spending for maintenance and utility</li>
-            <li>EP calculation, rankings, and leaderboards</li>
-            <li>Notifications, logs, and empire history</li>
-          </ul>
-        </div>
-      </section>
+          <div class="pill-row">
+            <span class="pill onchain"
+              >✅ On-Chain = Hive wallet / Keychain action</span
+            >
+            <span class="pill offchain"
+              >⚙️ Off-Chain = game logic / database action</span
+            >
+          </div>
+        </section>
 
-     <section class="transparency-section">
+        <section class="transparency-grid">
+          <div class="summary-card onchain">
+            <div class="summary-icon">⛓️</div>
+            <h2>On-Chain</h2>
+            <p>
+              These actions involve real HIVE, real wallet movement, or treasury
+              transfers. Players should expect Hive Keychain confirmation when
+              these happen.
+            </p>
+            <ul class="summary-list">
+              <li>Buying Genesis Packs with HIVE</li>
+              <li>Buying EMP with HIVE</li>
+              <li>Selling EMP back for HIVE</li>
+              <li>NFT marketplace trades involving HIVE</li>
+              <li>
+                Revenue split and treasury movements between MydEmpire wallets
+              </li>
+            </ul>
+          </div>
 
-<h2>Game Architecture & Blockchain Integration</h2>
+          <div class="summary-card offchain">
+            <div class="summary-icon">🏗️</div>
+            <h2>Off-Chain</h2>
+            <p>
+              These are gameplay systems that run inside MydEmpire for speed and
+              better user experience. No wallet popup is needed for these
+              actions.
+            </p>
+            <ul class="summary-list">
+              <li>Opening packs and receiving in-game assets</li>
+              <li>Building and upgrading factories</li>
+              <li>EMP spending for maintenance and utility</li>
+              <li>EP calculation, rankings, and leaderboards</li>
+              <li>Notifications, logs, and empire history</li>
+            </ul>
+          </div>
+        </section>
 
-<table class="transparency-table">
+        <section class="transparency-section">
+          <h2>Game Architecture & Blockchain Integration</h2>
 
-<tr>
-<th>System Component</th>
-<th>Status</th>
-<th>Description</th>
-</tr>
-
-<tr>
-<td>HIVE Payments</td>
-<td><span class="badge on">On-chain</span></td>
-<td>All purchases and payments are executed through Hive Keychain and recorded on the Hive blockchain.</td>
-</tr>
-
-<tr>
-<td>Treasury Wallets</td>
-<td><span class="badge on">On-chain</span></td>
-<td>Game treasury balances are held in public Hive accounts and can be independently verified on-chain.</td>
-</tr>
-
-<tr>
-<td>Pack Purchases</td>
-<td><span class="badge on">On-chain</span></td>
-<td>Buying packs requires an on-chain HIVE transfer, ensuring every purchase is publicly verifiable.</td>
-</tr>
-
-<tr>
-<td>Pack Opening Events</td>
-<td><span class="badge hybrid">Hybrid</span></td>
-<td>Pack opening results are generated by the game engine for fast gameplay and may be recorded on-chain as transparency events.</td>
-</tr>
-
-<tr>
-<td>Asset Ownership</td>
-<td><span class="badge hybrid">Hybrid</span></td>
-<td>Game assets such as Land, Blueprints, and Relics are currently managed in the MydEmpire game database for performance, while important asset events can be logged on-chain for transparency.</td>
-</tr>
-
-<tr>
-<td>Gameplay Systems</td>
-<td><span class="badge off">Off-chain</span></td>
-<td>Factory production, upgrades, maintenance, and gameplay mechanics run off-chain to ensure fast and smooth gameplay.</td>
-</tr>
-
-</table>
-
-</section>
-
-      <section class="transparency-section">
-        <h2>Action breakdown</h2>
-        <p>
-          The table below shows the practical difference between wallet-level actions and game-engine actions inside MydEmpire.
-        </p>
-
-        <div class="transparency-table-wrap">
           <table class="transparency-table">
-            <thead>
-              <tr>
-                <th>Action</th>
-                <th>Area</th>
-                <th>Where it happens</th>
-                <th>Status</th>
-                <th>Explanation</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Buying Genesis Packs</td>
-                <td>Pack sale</td>
-                <td>On-chain HIVE transfer</td>
-                <td><span class="badge on">On-chain</span></td>
-                <td>You pay with HIVE through Hive Keychain, so the payment is visible on Hive.</td>
-              </tr>
+            <tr>
+              <th>System Component</th>
+              <th>Status</th>
+              <th>Description</th>
+            </tr>
 
-              <tr>
-                <td>Buying EMP with HIVE</td>
-                <td>EMP economy</td>
-                <td>On-chain payment, off-chain EMP credit</td>
-                <td><span class="badge on">On-chain</span></td>
-                <td>HIVE payment is on-chain. EMP is then credited to your in-game balance.</td>
-              </tr>
+            <tr>
+              <td>HIVE Payments</td>
+              <td><span class="badge on">On-chain</span></td>
+              <td>
+                All purchases and payments are executed through Hive Keychain
+                and recorded on the Hive blockchain.
+              </td>
+            </tr>
 
-              <tr>
-                <td>Selling EMP for HIVE</td>
-                <td>EMP economy</td>
-                <td>On-chain HIVE payout</td>
-                <td><span class="badge on">On-chain</span></td>
-                <td>When HIVE is sent back to your wallet, that payout is on-chain.</td>
-              </tr>
+            <tr>
+              <td>Treasury Wallets</td>
+              <td><span class="badge on">On-chain</span></td>
+              <td>
+                Game treasury balances are held in public Hive accounts and can
+                be independently verified on-chain.
+              </td>
+            </tr>
 
-              <tr>
-                <td>NFT marketplace trades</td>
-                <td>Player-to-player</td>
-                <td>On-chain HIVE transfer + in-game ownership update</td>
-                <td><span class="badge on">On-chain</span></td>
-                <td>HIVE payment is on-chain. Asset ownership is then updated in the game system.</td>
-              </tr>
+            <tr>
+              <td>Pack Purchases</td>
+              <td><span class="badge on">On-chain</span></td>
+              <td>
+                Buying packs requires an on-chain HIVE transfer, ensuring every
+                purchase is publicly verifiable.
+              </td>
+            </tr>
 
-              <tr>
-                <td>Revenue distribution & treasury movement</td>
-                <td>Platform</td>
-                <td>On-chain transfers between MydEmpire wallets</td>
-                <td><span class="badge on">On-chain</span></td>
-                <td>Treasury, DAO, founder, and reward-wallet transfers are executed as real wallet transfers.</td>
-              </tr>
+            <tr>
+              <td>Pack Opening Events</td>
+              <td><span class="badge hybrid">Hybrid</span></td>
+              <td>
+                Pack opening results are generated by the game engine for fast
+                gameplay and may be recorded on-chain as transparency events.
+              </td>
+            </tr>
 
-              <tr>
-                <td>Connecting wallet / login</td>
-                <td>Access</td>
-                <td>Off-chain session / account recognition</td>
-                <td><span class="badge off">Off-chain</span></td>
-                <td>No HIVE moves here. The game only recognizes which Hive account is playing.</td>
-              </tr>
+            <tr>
+              <td>Asset Ownership</td>
+              <td><span class="badge hybrid">Hybrid</span></td>
+              <td>
+                Game assets such as Land, Blueprints, and Relics are currently
+                managed in the MydEmpire game database for performance, while
+                important asset events can be logged on-chain for transparency.
+              </td>
+            </tr>
 
-              <tr>
-                <td>Opening packs</td>
-                <td>Gameplay</td>
-                <td>Off-chain game database</td>
-                <td><span class="badge off">Off-chain</span></td>
-                <td>Pack results are generated inside the game system to keep gameplay fast and avoid unnecessary wallet confirmations.</td>
-              </tr>
-
-              <tr>
-                <td>Building factories on lands</td>
-                <td>Gameplay</td>
-                <td>Off-chain</td>
-                <td><span class="badge off">Off-chain</span></td>
-                <td>Blueprint use, slot filling, and build logic are handled inside the backend.</td>
-              </tr>
-
-              <tr>
-                <td>Upgrading factories</td>
-                <td>Gameplay</td>
-                <td>Off-chain</td>
-                <td><span class="badge off">Off-chain</span></td>
-                <td>Upgrade rules and time tracking are handled in the game engine.</td>
-              </tr>
-
-              <tr>
-                <td>Paying maintenance with EMP</td>
-                <td>Gameplay</td>
-                <td>Off-chain</td>
-                <td><span class="badge off">Off-chain</span></td>
-                <td>EMP is deducted in-game. No HIVE wallet movement is involved at this stage.</td>
-              </tr>
-
-              <tr>
-                <td>EP (Empire Power) calculation</td>
-                <td>Scoring</td>
-                <td>Off-chain</td>
-                <td><span class="badge off">Off-chain</span></td>
-                <td>All EP math is calculated on the server and used for rewards, status, and rankings.</td>
-              </tr>
-
-              <tr>
-                <td>Leaderboards & rankings</td>
-                <td>Scoring</td>
-                <td>Off-chain</td>
-                <td><span class="badge off">Off-chain</span></td>
-                <td>Leaderboards are generated from game data rather than the blockchain directly.</td>
-              </tr>
-
-              <tr>
-                <td>Notifications & empire history</td>
-                <td>UX</td>
-                <td>Off-chain</td>
-                <td><span class="badge off">Off-chain</span></td>
-                <td>Messages like maintenance due, ready to upgrade, or game history are stored by the backend.</td>
-              </tr>
-            </tbody>
+            <tr>
+              <td>Gameplay Systems</td>
+              <td><span class="badge off">Off-chain</span></td>
+              <td>
+                Factory production, upgrades, maintenance, and gameplay
+                mechanics run off-chain to ensure fast and smooth gameplay.
+              </td>
+            </tr>
           </table>
-        </div>
-      </section>
+        </section>
 
-      <section class="why-grid">
-        <div class="mini-card">
-          <h3>Why not put everything on-chain?</h3>
-         <ul>
-  <li>Too many wallet popups would make normal gameplay frustrating.</li>
-  <li>Fast strategy actions work better when processed instantly by the server.</li>
-  <li>Not every small gameplay action needs to be written on-chain or require wallet confirmation.</li>
-  <li>This keeps the game smooth while still preserving real HIVE transparency where it matters.</li>
-</ul>
-        </div>
+        <section class="transparency-section">
+          <h2>Action breakdown</h2>
+          <p>
+            The table below shows the practical difference between wallet-level
+            actions and game-engine actions inside MydEmpire.
+          </p>
 
-        <div class="mini-card">
-          <h3>Future on-chain features</h3>
-          <ul>
-            <li>Governance and voting for WRIT / RELIC based influence</li>
-            <li>Prestige NFTs or special achievement records</li>
-            <li>Snapshot-based reward claims or event participation</li>
-            <li>Any future wallet action will be documented clearly on this page</li>
-          </ul>
-        </div>
-      </section>
+          <div class="transparency-table-wrap">
+            <table class="transparency-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>Area</th>
+                  <th>Where it happens</th>
+                  <th>Status</th>
+                  <th>Explanation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Buying Genesis Packs</td>
+                  <td>Pack sale</td>
+                  <td>On-chain HIVE transfer</td>
+                  <td><span class="badge on">On-chain</span></td>
+                  <td>
+                    You pay with HIVE through Hive Keychain, so the payment is
+                    visible on Hive.
+                  </td>
+                </tr>
 
-    </div>
-  </main>
+                <tr>
+                  <td>Buying EMP with HIVE</td>
+                  <td>EMP economy</td>
+                  <td>On-chain payment, off-chain EMP credit</td>
+                  <td><span class="badge on">On-chain</span></td>
+                  <td>
+                    HIVE payment is on-chain. EMP is then credited to your
+                    in-game balance.
+                  </td>
+                </tr>
 
-<!-- <script src="js/appbar.js"></script> -->
+                <tr>
+                  <td>Selling EMP for HIVE</td>
+                  <td>EMP economy</td>
+                  <td>On-chain HIVE payout</td>
+                  <td><span class="badge on">On-chain</span></td>
+                  <td>
+                    When HIVE is sent back to your wallet, that payout is
+                    on-chain.
+                  </td>
+                </tr>
 
-  <div id="global-footer"></div>
+                <tr>
+                  <td>NFT marketplace trades</td>
+                  <td>Player-to-player</td>
+                  <td>On-chain HIVE transfer + in-game ownership update</td>
+                  <td><span class="badge on">On-chain</span></td>
+                  <td>
+                    HIVE payment is on-chain. Asset ownership is then updated in
+                    the game system.
+                  </td>
+                </tr>
 
-  <script>
-    fetch("footer.html")
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("global-footer").innerHTML = html;
+                <tr>
+                  <td>Revenue distribution & treasury movement</td>
+                  <td>Platform</td>
+                  <td>On-chain transfers between MydEmpire wallets</td>
+                  <td><span class="badge on">On-chain</span></td>
+                  <td>
+                    Treasury, DAO, founder, and reward-wallet transfers are
+                    executed as real wallet transfers.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Connecting wallet / login</td>
+                  <td>Access</td>
+                  <td>Off-chain session / account recognition</td>
+                  <td><span class="badge off">Off-chain</span></td>
+                  <td>
+                    No HIVE moves here. The game only recognizes which Hive
+                    account is playing.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Opening packs</td>
+                  <td>Gameplay</td>
+                  <td>Off-chain game database</td>
+                  <td><span class="badge off">Off-chain</span></td>
+                  <td>
+                    Pack results are generated inside the game system to keep
+                    gameplay fast and avoid unnecessary wallet confirmations.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Building factories on lands</td>
+                  <td>Gameplay</td>
+                  <td>Off-chain</td>
+                  <td><span class="badge off">Off-chain</span></td>
+                  <td>
+                    Blueprint use, slot filling, and build logic are handled
+                    inside the backend.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Upgrading factories</td>
+                  <td>Gameplay</td>
+                  <td>Off-chain</td>
+                  <td><span class="badge off">Off-chain</span></td>
+                  <td>
+                    Upgrade rules and time tracking are handled in the game
+                    engine.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Paying maintenance with EMP</td>
+                  <td>Gameplay</td>
+                  <td>Off-chain</td>
+                  <td><span class="badge off">Off-chain</span></td>
+                  <td>
+                    EMP is deducted in-game. No HIVE wallet movement is involved
+                    at this stage.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>EP (Empire Power) calculation</td>
+                  <td>Scoring</td>
+                  <td>Off-chain</td>
+                  <td><span class="badge off">Off-chain</span></td>
+                  <td>
+                    All EP math is calculated on the server and used for
+                    rewards, status, and rankings.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Leaderboards & rankings</td>
+                  <td>Scoring</td>
+                  <td>Off-chain</td>
+                  <td><span class="badge off">Off-chain</span></td>
+                  <td>
+                    Leaderboards are generated from game data rather than the
+                    blockchain directly.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Notifications & empire history</td>
+                  <td>UX</td>
+                  <td>Off-chain</td>
+                  <td><span class="badge off">Off-chain</span></td>
+                  <td>
+                    Messages like maintenance due, ready to upgrade, or game
+                    history are stored by the backend.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="why-grid">
+          <div class="mini-card">
+            <h3>Why not put everything on-chain?</h3>
+            <ul>
+              <li>
+                Too many wallet popups would make normal gameplay frustrating.
+              </li>
+              <li>
+                Fast strategy actions work better when processed instantly by
+                the server.
+              </li>
+              <li>
+                Not every small gameplay action needs to be written on-chain or
+                require wallet confirmation.
+              </li>
+              <li>
+                This keeps the game smooth while still preserving real HIVE
+                transparency where it matters.
+              </li>
+            </ul>
+          </div>
+
+          <div class="mini-card">
+            <h3>Future on-chain features</h3>
+            <ul>
+              <li>Governance and voting for WRIT / RELIC based influence</li>
+              <li>Prestige NFTs or special achievement records</li>
+              <li>Snapshot-based reward claims or event participation</li>
+              <li>
+                Any future wallet action will be documented clearly on this page
+              </li>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- <script src="js/appbar.js"></script> -->
+
+    <div id="global-footer"></div>
+
+    <script>
+      fetch("footer.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("global-footer").innerHTML = html;
+        });
+      function getTransparencyActiveUser() {
+        return (
+          new URLSearchParams(window.location.search).get("user") ||
+          localStorage.getItem("mde_username") ||
+          localStorage.getItem("hiveUsername") ||
+          localStorage.getItem("username") ||
+          ""
+        )
+          .replace("@", "")
+          .trim()
+          .toLowerCase();
+      }
+
+      function setupTransparencyNavbar() {
+        const activeUser = getTransparencyActiveUser();
+
+        const loginBtn = document.getElementById("appbarLoginBtn");
+        const accountWrap = document.getElementById("appbarAccountWrap");
+        const accountBtn = document.getElementById("appbarAccountBtn");
+        const dropdown = document.getElementById("appbarDropdown");
+        const dropdownHead = document.getElementById("appbarDropdownHead");
+        const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
+        const visitOtherEmpireBtn = document.getElementById(
+          "visitOtherEmpireBtn",
+        );
+        const logoutBtn = document.getElementById("appbarLogoutBtn");
+
+        if (!activeUser) {
+          if (loginBtn) loginBtn.style.display = "none";
+          if (accountWrap) accountWrap.style.display = "none";
+          return;
+        }
+
+        document.querySelectorAll(".auth-only").forEach((link) => {
+          link.classList.remove("hidden-auth-link");
+          link.classList.add("show-auth-link");
+          link.style.display = "inline-flex";
+        });
+
+        if (loginBtn) loginBtn.style.display = "none";
+        if (accountWrap) accountWrap.style.display = "block";
+        if (accountBtn) accountBtn.textContent = `@${activeUser} ▼`;
+        if (dropdownHead) dropdownHead.textContent = `@${activeUser}`;
+
+        const dashboardLink = document.getElementById("dashboardLink");
+        const shopLink = document.getElementById("shopLink");
+        const marketplaceLink = document.getElementById("marketplaceLink");
+
+        if (dashboardLink) {
+          dashboardLink.href = `player-dashboard.html?user=${encodeURIComponent(activeUser)}`;
+        }
+        if (shopLink) {
+          shopLink.href = `shop.html?user=${encodeURIComponent(activeUser)}`;
+        }
+        if (marketplaceLink) {
+          marketplaceLink.href = `marketplace.html?user=${encodeURIComponent(activeUser)}`;
+        }
+        if (visitMyEmpireLink) {
+          visitMyEmpireLink.href = `player-dashboard.html?user=${encodeURIComponent(activeUser)}`;
+        }
+
+        if (accountBtn && dropdown) {
+          accountBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle("open");
+          });
+
+          document.addEventListener("click", () => {
+            dropdown.classList.remove("open");
+          });
+        }
+
+        if (visitOtherEmpireBtn) {
+          visitOtherEmpireBtn.addEventListener("click", () => {
+            const target = prompt("Enter Hive username to visit empire:");
+            const clean = String(target || "")
+              .replace("@", "")
+              .trim()
+              .toLowerCase();
+            if (!clean) return;
+            window.location.href = `player-dashboard.html?user=${encodeURIComponent(clean)}`;
+          });
+        }
+
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("mde_username");
+            localStorage.removeItem("hiveUsername");
+            localStorage.removeItem("username");
+            window.location.href = "index.html";
+          });
+        }
+      }
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        setupTransparencyNavbar();
+        setupTransparencyNavbar();
       });
-    function getTransparencyActiveUser() {
-  return (
-    new URLSearchParams(window.location.search).get("user") ||
-    localStorage.getItem("mde_username") ||
-    localStorage.getItem("hiveUsername") ||
-    localStorage.getItem("username") ||
-    ""
-  )
-    .replace("@", "")
-    .trim()
-    .toLowerCase();
-}
-
-function setupTransparencyNavbar() {
-  const activeUser = getTransparencyActiveUser();
-
-  const loginBtn = document.getElementById("appbarLoginBtn");
-  const accountWrap = document.getElementById("appbarAccountWrap");
-  const accountBtn = document.getElementById("appbarAccountBtn");
-  const dropdown = document.getElementById("appbarDropdown");
-  const dropdownHead = document.getElementById("appbarDropdownHead");
-  const visitMyEmpireLink = document.getElementById("visitMyEmpireLink");
-  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
-  const logoutBtn = document.getElementById("appbarLogoutBtn");
-
-  if (!activeUser) {
-    if (loginBtn) loginBtn.style.display = "none";
-    if (accountWrap) accountWrap.style.display = "none";
-    return;
-  }
-
-  document.querySelectorAll(".auth-only").forEach((link) => {
-    link.classList.remove("hidden-auth-link");
-    link.classList.add("show-auth-link");
-    link.style.display = "inline-flex";
-  });
-
-  if (loginBtn) loginBtn.style.display = "none";
-  if (accountWrap) accountWrap.style.display = "block";
-  if (accountBtn) accountBtn.textContent = `@${activeUser} ▼`;
-  if (dropdownHead) dropdownHead.textContent = `@${activeUser}`;
-
-  const dashboardLink = document.getElementById("dashboardLink");
-  const shopLink = document.getElementById("shopLink");
-  const marketplaceLink = document.getElementById("marketplaceLink");
-
-  if (dashboardLink) {
-    dashboardLink.href = `player-dashboard.html?user=${encodeURIComponent(activeUser)}`;
-  }
-  if (shopLink) {
-    shopLink.href = `shop.html?user=${encodeURIComponent(activeUser)}`;
-  }
-  if (marketplaceLink) {
-    marketplaceLink.href = `marketplace.html?user=${encodeURIComponent(activeUser)}`;
-  }
-  if (visitMyEmpireLink) {
-    visitMyEmpireLink.href = `player-dashboard.html?user=${encodeURIComponent(activeUser)}`;
-  }
-
-  if (accountBtn && dropdown) {
-    accountBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("open");
-    });
-
-    document.addEventListener("click", () => {
-      dropdown.classList.remove("open");
-    });
-  }
-
-  if (visitOtherEmpireBtn) {
-    visitOtherEmpireBtn.addEventListener("click", () => {
-      const target = prompt("Enter Hive username to visit empire:");
-      const clean = String(target || "").replace("@", "").trim().toLowerCase();
-      if (!clean) return;
-      window.location.href = `player-dashboard.html?user=${encodeURIComponent(clean)}`;
-    });
-  }
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("mde_username");
-      localStorage.removeItem("hiveUsername");
-      localStorage.removeItem("username");
-      window.location.href = "index.html";
-    });
-  }
-}
-  </script>
-  <script>
-document.addEventListener("DOMContentLoaded", () => {
-  setupTransparencyNavbar();
-  setupTransparencyNavbar();
-});
-</script>
-</body>
+    </script>
+  </body>
 </html>

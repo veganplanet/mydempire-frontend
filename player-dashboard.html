@@ -16,7 +16,7 @@
           </a>
 
           <nav class="appbar-nav">
-            <a href="/" class="appbar-link">Home</a>
+            <a href="index.html" class="appbar-link">Home</a>
             <a href="economy.html" class="appbar-link">Economy</a>
             <a href="transparency.html" class="appbar-link">Transparency</a>
             <a href="codex.html" class="appbar-link">Codex</a>
@@ -211,6 +211,30 @@
           <div class="overview-block-title">Empire Snapshot</div>
 
           <div class="summary-grid snapshot-grid">
+            <div class="summary-card card-crate">
+              <div class="summary-label">🎁 Imperial Supply Crate</div>
+
+              <div class="summary-value" id="crate-cost-display">25 EMP</div>
+
+              <div class="summary-sub" id="crate-status-text">
+                1 crate per day • Reset at 00:00 UTC
+              </div>
+
+              <div class="summary-actions">
+                <button id="open-crate-btn" class="primary-button">
+                  Open Crate
+                </button>
+                <div id="crate-action-status" class="status-text">
+                  Rewards may include EMP, Blueprints, or rare Relic Fragments.
+                </div>
+                <a
+                  href="javascript:void(0)"
+                  id="crate-history-link"
+                  class="status-link"
+                  >View history</a
+                >
+              </div>
+            </div>
             <div class="summary-card card-emp">
               <div class="summary-label">
                 <svg class="ui-icon">
@@ -4047,6 +4071,208 @@
           slot.title = "Read-only mode";
         });
       }
+      /* ===============================
+   IMPERIAL SUPPLY CRATE LOGIC
+================================ */
+
+      function getCrateModalEls() {
+        return {
+          crateModal: document.getElementById("crate-modal"),
+          crateModalContent: document.getElementById("crate-modal-content"),
+          crateActionStatus: document.getElementById("crate-action-status"),
+          openCrateBtn: document.getElementById("open-crate-btn"),
+          closeCrateModalBtn: document.getElementById("close-crate-modal"),
+          cancelOpenCrateBtn: document.getElementById("cancel-open-crate-btn"),
+          confirmOpenCrateBtn: document.getElementById(
+            "confirm-open-crate-btn",
+          ),
+        };
+      }
+
+      function openCrateModal() {
+        const { crateModal } = getCrateModalEls();
+        if (!crateModal) return;
+        crateModal.style.display = "flex";
+      }
+
+      function closeCrateModal() {
+        const { crateModal } = getCrateModalEls();
+        if (!crateModal) return;
+        crateModal.style.display = "none";
+      }
+
+      async function openImperialSupplyCrate() {
+        const { crateModalContent, crateActionStatus } = getCrateModalEls();
+
+        try {
+          const activeUser =
+            window.ACTIVE_USER ||
+            localStorage.getItem("hiveUsername") ||
+            document
+              .getElementById("player-username-raw")
+              ?.textContent?.trim() ||
+            new URLSearchParams(window.location.search).get("user");
+
+          if (!activeUser) {
+            alert("No active user found.");
+            return;
+          }
+
+          if (crateModalContent) {
+            crateModalContent.innerHTML = `
+        <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
+        <div class="crate-modal-body">
+          <p>Opening Imperial Supply Crate...</p>
+        </div>
+      `;
+          }
+
+          const res = await fetch(apiUrl("/open-imperial-crate"), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-player-actor": activeUser,
+            },
+            body: JSON.stringify({
+              username: activeUser,
+            }),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            if (crateModalContent) {
+              crateModalContent.innerHTML = `
+          <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
+          <div class="crate-modal-body">
+            <p>${data.error || "Failed to open crate."}</p>
+          </div>
+          <div class="crate-modal-actions">
+            <button id="crate-close-after-result" class="primary-button" type="button">Close</button>
+          </div>
+        `;
+            }
+
+            const closeBtn = document.getElementById(
+              "crate-close-after-result",
+            );
+            if (closeBtn) {
+              closeBtn.addEventListener("click", closeCrateModal);
+            }
+
+            if (crateActionStatus) {
+              crateActionStatus.innerHTML =
+                (data.error || "Failed to open crate.") +
+                ' Try again in <span id="crate-reset-timer"></span>.';
+
+              startCrateResetTimer();
+            }
+            return;
+          }
+
+          const rewardText = data.reward?.label || "Reward received";
+
+          if (crateModalContent) {
+            crateModalContent.innerHTML = `
+        <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
+        <div class="crate-modal-body">
+          <p><strong>You discovered:</strong></p>
+          <p>${rewardText}</p>
+          <p><strong>EMP Balance:</strong> ${Number(data.emp_balance || 0).toLocaleString()}</p>
+        </div>
+        <div class="crate-modal-actions">
+          <button id="crate-close-after-success" class="primary-button" type="button">Close</button>
+        </div>
+      `;
+          }
+
+          const closeSuccessBtn = document.getElementById(
+            "crate-close-after-success",
+          );
+          if (closeSuccessBtn) {
+            closeSuccessBtn.addEventListener("click", closeCrateModal);
+          }
+
+          if (crateActionStatus) {
+            crateActionStatus.textContent = `Last crate reward: ${rewardText}`;
+          }
+
+          const empBox = document.getElementById("summary-emp-balance");
+          if (empBox) {
+            empBox.textContent = Number(data.emp_balance || 0).toLocaleString();
+          }
+        } catch (err) {
+          console.error("Open crate error:", err);
+
+          if (crateModalContent) {
+            crateModalContent.innerHTML = `
+        <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
+        <div class="crate-modal-body">
+          <p>Request failed while opening crate.</p>
+        </div>
+        <div class="crate-modal-actions">
+          <button id="crate-close-after-fail" class="primary-button" type="button">Close</button>
+        </div>
+      `;
+          }
+
+          const closeFailBtn = document.getElementById(
+            "crate-close-after-fail",
+          );
+          if (closeFailBtn) {
+            closeFailBtn.addEventListener("click", closeCrateModal);
+          }
+
+          if (crateActionStatus) {
+            crateActionStatus.textContent =
+              "Request failed while opening crate.";
+          }
+        }
+      }
+      function startCrateResetTimer() {
+        const el = document.getElementById("crate-reset-timer");
+        if (!el) return;
+
+        function updateTimer() {
+          const now = new Date();
+
+          const nextReset = new Date();
+          nextReset.setUTCHours(24, 0, 0, 0); // next 00:00 UTC
+
+          const diff = nextReset - now;
+
+          const hours = Math.floor(diff / 3600000);
+          const minutes = Math.floor((diff % 3600000) / 60000);
+          const seconds = Math.floor((diff % 60000) / 1000);
+
+          el.textContent = `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+      }
+      function startCrateResetTimer() {
+        const el = document.getElementById("crate-reset-timer");
+        if (!el) return;
+
+        function updateTimer() {
+          const now = new Date();
+
+          const nextReset = new Date();
+          nextReset.setUTCHours(24, 0, 0, 0);
+
+          const diff = nextReset - now;
+
+          const hours = Math.floor(diff / 3600000);
+          const minutes = Math.floor((diff % 3600000) / 60000);
+          const seconds = Math.floor((diff % 60000) / 1000);
+
+          el.textContent = `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+      }
       window.addEventListener("load", async () => {
         try {
           setupDashboardNavbar();
@@ -4062,6 +4288,111 @@
           setupDashboardNavbar(); // run again after data is loaded
         } catch (err) {
           console.error("Initial dashboard load failed:", err);
+        }
+
+        const crateEls = getCrateModalEls();
+
+        if (crateEls.openCrateBtn) {
+          crateEls.openCrateBtn.addEventListener("click", openCrateModal);
+        }
+
+        if (crateEls.closeCrateModalBtn) {
+          crateEls.closeCrateModalBtn.addEventListener(
+            "click",
+            closeCrateModal,
+          );
+        }
+
+        if (crateEls.cancelOpenCrateBtn) {
+          crateEls.cancelOpenCrateBtn.addEventListener(
+            "click",
+            closeCrateModal,
+          );
+        }
+
+        if (crateEls.confirmOpenCrateBtn) {
+          crateEls.confirmOpenCrateBtn.addEventListener(
+            "click",
+            openImperialSupplyCrate,
+          );
+        }
+
+        if (crateEls.crateModal) {
+          crateEls.crateModal.addEventListener("click", (e) => {
+            if (e.target === crateEls.crateModal) {
+              closeCrateModal();
+            }
+          });
+        }
+        const crateHistoryLink = document.getElementById("crate-history-link");
+        const closeCrateHistory = document.getElementById(
+          "close-crate-history",
+        );
+
+        if (crateHistoryLink) {
+          crateHistoryLink.addEventListener("click", async (e) => {
+            e.preventDefault();
+
+            const modal = document.getElementById("crate-history-modal");
+            const box = document.getElementById("crate-history-content");
+
+            if (!modal || !box) {
+              console.log("crate history modal not found");
+              return;
+            }
+
+            modal.style.display = "flex";
+            box.innerHTML = "Loading...";
+
+            try {
+              const activeUser =
+                window.ACTIVE_USER ||
+                localStorage.getItem("hiveUsername") ||
+                document
+                  .getElementById("player-username-raw")
+                  ?.textContent?.trim() ||
+                new URLSearchParams(window.location.search).get("user");
+
+              if (!activeUser) {
+                box.innerHTML = "No active user found.";
+                return;
+              }
+
+              const res = await fetch(apiUrl(`/crate-history/${activeUser}`));
+              const data = await res.json();
+
+              if (!res.ok || !data.success) {
+                box.innerHTML = "Failed to load history.";
+                return;
+              }
+
+              if (!data.history || !data.history.length) {
+                box.innerHTML = "No crate openings yet.";
+                return;
+              }
+
+              box.innerHTML = data.history
+                .map((row) => {
+                  const date = new Date(row.created_at)
+                    .toISOString()
+                    .slice(0, 10);
+                  return `<div>${date} — ${row.reward_value}</div>`;
+                })
+                .join("");
+            } catch (err) {
+              console.error("Crate history load error:", err);
+              box.innerHTML = "Failed to load history.";
+            }
+          });
+        }
+
+        if (closeCrateHistory) {
+          closeCrateHistory.addEventListener("click", () => {
+            const modal = document.getElementById("crate-history-modal");
+            if (modal) {
+              modal.style.display = "none";
+            }
+          });
         }
       });
 
@@ -4217,5 +4548,55 @@
           if (footerEl) footerEl.innerHTML = html;
         });
     </script>
+    <div id="crate-modal" class="modal-overlay" style="display: none">
+      <div class="modal-box crate-modal-box">
+        <button
+          id="close-crate-modal"
+          type="button"
+          class="modal-close-btn"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+        <div id="crate-modal-content">
+          <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
+          <div class="crate-modal-body">
+            <p><strong>Cost:</strong> 25 EMP</p>
+            <p>Daily limit: 1 crate per UTC day</p>
+            <p>Reset time: 00:00 UTC</p>
+            <p class="crate-modal-note">
+              Rewards may include EMP, Blueprints, or rare Relic Fragments.
+            </p>
+          </div>
+
+          <div class="crate-modal-actions">
+            <button
+              id="confirm-open-crate-btn"
+              class="primary-button"
+              type="button"
+            >
+              Open Crate
+            </button>
+            <button
+              id="cancel-open-crate-btn"
+              class="secondary-btn"
+              type="button"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="crate-history-modal" style="display: none" class="modal-overlay">
+      <div class="modal-box">
+        <button id="close-crate-history" class="modal-close-btn">×</button>
+
+        <h3>📜 Imperial Crate History</h3>
+
+        <div id="crate-history-content">Loading...</div>
+      </div>
+    </div>
   </body>
 </html>
