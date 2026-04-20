@@ -154,9 +154,97 @@
   background: #f9fafb;
   padding: 10px;
 }
+.emp-sales-scroll-box {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 2px solid #d1d5db;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 12px;
+  margin-top: 10px;
+}
 
-.scroll-box .kv {
-  margin-bottom: 10px;
+.emp-sales-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+}
+
+.emp-sales-left {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.emp-sales-right {
+  font-size: 13px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+.all-players-wrap {
+  margin-top: 12px;
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.all-players-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.all-players-table thead th {
+  background: #eef2ff;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 800;
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid #dbeafe;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.all-players-table tbody td {
+  padding: 11px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #111827;
+}
+
+.all-players-table tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.all-players-table tbody tr:hover {
+  background: #eff6ff;
+}
+
+.all-players-name {
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.all-players-num {
+  font-weight: 600;
+  text-align: center;
+}
+
+.all-players-zero {
+  color: #94a3b8;
+}
+
+.all-players-box {
+  max-height: 420px;
+  overflow-y: auto;
 }
   </style>
 </head>
@@ -317,6 +405,57 @@
 
   <div class="status" id="wallet-balances-status">
     Wallet balances not loaded yet.
+  </div>
+</div>
+<div class="section">
+  <h2>EMP Purchase History</h2>
+
+  <div class="row">
+    <button id="load-emp-sales-btn">Load EMP History</button>
+  </div>
+
+  <div class="status" id="emp-sales-status">
+    No EMP purchase history loaded yet.
+  </div>
+
+  <div id="emp-sales-box" class="emp-sales-scroll-box">
+  <div class="kv">
+    <span>Status</span>
+    <span>No EMP purchase history loaded yet.</span>
+  </div>
+</div>
+</div>
+<div class="section">
+  <h2>All Players</h2>
+
+  <div class="row">
+    <button id="load-all-players-btn" class="primary">Load All Players</button>
+  </div>
+
+  <div class="status" id="all-players-status">
+    No player list loaded yet.
+  </div>
+
+  <div class="all-players-wrap">
+    <div class="all-players-box">
+      <table class="all-players-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>EMP</th>
+            <th>Packs Bought</th>
+            <th>Factories</th>
+            <th>Lands</th>
+            <th>Blueprints</th>
+          </tr>
+        </thead>
+        <tbody id="all-players-tbody">
+          <tr>
+            <td colspan="6">No data loaded yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
     <div class="section">
@@ -511,7 +650,61 @@ document.getElementById("metric-pack-sales-updated").textContent =
           <div class="kv"><span>Unopened Packs</span><span>${data.unopened_packs}</span></div>
           <div class="kv"><span>Relics</span><span>${data.relic_count}</span></div>
           <div class="kv"><span>WRITs</span><span>${data.writ_count}</span></div>
+          <div class="row" style="margin-top:12px;">
+  <button id="view-assets-btn" class="primary">View Assets</button>
+  <button id="give-emp-btn">Give EMP</button>
+  <button id="give-pack-btn">Give Pack</button>
+  <button id="open-dashboard-btn">Open Dashboard</button>
+</div>
+
+<div class="status" id="player-action-status">
+  No admin action used yet.
+</div>
         `;
+       const inspectedUsername = data.username;
+
+// VIEW ASSETS
+document.getElementById("view-assets-btn")?.addEventListener("click", () => {
+  document.getElementById("player-action-status").textContent =
+    `Viewing assets for @${inspectedUsername}`;
+});
+
+// GIVE EMP
+document.getElementById("give-emp-btn")?.addEventListener("click", () => {
+
+  const amount = prompt(`Enter EMP amount to give to @${inspectedUsername}`);
+  if (!amount) return;
+
+  const ok = confirm(`Are you sure you want to give ${amount} EMP to @${inspectedUsername}?`);
+  if (!ok) return;
+
+  document.getElementById("player-action-status").textContent =
+    `Confirmed: Give ${amount} EMP to @${inspectedUsername}`;
+
+});
+
+// GIVE PACK
+document.getElementById("give-pack-btn")?.addEventListener("click", () => {
+
+  const amount = prompt(`Enter number of packs to give to @${inspectedUsername}`);
+  if (!amount) return;
+
+  const ok = confirm(`Are you sure you want to give ${amount} pack(s) to @${inspectedUsername}?`);
+  if (!ok) return;
+
+  document.getElementById("player-action-status").textContent =
+    `Confirmed: Give ${amount} pack(s) to @${inspectedUsername}`;
+
+});
+
+// OPEN PLAYER DASHBOARD
+document.getElementById("open-dashboard-btn")?.addEventListener("click", () => {
+
+  const url = `player-dashboard.html?user=${encodeURIComponent(inspectedUsername)}`;
+  window.open(url, "_blank");
+
+});
+        
       } catch (err) {
         console.error(err);
         alert("Error inspecting player.");
@@ -1007,9 +1200,115 @@ document
 document
   .getElementById("load-whitelist-btn")
   ?.addEventListener("click", loadWhitelistUsers);
+  document
+  .getElementById("load-emp-sales-btn")
+  ?.addEventListener("click", loadEmpSales);
+  document
+  .getElementById("load-all-players-btn")
+  ?.addEventListener("click", loadAllPlayers);
   
-  </script>
-  <script>
+  async function loadEmpSales() {
+
+  if (!ADMIN_KEY) {
+    document.getElementById("emp-sales-status").textContent =
+      "Connect admin first.";
+    return;
+  }
+
+  const status = document.getElementById("emp-sales-status");
+  const box = document.getElementById("emp-sales-box");
+
+  try {
+
+    status.textContent = "Loading EMP purchase history...";
+
+    const res = await fetch(`${API_BASE}/admin/emp-sales`, {
+      headers: { "x-admin-key": ADMIN_KEY }
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      status.textContent = "Failed to load EMP history.";
+      return;
+    }
+
+    const sales = data.sales || [];
+
+    status.textContent = `Loaded ${sales.length} purchases`;
+
+    box.innerHTML = sales.map(s => {
+
+  const date = new Date(s.created_at).toLocaleString();
+
+  return `
+    <div class="emp-sales-row">
+      <div class="emp-sales-left">
+        @${s.username} • ${Number(s.hive_amount).toFixed(3)} HIVE → ${Number(s.emp_amount).toLocaleString()} EMP
+      </div>
+
+      <div class="emp-sales-right">
+        ${date}
+      </div>
+    </div>
+  `;
+
+}).join("");
+
+  } catch (err) {
+
+    console.error(err);
+    status.textContent = "Error loading EMP history.";
+
+  }
+}
+async function loadAllPlayers() {
+  if (!ADMIN_KEY) {
+    document.getElementById("all-players-status").textContent =
+      "Connect admin first.";
+    return;
+  }
+
+  const statusEl = document.getElementById("all-players-status");
+  const tbody = document.getElementById("all-players-tbody");
+
+  try {
+    statusEl.textContent = "Loading all players...";
+
+    const res = await fetch(`${API_BASE}/admin/all-players`, {
+      headers: { "x-admin-key": ADMIN_KEY }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      statusEl.textContent = data.error || "Failed to load all players.";
+      return;
+    }
+
+    const players = data.players || [];
+    statusEl.textContent = `Loaded ${players.length} player(s).`;
+
+    if (!players.length) {
+      tbody.innerHTML = `<tr><td colspan="6">No players found.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = players.map((p) => `
+      <tr>
+        <td>@${p.username}</td>
+        <td>${Number(p.emp || 0).toLocaleString()}</td>
+        <td>${Number(p.packs_bought || 0)}</td>
+        <td>${Number(p.factories || 0)}</td>
+        <td>${Number(p.lands || 0)}</td>
+        <td>${Number(p.blueprints || 0)}</td>
+      </tr>
+    `).join("");
+  } catch (err) {
+    console.error("loadAllPlayers error:", err);
+    statusEl.textContent = "Error loading all players.";
+  }
+}
 async function loadWalletBalances() {
   if (!ADMIN_KEY) {
     document.getElementById("wallet-balances-status").textContent =
