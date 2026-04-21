@@ -246,6 +246,35 @@
   max-height: 420px;
   overflow-y: auto;
 }
+.assets-section-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 18px 0 10px;
+  color: #111827;
+}
+
+.assets-list {
+  display: grid;
+  gap: 8px;
+}
+
+.assets-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #f9fafb;
+}
+
+.assets-empty {
+  padding: 12px;
+  border: 1px dashed #d1d5db;
+  border-radius: 10px;
+  color: #6b7280;
+  background: #f9fafb;
+}
   </style>
 </head>
 <body>
@@ -664,37 +693,189 @@ document.getElementById("metric-pack-sales-updated").textContent =
        const inspectedUsername = data.username;
 
 // VIEW ASSETS
-document.getElementById("view-assets-btn")?.addEventListener("click", () => {
-  document.getElementById("player-action-status").textContent =
-    `Viewing assets for @${inspectedUsername}`;
+document.getElementById("view-assets-btn")?.addEventListener("click", async () => {
+  const modal = document.getElementById("assets-modal");
+  const title = document.getElementById("assets-modal-title");
+  const body = document.getElementById("assets-modal-body");
+
+  try {
+    title.textContent = `Player Assets — @${inspectedUsername}`;
+    body.innerHTML = "Loading assets...";
+    modal.style.display = "block";
+
+    const res = await fetch(`${API_BASE}/admin/player-assets/${encodeURIComponent(inspectedUsername)}`, {
+      headers: {
+        "x-admin-key": ADMIN_KEY
+      }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      body.innerHTML = `<div class="assets-empty">${data.error || "Failed to load assets."}</div>`;
+      return;
+    }
+
+    const assets = data.assets || {};
+
+    const renderList = (titleText, items, renderItem) => {
+      if (!items || !items.length) {
+        return `
+          <div class="assets-section-title">${titleText}</div>
+          <div class="assets-empty">No ${titleText.toLowerCase()} found.</div>
+        `;
+      }
+
+      return `
+        <div class="assets-section-title">${titleText} (${items.length})</div>
+        <div class="assets-list">
+          ${items.map(renderItem).join("")}
+        </div>
+      `;
+    };
+
+    body.innerHTML = `
+      ${renderList("Packs", assets.packs, (p) => `
+        <div class="assets-item">
+          <span>PACK #${p.id} • ${p.era || "--"} • ${p.tier || "--"}</span>
+          <span>${new Date(p.created_at).toLocaleString()}</span>
+        </div>
+      `)}
+
+      ${renderList("Lands", assets.lands, (l) => `
+        <div class="assets-item">
+          <span>LAND #${l.id} • ${l.tier || "--"} • ${l.era || "--"}</span>
+          <span>${new Date(l.created_at).toLocaleString()}</span>
+        </div>
+      `)}
+
+      ${renderList("Blueprints", assets.blueprints, (b) => `
+        <div class="assets-item">
+          <span>BLUEPRINT #${b.id} • ${b.tier || "--"} • ${b.era || "--"}</span>
+          <span>${new Date(b.created_at).toLocaleString()}</span>
+        </div>
+      `)}
+
+      ${renderList("Factories", assets.factories, (f) => `
+        <div class="assets-item">
+          <span>FACTORY #${f.id} • ${f.blueprint_tier || "--"} • Level ${f.level || 1} • ${f.status || "--"}</span>
+          <span>${new Date(f.created_at).toLocaleString()}</span>
+        </div>
+      `)}
+
+      ${renderList("Relics", assets.relics, (r) => `
+        <div class="assets-item">
+          <span>RELIC #${r.id} • ${r.tier || "--"} • ${r.era || "--"}</span>
+          <span>${new Date(r.created_at).toLocaleString()}</span>
+        </div>
+      `)}
+
+      ${renderList("WRITs", assets.writs, (w) => `
+        <div class="assets-item">
+          <span>WRIT #${w.id} • ${w.tier || "--"} • ${w.era || "--"}</span>
+          <span>${new Date(w.created_at).toLocaleString()}</span>
+        </div>
+      `)}
+    `;
+  } catch (err) {
+    console.error(err);
+    body.innerHTML = `<div class="assets-empty">Error loading assets.</div>`;
+    modal.style.display = "block";
+  }
+});
+document.getElementById("close-assets-modal-btn")?.addEventListener("click", () => {
+  document.getElementById("assets-modal").style.display = "none";
 });
 
 // GIVE EMP
-document.getElementById("give-emp-btn")?.addEventListener("click", () => {
-
+document.getElementById("give-emp-btn")?.addEventListener("click", async () => {
   const amount = prompt(`Enter EMP amount to give to @${inspectedUsername}`);
   if (!amount) return;
 
-  const ok = confirm(`Are you sure you want to give ${amount} EMP to @${inspectedUsername}?`);
+  const cleanAmount = Number(amount);
+  if (!Number.isInteger(cleanAmount) || cleanAmount <= 0) {
+    alert("Enter a valid whole EMP amount.");
+    return;
+  }
+
+  const ok = confirm(`Are you sure you want to give ${cleanAmount} EMP to @${inspectedUsername}?`);
   if (!ok) return;
 
-  document.getElementById("player-action-status").textContent =
-    `Confirmed: Give ${amount} EMP to @${inspectedUsername}`;
+  try {
+    const res = await fetch(`${API_BASE}/admin/give-emp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY
+      },
+      body: JSON.stringify({
+        username: inspectedUsername,
+        amount: cleanAmount
+      })
+    });
 
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      document.getElementById("player-action-status").textContent =
+        data.error || "Failed to give EMP.";
+      return;
+    }
+
+    document.getElementById("player-action-status").textContent =
+      `${cleanAmount} EMP given to @${inspectedUsername} successfully.`;
+
+    await inspectPlayer(); // refresh the inspector immediately
+  } catch (err) {
+    console.error(err);
+    document.getElementById("player-action-status").textContent =
+      "Error giving EMP.";
+  }
 });
-
 // GIVE PACK
-document.getElementById("give-pack-btn")?.addEventListener("click", () => {
-
+document.getElementById("give-pack-btn")?.addEventListener("click", async () => {
   const amount = prompt(`Enter number of packs to give to @${inspectedUsername}`);
   if (!amount) return;
 
-  const ok = confirm(`Are you sure you want to give ${amount} pack(s) to @${inspectedUsername}?`);
+  const cleanAmount = Number(amount);
+  if (!Number.isInteger(cleanAmount) || cleanAmount <= 0) {
+    alert("Enter a valid whole pack amount.");
+    return;
+  }
+
+  const ok = confirm(`Are you sure you want to give ${cleanAmount} pack(s) to @${inspectedUsername}?`);
   if (!ok) return;
 
-  document.getElementById("player-action-status").textContent =
-    `Confirmed: Give ${amount} pack(s) to @${inspectedUsername}`;
+  try {
+    const res = await fetch(`${API_BASE}/admin/give-pack`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY
+      },
+      body: JSON.stringify({
+        username: inspectedUsername,
+        amount: cleanAmount
+      })
+    });
 
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      document.getElementById("player-action-status").textContent =
+        data.error || "Failed to give pack.";
+      return;
+    }
+
+    document.getElementById("player-action-status").textContent =
+      `${cleanAmount} pack(s) given to @${inspectedUsername} successfully.`;
+
+    await inspectPlayer();
+  } catch (err) {
+    console.error(err);
+    document.getElementById("player-action-status").textContent =
+      "Error giving pack.";
+  }
 });
 
 // OPEN PLAYER DASHBOARD
@@ -1401,5 +1582,12 @@ async function loadWalletBalances() {
   }
 }
 </script>
+<div id="assets-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
+  <div style="max-width:900px; margin:40px auto; background:#fff; border-radius:16px; padding:20px; max-height:85vh; overflow-y:auto; position:relative;">
+    <button id="close-assets-modal-btn" style="position:absolute; top:12px; right:12px;">Close</button>
+    <h2 id="assets-modal-title">Player Assets</h2>
+    <div id="assets-modal-body">Loading...</div>
+  </div>
+</div>
 </body>
 </html>

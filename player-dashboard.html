@@ -217,7 +217,8 @@
               <div class="summary-value" id="crate-cost-display">25 EMP</div>
 
               <div class="summary-sub" id="crate-status-text">
-                1 crate per day • Reset at 00:00 UTC
+                1 crate per day • Next crate in
+                <span id="crate-reset-timer">--</span>
               </div>
 
               <div class="summary-actions">
@@ -4102,6 +4103,10 @@
       }
 
       async function openImperialSupplyCrate() {
+        if (window.crateOpenedToday) {
+          alert("You already opened your Imperial Supply Crate today.");
+          return;
+        }
         const { crateModalContent, crateActionStatus } = getCrateModalEls();
 
         try {
@@ -4196,7 +4201,7 @@
           if (crateActionStatus) {
             crateActionStatus.textContent = `Last crate reward: ${rewardText}`;
           }
-
+          window.crateOpenedToday = true;
           const empBox = document.getElementById("summary-emp-balance");
           if (empBox) {
             empBox.textContent = Number(data.emp_balance || 0).toLocaleString();
@@ -4233,51 +4238,33 @@
         const el = document.getElementById("crate-reset-timer");
         if (!el) return;
 
-        function updateTimer() {
+        function update() {
           const now = new Date();
+          const next = new Date();
 
-          const nextReset = new Date();
-          nextReset.setUTCHours(24, 0, 0, 0); // next 00:00 UTC
+          next.setUTCHours(24, 0, 0, 0); // next UTC midnight
 
-          const diff = nextReset - now;
+          const diff = next - now;
 
-          const hours = Math.floor(diff / 3600000);
-          const minutes = Math.floor((diff % 3600000) / 60000);
-          const seconds = Math.floor((diff % 60000) / 1000);
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff / (1000 * 60)) % 60);
+          const seconds = Math.floor((diff / 1000) % 60);
 
-          el.textContent = `${hours}h ${minutes}m ${seconds}s`;
+          el.textContent =
+            `${hours.toString().padStart(2, "0")}:` +
+            `${minutes.toString().padStart(2, "0")}:` +
+            `${seconds.toString().padStart(2, "0")}`;
         }
 
-        updateTimer();
-        setInterval(updateTimer, 1000);
-      }
-      function startCrateResetTimer() {
-        const el = document.getElementById("crate-reset-timer");
-        if (!el) return;
-
-        function updateTimer() {
-          const now = new Date();
-
-          const nextReset = new Date();
-          nextReset.setUTCHours(24, 0, 0, 0);
-
-          const diff = nextReset - now;
-
-          const hours = Math.floor(diff / 3600000);
-          const minutes = Math.floor((diff % 3600000) / 60000);
-          const seconds = Math.floor((diff % 60000) / 1000);
-
-          el.textContent = `${hours}h ${minutes}m ${seconds}s`;
-        }
-
-        updateTimer();
-        setInterval(updateTimer, 1000);
+        update();
+        setInterval(update, 1000);
       }
       window.addEventListener("load", async () => {
         try {
           setupDashboardNavbar();
 
           await loadDashboardSummary();
+          startCrateResetTimer();
           await loadRewardSummary();
           await loadGlobalHealth();
           await loadEmpireOverview();
@@ -4442,7 +4429,7 @@
     </script>
 
     <script>
-      src="js/appbar.js">
+      src = "js/appbar.js";
     </script>
 
     <div id="blueprint-mint-modal" class="pack-modal hidden">
@@ -4564,7 +4551,7 @@
           <div class="crate-modal-body">
             <p><strong>Cost:</strong> 25 EMP</p>
             <p>Daily limit: 1 crate per UTC day</p>
-            <p>Reset time: 00:00 UTC</p>
+            <p>Next crate available in <span id="crate-reset-timer"></span></p>
             <p class="crate-modal-note">
               Rewards may include EMP, Blueprints, or rare Relic Fragments.
             </p>
