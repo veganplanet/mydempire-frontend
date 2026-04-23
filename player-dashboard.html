@@ -229,12 +229,9 @@
                   Rewards may include EMP, B1 Blueprints, or Imperial Fragments
                   used for Relic and Data Center Blueprint crafting.
                 </div>
-                <a
-                  href="javascript:void(0)"
-                  id="crate-history-link"
-                  class="status-link"
-                  >View history</a
-                >
+                <a href="#" id="crate-history-link" class="status-link">
+                  View history
+                </a>
               </div>
             </div>
             <div class="summary-card card-emp">
@@ -785,6 +782,70 @@
       </section>
       <footer class="footer"></footer>
     </div>
+    <div id="crate-history-modal" class="modal-overlay" style="display: none">
+      <div class="modal-box">
+        <button
+          id="close-crate-history"
+          type="button"
+          class="modal-close-btn"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+        <h3>📜 Imperial Crate History</h3>
+
+        <div id="crate-history-content">Loading...</div>
+      </div>
+    </div>
+
+    <div id="crate-modal" class="modal-overlay" style="display: none">
+      <div class="modal-box crate-modal-box">
+        <button
+          id="close-crate-modal"
+          type="button"
+          class="modal-close-btn"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+        <div id="crate-modal-content">
+          <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
+
+          <div class="crate-modal-body">
+            <p><strong>Cost:</strong> 25 EMP</p>
+            <p>Daily limit: 1 crate per UTC day</p>
+            <p>
+              Next crate available in
+              <span id="crate-reset-timer">--</span>
+            </p>
+            <p class="crate-modal-note">
+              Rewards may include EMP or Imperial Fragments used for Relic and
+              Data Center Blueprint crafting.
+            </p>
+          </div>
+
+          <div class="crate-modal-actions">
+            <button
+              id="confirm-open-crate-btn"
+              class="primary-button"
+              type="button"
+            >
+              Open Crate
+            </button>
+
+            <button
+              id="cancel-open-crate-btn"
+              class="secondary-btn"
+              type="button"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
       function getActorHeaders(extra = {}) {
         return {
@@ -1198,6 +1259,46 @@
             throw new Error("HTTP " + blueprintsRes.status);
 
           const data = await dashboardRes.json();
+          const crateBtn = document.getElementById("open-crate-btn");
+          const crateStatusText = document.getElementById("crate-status-text");
+
+          window.crateOpenedToday = false;
+
+          if (data.lastCrateOpenedAt) {
+            const lastOpened = new Date(data.lastCrateOpenedAt);
+            const now = new Date();
+
+            // Compare by UTC day
+            const sameDay =
+              lastOpened.getUTCFullYear() === now.getUTCFullYear() &&
+              lastOpened.getUTCMonth() === now.getUTCMonth() &&
+              lastOpened.getUTCDate() === now.getUTCDate();
+            if (sameDay) {
+              window.crateOpenedToday = true;
+
+              if (crateBtn) {
+                crateBtn.disabled = true;
+                crateBtn.textContent = "Crate Opened";
+              }
+
+              if (crateStatusText) {
+                crateStatusText.innerHTML =
+                  '1 crate per day • Next crate in <span id="crate-reset-timer">--</span>';
+              }
+
+              startCrateResetTimer();
+            } else {
+              if (crateBtn) {
+                crateBtn.disabled = false;
+                crateBtn.textContent = "Open Crate";
+              }
+            }
+          } else {
+            if (crateBtn) {
+              crateBtn.disabled = false;
+              crateBtn.textContent = "Open Crate";
+            }
+          }
           const overviewData = await overviewRes.json();
           const blueprintsData = await blueprintsRes.json();
 
@@ -1466,43 +1567,7 @@
           if (!res.ok) throw new Error("HTTP " + res.status);
 
           const data = await res.json();
-          const crateBtn = document.getElementById("open-crate-btn");
-          const crateStatusText = document.getElementById("crate-status-text");
 
-          window.crateOpenedToday = false;
-
-          if (data.lastCrateOpenedAt) {
-            const openedDate = new Date(data.lastCrateOpenedAt)
-              .toISOString()
-              .slice(0, 10);
-            const nowDate = new Date().toISOString().slice(0, 10);
-
-            if (openedDate === nowDate) {
-              window.crateOpenedToday = true;
-
-              if (crateBtn) {
-                crateBtn.disabled = true;
-                crateBtn.textContent = "Crate Opened";
-              }
-
-              if (crateStatusText) {
-                crateStatusText.innerHTML =
-                  '1 crate per day • Next crate in <span id="crate-reset-timer">--</span>';
-              }
-
-              startCrateResetTimer();
-            } else {
-              if (crateBtn) {
-                crateBtn.disabled = false;
-                crateBtn.textContent = "Open Crate";
-              }
-            }
-          } else {
-            if (crateBtn) {
-              crateBtn.disabled = false;
-              crateBtn.textContent = "Open Crate";
-            }
-          }
           console.log("Reward summary:", data);
 
           const setText = (id, value) => {
@@ -4353,77 +4418,6 @@
         document
           .getElementById("crate-history-link")
           ?.addEventListener("click", openCrateHistory);
-
-        const crateHistoryLink = document.getElementById("crate-history-link");
-        const closeCrateHistory = document.getElementById(
-          "close-crate-history",
-        );
-
-        if (crateHistoryLink) {
-          crateHistoryLink.addEventListener("click", async (e) => {
-            e.preventDefault();
-
-            const modal = document.getElementById("crate-history-modal");
-            const box = document.getElementById("crate-history-content");
-
-            if (!modal || !box) {
-              console.log("crate history modal not found");
-              return;
-            }
-
-            modal.style.display = "flex";
-            box.innerHTML = "Loading...";
-
-            try {
-              const activeUser =
-                window.ACTIVE_USER ||
-                localStorage.getItem("hiveUsername") ||
-                document
-                  .getElementById("player-username-raw")
-                  ?.textContent?.trim() ||
-                new URLSearchParams(window.location.search).get("user");
-
-              if (!activeUser) {
-                box.innerHTML = "No active user found.";
-                return;
-              }
-
-              const res = await fetch(apiUrl(`/crate-history/${activeUser}`));
-              const data = await res.json();
-
-              if (!res.ok || !data.success) {
-                box.innerHTML = "Failed to load history.";
-                return;
-              }
-
-              if (!data.history || !data.history.length) {
-                box.innerHTML = "No crate openings yet.";
-                return;
-              }
-
-              box.innerHTML = data.history
-                .map((row) => {
-                  const date = new Date(row.created_at)
-                    .toISOString()
-                    .slice(0, 10);
-                  return `<div>${date} — ${row.reward_value}</div>`;
-                })
-                .join("");
-            } catch (err) {
-              console.error("Crate history load error:", err);
-              box.innerHTML = "Failed to load history.";
-            }
-          });
-        }
-
-        if (closeCrateHistory) {
-          closeCrateHistory.addEventListener("click", () => {
-            const modal = document.getElementById("crate-history-modal");
-            if (modal) {
-              modal.style.display = "none";
-            }
-          });
-        }
       });
 
       function setupLoggedInNav() {
@@ -4473,49 +4467,47 @@
         const modal = document.getElementById("crate-history-modal");
         const content = document.getElementById("crate-history-content");
 
-        if (!modal || !content) return;
+        if (!modal || !content) {
+          console.log("crate history modal not found");
+          return;
+        }
 
-        modal.style.display = "block";
-        content.innerHTML = "Loading...";
+        modal.style.display = "flex";
+        const activeUser =
+          window.ACTIVE_USER ||
+          localStorage.getItem("hiveUsername") ||
+          document.getElementById("player-username-raw")?.textContent?.trim() ||
+          new URLSearchParams(window.location.search).get("user");
 
+        if (!activeUser) {
+          content.innerHTML = "User not found.";
+          return;
+        }
+
+        const res = await fetch(apiUrl(`/crate-history/${activeUser}`));
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          content.innerHTML = data.error || "Failed to load crate history.";
+          return;
+        }
+
+        const rows = data.history || [];
+
+        if (!rows.length) {
+          content.innerHTML = "No crate history yet.";
+          return;
+        }
         try {
-          const activeUser =
-            window.ACTIVE_USER ||
-            localStorage.getItem("hiveUsername") ||
-            document
-              .getElementById("player-username-raw")
-              ?.textContent?.trim() ||
-            new URLSearchParams(window.location.search).get("user");
-
-          if (!activeUser) {
-            content.innerHTML = "User not found.";
-            return;
-          }
-
-          const res = await fetch(apiUrl(`/crate-history/${activeUser}`));
-          const data = await res.json();
-
-          if (!res.ok || !data.success) {
-            content.innerHTML = data.error || "Failed to load crate history.";
-            return;
-          }
-
-          const rows = data.history || [];
-
-          if (!rows.length) {
-            content.innerHTML = "No crate history yet.";
-            return;
-          }
-
           content.innerHTML = rows
             .map((row) => {
               const date = new Date(row.created_at).toLocaleString();
               return `
-        <div class="crate-history-row">
-          <span>${date}</span>
-          <strong>${row.reward_value}</strong>
-        </div>
-      `;
+      <div class="crate-history-row">
+        <span>${date}</span>
+        <strong>${row.reward_value}</strong>
+      </div>
+    `;
             })
             .join("");
         } catch (err) {
@@ -4523,58 +4515,25 @@
           content.innerHTML = "Failed to load crate history.";
         }
       }
-      async function openCrateHistory() {
-        const modal = document.getElementById("crate-history-modal");
-        const content = document.getElementById("crate-history-content");
 
-        if (!modal || !content) return;
-
-        modal.style.display = "block";
-        content.innerHTML = "Loading...";
-
-        try {
-          const activeUser =
-            window.ACTIVE_USER ||
-            localStorage.getItem("hiveUsername") ||
-            document.getElementById("player-username-raw")?.textContent?.trim();
-
-          const res = await fetch(apiUrl(`/crate-history/${activeUser}`));
-          const data = await res.json();
-
-          if (!res.ok || !data.success) {
-            content.innerHTML = "Failed to load history.";
-            return;
-          }
-
-          if (!data.history.length) {
-            content.innerHTML = "No crate history yet.";
-            return;
-          }
-
-          content.innerHTML = data.history
-            .map((row) => {
-              const time = new Date(row.created_at).toLocaleString();
-              return `<div style="padding:6px 0;border-bottom:1px solid #eee;">
-                  <strong>${row.reward_value}</strong>  
-                  <span style="float:right;color:#888">${time}</span>
-                </div>`;
-            })
-            .join("");
-        } catch (err) {
-          console.error(err);
-          content.innerHTML = "Error loading history.";
-        }
-      }
       document
         .getElementById("crate-history-link")
-        ?.addEventListener("click", function () {
+        ?.addEventListener("click", function (e) {
+          e.preventDefault();
           openCrateHistory();
+        });
+
+      document
+        .getElementById("close-crate-history")
+        ?.addEventListener("click", function () {
+          const modal = document.getElementById("crate-history-modal");
+          if (modal) {
+            modal.style.display = "none";
+          }
         });
     </script>
 
-    <script>
-      src = "js/appbar.js";
-    </script>
+    <script src="js/appbar.js"></script>
 
     <div id="blueprint-mint-modal" class="pack-modal hidden">
       <div class="pack-modal-card">
@@ -4679,77 +4638,5 @@
           if (footerEl) footerEl.innerHTML = html;
         });
     </script>
-    <div id="crate-history-modal" class="crate-modal" style="display: none">
-      <div class="crate-modal-card">
-        <button
-          id="close-crate-history"
-          type="button"
-          class="crate-modal-close"
-          aria-label="Close"
-        >
-          ✕
-        </button>
-
-        <div class="crate-modal-header">🎁 Imperial Supply Crate History</div>
-
-        <div class="crate-modal-body">
-          <div id="crate-history-content">Loading...</div>
-        </div>
-      </div>
-    </div>
-    <div id="crate-modal" class="modal-overlay" style="display: none">
-      <div class="modal-box crate-modal-box">
-        <button
-          id="close-crate-modal"
-          type="button"
-          class="modal-close-btn"
-          aria-label="Close"
-        >
-          ×
-        </button>
-
-        <div id="crate-modal-content">
-          <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
-          <div class="crate-modal-body">
-            <p><strong>Cost:</strong> 25 EMP</p>
-            <p>Daily limit: 1 crate per UTC day</p>
-            <p>Next crate available in <span id="crate-reset-timer"></span></p>
-            <p class="crate-modal-note">
-              Rewards may include EMP, B1 Blueprints, or Imperial Fragments used
-              for Relic and Data Center Blueprint crafting.
-            </p>
-          </div>
-
-          <div class="crate-modal-actions">
-            <button
-              id="confirm-open-crate-btn"
-              class="primary-button"
-              type="button"
-            >
-              Open Crate
-            </button>
-            <button
-              id="cancel-open-crate-btn"
-              class="secondary-btn"
-              type="button"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="crate-history-modal" style="display: none" class="modal-overlay">
-      <div class="modal-box">
-        document.getElementById("close-crate-history")?.addEventListener("click",
-        function () {
-        document.getElementById("crate-history-modal").style.display = "none";
-        });
-
-        <h3>📜 Imperial Crate History</h3>
-
-        <div id="crate-history-content">Loading...</div>
-      </div>
-    </div>
   </body>
 </html>
