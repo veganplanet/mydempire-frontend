@@ -11,12 +11,18 @@
     <header class="appbar">
       <div class="appbar-inner">
         <div class="appbar-left">
-          <a href="index.html" class="appbar-logo" aria-label="MydEmpire Home">
+          <a
+            href="/mydempire-frontend/index.html"
+            class="appbar-logo"
+            aria-label="MydEmpire Home"
+          >
             <img src="assets/logo.png" alt="MydEmpire" />
           </a>
 
           <nav class="appbar-nav">
-            <a href="/" class="appbar-link">Home</a>
+            <a href="/mydempire-frontend/index.html" class="appbar-link"
+              >Home</a
+            >
             <a href="economy.html" class="appbar-link">Economy</a>
             <a href="transparency.html" class="appbar-link">Transparency</a>
             <a href="codex.html" class="appbar-link">Codex</a>
@@ -206,26 +212,58 @@
             🌿 Loading empire status...
           </div>
         </div>
-        <div class="overview-block" style="margin-bottom:16px;">
-  <div style="
-    background: linear-gradient(180deg,#fff7ed,#ffedd5);
-    border:1px solid #fdba74;
-    color:#7c2d12;
-    border-radius:14px;
-    padding:14px;
-    font-weight:700;
-  ">
-    🎁 Imperial Supply Crate (Coming Soon)
-    <div style="font-size:13px; font-weight:500; margin-top:6px;">
-      Daily reward system under testing. Stay active to not miss early advantages.
-    </div>
-  </div>
-</div>
+        <div class="overview-block" style="margin-bottom: 16px">
+          <div
+            style="
+              background: linear-gradient(180deg, #fff7ed, #ffedd5);
+              border: 1px solid #fdba74;
+              color: #7c2d12;
+              border-radius: 14px;
+              padding: 14px;
+              font-weight: 700;
+            "
+          >
+            🎁 Imperial Supply Crate (Coming Soon)
+            <div style="font-size: 13px; font-weight: 500; margin-top: 6px">
+              Daily reward system under testing. Stay active to not miss early
+              advantages.
+            </div>
+          </div>
+        </div>
         <!-- ===== BLOCK 1: SNAPSHOT ===== -->
         <div class="overview-block">
           <div class="overview-block-title">Empire Snapshot</div>
 
           <div class="summary-grid snapshot-grid">
+            <div class="summary-card card-crate">
+              <div class="summary-label">🎁 Imperial Supply Crate</div>
+
+              <div class="summary-value" id="crate-cost-display">25 EMP</div>
+
+              <div class="summary-sub" id="crate-status-text">
+                1 crate per day • Next crate in
+                <span id="crate-reset-timer">--</span>
+              </div>
+
+              <div class="summary-actions">
+                <button id="open-crate-btn" class="primary-button">
+                  Open Crate
+                </button>
+
+                <div id="crate-action-status" class="status-text">
+                  Rewards may include EMP, B1 Blueprints, or Imperial Fragments
+                </div>
+
+                <a
+                  href="javascript:void(0)"
+                  id="crate-history-link"
+                  class="status-link"
+                  onclick="openCrateHistoryModal(event)"
+                >
+                  View history
+                </a>
+              </div>
+            </div>
             <div class="summary-card card-emp">
               <div class="summary-label">
                 <svg class="ui-icon">
@@ -1031,7 +1069,17 @@
               icon: "icon-builder-rank",
             };
           }
-          let html = `<div class="leaderboard-list">`;
+          let html = `
+  <div class="leaderboard-header-row">
+    <div>Rank</div>
+    <div>Player</div>
+    <div>Lifetime EP</div>
+    <div>EP/day</div>
+    <div>% EP/day</div>
+  </div>
+
+  <div class="leaderboard-list">
+`;
 
           data.leaders.forEach((row, index) => {
             const rankLabel =
@@ -1084,7 +1132,24 @@
   ${titleData.title}
 </div>
       </div>
-      <div class="leaderboard-score">${Number(row.lifetime_ep).toFixed(2)} EP</div>
+      <div class="leaderboard-score leaderboard-score-grid">
+
+  <div class="leaderboard-metric">
+    <strong>${Number(row.lifetime_ep || 0).toFixed(2)} EP</strong>
+    <span>lifetime</span>
+  </div>
+
+  <div class="leaderboard-metric">
+    <strong>${Number(row.current_ep_per_day || 0).toFixed(2)}</strong>
+    <span>EP/day</span>
+  </div>
+
+  <div class="leaderboard-metric">
+    <strong>--%</strong>
+    <span>Global/day</span>
+  </div>
+
+</div>
     </div>
   `;
           });
@@ -1155,12 +1220,34 @@
 
             html += `
   <div class="leaderboard-row">
-    <div class="leaderboard-rank">${item.label}</div>
-    <div class="leaderboard-player">${leader?.username ?? "—"}</div>
-    <div class="leaderboard-score">
-      ${leader ? `${Number(leader.ep).toFixed(2)} EP` : "No leader yet"}
-    </div>
+
+  <!-- Rank -->
+  <div class="leaderboard-rank">${item.label}</div>
+
+  <!-- Player -->
+  <div class="leaderboard-player">
+    ${leader?.username ?? "--"}
   </div>
+
+  <!-- Lifetime EP -->
+  <div class="leaderboard-metric">
+    <strong>${leader ? Number(leader.ep).toFixed(2) : "--"}</strong>
+    <span>EP</span>
+  </div>
+
+  <!-- EP/day -->
+  <div class="leaderboard-metric">
+    <strong>${leader ? Number(leader.current_ep_per_day || 0).toFixed(2) : "--"}</strong>
+    <span>EP/day</span>
+  </div>
+
+  <!-- Global % -->
+  <div class="leaderboard-metric">
+    <strong>--%</strong>
+    <span>Global/day</span>
+  </div>
+
+</div>
 `;
           });
 
@@ -3524,17 +3611,17 @@
         }
 
         if (accountBtn && dropdown) {
-    accountBtn.onclick = (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("open");
-    };
+          accountBtn.onclick = (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle("open");
+          };
 
-    document.onclick = (e) => {
-      if (!dropdown.contains(e.target) && e.target !== accountBtn) {
-        dropdown.classList.remove("open");
-      }
-    };
-  }
+          document.onclick = (e) => {
+            if (!dropdown.contains(e.target) && e.target !== accountBtn) {
+              dropdown.classList.remove("open");
+            }
+          };
+        }
 
         if (visitOtherEmpireBtn) {
           visitOtherEmpireBtn.style.display = "block";
@@ -4064,11 +4151,317 @@
           slot.title = "Read-only mode";
         });
       }
+      /* ===============================
+   IMPERIAL SUPPLY CRATE LOGIC
+================================ */
+
+      function getCrateModalEls() {
+        return {
+          crateModal: document.getElementById("crate-modal"),
+          crateModalContent: document.getElementById("crate-modal-content"),
+          crateActionStatus: document.getElementById("crate-action-status"),
+          openCrateBtn: document.getElementById("open-crate-btn"),
+          closeCrateModalBtn: document.getElementById("close-crate-modal"),
+          cancelOpenCrateBtn: document.getElementById("cancel-open-crate-btn"),
+          confirmOpenCrateBtn: document.getElementById(
+            "confirm-open-crate-btn",
+          ),
+        };
+      }
+
+      function openCrateModal() {
+        const { crateModal } = getCrateModalEls();
+        if (!crateModal) return;
+        crateModal.style.display = "flex";
+      }
+
+      function closeCrateModal() {
+        const { crateModal } = getCrateModalEls();
+        if (!crateModal) return;
+        crateModal.style.display = "none";
+      }
+
+      async function openImperialSupplyCrate() {
+        const { crateModalContent, crateActionStatus } = getCrateModalEls();
+
+        try {
+          const activeUser =
+            window.ACTIVE_USER ||
+            localStorage.getItem("hiveUsername") ||
+            document
+              .getElementById("player-username-raw")
+              ?.textContent?.trim() ||
+            new URLSearchParams(window.location.search).get("user");
+
+          if (!activeUser) {
+            alert("No active user found.");
+            return;
+          }
+
+          const res = await fetch(apiUrl("/open-imperial-crate"), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-player-actor": activeUser,
+            },
+            body: JSON.stringify({
+              username: activeUser,
+            }),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            if (crateModalContent) {
+              crateModalContent.innerHTML = `
+          <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
+          <div class="crate-modal-body">
+            <p>${data.error || "Failed to open crate."}</p>
+            <p>Next crate available in <span id="crate-popup-reset-timer">--</span></p>
+          </div>
+          <div class="crate-modal-actions">
+            <button id="crate-close-after-result" class="primary-button" type="button">Close</button>
+          </div>
+        `;
+            }
+
+            const closeBtn = document.getElementById(
+              "crate-close-after-result",
+            );
+            if (closeBtn) {
+              closeBtn.addEventListener("click", closeCrateModal);
+            }
+
+            if (crateActionStatus) {
+              crateActionStatus.innerHTML =
+                (data.error || "Failed to open crate.") +
+                ' Try again in <span id="crate-reset-timer"></span>.';
+
+              startCrateResetTimer();
+            }
+
+            startCrateResetTimer();
+            return;
+          }
+
+          const rewardText = data.reward?.label || "Reward received";
+
+          if (crateModalContent) {
+            crateModalContent.innerHTML = `
+        <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
+        <div class="crate-modal-body">
+          <p><strong>You discovered:</strong></p>
+          <p>${rewardText}</p>
+          <p><strong>EMP Balance:</strong> ${Number(data.emp_balance || 0).toLocaleString()}</p>
+        </div>
+        <div class="crate-modal-actions">
+          <button id="crate-close-after-success" class="primary-button" type="button">Close</button>
+        </div>
+      `;
+          }
+
+          const closeSuccessBtn = document.getElementById(
+            "crate-close-after-success",
+          );
+          if (closeSuccessBtn) {
+            closeSuccessBtn.addEventListener("click", closeCrateModal);
+          }
+
+          if (crateActionStatus) {
+            crateActionStatus.textContent = `Last crate reward: ${rewardText}`;
+          }
+
+          window.crateOpenedToday = true;
+          localStorage.setItem(
+            "mde_crate_opened_today",
+            new Date().toISOString(),
+          );
+
+          const openBtn = document.getElementById("open-crate-btn");
+          if (openBtn) {
+            openBtn.disabled = true;
+            openBtn.textContent = "Crate Opened Today";
+            openBtn.style.opacity = "0.6";
+            openBtn.style.cursor = "not-allowed";
+          }
+
+          const empBox = document.getElementById("summary-emp-balance");
+          if (empBox) {
+            empBox.textContent = Number(data.emp_balance || 0).toLocaleString();
+          }
+        } catch (err) {
+          console.error("Open crate error:", err);
+
+          if (crateModalContent) {
+            crateModalContent.innerHTML = `
+        <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
+        <div class="crate-modal-body">
+          <p>Request failed while opening crate.</p>
+        </div>
+        <div class="crate-modal-actions">
+          <button id="crate-close-after-fail" class="primary-button" type="button">Close</button>
+        </div>
+      `;
+          }
+
+          const closeFailBtn = document.getElementById(
+            "crate-close-after-fail",
+          );
+          if (closeFailBtn) {
+            closeFailBtn.addEventListener("click", closeCrateModal);
+          }
+
+          if (crateActionStatus) {
+            crateActionStatus.textContent =
+              "Request failed while opening crate.";
+          }
+        }
+      }
+
+      function startCrateResetTimer() {
+        const cardEl = document.getElementById("crate-reset-timer");
+        const popupEl = document.getElementById("crate-popup-reset-timer");
+
+        if (!cardEl && !popupEl) return;
+
+        function updateTimer() {
+          const now = new Date();
+          const nextReset = new Date();
+          nextReset.setUTCHours(24, 0, 0, 0);
+
+          const diff = nextReset - now;
+
+          const hours = Math.floor(diff / 3600000);
+          const minutes = Math.floor((diff % 3600000) / 60000);
+          const seconds = Math.floor((diff % 60000) / 1000);
+
+          const timerText = `${hours}h ${minutes}m ${seconds}s`;
+
+          if (cardEl) cardEl.textContent = timerText;
+          if (popupEl) popupEl.textContent = timerText;
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+      }
+      async function openCrateHistoryModal(e) {
+        if (e) e.preventDefault();
+
+        const modal = document.getElementById("crate-history-modal");
+        const box = document.getElementById("crate-history-list");
+
+        if (!modal || !box) return;
+
+        modal.style.display = "flex";
+        box.innerHTML = "Loading...";
+
+        try {
+          const activeUser =
+            window.ACTIVE_USER ||
+            localStorage.getItem("hiveUsername") ||
+            document
+              .getElementById("player-username-raw")
+              ?.textContent?.trim() ||
+            new URLSearchParams(window.location.search).get("user");
+
+          if (!activeUser) {
+            box.innerHTML = "No active user found.";
+            return;
+          }
+
+          const res = await fetch(apiUrl(`/crate-history/${activeUser}`));
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            box.innerHTML = "Failed to load history.";
+            return;
+          }
+
+          if (!data.history || !data.history.length) {
+            box.innerHTML = "No crate openings yet.";
+            return;
+          }
+
+          box.innerHTML = data.history
+            .map((row) => {
+              const date = new Date(row.created_at).toLocaleString();
+              return `
+  <div class="crate-history-row">
+    <div class="crate-history-reward">${row.reward_value}</div>
+    <div class="crate-history-date">${date}</div>
+  </div>
+`;
+            })
+            .join("");
+        } catch (err) {
+          console.error("Crate history load error:", err);
+          box.innerHTML = "Failed to load history.";
+        }
+      }
+
+      function closeCrateHistoryModal() {
+        const modal = document.getElementById("crate-history-modal");
+        if (!modal) return;
+        modal.style.display = "none";
+      }
+      function hasOpenedCrateTodayLocal(lastOpenedAt) {
+        if (!lastOpenedAt) return false;
+
+        const last = new Date(lastOpenedAt);
+        const now = new Date();
+
+        return (
+          last.getUTCFullYear() === now.getUTCFullYear() &&
+          last.getUTCMonth() === now.getUTCMonth() &&
+          last.getUTCDate() === now.getUTCDate()
+        );
+      }
       window.addEventListener("load", async () => {
         try {
           setupDashboardNavbar();
 
           await loadDashboardSummary();
+          startCrateResetTimer();
+          const savedCrateOpen = localStorage.getItem("mde_crate_opened_today");
+
+          if (savedCrateOpen && hasOpenedCrateTodayLocal(savedCrateOpen)) {
+            window.crateOpenedToday = true;
+
+            const openBtn = document.getElementById("open-crate-btn");
+            if (openBtn) {
+              openBtn.disabled = true;
+              openBtn.textContent = "Crate Opened Today";
+              openBtn.style.opacity = "0.6";
+              openBtn.style.cursor = "not-allowed";
+            }
+          }
+
+          const crateEls = getCrateModalEls();
+
+          if (crateEls.openCrateBtn) {
+            crateEls.openCrateBtn.addEventListener("click", openCrateModal);
+          }
+
+          if (crateEls.closeCrateModalBtn) {
+            crateEls.closeCrateModalBtn.addEventListener(
+              "click",
+              closeCrateModal,
+            );
+          }
+
+          if (crateEls.cancelOpenCrateBtn) {
+            crateEls.cancelOpenCrateBtn.addEventListener(
+              "click",
+              closeCrateModal,
+            );
+          }
+
+          if (crateEls.confirmOpenCrateBtn) {
+            crateEls.confirmOpenCrateBtn.addEventListener(
+              "click",
+              openImperialSupplyCrate,
+            );
+          }
           await loadRewardSummary();
           await loadGlobalHealth();
           await loadEmpireOverview();
@@ -4079,6 +4472,48 @@
           setupDashboardNavbar(); // run again after data is loaded
         } catch (err) {
           console.error("Initial dashboard load failed:", err);
+          const crateEls = getCrateModalEls();
+
+          if (crateEls.openCrateBtn) {
+            crateEls.openCrateBtn.addEventListener("click", openCrateModal);
+          }
+          // History link
+          const crateHistoryLink =
+            document.getElementById("crate-history-link");
+
+          if (crateHistoryLink) {
+            crateHistoryLink.addEventListener("click", openCrateHistoryModal);
+          }
+
+          // Close history modal button
+          const closeHistoryBtn = document.getElementById(
+            "close-crate-history-btn",
+          );
+
+          if (closeHistoryBtn) {
+            closeHistoryBtn.addEventListener("click", closeCrateHistoryModal);
+          }
+
+          // Existing crate modal close (keep this as it is)
+          if (crateEls.closeCrateModalBtn) {
+            crateEls.closeCrateModalBtn.addEventListener(
+              "click",
+              closeCrateModal,
+            );
+          }
+          if (crateEls.cancelOpenCrateBtn) {
+            crateEls.cancelOpenCrateBtn.addEventListener(
+              "click",
+              closeCrateModal,
+            );
+          }
+
+          if (crateEls.confirmOpenCrateBtn) {
+            crateEls.confirmOpenCrateBtn.addEventListener(
+              "click",
+              openImperialSupplyCrate,
+            );
+          }
         }
       });
 
@@ -4234,5 +4669,56 @@
           if (footerEl) footerEl.innerHTML = html;
         });
     </script>
+    <!-- IMPERIAL SUPPLY CRATE MODAL -->
+    <div id="crate-modal" class="crate-modal" style="display: none">
+      <div id="crate-modal-content" class="crate-modal-content">
+        <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
+
+        <div class="crate-modal-body">
+          <p>Open your daily Imperial Supply Crate?</p>
+          <p><strong>Cost:</strong> 25 EMP</p>
+        </div>
+
+        <div class="crate-modal-actions">
+          <button
+            id="cancel-open-crate-btn"
+            class="secondary-button"
+            type="button"
+          >
+            Cancel
+          </button>
+
+          <button
+            id="confirm-open-crate-btn"
+            class="primary-button"
+            type="button"
+          >
+            Confirm Open
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- IMPERIAL SUPPLY CRATE HISTORY MODAL -->
+    <div id="crate-history-modal" class="crate-modal" style="display: none">
+      <div id="crate-history-content" class="crate-modal-content">
+        <div class="crate-modal-header">🎁 Crate History</div>
+
+        <div class="crate-modal-body">
+          <p id="crate-history-loading">Loading crate history...</p>
+          <div id="crate-history-list"></div>
+        </div>
+
+        <div class="crate-modal-actions">
+          <button
+            id="close-crate-history-btn"
+            class="primary-button"
+            type="button"
+            onclick="closeCrateHistoryModal()"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
