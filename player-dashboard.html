@@ -1031,6 +1031,21 @@
       }
       async function loadEmperorLeaderboard() {
         try {
+          const cacheKey = "myd_leaderboard_emperors_cache";
+          const cached = sessionStorage.getItem(cacheKey);
+
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            const ageMs = Date.now() - parsed.savedAt;
+
+            if (ageMs < 60000 && parsed.html) {
+              const container = document.getElementById(
+                "emperor-leaderboard-list",
+              );
+              if (container) container.innerHTML = parsed.html;
+              return;
+            }
+          }
           const res = await fetch(apiUrl("/leaderboard/emperors"));
           const data = await res.json();
 
@@ -1040,6 +1055,13 @@
           if (!data.success || !data.leaders.length) {
             container.innerHTML =
               "Leaderboard will appear once lifetime EP begins accumulating.";
+            sessionStorage.setItem(
+              "myd_leaderboard_emperors_cache",
+              JSON.stringify({
+                savedAt: Date.now(),
+                html,
+              }),
+            );
             return;
           }
           function getPlayerTitle(rank) {
@@ -1070,15 +1092,15 @@
             };
           }
           let html = `
-  <div class="leaderboard-header-row">
-    <div>Rank</div>
-    <div>Player</div>
-    <div>Lifetime EP</div>
-    <div>EP/day</div>
-    <div>% EP/day</div>
-  </div>
-
   <div class="leaderboard-list">
+
+<div class="leaderboard-row leaderboard-header-row">
+  <div class="leaderboard-rank">Rank</div>
+  <div class="leaderboard-player">Player</div>
+  <div class="leaderboard-metric">Lifetime EP</div>
+  <div class="leaderboard-metric">EP/day</div>
+  <div class="leaderboard-metric">Daily Share</div>
+</div>
 `;
 
           data.leaders.forEach((row, index) => {
@@ -1094,7 +1116,18 @@
             const titleData = getPlayerTitle(index + 1);
 
             html += `
-    <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""}">
+    <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""} ${
+      Number(row.current_ep_per_day || row.ep_per_day || 0) >= 100 &&
+      Number(row.global_ep_share_percent || 0) >= 1.5
+        ? "crate-qualified"
+        : ""
+    }" 
+data-tooltip="${
+              Number(row.current_ep_per_day || row.ep_per_day || 0) >= 100 &&
+              Number(row.global_ep_share_percent || 0) >= 1.5
+                ? "Eligible for Daily Crate 🎁"
+                : ""
+            }">
       <div class="leaderboard-rank">
   ${
     index === 0
@@ -1145,7 +1178,7 @@
   </div>
 
   <div class="leaderboard-metric">
-    <strong>--%</strong>
+    <strong>${Number(row.global_ep_share_percent || 0).toFixed(2)}%</strong>
     <span>Global/day</span>
   </div>
 
@@ -1219,36 +1252,20 @@
             const leader = data.leaders[item.key];
 
             html += `
-  <div class="leaderboard-row">
+    <div class="leaderboard-row industry-leaderboard-row">
 
-  <!-- Rank -->
-  <div class="leaderboard-rank">${item.label}</div>
+      <div class="leaderboard-rank">${item.label}</div>
 
-  <!-- Player -->
-  <div class="leaderboard-player">
-    ${leader?.username ?? "--"}
-  </div>
+      <div class="leaderboard-player">
+        ${leader?.username ?? "--"}
+      </div>
 
-  <!-- Lifetime EP -->
-  <div class="leaderboard-metric">
-    <strong>${leader ? Number(leader.ep).toFixed(2) : "--"}</strong>
-    <span>EP</span>
-  </div>
+      <div class="leaderboard-metric">
+        <strong>${leader ? Number(leader.ep || 0).toFixed(2) : "--"} EP</strong>
+      </div>
 
-  <!-- EP/day -->
-  <div class="leaderboard-metric">
-    <strong>${leader ? Number(leader.current_ep_per_day || 0).toFixed(2) : "--"}</strong>
-    <span>EP/day</span>
-  </div>
-
-  <!-- Global % -->
-  <div class="leaderboard-metric">
-    <strong>--%</strong>
-    <span>Global/day</span>
-  </div>
-
-</div>
-`;
+    </div>
+  `;
           });
 
           html += `</div>`;

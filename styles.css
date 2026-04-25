@@ -11702,20 +11702,149 @@ cursor:pointer;
   gap:34px;
 }
 .leaderboard-header-row{
-  display:grid;
-  grid-template-columns: 70px 1.6fr 1fr 1fr 1fr;
-  gap:18px;
-  padding:10px 24px;
-  margin:0 10px 10px;
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
   color:#64748b;
   font-size:13px;
-  font-weight:800;
+  font-weight:900;
   text-transform:uppercase;
+  padding-bottom:8px !important;
+}
+.leaderboard-row{
+  display:grid;
+  grid-template-columns: 70px 1.8fr 1fr 1fr 1fr;
+  gap:18px;
+  align-items:center;
+  padding:16px 24px;   /* same as header */
+}
+/* ===== Clean Emperor Leaderboard Layout ===== */
+.leaderboard-rank{
+  text-align:center;
+}
+
+.leaderboard-player{
+  text-align:left;
+}
+.leaderboard-player{
+  padding-left:4px;
+}
+.leaderboard-metric{
+  text-align:center;
+}
+.leaderboard-row{
+  display:grid !important;
+  grid-template-columns: 70px 1.4fr 1fr 1fr 1fr !important;
+  gap:18px !important;
+  align-items:center !important;
+  width:100% !important;
+}
+
+.leaderboard-score{
+  display:contents !important;
+}
+
+.leaderboard-metric{
+  text-align:center;
+}
+
+.leaderboard-metric strong{
+  display:block;
+  font-size:17px;
+  font-weight:900;
+  color:#0f172a;
+}
+
+.leaderboard-metric span{
+  display:none;
+}
+/* Fix metric alignment per column */
+
+.leaderboard-row .leaderboard-metric:nth-child(3),
+.leaderboard-header-row .leaderboard-metric:nth-child(3){
+  text-align:center;   /* Lifetime EP */
+}
+
+.leaderboard-row .leaderboard-metric:nth-child(4),
+.leaderboard-header-row .leaderboard-metric:nth-child(4){
+  text-align:center;   /* EP/day */
+}
+
+.leaderboard-row .leaderboard-metric:nth-child(5),
+.leaderboard-header-row .leaderboard-metric:nth-child(5){
+  text-align:center;   /* % EP/day */
+}
+/* ===== FINAL Leaderboard Alignment Override ===== */
+
+.leaderboard-list{
+  width:100% !important;
 }
 
 .leaderboard-row{
-  display:grid;
-  grid-template-columns: 70px 1.6fr 1fr;
-  gap:18px;
-  align-items:center;
+  display:grid !important;
+  grid-template-columns: 90px 1.8fr 1fr 1fr 1fr !important;
+  gap:18px !important;
+  align-items:center !important;
+  width:100% !important;
+  padding:16px 24px !important;
+}
+
+.leaderboard-row > div{
+  min-width:0 !important;
+}
+
+.leaderboard-rank{
+  text-align:center !important;
+  justify-self:center !important;
+}
+
+.leaderboard-player{
+  text-align:left !important;
+  justify-self:start !important;
+}
+
+.leaderboard-score{
+  display:contents !important;
+}
+
+.leaderboard-metric{
+  text-align:center !important;
+  justify-self:center !important;
+  width:100% !important;
+}
+
+.leaderboard-metric strong,
+.leaderboard-header-row .leaderboard-metric{
+  display:block !important;
+  text-align:center !important;
+  width:100% !important;
+}
+/* Crate qualified highlight */
+
+.crate-qualified{
+  border: 1px solid #22c55e !important;
+  background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%) !important;
+}
+
+.crate-qualified:hover{
+  background: linear-gradient(180deg, #dcfce7 0%, #bbf7d0 100%) !important;
+}
+.leaderboard-row {
+  position: relative;
+}
+
+.leaderboard-row[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  margin-bottom: 6px;
+  z-index: 999;
 }
