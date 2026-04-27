@@ -4036,14 +4036,26 @@
           ".primary-button",
           "a[href*='rename']",
 "a[href*='maintenance']",
+          "[onclick*='payMaintenance']",
+"[onclick*='renameFactory']",
+"[onclick*='openMaintenance']",
+"[onclick*='factory/rename']",
+"[onclick*='factory/pay-maintenance']"
         ];
 
-        document.querySelectorAll(actionSelectors.join(",")).forEach((btn) => {
-          btn.disabled = true;
-          btn.style.opacity = "0.6";
-          btn.style.cursor = "not-allowed";
-          btn.title = "Read-only mode";
-        });
+       document.querySelectorAll(actionSelectors.join(",")).forEach((el) => {
+  // disable button if it's a button
+  if (el.tagName === "BUTTON") {
+    el.disabled = true;
+  }
+
+  // block all clicks (works for <a>, <div>, everything)
+  el.style.pointerEvents = "none";
+
+  el.style.opacity = "0.6";
+  el.style.cursor = "not-allowed";
+  el.title = "Read-only mode";
+});
 
         // disable only action form fields
         const inputSelectors = [
