@@ -4142,32 +4142,27 @@ document.head.appendChild(readOnlyStyle);
           await loadPacks();
          
 const dashboardUrlParams = new URLSearchParams(window.location.search);
+
 const viewingUser = (dashboardUrlParams.get("user") || "")
   .replace("@", "")
   .trim()
   .toLowerCase();
 
-const activeUserClean = String(ACTIVE_USER || "")
-  .replace("@", "")
-  .trim()
-  .toLowerCase();
-
-if (!activeUserClean || (viewingUser && viewingUser !== activeUserClean)) {
- const dashboardUrlParams = new URLSearchParams(window.location.search);
-const viewingUser = (dashboardUrlParams.get("user") || "")
-  .replace("@", "")
-  .trim()
-  .toLowerCase();
-
-const activeUserClean = String(ACTIVE_USER || localStorage.getItem("mde_username") || localStorage.getItem("username") || "")
+const activeUserClean = String(
+  ACTIVE_USER ||
+  getActiveUser() ||
+  localStorage.getItem("hiveUsername") ||
+  localStorage.getItem("mde_username") ||
+  localStorage.getItem("username") ||
+  ""
+)
   .replace("@", "")
   .trim()
   .toLowerCase();
 
 if (!activeUserClean || (viewingUser && viewingUser !== activeUserClean)) {
   applyReadOnlyEmpireMode();
-}
-}
+}}
           setupDashboardNavbar(); // run again after data is loaded
         } catch (err) {
           console.error("Initial dashboard load failed:", err);
