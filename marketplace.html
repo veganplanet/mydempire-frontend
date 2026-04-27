@@ -554,7 +554,7 @@ function renderCompactListingCard({
 }
     async function loadEmpListings() {
       try {
-        const res = await fetch(apiUrl("/marketplace/emp"));
+        const res = await secureFetch(apiUrl("/marketplace/emp"));
         const data = await res.json();
 
         if (!res.ok || !data.success) {
@@ -615,7 +615,7 @@ function renderCompactListingCard({
         const ok = confirm(`Cancel EMP listing #${listingId}?`);
         if (!ok) return;
 
-        const res = await fetch(apiUrl("/marketplace/emp/cancel"), {
+        const res = await secureFetch(apiUrl("/marketplace/emp/cancel"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: ACTIVE_USER, listing_id: listingId })
@@ -657,7 +657,7 @@ async function buyEmpListing(listingId) {
       return;
     }
 
-    const initRes = await fetch(apiUrl("/marketplace/emp/buy-init"), {
+    const initRes = await secureFetch(apiUrl("/marketplace/emp/buy-init"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -711,7 +711,7 @@ async function buyEmpListing(listingId) {
       throw new Error("Payment transfer did not return a transaction id.");
     }
 
-    const finalizeRes = await fetch(apiUrl("/marketplace/emp/buy-finalize"), {
+    const finalizeRes = await secureFetch(apiUrl("/marketplace/emp/buy-finalize"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -916,7 +916,7 @@ async function buyEmpListing(listingId) {
       setStatus("blueprint-market-status", "Loading blueprint inventory...");
 
       try {
-        const res = await fetch(apiUrl(`/player/${encodeURIComponent(ACTIVE_USER)}/blueprints`));
+        const res = await secureFetch(apiUrl(`/player/${encodeURIComponent(ACTIVE_USER)}/blueprints`));
         const data = await res.json();
 
         if (!res.ok) {
@@ -944,7 +944,7 @@ async function buyEmpListing(listingId) {
 
     async function loadBlueprintListings() {
       try {
-        const res = await fetch(apiUrl("/marketplace/blueprint"));
+        const res = await secureFetch(apiUrl("/marketplace/blueprint"));
         const data = await res.json();
 
         if (!res.ok || !data.success) {
@@ -983,7 +983,7 @@ async function buyEmpListing(listingId) {
 
         setStatus("blueprint-create-status", "Creating blueprint listing...");
 
-        const res = await fetch(apiUrl("/marketplace/blueprint/list"), {
+        const res = await secureFetch(apiUrl("/marketplace/blueprint/list"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: ACTIVE_USER, nft_id, price_hive })
@@ -1016,7 +1016,7 @@ async function buyEmpListing(listingId) {
         const ok = confirm(`Cancel Blueprint listing #${listingId}?`);
         if (!ok) return;
 
-        const res = await fetch(apiUrl("/marketplace/blueprint/cancel"), {
+        const res = await secureFetch(apiUrl("/marketplace/blueprint/cancel"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: ACTIVE_USER, listing_id: listingId })
@@ -1044,7 +1044,7 @@ async function buyEmpListing(listingId) {
       return;
     }
 
-    const initRes = await fetch(apiUrl("/marketplace/blueprint/buy-init"), {
+    const initRes = await secureFetch(apiUrl("/marketplace/blueprint/buy-init"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1097,7 +1097,7 @@ async function buyEmpListing(listingId) {
       throw new Error("Transaction ID not returned by Keychain.");
     }
 
-    const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
+    const finalizeRes = await secureFetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1132,7 +1132,7 @@ async function buyEmpListing(listingId) {
         }
 
         setStatus("packs-status", "Loading unopened packs...");
-        const res = await fetch(apiUrl(`/player/${encodeURIComponent(ACTIVE_USER)}/packs`));
+        const res = await secureFetch(apiUrl(`/player/${encodeURIComponent(ACTIVE_USER)}/packs`));
         const data = await res.json();
 
         if (!res.ok) {
@@ -1300,7 +1300,7 @@ async function createPackListing() {
 
     if (statusEl) statusEl.textContent = "Creating pack listing...";
 
-    const res = await fetch(apiUrl("/marketplace/pack/list"), {
+    const res = await secureFetch(apiUrl("/marketplace/pack/list"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1449,7 +1449,7 @@ async function buyPackListing(listingId) {
       throw new Error("Please enter a valid buy quantity.");
     }
 
-    const initRes = await fetch(apiUrl("/marketplace/pack/buy-init"), {
+    const initRes = await secureFetch(apiUrl("/marketplace/pack/buy-init"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1491,7 +1491,7 @@ async function buyPackListing(listingId) {
       throw new Error("Transaction ID not returned by Keychain.");
     }
 
-    const finalizeRes = await fetch(apiUrl("/marketplace/pack/buy-finalize"), {
+    const finalizeRes = await secureFetch(apiUrl("/marketplace/pack/buy-finalize"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1528,7 +1528,7 @@ async function cancelPackListing(listingId) {
     const ok = confirm(`Cancel pack listing #${listingId}?`);
     if (!ok) return;
 
-    const res = await fetch(apiUrl("/marketplace/pack/cancel"), {
+    const res = await secureFetch(apiUrl("/marketplace/pack/cancel"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
