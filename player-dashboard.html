@@ -792,12 +792,18 @@
         return params.get("user");
       }
 
-      const username =
-        getUsernameFromURL() || localStorage.getItem("hiveUsername");
+      const viewedUsername = getUsernameFromURL();
 
-      if (username) {
-        localStorage.setItem("hiveUsername", username);
-      }
+const loggedInUsername = localStorage.getItem("hiveUsername");
+
+const username = viewedUsername || loggedInUsername;
+
+if (loggedInUsername) {
+  ACTIVE_USER = String(loggedInUsername)
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+}
 
       console.log("Dashboard loading for:", username);
 
