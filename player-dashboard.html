@@ -808,7 +808,41 @@
         const u = (localStorage.getItem("hiveUsername") || "").trim();
         return u;
       }
+function getActiveUser() {
+  const u = (localStorage.getItem("hiveUsername") || "").trim();
+  return u;
+}
 
+// Add actor header automatically to all dashboard API requests
+const originalFetch = window.fetch.bind(window);
+
+window.fetch = function (url, options = {}) {
+  const actor = String(
+    ACTIVE_USER ||
+    getActiveUser() ||
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    ""
+  )
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+
+  const newOptions = { ...options };
+  const headers = new Headers(newOptions.headers || {});
+
+  if (actor) {
+    headers.set("x-mde-actor", actor);
+    headers.set("x-player-actor", actor);
+  }
+
+  newOptions.headers = headers;
+
+  return originalFetch(url, newOptions);
+};
+
+function setActiveUser(u) {
       function setActiveUser(u) {
         const user = (u || "").trim().toLowerCase();
         localStorage.setItem("hiveUsername", user);
