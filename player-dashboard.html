@@ -4005,6 +4005,18 @@
       }
       function applyReadOnlyEmpireMode() {
         document.body.classList.add("read-only-mode");
+        const readOnlyStyle = document.createElement("style");
+readOnlyStyle.innerHTML = `
+  body.read-only-mode a:not(.appbar-link):not(.appbar-logo):not(.status-link),
+  body.read-only-mode button:not(.subnav-btn),
+  body.read-only-mode input,
+  body.read-only-mode select {
+    pointer-events: none !important;
+    opacity: 0.55 !important;
+    cursor: not-allowed !important;
+  }
+`;
+document.head.appendChild(readOnlyStyle);
         if (isOwnEmpireView()) return;
 
         const viewed = getViewedUser();
