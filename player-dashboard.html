@@ -791,7 +791,8 @@
         const params = new URLSearchParams(window.location.search);
         return params.get("user");
       }
-
+let ACTIVE_USER = null;
+      let EXACT_WALLET_HIVE = 0;
       const viewedUsername = getUsernameFromURL();
 
 const loggedInUsername = localStorage.getItem("hiveUsername");
@@ -807,8 +808,7 @@ if (loggedInUsername) {
 
       console.log("Dashboard loading for:", username);
 
-      let ACTIVE_USER = null;
-      let EXACT_WALLET_HIVE = 0;
+      
 
     function getActiveUser() {
   const u = (localStorage.getItem("hiveUsername") || "").trim();
