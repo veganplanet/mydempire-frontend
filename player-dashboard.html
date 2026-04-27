@@ -4077,6 +4077,35 @@
           slot.style.opacity = "0.7";
           slot.title = "Read-only mode";
         });
+        document.addEventListener(
+  "click",
+  function (e) {
+    if (!isOwnEmpireView()) {
+      const actionText = (e.target.textContent || "").toLowerCase();
+
+      const blockedWords = [
+        "pay maintenance",
+        "rename",
+        "build factory",
+        "claim",
+        "withdraw",
+        "open crate",
+        "upgrade",
+        "transfer",
+        "list",
+        "buy"
+      ];
+
+      if (blockedWords.some((word) => actionText.includes(word))) {
+        e.preventDefault();
+        e.stopPropagation();
+        alert("Read-only mode: you cannot perform actions on another player empire.");
+        return false;
+      }
+    }
+  },
+  true
+);
       }
       window.addEventListener("load", async () => {
         try {
