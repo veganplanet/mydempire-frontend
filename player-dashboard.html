@@ -4074,7 +4074,12 @@
           await loadEmpireOverview();
           await loadBlueprints();
           await loadPacks();
-          applyReadOnlyEmpireMode();
+         const urlParams = new URLSearchParams(window.location.search);
+const viewingUser = (urlParams.get("user") || "").trim().toLowerCase();
+
+if (!ACTIVE_USER || viewingUser !== ACTIVE_USER) {
+  applyReadOnlyEmpireMode();
+}
 
           setupDashboardNavbar(); // run again after data is loaded
         } catch (err) {
