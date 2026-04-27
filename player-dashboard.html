@@ -4151,7 +4151,20 @@ const activeUserClean = String(ACTIVE_USER || "")
   .toLowerCase();
 
 if (!activeUserClean || (viewingUser && viewingUser !== activeUserClean)) {
+ const dashboardUrlParams = new URLSearchParams(window.location.search);
+const viewingUser = (dashboardUrlParams.get("user") || "")
+  .replace("@", "")
+  .trim()
+  .toLowerCase();
+
+const activeUserClean = String(ACTIVE_USER || localStorage.getItem("mde_username") || localStorage.getItem("username") || "")
+  .replace("@", "")
+  .trim()
+  .toLowerCase();
+
+if (!activeUserClean || (viewingUser && viewingUser !== activeUserClean)) {
   applyReadOnlyEmpireMode();
+}
 }
           setupDashboardNavbar(); // run again after data is loaded
         } catch (err) {
