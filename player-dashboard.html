@@ -4139,9 +4139,11 @@ document.head.appendChild(readOnlyStyle);
           await loadBlueprints();
           await loadPacks();
          const urlParams = new URLSearchParams(window.location.search);
-const viewingUser = (urlParams.get("user") || "").trim().toLowerCase();
+const urlParams = new URLSearchParams(window.location.search);
+const viewingUser = (urlParams.get("user") || "").replace("@", "").trim().toLowerCase();
+const activeUserClean = String(ACTIVE_USER || "").replace("@", "").trim().toLowerCase();
 
-if (!ACTIVE_USER || viewingUser !== ACTIVE_USER) {
+if (!activeUserClean || (viewingUser && viewingUser !== activeUserClean)) {
   applyReadOnlyEmpireMode();
 }
 
