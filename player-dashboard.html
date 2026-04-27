@@ -4004,7 +4004,7 @@
         }
       }
       function applyReadOnlyEmpireMode() {
-        alert("READ ONLY MODE FUNCTION RUNNING");
+        document.body.classList.add("read-only-mode");
         if (isOwnEmpireView()) return;
 
         const viewed = getViewedUser();
@@ -4081,7 +4081,7 @@
         document.addEventListener(
   "click",
   function (e) {
-    if (!isOwnEmpireView()) {
+    if (document.body.classList.contains("read-only-mode")) {
       const actionText = (e.target.textContent || "").toLowerCase();
 
       const blockedWords = [
