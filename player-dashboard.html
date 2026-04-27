@@ -4138,15 +4138,21 @@ document.head.appendChild(readOnlyStyle);
           await loadEmpireOverview();
           await loadBlueprints();
           await loadPacks();
-         const urlParams = new URLSearchParams(window.location.search);
-const urlParams = new URLSearchParams(window.location.search);
-const viewingUser = (urlParams.get("user") || "").replace("@", "").trim().toLowerCase();
-const activeUserClean = String(ACTIVE_USER || "").replace("@", "").trim().toLowerCase();
+         
+const dashboardUrlParams = new URLSearchParams(window.location.search);
+const viewingUser = (dashboardUrlParams.get("user") || "")
+  .replace("@", "")
+  .trim()
+  .toLowerCase();
+
+const activeUserClean = String(ACTIVE_USER || "")
+  .replace("@", "")
+  .trim()
+  .toLowerCase();
 
 if (!activeUserClean || (viewingUser && viewingUser !== activeUserClean)) {
   applyReadOnlyEmpireMode();
 }
-
           setupDashboardNavbar(); // run again after data is loaded
         } catch (err) {
           console.error("Initial dashboard load failed:", err);
