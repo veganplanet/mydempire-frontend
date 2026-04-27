@@ -263,8 +263,28 @@ function secureFetch(url, options = {}) {
     }
 
   }
+const actor = String(
+  localStorage.getItem("hiveUsername") ||
+  localStorage.getItem("mde_username") ||
+  localStorage.getItem("username") ||
+  ""
+)
+  .replace("@", "")
+  .trim()
+  .toLowerCase();
 
-  return fetch(url, options);
+const newOptions = { ...options };
+const headers = new Headers(newOptions.headers || {});
+
+if (actor) {
+  headers.set("x-mde-actor", actor);
+  headers.set("x-player-actor", actor);
+}
+
+newOptions.headers = headers;
+
+return fetch(url, newOptions);
+
 }
    function getMarketplaceViewedUser() {
   const params = new URLSearchParams(window.location.search);
