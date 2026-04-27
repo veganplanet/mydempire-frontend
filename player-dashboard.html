@@ -804,11 +804,7 @@
       let ACTIVE_USER = null;
       let EXACT_WALLET_HIVE = 0;
 
-      function getActiveUser() {
-        const u = (localStorage.getItem("hiveUsername") || "").trim();
-        return u;
-      }
-function getActiveUser() {
+    function getActiveUser() {
   const u = (localStorage.getItem("hiveUsername") || "").trim();
   return u;
 }
@@ -838,28 +834,25 @@ window.fetch = function (url, options = {}) {
   }
 
   newOptions.headers = headers;
-
   return originalFetch(url, newOptions);
 };
 
 function setActiveUser(u) {
-      function setActiveUser(u) {
-        const user = (u || "").trim().toLowerCase();
-        localStorage.setItem("hiveUsername", user);
-        ACTIVE_USER = user;
+  const user = (u || "").trim().toLowerCase();
+  localStorage.setItem("hiveUsername", user);
+  ACTIVE_USER = user;
 
-        const el = document.getElementById("welcomeUser"); // optional if you have it
-        if (el) el.textContent = `@${user}`;
+  const el = document.getElementById("welcomeUser");
+  if (el) el.textContent = `@${user}`;
 
-        return user;
-      }
+  return user;
+}
 
-      const LAND_TIER_COLORS_BY_KEY = {
-        L1: "#16a34a", // Frontier
-        L2: "#fbbf24", // Estate
-        L3: "#ef4444", // Industrial Zone
-      };
-
+const LAND_TIER_COLORS_BY_KEY = {
+  L1: "#16a34a",
+  L2: "#fbbf24",
+  L3: "#ef4444",
+};
       const LAND_TIER_SHORT_LABEL = {
         L1: "Frontier",
         L2: "Estate",
