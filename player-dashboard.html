@@ -1268,12 +1268,24 @@ data-tooltip="${
           items.forEach((item) => {
             const leader = data.leaders[item.key];
 
-            html += `
+           html += `
   <div class="leaderboard-row">
     <div class="leaderboard-rank">${item.label}</div>
-    <div class="leaderboard-player">${leader?.username ?? "—"}</div>
-    <div class="leaderboard-score">
-      ${leader ? `${Number(leader.ep).toFixed(2)} EP` : "No leader yet"}
+
+    <div class="leaderboard-player">
+      ${leader?.username ?? "—"}
+    </div>
+
+    <div class="leaderboard-score leaderboard-score-grid">
+      <div class="leaderboard-metric">
+        <strong>${leader ? Number(leader.ep).toFixed(2) : "--"}</strong>
+        <span>EP</span>
+      </div>
+
+      <div class="leaderboard-metric">
+        <strong>${leader ? Number(leader.industry_share_percent).toFixed(2) : "--"}%</strong>
+        <span>Share</span>
+      </div>
     </div>
   </div>
 `;
