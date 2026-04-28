@@ -1264,43 +1264,41 @@ data-tooltip="${
           ];
 
           let html = `
-  <div class="leaderboard-list leaderboard-industry-list">
+  <div class="industry-list">
 
-    <div class="leaderboard-row leaderboard-header-row">
-      <div class="leaderboard-rank">Industry</div>
-      <div class="leaderboard-player">Leader</div>
-      <div class="leaderboard-metric">EP</div>
-      <div class="leaderboard-metric">Share</div>
+    <div class="industry-header">
+      <div>Industry</div>
+      <div>Leader</div>
+      <div>EP</div>
+      <div>Share</div>
     </div>
 `;
 
-          items.forEach((item) => {
-            const leader = data.leaders[item.key];
+items.forEach((item) => {
+  const leader = data.leaders[item.key];
 
-           html += `
-  <div class="leaderboard-row">
-    <div class="leaderboard-rank">${item.label}</div>
+  html += `
+    <div class="industry-item">
+      <div class="industry-name">${item.label}</div>
 
-    <div class="leaderboard-player">
-      ${leader?.username ?? "—"}
-    </div>
-
-    <div class="leaderboard-score leaderboard-score-grid">
-      <div class="leaderboard-metric">
-        <strong>${leader ? Number(leader.ep).toFixed(2) : "--"}</strong>
-        <span>EP</span>
+      <div class="industry-player">
+        ${leader?.username ?? "—"}
       </div>
 
-      <div class="leaderboard-metric">
-        <strong>${leader ? Number(leader.industry_share_percent).toFixed(2) : "--"}%</strong>
-        <span>Share</span>
+      <div class="industry-ep">
+        ${leader ? Number(leader.ep).toFixed(2) : "--"} EP
+      </div>
+
+      <div class="industry-share">
+        ${leader ? Number(leader.industry_share_percent).toFixed(2) : "--"}%
       </div>
     </div>
-  </div>
-`;
-          });
+  `;
+});
 
-          html += `</div>`;
+html += `</div>`;
+          
+          
           container.innerHTML = html;
         } catch (err) {
           console.error("Industry leaderboard error:", err);
