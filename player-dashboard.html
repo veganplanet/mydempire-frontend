@@ -1263,7 +1263,16 @@ data-tooltip="${
             { label: "Supermarket", key: "supermarket" },
           ];
 
-          let html = `<div class="leaderboard-list leaderboard-industry-list">`;
+          let html = `
+  <div class="leaderboard-list leaderboard-industry-list">
+
+    <div class="leaderboard-row leaderboard-header-row">
+      <div class="leaderboard-rank">Industry</div>
+      <div class="leaderboard-player">Leader</div>
+      <div class="leaderboard-metric">EP</div>
+      <div class="leaderboard-metric">Share</div>
+    </div>
+`;
 
           items.forEach((item) => {
             const leader = data.leaders[item.key];
