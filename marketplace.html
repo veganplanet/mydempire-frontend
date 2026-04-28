@@ -16,7 +16,7 @@
       </a>
 
     <nav class="appbar-nav">
-  <a href="/" class="appbar-link">Home</a>
+  <a href="index.html" class="appbar-link">Home</a>
   <a href="economy.html" class="appbar-link">Economy</a>
   <a href="transparency.html" class="appbar-link">Transparency</a>
   <a href="codex.html" class="appbar-link">Codex</a>
@@ -100,18 +100,32 @@
           <div class="status" id="create-listing-status"></div>
         </div>
 
-        <div class="card">
-          <div class="market-header">
-            <div class="market-header-left">
-              <h2 id="emp-feed-title">EMP Market Listings</h2>
-              <div class="market-header-sub" id="emp-feed-subtitle">Browse active EMP listings.</div>
-            </div>
-            <div class="pill" id="emp-market-count-pill">0 Listings</div>
-          </div>
+       <div class="card">
+  <div class="market-header">
+    <div class="market-header-left">
+      <h2 id="emp-feed-title">EMP Market Listings</h2>
+      <div class="market-header-sub" id="emp-feed-subtitle">Browse active EMP listings.</div>
+    </div>
+    <div class="pill" id="emp-market-count-pill">0 Listings</div>
+  </div>
 
-          <div id="emp-market-list" class="listing-list"></div>
-        </div>
-      </div>
+  <div id="emp-market-list" class="listing-list">
+    <div class="empty">Loading EMP listings...</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="market-header">
+    <div class="market-header-left">
+      <h2>Recent EMP Trade History</h2>
+      <div class="market-header-sub">Last 10 completed EMP trades</div>
+    </div>
+  </div>
+
+  <div id="emp-history-list" class="listing-list">
+    <div class="empty">No EMP trade history yet.</div>
+  </div>
+</div>
     </section>
 
     <!-- BLUEPRINTS -->
@@ -156,18 +170,30 @@
           <div class="status" id="blueprint-create-status"></div>
         </div>
 
-        <div class="card">
-          <div class="market-header">
-            <div class="market-header-left">
-              <h2 id="blueprint-feed-title">Blueprint Market Listings</h2>
-              <div class="market-header-sub" id="blueprint-feed-subtitle">Browse active blueprint listings.</div>
-            </div>
-            <div class="pill" id="blueprint-market-count-pill">0 Items</div>
-          </div>
+      <div class="card">
+  <div class="market-header">
+    <div class="market-header-left">
+      <h2 id="blueprint-feed-title">Blueprint Market Listings</h2>
+      <div class="market-header-sub" id="blueprint-feed-subtitle">Browse active blueprint listings.</div>
+    </div>
+    <div class="pill" id="blueprint-market-count-pill">0 Items</div>
+  </div>
 
-          <div id="blueprint-feed"></div>
-        </div>
-      </div>
+  <div id="blueprint-feed"></div>
+</div>
+
+<div class="card">
+  <div class="market-header">
+    <div class="market-header-left">
+      <h2>Recent Blueprint Trade History</h2>
+      <div class="market-header-sub">Last 10 completed blueprint trades</div>
+    </div>
+  </div>
+
+  <div id="blueprint-history-list" class="listing-list">
+    <div class="empty">No blueprint trade history yet.</div>
+  </div>
+</div>
     </section>
 
  <!-- PACKS -->
@@ -236,7 +262,20 @@
       <!-- keep this hidden so old pack inventory grid does not appear -->
       <div id="packs-feed" class="pack-grid" style="display:none;"></div>
     </div>
+<div class="card">
+  <div class="market-header">
+    <div class="market-header-left">
+      <h2>Recent Pack Trade History</h2>
+      <div class="market-header-sub">
+        Last 10 completed pack trades
+      </div>
+    </div>
+  </div>
 
+  <div id="pack-history-list" class="listing-list">
+    <div class="empty">No pack trade history yet.</div>
+  </div>
+</div>
   </div>
 </section>
   </div>
@@ -247,10 +286,11 @@
     const host = window.location.hostname;
     const isLocal = host === "localhost" || host === "127.0.0.1";
     const API_BASE = isLocal ? LOCAL_API : PROD_API;
-
+console.log("BUY PACK LISTING NEW FILE LOADED");
     function apiUrl(path) {
       return API_BASE + path;
     }
+    
 function secureFetch(url, options = {}) {
 
   // block actions when visiting another empire
@@ -263,28 +303,8 @@ function secureFetch(url, options = {}) {
     }
 
   }
-const actor = String(
-  localStorage.getItem("hiveUsername") ||
-  localStorage.getItem("mde_username") ||
-  localStorage.getItem("username") ||
-  ""
-)
-  .replace("@", "")
-  .trim()
-  .toLowerCase();
 
-const newOptions = { ...options };
-const headers = new Headers(newOptions.headers || {});
-
-if (actor) {
-  headers.set("x-mde-actor", actor);
-  headers.set("x-player-actor", actor);
-}
-
-newOptions.headers = headers;
-
-return fetch(url, newOptions);
-
+  return fetch(url, options);
 }
    function getMarketplaceViewedUser() {
   const params = new URLSearchParams(window.location.search);
@@ -506,7 +526,7 @@ function renderCompactListingCard({
   const box = document.getElementById("emp-market-list");
   const list = getFilteredEmpListings();
   const countPill = document.getElementById("emp-market-count-pill");
-
+console.log("EMP sample listing:", list[0]);
   updateEmpFeedHeader();
   countPill.textContent = `${list.length} Listing${list.length === 1 ? "" : "s"}`;
 
@@ -519,42 +539,52 @@ function renderCompactListingCard({
     return;
   }
 
-  box.innerHTML = list
-    .map((listing) => {
-      const mine = ACTIVE_USER && listing.seller_username === ACTIVE_USER;
+  box.innerHTML = `
+<div class="compact-list">
+${list.map((listing) => {
 
-      return renderCompactListingCard({
-        mine,
-        title: `${Number(listing.quantity).toLocaleString()} EMP`,
-        meta: `Seller: @${listing.seller_username} • Listing #${listing.id}`,
-        stats: [
-          {
-            label: "Per EMP",
-            value: `${Number(listing.unit_price_hive).toFixed(4)} HIVE`,
-          },
-          {
-            label: "Qty",
-            value: `${Number(listing.quantity).toLocaleString()}`,
-          },
-          {
-            label: "Total",
-            value: `${Number(listing.total_price_hive).toFixed(3)} HIVE`,
-          },
-          {
-            label: "Fee",
-            value: `${Number(listing.fee_amount_hive).toFixed(3)} HIVE`,
-          },
-        ],
-        actionHtml: mine
-          ? `<button class="danger-btn" onclick="cancelEmpListing(${listing.id})">Cancel</button>`
-          : `<button class="primary-btn" onclick="buyEmpListing(${listing.id})">Buy EMP</button>`,
-      });
-    })
-    .join("");
+  const mine =
+    String(listing.seller_username || "").toLowerCase() ===
+    String(ACTIVE_USER || "").toLowerCase();
+
+  return `
+  <div class="compact-row">
+
+    <div class="compact-cell">
+      <div class="compact-asset-title">${Number(listing.quantity).toLocaleString()} EMP</div>
+      <div class="compact-asset-sub">EMP Listing</div>
+    </div>
+
+    <div class="compact-cell">
+      <div class="compact-seller">@${listing.seller_username}</div>
+      <div class="compact-asset-sub">Listing #${listing.id}</div>
+    </div>
+
+    <div class="compact-cell compact-details">
+      <strong>Price:</strong> ${Number(listing.unit_price_hive || 0).toFixed(3)} HIVE / EMP
+    </div>
+
+    <div class="compact-cell compact-price">
+      ${Number(listing.total_price_hive).toFixed(3)} HIVE
+    </div>
+
+    <div class="compact-cell compact-action">
+      ${
+        mine
+          ? `<button class="compact-cancel-btn" onclick="cancelEmpListing(${listing.id})">Cancel</button>`
+          : `<button class="compact-buy-btn" onclick="buyEmpListing(${listing.id})">Buy</button>`
+      }
+    </div>
+
+  </div>
+  `;
+}).join("")}
+</div>
+`;
 }
     async function loadEmpListings() {
       try {
-        const res = await secureFetch(apiUrl("/marketplace/emp"));
+        const res = await fetch(apiUrl("/marketplace/emp"));
         const data = await res.json();
 
         if (!res.ok || !data.success) {
@@ -615,7 +645,7 @@ function renderCompactListingCard({
         const ok = confirm(`Cancel EMP listing #${listingId}?`);
         if (!ok) return;
 
-        const res = await secureFetch(apiUrl("/marketplace/emp/cancel"), {
+        const res = await fetch(apiUrl("/marketplace/emp/cancel"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: ACTIVE_USER, listing_id: listingId })
@@ -657,7 +687,7 @@ async function buyEmpListing(listingId) {
       return;
     }
 
-    const initRes = await secureFetch(apiUrl("/marketplace/emp/buy-init"), {
+    const initRes = await fetch(apiUrl("/marketplace/emp/buy-init"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -672,46 +702,51 @@ async function buyEmpListing(listingId) {
       throw new Error(initData.error || "Failed to initialize EMP purchase.");
     }
 
-    const session = initData.session;
+       const session = initData.session;
 
-    const rawTotalAmount =
-      session.total_price_hive ??
-      session.total_payment?.amount ??
-      session.total_payment_hive;
+    const sellerAmount = Number(session.seller_payment?.amount || 0).toFixed(3);
+    const feeAmount = Number(session.fee_payment?.amount || 0).toFixed(3);
+    const sellerTo = session.seller_payment?.to;
+    const feeTo = session.fee_payment?.to;
+    const sellerMemo = session.seller_payment?.memo;
+    const feeMemo = session.fee_payment?.memo;
 
-    const numericTotal = Number(rawTotalAmount);
-    if (!Number.isFinite(numericTotal) || numericTotal <= 0) {
-      throw new Error("Invalid total payment amount returned by server.");
-    }
-
-    const totalAmount = numericTotal.toFixed(3);
-    const paymentTo = session.total_payment?.to || "mydempiregain";
-    const paymentMemo = session.total_payment?.memo || `MDE_EMPBUY_${session.id}_${ACTIVE_USER}`;
     const reserveUntil = session.reservation_expires_at
       ? new Date(session.reservation_expires_at).toLocaleString()
       : "shortly";
 
     const ok = confirm(
       `Buy ${Number(session.quantity).toLocaleString()} EMP?\n\n` +
-      `Total payment: ${totalAmount} HIVE to @${paymentTo}\n` +
+      `Seller payment: ${sellerAmount} HIVE to @${sellerTo}\n` +
+      `Fee payment: ${feeAmount} HIVE to @${feeTo}\n\n` +
       `Reservation valid until: ${reserveUntil}`
     );
     if (!ok) return;
 
-    const paymentTransfer = await hiveTransfer(
+    const sellerTransfer = await hiveTransfer(
       ACTIVE_USER,
-      paymentTo,
-      totalAmount,
-      paymentMemo
+      sellerTo,
+      sellerAmount,
+      sellerMemo
     );
 
-    const paymentTxId = paymentTransfer?.tx_id || paymentTransfer?.id;
+    const feeTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      feeTo,
+      feeAmount,
+      feeMemo
+    );
+
+    const paymentTxId =
+      sellerTransfer?.tx_id ||
+      sellerTransfer?.id ||
+      feeTransfer?.tx_id ||
+      feeTransfer?.id;
 
     if (!paymentTxId) {
       throw new Error("Payment transfer did not return a transaction id.");
     }
-
-    const finalizeRes = await secureFetch(apiUrl("/marketplace/emp/buy-finalize"), {
+    const finalizeRes = await fetch(apiUrl("/marketplace/emp/buy-finalize"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -859,6 +894,7 @@ async function buyEmpListing(listingId) {
 
   updateBlueprintFeedHeader();
   countPill.textContent = `${listings.length} Listing${listings.length === 1 ? "" : "s"}`;
+  console.log("Blueprint sample listing:", listings[0]);
 
   if (!listings.length) {
     feed.innerHTML = `<div class="empty">${
@@ -869,31 +905,45 @@ async function buyEmpListing(listingId) {
     return;
   }
 
-  feed.innerHTML = listings
-    .map((listing) => {
+  feed.innerHTML = `
+  <div class="compact-list">
+    ${listings.map((listing) => {
       const mine =
-        ACTIVE_USER && listing.seller_username === ACTIVE_USER;
+        String(listing.seller_username || "").toLowerCase() ===
+        String(ACTIVE_USER || "").toLowerCase();
 
-      const tier = listing.blueprint?.tier || "B1";
-      const edition = listing.blueprint?.edition || "--";
-      const era = listing.blueprint?.era || "GENESIS";
+      return `
+        <div class="compact-row">
+          <div class="compact-cell">
+            <div class="compact-asset-title">Blueprint #${listing.asset_id || "--"}</div>
+<div class="compact-asset-sub">${listing.blueprint?.tier || "--"}</div>
+          </div>
 
-      return renderCompactListingCard({
-        mine,
-        title: `Blueprint #${listing.asset_id}`,
-        meta: `Seller: @${listing.seller_username} • Listing #${listing.id}`,
-        stats: [
-          { label: "Tier", value: `${tier}` },
-          { label: "Edition", value: `${edition}` },
-          { label: "Era", value: `${era}` },
-          { label: "Price", value: `${Number(listing.total_price_hive).toFixed(3)} HIVE` },
-        ],
-        actionHtml: mine
-          ? `<button class="danger-btn" onclick="cancelBlueprintListing(${listing.id})">Cancel</button>`
-          : `<button class="primary-btn" onclick="buyBlueprintListing(${listing.id})">Buy</button>`,
-      });
-    })
-    .join("");
+          <div class="compact-cell">
+            <div class="compact-seller">@${listing.seller_username || "--"}</div>
+            <div class="compact-asset-sub">Listing #${listing.id || "--"}</div>
+          </div>
+
+          <div class="compact-cell compact-details">
+  <strong>Era:</strong> GENESIS
+</div>
+
+          <div class="compact-cell compact-price">
+            ${Number(listing.total_price_hive || 0).toFixed(3)} HIVE
+          </div>
+
+          <div class="compact-cell compact-action">
+            ${
+              mine
+                ? `<button class="compact-cancel-btn" onclick="cancelBlueprintListing(${listing.id})">Cancel</button>`
+                : `<button class="compact-buy-btn" onclick="buyBlueprintListing(${listing.id})">Buy</button>`
+            }
+          </div>
+        </div>
+      `;
+    }).join("")}
+  </div>
+`;
 }
 
     function renderBlueprintFeed() {
@@ -916,7 +966,7 @@ async function buyEmpListing(listingId) {
       setStatus("blueprint-market-status", "Loading blueprint inventory...");
 
       try {
-        const res = await secureFetch(apiUrl(`/player/${encodeURIComponent(ACTIVE_USER)}/blueprints`));
+        const res = await fetch(apiUrl(`/player/${encodeURIComponent(ACTIVE_USER)}/blueprints`));
         const data = await res.json();
 
         if (!res.ok) {
@@ -944,7 +994,7 @@ async function buyEmpListing(listingId) {
 
     async function loadBlueprintListings() {
       try {
-        const res = await secureFetch(apiUrl("/marketplace/blueprint"));
+        const res = await fetch(apiUrl("/marketplace/blueprint"));
         const data = await res.json();
 
         if (!res.ok || !data.success) {
@@ -983,7 +1033,7 @@ async function buyEmpListing(listingId) {
 
         setStatus("blueprint-create-status", "Creating blueprint listing...");
 
-        const res = await secureFetch(apiUrl("/marketplace/blueprint/list"), {
+        const res = await fetch(apiUrl("/marketplace/blueprint/list"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: ACTIVE_USER, nft_id, price_hive })
@@ -1016,7 +1066,7 @@ async function buyEmpListing(listingId) {
         const ok = confirm(`Cancel Blueprint listing #${listingId}?`);
         if (!ok) return;
 
-        const res = await secureFetch(apiUrl("/marketplace/blueprint/cancel"), {
+        const res = await fetch(apiUrl("/marketplace/blueprint/cancel"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: ACTIVE_USER, listing_id: listingId })
@@ -1044,7 +1094,7 @@ async function buyEmpListing(listingId) {
       return;
     }
 
-    const initRes = await secureFetch(apiUrl("/marketplace/blueprint/buy-init"), {
+    const initRes = await fetch(apiUrl("/marketplace/blueprint/buy-init"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1097,7 +1147,7 @@ async function buyEmpListing(listingId) {
       throw new Error("Transaction ID not returned by Keychain.");
     }
 
-    const finalizeRes = await secureFetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
+    const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1132,7 +1182,7 @@ async function buyEmpListing(listingId) {
         }
 
         setStatus("packs-status", "Loading unopened packs...");
-        const res = await secureFetch(apiUrl(`/player/${encodeURIComponent(ACTIVE_USER)}/packs`));
+        const res = await fetch(apiUrl(`/player/${encodeURIComponent(ACTIVE_USER)}/packs`));
         const data = await res.json();
 
         if (!res.ok) {
@@ -1300,7 +1350,7 @@ async function createPackListing() {
 
     if (statusEl) statusEl.textContent = "Creating pack listing...";
 
-    const res = await secureFetch(apiUrl("/marketplace/pack/list"), {
+    const res = await fetch(apiUrl("/marketplace/pack/list"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1377,49 +1427,65 @@ async function loadPackListings() {
     }
 
     if (box) {
-      box.innerHTML = listings
-        .map((l) => {
-          const mine =
-            String(l.seller_username || "").toLowerCase() ===
-            String(ACTIVE_USER || "").toLowerCase();
+  box.innerHTML = `
+    <div class="compact-list">
+      ${listings.map((l) => {
+        const mine =
+          String(l.seller_username || "").toLowerCase() ===
+          String(ACTIVE_USER || "").toLowerCase();
 
-          const remainingQty = Number(l.remaining_quantity ?? l.quantity ?? 1);
-          const unitPrice = Number(l.unit_price_hive || 0);
-          const totalPrice = Number(l.total_price_hive || 0);
-          const fee = Number(l.fee_amount_hive || 0);
+        const remainingQty = Number(l.remaining_quantity ?? l.quantity ?? 1);
+        const unitPrice = Number(l.unit_price_hive || 0);
+        const totalPrice = Number(l.total_price_hive || 0);
 
-          return renderCompactListingCard({
-            mine,
-            title: `${remainingQty} Sealed Pack${remainingQty > 1 ? "s" : ""}`,
-            meta: `Seller: @${l.seller_username} • Status: ${l.status}`,
-            stats: [
-              { label: "Per Pack", value: `${unitPrice.toFixed(3)} HIVE` },
-              { label: "Remaining", value: `${remainingQty}` },
-              { label: "Total", value: `${totalPrice.toFixed(3)} HIVE` },
-              { label: "Fee", value: `${fee.toFixed(3)} HIVE` },
-            ],
-            actionHtml:
-              mine && ["active", "reserved"].includes(String(l.status || "").toLowerCase())
-                ? `<button class="danger-btn" type="button" onclick="cancelPackListing(${l.id})">Cancel</button>`
-                : `
-                  <div style="display:flex; gap:8px; align-items:center;">
-                    <input
-                      id="buy-pack-qty-${l.id}"
-                      type="number"
-                      min="1"
-                      max="${remainingQty}"
-                      value="1"
-                      style="width:70px; padding:6px; border:1px solid #ccc; border-radius:6px;"
-                    />
-                    <button class="primary-btn" type="button" onclick="buyPackListing(${l.id})">
-                      Buy Packs
-                    </button>
-                  </div>
-                `,
-          });
-        })
-        .join("");
-    }
+        return `
+          <div class="compact-row">
+            <div class="compact-cell">
+              <div class="compact-asset-title">${remainingQty} Sealed Pack${remainingQty > 1 ? "s" : ""}</div>
+              <div class="compact-asset-sub">Genesis Pack</div>
+            </div>
+
+            <div class="compact-cell">
+              <div class="compact-seller">@${l.seller_username || "--"}</div>
+              <div class="compact-asset-sub">Listing #${l.id || "--"}</div>
+            </div>
+
+            <div class="compact-cell compact-details">
+              <strong>Era:</strong> GENESIS<br>
+              <strong>Price / Pack:</strong> ${unitPrice.toFixed(3)} HIVE
+            </div>
+
+            <div class="compact-cell compact-price">
+              ${totalPrice.toFixed(3)} HIVE
+            </div>
+
+            <div class="compact-cell compact-action">
+              ${
+                mine && ["active", "reserved"].includes(String(l.status || "").toLowerCase())
+                  ? `<button class="compact-cancel-btn" type="button" onclick="cancelPackListing(${l.id})">Cancel</button>`
+                  : `
+                    <div style="display:flex; gap:8px; align-items:center; justify-content:flex-end;">
+                      <input
+                        id="buy-pack-qty-${l.id}"
+                        type="number"
+                        min="1"
+                        max="${remainingQty}"
+                        value="1"
+                        style="width:70px; padding:6px; border:1px solid #ccc; border-radius:6px;"
+                      />
+                      <button class="compact-buy-btn" type="button" onclick="buyPackListing(${l.id})">
+                        Buy
+                      </button>
+                    </div>
+                  `
+              }
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
   } catch (err) {
     console.error("loadPackListings error:", err);
     if (box) {
@@ -1449,7 +1515,7 @@ async function buyPackListing(listingId) {
       throw new Error("Please enter a valid buy quantity.");
     }
 
-    const initRes = await secureFetch(apiUrl("/marketplace/pack/buy-init"), {
+    const initRes = await fetch(apiUrl("/marketplace/pack/buy-init"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1458,40 +1524,59 @@ async function buyPackListing(listingId) {
         buy_quantity: buyQuantity
       })
     });
+const data = await initRes.json();
+if (!initRes.ok || !data.success) {
+  throw new Error(data.error || "Failed to initialize marketplace purchase.");
+}
+       const session = data.session;
 
-    const initData = await initRes.json();
+    const pricePerPack =
+      Number(session.quantity || 0) > 0
+        ? Number(session.total_price_hive || 0) / Number(session.quantity || 1)
+        : 0;
 
-    if (!initRes.ok || !initData.success) {
-      throw new Error(initData.error || "Failed to initialize pack purchase.");
-    }
-
-    const session = initData.session;
+    const sellerAmount = Number(session.seller_payment?.amount || 0).toFixed(3);
+    const feeAmount = Number(session.fee_payment?.amount || 0).toFixed(3);
+    const sellerTo = session.seller_payment?.to;
+    const feeTo = session.fee_payment?.to;
+    const sellerMemo = session.seller_payment?.memo;
+    const feeMemo = session.fee_payment?.memo;
 
     const confirmText =
       `Buy ${Number(session.quantity || 0)} sealed pack(s)?\n\n` +
-      `Price per pack: ${Number(session.total_price_hive || 0) / Number(session.quantity || 1)} HIVE\n` +
-      `Total payment: ${session.total_payment.amount} HIVE to @${session.total_payment.to}`;
+      `Price per pack: ${pricePerPack} HIVE\n` +
+      `Seller payment: ${sellerAmount} HIVE to @${sellerTo}\n` +
+      `Fee payment: ${feeAmount} HIVE to @${feeTo}`;
 
     const ok = confirm(confirmText);
     if (!ok) return;
 
-    const paymentTransfer = await hiveTransfer(
+    const sellerTransfer = await hiveTransfer(
       ACTIVE_USER,
-      session.total_payment.to,
-      session.total_payment.amount,
-      session.total_payment.memo
+      sellerTo,
+      sellerAmount,
+      sellerMemo
+    );
+
+    const feeTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      feeTo,
+      feeAmount,
+      feeMemo
     );
 
     const paymentTxId =
-      paymentTransfer?.tx_id ||
-      paymentTransfer?.id ||
+      sellerTransfer?.tx_id ||
+      sellerTransfer?.id ||
+      feeTransfer?.tx_id ||
+      feeTransfer?.id ||
       null;
 
     if (!paymentTxId) {
       throw new Error("Transaction ID not returned by Keychain.");
     }
 
-    const finalizeRes = await secureFetch(apiUrl("/marketplace/pack/buy-finalize"), {
+    const finalizeRes = await fetch(apiUrl("/marketplace/pack/buy-finalize"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1528,7 +1613,7 @@ async function cancelPackListing(listingId) {
     const ok = confirm(`Cancel pack listing #${listingId}?`);
     if (!ok) return;
 
-    const res = await secureFetch(apiUrl("/marketplace/pack/cancel"), {
+    const res = await fetch(apiUrl("/marketplace/pack/cancel"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -1564,6 +1649,179 @@ document.querySelector('[data-market-tab-panel="packs"]')?.classList.add("active
     alert(err.message || "Server error cancelling listing.");
   }
 }
+  function formatHistoryTime(raw) {
+  if (!raw) return "--";
+  const d = new Date(raw);
+  if (isNaN(d.getTime())) return "--";
+  return d.toLocaleString();
+}
+
+function renderEmpHistory(history, box) {
+  if (!box) return;
+
+  if (!Array.isArray(history) || !history.length) {
+    box.innerHTML = `<div class="empty">No EMP trade history found.</div>`;
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="trade-tape">
+      ${history.map((item, index) => {
+
+        const qty = Number(item.quantity || 0);
+        const total = Number(item.total_price_hive || 0);
+        const seller = item.seller_username || "--";
+        const buyer = item.buyer_username || "--";
+        const time = formatHistoryTime(item.completed_at || item.created_at);
+
+        return `
+          <div class="trade-row ${index % 2 === 0 ? "trade-row-even" : "trade-row-odd"}">
+
+            <div class="trade-col trade-asset">
+              ${qty.toLocaleString()} EMP
+            </div>
+
+            <div class="trade-col trade-users">
+              @${seller} → @${buyer}
+            </div>
+
+            <div class="trade-col trade-total">
+              ${total.toFixed(3)} HIVE
+            </div>
+
+            <div class="trade-col trade-time">
+              ${time}
+            </div>
+
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+function renderBlueprintHistory(history, box) {
+  if (!box) return;
+
+  if (!Array.isArray(history) || !history.length) {
+    box.innerHTML = `<div class="empty">No blueprint trade history found.</div>`;
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="trade-tape">
+      ${history.map((item, index) => {
+
+        const blueprint = item.blueprint_type || item.industry || "Blueprint";
+        const level = item.blueprint_level || "";
+        const price = Number(item.total_price_hive || 0);
+
+        const seller = item.seller_username || "--";
+        const buyer = item.buyer_username || "--";
+        const time = formatHistoryTime(item.completed_at || item.created_at);
+
+        return `
+          <div class="trade-row ${index % 2 === 0 ? "trade-row-even" : "trade-row-odd"}">
+
+            <div class="trade-col trade-asset">
+              ${blueprint} ${level}
+            </div>
+
+            <div class="trade-col trade-users">
+              @${seller} → @${buyer}
+            </div>
+
+            <div class="trade-col trade-total">
+              ${price.toFixed(3)} HIVE
+            </div>
+
+            <div class="trade-col trade-time">
+              ${time}
+            </div>
+
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+function formatHistoryTime(ts) {
+  if (!ts) return "--";
+
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return "--";
+
+  return d.toLocaleString(undefined, {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+function renderPackHistory(history, box) {
+  if (!history || !history.length) {
+    box.innerHTML = `<div class="empty">No pack trade history found.</div>`;
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="trade-tape">
+      ${history.map((item, index) => {
+        const qty = Number(item.quantity || 0);
+        const total = Number(item.total_price_hive || 0);
+        const pricePerPack = qty > 0 ? (total / qty).toFixed(3) : "0.000";
+        const time = formatHistoryTime(item.completed_at || item.created_at);
+
+        return `
+          <div class="trade-row ${index % 2 === 0 ? "trade-row-even" : "trade-row-odd"}">
+            <div class="trade-col trade-asset">
+              ${qty} Pack${qty === 1 ? "" : "s"}
+            </div>
+
+            <div class="trade-col trade-users">
+              @${item.seller_username || "--"} → @${item.buyer_username || "--"}
+            </div>
+
+            <div class="trade-col trade-price">
+              ${pricePerPack} HIVE/pack
+            </div>
+
+            <div class="trade-col trade-total">
+              ${total.toFixed(3)} HIVE
+            </div>
+
+            <div class="trade-col trade-time">
+              ${time}
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+async function loadMarketplaceHistory(assetType, renderFn, boxId) {
+  const box = document.getElementById(boxId);
+  if (!box) return;
+
+  try {
+    const res = await fetch(apiUrl(`/marketplace/history?asset_type=${assetType}&limit=10`));
+    const data = await res.json();
+
+    if (!res.ok || !data.success) throw new Error();
+
+    renderFn(data.history || [], box);
+  } catch (err) {
+    box.innerHTML = `<div class="empty">Failed to load history.</div>`;
+  }
+}
+
+async function loadAllMarketplaceHistory() {
+  await loadMarketplaceHistory("EMP", renderEmpHistory, "emp-history-list");
+  await loadMarketplaceHistory("BLUEPRINT", renderBlueprintHistory, "blueprint-history-list");
+  await loadMarketplaceHistory("PACK", renderPackHistory, "pack-history-list");
+}
+  loadAllMarketplaceHistory();
 </script>
  
 </body>
