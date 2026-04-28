@@ -4199,10 +4199,9 @@ const activeUserClean = String(
   .trim()
   .toLowerCase();
 
-if (!activeUserClean || (viewingUser && viewingUser !== activeUserClean)) {
+if (viewingUser && (!activeUserClean || viewingUser !== activeUserClean)) {
   applyReadOnlyEmpireMode();
-}
-          setupDashboardNavbar(); // run again after data is loaded
+}          setupDashboardNavbar(); // run again after data is loaded
         } catch (err) {
           console.error("Initial dashboard load failed:", err);
         }
