@@ -613,7 +613,10 @@ ${list.map((listing) => {
 
         const res = await secureFetch(apiUrl("/marketplace/emp/list"), {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+  "Content-Type": "application/json",
+  "x-mde-actor": ACTIVE_USER,
+},
           body: JSON.stringify({ username: ACTIVE_USER, quantity, unit_price_hive })
         });
 
