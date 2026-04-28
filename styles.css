@@ -11427,3 +11427,59 @@ cursor:pointer;
     grid-template-columns:1fr !important;
   }
 }
+/* ===== PACK HISTORY HARD RESTORE ===== */
+
+#pack-history-list{
+  display:grid !important;
+  gap:10px !important;
+}
+
+#pack-history-list .trade-row{
+  display:grid !important;
+  grid-template-columns:1fr 1.4fr 1fr 1fr 1fr !important;
+  gap:12px !important;
+  align-items:center !important;
+  padding:12px 14px !important;
+  border:1px solid #e5e7eb !important;
+  border-radius:14px !important;
+  background:#ffffff !important;
+  box-shadow:0 6px 16px rgba(15,23,42,0.05) !important;
+}
+
+#pack-history-list .trade-row-even{
+  background:#f8fafc !important;
+}
+
+#pack-history-list .trade-col{
+  font-size:13px !important;
+  line-height:1.4 !important;
+  color:#334155 !important;
+  word-break:break-word !important;
+}
+
+#pack-history-list .trade-asset{
+  font-weight:900 !important;
+  color:#0f172a !important;
+}
+
+#pack-history-list .trade-users{
+  font-weight:800 !important;
+  color:#1e3a8a !important;
+}
+
+#pack-history-list .trade-price,
+#pack-history-list .trade-total{
+  font-weight:900 !important;
+  color:#0f172a !important;
+}
+
+#pack-history-list .trade-time{
+  font-size:12px !important;
+  color:#64748b !important;
+}
+
+@media(max-width:800px){
+  #pack-history-list .trade-row{
+    grid-template-columns:1fr !important;
+  }
+}
