@@ -11257,5 +11257,96 @@ cursor:pointer;
     grid-template-columns:1fr !important;
   }
 }
+/* ===== MARKETPLACE PACK COMPACT ROW FIX ===== */
 
+.page .compact-list{
+  display:grid !important;
+  gap:12px !important;
+}
+
+.page .compact-row{
+  display:grid !important;
+  grid-template-columns:1.2fr 1fr 1.2fr 0.8fr auto !important;
+  gap:12px !important;
+  align-items:center !important;
+  padding:14px 16px !important;
+  border:1px solid #e5e7eb !important;
+  border-radius:16px !important;
+  background:#ffffff !important;
+  box-shadow:0 8px 20px rgba(15,23,42,0.06) !important;
+}
+
+.page .compact-cell{
+  min-width:0 !important;
+  font-size:13px !important;
+  color:#334155 !important;
+}
+
+.page .compact-asset-title{
+  font-size:16px !important;
+  font-weight:900 !important;
+  color:#0f172a !important;
+  margin-bottom:4px !important;
+}
+
+.page .compact-asset-sub{
+  font-size:12px !important;
+  color:#64748b !important;
+  line-height:1.4 !important;
+}
+
+.page .compact-seller{
+  font-size:14px !important;
+  font-weight:800 !important;
+  color:#1e3a8a !important;
+}
+
+.page .compact-details{
+  line-height:1.55 !important;
+}
+
+.page .compact-price{
+  font-size:16px !important;
+  font-weight:900 !important;
+  color:#0f172a !important;
+  text-align:right !important;
+}
+
+.page .compact-action{
+  display:flex !important;
+  justify-content:flex-end !important;
+  align-items:center !important;
+}
+
+.page .compact-buy-btn,
+.page .compact-cancel-btn{
+  border:none !important;
+  border-radius:10px !important;
+  padding:9px 13px !important;
+  font-size:13px !important;
+  font-weight:900 !important;
+  cursor:pointer !important;
+}
+
+.page .compact-buy-btn{
+  background:#2563eb !important;
+  color:#ffffff !important;
+}
+
+.page .compact-cancel-btn{
+  background:#fee2e2 !important;
+  color:#991b1b !important;
+}
+
+@media(max-width:900px){
+  .page .compact-row{
+    grid-template-columns:1fr !important;
+  }
+
+  .page .compact-price,
+  .page .compact-action{
+    text-align:left !important;
+    justify-content:flex-start !important;
+  }
+}
 
