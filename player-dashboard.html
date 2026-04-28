@@ -802,8 +802,11 @@ if (viewedUsername && !localStorage.getItem("mde_logged_in")) {
 }
 
 const loggedInUsername = localStorage.getItem("hiveUsername");
-
 const username = viewedUsername || loggedInUsername;
+
+if (loggedInUsername) {
+  setActiveUser(loggedInUsername);
+}
 
 if (loggedInUsername) {
   ACTIVE_USER = String(loggedInUsername)
