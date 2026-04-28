@@ -11746,3 +11746,18 @@ cursor:pointer;
 #industry-leaderboard-list .industry-item:nth-child(6) .industry-name{
   color:#dc2626 !important;
 }
+/* ===== INDUSTRY HEADER ALIGN FIX ===== */
+
+#industry-leaderboard-list .industry-header{
+  display:grid !important;
+  grid-template-columns:140px minmax(220px,1.6fr) minmax(140px,1fr) minmax(120px,1fr) !important;
+  align-items:center !important;
+  gap:18px !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+}
+
+#industry-leaderboard-list .industry-header div:nth-child(3),
+#industry-leaderboard-list .industry-header div:nth-child(4){
+  text-align:right !important;
+}
