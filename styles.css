@@ -11502,3 +11502,44 @@ cursor:pointer;
     grid-template-columns:1fr !important;
   }
 }
+/* ===== LEADERBOARD ROW + COLUMN FIX ===== */
+
+.leaderboard-list{
+  display: grid !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+.leaderboard-row{
+  display: grid !important;
+  grid-template-columns: 70px 1.4fr 1fr 1fr 1fr !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  padding: 12px 14px !important;
+  box-sizing: border-box !important;
+}
+
+.leaderboard-header-row{
+  background: #f8fafc !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 14px !important;
+}
+
+.leaderboard-rank{
+  text-align: center !important;
+}
+
+.leaderboard-player{
+  text-align: left !important;
+  min-width: 0 !important;
+}
+
+.leaderboard-metric{
+  text-align: right !important;
+  min-width: 0 !important;
+}
+
+.leaderboard-score-grid{
+  display: contents !important;
+}
