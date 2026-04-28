@@ -3,15 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <title>MydEmpire — Codex</title>
-  
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="assets/favicon.png">
+    <link rel="icon" href="assets/favicon.png" />
   </head>
-  
-  
+
   <body class="page-root">
-    
     <header class="appbar">
       <div class="appbar-inner">
         <div class="appbar-left">
@@ -20,7 +18,7 @@
           </a>
 
           <nav class="appbar-nav">
-            <a href="/" class="appbar-link">Home</a>
+            <a href="index.html" class="appbar-link">Home</a>
             <a href="economy.html" class="appbar-link">Economy</a>
             <a href="transparency.html" class="appbar-link">Transparency</a>
             <a href="codex.html" class="appbar-link">Codex</a>
@@ -98,7 +96,6 @@
             <div class="codex-kicker">Genesis Rulebook</div>
             <h1>The Codex of MydEmpire</h1>
             <p>
-              
               This page explains how your empire actually works — from land
               slots and blueprints to factory setup, maintenance, upgrades, EMP
               utility, and reward share. The goal is simple: turn your assets
@@ -147,14 +144,146 @@
           </p>
         </section>
 
-        <div class="codex-grid-2">
+        <section id="pack-drops" class="codex-card-block">
+          <p class="eyebrow">PACK TRANSPARENCY</p>
+          <h2>Genesis Pack Drop Rates</h2>
+          <p class="codex-lead">
+            Each Genesis Pack contains <strong>1 Land</strong>,
+            <strong>1 Blueprint</strong>, and
+            <strong>EMP based on the land tier received</strong>. Packs may also
+            include bonus rewards.
+          </p>
+
+          <h3>Land + EMP</h3>
+          <table class="codex-table">
+            <thead>
+              <tr>
+                <th>Land Tier</th>
+                <th>Probability</th>
+                <th>EMP Received</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>L1 Frontier</td>
+                <td>75%</td>
+                <td>30 EMP</td>
+              </tr>
+              <tr>
+                <td>L2 Estate</td>
+                <td>22%</td>
+                <td>60 EMP</td>
+              </tr>
+              <tr>
+                <td>L3 Industrial Zone</td>
+                <td>3%</td>
+                <td>120 EMP</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Main Blueprint Level</h3>
+          <table class="codex-table">
+            <thead>
+              <tr>
+                <th>Blueprint Level</th>
+                <th>Probability</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>B1</td>
+                <td>55%</td>
+              </tr>
+              <tr>
+                <td>B2</td>
+                <td>25%</td>
+              </tr>
+              <tr>
+                <td>B3</td>
+                <td>14%</td>
+              </tr>
+              <tr>
+                <td>B4</td>
+                <td>5%</td>
+              </tr>
+              <tr>
+                <td>B5</td>
+                <td>1%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Bonus Drops</h3>
+          <table class="codex-table">
+            <thead>
+              <tr>
+                <th>Bonus Item</th>
+                <th>Chance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Bonus Blueprint</td>
+                <td>5%</td>
+              </tr>
+              <tr>
+                <td>Bonus EMP</td>
+                <td>10%</td>
+              </tr>
+              <tr>
+                <td>Relic (Founder Packs)</td>
+                <td>0.25%</td>
+              </tr>
+              <tr>
+                <td>Relic (Expansion Packs)</td>
+                <td>0.10%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Blueprint Mint Rates</h3>
+          <table class="codex-table">
+            <thead>
+              <tr>
+                <th>Blueprint Level</th>
+                <th>Probability</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>B1</td>
+                <td>55%</td>
+              </tr>
+              <tr>
+                <td>B2</td>
+                <td>25%</td>
+              </tr>
+              <tr>
+                <td>B3</td>
+                <td>14%</td>
+              </tr>
+              <tr>
+                <td>B4</td>
+                <td>5%</td>
+              </tr>
+              <tr>
+                <td>B5</td>
+                <td>1%</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <div class="codex-wide-grid">
+          <!-- LAND -->
           <section id="land" class="codex-card-block">
-           <h2>
-  <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-land"></use>
-  </svg>
-  Land
-</h2>
+            <h2>
+              <svg class="ui-icon">
+                <use href="assets/icons.svg#icon-land"></use>
+              </svg>
+              Land
+            </h2>
 
             <h3>Factory Slots</h3>
             <ul>
@@ -166,30 +295,21 @@
             <h3>B5 Limitation</h3>
             <p><strong>Each land can contain maximum 1 B5 factory.</strong></p>
 
-            <h3>Upgrade Behavior</h3>
-            <ul>
-              <li>
-                <strong>L1</strong> → direct high-tier build possible, but
-                low-start paths are more restricted
-              </li>
-              <li>
-                <strong>L2</strong> → supports two slots, but only one can reach
-                B5
-              </li>
-              <li>
-                <strong>L3</strong> → supports three slots, but only one can
-                reach B5
-              </li>
-            </ul>
+            <p class="codex-note">
+              Land defines how many factories you can operate. Higher-tier land
+              increases your expansion capacity but does not guarantee higher
+              efficiency without proper blueprint and upgrade strategy.
+            </p>
           </section>
 
+          <!-- BLUEPRINT -->
           <section id="blueprint" class="codex-card-block">
             <h2>
-  <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-blueprint"></use>
-  </svg>
-  Blueprints
-</h2>
+              <svg class="ui-icon">
+                <use href="assets/icons.svg#icon-blueprint"></use>
+              </svg>
+              Blueprints
+            </h2>
 
             <p>
               Blueprints define both the industry type and the starting strength
@@ -208,322 +328,418 @@
 
             <h3>Extra Blueprint Minting</h3>
             <p>
-              Extra blueprint minting is only allowed when your total available
-              land slots are greater than your current blueprint count. EMP
-              spent on this goes to treasury support.
+              Extra blueprint minting is allowed when your total available land
+              slots exceed your current blueprint count.
             </p>
-          </section>
-        </div>
 
-        <section id="factory" class="codex-card-block">
-          <h2>
-            <svg class="ui-icon">
-    <use href="assets/icons.svg#icon-factory"></use>
-  </svg>
-  
-            Factories
-          </h2>
-
-          <p>
-            A factory is created by combining one land slot, one blueprint, and
-            EMP. After construction, it becomes a persistent production asset
-            inside your empire.
-          </p>
-
-          <div class="codex-grid-3">
-            <div class="codex-mini-card">
-              <h3>Initial Factory Setup Cost</h3>
-              <ul>
-                <li>L1 Frontier → 40 EMP</li>
-                <li>L2 Estate → 80 EMP</li>
-                <li>L3 Industrial Zone → 150 EMP</li>
-              </ul>
-              <p class="codex-note">
-                Setup cost depends on land tier, not blueprint level.
-              </p>
-            </div>
-
-            <div class="codex-mini-card">
-              <h3>Factory States</h3>
-              <ul>
-                <li><strong>Building</strong> → under construction</li>
-                <li><strong>Active</strong> → producing EP</li>
-                <li>
-                  <strong>Upgrading</strong> → temporarily paused for upgrade
-                </li>
-                <li>
-                  <strong>Inactive</strong> → no production until maintenance is
-                  restored
-                </li>
-              </ul>
-            </div>
-
-            <div class="codex-mini-card">
-              <h3>Build Time</h3>
-              <ul>
-                <li>B1 → 1 day</li>
-                <li>B2 → 2 days</li>
-                <li>B3 → 3 days</li>
-                <li>B4 → 4 days</li>
-                <li>B5 → 5 days</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <div class="codex-grid-2">
-          <section id="emp" class="codex-card-block">
-            <h2>
-<svg class="ui-icon">
-<use href="assets/icons.svg#icon-emp"></use>
-</svg>
-EMP utility
-</h2>
-            <p>EMP is the core internal utility resource used for:</p>
             <ul>
-              <li>Factory setup</li>
-              <li>Upgrades</li>
-              <li>Maintenance</li>
-              <li>Extra blueprint minting</li>
+              <li>Cost = <strong>50% of current pack price (USD)</strong></li>
+              <li>Converted to HIVE at time of mint</li>
+              <li>Equivalent EMP is deducted</li>
             </ul>
-            <p>
-              EMP from packs is soulbound gameplay utility. EMP purchased
-              through the shop follows the fixed exchange reference of
-              <strong>100 EMP = 1 HIVE</strong>.
+
+            <p class="codex-note">
+              All EMP spent on blueprint minting supports the treasury and
+              strengthens long-term reward sustainability.
             </p>
-          </section>
-
-          <section id="ep" class="codex-card-block">
-            <h2>
-<svg class="ui-icon">
-<use href="assets/icons.svg#icon-ep"></use>
-</svg>
-EP System
-</h2>
-            <p>
-              EP (Empire Power) measures the productive strength of your empire.
-            </p>
-            <ul>
-              <li>Generated by active factories</li>
-              <li>Boosted by relics</li>
-              <li>Used to determine reward share</li>
-            </ul>
-            <p>
-              Production can accumulate for up to 7 days before claim efficiency
-              stops increasing.
-            </p>
-          </section>
-        </div>
-
-        <section
-          id="maintenance"
-          class="codex-card-block codex-highlight-block"
-        >
-         <h2>
-<svg class="ui-icon">
-<use href="assets/icons.svg#icon-maintenance"></use>
-</svg>
-Maintenance
-</h2>
-
-          <div class="codex-grid-3">
-            <div class="codex-mini-card">
-              <h3>Cycle</h3>
-              <p>Each factory runs on a 7-day maintenance cycle.</p>
-            </div>
-
-            <div class="codex-mini-card">
-              <h3>How Payment Works</h3>
-              <p>
-                Maintenance is paid factory-by-factory in EMP for a fixed 7-day
-                renewal. It is not a percentage claim on HIVE rewards.
-              </p>
-            </div>
-
-            <div class="codex-mini-card">
-              <h3>Renewal Window</h3>
-              <p>
-                Renewal is allowed only in the final 2 days of the current
-                cycle, creating a practical maximum of 9 days of remaining
-                maintenance.
-              </p>
-            </div>
-          </div>
-
-          <ul>
-            <li>Factories stop producing when maintenance expires</li>
-            <li>No penalty beyond inactivity</li>
-            <li>Players must visit and renew factories individually</li>
-            <li>
-              Maintenance exists to support active empire management, not
-              passive automation
-            </li>
-          </ul>
-        </section>
-
-        <section id="upgrade" class="codex-card-block">
-         <h2>
-<svg class="ui-icon">
-<use href="assets/icons.svg#icon-upgrade"></use>
-</svg>
-Upgrades
-</h2>
-
-          <div class="codex-grid-2">
-            <div class="codex-mini-card">
-              <h3>Upgrades cost</h3>
-              <ul>
-                <li>B1 → B2: 50 EMP</li>
-                <li>B2 → B3: 100 EMP</li>
-                <li>B3 → B4: 200 EMP</li>
-                <li>B4 → B5: 400 EMP</li>
-              </ul>
-            </div>
-
-            <div class="codex-mini-card">
-              <h3>Required Active Days</h3>
-              <ul>
-                <li>B1 → B2: 30 days</li>
-                <li>B2 → B3: 60 days</li>
-                <li>B3 → B4: 120 days</li>
-                <li>B4 → B5: 240 days</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <div class="codex-grid-2">
-          <section id="reward" class="codex-card-block">
-           <h2>
-<svg class="ui-icon">
-<use href="assets/icons.svg#icon-reward"></use>
-</svg>
-Rewards
-</h2>
-            <p>Rewards are distributed by EP share:</p>
-            <div class="codex-flow-box">
-              Player Reward = (Player EP / Total EP) × Reward Pool
-            </div>
-            <ul>
-              <li>Maximum emission can reach up to 0.5% of treasury</li>
-              <li>Actual emission is adjusted by treasury health</li>
-              <li>No guaranteed return is promised</li>
-            </ul>
-          </section>
-
-          <section id="relic" class="codex-card-block">
-            <h2>
-<svg class="ui-icon">
-<use href="assets/icons.svg#icon-relic"></use>
-</svg>
-Relics
-</h2>
-            <ul>
-              <li>+3% EP per relic</li>
-              <li>Maximum 2 counted</li>
-              <li>Total relic boost cap = 6%</li>
-            </ul>
-            <p>
-              Relics are rare strategic boosters and can also unlock premium
-              convenience such as instant upgrade after active-day requirements
-              are met.
-            </p>
-          </section>
-        </div>
-
-        <div class="codex-grid-3">
-          <section id="writ" class="codex-card-block">
-            <h2>
-<svg class="ui-icon">
-<use href="assets/icons.svg#icon-writ"></use>
-</svg>
-Writ
-</h2>
-            <p>
-              Writ is a Genesis strategic asset connected to Founder-level
-              status and long-term ecosystem privilege.
-            </p>
-          </section>
-
-          <section id="shop" class="codex-card-block">
-            <h2>
-<svg class="ui-icon">
-<use href="assets/icons.svg#icon-shop"></use>
-</svg>
-Shop
-</h2>
-            <ul>
-              <li>Buy sealed packs</li>
-              <li>Buy EMP</li>
-              <li>Mint eligible extra blueprints</li>
-            </ul>
-          </section>
-
-          <section id="market" class="codex-card-block">
-            <h2>
-<svg class="ui-icon">
-<use href="assets/icons.svg#icon-market"></use>
-</svg>
-Marketplace
-</h2>
-            <ul>
-              <li>Tradable: EMP, Blueprint, Relic, Writ</li>
-              <li>Land trading in a future phase</li>
-              <li>EMP fee: 3%</li>
-              <li>Other assets: 5%</li>
-              <li>Trades in HIVE</li>
-            </ul>
-          </section>
-        </div>
-
-        <div class="codex-grid-2">
-          <section id="transfer" class="codex-card-block">
-            <h2>
-<svg class="ui-icon">
-<use href="assets/icons.svg#icon-transfer"></use>
-</svg>
-P2P Transfer
-</h2>
-            <ul>
-              <li>No platform fee</li>
-              <li>Direct transfer allowed</li>
-              <li>Platform is not responsible for off-market deals</li>
-            </ul>
-          </section>
-
-          <section id="start" class="codex-card-block">
-           <h2>
-<svg class="ui-icon">
-<use href="assets/icons.svg#icon-guide"></use>
-</svg>
-New Player Guide
-</h2>
-            <ol>
-              <li>Buy a Genesis pack</li>
-              <li>Open and review your assets</li>
-              <li>Build your first factory</li>
-              <li>Maintain it regularly</li>
-              <li>Upgrade when eligible</li>
-              <li>Expand your empire slot by slot</li>
-            </ol>
           </section>
         </div>
       </div>
+
+      <section id="factory" class="codex-card-block">
+        <h2>
+          <svg class="ui-icon">
+            <use href="assets/icons.svg#icon-factory"></use>
+          </svg>
+
+          Factories
+        </h2>
+
+        <p>
+          A factory is created by combining one land slot, one blueprint, and
+          EMP. After construction, it becomes a persistent production asset
+          inside your empire.
+        </p>
+
+        <div class="codex-grid-3">
+          <div class="codex-mini-card">
+            <h3>Initial Factory Setup Cost</h3>
+            <ul>
+              <li>L1 Frontier → 40 EMP</li>
+              <li>L2 Estate → 80 EMP</li>
+              <li>L3 Industrial Zone → 150 EMP</li>
+            </ul>
+            <p class="codex-note">
+              Setup cost depends on land tier, not blueprint level.
+            </p>
+          </div>
+
+          <div class="codex-mini-card">
+            <h3>Factory States</h3>
+            <ul>
+              <li><strong>Building</strong> → under construction</li>
+              <li><strong>Active</strong> → producing EP</li>
+              <li>
+                <strong>Upgrading</strong> → temporarily paused for upgrade
+              </li>
+              <li>
+                <strong>Inactive</strong> → no production until maintenance is
+                restored
+              </li>
+            </ul>
+          </div>
+
+          <div class="codex-mini-card">
+            <h3>Build Time</h3>
+            <ul>
+              <li>B1 → 1 day</li>
+              <li>B2 → 2 days</li>
+              <li>B3 → 3 days</li>
+              <li>B4 → 4 days</li>
+              <li>B5 → 5 days</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="codex-grid-2">
+        <section id="emp" class="codex-card-block">
+          <h2>
+            <svg class="ui-icon">
+              <use href="assets/icons.svg#icon-emp"></use>
+            </svg>
+            EMP utility
+          </h2>
+          <p>EMP is the core internal utility resource used for:</p>
+          <ul>
+            <li>Factory setup</li>
+            <li>Upgrades</li>
+            <li>Maintenance</li>
+            <li>Extra blueprint minting</li>
+          </ul>
+          <p>
+            EMP from packs is soulbound gameplay utility. EMP purchased through
+            the shop follows the fixed exchange reference of
+            <strong>100 EMP = 1 HIVE</strong>.
+          </p>
+        </section>
+
+        <section id="ep" class="codex-card-block">
+          <h2>
+            <svg class="ui-icon">
+              <use href="assets/icons.svg#icon-ep"></use>
+            </svg>
+            EP System
+          </h2>
+
+          <p>
+            EP (Empire Production) measures the productive strength of your
+            empire.
+          </p>
+
+          <ul>
+            <li>Generated by active factories</li>
+            <li>Boosted by relics</li>
+            <li>Used to determine reward share</li>
+          </ul>
+
+          <p class="codex-note">
+            EP is not stored or accumulated. It represents your real-time
+            production power and directly affects your share of rewards.
+          </p>
+        </section>
+      </div>
+
+      <section id="maintenance" class="codex-card-block codex-highlight-block">
+        <h2>
+          <svg class="ui-icon">
+            <use href="assets/icons.svg#icon-maintenance"></use>
+          </svg>
+          Maintenance
+        </h2>
+
+        <div class="codex-grid-3">
+          <div class="codex-mini-card">
+            <h3>Cycle</h3>
+            <p>Each factory runs on a 7-day maintenance cycle.</p>
+          </div>
+
+          <div class="codex-mini-card">
+            <h3>How Payment Works</h3>
+            <p>
+              Maintenance is paid factory-by-factory in EMP for a fixed 7-day
+              renewal. It is not a percentage claim on HIVE rewards.
+            </p>
+          </div>
+
+          <div class="codex-mini-card">
+            <h3>Renewal Window</h3>
+            <p>
+              Renewal is allowed only in the final 2 days of the current cycle,
+              creating a practical maximum of 9 days of remaining maintenance.
+            </p>
+          </div>
+        </div>
+
+        <ul>
+          <li>Factories stop producing when maintenance expires</li>
+          <li>No penalty beyond inactivity</li>
+          <li>Players must visit and renew factories individually</li>
+          <li>
+            Maintenance exists to support active empire management, not passive
+            automation
+          </li>
+        </ul>
+      </section>
+
+      <section id="upgrade" class="codex-card-block">
+        <h2>
+          <svg class="ui-icon">
+            <use href="assets/icons.svg#icon-upgrade"></use>
+          </svg>
+          Upgrades
+        </h2>
+
+        <div class="codex-grid-3">
+          <div class="codex-mini-card">
+            <h3>Upgrades cost</h3>
+            <ul>
+              <li>B1 → B2: 50 EMP</li>
+              <li>B2 → B3: 100 EMP</li>
+              <li>B3 → B4: 200 EMP</li>
+              <li>B4 → B5: 400 EMP</li>
+            </ul>
+          </div>
+
+          <div class="codex-mini-card">
+            <h3>Required Active Days</h3>
+            <ul>
+              <li>B1 → B2: 30 days</li>
+              <li>B2 → B3: 60 days</li>
+              <li>B3 → B4: 120 days</li>
+              <li>B4 → B5: 240 days</li>
+            </ul>
+          </div>
+          <div class="codex-mini-card">
+            <h3>Land Upgrade Limits</h3>
+            <ul>
+              <li><strong>L1 Frontier</strong> → upgrade up to B3</li>
+              <li><strong>L2 Estate</strong> → upgrade up to B4</li>
+              <li><strong>L3 Industrial Zone</strong> → upgrade up to B5</li>
+            </ul>
+            <p class="codex-note">
+              Each land can contain maximum 1 B5 factory. Higher-tier blueprints
+              may still be built directly depending on slot rules.
+            </p>
+          </div>
+        </div>
+      </section>
+<div class="codex-grid-2">
+      <section id="reward" class="codex-card-block">
+        <h2>
+          <svg class="ui-icon">
+            <use href="assets/icons.svg#icon-reward"></use>
+          </svg>
+          Rewards
+        </h2>
+
+        <p>
+          MydEmpire does not print reward tokens. All rewards come from a real HIVE treasury funded by player activity and in-game economy.
+          
+        </p>
+
+        <div class="codex-flow-box">
+          Player Reward = (Player EP / Total EP) × Daily Reward Pool
+        </div>
+<p class="codex-note">
+  Your Empire production (EP) determines your share — not luck, not farming.
+</p>
+        <ul>
+          <li>Rewards are distributed based on EP share</li>
+          <li>Daily reward pool is calculated from treasury health</li>
+          <li>Rewards depend on your strategy, activity, and overall treasury health</li>
+        </ul>
+
+        <h3>HIVE Reward Accumulation</h3>
+        <ul>
+          <li>
+            Unclaimed HIVE rewards accumulate for up to
+            <strong>7 days</strong>
+          </li>
+          <li>On the 8th day, expired rewards return to the treasury</li>
+          <li>
+            This keeps the system active and protects long-term sustainability
+          </li>
+        </ul>
+
+        <p class="codex-note">
+          <p class="codex-highlight-line">
+  You are not earning tokens. You are earning a share.
+</p>
+       </p>
+</section>
+
+<section id="crate" class="codex-card-block codex-highlight-block">
+  <h2>
+    <svg class="ui-icon">
+      <use href="assets/icons.svg#icon-reward"></use>
+    </svg>
+    Imperial Supply Crate
+  </h2>
+
+  <div class="crate-showcase">
+    <p class="crate-desc">
+      Open one Imperial Supply Crate daily to earn EMP rewards and rare Imperial Fragments used for premium asset creation.
+    </p>
+
+    <div class="crate-grid">
+      <div class="crate-card common">
+        <div class="crate-title">EMP Reward</div>
+        <div class="crate-rate">Up to 100 EMP</div>
+      </div>
+
+      <div class="crate-card ultra">
+        <div class="crate-title">Imperial Fragment</div>
+        <div class="crate-rate">Tradable premium crafting item</div>
+      </div>
+    </div>
+
+    <div class="crate-note">
+      Imperial Fragments can be used to construct Relics, premium blueprints like Data Center, and future premium blueprints.
+    </div>
+  </div>
+
+  <div class="codex-flow-box">
+    1 crate per player per day
+  </div>
+
+  <h3>Access Rule</h3>
+  <ul>
+    <li>Free if ≥ <strong>1.5% of Global EP/day</strong></li>
+    <li>Minimum requirement: <strong>100 EP/day</strong></li>
+    <li>Otherwise: <strong>25 EMP</strong></li>
+  </ul>
+
+  <h3>Purpose</h3>
+  <ul>
+    <li>Rewards real economic contributors</li>
+    <li>Encourages competition for EP share</li>
+    <li>Maintains treasury sustainability</li>
+  </ul>
+
+  <p class="codex-note">
+    Crate access is earned through production strength, not passive holding.
+  </p>
+</section>
+</div>
+      <div class="codex-grid-3">
+        <section id="relic" class="codex-card-block">
+          <h2>
+            <svg class="ui-icon">
+              <use href="assets/icons.svg#icon-relic"></use>
+            </svg>
+            Relics
+          </h2>
+          <ul>
+            <li>+3% EP per relic</li>
+            <li>Maximum 2 counted</li>
+            <li>Total relic boost cap = 6%</li>
+          </ul>
+          <p>
+            Relics are rare strategic boosters and can also unlock premium
+            convenience such as instant upgrade after active-day requirements
+            are met.
+          </p>
+        </section>
+
+        <section id="writ" class="codex-card-block">
+          <h2>
+            <svg class="ui-icon">
+              <use href="assets/icons.svg#icon-writ"></use>
+            </svg>
+            Writ
+          </h2>
+          <p>
+            Writ is a Genesis strategic asset connected to Founder-level status
+            and long-term ecosystem privilege.
+          </p>
+        </section>
+
+        <section id="shop" class="codex-card-block">
+          <h2>
+            <svg class="ui-icon">
+              <use href="assets/icons.svg#icon-shop"></use>
+            </svg>
+            Shop
+          </h2>
+          <ul>
+            <li>Buy sealed packs</li>
+            <li>Buy EMP</li>
+            <li>Mint eligible extra blueprints</li>
+          </ul>
+        </section>
+
+        <section id="market" class="codex-card-block">
+          <h2>
+            <svg class="ui-icon">
+              <use href="assets/icons.svg#icon-market"></use>
+            </svg>
+            Marketplace
+          </h2>
+          <ul>
+            <li>Tradable: EMP, Blueprint, Relic, Writ</li>
+            <li>Land trading in a future phase</li>
+            <li>EMP fee: 3%</li>
+            <li>Other assets: 5%</li>
+            <li>Trades in HIVE</li>
+          </ul>
+        </section>
+
+        <section id="transfer" class="codex-card-block">
+          <h2>
+            <svg class="ui-icon">
+              <use href="assets/icons.svg#icon-transfer"></use>
+            </svg>
+            P2P Transfer
+          </h2>
+          <ul>
+            <li>No platform fee</li>
+            <li>Direct transfer allowed</li>
+            <li>Platform is not responsible for off-market deals</li>
+          </ul>
+        </section>
+
+        <section id="start" class="codex-card-block">
+          <h2>
+            <svg class="ui-icon">
+              <use href="assets/icons.svg#icon-guide"></use>
+            </svg>
+            New Player Guide
+          </h2>
+          <ol>
+            <li>Buy a Genesis pack</li>
+            <li>Open and review your assets</li>
+            <li>Build your first factory</li>
+            <li>Maintain it regularly</li>
+            <li>Upgrade when eligible</li>
+            <li>Expand your empire slot by slot</li>
+          </ol>
+        </section>
+      </div>
     </main>
 
- 
-
     <script src="js/appbar.js"></script>
+
     <footer class="global-footer">
+      <div id="global-footer"></div>
+    </footer>
 
-  <div id="global-footer"></div>
-
-<script>
-  fetch("footer.html")
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById("global-footer").innerHTML = html;
-    });
-</script>
+    <script>
+      fetch("footer.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("global-footer").innerHTML = html;
+        });
+    </script>
   </body>
 </html>
