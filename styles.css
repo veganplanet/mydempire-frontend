@@ -11349,4 +11349,29 @@ cursor:pointer;
     justify-content:flex-start !important;
   }
 }
+/* ===== MARKETPLACE COMPACT FIX (NO PAGE DEPENDENCY) ===== */
 
+.compact-row{
+  display:grid !important;
+  grid-template-columns:1.2fr 1fr 1.2fr 0.8fr auto !important;
+  gap:12px !important;
+  align-items:center !important;
+  padding:14px 16px !important;
+  border:1px solid #e5e7eb !important;
+  border-radius:16px !important;
+  background:#ffffff !important;
+  box-shadow:0 8px 20px rgba(15,23,42,0.06) !important;
+}
+
+.compact-cell{
+  min-width:0 !important;
+}
+
+.compact-action{
+  display:flex !important;
+  justify-content:flex-end !important;
+}
+
+.compact-price{
+  text-align:right !important;
+}
