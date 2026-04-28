@@ -4141,7 +4141,7 @@ document.head.appendChild(readOnlyStyle);
         document.querySelectorAll(inputSelectors.join(",")).forEach((el) => {
           el.disabled = true;
           el.style.opacity = "0.6";
-          el.title = "Read-only mode";
+          el.title = "Viewing only — actions are disabled here.";
         });
 
         // disable empty land slots for build action
@@ -4172,7 +4172,7 @@ document.head.appendChild(readOnlyStyle);
       if (blockedWords.some((word) => actionText.includes(word))) {
         e.preventDefault();
         e.stopPropagation();
-        alert("Read-only mode: you cannot perform actions on another player empire.");
+        alert("You are viewing another empire. Actions are only available inside your own empire.");
         return false;
       }
     }
