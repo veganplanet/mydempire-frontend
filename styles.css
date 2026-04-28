@@ -11180,6 +11180,82 @@ cursor:pointer;
   box-shadow: 0 0 18px rgba(142, 68, 173, 0.25);
 }
 
+/* ===== MARKETPLACE LISTINGS SAFE RESTORE ===== */
 
+.page .listing-list{
+  display:grid !important;
+  gap:14px !important;
+}
+
+.page .listing-card{
+  border:1px solid #e5e7eb !important;
+  border-radius:16px !important;
+  padding:16px !important;
+  background:#ffffff !important;
+  box-shadow:0 8px 20px rgba(15,23,42,0.06) !important;
+}
+
+.page .listing-card.mine{
+  border-color:#bfdbfe !important;
+  background:linear-gradient(180deg,#f8fbff 0%,#ffffff 100%) !important;
+}
+
+.page .listing-top{
+  display:flex !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  flex-wrap:wrap !important;
+  margin-bottom:10px !important;
+}
+
+.page .listing-title{
+  font-size:18px !important;
+  font-weight:800 !important;
+  color:#0f172a !important;
+}
+
+.page .listing-meta{
+  color:#64748b !important;
+  font-size:13px !important;
+  line-height:1.45 !important;
+}
+
+.page .kv-grid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(120px,1fr)) !important;
+  gap:10px !important;
+  margin:10px 0 12px !important;
+}
+
+.page .kv{
+  background:#f8fafc !important;
+  border:1px solid #edf2f7 !important;
+  border-radius:12px !important;
+  padding:10px !important;
+}
+
+.page .k{
+  font-size:12px !important;
+  color:#64748b !important;
+  margin-bottom:4px !important;
+}
+
+.page .v{
+  font-size:15px !important;
+  font-weight:800 !important;
+  color:#0f172a !important;
+}
+
+.page .button-row{
+  display:flex !important;
+  gap:10px !important;
+  flex-wrap:wrap !important;
+}
+
+@media(max-width:640px){
+  .page .kv-grid{
+    grid-template-columns:1fr !important;
+  }
+}
 
 
