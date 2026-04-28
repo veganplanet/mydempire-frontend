@@ -1038,7 +1038,10 @@ async function buyEmpListing(listingId) {
 
         const res = await fetch(apiUrl("/marketplace/blueprint/list"), {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+  "Content-Type": "application/json",
+  "x-mde-actor": ACTIVE_USER,
+},
           body: JSON.stringify({ username: ACTIVE_USER, nft_id, price_hive })
         });
 
@@ -1355,7 +1358,10 @@ async function createPackListing() {
 
     const res = await fetch(apiUrl("/marketplace/pack/list"), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+  "Content-Type": "application/json",
+  "x-mde-actor": ACTIVE_USER,
+},
       body: JSON.stringify({
         username: ACTIVE_USER,
         quantity: quantity,
