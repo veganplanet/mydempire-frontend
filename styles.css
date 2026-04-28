@@ -7810,10 +7810,17 @@ body {
 }
 
 .codex-pill-nav{
+  position: sticky;
+  top: 96px;
+  z-index: 20;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   margin:0 0 24px;
+  padding:10px;
+  background:rgba(238,244,255,0.92);
+  backdrop-filter:blur(10px);
+  border-radius:18px;
 }
 
 .codex-pill-nav a{
