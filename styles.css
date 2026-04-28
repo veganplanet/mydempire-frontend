@@ -12129,6 +12129,24 @@ height: 44px !important;
 align-self: start !important;
 margin-top: 24px !important;
 }
+/* ===== MARKETPLACE LIVE TOOLBAR FIX ===== */
+.page .market-toolbar{
+  grid-template-columns: 1fr 1fr 1fr auto auto !important;
+  align-items: start !important;
+}
 
+.page .market-toolbar .field{
+  min-width: 180px !important;
+}
 
-Close
+@media (max-width: 980px){
+  .page .market-toolbar{
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+@media (max-width: 640px){
+  .page .market-toolbar{
+    grid-template-columns: 1fr !important;
+  }
+}
