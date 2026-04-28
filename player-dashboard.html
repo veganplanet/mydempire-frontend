@@ -1043,17 +1043,43 @@ const LAND_TIER_COLORS_BY_KEY = {
       }
       async function loadEmperorLeaderboard() {
         try {
+          const cacheKey = "myd_leaderboard_emperors_cache";
+          const cached = sessionStorage.getItem(cacheKey);
+
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            const ageMs = Date.now() - parsed.savedAt;
+
+            if (ageMs < 60000 && parsed.html) {
+              const container = document.getElementById(
+                "emperor-leaderboard-list",
+              );
+              if (container) container.innerHTML = parsed.html;
+              return;
+            }
+          }
           const res = await fetch(apiUrl("/leaderboard/emperors"));
           const data = await res.json();
 
           const container = document.getElementById("emperor-leaderboard-list");
           if (!container) return;
 
-          if (!data.success || !data.leaders.length) {
-            container.innerHTML =
-              "Leaderboard will appear once lifetime EP begins accumulating.";
-            return;
-          }
+         if (!data.success || !data.leaders.length) {
+  const emptyHtml =
+    "Leaderboard will appear once lifetime EP begins accumulating.";
+
+  container.innerHTML = emptyHtml;
+
+  sessionStorage.setItem(
+    "myd_leaderboard_emperors_cache",
+    JSON.stringify({
+      savedAt: Date.now(),
+      html: emptyHtml,
+    }),
+  );
+
+  return;
+}
           function getPlayerTitle(rank) {
             if (rank === 1) {
               return {
@@ -1081,7 +1107,17 @@ const LAND_TIER_COLORS_BY_KEY = {
               icon: "icon-builder-rank",
             };
           }
-          let html = `<div class="leaderboard-list">`;
+          let html = `
+  <div class="leaderboard-list">
+
+<div class="leaderboard-row leaderboard-header-row">
+  <div class="leaderboard-rank">Rank</div>
+  <div class="leaderboard-player">Player</div>
+  <div class="leaderboard-metric">Lifetime EP</div>
+  <div class="leaderboard-metric">EP/day</div>
+  <div class="leaderboard-metric">Daily Share</div>
+</div>
+`;
 
           data.leaders.forEach((row, index) => {
             const rankLabel =
@@ -1096,7 +1132,18 @@ const LAND_TIER_COLORS_BY_KEY = {
             const titleData = getPlayerTitle(index + 1);
 
             html += `
-    <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""}">
+    <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""} ${
+      Number(row.current_ep_per_day || row.ep_per_day || 0) >= 100 &&
+      Number(row.global_ep_share_percent || 0) >= 1.5
+        ? "crate-qualified"
+        : ""
+    }" 
+data-tooltip="${
+              Number(row.current_ep_per_day || row.ep_per_day || 0) >= 100 &&
+              Number(row.global_ep_share_percent || 0) >= 1.5
+                ? "Eligible for Daily Crate 🎁"
+                : ""
+            }">
       <div class="leaderboard-rank">
   ${
     index === 0
@@ -1134,7 +1181,24 @@ const LAND_TIER_COLORS_BY_KEY = {
   ${titleData.title}
 </div>
       </div>
-      <div class="leaderboard-score">${Number(row.lifetime_ep).toFixed(2)} EP</div>
+      <div class="leaderboard-score leaderboard-score-grid">
+
+  <div class="leaderboard-metric">
+    <strong>${Number(row.lifetime_ep || 0).toFixed(2)} EP</strong>
+    <span>lifetime</span>
+  </div>
+
+  <div class="leaderboard-metric">
+    <strong>${Number(row.current_ep_per_day || 0).toFixed(2)}</strong>
+    <span>EP/day</span>
+  </div>
+
+  <div class="leaderboard-metric">
+    <strong>${Number(row.global_ep_share_percent || 0).toFixed(2)}%</strong>
+    <span>Global/day</span>
+  </div>
+
+</div>
     </div>
   `;
           });
@@ -1174,6 +1238,7 @@ const LAND_TIER_COLORS_BY_KEY = {
           console.error("Leaderboard error:", err);
         }
       }
+
       async function loadIndustryLeaders() {
         try {
           const res = await fetch(apiUrl("/leaderboard/industries"));
