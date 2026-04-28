@@ -11605,3 +11605,77 @@ cursor:pointer;
 .leaderboard-industry-list .leaderboard-player{
   padding-left: 10px;
 }
+/* ===== INDUSTRY LEADERBOARD FINAL POLISH ===== */
+
+.leaderboard-industry-list{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:14px !important;
+}
+
+/* Header */
+.leaderboard-industry-list .leaderboard-header-row{
+  background:#f1f5f9 !important;
+  border-radius:14px !important;
+  padding:14px 18px !important;
+  font-weight:800 !important;
+  color:#64748b !important;
+}
+
+/* Row layout */
+.leaderboard-industry-list .leaderboard-row{
+  display:grid !important;
+  grid-template-columns:140px 1.5fr 1fr 1fr !important;
+  align-items:center !important;
+  padding:16px 18px !important;
+  border-radius:18px !important;
+  border:1px solid #e5e7eb !important;
+  background:#ffffff !important;
+}
+
+/* Align text */
+.leaderboard-industry-list .leaderboard-metric{
+  text-align:right !important;
+}
+
+/* ===== Industry Colors ===== */
+
+.industry-food{
+  border:2px solid #22c55e !important;
+  background:rgba(34,197,94,0.08) !important;
+}
+.industry-food .leaderboard-rank{
+  color:#15803d !important;
+}
+
+.industry-textile{
+  border:2px solid #8b5cf6 !important;
+  background:rgba(139,92,246,0.08) !important;
+}
+.industry-textile .leaderboard-rank{
+  color:#6d28d9 !important;
+}
+
+.industry-pharma{
+  border:2px solid #3b82f6 !important;
+  background:rgba(59,130,246,0.08) !important;
+}
+.industry-pharma .leaderboard-rank{
+  color:#1d4ed8 !important;
+}
+
+.industry-chemical{
+  border:2px solid #f97316 !important;
+  background:rgba(249,115,22,0.08) !important;
+}
+.industry-chemical .leaderboard-rank{
+  color:#c2410c !important;
+}
+
+.industry-supermarket{
+  border:2px solid #ef4444 !important;
+  background:rgba(239,68,68,0.08) !important;
+}
+.industry-supermarket .leaderboard-rank{
+  color:#b91c1c !important;
+}
