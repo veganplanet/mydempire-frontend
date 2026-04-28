@@ -11605,3 +11605,42 @@ cursor:pointer;
 .leaderboard-industry-list .leaderboard-player{
   padding-left: 10px;
 }
+/* ===== INDUSTRY FINAL ALIGN FIX ===== */
+
+.industry-header,
+.industry-item{
+  display: grid !important;
+  grid-template-columns: 140px 1.6fr 1fr 1fr !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+/* Fix text overlap */
+.industry-name{
+  font-weight: 800;
+  color: #1e3a8a;
+  white-space: nowrap;
+}
+
+.industry-player{
+  font-weight: 700;
+  padding-left: 8px;
+  white-space: nowrap;
+}
+
+/* Keep EP & Share in one line */
+.industry-ep,
+.industry-share{
+  text-align: right;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* Header clarity */
+.industry-header{
+  background:#f1f5f9;
+  border-radius:14px;
+  padding:14px 18px;
+  font-weight:800;
+  color:#64748b;
+}
