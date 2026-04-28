@@ -1589,14 +1589,17 @@ if (!initRes.ok || !data.success) {
     }
 
     const finalizeRes = await fetch(apiUrl("/marketplace/pack/buy-finalize"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: ACTIVE_USER,
-        session_id: session.id,
-        payment_tx_id: paymentTxId
-      })
-    });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-mde-actor": ACTIVE_USER,
+  },
+  body: JSON.stringify({
+    username: ACTIVE_USER,
+    session_id: session.id,
+    payment_tx_id: paymentTxId
+  })
+});
 
     const finalizeData = await finalizeRes.json();
 
