@@ -650,7 +650,10 @@ ${list.map((listing) => {
 
         const res = await fetch(apiUrl("/marketplace/emp/cancel"), {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+  "Content-Type": "application/json",
+  "x-mde-actor": ACTIVE_USER,
+},
           body: JSON.stringify({ username: ACTIVE_USER, listing_id: listingId })
         });
 
@@ -692,7 +695,10 @@ async function buyEmpListing(listingId) {
 
     const initRes = await fetch(apiUrl("/marketplace/emp/buy-init"), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+  "Content-Type": "application/json",
+  "x-mde-actor": ACTIVE_USER,
+},
       body: JSON.stringify({
         username: ACTIVE_USER,
         listing_id: listingId
@@ -751,7 +757,10 @@ async function buyEmpListing(listingId) {
     }
     const finalizeRes = await fetch(apiUrl("/marketplace/emp/buy-finalize"), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+  "Content-Type": "application/json",
+  "x-mde-actor": ACTIVE_USER,
+},
       body: JSON.stringify({
         username: ACTIVE_USER,
         session_id: session.id,
@@ -1074,7 +1083,10 @@ async function buyEmpListing(listingId) {
 
         const res = await fetch(apiUrl("/marketplace/blueprint/cancel"), {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+  "Content-Type": "application/json",
+  "x-mde-actor": ACTIVE_USER,
+},
           body: JSON.stringify({ username: ACTIVE_USER, listing_id: listingId })
         });
 
@@ -1102,7 +1114,10 @@ async function buyEmpListing(listingId) {
 
     const initRes = await fetch(apiUrl("/marketplace/blueprint/buy-init"), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+  "Content-Type": "application/json",
+  "x-mde-actor": ACTIVE_USER,
+},
       body: JSON.stringify({
         username: ACTIVE_USER,
         listing_id: listingId
@@ -1155,7 +1170,10 @@ async function buyEmpListing(listingId) {
 
     const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+  "Content-Type": "application/json",
+  "x-mde-actor": ACTIVE_USER,
+},
       body: JSON.stringify({
         username: ACTIVE_USER,
         session_id: session.id,
