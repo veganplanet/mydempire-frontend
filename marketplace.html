@@ -1,6 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <style>
+/* ===== PACK FEED HARD FIX ===== */
+
+.compact-list{
+  display:grid;
+  gap:12px;
+}
+
+.compact-row{
+  display:grid;
+  grid-template-columns:1.2fr 1fr 1.2fr 0.8fr auto;
+  gap:12px;
+  align-items:center;
+  padding:14px 16px;
+  border:1px solid #e5e7eb;
+  border-radius:16px;
+  background:#ffffff;
+  box-shadow:0 8px 20px rgba(15,23,42,0.06);
+}
+
+.compact-cell{
+  font-size:13px;
+  color:#334155;
+}
+
+.compact-asset-title{
+  font-size:16px;
+  font-weight:900;
+  color:#0f172a;
+}
+
+.compact-asset-sub{
+  font-size:12px;
+  color:#64748b;
+}
+
+.compact-seller{
+  font-size:14px;
+  font-weight:800;
+  color:#1e3a8a;
+}
+
+.compact-price{
+  font-size:16px;
+  font-weight:900;
+  text-align:right;
+}
+
+.compact-action{
+  display:flex;
+  justify-content:flex-end;
+}
+
+.compact-buy-btn{
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:8px 12px;
+  cursor:pointer;
+}
+
+.compact-cancel-btn{
+  background:#fee2e2;
+  color:#991b1b;
+  border:none;
+  border-radius:10px;
+  padding:8px 12px;
+  cursor:pointer;
+}
+
+@media(max-width:900px){
+  .compact-row{
+    grid-template-columns:1fr;
+  }
+
+  .compact-price,
+  .compact-action{
+    text-align:left;
+    justify-content:flex-start;
+  }
+}
+</style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MydEmpire Marketplace</title>
