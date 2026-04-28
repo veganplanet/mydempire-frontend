@@ -11585,3 +11585,13 @@ cursor:pointer;
   transform: translateY(-2px) !important;
   box-shadow: 0 10px 22px rgba(15,23,42,0.10) !important;
 }
+/* Industry leaderboard fix */
+.leaderboard-score-grid{
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 20px !important;
+}
+
+.leaderboard-score-grid .leaderboard-metric{
+  text-align: right !important;
+}
