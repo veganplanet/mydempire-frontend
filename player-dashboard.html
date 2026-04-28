@@ -794,9 +794,13 @@
 let ACTIVE_USER = null;
       let EXACT_WALLET_HIVE = 0;
       const viewedUsername = getUsernameFromURL();
-      // Prevent URL-based fake login (cleanup old polluted storage)
-if (viewedUsername && !localStorage.getItem("mde_logged_in")) {
-  localStorage.removeItem("hiveUsername");
+     // Fix: only clean if NO real login exists
+const hasRealLogin =
+  localStorage.getItem("hiveUsername") ||
+  localStorage.getItem("mde_username") ||
+  localStorage.getItem("username");
+
+if (viewedUsername && !hasRealLogin) {
   localStorage.removeItem("mde_username");
   localStorage.removeItem("username");
 }
