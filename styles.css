@@ -7810,17 +7810,25 @@ body {
 }
 
 .codex-pill-nav{
-  position: sticky;
+  position: fixed;
   top: 96px;
-  z-index: 20;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 900;
   display:flex;
   flex-wrap:wrap;
+  justify-content:center;
   gap:10px;
-  margin:0 0 24px;
+  width: min(1120px, calc(100% - 32px));
   padding:10px;
-  background:rgba(238,244,255,0.92);
+  margin:0;
+  background:rgba(238,244,255,0.94);
   backdrop-filter:blur(10px);
   border-radius:18px;
+  box-shadow:0 10px 24px rgba(15,23,42,0.10);
+}
+.codex-shell{
+  padding-top:70px;
 }
 
 .codex-pill-nav a{
