@@ -801,7 +801,11 @@ if (viewedUsername && !localStorage.getItem("mde_logged_in")) {
   localStorage.removeItem("username");
 }
 
-const loggedInUsername = localStorage.getItem("hiveUsername");
+const loggedInUsername =
+  localStorage.getItem("hiveUsername") ||
+  localStorage.getItem("mde_username") ||
+  localStorage.getItem("username");
+
 const username = viewedUsername || loggedInUsername;
 
 if (loggedInUsername) {
