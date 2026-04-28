@@ -11700,3 +11700,49 @@ cursor:pointer;
   text-align:right !important;
   font-weight:900 !important;
 }
+/* ===== INDUSTRY LEADERBOARD COLORS ===== */
+
+#industry-leaderboard-list .industry-item:nth-child(2){
+  border:2px solid #22c55e !important;
+  background:rgba(34,197,94,0.10) !important;
+}
+
+#industry-leaderboard-list .industry-item:nth-child(2) .industry-name{
+  color:#15803d !important;
+}
+
+#industry-leaderboard-list .industry-item:nth-child(3){
+  border:2px solid #8b5cf6 !important;
+  background:rgba(139,92,246,0.10) !important;
+}
+
+#industry-leaderboard-list .industry-item:nth-child(3) .industry-name{
+  color:#7c3aed !important;
+}
+
+#industry-leaderboard-list .industry-item:nth-child(4){
+  border:2px solid #3b82f6 !important;
+  background:rgba(59,130,246,0.10) !important;
+}
+
+#industry-leaderboard-list .industry-item:nth-child(4) .industry-name{
+  color:#2563eb !important;
+}
+
+#industry-leaderboard-list .industry-item:nth-child(5){
+  border:2px solid #f97316 !important;
+  background:rgba(249,115,22,0.10) !important;
+}
+
+#industry-leaderboard-list .industry-item:nth-child(5) .industry-name{
+  color:#ea580c !important;
+}
+
+#industry-leaderboard-list .industry-item:nth-child(6){
+  border:2px solid #ef4444 !important;
+  background:rgba(239,68,68,0.10) !important;
+}
+
+#industry-leaderboard-list .industry-item:nth-child(6) .industry-name{
+  color:#dc2626 !important;
+}
