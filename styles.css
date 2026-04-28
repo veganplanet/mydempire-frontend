@@ -11761,3 +11761,23 @@ cursor:pointer;
 #industry-leaderboard-list .industry-header div:nth-child(4){
   text-align:right !important;
 }
+/* ===== EMPEROR LEADERBOARD ALIGN FIX ===== */
+
+#emperor-leaderboard-list .leaderboard-row{
+  display:grid !important;
+  grid-template-columns:80px 1.6fr 1fr 1fr 1fr !important;
+  align-items:center !important;
+  gap:18px !important;
+}
+
+#emperor-leaderboard-list .leaderboard-score-grid{
+  display:contents !important;
+}
+
+#emperor-leaderboard-list .leaderboard-metric{
+  text-align:right !important;
+}
+
+#emperor-leaderboard-list .leaderboard-metric span{
+  display:none !important; /* remove "lifetime", "EP/day" text */
+}
