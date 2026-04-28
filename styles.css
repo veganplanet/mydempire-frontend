@@ -11568,3 +11568,20 @@ cursor:pointer;
 .leaderboard-row[data-tooltip=""]:hover::after{
   display: none;
 }
+/* ===== LEADERBOARD HOVER FIX ===== */
+
+.card-leaderboard:hover,
+.leaderboard-shell:hover,
+.leaderboard-body:hover,
+.leaderboard-list:hover{
+  transform: none !important;
+}
+
+.leaderboard-row{
+  transition: transform 0.18s ease, box-shadow 0.18s ease !important;
+}
+
+.leaderboard-row:hover{
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 22px rgba(15,23,42,0.10) !important;
+}
