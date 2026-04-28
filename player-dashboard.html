@@ -4199,9 +4199,9 @@ const activeUserClean = String(
   .trim()
   .toLowerCase();
 
-if (viewingUser && (!activeUserClean || viewingUser !== activeUserClean)) {
-  applyReadOnlyEmpireMode();
-}          setupDashboardNavbar(); // run again after data is loaded
+// TEMP FIX: disable read-only mode completely
+          
+          setupDashboardNavbar(); // run again after data is loaded
         } catch (err) {
           console.error("Initial dashboard load failed:", err);
         }
