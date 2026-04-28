@@ -11595,3 +11595,13 @@ cursor:pointer;
 .leaderboard-score-grid .leaderboard-metric{
   text-align: right !important;
 }
+/* Industry leaderboard spacing fix */
+.leaderboard-industry-list .leaderboard-rank{
+  min-width: 120px;
+  font-weight: 800;
+  color: #1e3a8a;
+}
+
+.leaderboard-industry-list .leaderboard-player{
+  padding-left: 10px;
+}
