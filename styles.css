@@ -11543,3 +11543,28 @@ cursor:pointer;
 .leaderboard-score-grid{
   display: contents !important;
 }
+/* ===== LEADERBOARD TOOLTIP RESTORE ===== */
+
+.leaderboard-row{
+  position: relative !important;
+}
+
+.leaderboard-row[data-tooltip]:hover::after{
+  content: attr(data-tooltip);
+  position: absolute;
+  right: 18px;
+  top: -34px;
+  background: #111827;
+  color: #ffffff;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  z-index: 50;
+  box-shadow: 0 8px 18px rgba(15,23,42,0.22);
+}
+
+.leaderboard-row[data-tooltip=""]:hover::after{
+  display: none;
+}
