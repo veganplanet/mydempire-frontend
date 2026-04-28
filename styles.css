@@ -11375,3 +11375,55 @@ cursor:pointer;
 .compact-price{
   text-align:right !important;
 }
+/* ===== MARKETPLACE PACK HISTORY FIX ===== */
+
+.trade-row{
+  display:grid !important;
+  grid-template-columns:1fr 1.3fr 1fr 1fr 1fr !important;
+  gap:12px !important;
+  align-items:center !important;
+  padding:12px 14px !important;
+  border:1px solid #e5e7eb !important;
+  border-radius:14px !important;
+  background:#ffffff !important;
+  margin-bottom:10px !important;
+  box-shadow:0 6px 16px rgba(15,23,42,0.05) !important;
+}
+
+.trade-row-even{
+  background:#f8fafc !important;
+}
+
+.trade-col{
+  font-size:13px !important;
+  color:#334155 !important;
+  line-height:1.4 !important;
+  word-break:break-word !important;
+}
+
+.trade-asset{
+  font-weight:900 !important;
+  color:#0f172a !important;
+}
+
+.trade-users{
+  color:#1e3a8a !important;
+  font-weight:700 !important;
+}
+
+.trade-price,
+.trade-total{
+  font-weight:800 !important;
+  color:#0f172a !important;
+}
+
+.trade-time{
+  color:#64748b !important;
+  font-size:12px !important;
+}
+
+@media(max-width:800px){
+  .trade-row{
+    grid-template-columns:1fr !important;
+  }
+}
