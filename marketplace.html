@@ -1648,9 +1648,10 @@ async function cancelPackListing(listingId) {
 
     const res = await fetch(apiUrl("/marketplace/pack/cancel"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+     headers: {
+  "Content-Type": "application/json",
+  "x-mde-actor": ACTIVE_USER,
+},
       body: JSON.stringify({
         username: ACTIVE_USER,
         listing_id: listingId
