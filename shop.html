@@ -915,9 +915,10 @@ async function mintExtraBlueprint() {
 
     const res = await fetch(shopApiUrl("/mint-extra-blueprint"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+     headers: {
+  "Content-Type": "application/json",
+  "x-mde-actor": username
+},
       body: JSON.stringify({ username: activeUser })
     });
 
