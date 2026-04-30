@@ -565,7 +565,7 @@ ${list.map((listing) => {
     </div>
 
     <div class="compact-cell compact-price">
-      ${Number(listing.total_price_hive).toFixed(3)} HIVE
+      ${(Number(listing.unit_price_hive || 0) * Number(listing.quantity || 0)).toFixed(3)} HIVE
     </div>
 
     <div class="compact-cell compact-action">
