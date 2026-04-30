@@ -917,7 +917,7 @@ async function mintExtraBlueprint() {
       method: "POST",
      headers: {
   "Content-Type": "application/json",
-  "x-mde-actor": username
+  "x-mde-actor": getShopActiveUser()
 },
       body: JSON.stringify({ username: activeUser })
     });
