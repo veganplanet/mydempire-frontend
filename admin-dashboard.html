@@ -1467,7 +1467,10 @@ document
 <td>
   ${
     l.status === "reserved"
-      ? `<button class="primary" onclick="resetPackListingLocks(${l.id})">Recover</button>`
+      ? `
+        <button class="primary" onclick="resetPackListingLocks(${l.id})">Recover</button>
+        <button class="danger" onclick="cancelPackListing(${l.id})">Cancel</button>
+      `
       : l.status === "active"
       ? `<button class="danger" onclick="cancelPackListing(${l.id})">Cancel</button>`
       : "-"
