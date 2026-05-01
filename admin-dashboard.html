@@ -1464,13 +1464,12 @@ document
   <td>${l.reserved_count || 0}</td>
   <td>${l.consumed_count || 0}</td>
   <td>${new Date(l.created_at).toLocaleString()}</td>
- <td>
+<td>
   ${
-    l.status === "active" || l.status === "reserved"
-      ? `
-        <button class="danger" onclick="cancelPackListing(${l.id})">Cancel</button>
-        <button class="primary" onclick="resetPackListingLocks(${l.id})">Reset Locks</button>
-      `
+    l.status === "reserved"
+      ? `<button class="primary" onclick="resetPackListingLocks(${l.id})">Recover</button>`
+      : l.status === "active"
+      ? `<button class="danger" onclick="cancelPackListing(${l.id})">Cancel</button>`
       : "-"
   }
 </td>
