@@ -454,6 +454,38 @@
   </div>
 </div>
 </div>
+    <div class="section">
+  <h2>Marketplace Listings (Pack)</h2>
+
+  <div class="row">
+    <button id="load-pack-listings-btn" class="primary">
+      Load Pack Listings
+    </button>
+  </div>
+
+  <div class="status" id="pack-listings-status">
+    No pack listings loaded yet.
+  </div>
+
+  <div class="all-players-wrap">
+    <div class="all-players-box">
+      <table class="all-players-table" id="pack-listings-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Seller</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Reserved By</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
 <div class="section">
   <h2>All Players</h2>
 
@@ -1387,7 +1419,52 @@ document
   document
   .getElementById("load-all-players-btn")
   ?.addEventListener("click", loadAllPlayers);
-  
+  document.getElementById("load-pack-listings-btn").addEventListener("click", async () => {
+  const statusEl = document.getElementById("pack-listings-status");
+  const tableBody = document.querySelector("#pack-listings-table tbody");
+
+  statusEl.textContent = "Loading...";
+  tableBody.innerHTML = "";
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/pack-listings`);
+    const data = await res.json();
+
+    if (!data.success) {
+      statusEl.textContent = "Failed to load listings.";
+      return;
+    }
+
+    const listings = data.listings || [];
+
+    if (!listings.length) {
+      statusEl.textContent = "No listings found.";
+      return;
+    }
+
+    statusEl.textContent = `${listings.length} listings loaded`;
+
+    listings.forEach(l => {
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${l.id}</td>
+        <td>${l.seller_username}</td>
+        <td>${l.quantity}</td>
+        <td>${Number(l.unit_price_hive || 0).toFixed(3)}</td>
+        <td>${l.status}</td>
+        <td>${l.reserved_by || "-"}</td>
+        <td>${new Date(l.created_at).toLocaleString()}</td>
+      `;
+
+      tableBody.appendChild(row);
+    });
+
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "Error loading listings.";
+  }
+});
   async function loadEmpSales() {
 
   if (!ADMIN_KEY) {
