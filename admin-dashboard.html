@@ -472,13 +472,17 @@
       <table class="all-players-table" id="pack-listings-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Seller</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Reserved By</th>
-            <th>Created</th>
+           <th>ID</th>
+<th>Seller</th>
+<th>Qty</th>
+<th>Unit</th>
+<th>Total</th>
+<th>Status</th>
+<th>Reserved By</th>
+<th>Locks</th>
+<th>Reserved</th>
+<th>Consumed</th>
+<th>Created</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -1448,14 +1452,18 @@ document
       const row = document.createElement("tr");
 
       row.innerHTML = `
-        <td>${l.id}</td>
-        <td>${l.seller_username}</td>
-        <td>${l.quantity}</td>
-        <td>${Number(l.unit_price_hive || 0).toFixed(3)}</td>
-        <td>${l.status}</td>
-        <td>${l.reserved_by || "-"}</td>
-        <td>${new Date(l.created_at).toLocaleString()}</td>
-      `;
+  <td>${l.id}</td>
+  <td>${l.seller_username}</td>
+  <td>${l.quantity}</td>
+  <td>${Number(l.unit_price_hive || 0).toFixed(3)}</td>
+  <td>${Number(l.total_price_hive || 0).toFixed(3)}</td>
+  <td>${l.status}</td>
+  <td>${l.reserved_by || "-"}</td>
+  <td>${l.locked_count || 0}</td>
+  <td>${l.reserved_count || 0}</td>
+  <td>${l.consumed_count || 0}</td>
+  <td>${new Date(l.created_at).toLocaleString()}</td>
+`;
 
       tableBody.appendChild(row);
     });
