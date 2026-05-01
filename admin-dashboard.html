@@ -1,635 +1,676 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>MydEmpire — Admin Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: #f4f6fb;
-        color: #111827;
-        margin: 0;
-        padding: 24px;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>MydEmpire — Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      color: #111827;
+      margin: 0;
+      padding: 24px;
+    }
 
-      .page {
-        max-width: 1100px;
-        margin: 0 auto;
-      }
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
 
-      h1 {
-        margin-bottom: 8px;
-      }
+    h1 {
+      margin-bottom: 8px;
+    }
 
-      .sub {
-        color: #6b7280;
-        margin-bottom: 20px;
-      }
+    .sub {
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
 
-      .top-row {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        margin-bottom: 20px;
-      }
+    .top-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
 
-      button {
-        padding: 10px 14px;
-        border: 1px solid #d1d5db;
-        border-radius: 10px;
-        background: white;
-        cursor: pointer;
-        font-size: 14px;
-      }
+    button {
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+    }
 
-      button:hover {
-        background: #f9fafb;
-      }
+    button:hover {
+      background: #f9fafb;
+    }
 
-      .primary {
-        background: #dbeafe;
-        border-color: #93c5fd;
-      }
+    .primary {
+      background: #dbeafe;
+      border-color: #93c5fd;
+    }
 
-      .danger {
-        background: #fee2e2;
-        border-color: #fca5a5;
-      }
+    .danger {
+      background: #fee2e2;
+      border-color: #fca5a5;
+    }
 
-      .section {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        padding: 16px;
-        margin-bottom: 18px;
-      }
+    .section {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
 
-      .section h2 {
-        margin-top: 0;
-        margin-bottom: 12px;
-        font-size: 20px;
-      }
+    .section h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 20px;
+    }
 
-      .metrics {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
-      }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
 
-      .card {
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 14px;
-      }
+    .card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 14px;
+    }
 
-      .label {
-        font-size: 12px;
-        color: #6b7280;
-        text-transform: uppercase;
-        margin-bottom: 6px;
-      }
+    .label {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
 
-      .value {
-        font-size: 24px;
-        font-weight: bold;
-      }
+    .value {
+      font-size: 24px;
+      font-weight: bold;
+    }
 
-      .small {
-        font-size: 13px;
-        color: #6b7280;
-        margin-top: 6px;
-      }
+    .small {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
 
-      .row {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        align-items: center;
-        margin-bottom: 12px;
-      }
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px;
+    }
 
-      input {
-        padding: 10px 12px;
-        border: 1px solid #d1d5db;
-        border-radius: 10px;
-        min-width: 240px;
-        font-size: 14px;
-      }
+    input {
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      min-width: 240px;
+      font-size: 14px;
+    }
 
-      .player-box .kv {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 10px 12px;
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        margin-bottom: 8px;
-      }
+    .player-box .kv {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
 
-      .status {
-        margin-top: 10px;
-        font-size: 14px;
-        color: #374151;
-      }
+    .status {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #374151;
+    }
 
-      .pill {
-        display: inline-block;
-        padding: 5px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        background: #eff6ff;
-        color: #1d4ed8;
-        border: 1px solid #bfdbfe;
-        margin-bottom: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- pages rebuild -->
-    <div class="page">
-      <h1>MydEmpire — Admin Dashboard</h1>
-      <div class="sub">Economy control center for Genesis / Pre-Genesis</div>
+    .pill {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      margin-bottom: 10px;
+    }
+    .scroll-box {
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 6px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
+  padding: 10px;
+}
+.emp-sales-scroll-box {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 2px solid #d1d5db;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 12px;
+  margin-top: 10px;
+}
 
-      <div class="top-row">
-        <button id="connect-admin-btn" class="primary">Connect Admin</button>
+.emp-sales-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+}
 
-        <button id="run-rewards-btn" class="primary">Run Daily Rewards</button>
+.emp-sales-left {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
 
-        <button id="reset-cycle-btn" class="danger">
-          Reset Today Reward Cycle
+.emp-sales-right {
+  font-size: 13px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+.all-players-wrap {
+  margin-top: 12px;
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.all-players-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.all-players-table thead th {
+  background: #eef2ff;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 800;
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid #dbeafe;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.all-players-table tbody td {
+  padding: 11px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #111827;
+}
+
+.all-players-table tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.all-players-table tbody tr:hover {
+  background: #eff6ff;
+}
+
+.all-players-name {
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.all-players-num {
+  font-weight: 600;
+  text-align: center;
+}
+
+.all-players-zero {
+  color: #94a3b8;
+}
+
+.all-players-box {
+  max-height: 420px;
+  overflow-y: auto;
+}
+.assets-section-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 18px 0 10px;
+  color: #111827;
+}
+
+.assets-list {
+  display: grid;
+  gap: 8px;
+}
+
+.assets-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #f9fafb;
+}
+
+.assets-empty {
+  padding: 12px;
+  border: 1px dashed #d1d5db;
+  border-radius: 10px;
+  color: #6b7280;
+  background: #f9fafb;
+}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>MydEmpire — Admin Dashboard</h1>
+    <div class="sub">Economy control center for Genesis / Pre-Genesis</div>
+
+   <div class="top-row">
+  <button id="connect-admin-btn" class="primary">Connect Admin</button>
+
+  <button id="run-rewards-btn" class="primary">
+    Run Daily Rewards
+  </button>
+
+  <button id="reset-cycle-btn" class="danger">
+    Reset Today Reward Cycle
+  </button>
+
+  <button id="distribute-btn">
+    Distribute Revenue
+  </button>
+
+  <button id="pause-pack-sales-btn" class="danger">
+    Pause Pack Sales
+  </button>
+
+  <button id="resume-pack-sales-btn">
+    Resume Pack Sales
+  </button>
+
+  <button id="broadcast-chain-events-btn" class="primary">
+    Broadcast Chain Events
+  </button>
+
+  <button id="load-chain-events-btn">
+    View Chain Events
+  </button>
+</div>
+    <div class="pill" id="phase-pill">Game Phase: --</div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <div class="metrics">
+  <div class="card">
+    <div class="label">Genesis Packs Sold</div>
+    <div class="value" id="metric-packs-sold">--</div>
+    <div class="small" id="metric-packs-remaining">Remaining: --</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Pre-Genesis Packs Sold</div>
+    <div class="value" id="metric-pregen-sold">--</div>
+    <div class="small">Closed test phase progress</div>
+  </div>
+
+  
+
+  <div class="card">
+    <div class="label">EMP Supply</div>
+    <div class="value" id="metric-emp">--</div>
+    <div class="small">Total EMP across all players</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Total Factories</div>
+    <div class="value" id="metric-factories">--</div>
+    <div class="small" id="metric-factory-breakdown">A: -- | U/B: -- | I: --</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Active Players</div>
+    <div class="value" id="metric-players">--</div>
+    <div class="small">Players seen in orders/assets/factories</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Pack Sales Status</div>
+    <div class="value" id="metric-pack-sales-flag">--</div>
+    <div class="small" id="metric-pack-sales-updated">Updated: --</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Current Phase</div>
+    <div class="value" id="metric-phase">--</div>
+    <div class="small">Live backend game phase</div>
+  </div>
+</div>
+
+      <div class="status" id="admin-status">Not connected yet.</div>
+          <div class="section">
+      <h2>Blockchain Event Monitor</h2>
+
+      <div class="row">
+        <button id="broadcast-chain-events-btn-2" class="primary">
+          Broadcast Pending Chain Events
         </button>
-
-        <button id="distribute-btn">Distribute Revenue</button>
-
-        <button id="pause-pack-sales-btn" class="danger">
-          Pause Pack Sales
+        <button id="load-chain-events-btn-2">
+          Refresh Recent Chain Events
         </button>
-
-        <button id="resume-pack-sales-btn">Resume Pack Sales</button>
-
-        <button id="broadcast-chain-events-btn" class="primary">
-          Broadcast Chain Events
-        </button>
-
-        <button id="load-chain-events-btn">View Chain Events</button>
       </div>
-      <div class="pill" id="phase-pill">Game Phase: --</div>
 
-      <div class="section">
-        <h2>Overview</h2>
-        <div class="metrics">
-          <div class="card">
-            <div class="label">Genesis Packs Sold</div>
-            <div class="value" id="metric-packs-sold">--</div>
-            <div class="small" id="metric-packs-remaining">Remaining: --</div>
-          </div>
-
-          <div class="card">
-            <div class="label">Pre-Genesis Packs Sold</div>
-            <div class="value" id="metric-pregen-sold">--</div>
-            <div class="small">Closed test phase progress</div>
-          </div>
-
-          <div class="card">
-            <div class="label">EMP Supply</div>
-            <div class="value" id="metric-emp">--</div>
-            <div class="small">Total EMP across all players</div>
-          </div>
-
-          <div class="card">
-            <div class="label">Total Factories</div>
-            <div class="value" id="metric-factories">--</div>
-            <div class="small" id="metric-factory-breakdown">
-              A: -- | U/B: -- | I: --
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="label">Active Players</div>
-            <div class="value" id="metric-players">--</div>
-            <div class="small">Players seen in orders/assets/factories</div>
-          </div>
-
-          <div class="card">
-            <div class="label">Pack Sales Status</div>
-            <div class="value" id="metric-pack-sales-flag">--</div>
-            <div class="small" id="metric-pack-sales-updated">Updated: --</div>
-          </div>
-
-          <div class="card">
-            <div class="label">Current Phase</div>
-            <div class="value" id="metric-phase">--</div>
-            <div class="small">Live backend game phase</div>
-          </div>
-        </div>
-
-        <div class="status" id="admin-status">Not connected yet.</div>
-        <div class="section">
-          <h2>Blockchain Event Monitor</h2>
-
-          <div class="row">
-            <button id="broadcast-chain-events-btn-2" class="primary">
-              Broadcast Pending Chain Events
-            </button>
-            <button id="load-chain-events-btn-2">
-              Refresh Recent Chain Events
-            </button>
-          </div>
-
-          <div class="status" id="chain-events-status">
-            No chain event action yet.
-          </div>
-
-          <div id="chain-events-box">
-            <div class="kv">
-              <span>Status</span><span>No chain events loaded yet.</span>
-            </div>
-          </div>
-        </div>
+      <div class="status" id="chain-events-status">
+        No chain event action yet.
       </div>
-      <div class="section">
-        <h2>Live Wallet Balances</h2>
 
-        <div class="row">
-          <button id="refresh-wallet-balances-btn" class="primary">
-            Refresh Wallet Balances
-          </button>
-        </div>
+      <div id="chain-events-box" class="scroll-box">
+  <div class="kv"><span>Status</span><span>No chain events loaded yet.</span></div>
+</div>
+    </div>
+    </div>
+<div class="section">
+  <h2>Live Wallet Balances</h2>
 
-        <div class="metrics">
-          <div class="card">
-            <div class="label">Revenue Wallet</div>
-            <div class="value" id="wallet-revenue-balance">--</div>
-            <div class="small" id="wallet-revenue-account">@mydempiregain</div>
-          </div>
+  <div class="row">
+    <button id="refresh-wallet-balances-btn" class="primary">
+      Refresh Wallet Balances
+    </button>
+  </div>
 
-          <div class="card">
-            <div class="label">Treasury Wallet</div>
-            <div class="value" id="wallet-treasury-balance">--</div>
-            <div class="small" id="wallet-treasury-account">
-              @mydempire-vault
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="label">Reward Wallet</div>
-            <div class="value" id="wallet-reward-balance">--</div>
-            <div class="small" id="wallet-reward-account">
-              @mydempire-reward
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="label">DAO Wallet</div>
-            <div class="value" id="wallet-dao-balance">--</div>
-            <div class="small" id="wallet-dao-account">@mydempire-dao</div>
-          </div>
-
-          <div class="card">
-            <div class="label">Founder Wallet</div>
-            <div class="value" id="wallet-founder-balance">--</div>
-            <div class="small" id="wallet-founder-account">
-              @mydempire-owner
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="label">Treasury System Total</div>
-            <div class="value" id="wallet-treasury-system-total">--</div>
-            <div class="small">Vault + Reward wallets</div>
-          </div>
-        </div>
-
-        <div class="status" id="wallet-balances-status">
-          Wallet balances not loaded yet.
-        </div>
-      </div>
-      <div class="section">
-        <div class="section">
-          <h2>All Players</h2>
-
-          <div class="row">
-            <button id="load-all-players-btn" class="primary">
-              Load All Players
-            </button>
-          </div>
-
-          <div class="status" id="all-players-status">
-            Players list not loaded yet.
-          </div>
-
-          <div style="overflow-x: auto">
-            <table
-              style="
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 12px;
-                background: #fff;
-                border: 1px solid #e5e7eb;
-                border-radius: 12px;
-                overflow: hidden;
-              "
-            >
-              <thead style="background: #f9fafb">
-                <tr>
-                  <th style="padding: 10px; text-align: left">Username</th>
-                  <th style="padding: 10px; text-align: left">EMP</th>
-                  <th style="padding: 10px; text-align: left">Packs Bought</th>
-                  <th style="padding: 10px; text-align: left">Factories</th>
-                  <th style="padding: 10px; text-align: left">Lands</th>
-                  <th style="padding: 10px; text-align: left">Blueprints</th>
-                </tr>
-              </thead>
-              <tbody id="all-players-body">
-                <tr>
-                  <td colspan="6" style="padding: 12px; color: #6b7280">
-                    No players loaded yet.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="section">
-          <h2>EMP Purchase Log</h2>
-
-          <div class="row">
-            <button id="load-emp-sales-btn" class="primary">
-              Load EMP Purchase Log
-            </button>
-          </div>
-
-          <div class="status" id="emp-sales-status">
-            EMP purchase log not loaded yet.
-          </div>
-          <div class="status" id="emp-sales-status">
-            EMP purchase log not loaded yet.
-          </div>
-
-          <div class="metrics" style="margin-top: 12px">
-            <div class="card">
-              <div class="label">Total EMP Orders</div>
-              <div class="value" id="emp-sales-total-orders">--</div>
-              <div class="small">All recorded EMP purchase orders</div>
-            </div>
-
-            <div class="card">
-              <div class="label">Completed EMP Orders</div>
-              <div class="value" id="emp-sales-completed-orders">--</div>
-              <div class="small">Successful EMP purchases</div>
-            </div>
-
-            <div class="card">
-              <div class="label">Completed HIVE Revenue</div>
-              <div class="value" id="emp-sales-total-hive">--</div>
-              <div class="small">Total HIVE received from EMP sales</div>
-            </div>
-
-            <div class="card">
-              <div class="label">Completed EMP Credited</div>
-              <div class="value" id="emp-sales-total-emp">--</div>
-              <div class="small">Total EMP delivered to players</div>
-            </div>
-          </div>
-          <div style="overflow-x: auto">
-            <table
-              style="
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 12px;
-                background: #fff;
-                border: 1px solid #e5e7eb;
-                border-radius: 12px;
-                overflow: hidden;
-              "
-            >
-              <thead style="background: #f9fafb">
-                <tr>
-                  <th style="padding: 10px; text-align: left">Username</th>
-                  <th style="padding: 10px; text-align: left">HIVE</th>
-                  <th style="padding: 10px; text-align: left">EMP</th>
-                  <th style="padding: 10px; text-align: left">Status</th>
-                  <th style="padding: 10px; text-align: left">TXID</th>
-                  <th style="padding: 10px; text-align: left">Created</th>
-                </tr>
-              </thead>
-              <tbody id="emp-sales-body">
-                <tr>
-                  <td colspan="6" style="padding: 12px; color: #6b7280">
-                    No EMP purchase log loaded yet.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <h2>Player Inspector</h2>
-        <div class="row">
-          <input
-            type="text"
-            id="player-search-input"
-            placeholder="Enter Hive username"
-          />
-          <button id="player-search-btn">Inspect Player</button>
-        </div>
-        <div class="row" style="margin-top: 10px">
-          <button id="admin-view-assets-btn">View Assets</button>
-          <button id="admin-give-emp-btn" class="primary">Give EMP</button>
-          <button id="admin-reset-factories-btn" class="danger">
-            Reset Factories
-          </button>
-        </div>
-        <div class="status" id="admin-player-action-status">
-          No player action yet.
-        </div>
-        <div id="player-inspector-result" style="margin-top: 15px"></div>
-        <!-- ============================= -->
-        <!-- WHITELIST MANAGER -->
-        <!-- ============================= -->
-
-        <div class="section">
-          <h2>Whitelist Manager</h2>
-
-          <div class="row">
-            <input
-              type="text"
-              id="whitelist-username-input"
-              placeholder="Enter Hive username"
-            />
-            <button id="add-whitelist-btn" class="primary">
-              Add to Whitelist
-            </button>
-            <button id="load-whitelist-btn">Load Whitelist</button>
-          </div>
-
-          <div class="status" id="whitelist-status">No action yet.</div>
-
-          <div
-            id="whitelist-users-box"
-            class="player-box"
-            style="margin-top: 12px"
-          >
-            <div class="small">Whitelist users will appear here.</div>
-          </div>
-        </div>
-        <div class="section">
-          <h2>Withdrawal Requests</h2>
-
-          <div class="row">
-            <button id="load-withdrawals-btn">Load Withdrawals</button>
-          </div>
-
-          <div id="withdrawals-box">
-            <div class="kv">
-              <span>Status</span><span>No data loaded yet.</span>
-            </div>
-          </div>
-        </div>
-
-        <div id="player-inspector-box" class="player-box">
-          <div class="kv"><span>Player</span><span>--</span></div>
-          <div class="kv"><span>EMP Balance</span><span>--</span></div>
-          <div class="kv"><span>Lands</span><span>--</span></div>
-          <div class="kv"><span>Factories</span><span>--</span></div>
-          <div class="kv"><span>Blueprints</span><span>--</span></div>
-          <div class="kv"><span>Unopened Packs</span><span>--</span></div>
-          <div class="kv"><span>Relics</span><span>--</span></div>
-          <div class="kv"><span>WRITs</span><span>--</span></div>
-        </div>
-      </div>
+  <div class="metrics">
+    <div class="card">
+      <div class="label">Revenue Wallet</div>
+      <div class="value" id="wallet-revenue-balance">--</div>
+      <div class="small" id="wallet-revenue-account">@mydempiregain</div>
     </div>
 
-    <script>
-      const LOCAL_API = "http://localhost:10000";
-      const PROD_API = "https://mydempire-backend-1.onrender.com";
+    <div class="card">
+      <div class="label">Treasury Wallet</div>
+      <div class="value" id="wallet-treasury-balance">--</div>
+      <div class="small" id="wallet-treasury-account">@mydempire-vault</div>
+    </div>
 
-      const isLocal =
-        location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    <div class="card">
+      <div class="label">Reward Wallet</div>
+      <div class="value" id="wallet-reward-balance">--</div>
+      <div class="small" id="wallet-reward-account">@mydempire-reward</div>
+    </div>
 
-      const API_BASE = isLocal ? LOCAL_API : PROD_API;
+    <div class="card">
+      <div class="label">DAO Wallet</div>
+      <div class="value" id="wallet-dao-balance">--</div>
+      <div class="small" id="wallet-dao-account">@mydempire-dao</div>
+    </div>
 
-      let ADMIN_KEY = "";
+    <div class="card">
+      <div class="label">Founder Wallet</div>
+      <div class="value" id="wallet-founder-balance">--</div>
+      <div class="small" id="wallet-founder-account">@mydempire-owner</div>
+    </div>
 
-      function setStatus(message) {
-        document.getElementById("admin-status").textContent = message;
-      }
+    <div class="card">
+      <div class="label">Treasury System Total</div>
+      <div class="value" id="wallet-treasury-system-total">--</div>
+      <div class="small">Vault + Reward wallets</div>
+    </div>
+  </div>
 
-      async function connectAdmin() {
-        const key = prompt("Enter ADMIN_SECRET");
-        if (!key) return;
+  <div class="status" id="wallet-balances-status">
+    Wallet balances not loaded yet.
+  </div>
+</div>
+<div class="section">
+  <h2>EMP Purchase History</h2>
 
-        ADMIN_KEY = key.trim();
-        setStatus("Admin connected. Loading overview...");
+  <div class="row">
+    <button id="load-emp-sales-btn">Load EMP History</button>
+  </div>
 
-        await loadAdminOverview();
-        await loadWalletBalances();
-      }
+  <div class="status" id="emp-sales-status">
+    No EMP purchase history loaded yet.
+  </div>
 
-      async function loadAdminOverview() {
-        try {
-          const r = await fetch(`${API_BASE}/admin/overview`, {
-            headers: {
-              "x-admin-key": ADMIN_KEY,
-            },
-          });
+  <div id="emp-sales-box" class="emp-sales-scroll-box">
+  <div class="kv">
+    <span>Status</span>
+    <span>No EMP purchase history loaded yet.</span>
+  </div>
+</div>
+</div>
+<div class="section">
+  <h2>All Players</h2>
 
-          const data = await r.json();
-          console.log("admin overview:", data);
+  <div class="row">
+    <button id="load-all-players-btn" class="primary">Load All Players</button>
+  </div>
 
-          if (!data.success) {
-            alert(data.error || "Failed to load admin overview");
-            setStatus("Failed to load admin overview.");
-            return;
+  <div class="status" id="all-players-status">
+    No player list loaded yet.
+  </div>
+
+  <div class="all-players-wrap">
+    <div class="all-players-box">
+      <table class="all-players-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>EMP</th>
+            <th>Packs Bought</th>
+            <th>Factories</th>
+            <th>Lands</th>
+            <th>Blueprints</th>
+          </tr>
+        </thead>
+        <tbody id="all-players-tbody">
+          <tr>
+            <td colspan="6">No data loaded yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+    <div class="section">
+      <h2>Player Inspector</h2>
+
+      <div class="row">
+        <input
+          type="text"
+          id="player-search-input"
+          placeholder="Enter Hive username"
+        />
+        <button id="player-search-btn">Inspect Player</button>
+      </div>
+      </div>
+
+<!-- ============================= -->
+<!-- WHITELIST MANAGER -->
+<!-- ============================= -->
+
+<div class="section">
+  <h2>Whitelist Manager</h2>
+
+  <div class="row">
+    <input
+      type="text"
+      id="whitelist-username-input"
+      placeholder="Enter Hive username"
+    />
+    <button id="add-whitelist-btn" class="primary">Add to Whitelist</button>
+    <button id="load-whitelist-btn">Load Whitelist</button>
+  </div>
+
+  <div class="status" id="whitelist-status">No action yet.</div>
+
+  <div id="whitelist-users-box" class="player-box" style="margin-top:12px;">
+    <div class="small">Whitelist users will appear here.</div>
+  </div>
+</div>
+      <div class="section">
+  <h2>Withdrawal Requests</h2>
+
+  <div class="row">
+    <button id="load-withdrawals-btn">Load Withdrawals</button>
+  </div>
+
+  <div id="withdrawals-box">
+    <div class="kv"><span>Status</span><span>No data loaded yet.</span></div>
+  </div>
+</div>
+
+      <div id="player-inspector-box" class="player-box">
+        <div class="kv"><span>Player</span><span>--</span></div>
+        <div class="kv"><span>EMP Balance</span><span>--</span></div>
+        <div class="kv"><span>Lands</span><span>--</span></div>
+        <div class="kv"><span>Factories</span><span>--</span></div>
+        <div class="kv"><span>Blueprints</span><span>--</span></div>
+        <div class="kv"><span>Unopened Packs</span><span>--</span></div>
+        <div class="kv"><span>Relics</span><span>--</span></div>
+        <div class="kv"><span>WRITs</span><span>--</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const LOCAL_API = "http://localhost:10000";
+    const PROD_API = "https://mydempire-backend-1.onrender.com";
+
+    const isLocal =
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1";
+
+    const API_BASE = isLocal ? LOCAL_API : PROD_API;
+
+    let ADMIN_KEY = "";
+
+    function setStatus(message) {
+      document.getElementById("admin-status").textContent = message;
+    }
+
+    async function connectAdmin() {
+      const key = prompt("Enter ADMIN_SECRET");
+      if (!key) return;
+
+      ADMIN_KEY = key.trim();
+      setStatus("Admin connected. Loading overview...");
+
+      await loadAdminOverview();
+      await loadWalletBalances();
+    }
+
+    async function loadAdminOverview() {
+      try {
+        const r = await fetch(`${API_BASE}/admin/overview`, {
+          headers: {
+            "x-admin-key": ADMIN_KEY
           }
+        });
 
-          document.getElementById("metric-packs-sold").textContent = Number(
-            data.packs.genesis_sold || 0,
-          );
+        const data = await r.json();
+        console.log("admin overview:", data);
 
-          document.getElementById("metric-packs-remaining").textContent =
-            "Remaining: " + Number(data.packs.genesis_remaining || 0);
-
-          document.getElementById("metric-pregen-sold").textContent = Number(
-            data.packs.pre_genesis_sold || 0,
-          );
-
-          document.getElementById("metric-emp").textContent = Number(
-            data.emp.total_supply || 0,
-          ).toLocaleString();
-
-          document.getElementById("metric-factories").textContent = Number(
-            data.factories.total || 0,
-          );
-
-          document.getElementById("metric-factory-breakdown").textContent =
-            "A: " +
-            Number(data.factories.active || 0) +
-            " | U/B: " +
-            Number(data.factories.upgrading || 0) +
-            " | I: " +
-            Number(data.factories.inactive || 0);
-
-          document.getElementById("metric-players").textContent = Number(
-            data.players.active || 0,
-          );
-
-          document.getElementById("metric-phase").textContent =
-            data.phase || "--";
-
-          document.getElementById("phase-pill").textContent =
-            "Game Phase: " + (data.phase || "--");
-
-          const packSalesFlag = data.flags?.pack_sales_enabled?.value;
-          const packSalesUpdated = data.flags?.pack_sales_enabled?.updated_at;
-
-          document.getElementById("metric-pack-sales-flag").textContent =
-            String(packSalesFlag) === "true" ? "ENABLED" : "DISABLED";
-
-          document.getElementById("metric-pack-sales-updated").textContent =
-            "Updated: " + (packSalesUpdated || "--");
-
-          setStatus("Overview loaded successfully.");
-        } catch (err) {
-          console.error(err);
-          alert("Error loading admin overview.");
-          setStatus("Error loading admin overview.");
-        }
-      }
-
-      async function inspectPlayer() {
-        const username = document
-          .getElementById("player-search-input")
-          .value.trim();
-
-        if (!username) {
-          alert("Enter username first");
+        if (!data.success) {
+          alert(data.error || "Failed to load admin overview");
+          setStatus("Failed to load admin overview.");
           return;
         }
 
-        if (!ADMIN_KEY) {
-          alert("Connect Admin first");
+       document.getElementById("metric-packs-sold").textContent =
+  Number(data.packs.genesis_sold || 0);
+
+document.getElementById("metric-packs-remaining").textContent =
+  "Remaining: " + Number(data.packs.genesis_remaining || 0);
+
+document.getElementById("metric-pregen-sold").textContent =
+  Number(data.packs.pre_genesis_sold || 0);
+
+document.getElementById("metric-emp").textContent =
+  Number(data.emp.total_supply || 0).toLocaleString();
+
+document.getElementById("metric-factories").textContent =
+  Number(data.factories.total || 0);
+
+document.getElementById("metric-factory-breakdown").textContent =
+  "A: " + Number(data.factories.active || 0) +
+  " | U/B: " + Number(data.factories.upgrading || 0) +
+  " | I: " + Number(data.factories.inactive || 0);
+
+document.getElementById("metric-players").textContent =
+  Number(data.players.active || 0);
+
+
+
+document.getElementById("metric-phase").textContent =
+  data.phase || "--";
+
+document.getElementById("phase-pill").textContent =
+  "Game Phase: " + (data.phase || "--");
+
+const packSalesFlag = data.flags?.pack_sales_enabled?.value;
+const packSalesUpdated = data.flags?.pack_sales_enabled?.updated_at;
+
+document.getElementById("metric-pack-sales-flag").textContent =
+  String(packSalesFlag) === "true" ? "ENABLED" : "DISABLED";
+
+document.getElementById("metric-pack-sales-updated").textContent =
+  "Updated: " + (packSalesUpdated || "--");
+
+        setStatus("Overview loaded successfully.");
+      } catch (err) {
+        console.error(err);
+        alert("Error loading admin overview.");
+        setStatus("Error loading admin overview.");
+      }
+    }
+
+    async function inspectPlayer() {
+      const username = document
+        .getElementById("player-search-input")
+        .value.trim();
+
+      if (!username) {
+        alert("Enter username first");
+        return;
+      }
+
+      if (!ADMIN_KEY) {
+        alert("Connect Admin first");
+        return;
+      }
+
+      try {
+        const r = await fetch(`${API_BASE}/admin/player/${username}`, {
+          headers: {
+            "x-admin-key": ADMIN_KEY
+          }
+        });
+
+        const data = await r.json();
+        console.log("player inspect:", data);
+
+        if (!data.success) {
+          alert(data.error || "Failed to inspect player");
           return;
         }
 
-        try {
-          const r = await fetch(`${API_BASE}/admin/player/${username}`, {
-            headers: {
-              "x-admin-key": ADMIN_KEY,
-            },
-          });
-
-          const data = await r.json();
-          console.log("player inspect:", data);
-
-          if (!data.success) {
-            alert(data.error || "Failed to inspect player");
-            return;
-          }
-
-          document.getElementById("player-inspector-box").innerHTML = `
+        document.getElementById("player-inspector-box").innerHTML = `
           <div class="kv"><span>Player</span><span>@${data.username}</span></div>
           <div class="kv"><span>EMP Balance</span><span>${data.emp_balance}</span></div>
           <div class="kv"><span>Lands</span><span>${data.total_lands}</span></div>
@@ -638,114 +679,320 @@
           <div class="kv"><span>Unopened Packs</span><span>${data.unopened_packs}</span></div>
           <div class="kv"><span>Relics</span><span>${data.relic_count}</span></div>
           <div class="kv"><span>WRITs</span><span>${data.writ_count}</span></div>
+          <div class="row" style="margin-top:12px;">
+  <button id="view-assets-btn" class="primary">View Assets</button>
+  <button id="give-emp-btn">Give EMP</button>
+  <button id="give-pack-btn">Give Pack</button>
+  <button id="open-dashboard-btn">Open Dashboard</button>
+</div>
+
+<div class="status" id="player-action-status">
+  No admin action used yet.
+</div>
         `;
-        } catch (err) {
-          console.error(err);
-          alert("Error inspecting player.");
-        }
+       const inspectedUsername = data.username;
+
+// VIEW ASSETS
+document.getElementById("view-assets-btn")?.addEventListener("click", async () => {
+  const modal = document.getElementById("assets-modal");
+  const title = document.getElementById("assets-modal-title");
+  const body = document.getElementById("assets-modal-body");
+
+  try {
+    title.textContent = `Player Assets — @${inspectedUsername}`;
+    body.innerHTML = "Loading assets...";
+    modal.style.display = "block";
+
+    const res = await fetch(`${API_BASE}/admin/player-assets/${encodeURIComponent(inspectedUsername)}`, {
+      headers: {
+        "x-admin-key": ADMIN_KEY
+      }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      body.innerHTML = `<div class="assets-empty">${data.error || "Failed to load assets."}</div>`;
+      return;
+    }
+
+    const assets = data.assets || {};
+
+    const renderList = (titleText, items, renderItem) => {
+      if (!items || !items.length) {
+        return `
+          <div class="assets-section-title">${titleText}</div>
+          <div class="assets-empty">No ${titleText.toLowerCase()} found.</div>
+        `;
       }
 
-      async function togglePackSales(value) {
-        if (!ADMIN_KEY) {
-          alert("Connect Admin first");
+      return `
+        <div class="assets-section-title">${titleText} (${items.length})</div>
+        <div class="assets-list">
+          ${items.map(renderItem).join("")}
+        </div>
+      `;
+    };
+
+    body.innerHTML = `
+      ${renderList("Packs", assets.packs, (p) => `
+        <div class="assets-item">
+          <span>PACK #${p.id} • ${p.era || "--"} • ${p.tier || "--"}</span>
+          <span>${new Date(p.created_at).toLocaleString()}</span>
+        </div>
+      `)}
+
+      ${renderList("Lands", assets.lands, (l) => `
+        <div class="assets-item">
+          <span>LAND #${l.id} • ${l.tier || "--"} • ${l.era || "--"}</span>
+          <span>${new Date(l.created_at).toLocaleString()}</span>
+        </div>
+      `)}
+
+      ${renderList("Blueprints", assets.blueprints, (b) => `
+        <div class="assets-item">
+          <span>BLUEPRINT #${b.id} • ${b.tier || "--"} • ${b.era || "--"}</span>
+          <span>${new Date(b.created_at).toLocaleString()}</span>
+        </div>
+      `)}
+
+      ${renderList("Factories", assets.factories, (f) => `
+        <div class="assets-item">
+          <span>FACTORY #${f.id} • ${f.blueprint_tier || "--"} • Level ${f.level || 1} • ${f.status || "--"}</span>
+          <span>${new Date(f.created_at).toLocaleString()}</span>
+        </div>
+      `)}
+
+      ${renderList("Relics", assets.relics, (r) => `
+        <div class="assets-item">
+          <span>RELIC #${r.id} • ${r.tier || "--"} • ${r.era || "--"}</span>
+          <span>${new Date(r.created_at).toLocaleString()}</span>
+        </div>
+      `)}
+
+      ${renderList("WRITs", assets.writs, (w) => `
+        <div class="assets-item">
+          <span>WRIT #${w.id} • ${w.tier || "--"} • ${w.era || "--"}</span>
+          <span>${new Date(w.created_at).toLocaleString()}</span>
+        </div>
+      `)}
+    `;
+  } catch (err) {
+    console.error(err);
+    body.innerHTML = `<div class="assets-empty">Error loading assets.</div>`;
+    modal.style.display = "block";
+  }
+});
+document.getElementById("close-assets-modal-btn")?.addEventListener("click", () => {
+  document.getElementById("assets-modal").style.display = "none";
+});
+
+// GIVE EMP
+document.getElementById("give-emp-btn")?.addEventListener("click", async () => {
+  const amount = prompt(`Enter EMP amount to give to @${inspectedUsername}`);
+  if (!amount) return;
+
+  const cleanAmount = Number(amount);
+  if (!Number.isInteger(cleanAmount) || cleanAmount <= 0) {
+    alert("Enter a valid whole EMP amount.");
+    return;
+  }
+
+  const ok = confirm(`Are you sure you want to give ${cleanAmount} EMP to @${inspectedUsername}?`);
+  if (!ok) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/give-emp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY
+      },
+      body: JSON.stringify({
+        username: inspectedUsername,
+        amount: cleanAmount
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      document.getElementById("player-action-status").textContent =
+        data.error || "Failed to give EMP.";
+      return;
+    }
+
+    document.getElementById("player-action-status").textContent =
+      `${cleanAmount} EMP given to @${inspectedUsername} successfully.`;
+
+    await inspectPlayer(); // refresh the inspector immediately
+  } catch (err) {
+    console.error(err);
+    document.getElementById("player-action-status").textContent =
+      "Error giving EMP.";
+  }
+});
+// GIVE PACK
+document.getElementById("give-pack-btn")?.addEventListener("click", async () => {
+  const amount = prompt(`Enter number of packs to give to @${inspectedUsername}`);
+  if (!amount) return;
+
+  const cleanAmount = Number(amount);
+  if (!Number.isInteger(cleanAmount) || cleanAmount <= 0) {
+    alert("Enter a valid whole pack amount.");
+    return;
+  }
+
+  const ok = confirm(`Are you sure you want to give ${cleanAmount} pack(s) to @${inspectedUsername}?`);
+  if (!ok) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/give-pack`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY
+      },
+      body: JSON.stringify({
+        username: inspectedUsername,
+        amount: cleanAmount
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      document.getElementById("player-action-status").textContent =
+        data.error || "Failed to give pack.";
+      return;
+    }
+
+    document.getElementById("player-action-status").textContent =
+      `${cleanAmount} pack(s) given to @${inspectedUsername} successfully.`;
+
+    await inspectPlayer();
+  } catch (err) {
+    console.error(err);
+    document.getElementById("player-action-status").textContent =
+      "Error giving pack.";
+  }
+});
+
+// OPEN PLAYER DASHBOARD
+document.getElementById("open-dashboard-btn")?.addEventListener("click", () => {
+
+  const url = `player-dashboard.html?user=${encodeURIComponent(inspectedUsername)}`;
+  window.open(url, "_blank");
+
+});
+        
+      } catch (err) {
+        console.error(err);
+        alert("Error inspecting player.");
+      }
+    }
+
+    async function togglePackSales(value) {
+      if (!ADMIN_KEY) {
+        alert("Connect Admin first");
+        return;
+      }
+
+      try {
+        const r = await fetch(`${API_BASE}/admin/flags/pack_sales_enabled`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-key": ADMIN_KEY
+          },
+          body: JSON.stringify({ value })
+        });
+
+        const data = await r.json();
+        console.log("toggle result:", data);
+
+        if (!data.success) {
+          alert(data.error || "Failed to update pack sales flag");
           return;
         }
 
-        try {
-          const r = await fetch(`${API_BASE}/admin/flags/pack_sales_enabled`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-admin-key": ADMIN_KEY,
-            },
-            body: JSON.stringify({ value }),
-          });
+        alert("Pack sales updated to: " + value);
+        loadAdminOverview();
+      } catch (err) {
+        console.error(err);
+        alert("Error updating pack sales flag.");
+      }
+    }
 
-          const data = await r.json();
-          console.log("toggle result:", data);
-
-          if (!data.success) {
-            alert(data.error || "Failed to update pack sales flag");
-            return;
-          }
-
-          alert("Pack sales updated to: " + value);
-          loadAdminOverview();
-        } catch (err) {
-          console.error(err);
-          alert("Error updating pack sales flag.");
-        }
+    async function distributeRevenue() {
+      if (!ADMIN_KEY) {
+        alert("Connect Admin first");
+        return;
       }
 
-      async function distributeRevenue() {
-        if (!ADMIN_KEY) {
-          alert("Connect Admin first");
+      try {
+        const r = await fetch(`${API_BASE}/admin/distribute`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-key": ADMIN_KEY
+          }
+        });
+
+        const data = await r.json();
+        console.log("distribute result:", data);
+
+        if (!data.success) {
+          alert(data.error || "Distribution failed");
           return;
         }
 
-        try {
-          const r = await fetch(`${API_BASE}/admin/distribute`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-admin-key": ADMIN_KEY,
-            },
-          });
-
-          const data = await r.json();
-          console.log("distribute result:", data);
-
-          if (!data.success) {
-            alert(data.error || "Distribution failed");
-            return;
-          }
-
-          alert(
-            `Revenue distributed successfully.\n\n` +
-              `Total: ${Number(data.distributed || 0).toFixed(3)} HIVE\n` +
-              `Treasury: ${Number(data.splits?.treasury || 0).toFixed(3)} HIVE\n` +
-              `DAO: ${Number(data.splits?.dao || 0).toFixed(3)} HIVE\n` +
-              `Founder: ${Number(data.splits?.founder || 0).toFixed(3)} HIVE`,
-          );
-          await loadWalletBalances();
-          loadAdminOverview();
-        } catch (err) {
-          console.error(err);
-          alert("Error distributing revenue.");
-        }
+        alert(
+  `Revenue distributed successfully.\n\n` +
+  `Total: ${Number(data.distributed || 0).toFixed(3)} HIVE\n` +
+  `Treasury: ${Number(data.splits?.treasury || 0).toFixed(3)} HIVE\n` +
+  `DAO: ${Number(data.splits?.dao || 0).toFixed(3)} HIVE\n` +
+  `Founder: ${Number(data.splits?.founder || 0).toFixed(3)} HIVE`
+);
+await loadWalletBalances();    
+loadAdminOverview();
+      } catch (err) {
+        console.error(err);
+        alert("Error distributing revenue.");
       }
-      async function loadWithdrawals() {
-        if (!ADMIN_KEY) {
-          alert("Connect Admin first");
-          return;
-        }
+    }
+async function loadWithdrawals() {
+  if (!ADMIN_KEY) {
+    alert("Connect Admin first");
+    return;
+  }
 
-        try {
-          const r = await fetch(`${API_BASE}/admin/withdrawals`, {
-            headers: {
-              "x-admin-key": ADMIN_KEY,
-            },
-          });
+  try {
+    const r = await fetch(`${API_BASE}/admin/withdrawals`, {
+      headers: {
+        "x-admin-key": ADMIN_KEY
+      }
+    });
 
-          const data = await r.json();
-          console.log("withdrawals:", data);
+    const data = await r.json();
+    console.log("withdrawals:", data);
 
-          if (!data.success) {
-            alert(data.error || "Failed to load withdrawals");
-            return;
-          }
+    if (!data.success) {
+      alert(data.error || "Failed to load withdrawals");
+      return;
+    }
 
-          const box = document.getElementById("withdrawals-box");
-          const withdrawals = data.withdrawals || data.requests || [];
+    const box = document.getElementById("withdrawals-box");
+    const withdrawals = data.withdrawals || data.requests || [];
 
-          if (!withdrawals.length) {
-            box.innerHTML = `<div class="kv"><span>Status</span><span>No withdrawal requests found.</span></div>`;
-            return;
-          }
+    if (!withdrawals.length) {
+      box.innerHTML = `<div class="kv"><span>Status</span><span>No withdrawal requests found.</span></div>`;
+      return;
+    }
 
-          box.innerHTML = withdrawals
-            .map(
-              (w) => `
+    box.innerHTML = withdrawals
+      .map(
+        (w) => `
           <div class="kv">
             <span>
               #${w.id} • @${w.username} • ${Number(w.amount).toFixed(3)} HIVE • ${w.status}
@@ -758,223 +1005,231 @@
               }
             </span>
           </div>
-        `,
-            )
-            .join("");
-        } catch (err) {
-          console.error(err);
-          alert("Error loading withdrawals.");
+        `
+      )
+      .join("");
+  } catch (err) {
+    console.error(err);
+    alert("Error loading withdrawals.");
+  }
+}
+
+async function completeWithdrawal(id) {
+  if (!ADMIN_KEY) {
+    alert("Connect Admin first");
+    return;
+  }
+
+  const txid = prompt("Optional: enter Hive transaction id, or leave blank");
+  if (txid === null) return;
+
+  try {
+    const r = await fetch(`${API_BASE}/admin/withdrawals/${id}/complete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY
+      },
+      body: JSON.stringify({ txid })
+    });
+
+    const data = await r.json();
+    console.log("complete withdrawal:", data);
+
+    if (!data.success) {
+      alert(data.error || "Failed to complete withdrawal");
+      return;
+    }
+
+    alert("Withdrawal marked as completed.");
+    loadWithdrawals();
+  } catch (err) {
+    console.error(err);
+    alert("Error completing withdrawal.");
+  }
+}
+    document
+      .getElementById("connect-admin-btn")
+      .addEventListener("click", connectAdmin);
+
+    document
+      .getElementById("player-search-btn")
+      .addEventListener("click", inspectPlayer);
+
+    document
+      .getElementById("pause-pack-sales-btn")
+      .addEventListener("click", () => togglePackSales(false));
+
+    document
+      .getElementById("resume-pack-sales-btn")
+      .addEventListener("click", () => togglePackSales(true));
+
+    document
+      .getElementById("distribute-btn")
+      .addEventListener("click", distributeRevenue);
+      
+  
+    // RUN DAILY REWARDS
+document
+  .getElementById("run-rewards-btn")
+  .addEventListener("click", async () => {
+    if (!ADMIN_KEY) {
+      alert("Connect Admin first");
+      return;
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+
+    try {
+      const res = await fetch(
+        `${API_BASE}/admin/test-run-daily-rewards?date=${today}`,
+        {
+          headers: {
+            "x-admin-key": ADMIN_KEY
+          }
         }
+      );
+
+      const data = await res.json();
+
+      alert(
+        "Reward engine executed.\n\n" +
+        JSON.stringify(data, null, 2)
+      );
+
+    } catch (err) {
+      alert("Error running rewards");
+      console.error(err);
+    }
+  });
+
+// RESET TODAY REWARD CYCLE
+document
+  .getElementById("reset-cycle-btn")
+  .addEventListener("click", async () => {
+
+    const confirmReset = confirm(
+      "Delete today's reward cycle?\n\nThis will allow rewards to be rebuilt."
+    );
+
+    if (!confirmReset) return;
+
+    try {
+      const res = await fetch(
+        `${API_BASE}/admin/reset-todays-reward-cycle`
+      );
+
+      const data = await res.json();
+
+      alert(
+        "Cycle reset result:\n\n" +
+        JSON.stringify(data, null, 2)
+      );
+
+    } catch (err) {
+      alert("Error resetting cycle");
+      console.error(err);
+    }
+  });
+    document
+  .getElementById("load-withdrawals-btn")
+  .addEventListener("click", loadWithdrawals);
+    document
+  .getElementById("refresh-wallet-balances-btn")
+  .addEventListener("click", loadWalletBalances);
+    // =============================
+// CHAIN EVENTS
+// =============================
+
+async function broadcastChainEvents(limit = 20) {
+  if (!ADMIN_KEY) {
+    alert("Connect admin first.");
+    return;
+  }
+
+  const statusEl = document.getElementById("chain-events-status");
+  if (statusEl) {
+    statusEl.textContent = "Broadcasting pending chain events...";
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/broadcast-chain-events`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY,
+      },
+      body: JSON.stringify({ limit }),
+    });
+
+    const data = await res.json();
+
+    if (statusEl) {
+      statusEl.textContent =
+        data.message ||
+        data.error ||
+        "Broadcast chain events request completed.";
+    }
+
+    if (!data.success) {
+      alert(data.error || "Failed to broadcast chain events.");
+      return;
+    }
+
+    alert(
+      "Chain broadcast result:\n\n" +
+        JSON.stringify(data, null, 2)
+    );
+
+    await loadChainEvents();
+  } catch (err) {
+    console.error("Broadcast chain events error:", err);
+    if (statusEl) {
+      statusEl.textContent = "Failed to broadcast chain events.";
+    }
+    alert("Error broadcasting chain events.");
+  }
+}
+
+async function loadChainEvents(limit = 20) {
+  if (!ADMIN_KEY) {
+    alert("Connect admin first.");
+    return;
+  }
+
+  const statusEl = document.getElementById("chain-events-status");
+  const box = document.getElementById("chain-events-box");
+
+  if (statusEl) {
+    statusEl.textContent = "Loading recent chain events...";
+  }
+
+  try {
+    const res = await fetch(
+      `${API_BASE}/admin/chain-events?key=${encodeURIComponent(ADMIN_KEY)}&limit=${limit}`
+    );
+
+    const data = await res.json();
+
+    if (!data.success) {
+      if (statusEl) {
+        statusEl.textContent = data.error || "Failed to load chain events.";
       }
+      return;
+    }
 
-      async function completeWithdrawal(id) {
-        if (!ADMIN_KEY) {
-          alert("Connect Admin first");
-          return;
-        }
+    if (statusEl) {
+      statusEl.textContent = `Loaded ${Number(data.count || 0)} chain event(s).`;
+    }
 
-        const txid = prompt(
-          "Optional: enter Hive transaction id, or leave blank",
-        );
-        if (txid === null) return;
+    if (!data.events || !data.events.length) {
+      box.innerHTML = `<div class="kv"><span>Status</span><span>No chain events found.</span></div>`;
+      return;
+    }
 
-        try {
-          const r = await fetch(
-            `${API_BASE}/admin/withdrawals/${id}/complete`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "x-admin-key": ADMIN_KEY,
-              },
-              body: JSON.stringify({ txid }),
-            },
-          );
-
-          const data = await r.json();
-          console.log("complete withdrawal:", data);
-
-          if (!data.success) {
-            alert(data.error || "Failed to complete withdrawal");
-            return;
-          }
-
-          alert("Withdrawal marked as completed.");
-          loadWithdrawals();
-        } catch (err) {
-          console.error(err);
-          alert("Error completing withdrawal.");
-        }
-      }
-      document
-        .getElementById("connect-admin-btn")
-        .addEventListener("click", connectAdmin);
-
-      document
-        .getElementById("player-search-btn")
-        .addEventListener("click", inspectPlayer);
-
-      document
-        .getElementById("pause-pack-sales-btn")
-        .addEventListener("click", () => togglePackSales(false));
-
-      document
-        .getElementById("resume-pack-sales-btn")
-        .addEventListener("click", () => togglePackSales(true));
-
-      document
-        .getElementById("distribute-btn")
-        .addEventListener("click", distributeRevenue);
-
-      // RUN DAILY REWARDS
-      document
-        .getElementById("run-rewards-btn")
-        .addEventListener("click", async () => {
-          if (!ADMIN_KEY) {
-            alert("Connect Admin first");
-            return;
-          }
-
-          const today = new Date().toISOString().slice(0, 10);
-
-          try {
-            const res = await fetch(
-              `${API_BASE}/admin/test-run-daily-rewards?date=${today}`,
-              {
-                headers: {
-                  "x-admin-key": ADMIN_KEY,
-                },
-              },
-            );
-
-            const data = await res.json();
-
-            alert(
-              "Reward engine executed.\n\n" + JSON.stringify(data, null, 2),
-            );
-          } catch (err) {
-            alert("Error running rewards");
-            console.error(err);
-          }
-        });
-
-      // RESET TODAY REWARD CYCLE
-      document
-        .getElementById("reset-cycle-btn")
-        .addEventListener("click", async () => {
-          const confirmReset = confirm(
-            "Delete today's reward cycle?\n\nThis will allow rewards to be rebuilt.",
-          );
-
-          if (!confirmReset) return;
-
-          try {
-            const res = await fetch(
-              `${API_BASE}/admin/reset-todays-reward-cycle`,
-            );
-
-            const data = await res.json();
-
-            alert("Cycle reset result:\n\n" + JSON.stringify(data, null, 2));
-          } catch (err) {
-            alert("Error resetting cycle");
-            console.error(err);
-          }
-        });
-      document
-        .getElementById("load-withdrawals-btn")
-        .addEventListener("click", loadWithdrawals);
-      // =============================
-      // CHAIN EVENTS
-      // =============================
-
-      async function broadcastChainEvents(limit = 20) {
-        if (!ADMIN_KEY) {
-          alert("Connect admin first.");
-          return;
-        }
-
-        const statusEl = document.getElementById("chain-events-status");
-        if (statusEl) {
-          statusEl.textContent = "Broadcasting pending chain events...";
-        }
-
-        try {
-          const res = await fetch(`${API_BASE}/admin/broadcast-chain-events`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-admin-key": ADMIN_KEY,
-            },
-            body: JSON.stringify({ limit }),
-          });
-
-          const data = await res.json();
-
-          if (statusEl) {
-            statusEl.textContent =
-              data.message ||
-              data.error ||
-              "Broadcast chain events request completed.";
-          }
-
-          if (!data.success) {
-            alert(data.error || "Failed to broadcast chain events.");
-            return;
-          }
-
-          alert("Chain broadcast result:\n\n" + JSON.stringify(data, null, 2));
-
-          await loadChainEvents();
-        } catch (err) {
-          console.error("Broadcast chain events error:", err);
-          if (statusEl) {
-            statusEl.textContent = "Failed to broadcast chain events.";
-          }
-          alert("Error broadcasting chain events.");
-        }
-      }
-
-      async function loadChainEvents(limit = 20) {
-        if (!ADMIN_KEY) {
-          alert("Connect admin first.");
-          return;
-        }
-
-        const statusEl = document.getElementById("chain-events-status");
-        const box = document.getElementById("chain-events-box");
-
-        if (statusEl) {
-          statusEl.textContent = "Loading recent chain events...";
-        }
-
-        try {
-          const res = await fetch(
-            `${API_BASE}/admin/chain-events?key=${encodeURIComponent(ADMIN_KEY)}&limit=${limit}`,
-          );
-
-          const data = await res.json();
-
-          if (!data.success) {
-            if (statusEl) {
-              statusEl.textContent =
-                data.error || "Failed to load chain events.";
-            }
-            return;
-          }
-
-          if (statusEl) {
-            statusEl.textContent = `Loaded ${Number(data.count || 0)} chain event(s).`;
-          }
-
-          if (!data.events || !data.events.length) {
-            box.innerHTML = `<div class="kv"><span>Status</span><span>No chain events found.</span></div>`;
-            return;
-          }
-
-          box.innerHTML = data.events
-            .map(
-              (evt) => `
+    box.innerHTML = data.events
+      .map(
+        (evt) => `
         <div class="kv" style="display:block; margin-bottom:10px;">
           <div><b>#${evt.id}</b> • <b>${evt.event_type}</b> • <b>${evt.status}</b></div>
           <div style="margin-top:6px; color:#374151;">User: ${evt.username || "--"} | Asset: ${evt.asset_type || "--"} #${evt.asset_id || "--"}</div>
@@ -993,59 +1248,59 @@
               : ""
           }
         </div>
-      `,
-            )
-            .join("");
-        } catch (err) {
-          console.error("Load chain events error:", err);
-          if (statusEl) {
-            statusEl.textContent = "Error loading chain events.";
-          }
-        }
-      }
+      `
+      )
+      .join("");
+  } catch (err) {
+    console.error("Load chain events error:", err);
+    if (statusEl) {
+      statusEl.textContent = "Error loading chain events.";
+    }
+  }
+}
 
-      document
-        .getElementById("broadcast-chain-events-btn")
-        ?.addEventListener("click", () => broadcastChainEvents(20));
+document
+  .getElementById("broadcast-chain-events-btn")
+  ?.addEventListener("click", () => broadcastChainEvents(20));
 
-      document
-        .getElementById("load-chain-events-btn")
-        ?.addEventListener("click", () => loadChainEvents(20));
+document
+  .getElementById("load-chain-events-btn")
+  ?.addEventListener("click", () => loadChainEvents(20));
 
-      document
-        .getElementById("broadcast-chain-events-btn-2")
-        ?.addEventListener("click", () => broadcastChainEvents(20));
+document
+  .getElementById("broadcast-chain-events-btn-2")
+  ?.addEventListener("click", () => broadcastChainEvents(20));
 
-      document
-        .getElementById("load-chain-events-btn-2")
-        ?.addEventListener("click", () => loadChainEvents(20));
-      // =============================
-      // WHITELIST MANAGER
-      // =============================
+document
+  .getElementById("load-chain-events-btn-2")
+  ?.addEventListener("click", () => loadChainEvents(20));
+    // =============================
+// WHITELIST MANAGER
+// =============================
 
-      async function loadWhitelistUsers() {
-        try {
-          const res = await fetch(`${API_BASE}/admin/whitelist-users`, {
-            headers: { "x-admin-key": ADMIN_KEY },
-          });
+async function loadWhitelistUsers() {
+  try {
+    const res = await fetch(`${API_BASE}/admin/whitelist-users`, {
+      headers: { "x-admin-key": ADMIN_KEY },
+    });
 
-          const data = await res.json();
-          const box = document.getElementById("whitelist-users-box");
+    const data = await res.json();
+    const box = document.getElementById("whitelist-users-box");
 
-          if (!data.success) {
-            document.getElementById("whitelist-status").textContent =
-              data.error || "Failed to load whitelist users.";
-            return;
-          }
+    if (!data.success) {
+      document.getElementById("whitelist-status").textContent =
+        data.error || "Failed to load whitelist users.";
+      return;
+    }
 
-          if (!data.users.length) {
-            box.innerHTML = `<div class="small">No whitelisted users found.</div>`;
-            return;
-          }
+    if (!data.users.length) {
+      box.innerHTML = `<div class="small">No whitelisted users found.</div>`;
+      return;
+    }
 
-          box.innerHTML = data.users
-            .map(
-              (user) => `
+    box.innerHTML = data.users
+      .map(
+        (user) => `
       <div class="kv">
         <span>@${user.username}</span>
         <button onclick="removeWhitelistUser('${user.username}')">
@@ -1053,368 +1308,286 @@
         </button>
       </div>
     `,
-            )
-            .join("");
-        } catch (err) {
-          console.error("Whitelist load error:", err);
-        }
-      }
+      )
+      .join("");
+  } catch (err) {
+    console.error("Whitelist load error:", err);
+  }
+}
 
-      async function addWhitelistUser() {
-        const input = document.getElementById("whitelist-username-input");
-        const username = input.value.trim().replace("@", "").toLowerCase();
+async function addWhitelistUser() {
+  const input = document.getElementById("whitelist-username-input");
+  const username = input.value.trim().replace("@", "").toLowerCase();
 
-        if (!username) {
-          document.getElementById("whitelist-status").textContent =
-            "Enter username first.";
-          return;
-        }
+  if (!username) {
+    document.getElementById("whitelist-status").textContent =
+      "Enter username first.";
+    return;
+  }
 
-        try {
-          const res = await fetch(`${API_BASE}/admin/whitelist-user`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-admin-key": ADMIN_KEY,
-            },
-            body: JSON.stringify({ username }),
-          });
+  try {
+    const res = await fetch(`${API_BASE}/admin/whitelist-user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY,
+      },
+      body: JSON.stringify({ username }),
+    });
 
-          const data = await res.json();
+    const data = await res.json();
 
-          document.getElementById("whitelist-status").textContent =
-            data.message || data.error;
+    document.getElementById("whitelist-status").textContent =
+      data.message || data.error;
 
-          if (data.success) {
-            input.value = "";
-            loadWhitelistUsers();
-          }
-        } catch (err) {
-          console.error("Whitelist add error:", err);
-        }
-      }
+    if (data.success) {
+      input.value = "";
+      loadWhitelistUsers();
+    }
+  } catch (err) {
+    console.error("Whitelist add error:", err);
+  }
+}
 
-      async function removeWhitelistUser(username) {
-        try {
-          const res = await fetch(`${API_BASE}/admin/remove-whitelist-user`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-admin-key": ADMIN_KEY,
-            },
-            body: JSON.stringify({ username }),
-          });
+async function removeWhitelistUser(username) {
+  try {
+    const res = await fetch(`${API_BASE}/admin/remove-whitelist-user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY,
+      },
+      body: JSON.stringify({ username }),
+    });
 
-          const data = await res.json();
+    const data = await res.json();
 
-          document.getElementById("whitelist-status").textContent =
-            data.message || data.error;
+    document.getElementById("whitelist-status").textContent =
+      data.message || data.error;
 
-          if (data.success) {
-            loadWhitelistUsers();
-          }
-        } catch (err) {
-          console.error("Whitelist remove error:", err);
-        }
-      }
+    if (data.success) {
+      loadWhitelistUsers();
+    }
+  } catch (err) {
+    console.error("Whitelist remove error:", err);
+  }
+}
 
-      // button bindings
-      document
-        .getElementById("add-whitelist-btn")
-        ?.addEventListener("click", addWhitelistUser);
+// button bindings
+document
+  .getElementById("add-whitelist-btn")
+  ?.addEventListener("click", addWhitelistUser);
 
-      document
-        .getElementById("load-whitelist-btn")
-        ?.addEventListener("click", loadWhitelistUsers);
-    </script>
-    <script>
-      async function loadWalletBalances() {
-        if (!ADMIN_KEY) {
-          document.getElementById("wallet-balances-status").textContent =
-            "Connect admin first.";
-          return;
-        }
+document
+  .getElementById("load-whitelist-btn")
+  ?.addEventListener("click", loadWhitelistUsers);
+  document
+  .getElementById("load-emp-sales-btn")
+  ?.addEventListener("click", loadEmpSales);
+  document
+  .getElementById("load-all-players-btn")
+  ?.addEventListener("click", loadAllPlayers);
+  
+  async function loadEmpSales() {
 
-        try {
-          document.getElementById("wallet-balances-status").textContent =
-            "Loading wallet balances...";
+  if (!ADMIN_KEY) {
+    document.getElementById("emp-sales-status").textContent =
+      "Connect admin first.";
+    return;
+  }
 
-          const res = await fetch(`${API_BASE}/admin/wallet-balances`, {
-            headers: {
-              "x-admin-key": ADMIN_KEY,
-            },
-          });
+  const status = document.getElementById("emp-sales-status");
+  const box = document.getElementById("emp-sales-box");
 
-          const data = await res.json();
+  try {
 
-          if (!res.ok || !data.success) {
-            document.getElementById("wallet-balances-status").textContent =
-              data.error || "Failed to load wallet balances.";
-            return;
-          }
+    status.textContent = "Loading EMP purchase history...";
 
-          const wallets = data.wallets || {};
-          const totals = data.totals || {};
+    const res = await fetch(`${API_BASE}/admin/emp-sales`, {
+      headers: { "x-admin-key": ADMIN_KEY }
+    });
 
-          function setText(id, value) {
-            const el = document.getElementById(id);
-            if (el) el.textContent = value;
-          }
+    const data = await res.json();
 
-          setText(
-            "wallet-revenue-balance",
-            `${Number(wallets.revenue?.balance || 0).toFixed(3)} HIVE`,
-          );
-          setText(
-            "wallet-revenue-account",
-            wallets.revenue?.account || "@mydempiregain",
-          );
+    if (!data.success) {
+      status.textContent = "Failed to load EMP history.";
+      return;
+    }
 
-          setText(
-            "wallet-treasury-balance",
-            `${Number(wallets.treasury?.balance || 0).toFixed(3)} HIVE`,
-          );
-          setText(
-            "wallet-treasury-account",
-            wallets.treasury?.account || "@mydempire-vault",
-          );
+    const sales = data.sales || [];
 
-          setText(
-            "wallet-reward-balance",
-            `${Number(wallets.reward?.balance || 0).toFixed(3)} HIVE`,
-          );
-          setText(
-            "wallet-reward-account",
-            wallets.reward?.account || "@mydempire-reward",
-          );
+    status.textContent = `Loaded ${sales.length} purchases`;
 
-          setText(
-            "wallet-dao-balance",
-            `${Number(wallets.dao?.balance || 0).toFixed(3)} HIVE`,
-          );
-          setText(
-            "wallet-dao-account",
-            wallets.dao?.account || "@mydempire-dao",
-          );
+    box.innerHTML = sales.map(s => {
 
-          setText(
-            "wallet-founder-balance",
-            `${Number(wallets.founder?.balance || 0).toFixed(3)} HIVE`,
-          );
-          setText(
-            "wallet-founder-account",
-            wallets.founder?.account || "@mydempire-owner",
-          );
+  const date = new Date(s.created_at).toLocaleString();
 
-          setText(
-            "wallet-treasury-system-total",
-            `${Number(totals.treasurySystem || 0).toFixed(3)} HIVE`,
-          );
+  return `
+    <div class="emp-sales-row">
+      <div class="emp-sales-left">
+        @${s.username} • ${Number(s.hive_amount).toFixed(3)} HIVE → ${Number(s.emp_amount).toLocaleString()} EMP
+      </div>
 
-          document.getElementById("wallet-balances-status").textContent =
-            `Updated: ${new Date(data.updatedAt).toLocaleString()}`;
-        } catch (err) {
-          console.error("loadWalletBalances error:", err);
-          document.getElementById("wallet-balances-status").textContent =
-            "Failed to load wallet balances.";
-        }
-      }
-      async function loadAllPlayers() {
-        const statusEl = document.getElementById("all-players-status");
-        const tbody = document.getElementById("all-players-body");
+      <div class="emp-sales-right">
+        ${date}
+      </div>
+    </div>
+  `;
 
-        statusEl.textContent = "Loading all players...";
-        tbody.innerHTML = "";
+}).join("");
 
-        try {
-          const res = await fetch(`${API_BASE}/admin/players`, {
-            headers: {
-              "x-admin-key": ADMIN_KEY,
-            },
-          });
+  } catch (err) {
 
-          const data = await res.json();
+    console.error(err);
+    status.textContent = "Error loading EMP history.";
 
-          if (!data.success) {
-            statusEl.textContent = data.error || "Failed to load players.";
-            return;
-          }
+  }
+}
+async function loadAllPlayers() {
+  if (!ADMIN_KEY) {
+    document.getElementById("all-players-status").textContent =
+      "Connect admin first.";
+    return;
+  }
 
-          const players = Array.isArray(data.players) ? data.players : [];
+  const statusEl = document.getElementById("all-players-status");
+  const tbody = document.getElementById("all-players-tbody");
 
-          if (!players.length) {
-            statusEl.textContent = "No players found.";
-            return;
-          }
+  try {
+    statusEl.textContent = "Loading all players...";
 
-          tbody.innerHTML = players
-            .map(
-              (p) => `
-          <tr>
-            <td>${p.username || "-"}</td>
-            <td>${Number(p.emp_balance || 0).toLocaleString()}</td>
-            <td>${Number(p.total_packs_bought || 0)}</td>
-            <td>${Number(p.total_lands || 0)}</td>
-            <td>${Number(p.total_blueprints || 0)}</td>
-            <td>${Number(p.total_factories || 0)}</td>
-          </tr>
-        `,
-            )
-            .join("");
+    const res = await fetch(`${API_BASE}/admin/all-players`, {
+      headers: { "x-admin-key": ADMIN_KEY }
+    });
 
-          statusEl.textContent = `Loaded ${players.length} player(s).`;
-        } catch (err) {
-          console.error("loadAllPlayers error:", err);
-          statusEl.textContent = "Failed to load players.";
-        }
-      }
-      document
-        .getElementById("load-all-players-btn")
-        .addEventListener("click", loadAllPlayers);
-      document
-        .getElementById("admin-view-assets-btn")
-        .addEventListener("click", async () => {
-          const username = document
-            .getElementById("player-search-input")
-            .value.trim();
+    const data = await res.json();
 
-          if (!username) {
-            document.getElementById("admin-player-action-status").textContent =
-              "Enter a username first.";
-            return;
-          }
+    if (!res.ok || !data.success) {
+      statusEl.textContent = data.error || "Failed to load all players.";
+      return;
+    }
 
-          try {
-            document.getElementById("admin-player-action-status").textContent =
-              "Loading player assets...";
+    const players = data.players || [];
+    statusEl.textContent = `Loaded ${players.length} player(s).`;
 
-            const res = await fetch(
-              `${API_BASE}/admin/player/${encodeURIComponent(username)}`,
-              {
-                headers: {
-                  "x-admin-key": ADMIN_KEY,
-                },
-              },
-            );
+    if (!players.length) {
+      tbody.innerHTML = `<tr><td colspan="6">No players found.</td></tr>`;
+      return;
+    }
 
-            const data = await res.json();
+    tbody.innerHTML = players.map((p) => `
+      <tr>
+        <td>@${p.username}</td>
+        <td>${Number(p.emp || 0).toLocaleString()}</td>
+        <td>${Number(p.packs_bought || 0)}</td>
+        <td>${Number(p.factories || 0)}</td>
+        <td>${Number(p.lands || 0)}</td>
+        <td>${Number(p.blueprints || 0)}</td>
+      </tr>
+    `).join("");
+  } catch (err) {
+    console.error("loadAllPlayers error:", err);
+    statusEl.textContent = "Error loading all players.";
+  }
+}
+async function loadWalletBalances() {
+  if (!ADMIN_KEY) {
+    document.getElementById("wallet-balances-status").textContent =
+      "Connect admin first.";
+    return;
+  }
 
-            if (!res.ok || !data.success) {
-              document.getElementById(
-                "admin-player-action-status",
-              ).textContent = data.error || "Failed to load assets.";
-              return;
-            }
+  try {
+    document.getElementById("wallet-balances-status").textContent =
+      "Loading wallet balances...";
 
-            const resultDiv = document.getElementById(
-              "player-inspector-result",
-            );
+    const res = await fetch(`${API_BASE}/admin/wallet-balances`, {
+      headers: {
+        "x-admin-key": ADMIN_KEY,
+      },
+    });
 
-            resultDiv.innerHTML = `
-        <div class="shop-card">
-          <h3>@${username} Assets</h3>
-          <p><strong>EMP Balance:</strong> ${data.emp_balance}</p>
-          <p><strong>Factories:</strong> ${data.factories.length}</p>
-          <p><strong>Lands:</strong> ${data.lands.length}</p>
-          <p><strong>Blueprints:</strong> ${data.blueprints.length}</p>
-          <p><strong>Relics:</strong> ${data.relics.length}</p>
-          <p><strong>WRITs:</strong> ${data.writs.length}</p>
-        </div>
-      `;
+    const data = await res.json();
 
-            document.getElementById("admin-player-action-status").textContent =
-              "Assets loaded successfully.";
-          } catch (err) {
-            console.error(err);
-            document.getElementById("admin-player-action-status").textContent =
-              "Error loading assets.";
-          }
-        });
-      async function loadEmpSales() {
-        if (!ADMIN_KEY) {
-          document.getElementById("emp-sales-status").textContent =
-            "Connect Admin first.";
-          return;
-        }
+    if (!res.ok || !data.success) {
+      document.getElementById("wallet-balances-status").textContent =
+        data.error || "Failed to load wallet balances.";
+      return;
+    }
 
-        try {
-          document.getElementById("emp-sales-status").textContent =
-            "Loading EMP purchase log...";
+    const wallets = data.wallets || {};
+    const totals = data.totals || {};
 
-          const res = await fetch(`${API_BASE}/admin/emp-sales`, {
-            headers: {
-              "x-admin-key": ADMIN_KEY,
-            },
-          });
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    }
 
-          const data = await res.json();
+    setText(
+      "wallet-revenue-balance",
+      `${Number(wallets.revenue?.balance || 0).toFixed(3)} HIVE`
+    );
+    setText(
+      "wallet-revenue-account",
+      wallets.revenue?.account || "@mydempiregain"
+    );
 
-          if (!res.ok || !data.success) {
-            document.getElementById("emp-sales-status").textContent =
-              data.error || "Failed to load EMP purchase log.";
-            return;
-          }
+    setText(
+      "wallet-treasury-balance",
+      `${Number(wallets.treasury?.balance || 0).toFixed(3)} HIVE`
+    );
+    setText(
+      "wallet-treasury-account",
+      wallets.treasury?.account || "@mydempire-vault"
+    );
 
-          const summary = data.summary || {};
-          const sales = data.sales || [];
+    setText(
+      "wallet-reward-balance",
+      `${Number(wallets.reward?.balance || 0).toFixed(3)} HIVE`
+    );
+    setText(
+      "wallet-reward-account",
+      wallets.reward?.account || "@mydempire-reward"
+    );
 
-          // ===== Fill summary cards =====
-          document.getElementById("emp-sales-total-orders").textContent =
-            Number(summary.total_orders || 0);
+    setText(
+      "wallet-dao-balance",
+      `${Number(wallets.dao?.balance || 0).toFixed(3)} HIVE`
+    );
+    setText(
+      "wallet-dao-account",
+      wallets.dao?.account || "@mydempire-dao"
+    );
 
-          document.getElementById("emp-sales-completed-orders").textContent =
-            Number(summary.completed_orders || 0);
+    setText(
+      "wallet-founder-balance",
+      `${Number(wallets.founder?.balance || 0).toFixed(3)} HIVE`
+    );
+    setText(
+      "wallet-founder-account",
+      wallets.founder?.account || "@mydempire-owner"
+    );
 
-          document.getElementById("emp-sales-total-hive").textContent =
-            `${Number(summary.total_hive_completed || 0).toFixed(3)} HIVE`;
+    setText(
+      "wallet-treasury-system-total",
+      `${Number(totals.treasurySystem || 0).toFixed(3)} HIVE`
+    );
 
-          document.getElementById("emp-sales-total-emp").textContent = Number(
-            summary.total_emp_completed || 0,
-          ).toFixed(0);
-
-          // ===== Fill sales table =====
-          const body = document.getElementById("emp-sales-body");
-          body.innerHTML = "";
-
-          if (!sales.length) {
-            body.innerHTML = `
-        <tr>
-          <td colspan="6" style="padding:12px;color:#6b7280;">
-            No EMP purchase records found.
-          </td>
-        </tr>
-      `;
-            document.getElementById("emp-sales-status").textContent =
-              "No EMP purchase records found.";
-            return;
-          }
-
-          for (const sale of sales) {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-        <td style="padding:10px;">@${sale.username}</td>
-        <td style="padding:10px;">${Number(sale.hive_amount || 0).toFixed(3)}</td>
-        <td style="padding:10px;">${Number(sale.emp_amount || 0).toFixed(0)}</td>
-        <td style="padding:10px;">${sale.status || "--"}</td>
-        <td style="padding:10px;">${sale.txid || "--"}</td>
-        <td style="padding:10px;">${
-          sale.created_at ? new Date(sale.created_at).toLocaleString() : "--"
-        }</td>
-      `;
-            body.appendChild(tr);
-          }
-
-          document.getElementById("emp-sales-status").textContent =
-            `Loaded ${sales.length} EMP purchase records.`;
-        } catch (err) {
-          console.error("loadEmpSales error:", err);
-          document.getElementById("emp-sales-status").textContent =
-            "Failed to load EMP purchase log.";
-        }
-      }
-      document
-        .getElementById("load-emp-sales-btn")
-        .addEventListener("click", loadEmpSales);
-    </script>
-  </body>
+    document.getElementById("wallet-balances-status").textContent =
+      `Updated: ${new Date(data.updatedAt).toLocaleString()}`;
+  } catch (err) {
+    console.error("loadWalletBalances error:", err);
+    document.getElementById("wallet-balances-status").textContent =
+      "Failed to load wallet balances.";
+  }
+}
+</script>
+<div id="assets-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
+  <div style="max-width:900px; margin:40px auto; background:#fff; border-radius:16px; padding:20px; max-height:85vh; overflow-y:auto; position:relative;">
+    <button id="close-assets-modal-btn" style="position:absolute; top:12px; right:12px;">Close</button>
+    <h2 id="assets-modal-title">Player Assets</h2>
+    <div id="assets-modal-body">Loading...</div>
+  </div>
+</div>
+</body>
 </html>
