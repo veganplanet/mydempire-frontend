@@ -11781,3 +11781,43 @@ cursor:pointer;
 #emperor-leaderboard-list .leaderboard-metric span{
   display:none !important; /* remove "lifetime", "EP/day" text */
 }
+.dashboard-feature-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.dashboard-feature-card {
+  border-radius: 14px;
+  padding: 14px;
+  font-weight: 700;
+}
+
+.crate-feature-card {
+  background: linear-gradient(180deg, #fff7ed, #ffedd5);
+  border: 1px solid #fdba74;
+  color: #7c2d12;
+}
+
+.redevelopment-feature-card {
+  background: linear-gradient(180deg, #eef6ff, #dbeafe);
+  border: 1px solid #93c5fd;
+  color: #173b7a;
+}
+
+.feature-title {
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.feature-text {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 760px) {
+  .dashboard-feature-row {
+    grid-template-columns: 1fr;
+  }
+}
