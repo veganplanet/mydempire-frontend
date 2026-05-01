@@ -1469,6 +1469,7 @@ document
     l.status === "reserved"
       ? `
         <button class="primary" onclick="resetPackListingLocks(${l.id})">Recover</button>
+        <button class="primary" onclick="deliverReservedPackListing(${l.id})">Deliver</button>
         <button class="danger" onclick="cancelPackListing(${l.id})">Cancel</button>
       `
       : l.status === "active"
@@ -1744,6 +1745,39 @@ async function loadWalletBalances() {
   } catch (err) {
     console.error(err);
     alert("Error resetting pack locks.");
+  }
+}
+    async function deliverReservedPackListing(listingId) {
+  const ok = confirm(
+    `Deliver reserved pack(s) for listing #${listingId}?\n\nUse this ONLY if buyer already paid but pack was not delivered.`
+  );
+
+  if (!ok) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/deliver-reserved-pack-listing`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        listing_id: listingId,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      alert(data.error || "Failed to deliver reserved packs.");
+      return;
+    }
+
+    alert(data.message || "Reserved packs delivered successfully.");
+
+    document.getElementById("load-pack-listings-btn")?.click();
+  } catch (err) {
+    console.error(err);
+    alert("Error delivering reserved packs.");
   }
 }
 </script>
