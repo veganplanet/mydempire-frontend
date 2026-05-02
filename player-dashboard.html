@@ -3645,7 +3645,8 @@ updateCrateCardDisplay();
           if (!data.success) {
             statusEl.textContent = data.error || "Claim failed.";
             return;
-          }
+             }
+          showCrateResultModal(data.reward, data);
 
           if (!data.totalEMPClaimed || data.totalEMPClaimed <= 0) {
             statusEl.textContent =
@@ -4405,38 +4406,6 @@ function updateCrateCardDisplay() {
     crateCostEl.textContent = isFree ? "FREE 🎁" : "25 EMP";
   }
 }
-      function showCrateRewardPopup(reward) {
-  const text = reward?.label || "Reward";
-
-  const popup = document.createElement("div");
-  popup.style.position = "fixed";
-  popup.style.top = "50%";
-  popup.style.left = "50%";
-  popup.style.transform = "translate(-50%, -50%)";
-  popup.style.background = "linear-gradient(180deg, #111827, #1f2937)";
-  popup.style.color = "#fff";
-  popup.style.padding = "22px 30px";
-  popup.style.borderRadius = "18px";
-  popup.style.fontSize = "20px";
-  popup.style.fontWeight = "800";
-  popup.style.zIndex = "9999";
-  popup.style.boxShadow = "0 22px 50px rgba(0,0,0,0.45)";
-  popup.style.textAlign = "center";
-  popup.style.border = "1px solid rgba(255,255,255,0.18)";
-  popup.innerHTML = `
-    <div style="font-size:34px; margin-bottom:8px;">🎁</div>
-    <div>Imperial Supply Crate</div>
-    <div style="font-size:24px; color:#facc15; margin-top:8px;">
-      ${text}
-    </div>
-  `;
-
-  document.body.appendChild(popup);
-
-  setTimeout(() => {
-    popup.remove();
-  }, 2600);
-}
     </script>
 
     <script>
@@ -4580,7 +4549,7 @@ function updateCrateCardDisplay() {
         return;
       }
 
-     showCrateRewardPopup(data.reward);
+     
 
 openBtn.disabled = true;
 openBtn.textContent = "Opened Today";
@@ -4599,6 +4568,45 @@ loadDashboardSummary();
     }
   });
 });
+      function showCrateResultModal(reward, data) {
+  const modal = document.getElementById("crate-result-modal");
+  const rewardEl = document.getElementById("crate-result-reward");
+  const detailEl = document.getElementById("crate-result-detail");
+
+  if (!modal) return;
+
+  if (rewardEl) {
+    rewardEl.textContent = reward?.label || "Reward";
+  }
+
+  if (detailEl) {
+    detailEl.textContent =
+      data?.crate_cost === 0
+        ? "Free crate opened successfully."
+        : `Paid crate opened. Cost: ${data?.crate_cost || 25} EMP.`;
+  }
+
+  modal.style.display = "flex";
+}
+
+document.getElementById("close-crate-result-btn")?.addEventListener("click", () => {
+  document.getElementById("crate-result-modal").style.display = "none";
+});
     </script>
+    <div id="crate-result-modal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:9999; align-items:center; justify-content:center;">
+  <div style="background:#111827; color:white; width:min(420px, 92vw); border-radius:22px; padding:26px; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.16);">
+    <div style="font-size:42px;">🎁</div>
+    <h2 style="margin:10px 0 6px;">Imperial Supply Crate</h2>
+    <div id="crate-result-reward" style="font-size:28px; font-weight:900; color:#facc15; margin:14px 0;">
+      Reward
+    </div>
+    <div id="crate-result-detail" style="font-size:14px; color:#cbd5e1; margin-bottom:18px;">
+      Your crate has been opened successfully.
+    </div>
+    <button id="close-crate-result-btn" class="primary-button" type="button">
+      Close
+    </button>
+  </div>
+</div>
   </body>
 </html>
