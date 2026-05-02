@@ -4447,7 +4447,9 @@ loadDashboardSummary();
   }
 }
       async function openCrateHistoryModal(e) {
-  if (e) e.preventDefault();
+         if (e) e.preventDefault();
+        const loadingEl = document.getElementById("crate-history-loading");
+if (loadingEl) loadingEl.style.display = "none";
 
   const modal = document.getElementById("crate-history-modal");
   const box = document.getElementById("crate-history-list");
@@ -4852,7 +4854,7 @@ document.getElementById("close-crate-result-btn")?.addEventListener("click", () 
     <div class="crate-modal-header">🎁 Crate History</div>
 
     <div class="crate-modal-body">
-      <p id="crate-history-loading">Loading crate history...</p>
+      <p id="crate-history-loading" style="display:none;"></p>
       <div
   id="crate-history-list"
   style="max-height: 420px; overflow-y: auto; padding-right: 6px;"
