@@ -11821,3 +11821,57 @@ cursor:pointer;
     grid-template-columns: 1fr;
   }
 }
+.crate-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.68);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.crate-modal-content {
+  width: min(420px, 94vw);
+  background: linear-gradient(180deg, #ffffff 0%, #fff7ed 100%);
+  border: 1px solid #fdba74;
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+  color: #7c2d12;
+}
+
+.crate-modal-header {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.crate-modal-body {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.crate-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.crate-history-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(124, 45, 18, 0.15);
+}
+
+.crate-history-reward {
+  font-weight: 900;
+}
+
+.crate-history-date {
+  font-size: 12px;
+  color: #64748b;
+}
