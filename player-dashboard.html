@@ -4345,9 +4345,33 @@ document.head.appendChild(readOnlyStyle);
   updateTimer();
   setInterval(updateTimer, 1000);
 }
-      function openCrateModal() {
+     function openCrateModal() {
   const modal = document.getElementById("crate-modal");
-  if (modal) modal.style.display = "flex";
+  const costText = document.getElementById("crate-cost-text");
+  const message = document.getElementById("crate-modal-message");
+
+  if (!modal) return;
+
+  const epDay = window.dashboardData?.totalBaseEP || 0;
+  const globalShare = window.dashboardData?.globalSharePercent || 0;
+
+  const isFree =
+    Number(epDay || 0) >= 100 &&
+    Number(globalShare || 0) >= 1.5;
+
+  if (costText) {
+    costText.innerHTML = isFree
+      ? "<strong>Cost:</strong> FREE 🎁"
+      : "<strong>Cost:</strong> 25 EMP";
+  }
+
+  if (message) {
+    message.textContent = isFree
+      ? "You are eligible for a free crate. Open now?"
+      : "You are not eligible for a free crate. This will cost 25 EMP.";
+  }
+
+  modal.style.display = "flex";
 }
       function closeCrateModal() {
   const modal = document.getElementById("crate-modal");
