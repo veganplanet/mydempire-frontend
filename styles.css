@@ -11920,3 +11920,23 @@ cursor:pointer;
   font-size: 12px;
   color: #64748b;
 }
+.inventory-fragment {
+  min-height: 150px;
+}
+
+.inventory-fragment .inventory-title {
+  max-width: 160px;
+  line-height: 1.2;
+}
+
+.inventory-fragment .inventory-count {
+  margin-top: 8px;
+  font-size: 36px;
+  line-height: 1;
+}
+
+.inventory-fragment .inventory-subcount {
+  margin-top: 8px;
+  max-width: 190px;
+  line-height: 1.35;
+}
