@@ -4513,6 +4513,53 @@ function updateCrateCardDisplay() {
           const footerEl = document.getElementById("global-footer");
           if (footerEl) footerEl.innerHTML = html;
         });
+      document.addEventListener("DOMContentLoaded", () => {
+  const openBtn = document.getElementById("open-crate-btn");
+
+  if (!openBtn) return;
+
+  openBtn.addEventListener("click", async () => {
+    const username = localStorage.getItem("hiveUsername");
+
+    if (!username) {
+      alert("Please connect your wallet.");
+      return;
+    }
+
+    try {
+      openBtn.disabled = true;
+      openBtn.textContent = "Opening...";
+
+      const res = await fetch(apiUrl("/open-imperial-crate"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-player-actor": username
+        },
+        body: JSON.stringify({ username })
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        alert(data.error || "Failed to open crate.");
+        openBtn.disabled = false;
+        openBtn.textContent = "Open Crate";
+        return;
+      }
+
+      alert(`🎁 You received: ${data.reward?.label || "Reward!"}`);
+
+      loadDashboardSummary();
+
+    } catch (err) {
+      console.error(err);
+      alert("Error opening crate.");
+      openBtn.disabled = false;
+      openBtn.textContent = "Open Crate";
+    }
+  });
+});
     </script>
   </body>
 </html>
