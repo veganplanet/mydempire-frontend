@@ -214,9 +214,34 @@
 
     <div class="dashboard-feature-card crate-feature-card">
       <div class="feature-title">🎁 Imperial Supply Crate</div>
-      <div class="feature-text">
-        Daily reward system under testing. Stay active to not miss early advantages.
-      </div>
+
+<div class="feature-text">
+  <strong id="crate-cost-display" style="font-size: 26px; display:block; margin-bottom: 6px;">
+    25 EMP
+  </strong>
+
+  <div id="crate-status-text">
+    1 crate per day • Next crate in
+    <span id="crate-reset-timer">--</span>
+  </div>
+
+  <button id="open-crate-btn" class="primary-button" type="button" style="margin-top: 12px;">
+    Open Crate
+  </button>
+
+  <div id="crate-action-status" class="status-text" style="margin-top: 8px;">
+    Rewards include up to 100 EMP and Imperial Fragments
+  </div>
+
+  <a
+    href="javascript:void(0)"
+    id="crate-history-link"
+    class="status-link"
+    onclick="openCrateHistoryModal(event)"
+  >
+    View history
+  </a>
+</div>
     </div>
 
     <div class="dashboard-feature-card redevelopment-feature-card">
@@ -1338,6 +1363,8 @@ html += `</div>`;
             throw new Error("HTTP " + blueprintsRes.status);
 
           const data = await dashboardRes.json();
+          window.dashboardData = data;
+updateCrateCardDisplay();
           const overviewData = await overviewRes.json();
           const blueprintsData = await blueprintsRes.json();
 
@@ -4362,6 +4389,22 @@ const activeUserClean = String(
       function tradeBlueprint(id) {
         window.location.href = "marketplace.html?blueprint=" + id;
       }
+      function isCrateEligible(epDay, globalShare) {
+  return Number(epDay || 0) >= 100 && Number(globalShare || 0) >= 1.5;
+}
+
+function updateCrateCardDisplay() {
+  const epDay = window.dashboardData?.totalBaseEP || 0;
+  const globalShare = window.dashboardData?.globalSharePercent || 0;
+
+  const isFree = isCrateEligible(epDay, globalShare);
+
+  const crateCostEl = document.getElementById("crate-cost-display");
+
+  if (crateCostEl) {
+    crateCostEl.textContent = isFree ? "FREE 🎁" : "25 EMP";
+  }
+}
     </script>
 
     <script>
