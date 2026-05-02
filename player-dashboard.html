@@ -4548,10 +4548,17 @@ function updateCrateCardDisplay() {
         return;
       }
 
-      alert(`🎁 You received: ${data.reward?.label || "Reward!"}`);
+     alert(`🎁 You received: ${data.reward?.label || "Reward!"}`);
 
-      loadDashboardSummary();
+openBtn.disabled = true;
+openBtn.textContent = "Opened Today";
 
+const statusEl = document.getElementById("crate-action-status");
+if (statusEl) {
+  statusEl.textContent = "You already opened today’s Imperial Supply Crate.";
+}
+
+loadDashboardSummary();
     } catch (err) {
       console.error(err);
       alert("Error opening crate.");
