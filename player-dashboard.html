@@ -212,26 +212,32 @@
   <!-- 🔹 Replace wide crate with 2 banners -->
   <div class="overview-block dashboard-feature-row" style="margin-bottom: 16px">
 
-    <div class="dashboard-feature-card crate-feature-card">
-      <div class="feature-title">🎁 Imperial Supply Crate</div>
-
-<div class="feature-text">
-  <strong id="crate-cost-display" style="font-size: 26px; display:block; margin-bottom: 6px;">
-    25 EMP
-  </strong>
-
-  <div id="crate-status-text">
-    1 crate per day • Next crate in
-    <span id="crate-reset-timer">--</span>
+   <div class="crate-card">
+  <div class="crate-header">
+    <div class="crate-title">🎁 Imperial Supply Crate</div>
+    <div class="crate-badge" id="crate-badge">FREE</div>
   </div>
 
-  <button id="open-crate-btn" class="primary-button" type="button" style="margin-top: 12px;">
-    Open Crate
-  </button>
+  <div class="crate-main">
+    <div class="crate-status">
+      <div class="crate-cost" id="crate-cost-display">25 EMP</div>
+      <div class="crate-timer">
+        Next crate in <span id="crate-reset-timer">--</span>
+      </div>
+    </div>
 
-  <div id="crate-action-status" class="status-text" style="margin-top: 8px;">
-    Rewards include up to 100 EMP and Imperial Fragments
+    <button class="primary-button crate-open-btn" id="open-crate-btn">
+      Open Crate
+    </button>
   </div>
+
+  <div class="crate-footer">
+    <div class="crate-rewards">
+      💰 Rewards up to <strong>100 EMP</strong> & 🧩 Fragments
+    </div>
+    <a href="#" onclick="openCrateHistoryModal(event)">View history</a>
+  </div>
+</div>
 
   <a
     href="javascript:void(0)"
