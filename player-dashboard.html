@@ -4593,47 +4593,15 @@ if (openBtn) {
   });
 }
 
-    try {
-      openBtn.disabled = true;
-      openBtn.textContent = "Opening...";
+  // 🔹 Only open modal on button click
+const openBtn = document.getElementById("open-crate-btn");
 
-      const res = await fetch(apiUrl("/open-imperial-crate"), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-player-actor": username
-        },
-        body: JSON.stringify({ username })
-      });
-
-      const data = await res.json();
-
-      if (!data.success) {
-        alert(data.error || "Failed to open crate.");
-        openBtn.disabled = false;
-        openBtn.textContent = "Open Crate";
-        return;
-      }
-
-     
-
-openBtn.disabled = true;
-openBtn.textContent = "Opened Today";
-
-const statusEl = document.getElementById("crate-action-status");
-if (statusEl) {
-  statusEl.textContent = "You already opened today’s Imperial Supply Crate.";
-}
-
-loadDashboardSummary();
-    } catch (err) {
-      console.error(err);
-      alert("Error opening crate.");
-      openBtn.disabled = false;
-      openBtn.textContent = "Open Crate";
-    }
+if (openBtn) {
+  openBtn.addEventListener("click", () => {
+    const modal = document.getElementById("crate-modal");
+    if (modal) modal.style.display = "flex";
   });
-});
+};
       function showCrateResultModal(reward, data) {
   const modal = document.getElementById("crate-result-modal");
   const rewardEl = document.getElementById("crate-result-reward");
