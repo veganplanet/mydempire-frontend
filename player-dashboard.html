@@ -4830,7 +4830,10 @@ document.getElementById("close-crate-result-btn")?.addEventListener("click", () 
 
     <div class="crate-modal-body">
       <p id="crate-history-loading">Loading crate history...</p>
-      <div id="crate-history-list"></div>
+      <div
+  id="crate-history-list"
+  style="max-height: 420px; overflow-y: auto; padding-right: 6px;"
+></div>
     </div>
 
     <div class="crate-modal-actions">
