@@ -4319,6 +4319,32 @@ document.head.appendChild(readOnlyStyle);
   true
 );
       }
+      function startCrateResetTimer() {
+  const cardEl = document.getElementById("crate-reset-timer");
+  const popupEl = document.getElementById("crate-popup-reset-timer");
+
+  if (!cardEl && !popupEl) return;
+
+  function updateTimer() {
+    const now = new Date();
+    const nextReset = new Date();
+    nextReset.setUTCHours(24, 0, 0, 0);
+
+    const diff = nextReset - now;
+
+    const hours = Math.floor(diff / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+
+    const timerText = `${hours}h ${minutes}m ${seconds}s`;
+
+    if (cardEl) cardEl.textContent = timerText;
+    if (popupEl) popupEl.textContent = timerText;
+  }
+
+  updateTimer();
+  setInterval(updateTimer, 1000);
+}
       window.addEventListener("load", async () => {
         try {
           setupDashboardNavbar();
