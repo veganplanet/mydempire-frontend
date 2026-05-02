@@ -4349,6 +4349,10 @@ document.head.appendChild(readOnlyStyle);
   const modal = document.getElementById("crate-modal");
   if (modal) modal.style.display = "flex";
 }
+      function closeCrateModal() {
+  const modal = document.getElementById("crate-modal");
+  if (modal) modal.style.display = "none";
+}
       window.addEventListener("load", async () => {
         try {
           setupDashboardNavbar();
