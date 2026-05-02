@@ -4398,28 +4398,26 @@ document.head.appendChild(readOnlyStyle);
 
     const data = await res.json();
 
-    if (!data.success) {
-      alert(data.error || "Failed to open crate.");
-      return;
-    }
+ if (!data.success) {
+  alert(data.error || "Failed to open crate.");
+  return;
+}
 
-    // close modal
-    closeCrateModal();
-
-// 🔥 ADD THIS LINE
+// 🔥 SHOW RESULT FIRST
 showCrateResultModal(data.reward, data);
 
-    // show reward
-    showCrateResultModal(data.reward, data);
+// THEN CLOSE CONFIRM MODAL
+setTimeout(() => {
+  closeCrateModal();
+}, 100);
 
-    // update button
-    if (openBtn) {
-      openBtn.disabled = true;
-      openBtn.textContent = "Opened Today";
-    }
+// update button
+if (openBtn) {
+  openBtn.disabled = true;
+  openBtn.textContent = "Opened Today";
+}
 
-    loadDashboardSummary();
-
+loadDashboardSummary();
   } catch (err) {
     console.error(err);
     alert("Error opening crate.");
