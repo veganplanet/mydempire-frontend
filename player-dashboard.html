@@ -4353,6 +4353,51 @@ document.head.appendChild(readOnlyStyle);
   const modal = document.getElementById("crate-modal");
   if (modal) modal.style.display = "none";
 }
+      async function openImperialSupplyCrate() {
+  const username = localStorage.getItem("hiveUsername");
+  const openBtn = document.getElementById("open-crate-btn");
+
+  if (!username) {
+    alert("Please connect your wallet.");
+    return;
+  }
+
+  try {
+    const res = await fetch(apiUrl("/open-imperial-crate"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-player-actor": username
+      },
+      body: JSON.stringify({ username })
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      alert(data.error || "Failed to open crate.");
+      return;
+    }
+
+    // close modal
+    closeCrateModal();
+
+    // show reward
+    showCrateResultModal(data.reward, data);
+
+    // update button
+    if (openBtn) {
+      openBtn.disabled = true;
+      openBtn.textContent = "Opened Today";
+    }
+
+    loadDashboardSummary();
+
+  } catch (err) {
+    console.error(err);
+    alert("Error opening crate.");
+  }
+}
       window.addEventListener("load", async () => {
         try {
           setupDashboardNavbar();
