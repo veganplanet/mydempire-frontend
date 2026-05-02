@@ -4593,16 +4593,7 @@ if (openBtn) {
   });
 }
 
-  // 🔹 Only open modal on button click
-const openBtn = document.getElementById("open-crate-btn");
-
-if (openBtn) {
-  openBtn.addEventListener("click", () => {
-    const modal = document.getElementById("crate-modal");
-    if (modal) modal.style.display = "flex";
-  });
-};
-      function showCrateResultModal(reward, data) {
+       function showCrateResultModal(reward, data) {
   const modal = document.getElementById("crate-result-modal");
   const rewardEl = document.getElementById("crate-result-reward");
   const detailEl = document.getElementById("crate-result-detail");
