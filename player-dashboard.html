@@ -4524,9 +4524,7 @@ function updateCrateCardDisplay() {
           const footerEl = document.getElementById("global-footer");
           if (footerEl) footerEl.innerHTML = html;
         });
-      document.addEventListener("DOMContentLoaded", () => {
-  const openBtn = document.getElementById("open-crate-btn");
-
+      
   if (!openBtn) return;
 
   openBtn.addEventListener("click", () => {
@@ -4653,20 +4651,47 @@ document.getElementById("close-crate-result-btn")?.addEventListener("click", () 
     }
   });
     </script>
-    <div id="crate-result-modal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:9999; align-items:center; justify-content:center;">
-  <div style="background:#111827; color:white; width:min(420px, 92vw); border-radius:22px; padding:26px; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.16);">
-    <div style="font-size:42px;">🎁</div>
-    <h2 style="margin:10px 0 6px;">Imperial Supply Crate</h2>
-    <div id="crate-result-reward" style="font-size:28px; font-weight:900; color:#facc15; margin:14px 0;">
-      Reward
+  <!-- IMPERIAL SUPPLY CRATE MODAL -->
+<div id="crate-modal" class="crate-modal" style="display: none">
+  <div id="crate-modal-content" class="crate-modal-content">
+    <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
+
+    <div class="crate-modal-body">
+      <p id="crate-modal-message">Open your daily Imperial Supply Crate?</p>
+      <p id="crate-cost-text"><strong>Cost:</strong> 25 EMP</p>
+      <p id="crate-free-rule-text" style="font-size: 13px; color: #64748b; margin-top: 8px">
+        Free crate requires 100 EP/day and 1.5% Daily Share.
+      </p>
     </div>
-    <div id="crate-result-detail" style="font-size:14px; color:#cbd5e1; margin-bottom:18px;">
-      Your crate has been opened successfully.
+
+    <div class="crate-modal-actions">
+      <button id="cancel-open-crate-btn" class="secondary-button" type="button">
+        Cancel
+      </button>
+
+      <button id="confirm-open-crate-btn" class="primary-button" type="button">
+        Confirm Open
+      </button>
     </div>
-    <button id="close-crate-result-btn" class="primary-button" type="button">
-      Close
-    </button>
   </div>
 </div>
+
+<!-- IMPERIAL SUPPLY CRATE HISTORY MODAL -->
+<div id="crate-history-modal" class="crate-modal" style="display: none">
+  <div id="crate-history-content" class="crate-modal-content">
+    <div class="crate-modal-header">🎁 Crate History</div>
+
+    <div class="crate-modal-body">
+      <p id="crate-history-loading">Loading crate history...</p>
+      <div id="crate-history-list"></div>
+    </div>
+
+    <div class="crate-modal-actions">
+      <button id="close-crate-history-btn" class="primary-button" type="button" onclick="closeCrateHistoryModal()">
+        Close
+      </button>
+    </div>
+  </div>
+</div>  
   </body>
 </html>
