@@ -11933,3 +11933,27 @@ cursor:pointer;
   font-weight: 900;
   line-height: 1;
 }
+/* Force same text sizing for all Empire Asset cards */
+.empire-inventory .inventory-card .inventory-title,
+.empire-inventory .inventory-card.inventory-fragment .inventory-title {
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  line-height: 1.25 !important;
+}
+
+.empire-inventory .inventory-card .inventory-count,
+.empire-inventory .inventory-card.inventory-fragment .inventory-count {
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  color: #2563eb !important;
+  line-height: 1 !important;
+}
+
+.empire-inventory .inventory-card .inventory-subcount,
+.empire-inventory .inventory-card.inventory-fragment .inventory-subcount {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  line-height: 1.4 !important;
+}
