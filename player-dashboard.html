@@ -593,6 +593,16 @@
               <div class="inventory-count" id="asset-writs">0</div>
             </div>
           </div>
+          <div class="inventory-card inventory-fragment">
+  <div class="inventory-icon" style="font-size: 42px;">💠</div>
+  <div class="inventory-info">
+    <div class="inventory-title">Imperial Fragments</div>
+    <div class="inventory-count" id="asset-imperial-fragments">0</div>
+    <div class="inventory-subcount">
+      Rare crate material for future premium construction
+    </div>
+  </div>
+</div>
         </div>
 
         <h3 style="margin: 24px 0 12px">Blueprints</h3>
@@ -1617,6 +1627,10 @@ updateCrateCardDisplay();
           setText("asset-packs", `x ${unopenedPacks}`);
           setText("asset-relics", `x ${relicCount}`);
           setText("asset-writs", `x ${writCount}`);
+          setText(
+  "asset-imperial-fragments",
+  `x ${Number(data.imperialFragments || 0)}`
+);
         } catch (err) {
           console.error("Failed to load dashboard summary:", err);
         }
