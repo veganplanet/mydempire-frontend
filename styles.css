@@ -11875,3 +11875,48 @@ cursor:pointer;
   font-size: 12px;
   color: #64748b;
 }
+/* Imperial Fragment Card */
+.inventory-fragment {
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  border: 1px solid #c7d2fe;
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 6px 14px rgba(99, 102, 241, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inventory-fragment:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+}
+
+.inventory-fragment .inventory-icon {
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e0e7ff;
+  border-radius: 12px;
+  font-size: 28px;
+}
+
+.inventory-fragment .inventory-title {
+  font-weight: 800;
+  font-size: 16px;
+  color: #3730a3;
+}
+
+.inventory-fragment .inventory-count {
+  font-size: 20px;
+  font-weight: 900;
+  color: #4f46e5;
+}
+
+.inventory-fragment .inventory-subcount {
+  font-size: 12px;
+  color: #64748b;
+}
