@@ -12056,3 +12056,18 @@ cursor:pointer;
 .redevelopment-feature-card {
   height: 100%;
 }
+.navbar,
+.top-nav,
+.header {
+  overflow: visible !important;
+}
+.nav-dropdown,
+.nav-account-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 9999;
+}
+.nav-account {
+  position: relative;
+}
