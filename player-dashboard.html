@@ -4840,5 +4840,33 @@ document.getElementById("close-crate-result-btn")?.addEventListener("click", () 
     </div>
   </div>
 </div>  
+    <!-- IMPERIAL SUPPLY CRATE RESULT MODAL -->
+<div id="crate-result-modal" class="crate-modal" style="display: none">
+  <div class="crate-modal-content">
+    <div style="font-size: 42px; text-align: center">🎁</div>
+    <div class="crate-modal-header" style="text-align: center">
+      Imperial Supply Crate
+    </div>
+
+    <div class="crate-modal-body" style="text-align: center">
+      <p><strong>You discovered:</strong></p>
+      <p id="crate-result-reward" style="font-size: 28px; font-weight: 900; color: #ca8a04">
+        Reward
+      </p>
+      <p id="crate-result-detail">Crate opened successfully.</p>
+    </div>
+
+    <div class="crate-modal-actions" style="justify-content: center">
+      <button
+        id="close-crate-result-btn"
+        class="primary-button"
+        type="button"
+        onclick="document.getElementById('crate-result-modal').style.display='none'"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
   </body>
 </html>
