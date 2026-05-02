@@ -4324,6 +4324,31 @@ document.head.appendChild(readOnlyStyle);
           setupDashboardNavbar();
 
           await loadDashboardSummary();
+          startCrateResetTimer();
+
+const crateEls = getCrateModalEls();
+
+if (crateEls.openCrateBtn) {
+  crateEls.openCrateBtn.addEventListener("click", openCrateModal);
+}
+
+if (crateEls.cancelOpenCrateBtn) {
+  crateEls.cancelOpenCrateBtn.addEventListener("click", closeCrateModal);
+}
+
+if (crateEls.confirmOpenCrateBtn) {
+  crateEls.confirmOpenCrateBtn.addEventListener("click", openImperialSupplyCrate);
+}
+
+const crateHistoryLink = document.getElementById("crate-history-link");
+if (crateHistoryLink) {
+  crateHistoryLink.addEventListener("click", openCrateHistoryModal);
+}
+
+const closeHistoryBtn = document.getElementById("close-crate-history-btn");
+if (closeHistoryBtn) {
+  closeHistoryBtn.addEventListener("click", closeCrateHistoryModal);
+}
           await loadRewardSummary();
           await loadGlobalHealth();
           await loadEmpireOverview();
