@@ -4584,18 +4584,14 @@ function updateCrateCardDisplay() {
           if (footerEl) footerEl.innerHTML = html;
         });
       
-  if (!openBtn) return;
+const openBtn = document.getElementById("open-crate-btn");
 
+if (openBtn) {
   openBtn.addEventListener("click", () => {
-  const modal = document.getElementById("crate-modal");
-  if (modal) modal.style.display = "flex";
-});
-    const username = localStorage.getItem("hiveUsername");
-
-    if (!username) {
-      alert("Please connect your wallet.");
-      return;
-    }
+    const modal = document.getElementById("crate-modal");
+    if (modal) modal.style.display = "flex";
+  });
+}
 
     try {
       openBtn.disabled = true;
