@@ -4405,6 +4405,38 @@ function updateCrateCardDisplay() {
     crateCostEl.textContent = isFree ? "FREE 🎁" : "25 EMP";
   }
 }
+      function showCrateRewardPopup(reward) {
+  const text = reward?.label || "Reward";
+
+  const popup = document.createElement("div");
+  popup.style.position = "fixed";
+  popup.style.top = "50%";
+  popup.style.left = "50%";
+  popup.style.transform = "translate(-50%, -50%)";
+  popup.style.background = "linear-gradient(180deg, #111827, #1f2937)";
+  popup.style.color = "#fff";
+  popup.style.padding = "22px 30px";
+  popup.style.borderRadius = "18px";
+  popup.style.fontSize = "20px";
+  popup.style.fontWeight = "800";
+  popup.style.zIndex = "9999";
+  popup.style.boxShadow = "0 22px 50px rgba(0,0,0,0.45)";
+  popup.style.textAlign = "center";
+  popup.style.border = "1px solid rgba(255,255,255,0.18)";
+  popup.innerHTML = `
+    <div style="font-size:34px; margin-bottom:8px;">🎁</div>
+    <div>Imperial Supply Crate</div>
+    <div style="font-size:24px; color:#facc15; margin-top:8px;">
+      ${text}
+    </div>
+  `;
+
+  document.body.appendChild(popup);
+
+  setTimeout(() => {
+    popup.remove();
+  }, 2600);
+}
     </script>
 
     <script>
@@ -4548,7 +4580,7 @@ function updateCrateCardDisplay() {
         return;
       }
 
-     alert(`🎁 You received: ${data.reward?.label || "Reward!"}`);
+     showCrateRewardPopup(data.reward);
 
 openBtn.disabled = true;
 openBtn.textContent = "Opened Today";
