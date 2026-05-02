@@ -181,46 +181,91 @@
         </button>
       </div>
 
-      <!-- ===== TAB: OVERVIEW ===== -->
-      <section
-        class="section tab-panel tab-panel-active"
-        data-tab-panel="overview"
-      >
-        <div class="section-header">
-          <h2>Overview</h2>
-          <small>Your Genesis EMP, lands, factories and boosts</small>
-        </div>
-        <div class="overview-block" style="margin-bottom: 16px">
-          <div
-            id="empire-status-pulse"
-            style="
-              background: linear-gradient(180deg, #eef6ff 0%, #e0ecff 100%);
-              border: 1px solid #bfdbfe;
-              color: #173b7a;
-              border-radius: 16px;
-              padding: 14px 16px;
-              font-weight: 800;
-              box-shadow: 0 8px 18px rgba(37, 99, 235, 0.1);
-            "
-          >
-            🌿 Loading empire status...
+  <!-- ===== TAB: OVERVIEW ===== -->
+<section
+  class="section tab-panel tab-panel-active"
+  data-tab-panel="overview"
+>
+  <div class="section-header">
+    <h2>Overview</h2>
+    <small>Your Genesis EMP, lands, factories and boosts</small>
+  </div>
+
+  <!-- 🔹 Pulse (keep first) -->
+  <div class="overview-block" style="margin-bottom: 16px">
+    <div
+      id="empire-status-pulse"
+      style="
+        background: linear-gradient(180deg, #eef6ff 0%, #e0ecff 100%);
+        border: 1px solid #bfdbfe;
+        color: #173b7a;
+        border-radius: 16px;
+        padding: 14px 16px;
+        font-weight: 800;
+        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.1);
+      "
+    >
+      🌿 Loading empire status...
+    </div>
+  </div>
+
+  <!-- 🔹 Replace wide crate with 2 banners -->
+  <div class="overview-block dashboard-feature-row" style="margin-bottom: 16px">
+  <div class="dashboard-feature-card crate-feature-card">
+    <div class="crate-card">
+      <div class="crate-header">
+        <div class="crate-title">🎁 Imperial Supply Crate</div>
+        <div class="crate-badge" id="crate-badge">DAILY</div>
+      </div>
+
+      <div class="crate-main">
+        <div class="crate-status">
+          <div class="crate-cost" id="crate-cost-display">25 EMP</div>
+          <div class="crate-timer">
+            Next crate in <span id="crate-reset-timer">--</span>
           </div>
         </div>
-        <div class="overview-block" style="margin-bottom:16px;">
-  <div style="
-    background: linear-gradient(180deg,#fff7ed,#ffedd5);
-    border:1px solid #fdba74;
-    color:#7c2d12;
-    border-radius:14px;
-    padding:14px;
-    font-weight:700;
-  ">
-    🎁 Imperial Supply Crate (Coming Soon)
-    <div style="font-size:13px; font-weight:500; margin-top:6px;">
-      Daily reward system under testing. Stay active to not miss early advantages.
+
+        <button class="primary-button crate-open-btn" id="open-crate-btn" type="button">
+          Open Crate
+        </button>
+      </div>
+
+      <div class="crate-footer">
+        <div class="crate-rewards">
+          💰 Rewards up to <strong>100 EMP</strong> & 🧩 Fragments
+        </div>
+
+        <a
+          href="javascript:void(0)"
+          id="crate-history-link"
+          onclick="openCrateHistoryModal(event)"
+        >
+          View history
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-feature-card redevelopment-feature-card">
+    <div class="feature-title">🏭 Factory Redevelopment</div>
+
+    <div class="feature-text">
+      A new strategic ability is arriving.<br />
+      Prepare your empire for transformation.
+    </div>
+
+    <button class="primary-button" type="button" disabled>
+      Coming Soon 🔒
+    </button>
+
+    <div class="status-text" style="margin-top: 8px;">
+      Only prepared empires will benefit.
     </div>
   </div>
 </div>
+    
+
         <!-- ===== BLOCK 1: SNAPSHOT ===== -->
         <div class="overview-block">
           <div class="overview-block-title">Empire Snapshot</div>
@@ -541,6 +586,9 @@
             <div class="inventory-info">
               <div class="inventory-title">Relics</div>
               <div class="inventory-count" id="asset-relics">0</div>
+              <div class="inventory-subcount">
+  Permanent EP boost collectible
+</div>
             </div>
           </div>
 
@@ -549,8 +597,21 @@
             <div class="inventory-info">
               <div class="inventory-title">WRITs</div>
               <div class="inventory-count" id="asset-writs">0</div>
+              <div class="inventory-subcount">
+  Strategic booster for future utility
+</div>
             </div>
           </div>
+          <div class="inventory-card inventory-fragment">
+  <div class="inventory-icon" style="font-size: 42px;">💠</div>
+  <div class="inventory-info">
+    <div class="inventory-title">Imperial Fragments</div>
+    <div class="inventory-count" id="asset-imperial-fragments">0</div>
+    <div class="inventory-subcount">
+      Rare crate material for future premium construction
+    </div>
+  </div>
+</div>
         </div>
 
         <h3 style="margin: 24px 0 12px">Blueprints</h3>
@@ -791,41 +852,91 @@
         const params = new URLSearchParams(window.location.search);
         return params.get("user");
       }
+let ACTIVE_USER = null;
+      let EXACT_WALLET_HIVE = 0;
+      const viewedUsername = getUsernameFromURL();
+     // Fix: only clean if NO real login exists
+const hasRealLogin =
+  localStorage.getItem("hiveUsername") ||
+  localStorage.getItem("mde_username") ||
+  localStorage.getItem("username");
 
-      const username =
-        getUsernameFromURL() || localStorage.getItem("hiveUsername");
+if (viewedUsername && !hasRealLogin) {
+  localStorage.removeItem("mde_username");
+  localStorage.removeItem("username");
+}
 
-      if (username) {
-        localStorage.setItem("hiveUsername", username);
-      }
+const loggedInUsername =
+  localStorage.getItem("hiveUsername") ||
+  localStorage.getItem("mde_username") ||
+  localStorage.getItem("username");
+
+const username = viewedUsername || loggedInUsername;
+
+if (loggedInUsername) {
+  setActiveUser(loggedInUsername);
+}
+
+if (loggedInUsername) {
+  ACTIVE_USER = String(loggedInUsername)
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+}
 
       console.log("Dashboard loading for:", username);
 
-      let ACTIVE_USER = null;
-      let EXACT_WALLET_HIVE = 0;
+      
 
-      function getActiveUser() {
-        const u = (localStorage.getItem("hiveUsername") || "").trim();
-        return u;
-      }
+    function getActiveUser() {
+  const u = (localStorage.getItem("hiveUsername") || "").trim();
+  return u;
+}
 
-      function setActiveUser(u) {
-        const user = (u || "").trim().toLowerCase();
-        localStorage.setItem("hiveUsername", user);
-        ACTIVE_USER = user;
+// Add actor header automatically to all dashboard API requests
+const originalFetch = window.fetch.bind(window);
 
-        const el = document.getElementById("welcomeUser"); // optional if you have it
-        if (el) el.textContent = `@${user}`;
+window.fetch = function (url, options = {}) {
+  const actor = String(
+    ACTIVE_USER ||
+    getActiveUser() ||
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    ""
+  )
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
 
-        return user;
-      }
+  const newOptions = { ...options };
+  const headers = new Headers(newOptions.headers || {});
 
-      const LAND_TIER_COLORS_BY_KEY = {
-        L1: "#16a34a", // Frontier
-        L2: "#fbbf24", // Estate
-        L3: "#ef4444", // Industrial Zone
-      };
+  if (actor) {
+    headers.set("x-mde-actor", actor);
+    headers.set("x-player-actor", actor);
+  }
 
+  newOptions.headers = headers;
+  return originalFetch(url, newOptions);
+};
+
+function setActiveUser(u) {
+  const user = (u || "").trim().toLowerCase();
+  localStorage.setItem("hiveUsername", user);
+  ACTIVE_USER = user;
+
+  const el = document.getElementById("welcomeUser");
+  if (el) el.textContent = `@${user}`;
+
+  return user;
+}
+
+const LAND_TIER_COLORS_BY_KEY = {
+  L1: "#16a34a",
+  L2: "#fbbf24",
+  L3: "#ef4444",
+};
       const LAND_TIER_SHORT_LABEL = {
         L1: "Frontier",
         L2: "Estate",
@@ -993,17 +1104,43 @@
       }
       async function loadEmperorLeaderboard() {
         try {
+          const cacheKey = "myd_leaderboard_emperors_cache";
+          const cached = sessionStorage.getItem(cacheKey);
+
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            const ageMs = Date.now() - parsed.savedAt;
+
+            if (ageMs < 60000 && parsed.html) {
+              const container = document.getElementById(
+                "emperor-leaderboard-list",
+              );
+              if (container) container.innerHTML = parsed.html;
+              return;
+            }
+          }
           const res = await fetch(apiUrl("/leaderboard/emperors"));
           const data = await res.json();
 
           const container = document.getElementById("emperor-leaderboard-list");
           if (!container) return;
 
-          if (!data.success || !data.leaders.length) {
-            container.innerHTML =
-              "Leaderboard will appear once lifetime EP begins accumulating.";
-            return;
-          }
+         if (!data.success || !data.leaders.length) {
+  const emptyHtml =
+    "Leaderboard will appear once lifetime EP begins accumulating.";
+
+  container.innerHTML = emptyHtml;
+
+  sessionStorage.setItem(
+    "myd_leaderboard_emperors_cache",
+    JSON.stringify({
+      savedAt: Date.now(),
+      html: emptyHtml,
+    }),
+  );
+
+  return;
+}
           function getPlayerTitle(rank) {
             if (rank === 1) {
               return {
@@ -1031,7 +1168,17 @@
               icon: "icon-builder-rank",
             };
           }
-          let html = `<div class="leaderboard-list">`;
+          let html = `
+  <div class="leaderboard-list">
+
+<div class="leaderboard-row leaderboard-header-row">
+  <div class="leaderboard-rank">Rank</div>
+  <div class="leaderboard-player">Player</div>
+  <div class="leaderboard-metric">Lifetime EP</div>
+  <div class="leaderboard-metric">EP/day</div>
+  <div class="leaderboard-metric">Daily Share</div>
+</div>
+`;
 
           data.leaders.forEach((row, index) => {
             const rankLabel =
@@ -1046,7 +1193,18 @@
             const titleData = getPlayerTitle(index + 1);
 
             html += `
-    <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""}">
+    <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""} ${
+      Number(row.current_ep_per_day || row.ep_per_day || 0) >= 100 &&
+      Number(row.global_ep_share_percent || 0) >= 1.5
+        ? "crate-qualified"
+        : ""
+    }" 
+data-tooltip="${
+              Number(row.current_ep_per_day || row.ep_per_day || 0) >= 100 &&
+              Number(row.global_ep_share_percent || 0) >= 1.5
+                ? "Eligible for Daily Crate 🎁"
+                : ""
+            }">
       <div class="leaderboard-rank">
   ${
     index === 0
@@ -1084,7 +1242,24 @@
   ${titleData.title}
 </div>
       </div>
-      <div class="leaderboard-score">${Number(row.lifetime_ep).toFixed(2)} EP</div>
+      <div class="leaderboard-score leaderboard-score-grid">
+
+  <div class="leaderboard-metric">
+    <strong>${Number(row.lifetime_ep || 0).toFixed(2)} EP</strong>
+    <span>lifetime</span>
+  </div>
+
+  <div class="leaderboard-metric">
+    <strong>${Number(row.current_ep_per_day || 0).toFixed(2)}</strong>
+    <span>EP/day</span>
+  </div>
+
+  <div class="leaderboard-metric">
+    <strong>${Number(row.global_ep_share_percent || 0).toFixed(2)}%</strong>
+    <span>Global/day</span>
+  </div>
+
+</div>
     </div>
   `;
           });
@@ -1124,6 +1299,7 @@
           console.error("Leaderboard error:", err);
         }
       }
+
       async function loadIndustryLeaders() {
         try {
           const res = await fetch(apiUrl("/leaderboard/industries"));
@@ -1148,23 +1324,42 @@
             { label: "Supermarket", key: "supermarket" },
           ];
 
-          let html = `<div class="leaderboard-list leaderboard-industry-list">`;
+          let html = `
+  <div class="industry-list">
 
-          items.forEach((item) => {
-            const leader = data.leaders[item.key];
-
-            html += `
-  <div class="leaderboard-row">
-    <div class="leaderboard-rank">${item.label}</div>
-    <div class="leaderboard-player">${leader?.username ?? "—"}</div>
-    <div class="leaderboard-score">
-      ${leader ? `${Number(leader.ep).toFixed(2)} EP` : "No leader yet"}
+    <div class="industry-header">
+      <div>Industry</div>
+      <div>Leader</div>
+      <div>EP</div>
+      <div>Share</div>
     </div>
-  </div>
 `;
-          });
 
-          html += `</div>`;
+items.forEach((item) => {
+  const leader = data.leaders[item.key];
+
+  html += `
+    <div class="industry-item">
+      <div class="industry-name">${item.label}</div>
+
+      <div class="industry-player">
+        ${leader?.username ?? "—"}
+      </div>
+
+      <div class="industry-ep">
+        ${leader ? Number(leader.ep).toFixed(2) : "--"} EP
+      </div>
+
+      <div class="industry-share">
+        ${leader ? Number(leader.industry_share_percent).toFixed(2) : "--"}%
+      </div>
+    </div>
+  `;
+});
+
+html += `</div>`;
+          
+          
           container.innerHTML = html;
         } catch (err) {
           console.error("Industry leaderboard error:", err);
@@ -1187,6 +1382,8 @@
             throw new Error("HTTP " + blueprintsRes.status);
 
           const data = await dashboardRes.json();
+          window.dashboardData = data;
+updateCrateCardDisplay();
           const overviewData = await overviewRes.json();
           const blueprintsData = await blueprintsRes.json();
 
@@ -1439,6 +1636,10 @@
           setText("asset-packs", `x ${unopenedPacks}`);
           setText("asset-relics", `x ${relicCount}`);
           setText("asset-writs", `x ${writCount}`);
+          setText(
+  "asset-imperial-fragments",
+  `x ${Number(data.imperialFragments || 0)}`
+);
         } catch (err) {
           console.error("Failed to load dashboard summary:", err);
         }
@@ -3465,9 +3666,20 @@
           console.log("Claim all result:", data);
 
           if (!data.success) {
-            statusEl.textContent = data.error || "Claim failed.";
-            return;
-          }
+  statusEl.textContent = data.error || "Claim failed.";
+  openBtn.disabled = false;
+  openBtn.textContent = "Open Crate";
+  return;
+}
+
+// ✅ SUCCESS FLOW
+showCrateResultModal(data.reward, data);
+
+openBtn.disabled = true;
+openBtn.textContent = "Opened Today";
+
+loadDashboardSummary();
+          showCrateResultModal(data.reward, data);
 
           if (!data.totalEMPClaimed || data.totalEMPClaimed <= 0) {
             statusEl.textContent =
@@ -4005,6 +4217,29 @@
       }
       function applyReadOnlyEmpireMode() {
         if (isOwnEmpireView()) return;
+        console.log("READ ONLY TRIGGER");
+        document.body.classList.add("read-only-mode");
+       const readOnlyStyle = document.createElement("style");
+readOnlyStyle.innerHTML = `
+  body.read-only-mode a:not(.appbar-link):not(.appbar-logo):not(.subnav-btn),
+  body.read-only-mode button:not(.subnav-btn),
+  body.read-only-mode input,
+  body.read-only-mode select {
+    pointer-events: none !important;
+    opacity: 0.55 !important;
+    cursor: not-allowed !important;
+  }
+
+  body.read-only-mode .summary-actions,
+  body.read-only-mode .build-factory-box,
+  body.read-only-mode .market-action,
+  body.read-only-mode .shop-buy-dominant-right {
+    pointer-events: none !important;
+    opacity: 0.55 !important;
+  }
+`;
+document.head.appendChild(readOnlyStyle);
+        if (isOwnEmpireView()) return;
 
         const viewed = getViewedUser();
 
@@ -4034,14 +4269,28 @@
           ".bp-card-menu button",
           ".secondary-button",
           ".primary-button",
+          "a[href*='rename']",
+"a[href*='maintenance']",
+          "[onclick*='payMaintenance']",
+"[onclick*='renameFactory']",
+"[onclick*='openMaintenance']",
+"[onclick*='factory/rename']",
+"[onclick*='factory/pay-maintenance']"
         ];
 
-        document.querySelectorAll(actionSelectors.join(",")).forEach((btn) => {
-          btn.disabled = true;
-          btn.style.opacity = "0.6";
-          btn.style.cursor = "not-allowed";
-          btn.title = "Read-only mode";
-        });
+       document.querySelectorAll(actionSelectors.join(",")).forEach((el) => {
+  // disable button if it's a button
+  if (el.tagName === "BUTTON") {
+    el.disabled = true;
+  }
+
+  // block all clicks (works for <a>, <div>, everything)
+  el.style.pointerEvents = "none";
+
+  el.style.opacity = "0.6";
+  el.style.cursor = "not-allowed";
+  el.title = "Read-only mode";
+});
 
         // disable only action form fields
         const inputSelectors = [
@@ -4054,7 +4303,7 @@
         document.querySelectorAll(inputSelectors.join(",")).forEach((el) => {
           el.disabled = true;
           el.style.opacity = "0.6";
-          el.title = "Read-only mode";
+          el.title = "Viewing only — actions are disabled here.";
         });
 
         // disable empty land slots for build action
@@ -4063,25 +4312,270 @@
           slot.style.opacity = "0.7";
           slot.title = "Read-only mode";
         });
+        document.addEventListener(
+  "click",
+  function (e) {
+    if (document.body.classList.contains("read-only-mode")) {
+      const actionText = (e.target.textContent || "").toLowerCase();
+
+      const blockedWords = [
+        "pay maintenance",
+        "rename",
+        "build factory",
+        "claim",
+        "withdraw",
+        "open crate",
+        "upgrade",
+        "transfer",
+        "list",
+        "buy"
+      ];
+
+      if (blockedWords.some((word) => actionText.includes(word))) {
+        e.preventDefault();
+        e.stopPropagation();
+        alert("You are viewing another empire. Actions are only available inside your own empire.");
+        return false;
       }
+    }
+  },
+  true
+);
+      }
+      function startCrateResetTimer() {
+  const cardEl = document.getElementById("crate-reset-timer");
+  const popupEl = document.getElementById("crate-popup-reset-timer");
+
+  if (!cardEl && !popupEl) return;
+
+  function updateTimer() {
+    const now = new Date();
+    const nextReset = new Date();
+    nextReset.setUTCHours(24, 0, 0, 0);
+
+    const diff = nextReset - now;
+
+    const hours = Math.floor(diff / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+
+    const timerText = `${hours}h ${minutes}m ${seconds}s`;
+
+    if (cardEl) cardEl.textContent = timerText;
+    if (popupEl) popupEl.textContent = timerText;
+  }
+
+  updateTimer();
+  setInterval(updateTimer, 1000);
+}
+     function openCrateModal() {
+  const modal = document.getElementById("crate-modal");
+  const costText = document.getElementById("crate-cost-text");
+  const message = document.getElementById("crate-modal-message");
+
+  if (!modal) return;
+
+  const epDay = window.dashboardData?.totalBaseEP || 0;
+  const globalShare = window.dashboardData?.globalSharePercent || 0;
+
+  const isFree =
+    Number(epDay || 0) >= 100 &&
+    Number(globalShare || 0) >= 1.5;
+
+  if (costText) {
+    costText.innerHTML = isFree
+      ? "<strong>Cost:</strong> FREE 🎁"
+      : "<strong>Cost:</strong> 25 EMP";
+  }
+
+  if (message) {
+    message.textContent = isFree
+      ? "You are eligible for a free crate. Open now?"
+      : "You are not eligible for a free crate. This will cost 25 EMP.";
+  }
+
+  modal.style.display = "flex";
+}
+      function closeCrateModal() {
+  const modal = document.getElementById("crate-modal");
+  if (modal) modal.style.display = "none";
+}
+      async function openImperialSupplyCrate() {
+  const username = localStorage.getItem("hiveUsername");
+  const openBtn = document.getElementById("open-crate-btn");
+
+  if (!username) {
+    alert("Please connect your wallet.");
+    return;
+  }
+
+  try {
+    const res = await fetch(apiUrl("/open-imperial-crate"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-player-actor": username
+      },
+      body: JSON.stringify({ username })
+    });
+
+    const data = await res.json();
+
+ if (!data.success) {
+  alert(data.error || "Failed to open crate.");
+  return;
+}
+
+// 🔥 SHOW RESULT FIRST
+showCrateResultModal(data.reward, data);
+
+// THEN CLOSE CONFIRM MODAL
+setTimeout(() => {
+  closeCrateModal();
+}, 100);
+
+// update button
+if (openBtn) {
+  openBtn.disabled = true;
+  openBtn.textContent = "Opened Today";
+}
+
+loadDashboardSummary();
+  } catch (err) {
+    console.error(err);
+    alert("Error opening crate.");
+  }
+}
+      async function openCrateHistoryModal(e) {
+         if (e) e.preventDefault();
+        const loadingEl = document.getElementById("crate-history-loading");
+if (loadingEl) loadingEl.style.display = "none";
+
+  const modal = document.getElementById("crate-history-modal");
+  const box = document.getElementById("crate-history-list");
+
+  if (!modal || !box) return;
+
+  modal.style.display = "flex";
+  box.innerHTML = "Loading...";
+
+  try {
+    const activeUser =
+      localStorage.getItem("hiveUsername") ||
+      new URLSearchParams(window.location.search).get("user");
+
+    if (!activeUser) {
+      box.innerHTML = "No active user found.";
+      return;
+    }
+
+    const res = await fetch(apiUrl(`/crate-history/${activeUser}`));
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      box.innerHTML = "Failed to load history.";
+      return;
+    }
+
+    if (!data.history || !data.history.length) {
+      box.innerHTML = "No crate openings yet.";
+      return;
+    }
+
+    box.innerHTML = data.history
+      .map((row) => {
+        const date = new Date(row.created_at).toLocaleString();
+        return `
+          <div class="crate-history-row">
+            <div class="crate-history-reward">${row.reward_value}</div>
+            <div class="crate-history-date">${date}</div>
+          </div>
+        `;
+      })
+      .join("");
+  } catch (err) {
+    console.error("Crate history load error:", err);
+    box.innerHTML = "Failed to load history.";
+  }
+}
+
+function closeCrateHistoryModal() {
+  const modal = document.getElementById("crate-history-modal");
+  if (modal) modal.style.display = "none";
+}
       window.addEventListener("load", async () => {
         try {
           setupDashboardNavbar();
 
           await loadDashboardSummary();
+          startCrateResetTimer();
+
+const crateEls = getCrateModalEls();
+
+if (crateEls.openCrateBtn) {
+  crateEls.openCrateBtn.addEventListener("click", openCrateModal);
+}
+
+if (crateEls.cancelOpenCrateBtn) {
+  crateEls.cancelOpenCrateBtn.addEventListener("click", closeCrateModal);
+}
+
+if (crateEls.confirmOpenCrateBtn) {
+  crateEls.confirmOpenCrateBtn.addEventListener("click", openImperialSupplyCrate);
+}
+
+const crateHistoryLink = document.getElementById("crate-history-link");
+if (crateHistoryLink) {
+  crateHistoryLink.addEventListener("click", openCrateHistoryModal);
+}
+
+const closeHistoryBtn = document.getElementById("close-crate-history-btn");
+if (closeHistoryBtn) {
+  closeHistoryBtn.addEventListener("click", closeCrateHistoryModal);
+}
           await loadRewardSummary();
           await loadGlobalHealth();
           await loadEmpireOverview();
           await loadBlueprints();
           await loadPacks();
-          applyReadOnlyEmpireMode();
+         
+const dashboardUrlParams = new URLSearchParams(window.location.search);
 
+const viewingUser = (dashboardUrlParams.get("user") || "")
+  .replace("@", "")
+  .trim()
+  .toLowerCase();
+
+const activeUserClean = String(
+  ACTIVE_USER ||
+  getActiveUser() ||
+  localStorage.getItem("hiveUsername") ||
+  localStorage.getItem("mde_username") ||
+  localStorage.getItem("username") ||
+  ""
+)
+  .replace("@", "")
+  .trim()
+  .toLowerCase();
+
+// TEMP FIX: disable read-only mode completely
+          
           setupDashboardNavbar(); // run again after data is loaded
         } catch (err) {
           console.error("Initial dashboard load failed:", err);
         }
       });
-
+function getCrateModalEls() {
+  return {
+    crateModal: document.getElementById("crate-modal"),
+    crateModalContent: document.getElementById("crate-modal-content"),
+    crateActionStatus: document.getElementById("crate-action-status"),
+    openCrateBtn: document.getElementById("open-crate-btn"),
+    closeCrateModalBtn: document.getElementById("close-crate-modal"),
+    cancelOpenCrateBtn: document.getElementById("cancel-open-crate-btn"),
+    confirmOpenCrateBtn: document.getElementById("confirm-open-crate-btn"),
+  };
+}
       function setupLoggedInNav() {
         const nav = document.getElementById("loggedInNav");
         const accountName = document.getElementById("nav-account-name");
@@ -4125,11 +4619,25 @@
       function tradeBlueprint(id) {
         window.location.href = "marketplace.html?blueprint=" + id;
       }
+      function isCrateEligible(epDay, globalShare) {
+  return Number(epDay || 0) >= 100 && Number(globalShare || 0) >= 1.5;
+}
+
+function updateCrateCardDisplay() {
+  const epDay = window.dashboardData?.totalBaseEP || 0;
+  const globalShare = window.dashboardData?.globalSharePercent || 0;
+
+  const isFree = isCrateEligible(epDay, globalShare);
+
+  const crateCostEl = document.getElementById("crate-cost-display");
+
+  if (crateCostEl) {
+    crateCostEl.textContent = isFree ? "FREE 🎁" : "25 EMP";
+  }
+}
     </script>
 
-    <script>
-      src="js/appbar.js">
-    </script>
+   <script src="js/appbar.js"></script>
 
     <div id="blueprint-mint-modal" class="pack-modal hidden">
       <div class="pack-modal-card">
@@ -4233,6 +4741,160 @@
           const footerEl = document.getElementById("global-footer");
           if (footerEl) footerEl.innerHTML = html;
         });
+      
+const openBtn = document.getElementById("open-crate-btn");
+
+if (openBtn) {
+  openBtn.addEventListener("click", () => {
+    const modal = document.getElementById("crate-modal");
+    if (modal) modal.style.display = "flex";
+  });
+}
+
+       function showCrateResultModal(reward, data) {
+  const modal = document.getElementById("crate-result-modal");
+  const rewardEl = document.getElementById("crate-result-reward");
+  const detailEl = document.getElementById("crate-result-detail");
+
+  if (!modal) return;
+
+  if (rewardEl) {
+    rewardEl.textContent = reward?.label || "Reward";
+  }
+
+  if (detailEl) {
+    detailEl.textContent =
+      data?.crate_cost === 0
+        ? "Free crate opened successfully."
+        : `Paid crate opened. Cost: ${data?.crate_cost || 25} EMP.`;
+  }
+
+  modal.style.display = "flex";
+}
+
+document.getElementById("close-crate-result-btn")?.addEventListener("click", () => {
+  document.getElementById("crate-result-modal").style.display = "none";
+});
+      document
+  .getElementById("confirm-open-crate-btn")
+  ?.addEventListener("click", async () => {
+    const username = localStorage.getItem("hiveUsername");
+    const openBtn = document.getElementById("open-crate-btn");
+    const modal = document.getElementById("crate-modal");
+
+    if (!username) {
+      alert("Please connect wallet.");
+      return;
+    }
+
+    try {
+      const res = await fetch(apiUrl("/open-imperial-crate"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-player-actor": username,
+        },
+        body: JSON.stringify({ username }),
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        alert(data.error || "Failed to open crate.");
+        return;
+      }
+
+      // close confirm modal
+      if (modal) modal.style.display = "none";
+
+      // show result popup
+      showCrateResultModal(data.reward, data);
+
+      // update button
+      if (openBtn) {
+        openBtn.disabled = true;
+        openBtn.textContent = "Opened Today";
+      }
+
+      loadDashboardSummary();
+    } catch (err) {
+      console.error(err);
+      alert("Error opening crate.");
+    }
+  });
     </script>
+  <!-- IMPERIAL SUPPLY CRATE MODAL -->
+<div id="crate-modal" class="crate-modal" style="display: none">
+  <div id="crate-modal-content" class="crate-modal-content">
+    <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
+
+    <div class="crate-modal-body">
+      <p id="crate-modal-message">Open your daily Imperial Supply Crate?</p>
+      <p id="crate-cost-text"><strong>Cost:</strong> 25 EMP</p>
+      <p id="crate-free-rule-text" style="font-size: 13px; color: #64748b; margin-top: 8px">
+        Free crate requires 100 EP/day and 1.5% Daily Share.
+      </p>
+    </div>
+
+    <div class="crate-modal-actions">
+      <button id="cancel-open-crate-btn" class="secondary-button" type="button">
+        Cancel
+      </button>
+
+      <button id="confirm-open-crate-btn" class="primary-button" type="button">
+        Confirm Open
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- IMPERIAL SUPPLY CRATE HISTORY MODAL -->
+<div id="crate-history-modal" class="crate-modal" style="display: none">
+  <div id="crate-history-content" class="crate-modal-content">
+    <div class="crate-modal-header">🎁 Crate History</div>
+
+    <div class="crate-modal-body">
+      <p id="crate-history-loading" style="display:none;"></p>
+      <div
+  id="crate-history-list"
+  style="max-height: 420px; overflow-y: auto; padding-right: 6px;"
+></div>
+    </div>
+
+    <div class="crate-modal-actions">
+      <button id="close-crate-history-btn" class="primary-button" type="button" onclick="closeCrateHistoryModal()">
+        Close
+      </button>
+    </div>
+  </div>
+</div>  
+    <!-- IMPERIAL SUPPLY CRATE RESULT MODAL -->
+<div id="crate-result-modal" class="crate-modal" style="display: none">
+  <div class="crate-modal-content">
+    <div style="font-size: 42px; text-align: center">🎁</div>
+    <div class="crate-modal-header" style="text-align: center">
+      Imperial Supply Crate
+    </div>
+
+    <div class="crate-modal-body" style="text-align: center">
+      <p><strong>You discovered:</strong></p>
+      <p id="crate-result-reward" style="font-size: 28px; font-weight: 900; color: #ca8a04">
+        Reward
+      </p>
+      <p id="crate-result-detail">Crate opened successfully.</p>
+    </div>
+
+    <div class="crate-modal-actions" style="justify-content: center">
+      <button
+        id="close-crate-result-btn"
+        class="primary-button"
+        type="button"
+        onclick="document.getElementById('crate-result-modal').style.display='none'"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
   </body>
 </html>
