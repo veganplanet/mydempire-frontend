@@ -4529,7 +4529,10 @@ function updateCrateCardDisplay() {
 
   if (!openBtn) return;
 
-  openBtn.addEventListener("click", async () => {
+  openBtn.addEventListener("click", () => {
+  const modal = document.getElementById("crate-modal");
+  if (modal) modal.style.display = "flex";
+});
     const username = localStorage.getItem("hiveUsername");
 
     if (!username) {
@@ -4602,6 +4605,53 @@ loadDashboardSummary();
 document.getElementById("close-crate-result-btn")?.addEventListener("click", () => {
   document.getElementById("crate-result-modal").style.display = "none";
 });
+      document
+  .getElementById("confirm-open-crate-btn")
+  ?.addEventListener("click", async () => {
+    const username = localStorage.getItem("hiveUsername");
+    const openBtn = document.getElementById("open-crate-btn");
+    const modal = document.getElementById("crate-modal");
+
+    if (!username) {
+      alert("Please connect wallet.");
+      return;
+    }
+
+    try {
+      const res = await fetch(apiUrl("/open-imperial-crate"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-player-actor": username,
+        },
+        body: JSON.stringify({ username }),
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        alert(data.error || "Failed to open crate.");
+        return;
+      }
+
+      // close confirm modal
+      if (modal) modal.style.display = "none";
+
+      // show result popup
+      showCrateResultModal(data.reward, data);
+
+      // update button
+      if (openBtn) {
+        openBtn.disabled = true;
+        openBtn.textContent = "Opened Today";
+      }
+
+      loadDashboardSummary();
+    } catch (err) {
+      console.error(err);
+      alert("Error opening crate.");
+    }
+  });
     </script>
     <div id="crate-result-modal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:9999; align-items:center; justify-content:center;">
   <div style="background:#111827; color:white; width:min(420px, 92vw); border-radius:22px; padding:26px; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.16);">
