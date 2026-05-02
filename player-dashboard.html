@@ -4381,7 +4381,17 @@ const activeUserClean = String(
           console.error("Initial dashboard load failed:", err);
         }
       });
-
+function getCrateModalEls() {
+  return {
+    crateModal: document.getElementById("crate-modal"),
+    crateModalContent: document.getElementById("crate-modal-content"),
+    crateActionStatus: document.getElementById("crate-action-status"),
+    openCrateBtn: document.getElementById("open-crate-btn"),
+    closeCrateModalBtn: document.getElementById("close-crate-modal"),
+    cancelOpenCrateBtn: document.getElementById("cancel-open-crate-btn"),
+    confirmOpenCrateBtn: document.getElementById("confirm-open-crate-btn"),
+  };
+}
       function setupLoggedInNav() {
         const nav = document.getElementById("loggedInNav");
         const accountName = document.getElementById("nav-account-name");
