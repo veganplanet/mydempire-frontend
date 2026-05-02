@@ -3643,9 +3643,19 @@ updateCrateCardDisplay();
           console.log("Claim all result:", data);
 
           if (!data.success) {
-            statusEl.textContent = data.error || "Claim failed.";
-            return;
-             }
+  statusEl.textContent = data.error || "Claim failed.";
+  openBtn.disabled = false;
+  openBtn.textContent = "Open Crate";
+  return;
+}
+
+// ✅ SUCCESS FLOW
+showCrateResultModal(data.reward, data);
+
+openBtn.disabled = true;
+openBtn.textContent = "Opened Today";
+
+loadDashboardSummary();
           showCrateResultModal(data.reward, data);
 
           if (!data.totalEMPClaimed || data.totalEMPClaimed <= 0) {
