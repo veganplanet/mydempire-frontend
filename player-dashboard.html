@@ -4398,6 +4398,61 @@ document.head.appendChild(readOnlyStyle);
     alert("Error opening crate.");
   }
 }
+      async function openCrateHistoryModal(e) {
+  if (e) e.preventDefault();
+
+  const modal = document.getElementById("crate-history-modal");
+  const box = document.getElementById("crate-history-list");
+
+  if (!modal || !box) return;
+
+  modal.style.display = "flex";
+  box.innerHTML = "Loading...";
+
+  try {
+    const activeUser =
+      localStorage.getItem("hiveUsername") ||
+      new URLSearchParams(window.location.search).get("user");
+
+    if (!activeUser) {
+      box.innerHTML = "No active user found.";
+      return;
+    }
+
+    const res = await fetch(apiUrl(`/crate-history/${activeUser}`));
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      box.innerHTML = "Failed to load history.";
+      return;
+    }
+
+    if (!data.history || !data.history.length) {
+      box.innerHTML = "No crate openings yet.";
+      return;
+    }
+
+    box.innerHTML = data.history
+      .map((row) => {
+        const date = new Date(row.created_at).toLocaleString();
+        return `
+          <div class="crate-history-row">
+            <div class="crate-history-reward">${row.reward_value}</div>
+            <div class="crate-history-date">${date}</div>
+          </div>
+        `;
+      })
+      .join("");
+  } catch (err) {
+    console.error("Crate history load error:", err);
+    box.innerHTML = "Failed to load history.";
+  }
+}
+
+function closeCrateHistoryModal() {
+  const modal = document.getElementById("crate-history-modal");
+  if (modal) modal.style.display = "none";
+}
       window.addEventListener("load", async () => {
         try {
           setupDashboardNavbar();
