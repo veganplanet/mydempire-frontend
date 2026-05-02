@@ -11917,3 +11917,19 @@ cursor:pointer;
   transform: translateY(-4px);
   box-shadow: 0 14px 28px rgba(139, 92, 246, 0.25);
 }
+.inventory-card {
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+}
+.inventory-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+.inventory-count {
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1;
+}
