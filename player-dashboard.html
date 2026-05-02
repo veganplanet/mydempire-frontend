@@ -211,42 +211,58 @@
 
   <!-- 🔹 Replace wide crate with 2 banners -->
   <div class="overview-block dashboard-feature-row" style="margin-bottom: 16px">
+  <div class="dashboard-feature-card crate-feature-card">
+    <div class="crate-card">
+      <div class="crate-header">
+        <div class="crate-title">🎁 Imperial Supply Crate</div>
+        <div class="crate-badge" id="crate-badge">FREE</div>
+      </div>
 
-   <div class="crate-card">
-  <div class="crate-header">
-    <div class="crate-title">🎁 Imperial Supply Crate</div>
-    <div class="crate-badge" id="crate-badge">FREE</div>
-  </div>
+      <div class="crate-main">
+        <div class="crate-status">
+          <div class="crate-cost" id="crate-cost-display">25 EMP</div>
+          <div class="crate-timer">
+            Next crate in <span id="crate-reset-timer">--</span>
+          </div>
+        </div>
 
-  <div class="crate-main">
-    <div class="crate-status">
-      <div class="crate-cost" id="crate-cost-display">25 EMP</div>
-      <div class="crate-timer">
-        Next crate in <span id="crate-reset-timer">--</span>
+        <button class="primary-button crate-open-btn" id="open-crate-btn" type="button">
+          Open Crate
+        </button>
+      </div>
+
+      <div class="crate-footer">
+        <div class="crate-rewards">
+          💰 Rewards up to <strong>100 EMP</strong> & 🧩 Fragments
+        </div>
+
+        <a
+          href="javascript:void(0)"
+          id="crate-history-link"
+          onclick="openCrateHistoryModal(event)"
+        >
+          View history
+        </a>
       </div>
     </div>
-
-    <button class="primary-button crate-open-btn" id="open-crate-btn">
-      Open Crate
-    </button>
   </div>
 
-  <div class="crate-footer">
-    <div class="crate-rewards">
-      💰 Rewards up to <strong>100 EMP</strong> & 🧩 Fragments
+  <div class="dashboard-feature-card redevelopment-feature-card">
+    <div class="feature-title">🏭 Factory Redevelopment</div>
+
+    <div class="feature-text">
+      A new strategic ability is arriving.<br />
+      Prepare your empire for transformation.
     </div>
-    <a href="#" onclick="openCrateHistoryModal(event)">View history</a>
-  </div>
-</div>
 
-  <a
-    href="javascript:void(0)"
-    id="crate-history-link"
-    class="status-link"
-    onclick="openCrateHistoryModal(event)"
-  >
-    View history
-  </a>
+    <button class="primary-button" type="button" disabled>
+      Coming Soon 🔒
+    </button>
+
+    <div class="status-text" style="margin-top: 8px;">
+      Only prepared empires will benefit.
+    </div>
+  </div>
 </div>
     </div>
 
