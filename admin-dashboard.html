@@ -1708,7 +1708,9 @@ async function loadWalletBalances() {
     alert("Pack listing cancelled successfully.");
 
     // reload listings
-    document.getElementById("load-pack-listings-btn")?.click();
+    setTimeout(() => {
+  document.getElementById("load-pack-listings-btn")?.click();
+}, 500);
   } catch (err) {
     console.error(err);
     alert("Error cancelling pack listing.");
@@ -1741,15 +1743,30 @@ async function loadWalletBalances() {
 
     alert(data.message || "Pack locks reset successfully.");
 
-    document.getElementById("load-pack-listings-btn")?.click();
+    setTimeout(() => {
+  document.getElementById("load-pack-listings-btn")?.click();
+}, 500);
   } catch (err) {
     console.error(err);
     alert("Error resetting pack locks.");
   }
 }
-    async function deliverReservedPackListing(listingId) {
+   async function deliverReservedPackListing(listingId) {
+  const qtyRaw = prompt(
+    `How many paid pack(s) should be delivered for listing #${listingId}?\n\nOnly enter the quantity that buyer already paid for.`
+  );
+
+  if (qtyRaw === null) return;
+
+  const quantity = Number(qtyRaw);
+
+  if (!Number.isInteger(quantity) || quantity <= 0) {
+    alert("Please enter a valid pack quantity.");
+    return;
+  }
+
   const ok = confirm(
-    `Deliver reserved pack(s) for listing #${listingId}?\n\nUse this ONLY if buyer already paid but pack was not delivered.`
+    `Confirm delivery of ${quantity} paid pack(s) for listing #${listingId}?\n\nUse this ONLY if payment was already received.`
   );
 
   if (!ok) return;
@@ -1762,6 +1779,7 @@ async function loadWalletBalances() {
       },
       body: JSON.stringify({
         listing_id: listingId,
+        quantity: quantity,
       }),
     });
 
@@ -1774,7 +1792,9 @@ async function loadWalletBalances() {
 
     alert(data.message || "Reserved packs delivered successfully.");
 
-    document.getElementById("load-pack-listings-btn")?.click();
+    setTimeout(() => {
+  document.getElementById("load-pack-listings-btn")?.click();
+}, 500);
   } catch (err) {
     console.error(err);
     alert("Error delivering reserved packs.");

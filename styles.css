@@ -1472,8 +1472,12 @@ body{
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
   padding: 8px;
   display: none;
+  z-index: 99999;
 }
-
+.appbar-account-wrap{
+  position: relative;
+  z-index: 99999;
+}
 .appbar-dropdown.open{
   display: block;
 }
