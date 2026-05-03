@@ -794,6 +794,14 @@
           >
             Industry
           </button>
+          <button
+            type="button"
+            class="leaderboard-subnav-btn leaderboard-season-btn"
+            data-lb-tab="season"
+            onclick="setLeaderboardTab('season')"
+          >
+            Season <span class="season-new-badge">NEW</span>
+          </button>
         </div>
 
         <div
@@ -821,22 +829,74 @@
         </div>
 
         <div class="leaderboard-tab-panel" data-lb-panel="industry">
-          <div class="section-header">
-            <h2>🏭 Industry Leaders</h2>
-            <small>Top empire in each industry by lifetime EP</small>
-          </div>
+  <div class="section-header">
+    <h2>🏭 Industry Leaders</h2>
+    <small>Top empire in each industry by lifetime EP</small>
+  </div>
 
-          <div class="summary-card card-leaderboard">
-            <div class="leaderboard-shell">
-              <div class="leaderboard-topbar"></div>
-              <div class="leaderboard-body">
-                <div id="industry-leaderboard-list" class="leaderboard-empty">
-                  Industry leaders will appear once lifetime industry EP begins
-                  accumulating.
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="summary-card card-leaderboard">
+    <div class="leaderboard-shell">
+      <div class="leaderboard-topbar"></div>
+      <div class="leaderboard-body">
+        <div id="industry-leaderboard-list" class="leaderboard-empty">
+          Industry leaders will appear once lifetime industry EP begins
+          accumulating.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="leaderboard-tab-panel" data-lb-panel="season">
+  <div class="season-coming-card">
+    <div class="season-coming-top">
+      <span class="season-coming-pill">🏆 NEW MODE</span>
+      <span class="season-coming-pill season-coming-live">COMING SOON</span>
+    </div>
+
+    <h2>Industry Seasons Are Coming</h2>
+
+    <p>
+      Compete in 14-day industry challenges where one industry becomes
+      the center of the empire race.
+    </p>
+
+    <div class="season-coming-grid">
+      <div class="season-coming-item">
+        <div class="season-coming-icon">⏳</div>
+        <strong>14 Days</strong>
+        <span>Short, exciting seasons</span>
+      </div>
+
+      <div class="season-coming-item">
+        <div class="season-coming-icon">🏭</div>
+        <strong>Industry Focus</strong>
+        <span>Food, Textile, Pharma, Chemical or Supermarket</span>
+      </div>
+
+      <div class="season-coming-item">
+        <div class="season-coming-icon">⚡</div>
+        <strong>EP/day Race</strong>
+        <span>Highest industry production wins</span>
+      </div>
+    </div>
+<div style="
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #eef6ff;
+  border: 1px solid #bfdbfe;
+  font-weight: 700;
+  color: #1e3a8a;
+">
+  ⏳ First Season Announcement Coming Soon
+</div>
+    <div class="season-coming-footer">
+      🔥 Prepare your empire. First season will be announced in advance.
+    </div>
+  </div>
+</div>
+          
         </div>
       </section>
       <footer class="footer"></footer>
@@ -1315,8 +1375,7 @@ data-tooltip="${
           if (!container) return;
 
           if (!data.success || !data.leaders) {
-            container.innerHTML =
-              "Industry leaders will appear once lifetime industry EP begins accumulating.";
+            container.innerHTML = "";
             return;
           }
 

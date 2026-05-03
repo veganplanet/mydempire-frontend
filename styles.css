@@ -12075,3 +12075,189 @@ cursor:pointer;
 .nav-account {
   position: relative;
 }
+/* ===== Season NEW Badge ===== */
+.season-new-badge {
+  background: linear-gradient(90deg, #ef4444, #f97316);
+  color: #fff;
+  font-size: 10px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  margin-left: 6px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+
+  animation: pulseGlow 1.5s infinite;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+/* Glow animation */
+@keyframes pulseGlow {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 14px rgba(249, 115, 22, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
+  }
+}
+.leaderboard-season-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.leaderboard-season-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shine 2.5s infinite;
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+/* ===== Leaderboard tab visibility fix ===== */
+.leaderboard-tab-panel {
+  display: none;
+}
+
+.leaderboard-tab-panel.leaderboard-tab-panel-active {
+  display: block;
+}
+/* ===== Season Coming Soon Premium Card ===== */
+.season-coming-card {
+  position: relative;
+  overflow: hidden;
+  margin-top: 18px;
+  padding: 28px;
+  border-radius: 24px;
+  border: 1px solid rgba(59, 130, 246, 0.22);
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.14), transparent 34%),
+    linear-gradient(135deg, #ffffff 0%, #eef4ff 52%, #fff7ed 100%);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+}
+
+.season-coming-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent);
+  animation: seasonCardShine 4s infinite;
+}
+
+@keyframes seasonCardShine {
+  0% { left: -60%; }
+  55% { left: 120%; }
+  100% { left: 120%; }
+}
+
+.season-coming-top {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.season-coming-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #1e40af;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.season-coming-live {
+  background: linear-gradient(90deg, #ef4444, #f97316);
+  box-shadow: 0 0 14px rgba(249, 115, 22, 0.55);
+  animation: pulseGlow 1.6s infinite;
+}
+
+.season-coming-card h2 {
+  margin: 0 0 10px;
+  font-size: 30px;
+  color: #0f172a;
+}
+
+.season-coming-card p {
+  max-width: 760px;
+  color: #334155;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.season-coming-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.season-coming-item {
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(148,163,184,0.22);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 10px 22px rgba(15,23,42,0.08);
+}
+
+.season-coming-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.season-coming-item strong {
+  display: block;
+  font-size: 17px;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.season-coming-item span {
+  display: block;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.season-coming-footer {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #9a3412;
+  font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .season-coming-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .season-coming-card h2 {
+    font-size: 24px;
+  }
+}
