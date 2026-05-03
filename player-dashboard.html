@@ -4510,9 +4510,14 @@ data-tooltip="${
 
           // update button
           if (openBtn) {
-            openBtn.disabled = true;
-            openBtn.textContent = "Opened Today";
-          }
+  openBtn.disabled = true;
+  openBtn.textContent = "Opened Today";
+
+  openBtn.classList.add("btn-disabled");
+
+  // remove click completely
+  openBtn.onclick = null;
+}
 
           loadDashboardSummary();
         } catch (err) {
@@ -4710,18 +4715,30 @@ data-tooltip="${
         return Number(epDay || 0) >= 100 && Number(globalShare || 0) >= 1.5;
       }
 
-      function updateCrateCardDisplay() {
-        const epDay = window.dashboardData?.totalBaseEP || 0;
-        const globalShare = window.dashboardData?.globalSharePercent || 0;
+    function updateCrateCardDisplay() {
+  const epDay = window.dashboardData?.totalBaseEP || 0;
+  const globalShare = window.dashboardData?.globalSharePercent || 0;
 
-        const isFree = isCrateEligible(epDay, globalShare);
+  const isFree = isCrateEligible(epDay, globalShare);
 
-        const crateCostEl = document.getElementById("crate-cost-display");
+  const crateCostEl = document.getElementById("crate-cost-display");
+  if (crateCostEl) {
+    crateCostEl.textContent = isFree ? "FREE 🎁" : "25 EMP";
+  }
 
-        if (crateCostEl) {
-          crateCostEl.textContent = isFree ? "FREE 🎁" : "25 EMP";
-        }
-      }
+  const openBtn = document.getElementById("open-crate-btn");
+
+  const lastOpened =
+    window.dashboardData?.lastCrateOpenedAt ||
+    window.dashboardData?.last_crate_opened_at;
+
+  if (openBtn && lastOpened) {
+    openBtn.disabled = true;
+    openBtn.textContent = "Opened Today";
+    openBtn.style.opacity = "0.6";
+    openBtn.style.cursor = "not-allowed";
+  }
+}
     </script>
 
     <script src="js/appbar.js"></script>
@@ -4831,12 +4848,20 @@ data-tooltip="${
 
       const openBtn = document.getElementById("open-crate-btn");
 
-      if (openBtn) {
-        openBtn.addEventListener("click", () => {
-          const modal = document.getElementById("crate-modal");
-          if (modal) modal.style.display = "flex";
-        });
-      }
+if (openBtn) {
+  openBtn.addEventListener("click", () => {
+    if (openBtn.disabled) return;
+
+    const lastOpened =
+      window.dashboardData?.lastCrateOpenedAt ||
+      window.dashboardData?.last_crate_opened_at;
+
+    if (lastOpened) return;
+
+    const modal = document.getElementById("crate-modal");
+    if (modal) modal.style.display = "flex";
+  });
+}
 
       function showCrateResultModal(reward, data) {
         const modal = document.getElementById("crate-result-modal");
