@@ -4732,12 +4732,31 @@ data-tooltip="${
     window.dashboardData?.lastCrateOpenedAt ||
     window.dashboardData?.last_crate_opened_at;
 
-  if (openBtn && lastOpened) {
+  let openedToday = false;
+
+if (lastOpened) {
+  const last = new Date(lastOpened);
+  const now = new Date();
+
+  openedToday =
+    last.getUTCFullYear() === now.getUTCFullYear() &&
+    last.getUTCMonth() === now.getUTCMonth() &&
+    last.getUTCDate() === now.getUTCDate();
+}
+
+if (openBtn) {
+  if (openedToday) {
     openBtn.disabled = true;
     openBtn.textContent = "Opened Today";
     openBtn.style.opacity = "0.6";
     openBtn.style.cursor = "not-allowed";
+  } else {
+    openBtn.disabled = false;
+    openBtn.textContent = "Open Crate";
+    openBtn.style.opacity = "1";
+    openBtn.style.cursor = "pointer";
   }
+}
 }
     </script>
 
