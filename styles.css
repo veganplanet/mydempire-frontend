@@ -11979,19 +11979,37 @@ cursor:pointer;
   box-shadow: none;
 }
 
-.crate-card {
+.player-dashboard-page .crate-card {
   width: 100%;
   min-height: 230px;
+
+  position: relative; /* ✅ ADD THIS */
+
   background:
     radial-gradient(circle at 16% 12%, rgba(255,255,255,0.95), transparent 34%),
     linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+
   border: 1px solid #fdba74;
   border-radius: 20px;
   padding: 22px 26px;
+
   box-shadow: 0 14px 34px rgba(251, 146, 60, 0.18);
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.player-dashboard-page .crate-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0.35),
+    transparent 60%
+  );
+  pointer-events: none;
 }
 
 .crate-header,
@@ -12003,7 +12021,7 @@ cursor:pointer;
   gap: 16px;
 }
 
-.crate-title {
+.player-dashboard-page.crate-title {
   font-size: 22px;
   font-weight: 900;
   color: #7c2d12;
@@ -12039,7 +12057,7 @@ cursor:pointer;
   font-weight: 900;
 }
 
-.crate-footer {
+.player-dashboard-page.crate-footer {
   font-size: 15px;
   color: #7c2d12;
 }

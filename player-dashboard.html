@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="assets/favicon.png" />
   </head>
-  <body data-requires-login="true">
+  <body data-requires-login="true" class="player-dashboard-page">
     <header class="appbar">
       <div class="appbar-inner">
         <div class="appbar-left">
@@ -1138,10 +1138,7 @@
         if (tabName === "leaderboard") {
           setLeaderboardTab("empire");
         }
-        {
-          loadEmperorLeaderboard();
-          loadIndustryLeaders();
-        }
+        
       }
       function setLeaderboardTab(tabName) {
         const buttons = document.querySelectorAll(".leaderboard-subnav-btn");
@@ -3769,9 +3766,32 @@ data-tooltip="${
         const accountBtn = document.getElementById("appbarAccountBtn");
         const dropdown = document.getElementById("appbarDropdown");
         // Toggle dropdown
-        accountBtn.addEventListener("click", () => {
-          dropdown.classList.toggle("open");
-        });
+        function setupAppbarDropdown() {
+  const accountWrap = document.getElementById("appbarAccountWrap");
+  const accountBtn = document.getElementById("appbarAccountBtn");
+  const dropdown = document.getElementById("appbarDropdown");
+
+  if (!accountWrap || !accountBtn || !dropdown) return;
+
+  if (accountBtn.dataset.dropdownReady === "true") return;
+  accountBtn.dataset.dropdownReady = "true";
+
+  accountBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropdown.classList.toggle("open");
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!accountWrap.contains(e.target)) {
+      dropdown.classList.remove("open");
+    }
+  });
+}
+
+setupAppbarDropdown();
+setTimeout(setupAppbarDropdown, 300);
+setTimeout(setupAppbarDropdown, 1000);
 
         // Close when clicking outside
         document.addEventListener("click", (e) => {
@@ -3821,21 +3841,33 @@ data-tooltip="${
           };
         }
 
-        if (visitOtherEmpireBtn) {
-          visitOtherEmpireBtn.style.display = "block";
+       if (visitOtherEmpireBtn) {
+  visitOtherEmpireBtn.style.display = "block";
 
-          visitOtherEmpireBtn.onclick = () => {
-            const target = prompt("Enter Hive username to visit empire:");
-            const clean = String(target || "")
-              .replace("@", "")
-              .trim()
-              .toLowerCase();
+  visitOtherEmpireBtn.onclick = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
 
-            if (!clean) return;
+  const dropdown = document.getElementById("appbarDropdown");
+  if (dropdown) {
+    dropdown.classList.remove("open");
+    dropdown.style.display = "";
+  }
 
-            window.location.href = `player-dashboard.html?user=${encodeURIComponent(clean)}`;
-          };
-        }
+  setTimeout(() => {
+    const target = prompt("Enter Hive username to visit empire:");
+
+    const clean = String(target || "")
+      .replace("@", "")
+      .trim()
+      .toLowerCase();
+
+    if (!clean) return;
+
+    window.location.href = `player-dashboard.html?user=${encodeURIComponent(clean)}`;
+  }, 150);
+};
+}
 
         const pageHeader = document.querySelector(".header-subline");
         if (pageHeader && viewedUser && !ownView) {
@@ -4035,7 +4067,20 @@ data-tooltip="${
           if (tierValue === "L3") buildCostEMP = 150;
 
           console.log("selected land tier =", tierValue);
+const loggedInUser = (localStorage.getItem("hiveUsername") || "")
+  .replace("@", "")
+  .toLowerCase();
 
+const viewedUser = (PLAYER_USERNAME || "")
+  .replace("@", "")
+  .toLowerCase();
+
+if (loggedInUser !== viewedUser) {
+  alert(
+    "Action not allowed here. Visit your own empire to continue."
+  );
+  return;
+}
           const confirmed = confirm(
             `Build ${factoryName}?\n\n` +
               `Factory setup cost: ${buildCostEMP} EMP\n` +
@@ -4475,7 +4520,12 @@ data-tooltip="${
         if (modal) modal.style.display = "none";
       }
       async function openImperialSupplyCrate() {
-        const username = localStorage.getItem("hiveUsername");
+        const username = getLoggedInUser();
+
+if (!isOwnEmpireView()) {
+  alert("You are viewing another empire. Crate can only be opened from your own empire.");
+  return;
+}
         const openBtn = document.getElementById("open-crate-btn");
 
         if (!username) {
@@ -4603,11 +4653,20 @@ data-tooltip="${
           }
 
           if (crateEls.confirmOpenCrateBtn) {
-            crateEls.confirmOpenCrateBtn.addEventListener(
-              "click",
-              openImperialSupplyCrate,
-            );
-          }
+  crateEls.confirmOpenCrateBtn.addEventListener("click", async () => {
+    if (crateEls.confirmOpenCrateBtn.dataset.busy === "true") return;
+
+    crateEls.confirmOpenCrateBtn.dataset.busy = "true";
+    crateEls.confirmOpenCrateBtn.disabled = true;
+    crateEls.confirmOpenCrateBtn.textContent = "Opening...";
+
+    try {
+      await openImperialSupplyCrate();
+    } finally {
+      crateEls.confirmOpenCrateBtn.dataset.busy = "false";
+    }
+  });
+}
 
           const crateHistoryLink =
             document.getElementById("crate-history-link");
@@ -4622,10 +4681,14 @@ data-tooltip="${
             closeHistoryBtn.addEventListener("click", closeCrateHistoryModal);
           }
           await loadRewardSummary();
-          await loadGlobalHealth();
-          await loadEmpireOverview();
-          await loadBlueprints();
-          await loadPacks();
+await loadEmpireOverview();
+
+// Load heavy sections after dashboard becomes usable
+setTimeout(() => {
+  loadBlueprints();
+  loadPacks();
+  loadGlobalHealth();
+}, 1200);
 
           const dashboardUrlParams = new URLSearchParams(
             window.location.search,
@@ -4727,6 +4790,14 @@ data-tooltip="${
   }
 
   const openBtn = document.getElementById("open-crate-btn");
+  if (openBtn && !isOwnEmpireView()) {
+  openBtn.disabled = true;
+  openBtn.textContent = "Read-only";
+  openBtn.style.opacity = "0.6";
+  openBtn.style.cursor = "not-allowed";
+  openBtn.title = "You can only open crates from your own empire.";
+  return;
+}
 
   const lastOpened =
     window.dashboardData?.lastCrateOpenedAt ||
@@ -4908,53 +4979,7 @@ if (openBtn) {
         ?.addEventListener("click", () => {
           document.getElementById("crate-result-modal").style.display = "none";
         });
-      document
-        .getElementById("confirm-open-crate-btn")
-        ?.addEventListener("click", async () => {
-          const username = localStorage.getItem("hiveUsername");
-          const openBtn = document.getElementById("open-crate-btn");
-          const modal = document.getElementById("crate-modal");
-
-          if (!username) {
-            alert("Please connect wallet.");
-            return;
-          }
-
-          try {
-            const res = await fetch(apiUrl("/open-imperial-crate"), {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "x-player-actor": username,
-              },
-              body: JSON.stringify({ username }),
-            });
-
-            const data = await res.json();
-
-            if (!data.success) {
-              alert(data.error || "Failed to open crate.");
-              return;
-            }
-
-            // close confirm modal
-            if (modal) modal.style.display = "none";
-
-            // show result popup
-            showCrateResultModal(data.reward, data);
-
-            // update button
-            if (openBtn) {
-              openBtn.disabled = true;
-              openBtn.textContent = "Opened Today";
-            }
-
-            loadDashboardSummary();
-          } catch (err) {
-            console.error(err);
-            alert("Error opening crate.");
-          }
-        });
+     
     </script>
     <!-- IMPERIAL SUPPLY CRATE MODAL -->
     <div id="crate-modal" class="crate-modal" style="display: none">
