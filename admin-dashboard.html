@@ -362,7 +362,37 @@
     <div class="small">Live backend game phase</div>
   </div>
 </div>
+<div class="section">
+  <h2>🏆 Season Control</h2>
 
+  <div class="row">
+    <input id="season-name-input" placeholder="Season name" />
+    <select id="season-industry-input">
+      <option value="FOOD">FOOD</option>
+      <option value="TEXTILE">TEXTILE</option>
+      <option value="PHARMA">PHARMA</option>
+      <option value="CHEMICAL">CHEMICAL</option>
+      <option value="SUPERMARKET">SUPERMARKET</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <input id="season-start-input" type="datetime-local" />
+    <input id="season-end-input" type="datetime-local" />
+    <input id="season-boost-input" type="number" placeholder="EP boost %" value="0" />
+  </div>
+
+  <div class="row">
+    <button id="create-season-btn" class="primary">Create Season</button>
+    <input id="season-id-input" placeholder="Season ID" />
+    <button id="start-season-btn" class="primary">Start Season</button>
+    <button id="end-season-btn" class="danger">End Season</button>
+  </div>
+
+  <div class="status" id="season-control-status">
+    No season action yet.
+  </div>
+</div>
       <div class="status" id="admin-status">Not connected yet.</div>
           <div class="section">
       <h2>Blockchain Event Monitor</h2>
@@ -1800,6 +1830,66 @@ async function loadWalletBalances() {
     alert("Error delivering reserved packs.");
   }
 }
+async function adminPostJson(url, body) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-key": ADMIN_KEY,
+    },
+    body: JSON.stringify(body || {}),
+  });
+
+  return res.json();
+}
+
+document.getElementById("create-season-btn")?.addEventListener("click", async () => {
+  const status = document.getElementById("season-control-status");
+
+  const body = {
+    name: document.getElementById("season-name-input").value,
+    industry: document.getElementById("season-industry-input").value,
+    start_date: document.getElementById("season-start-input").value,
+    end_date: document.getElementById("season-end-input").value,
+    ep_boost_percent: Number(document.getElementById("season-boost-input").value || 0),
+  };
+
+  const data = await adminPostJson(`${API_BASE}/admin/create-season`, body);
+
+  status.textContent = data.success
+    ? `✅ Season created. ID: ${data.season.id}`
+    : `❌ ${data.error || "Failed to create season"}`;
+});
+
+document.getElementById("start-season-btn")?.addEventListener("click", async () => {
+  const status = document.getElementById("season-control-status");
+  const seasonId = document.getElementById("season-id-input").value;
+
+  const data = await adminPostJson(`${API_BASE}/admin/start-season/${seasonId}`, {});
+
+  status.textContent = data.success
+    ? `✅ Season started. Players snapshotted: ${data.players_snapshotted}`
+    : `❌ ${data.error || "Failed to start season"}`;
+});
+
+document.getElementById("end-season-btn")?.addEventListener("click", async () => {
+  const status = document.getElementById("season-control-status");
+  const seasonId = document.getElementById("season-id-input").value;
+
+  const data = await adminPostJson(`${API_BASE}/admin/end-season/${seasonId}`, {});
+
+  if (data.success) {
+    const winners = data.season_winners || [];
+    status.textContent =
+      `✅ Season ended.\n` +
+      `🥇 ${winners[0]?.username || "-"} (${winners[0]?.ep || 0} EP/day)\n` +
+      `🥈 ${winners[1]?.username || "-"} (${winners[1]?.ep || 0} EP/day)\n` +
+      `🥉 ${winners[2]?.username || "-"} (${winners[2]?.ep || 0} EP/day)\n` +
+      `🚀 Growth Champion: ${data.growth_champion?.username || "None"}`;
+  } else {
+    status.textContent = `❌ ${data.error || "Failed to end season"}`;
+  }
+});
 </script>
 <div id="assets-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
   <div style="max-width:900px; margin:40px auto; background:#fff; border-radius:16px; padding:20px; max-height:85vh; overflow-y:auto; position:relative;">

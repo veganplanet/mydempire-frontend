@@ -12279,3 +12279,377 @@ cursor:pointer;
     font-size: 24px;
   }
 }
+/* ===== INDUSTRY SEASON UI ===== */
+
+#active-season-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+#season-status-text {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e3a8a;
+  font-weight: 800;
+}
+
+#season-details-box {
+  padding: 14px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+#season-live-leaderboard,
+#season-history-display {
+  margin-top: 8px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+#season-live-leaderboard strong {
+  color: #7c3aed;
+}
+
+#season-history-display button {
+  width: auto;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+#season-growth-display {
+  font-weight: 800;
+  color: #7c3aed;
+}
+#season-history-display {
+  line-height: 1.45;
+}
+#season-history-display .season-history-nav {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+#season-history-display .season-history-nav button {
+  min-width: 120px;
+}
+/* ===== SEASON HISTORY POLISH ===== */
+
+#active-season-card {
+  max-width: 920px;
+}
+
+#season-status-text {
+  margin-top: 14px;
+}
+
+#season-history-display {
+  max-width: 760px;
+  line-height: 1.45;
+  font-size: 15px;
+}
+
+#season-history-display strong {
+  color: #111827;
+}
+
+#season-history-display hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 14px 0;
+}
+
+#season-history-display .season-history-nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+#season-history-display .season-history-nav button {
+  min-width: 130px;
+}
+
+#season-history-display {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+@media (max-width: 640px) {
+  #season-history-display {
+    font-size: 14px;
+    padding: 14px;
+  }
+
+  #season-history-display .season-history-nav button {
+    width: 100%;
+  }
+}/* ===== SEASON HISTORY POLISH ===== */
+
+#active-season-card {
+  max-width: 920px;
+}
+
+#season-status-text {
+  margin-top: 14px;
+}
+
+#season-history-display {
+  max-width: 760px;
+  line-height: 1.45;
+  font-size: 15px;
+}
+
+#season-history-display strong {
+  color: #111827;
+}
+
+#season-history-display hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 14px 0;
+}
+
+#season-history-display .season-history-nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+#season-history-display .season-history-nav button {
+  min-width: 130px;
+}
+
+#season-history-display {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+@media (max-width: 640px) {
+  #season-history-display {
+    font-size: 14px;
+    padding: 14px;
+  }
+
+  #season-history-display .season-history-nav button {
+    width: 100%;
+  }
+}
+/* ===== LIVE SEASON LEADERBOARD ===== */
+
+#season-live-leaderboard {
+  margin-top: 14px;
+}
+
+.season-live-card {
+  display: grid;
+  gap: 8px;
+}
+
+.season-live-rank {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  margin-bottom: 8px;
+}
+
+.season-live-rank.top3 {
+  background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%);
+  border-color: #fde68a;
+}
+
+.season-live-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.season-live-name {
+  font-weight: 800;
+  color: #111827;
+}
+
+.season-live-ep {
+  font-weight: 900;
+  color: #1e3a8a;
+  white-space: nowrap;
+}
+
+.season-your-rank {
+  margin-bottom: 16px;
+  background: linear-gradient(90deg, #ede9fe 0%, #faf5ff 100%);
+  border: 1px solid #c4b5fd;
+  color: #6d28d9;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-weight: 900;
+  font-size: 15px;
+}
+/* ===== SEASON HISTORY PREMIUM CARD ===== */
+
+#season-history-display {
+  max-width: 760px;
+}
+
+.season-history-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e5e7eb;
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.season-history-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.season-history-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.season-history-sub {
+  font-size: 14px;
+  font-weight: 700;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.season-reward-badge {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.season-rank-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+  margin-bottom: 8px;
+}
+
+.season-rank-row.top-rank {
+  background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%);
+  border-color: #fde68a;
+}
+
+.season-rank-name {
+  font-weight: 900;
+  color: #111827;
+}
+
+.season-rank-ep {
+  font-weight: 900;
+  color: #1e3a8a;
+}
+
+.season-growth-badge {
+  margin-top: 14px;
+  display: inline-block;
+  background: #f3e8ff;
+  color: #6b21a8;
+  border: 1px solid #e9d5ff;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 900;
+}
+/* ===== SEASON REWARD PREVIEW ===== */
+
+.season-reward-preview {
+  margin: 18px 0 20px;
+  padding: 18px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fffdf5 0%, #ffffff 100%);
+  border: 1px solid #fde68a;
+  box-shadow: 0 10px 24px rgba(245, 158, 11, 0.08);
+}
+
+.season-reward-title {
+  font-size: 18px;
+  font-weight: 900;
+  color: #92400e;
+  margin-bottom: 14px;
+}
+
+.season-reward-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.season-reward-item {
+  background: rgba(255,255,255,0.75);
+  border: 1px solid #fde68a;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.season-reward-item span {
+  color: #1e3a8a;
+  font-weight: 900;
+}
+.season-reward-info {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed #fcd34d;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.season-reward-item {
+  min-height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.season-reward-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.season-reward-item {
+  grid-column: span 2;
+}
+
+.season-reward-item.wide {
+  grid-column: span 3;
+}

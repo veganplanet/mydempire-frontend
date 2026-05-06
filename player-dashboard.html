@@ -848,52 +848,102 @@
 </div>
 
 <div class="leaderboard-tab-panel" data-lb-panel="season">
-  <div class="season-coming-card">
+  <div>
     <div class="season-coming-top">
-      <span class="season-coming-pill">🏆 NEW MODE</span>
-      <span class="season-coming-pill season-coming-live">COMING SOON</span>
+
+      
     </div>
 
-    <h2>Industry Seasons Are Coming</h2>
+   <div id="active-season-card">
+  <div class="section-header">
+    <h2>🏆 Active Industry Season</h2>
+    <small>Compete and climb the industry leaderboard</small>
+  </div>
 
-    <p>
-      Compete in 14-day industry challenges where one industry becomes
-      the center of the empire race.
-    </p>
+  <div id="season-status-text" class="status-text">
+    Loading active season...
+  </div>
+<div id="season-details-box" style="display:none; margin-top:12px;">
+  <div><strong>Season:</strong> <span id="season-name-display">--</span></div>
+  <div><strong>Industry:</strong> <span id="season-industry-display">--</span></div>
+  <div><strong>Ends:</strong> <span id="season-end-display">--</span></div>
 
-    <div class="season-coming-grid">
-      <div class="season-coming-item">
-        <div class="season-coming-icon">⏳</div>
-        <strong>14 Days</strong>
-        <span>Short, exciting seasons</span>
-      </div>
+  <div style="margin-top:12px;">
+    <div id="season-reward-preview" class="season-reward-preview">
+  <div class="season-reward-title">
+    🏆 Season Reward Distribution
+  </div>
 
-      <div class="season-coming-item">
-        <div class="season-coming-icon">🏭</div>
-        <strong>Industry Focus</strong>
-        <span>Food, Textile, Pharma, Chemical or Supermarket</span>
-      </div>
-
-      <div class="season-coming-item">
-        <div class="season-coming-icon">⚡</div>
-        <strong>EP/day Race</strong>
-        <span>Highest industry production wins</span>
-      </div>
+  <div class="season-reward-grid">
+    <div class="season-reward-item">
+      🥇 Rank 1 → <span id="season-r1-preview">-</span>
     </div>
-<div style="
-  margin-top: 18px;
-  padding: 14px;
-  border-radius: 14px;
-  background: #eef6ff;
-  border: 1px solid #bfdbfe;
-  font-weight: 700;
-  color: #1e3a8a;
-">
-  ⏳ First Season Announcement Coming Soon
+
+    <div class="season-reward-item">
+      🥈 Rank 2 → <span id="season-r2-preview">-</span>
+    </div>
+
+    <div class="season-reward-item">
+      🥉 Rank 3 → <span id="season-r3-preview">-</span>
+    </div>
+
+    <div class="season-reward-item wide">
+      ⚡ Rank 4–10 → 10–4 EMP
+    </div>
+
+    <div class="season-reward-item wide">
+      🚀 Growth Champion → Custom Reward
+    </div>
+  </div>
+  <div class="season-reward-info">
+  <div>
+    💰 <strong>Reward Pool:</strong><br>
+    Calculated from 0.5% of treasury value at the moment the season ends.
+  </div>
+
+  <div style="margin-top:10px;">
+    🚀 <strong>Growth Champion:</strong><br>
+    Awarded to the empire with the strongest EP growth during the season among eligible participants.
+  </div>
 </div>
-    <div class="season-coming-footer">
-      🔥 Prepare your empire. First season will be announced in advance.
+</div>
+    <strong>Live Season Leaderboard:</strong>
+    <div id="season-live-leaderboard" class="status-text">
+      Loading season leaderboard...
     </div>
+  </div>
+
+  <div style="margin-top:12px;">
+    <strong>Growth Champion:</strong>
+    <span id="season-growth-display">Not decided yet</span>
+  </div>
+</div>
+
+<!-- ALWAYS visible -->
+<div style="margin-top:16px;">
+  <button
+    type="button"
+    class="secondary-button"
+    onclick="toggleSeasonHistory()"
+  >
+    📜 View Season History
+  </button>
+
+  <div
+    id="season-history-display"
+    class="status-text"
+    style="display:none; margin-top:12px;"
+  >
+    Loading season history...
+  </div>
+</div>
+ 
+</div>
+
+
+  </div>
+</div>
+
   </div>
 </div>
           
@@ -1028,7 +1078,8 @@
 
       const host = window.location.hostname;
       const isLocal = host === "localhost" || host === "127.0.0.1";
-
+let seasonHistoryList = [];
+let seasonHistoryIndex = 0;
       const API_BASE = isLocal ? LOCAL_API : PROD_API;
       console.log(
         "✅ Packs Debug | host:",
@@ -1162,6 +1213,7 @@
 
         if (tabName === "empire") loadEmperorLeaderboard();
         if (tabName === "industry") loadIndustryLeaders();
+        if (tabName === "season") loadActiveSeason();
       }
       async function loadEmperorLeaderboard() {
         try {
@@ -1424,6 +1476,241 @@ data-tooltip="${
           console.error("Industry leaderboard error:", err);
         }
       }
+      function toggleSeasonHistory() {
+  const box = document.getElementById("season-history-display");
+  if (!box) return;
+
+  box.style.display = box.style.display === "none" ? "block" : "none";
+}
+
+function renderSeasonHistory() {
+  const box = document.getElementById("season-history-display");
+  if (!box) return;
+
+  if (!seasonHistoryList.length) {
+    box.innerHTML = "No completed seasons yet.";
+    return;
+  }
+
+  const s = seasonHistoryList[seasonHistoryIndex];
+  const top10 = Array.isArray(s.season_top10) ? s.season_top10 : [];
+
+  const rowsHtml = top10.length
+    ? top10
+        .map((p, index) => {
+          const rank = index + 1;
+          const medal =
+            rank === 1 ? "🥇" :
+            rank === 2 ? "🥈" :
+            rank === 3 ? "🥉" :
+            `#${rank}`;
+
+          return `
+            <div class="season-rank-row ${rank <= 3 ? 'top-rank' : ''}">
+              <div class="season-rank-left">
+                <span class="season-rank-medal">${medal}</span>
+                <span class="season-rank-name">@${p.username}</span>
+              </div>
+              <div class="season-rank-ep">${Number(p.ep || 0).toFixed(0)} EP/day</div>
+            </div>
+          `;
+        })
+        .join("")
+    : `<div class="season-empty-history">No ranking saved.</div>`;
+
+  box.innerHTML = `
+    <div class="season-history-card">
+      <div class="season-history-head">
+        <div>
+          <div class="season-history-count">Season ${seasonHistoryIndex + 1} of ${seasonHistoryList.length}</div>
+          <div class="season-history-title">🏆 ${s.name || "-"}</div>
+          <div class="season-history-sub">${s.industry || "-"} Industry Season</div>
+        </div>
+
+        <div class="season-reward-badge">
+          ${Number(s.reward_pool_hive || 0).toFixed(3)} HIVE Pool
+        </div>
+      </div>
+
+      <div class="season-rank-list">
+        ${rowsHtml}
+      </div>
+
+      <div class="season-history-footer">
+        <span class="season-growth-badge">
+          🚀 Growth Champion: @${s.growth_champion || "None"}
+        </span>
+      </div>
+
+      <div class="season-history-nav">
+        <button type="button" class="secondary-button" onclick="showPreviousSeasonHistory()">⬅ Previous</button>
+        <button type="button" class="secondary-button" onclick="showNextSeasonHistory()">Next ➡</button>
+      </div>
+    </div>
+  `;
+}
+function showPreviousSeasonHistory() {
+  if (!seasonHistoryList.length) return;
+
+  seasonHistoryIndex =
+    seasonHistoryIndex <= 0
+      ? seasonHistoryList.length - 1
+      : seasonHistoryIndex - 1;
+
+  renderSeasonHistory();
+}
+
+function showNextSeasonHistory() {
+  if (!seasonHistoryList.length) return;
+
+  seasonHistoryIndex =
+    seasonHistoryIndex >= seasonHistoryList.length - 1
+      ? 0
+      : seasonHistoryIndex + 1;
+
+  renderSeasonHistory();
+}
+      async function loadActiveSeason() {
+  try {
+    const res = await fetch(apiUrl("/season/active"));
+    const data = await res.json();
+
+    const status = document.getElementById("season-status-text");
+    const box = document.getElementById("season-details-box");
+
+    if (!status || !box) return;
+
+    if (!data.success || !data.season) {
+  status.textContent = "No active industry season right now.";
+  box.style.display = "none";
+
+  
+const historyRes = await fetch(apiUrl("/season/history"));
+const historyData = await historyRes.json();
+
+const historyBox = document.getElementById("season-history-display");
+
+if (historyBox && historyData.success && Array.isArray(historyData.seasons)) {
+  seasonHistoryList = historyData.seasons;
+seasonHistoryIndex = 0;
+
+renderSeasonHistory();
+}
+  return;
+}
+
+    const season = data.season;
+
+    status.textContent = "🔥 Season is live — climb the ranks!";
+    box.style.display = "block";
+
+    document.getElementById("season-name-display").textContent =
+      season.name || "--";
+
+    document.getElementById("season-industry-display").textContent =
+      season.industry || "--";
+
+    document.getElementById("season-end-display").textContent =
+      season.end_date
+        ? new Date(season.end_date).toLocaleString()
+        : "--";
+        const estimatedPool = 5.046; // temporary test value
+
+document.getElementById("season-r1-preview").textContent =
+  `${(estimatedPool * 0.5).toFixed(3)} HIVE`;
+
+document.getElementById("season-r2-preview").textContent =
+  `${(estimatedPool * 0.3).toFixed(3)} HIVE`;
+
+document.getElementById("season-r3-preview").textContent =
+  `${(estimatedPool * 0.2).toFixed(3)} HIVE`;
+
+    
+
+    document.getElementById("season-growth-display").textContent =
+      season.growth_champion || "Not decided yet";
+      const lbRes = await fetch(apiUrl("/season/active/leaderboard"));
+const lbData = await lbRes.json();
+
+const lbBox = document.getElementById("season-live-leaderboard");
+
+if (lbBox && lbData.success && Array.isArray(lbData.leaderboard)) {
+  if (!lbData.leaderboard.length) {
+    lbBox.innerHTML = "No active production in this season industry yet.";
+  } else {
+    const activeUsername = String(ACTIVE_USER || "")
+  .replace("@", "")
+  .toLowerCase();
+
+let myRankLine = "";
+
+const leaderboardHtml = lbData.leaderboard
+  .map((p, index) => {
+    const rank = index + 1;
+
+    const medal =
+      rank === 1 ? "🥇" :
+      rank === 2 ? "🥈" :
+      rank === 3 ? "🥉" :
+      `#${rank}`;
+
+    const rowClass =
+      rank <= 3
+        ? "season-live-rank top3"
+        : "season-live-rank";
+
+    return `
+      <div class="${rowClass}">
+        <div class="season-live-left">
+          <span>${medal}</span>
+          <span class="season-live-name">@${p.username}</span>
+        </div>
+
+        <div class="season-live-ep">
+          ${Number(p.ep || 0).toFixed(0)} EP/day
+        </div>
+      </div>
+    `;
+  })
+  .join("");
+
+lbBox.innerHTML = `
+  <div class="season-live-card">
+    ${
+      myRankLine
+        ? `<div class="season-your-rank">${myRankLine}</div>`
+        : ""
+    }
+
+    ${leaderboardHtml}
+  </div>
+`;
+
+if (myRankLine) {
+  lbBox.innerHTML = `<strong>${myRankLine}</strong><br><br>` + lbBox.innerHTML;
+}
+
+const historyRes = await fetch(apiUrl("/season/history"));
+const historyData = await historyRes.json();
+
+const historyBox = document.getElementById("season-history-display");
+
+if (historyBox && historyData.success && Array.isArray(historyData.seasons)) {
+  if (!historyData.seasons.length) {
+    historyBox.innerHTML = "No completed seasons yet.";
+  } else {
+    seasonHistoryList = historyData.seasons || [];
+seasonHistoryIndex = 0;
+renderSeasonHistory();
+  }
+}
+
+  }
+}
+  } catch (err) {
+  console.error("Active season error:", err);
+}
+}
       // ===== PLAYER SUMMARY =====
       async function loadDashboardSummary() {
         try {
