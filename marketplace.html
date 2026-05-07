@@ -55,10 +55,19 @@
       </div>
     </div>
  <div class="tabbar">
-      <button class="tab-btn active" data-market-tab="emp">EMP</button>
-      <button class="tab-btn" data-market-tab="blueprints">Blueprints</button>
-      <button class="tab-btn" data-market-tab="packs">Packs</button>
-    </div>
+  <button class="tab-btn active" data-market-tab="emp">EMP</button>
+  <button class="tab-btn" data-market-tab="blueprints">Blueprints</button>
+  <button class="tab-btn" data-market-tab="packs">Packs</button>
+ <button class="tab-btn" data-market-tab="premium">
+  Premium Assets <span class="soon-pill">SOON</span>
+</button>
+  <button class="tab-btn" data-market-tab="land">
+  Land <span class="soon-pill">SOON</span>
+</button>
+  <button class="tab-btn" data-market-tab="industry">
+  Industrial Empires <span class="soon-pill">SOON</span>
+</button>
+</div>
 
     <!-- EMP -->
     <section class="market-tab-panel active" data-market-tab-panel="emp">
@@ -279,7 +288,89 @@
   </div>
 </section>
   </div>
+<!-- PREMIUM ASSETS -->
+<section class="market-tab-panel" data-market-tab-panel="premium">
+  <div class="card coming-soon-card premium-soon">
 
+    <div class="coming-soon-kicker">🏛 PREMIUM MARKET</div>
+
+    <h2>Premium Assets Marketplace</h2>
+
+    <p>
+      Rare strategic collectibles and Genesis-era premium assets will become
+      tradable in a future marketplace expansion.
+    </p>
+
+    <div class="premium-preview-grid">
+
+      <div class="premium-preview-card">
+        <div class="premium-preview-icon">🏛</div>
+        <div class="premium-preview-title">Relics</div>
+        <div class="premium-preview-text">
+          Rare Founder collectibles with permanent EP boost utility.
+        </div>
+      </div>
+
+      <div class="premium-preview-card">
+        <div class="premium-preview-icon">💠</div>
+        <div class="premium-preview-title">Imperial Fragments</div>
+        <div class="premium-preview-text">
+          Premium crafting material obtained from Imperial Supply Crates.
+        </div>
+      </div>
+
+      <div class="premium-preview-card">
+        <div class="premium-preview-icon">📜</div>
+        <div class="premium-preview-title">Writs</div>
+        <div class="premium-preview-text">
+          Founder-era strategic documents connected to future ecosystem utility.
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- LAND -->
+<section class="market-tab-panel" data-market-tab-panel="land">
+  <div class="card coming-soon-card">
+
+    <div class="coming-soon-kicker">🌍 LAND ECONOMY</div>
+
+    <h2>Land Marketplace</h2>
+
+    <p>
+      Trade Genesis lands directly with other players and expand your empire
+      through strategic territory acquisition.
+    </p>
+
+    <div class="coming-soon-note">
+      Frontier • Estate • Industrial Zone
+    </div>
+
+  </div>
+</section>
+
+<!-- INDUSTRIAL EMPIRES -->
+<section class="market-tab-panel" data-market-tab-panel="industry">
+  <div class="card coming-soon-card">
+
+    <div class="coming-soon-kicker">🏭 INDUSTRIAL ECONOMY</div>
+
+    <h2>Industrial Empire Marketplace</h2>
+
+    <p>
+  Trade complete industrial empires — lands with built factories,
+  upgrades, active production, and established industrial infrastructure.
+</p>
+
+    <div class="coming-soon-note">
+      Build • Expand • Trade Complete Empires
+    </div>
+
+  </div>
+</section>
   <script>
     const LOCAL_API = "http://localhost:10000";
     const PROD_API = "https://mydempire-backend-1.onrender.com";

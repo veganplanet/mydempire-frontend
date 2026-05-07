@@ -377,10 +377,21 @@
   </div>
 
   <div class="row">
-    <input id="season-start-input" type="datetime-local" />
-    <input id="season-end-input" type="datetime-local" />
-    <input id="season-boost-input" type="number" placeholder="EP boost %" value="0" />
-  </div>
+  <input id="season-start-input" type="datetime-local" />
+
+  <input id="season-end-input" type="datetime-local" />
+
+  <input
+    id="season-boost-input"
+    type="number"
+    placeholder="EP Boost %"
+  />
+
+  <input
+    id="season-growth-reward-input"
+    placeholder="Growth Champion reward"
+  />
+</div>
 
   <div class="row">
     <button id="create-season-btn" class="primary">Create Season</button>
@@ -1852,6 +1863,7 @@ document.getElementById("create-season-btn")?.addEventListener("click", async ()
     start_date: document.getElementById("season-start-input").value,
     end_date: document.getElementById("season-end-input").value,
     ep_boost_percent: Number(document.getElementById("season-boost-input").value || 0),
+    growth_champion_reward: document.getElementById("season-growth-reward-input").value,
   };
 
   const data = await adminPostJson(`${API_BASE}/admin/create-season`, body);
