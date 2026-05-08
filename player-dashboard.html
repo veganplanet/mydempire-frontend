@@ -498,7 +498,45 @@
             status.</small
           >
         </div>
+<div class="land-filter-bar">
 
+  <button class="land-filter-btn active" data-land-filter="ALL">
+    All
+  </button>
+
+  <button class="land-filter-btn" data-land-filter="L1">
+    L1
+  </button>
+
+  <button class="land-filter-btn" data-land-filter="L2">
+    L2
+  </button>
+
+  <button class="land-filter-btn" data-land-filter="L3">
+    L3
+  </button>
+
+  <button class="land-filter-btn" data-land-filter="FOOD">
+    Food
+  </button>
+
+  <button class="land-filter-btn" data-land-filter="PHARMA">
+    Pharma
+  </button>
+
+  <button class="land-filter-btn" data-land-filter="TEXTILE">
+    Textile
+  </button>
+
+  <button class="land-filter-btn" data-land-filter="CHEMICAL">
+    Chemical
+  </button>
+
+  <button class="land-filter-btn" data-land-filter="SUPERMARKET">
+    Super Market
+  </button>
+
+</div>
         <div class="land-grid" id="lands-container">
           <p class="status-text">Loading your lands and factories…</p>
         </div>
@@ -3327,6 +3365,11 @@ await loadSeasonLiveBanner();
           // ===== Build Land Row Card =====
           const landCard = document.createElement("div");
           landCard.className = `land-card-row land-tier-${landTierKey.toLowerCase()}`;
+          landCard.dataset.landTier = landTierKey;
+landCard.dataset.industry = (factories || [])
+  .map((f) => String(f.blueprint_tier || "").split("_")[0].toUpperCase())
+  .filter(Boolean)
+  .join(",");
           landCard.style.setProperty("--tier-border", borderColor);
 
           // Slot bar HTML
@@ -4275,6 +4318,46 @@ setTimeout(setupAppbarDropdown, 1000);
           grid.appendChild(tile);
         }
       }
+      function setupLandFilters() {
+  const buttons = document.querySelectorAll(".land-filter-btn");
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+
+      buttons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const filter = btn.dataset.landFilter;
+
+      const cards = document.querySelectorAll(".land-card-row");
+
+      cards.forEach((card) => {
+
+        const tier = String(card.dataset.landTier || "").toUpperCase();
+
+        const industries = String(card.dataset.industry || "").toUpperCase();
+
+        let show = false;
+
+        if (filter === "ALL") {
+          show = true;
+        }
+        else if (
+          filter === "L1" ||
+          filter === "L2" ||
+          filter === "L3"
+        ) {
+          show = tier === filter;
+        }
+        else {
+          show = industries.includes(filter);
+        }
+
+        card.style.display = show ? "" : "none";
+      });
+    });
+  });
+}
       function getFreeBuildLands() {
         if (!Array.isArray(empireLands)) return [];
 
@@ -5098,6 +5181,7 @@ setTimeout(() => {
   }
 
   loadSeasonLiveBanner();
+  setupLandFilters();
 });
       function toggleBlueprintCardMenu(btn) {
         const menu = btn.nextElementSibling;
