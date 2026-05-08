@@ -3510,7 +3510,22 @@ renderSeasonHistory();
                 upgradeBtn.addEventListener("click", async (e) => {
                   e.stopPropagation();
 
-                  const ok = confirm(`Upgrade ${factoryName}?`);
+                  const upgradeCostByTier = {
+  B1: 50,
+  B2: 100,
+  B3: 200,
+  B4: 400,
+};
+
+const currentTierShort = String(blueprintTier || "")
+  .toUpperCase()
+  .match(/B[1-5]/)?.[0];
+
+const upgradeCost = upgradeCostByTier[currentTierShort] || "?";
+
+const ok = confirm(
+  `Upgrade ${factoryName}?\n\nCost: ${upgradeCost} EMP\nNext level: ${nextUpgradeLabel}`
+);
                   if (!ok) return;
 
                   try {
