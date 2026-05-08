@@ -12769,3 +12769,64 @@ cursor:pointer;
     box-shadow: 0 0 8px rgba(251, 146, 60, 0.18);
   }
 }
+.season-live-banner{
+  margin: 14px 0 18px;
+  padding: 18px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(245,158,11,.45);
+  background:
+    radial-gradient(circle at 12% 20%, rgba(250,204,21,.34), transparent 24%),
+    radial-gradient(circle at 88% 30%, rgba(124,58,237,.25), transparent 28%),
+    linear-gradient(135deg,#1e1b4b 0%, #312e81 48%, #111827 100%);
+  color: #fff;
+  box-shadow: 0 16px 34px rgba(49,46,129,.24);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  cursor: pointer;
+}
+
+.season-live-pill{
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(251,191,36,.16);
+  border: 1px solid rgba(251,191,36,.5);
+  color: #fde68a;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.season-live-title{
+  margin-top: 10px;
+  font-size: 26px;
+  font-weight: 950;
+}
+
+.season-live-text{
+  margin-top: 4px;
+  color: #dbeafe;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.season-live-btn{
+  background: linear-gradient(135deg,#facc15,#f59e0b) !important;
+  color: #1f2937 !important;
+  border: none !important;
+  box-shadow: 0 10px 24px rgba(245,158,11,.28);
+  white-space: nowrap;
+}
+
+@media (max-width: 760px){
+  .season-live-banner{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .season-live-btn{
+    width: 100%;
+  }
+}

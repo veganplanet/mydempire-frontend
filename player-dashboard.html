@@ -190,7 +190,41 @@
           <h2>Overview</h2>
           <small>Your Genesis EMP, lands, factories and boosts</small>
         </div>
+<div
+  id="season-live-banner"
+  class="season-live-banner"
+  onclick="openSeasonLeaderboard()"
+  style="display:none;"
+>
+  <div class="season-live-left">
 
+    <div class="season-live-pill">
+      🔥 LIVE SEASON
+    </div>
+
+    <div
+      id="season-live-title"
+      class="season-live-title"
+    >
+      Loading season...
+    </div>
+
+    <div
+      id="season-live-meta"
+      class="season-live-text"
+    >
+      Loading details...
+    </div>
+
+  </div>
+
+  <button
+    type="button"
+    class="season-live-btn"
+  >
+    View Leaderboard →
+  </button>
+</div>
         <!-- 🔹 Pulse (keep first) -->
         <div class="overview-block" style="margin-bottom: 16px">
           <div
@@ -2590,7 +2624,7 @@ renderSeasonHistory();
           await loadEmpireOverview();
           await loadBlueprints();
           await loadPacks();
-
+await loadSeasonLiveBanner();
           if (typeof loadPackOpenHistory === "function") {
             await loadPackOpenHistory();
           }
@@ -5058,11 +5092,13 @@ setTimeout(() => {
         .getElementById("claim-reward-btn")
         ?.addEventListener("click", claimReward);
       document.addEventListener("DOMContentLoaded", () => {
-        const withdrawBtn = document.getElementById("withdraw-hive-btn");
-        if (withdrawBtn) {
-          withdrawBtn.addEventListener("click", requestWithdrawHive);
-        }
-      });
+  const withdrawBtn = document.getElementById("withdraw-hive-btn");
+  if (withdrawBtn) {
+    withdrawBtn.addEventListener("click", requestWithdrawHive);
+  }
+
+  loadSeasonLiveBanner();
+});
       function toggleBlueprintCardMenu(btn) {
         const menu = btn.nextElementSibling;
 
@@ -5130,6 +5166,52 @@ if (openBtn) {
     openBtn.style.cursor = "pointer";
   }
 }
+}
+async function loadSeasonLiveBanner() {
+  console.log("LOAD SEASON BANNER FUNCTION STARTED");
+  try {
+    const res = await fetch(`${API_BASE}/season/active`);
+    const data = await res.json();
+
+    if (!data?.success || !data?.season) {
+      return;
+    }
+
+    const season = data.season;
+
+    const banner = document.getElementById("season-live-banner");
+    const title = document.getElementById("season-live-title");
+    const meta = document.getElementById("season-live-meta");
+
+
+
+    const endDate = new Date(season.end_date);
+
+    title.textContent =
+      `${season.name} (${season.industry} INDUSTRY)`;
+
+    meta.innerHTML =
+  `⏳ Ends: ${endDate.toLocaleString()} &nbsp;&nbsp; • &nbsp;&nbsp; 🏆 Rewards shown inside Season leaderboard`;
+
+    console.log("BANNER FOUND:", banner);
+
+banner.style.display = "flex";
+banner.style.border = "5px solid red";
+
+  } catch (err) {
+    console.error("Season banner load failed:", err);
+  }
+}
+function openSeasonLeaderboard() {
+  setActiveTab("leaderboard");
+
+  setTimeout(() => {
+    const seasonBtn = document.querySelector('[data-lb-tab="season"]');
+
+    if (seasonBtn) {
+      seasonBtn.click();
+    }
+  }, 100);
 }
     </script>
 
