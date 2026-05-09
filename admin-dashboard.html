@@ -761,6 +761,7 @@ document.getElementById("metric-pack-sales-updated").textContent =
   <button id="view-assets-btn" class="primary">View Assets</button>
   <button id="give-emp-btn">Give EMP</button>
   <button id="give-pack-btn">Give Pack</button>
+  <button id="create-starter-empire-btn" class="primary">Create Starter Empire</button>
   <button id="open-dashboard-btn">Open Dashboard</button>
 </div>
 
@@ -1075,6 +1076,49 @@ document.getElementById("give-blueprint-btn")?.addEventListener("click", async (
       "Error giving blueprint.";
   }
 });
+// CREATE STARTER EMPIRE
+document
+  .getElementById("create-starter-empire-btn")
+  ?.addEventListener("click", async () => {
+    const ok = confirm(
+      `Create starter empire for @${inspectedUsername}?\n\nThis will give:\n• 1x L1 Land\n• 1x random B1 Blueprint\n• 30 EMP`
+    );
+
+    if (!ok) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/admin/create-starter-empire`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": ADMIN_KEY,
+        },
+        body: JSON.stringify({
+          username: inspectedUsername,
+        }),
+      });
+
+      const data = await res.json();
+       
+
+      if (!res.ok || !data.success) {
+        document.getElementById("player-action-status").textContent =
+          data.error || "Failed to create starter empire.";
+        return;
+      }
+
+      document.getElementById("player-action-status").textContent =
+        `Starter Empire created for @${inspectedUsername}: L1 + ${data.blueprint?.tier || "B1 Blueprint"} + 30 EMP`;
+
+      await inspectPlayer();
+    } catch (err) {
+      console.error(err);
+
+
+document.getElementById("player-action-status").textContent =
+  "Error creating starter empire.";
+    }
+  });
 document.getElementById("give-land-btn").onclick = async () => {
   const username = inspectedUsername;
   const tier = document.getElementById("admin-land-tier").value;
@@ -1089,6 +1133,7 @@ document.getElementById("give-land-btn").onclick = async () => {
   });
 
   const data = await res.json();
+ 
 
   playerInspectorStatus.textContent = data.success
     ? `✅ ${tier} land given to @${username}`
