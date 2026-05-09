@@ -501,40 +501,40 @@
 <div class="land-filter-bar">
 
   <button class="land-filter-btn active" data-land-filter="ALL">
-    All
-  </button>
+  All <span class="land-filter-count" id="land-count-all">0</span>
+</button>
 
-  <button class="land-filter-btn" data-land-filter="L1">
-    L1
-  </button>
+<button class="land-filter-btn" data-land-filter="L1">
+  L1 <span class="land-filter-count" id="land-count-l1">0</span>
+</button>
 
-  <button class="land-filter-btn" data-land-filter="L2">
-    L2
-  </button>
+<button class="land-filter-btn" data-land-filter="L2">
+  L2 <span class="land-filter-count" id="land-count-l2">0</span>
+</button>
 
-  <button class="land-filter-btn" data-land-filter="L3">
-    L3
-  </button>
+<button class="land-filter-btn" data-land-filter="L3">
+  L3 <span class="land-filter-count" id="land-count-l3">0</span>
+</button>
 
   <button class="land-filter-btn" data-land-filter="FOOD">
-    Food
-  </button>
+  Food <span class="land-filter-count" id="land-count-food">0</span>
+</button>
 
-  <button class="land-filter-btn" data-land-filter="PHARMA">
-    Pharma
-  </button>
+<button class="land-filter-btn" data-land-filter="PHARMA">
+  Pharma <span class="land-filter-count" id="land-count-pharma">0</span>
+</button>
 
-  <button class="land-filter-btn" data-land-filter="TEXTILE">
-    Textile
-  </button>
+<button class="land-filter-btn" data-land-filter="TEXTILE">
+  Textile <span class="land-filter-count" id="land-count-textile">0</span>
+</button>
 
-  <button class="land-filter-btn" data-land-filter="CHEMICAL">
-    Chemical
-  </button>
+<button class="land-filter-btn" data-land-filter="CHEMICAL">
+  Chemical <span class="land-filter-count" id="land-count-chemical">0</span>
+</button>
 
-  <button class="land-filter-btn" data-land-filter="SUPERMARKET">
-    Super Market
-  </button>
+<button class="land-filter-btn" data-land-filter="SUPERMARKET">
+  Supermarket <span class="land-filter-count" id="land-count-supermarket">0</span>
+</button>
 
 </div>
         <div class="land-grid" id="lands-container">
@@ -3712,8 +3712,11 @@ const ok = confirm(
           if (rightCol) rightCol.appendChild(factoriesList);
 
           landsContainer.appendChild(landCard);
-        }
-        wireEmptySlotBuildActions();
+}
+
+updateLandFilterCounts();
+
+wireEmptySlotBuildActions();
       }
 
       function wireEmptySlotBuildActions() {
@@ -4341,7 +4344,53 @@ setTimeout(setupAppbarDropdown, 1000);
           grid.appendChild(tile);
         }
       }
+      function updateLandFilterCounts() {
+  const cards = document.querySelectorAll(".land-card-row");
+
+  const counts = {
+    ALL: cards.length,
+    L1: 0,
+    L2: 0,
+    L3: 0,
+    FOOD: 0,
+    PHARMA: 0,
+    TEXTILE: 0,
+    CHEMICAL: 0,
+    SUPERMARKET: 0,
+  };
+
+  cards.forEach((card) => {
+    const tier = String(card.dataset.landTier || "").toUpperCase();
+    const industries = String(card.dataset.industry || "").toUpperCase();
+
+    if (counts[tier] !== undefined) {
+      counts[tier]++;
+    }
+
+    ["FOOD", "PHARMA", "TEXTILE", "CHEMICAL", "SUPERMARKET"].forEach((industry) => {
+      if (industries.includes(industry)) {
+        counts[industry]++;
+      }
+    });
+  });
+
+  const setCount = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+
+  setCount("land-count-all", counts.ALL);
+  setCount("land-count-l1", counts.L1);
+  setCount("land-count-l2", counts.L2);
+  setCount("land-count-l3", counts.L3);
+  setCount("land-count-food", counts.FOOD);
+  setCount("land-count-pharma", counts.PHARMA);
+  setCount("land-count-textile", counts.TEXTILE);
+  setCount("land-count-chemical", counts.CHEMICAL);
+  setCount("land-count-supermarket", counts.SUPERMARKET);
+}
       function setupLandFilters() {
+        
   const buttons = document.querySelectorAll(".land-filter-btn");
 
   buttons.forEach((btn) => {
@@ -4813,11 +4862,13 @@ if (loggedInUser !== viewedUser) {
 
         // disable only action buttons, not navigation tabs
         const actionSelectors = [
+        
           "#claim-reward-btn",
           "#withdraw-hive-btn",
           "#build-factory-btn",
           "#appbarLoginBtn",
           "#appbarLogoutBtn",
+          "#crate-history-link",
           ".rename-factory-btn",
           ".upgrade-factory-btn",
           ".maintenance-factory-btn",
@@ -4829,6 +4880,7 @@ if (loggedInUser !== viewedUser) {
           ".bp-card-menu button",
           ".secondary-button",
           ".primary-button",
+          
           "a[href*='rename']",
           "a[href*='maintenance']",
           "[onclick*='payMaintenance']",
@@ -4836,6 +4888,7 @@ if (loggedInUser !== viewedUser) {
           "[onclick*='openMaintenance']",
           "[onclick*='factory/rename']",
           "[onclick*='factory/pay-maintenance']",
+          
         ];
 
         document.querySelectorAll(actionSelectors.join(",")).forEach((el) => {
@@ -4851,7 +4904,21 @@ if (loggedInUser !== viewedUser) {
           el.style.cursor = "not-allowed";
           el.title = "Read-only mode";
         });
+const crateHistoryLink = document.getElementById("crate-history-link");
 
+if (crateHistoryLink) {
+  crateHistoryLink.removeAttribute("onclick");
+  crateHistoryLink.onclick = function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
+  };
+
+  crateHistoryLink.textContent = "History unavailable in visitor mode";
+  crateHistoryLink.style.pointerEvents = "none";
+  crateHistoryLink.style.opacity = "0.45";
+  crateHistoryLink.style.cursor = "not-allowed";
+}
         // disable only action form fields
         const inputSelectors = [
           "#build-land-select",
@@ -5018,6 +5085,39 @@ if (!isOwnEmpireView()) {
         }
       }
       async function openCrateHistoryModal(e) {
+          if (
+    typeof IS_VISITOR_MODE !== "undefined" &&
+    IS_VISITOR_MODE
+  ) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    alert("Crate history unavailable in visitor mode.");
+    return;
+  }
+  const viewedUser =
+  new URLSearchParams(window.location.search).get("user");
+
+const myUser =
+  localStorage.getItem("hiveUsername") ||
+  localStorage.getItem("mde_username") ||
+  localStorage.getItem("username");
+
+if (
+  viewedUser &&
+  myUser &&
+  viewedUser.toLowerCase() !== myUser.toLowerCase()
+) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  alert("Crate history unavailable in visitor mode.");
+  return;
+}
         if (e) e.preventDefault();
         const loadingEl = document.getElementById("crate-history-loading");
         if (loadingEl) loadingEl.style.display = "none";
@@ -5554,16 +5654,13 @@ if (openBtn) {
 
         <div class="crate-modal-actions" style="justify-content: center">
           <button
-            id="close-crate-result-btn"
-            class="primary-button"
-            type="button"
-            onclick="
-              document.getElementById('crate-result-modal').style.display =
-                'none'
-            "
-          >
-            Close
-          </button>
+  id="close-crate-result-btn"
+  class="primary-button"
+  type="button"
+  onclick="document.getElementById('crate-result-modal').style.display='none';"
+>
+  Close
+</button>
         </div>
       </div>
     </div>

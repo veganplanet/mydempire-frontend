@@ -12883,3 +12883,16 @@ cursor:pointer;
     );
   pointer-events:none;
 }
+.land-filter-count{
+  margin-left: 6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(15,23,42,.10);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.land-filter-btn.active .land-filter-count{
+  background: rgba(255,255,255,.22);
+  color: #fff;
+}
