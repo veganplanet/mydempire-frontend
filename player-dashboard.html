@@ -1686,16 +1686,16 @@ renderSeasonHistory();
       season.end_date
         ? new Date(season.end_date).toLocaleString()
         : "--";
-        const estimatedPool = 5.046; // temporary test value
+        const estimatedPool = Number(season.projected_reward_pool_hive || 0);
 
 document.getElementById("season-r1-preview").textContent =
-  `${(estimatedPool * 0.5).toFixed(3)} HIVE`;
+  `${Number(season.projected_winner1_reward || 0).toFixed(3)} HIVE`;
 
 document.getElementById("season-r2-preview").textContent =
-  `${(estimatedPool * 0.3).toFixed(3)} HIVE`;
+  `${Number(season.projected_winner2_reward || 0).toFixed(3)} HIVE`;
 
 document.getElementById("season-r3-preview").textContent =
-  `${(estimatedPool * 0.2).toFixed(3)} HIVE`;
+  `${Number(season.projected_winner3_reward || 0).toFixed(3)} HIVE`;
 
     
 
