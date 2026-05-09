@@ -1837,7 +1837,21 @@ function renderBlueprintHistory(history, box) {
     <div class="trade-tape">
       ${history.map((item, index) => {
 
-        const blueprint = item.blueprint_type || item.industry || "Blueprint";
+        const blueprintTier =
+  item.blueprint_tier ||
+  item.tier ||
+  item.asset_tier ||
+  item.nft_tier ||
+  item.blueprint_type ||
+  "";
+
+const blueprint =
+  item.nft_tier ||
+  item.blueprint_tier ||
+  item.tier ||
+  item.asset_tier ||
+  item.blueprint_type ||
+  "Blueprint";
         const level = item.blueprint_level || "";
         const price = Number(item.total_price_hive || 0);
 

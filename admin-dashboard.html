@@ -764,6 +764,35 @@ document.getElementById("metric-pack-sales-updated").textContent =
   <button id="open-dashboard-btn">Open Dashboard</button>
 </div>
 
+<div class="row" style="margin-top:12px;">
+  <select id="admin-land-tier">
+    <option value="L1">L1 Frontier</option>
+    <option value="L2">L2 Estate</option>
+    <option value="L3">L3 Industrial Zone</option>
+  </select>
+  <button id="give-land-btn">Give Land</button>
+</div>
+
+<div class="row" style="margin-top:12px;">
+  <select id="admin-bp-industry">
+    <option value="FOOD">Food</option>
+    <option value="TEXTILE">Textile</option>
+    <option value="PHARMA">Pharma</option>
+    <option value="CHEMICAL">Chemical</option>
+    <option value="SUPERMARKET">Supermarket</option>
+  </select>
+
+  <select id="admin-bp-level">
+    <option value="B1">B1</option>
+    <option value="B2">B2</option>
+    <option value="B3">B3</option>
+    <option value="B4">B4</option>
+    <option value="B5">B5</option>
+  </select>
+
+  <button id="give-blueprint-btn">Give Blueprint</button>
+</div>
+
 <div class="status" id="player-action-status">
   No admin action used yet.
 </div>
@@ -955,7 +984,141 @@ document.getElementById("give-pack-btn")?.addEventListener("click", async () => 
       "Error giving pack.";
   }
 });
+// GIVE LAND
+document.getElementById("give-land-btn")?.addEventListener("click", async () => {
+  const tier = document.getElementById("admin-land-tier")?.value;
 
+  if (!tier) {
+    alert("Select land tier first.");
+    return;
+  }
+
+  const ok = confirm(`Are you sure you want to give ${tier} land to @${inspectedUsername}?`);
+  if (!ok) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/give-land`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY
+      },
+      body: JSON.stringify({
+        username: inspectedUsername,
+        tier
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      document.getElementById("player-action-status").textContent =
+        data.error || "Failed to give land.";
+      return;
+    }
+
+    document.getElementById("player-action-status").textContent =
+      `${tier} land given to @${inspectedUsername} successfully.`;
+
+    await inspectPlayer();
+  } catch (err) {
+    console.error(err);
+    document.getElementById("player-action-status").textContent =
+      "Error giving land.";
+  }
+});
+
+// GIVE BLUEPRINT
+document.getElementById("give-blueprint-btn")?.addEventListener("click", async () => {
+  const industry = document.getElementById("admin-bp-industry")?.value;
+  const level = document.getElementById("admin-bp-level")?.value;
+
+  if (!industry || !level) {
+    alert("Select blueprint industry and level first.");
+    return;
+  }
+
+  const tier = `${industry}_${level}`;
+
+  const ok = confirm(`Are you sure you want to give ${tier} blueprint to @${inspectedUsername}?`);
+  if (!ok) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/give-blueprint`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY
+      },
+      body: JSON.stringify({
+        username: inspectedUsername,
+        industry,
+        level
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      document.getElementById("player-action-status").textContent =
+        data.error || "Failed to give blueprint.";
+      return;
+    }
+
+    document.getElementById("player-action-status").textContent =
+      `${tier} blueprint given to @${inspectedUsername} successfully.`;
+
+    await inspectPlayer();
+  } catch (err) {
+    console.error(err);
+    document.getElementById("player-action-status").textContent =
+      "Error giving blueprint.";
+  }
+});
+document.getElementById("give-land-btn").onclick = async () => {
+  const username = inspectedUsername;
+  const tier = document.getElementById("admin-land-tier").value;
+
+  const res = await fetch(`${API_BASE}/admin/give-land?key=${ADMIN_SECRET}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username,
+      tier,
+    }),
+  });
+
+  const data = await res.json();
+
+  playerInspectorStatus.textContent = data.success
+    ? `✅ ${tier} land given to @${username}`
+    : `❌ ${data.error || "Failed to give land"}`;
+};
+
+document.getElementById("give-blueprint-btn").onclick = async () => {
+  const username = inspectedUsername;
+  const industry = document.getElementById("admin-bp-industry").value;
+  const level = document.getElementById("admin-bp-level").value;
+
+  const res = await fetch(
+    `${API_BASE}/admin/give-blueprint?key=${ADMIN_SECRET}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        industry,
+        level,
+      }),
+    }
+  );
+
+  const data = await res.json();
+
+  playerInspectorStatus.textContent = data.success
+    ? `✅ ${industry}_${level} blueprint given to @${username}`
+    : `❌ ${data.error || "Failed to give blueprint"}`;
+};
 // OPEN PLAYER DASHBOARD
 document.getElementById("open-dashboard-btn")?.addEventListener("click", () => {
 
