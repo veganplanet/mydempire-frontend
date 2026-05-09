@@ -3357,10 +3357,7 @@ await loadSeasonLiveBanner();
             }
           }
 
-          const daysInfoText =
-            oldestClaimDays === null
-              ? "Claim info: not available yet"
-              : `Oldest unclaimed time: ~${oldestClaimDays.toFixed(1)}d`;
+          const daysInfoText = "";
 
           // ===== Build Land Row Card =====
           const landCard = document.createElement("div");
@@ -3482,6 +3479,28 @@ landCard.dataset.industry = (factories || [])
               const requiredDays =
                 getRequiredActiveDaysForUpgradeTier(blueprintTier);
               const nextUpgradeLabel = getNextUpgradeLabel(blueprintTier);
+              const landMaxUpgradeLevel =
+  landTierKey === "L1" ? 3 :
+  landTierKey === "L2" ? 4 :
+  landTierKey === "L3" ? 5 :
+  1;
+
+const currentBlueprintLevel = Number(
+  String(blueprintTier || "").match(/B([1-5])/)?.[1] || 1
+);
+
+const reachedLandUpgradeCap =
+  currentBlueprintLevel >= landMaxUpgradeLevel;
+  const landAlreadyHasB5 = factories.some((otherFactory) => {
+  if (String(otherFactory.id) === String(f.id)) return false;
+
+  return String(otherFactory.blueprint_tier || "")
+    .toUpperCase()
+    .includes("_B5");
+});
+
+const blockedByExistingB5 =
+  nextUpgradeLabel === "B5" && landAlreadyHasB5;
               let maintenanceText = "";
 
               if (status === "BUILDING") {
@@ -3507,11 +3526,15 @@ landCard.dataset.industry = (factories || [])
                 upgradeMatrix = `✅ Max tier reached`;
               } else if (status !== "ACTIVE") {
                 upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Upgrade unavailable while ${status.toLowerCase()}`;
-              } else if (isReadyToUpgrade) {
-                upgradeMatrix = `✅ Factory is ready to upgrade to ${nextUpgradeLabel}`;
-              } else {
-                upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Needs ${requiredDays - activeDays} more day(s) for ${nextUpgradeLabel}`;
-              }
+              } else if (reachedLandUpgradeCap) {
+  upgradeMatrix = `Max level reached for this land`;
+} else if (blockedByExistingB5) {
+  upgradeMatrix = `This land already has a B5 factory`;
+} else if (isReadyToUpgrade) {
+  upgradeMatrix = `✅ Factory is ready to upgrade to ${nextUpgradeLabel}`;
+} else {
+  upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Needs ${requiredDays - activeDays} more day(s) for ${nextUpgradeLabel}`;
+}
 
               let subLine = `Blueprint tier: ${blueprintTier}<br>${upgradeMatrix}<br>${maintenanceText}`;
 
