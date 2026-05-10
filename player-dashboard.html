@@ -874,9 +874,17 @@
           >
             Season <span class="season-new-badge">NEW</span>
           </button>
+          <button
+  type="button"
+class="leaderboard-subnav-btn"
+data-lb-tab="surge"
+onclick="setLeaderboardTab('surge')"
+>
+Empire Surge
+<span class="season-new-badge">LIVE</span>
+</button>
         </div>
-
-        <div
+        <div  
           class="leaderboard-tab-panel leaderboard-tab-panel-active"
           data-lb-panel="empire"
         >
@@ -918,7 +926,13 @@
     </div>
   </div>
 </div>
+<div class="leaderboard-tab-panel" data-lb-panel="surge" style="padding:20px 0;">
 
+ <div id="empire-surge-live-board" style="margin-top:18px; min-height:320px;">
+  <div class="status-text">
+    Loading Empire Surge leaderboard...
+  </div>
+</div>
 <div class="leaderboard-tab-panel" data-lb-panel="season">
   <div>
     <div class="season-coming-top">
@@ -935,6 +949,7 @@
   <div id="season-status-text" class="status-text">
     Loading active season...
   </div>
+  
 <div id="season-details-box" style="display:none; margin-top:12px;">
   <div><strong>Season:</strong> <span id="season-name-display">--</span></div>
   <div><strong>Industry:</strong> <span id="season-industry-display">--</span></div>
@@ -989,6 +1004,7 @@
     <strong>Growth Champion:</strong>
     <span id="season-growth-display">Not decided yet</span>
   </div>
+</div>
 </div>
 
 <!-- ALWAYS visible -->
@@ -1286,6 +1302,8 @@ let seasonHistoryIndex = 0;
         if (tabName === "empire") loadEmperorLeaderboard();
         if (tabName === "industry") loadIndustryLeaders();
         if (tabName === "season") loadActiveSeason();
+        if (tabName === "surge") loadEmpireSurgeLeaderboard();
+        
       }
       async function loadEmperorLeaderboard() {
         try {
@@ -1484,7 +1502,78 @@ data-tooltip="${
           console.error("Leaderboard error:", err);
         }
       }
+async function loadEmpireSurgeLeaderboard() {
+  
+  const container = document.getElementById("empire-surge-live-board");
+  
+  if (!container) return;
 
+  try {
+    const res = await fetch(apiUrl("/empire-surge/leaderboard"));
+    const data = await res.json();
+    
+
+    const rows = data.leaderboard || [];
+
+    if (!data.success || rows.length === 0) {
+    
+
+return;
+    }
+
+    container.innerHTML = `
+      <div style="margin-top:18px;">
+        <h3 style="margin:0 0 10px;">Live Empire Surge Leaderboard</h3>
+
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; background:#fff; border:1px solid #e5e7eb; border-radius:14px; overflow:hidden;">
+            <thead>
+              <tr style="background:#eef2ff;">
+                <th style="padding:10px; text-align:left;">Rank</th>
+                <th style="padding:10px; text-align:left;">Empire</th>
+                <th style="padding:10px; text-align:right;">Start EP/day</th>
+                <th style="padding:10px; text-align:right;">Current EP/day</th>
+                <th style="padding:10px; text-align:right;">Growth</th>
+                <th style="padding:10px; text-align:right;">Top Days</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map((row, index) => `
+                <tr>
+                  <td style="padding:10px; border-top:1px solid #e5e7eb; font-weight:800;">
+                    #${index + 1}
+                  </td>
+                  <td style="padding:10px; border-top:1px solid #e5e7eb; font-weight:800;">
+                    @${row.username}
+                  </td>
+                  <td style="padding:10px; border-top:1px solid #e5e7eb; text-align:right;">
+                    ${Number(row.start_ep || 0).toFixed(0)}
+                  </td>
+                  <td style="padding:10px; border-top:1px solid #e5e7eb; text-align:right;">
+                    ${Number(row.current_ep || 0).toFixed(0)}
+                  </td>
+                  <td style="padding:10px; border-top:1px solid #e5e7eb; text-align:right; font-weight:900;">
+                    +${Number(row.growth_ep || 0).toFixed(0)}
+                  </td>
+                  <td style="padding:10px; border-top:1px solid #e5e7eb; text-align:right;">
+                    ${Number(row.top_days || 0)}
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    console.error("Empire Surge leaderboard load error:", err);
+    container.innerHTML = `
+      <div class="status-text">
+        Failed to load Empire Surge leaderboard.
+      </div>
+    `;
+  }
+}
       async function loadIndustryLeaders() {
         try {
           const res = await fetch(apiUrl("/leaderboard/industries"));
