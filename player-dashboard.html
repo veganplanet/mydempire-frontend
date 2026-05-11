@@ -933,6 +933,7 @@ Empire Surge
     Loading Empire Surge leaderboard...
   </div>
 </div>
+</div>
 <div class="leaderboard-tab-panel" data-lb-panel="season">
   <div>
     <div class="season-coming-top">
@@ -949,7 +950,6 @@ Empire Surge
   <div id="season-status-text" class="status-text">
     Loading active season...
   </div>
-  
 <div id="season-details-box" style="display:none; margin-top:12px;">
   <div><strong>Season:</strong> <span id="season-name-display">--</span></div>
   <div><strong>Industry:</strong> <span id="season-industry-display">--</span></div>
@@ -1005,9 +1005,9 @@ Empire Surge
     <span id="season-growth-display">Not decided yet</span>
   </div>
 </div>
-</div>
 
 <!-- ALWAYS visible -->
+
 <div style="margin-top:16px;">
   <button
     type="button"
@@ -1280,6 +1280,8 @@ let seasonHistoryIndex = 0;
         
       }
       function setLeaderboardTab(tabName) {
+        console.log("Empire Surge loader called");
+        console.log("Leaderboard tab clicked:", tabName);
         const buttons = document.querySelectorAll(".leaderboard-subnav-btn");
         const panels = document.querySelectorAll(".leaderboard-tab-panel");
 
@@ -1324,6 +1326,7 @@ let seasonHistoryIndex = 0;
           }
           const res = await fetch(apiUrl("/leaderboard/emperors"));
           const data = await res.json();
+          console.log("Empire Surge data:", data);
 
           const container = document.getElementById("emperor-leaderboard-list");
           if (!container) return;
@@ -1502,66 +1505,106 @@ data-tooltip="${
           console.error("Leaderboard error:", err);
         }
       }
+
 async function loadEmpireSurgeLeaderboard() {
-  
   const container = document.getElementById("empire-surge-live-board");
-  
   if (!container) return;
 
   try {
     const res = await fetch(apiUrl("/empire-surge/leaderboard"));
     const data = await res.json();
-    
 
     const rows = data.leaderboard || [];
 
     if (!data.success || rows.length === 0) {
-    
-
-return;
+      container.innerHTML = `
+        <div class="status-text">
+          Empire Surge leaderboard will appear after the next snapshot.
+        </div>
+      `;
+      return;
     }
+
+    const rowHtml = rows.map((row, index) => {
+      const rankLabel =
+        index === 0 ? "🥇" :
+        index === 1 ? "🥈" :
+        index === 2 ? "🥉" :
+        "#" + (index + 1);
+
+      return `
+        <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""}">
+          <div class="leaderboard-rank">${rankLabel}</div>
+
+          <div class="leaderboard-player">
+            <strong>@${row.username}</strong>
+          </div>
+
+          <div class="leaderboard-metric">
+            ${Number(row.start_ep || 0).toFixed(0)}
+          </div>
+
+          <div class="leaderboard-metric">
+            ${Number(row.current_ep || 0).toFixed(0)}
+          </div>
+
+          <div class="leaderboard-metric">
+            +${Number(row.growth_ep || 0).toFixed(0)}
+          </div>
+
+          
+        </div>
+      `;
+    }).join("");
 
     container.innerHTML = `
       <div style="margin-top:18px;">
-        <h3 style="margin:0 0 10px;">Live Empire Surge Leaderboard</h3>
+        <div style="margin-bottom:18px;">
+          <div style="font-size:12px; font-weight:900; color:#f97316; letter-spacing:.08em; margin-bottom:6px;">
+            WEEKLY LIVE EVENT
+          </div>
 
-        <div style="overflow-x:auto;">
-          <table style="width:100%; border-collapse:collapse; background:#fff; border:1px solid #e5e7eb; border-radius:14px; overflow:hidden;">
-            <thead>
-              <tr style="background:#eef2ff;">
-                <th style="padding:10px; text-align:left;">Rank</th>
-                <th style="padding:10px; text-align:left;">Empire</th>
-                <th style="padding:10px; text-align:right;">Start EP/day</th>
-                <th style="padding:10px; text-align:right;">Current EP/day</th>
-                <th style="padding:10px; text-align:right;">Growth</th>
-                <th style="padding:10px; text-align:right;">Top Days</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rows.map((row, index) => `
-                <tr>
-                  <td style="padding:10px; border-top:1px solid #e5e7eb; font-weight:800;">
-                    #${index + 1}
-                  </td>
-                  <td style="padding:10px; border-top:1px solid #e5e7eb; font-weight:800;">
-                    @${row.username}
-                  </td>
-                  <td style="padding:10px; border-top:1px solid #e5e7eb; text-align:right;">
-                    ${Number(row.start_ep || 0).toFixed(0)}
-                  </td>
-                  <td style="padding:10px; border-top:1px solid #e5e7eb; text-align:right;">
-                    ${Number(row.current_ep || 0).toFixed(0)}
-                  </td>
-                  <td style="padding:10px; border-top:1px solid #e5e7eb; text-align:right; font-weight:900;">
-                    +${Number(row.growth_ep || 0).toFixed(0)}
-                  </td>
-                  <td style="padding:10px; border-top:1px solid #e5e7eb; text-align:right;">
-                    ${Number(row.top_days || 0)}
-                  </td>
-                </tr>
-              `).join("")}
-            </tbody>
-          </table>
+          
+          <h2 style="margin:0; color:#0f172a;">
+  ⚡ Empire Surge
+</h2>
+
+<div class="season-reward-preview" style="margin-top:16px;">
+  <div class="season-reward-title">
+    ⚔️ Ranking Rules
+  </div>
+
+  <div style="line-height:1.7; color:#475569;">
+    <div>📈 Highest weekly EP growth ranks first</div>
+    <div>👑 Empires holding #1 longer gain advantage</div>
+    <div>⚡ Current EP breaks final ties</div>
+  </div>
+</div>
+
+<p style="margin:8px 0 0; color:#64748b; line-height:1.6;">
+
+          <p style="margin:8px 0 0; color:#64748b; line-height:1.6;">
+            Increase your Empire Power (EP/day) during the week.
+            The empire with the strongest surge climbs the rankings and competes for weekly rewards.
+          </p>
+        </div>
+
+        <div class="summary-card card-leaderboard" style="margin-top:12px;">
+          <div class="leaderboard-shell">
+            <div class="leaderboard-topbar"></div>
+            <div class="leaderboard-body">
+              <div class="leaderboard-row leaderboard-header-row">
+                <div class="leaderboard-rank">Rank</div>
+                <div class="leaderboard-player">Empire</div>
+                <div class="leaderboard-metric">Week Start</div>
+                <div class="leaderboard-metric">Live EP</div>
+                <div class="leaderboard-metric">Surge</div>
+                
+              </div>
+
+              ${rowHtml}
+            </div>
+          </div>
         </div>
       </div>
     `;
@@ -1732,9 +1775,11 @@ function showNextSeasonHistory() {
   renderSeasonHistory();
 }
       async function loadActiveSeason() {
+        console.log("Season loader called");
   try {
     const res = await fetch(apiUrl("/season/active"));
     const data = await res.json();
+    console.log("Season API data:", data);
 
     const status = document.getElementById("season-status-text");
     const box = document.getElementById("season-details-box");

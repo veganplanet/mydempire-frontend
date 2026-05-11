@@ -7717,6 +7717,10 @@ body {
 .leaderboard-tab-panel-active {
   display: block;
 }
+.leaderboard-tab-panel-active {
+  width: 100%;
+  min-height: 420px;
+}
 /* ===== Premium Leaderboard ===== */
 
 .card-leaderboard {
