@@ -1778,7 +1778,9 @@ async function loadEmpireSurgeLeaderboard() {
           <div class="leaderboard-metric">
             +${Number(row.growth_ep || 0).toFixed(0)}
           </div>
-
+<div class="leaderboard-metric">
+  ${Number(row.top_days || 0).toFixed(0)} days
+</div>
           
         </div>
       `;
@@ -1801,10 +1803,18 @@ async function loadEmpireSurgeLeaderboard() {
     ⚔️ Ranking Rules
   </div>
 
-  <div style="line-height:1.7; color:#475569;">
-    <div>📈 Highest weekly EP growth ranks first</div>
-    <div>👑 Empires holding #1 longer gain advantage</div>
-    <div>⚡ Current EP breaks final ties</div>
+  <div style="line-height:1.9; color:#475569;">
+    <div>📅 Empire Surge starts every Monday at 00:00 UTC and ends on Sunday at 23:59 UTC.</div>
+
+    <div>📈 Empires with the highest EP/day growth during the week rank higher.</div>
+
+    <div>👑 Holding the #1 position for more days increases your advantage.</div>
+
+    <div>⚡ If two empires have the same growth, the empire with higher Live EP ranks above.</div>
+
+    <div style="margin-top:10px; font-weight:800; color:#b45309; font-size:16px;">
+      🏆 Weekly Reward: Rank #1 wins 1 Imperial Fragment
+    </div>
   </div>
 </div>
 
@@ -1826,6 +1836,7 @@ async function loadEmpireSurgeLeaderboard() {
                 <div class="leaderboard-metric">Week Start</div>
                 <div class="leaderboard-metric">Live EP</div>
                 <div class="leaderboard-metric">Surge</div>
+                <div class="leaderboard-metric">Top Days</div>
                 
               </div>
 

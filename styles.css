@@ -7769,15 +7769,27 @@ body {
 
 .leaderboard-row {
   display: grid;
-  grid-template-columns: 90px 1fr 180px;
-  gap: 12px;
+  grid-template-columns: 90px 1.8fr 1fr 1fr 1fr 1fr;
+  gap: 8px;
   align-items: center;
   padding: 14px 16px;
   border-radius: 16px;
   background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
   border: 1px solid rgba(148, 163, 184, 0.16);
 }
-
+.leaderboard-metric {
+  text-align: center;
+  white-space: nowrap;
+}
+.leaderboard-player {
+  min-width: 0;
+}
+.leaderboard-header-row {
+  display: grid;
+  grid-template-columns: 90px 1.8fr 1fr 1fr 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+}
 .leaderboard-top {
   background: linear-gradient(180deg, #fffdf5 0%, #fff7e8 100%);
   border: 1px solid rgba(251, 191, 36, 0.28);
@@ -12899,4 +12911,22 @@ cursor:pointer;
 .land-filter-btn.active .land-filter-count{
   background: rgba(255,255,255,.22);
   color: #fff;
+}
+/* Empire Surge leaderboard 6-column fix */
+.leaderboard-header-row,
+.leaderboard-row {
+  display: grid !important;
+  grid-template-columns: 90px minmax(180px, 1.8fr) repeat(4, minmax(90px, 1fr)) !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.leaderboard-header-row > div,
+.leaderboard-row > div {
+  min-width: 0;
+}
+
+.leaderboard-metric {
+  text-align: center !important;
+  white-space: nowrap !important;
 }
