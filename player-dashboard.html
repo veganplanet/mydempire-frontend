@@ -3689,14 +3689,11 @@ await loadSeasonLiveBanner();
               landUnclaimedEP += unclaimed;
             }
 
-            const days = safeDaysAgo(f.last_claimed_at);
+           const rate = Number(f.factoryEP ?? f.ep_per_day ?? 0);
 
-            if (days && days > 0) {
-              const rate = unclaimed / days;
-              if (!isNaN(rate)) {
-                landRatePerDay += rate;
-              }
-            }
+if (!isNaN(rate)) {
+  landRatePerDay += rate;
+}
           }
 
           const landUnclaimedEPText = landUnclaimedEP.toFixed(2);
