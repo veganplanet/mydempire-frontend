@@ -1779,7 +1779,7 @@ async function loadEmpireSurgeLeaderboard() {
             +${Number(row.growth_ep || 0).toFixed(0)}
           </div>
 <div class="leaderboard-metric">
-  ${Number(row.top_days || 0).toFixed(0)} days
+  ${Math.min(Number(row.top_days || 0), 7).toFixed(0)} days
 </div>
           
         </div>
