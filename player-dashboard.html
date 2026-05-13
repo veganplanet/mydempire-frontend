@@ -1057,7 +1057,9 @@ Empire Surge
     <h2>Empire Operations</h2>
     <small>A strategic industrial expansion layer for MydEmpire.</small>
   </div>
-
+<div id="operations-live-area">
+  <p class="status-text">Loading Empire Operations...</p>
+</div>
   <div
     style="
      background:
@@ -1501,11 +1503,419 @@ let seasonHistoryIndex = 0;
             panel.classList.remove("tab-panel-active");
           }
         });
-        if (tabName === "leaderboard") {
-          setLeaderboardTab("empire");
-        }
-        
-      }
+       if (tabName === "leaderboard") {
+  setLeaderboardTab("empire");
+}
+
+if (tabName === "operations") {
+  loadEmpireOperations();
+}
+
+}
+async function loadEmpireOperations() {
+  const area = document.getElementById("operations-live-area");
+
+  try {
+    const username = getLoggedInUser();
+
+    if (!area) return;
+
+    if (!username) {
+      area.innerHTML = `<p class="status-text">Please connect wallet to view Empire Operations.</p>`;
+      return;
+    }
+
+    area.innerHTML = `<p class="status-text">Loading Empire Operations...</p>`;
+
+    const [configResponse, playerResponse] = await Promise.all([
+      fetch(`${API_BASE}/empire-operations/config`),
+      fetch(`${API_BASE}/player/${username}/empire-operations`),
+    ]);
+
+    const configData = await configResponse.json();
+    const playerData = await playerResponse.json();
+
+    if (!configData.success || !playerData.success) {
+      throw new Error("Failed to load operations data.");
+    }
+
+    renderEmpireOperations(area, configData.operations, playerData);
+  } catch (err) {
+    console.error("Failed to load Empire Operations:", err);
+    if (area) {
+      area.innerHTML = `<p class="status-error">Failed to load Empire Operations.</p>`;
+    }
+  }
+}  
+function getEmpireOperationStatusText(operation) {
+  if (!operation) return "Preparing operation report...";
+
+  const type = String(operation.operation_type || "").toUpperCase();
+  const result = String(operation.planned_result || "").toUpperCase();
+  const seed = Number(operation.narrative_seed || 0);
+
+  const startedAt = new Date(operation.started_at).getTime();
+  const endsAt = new Date(operation.ends_at).getTime();
+  const now = Date.now();
+
+  let progress = 0;
+
+  if (Number.isFinite(startedAt) && Number.isFinite(endsAt) && endsAt > startedAt) {
+    progress = (now - startedAt) / (endsAt - startedAt);
+  }
+
+  let stage = "early";
+  if (progress >= 0.66) stage = "late";
+  else if (progress >= 0.33) stage = "mid";
+
+  const pools = {
+    LOCAL_SUPPLY: {
+      early: [
+        "Supply teams are preparing the local distribution route.",
+        "Warehouse staff are loading cargo for nearby delivery points.",
+        "Local buyers have confirmed initial demand for the contract.",
+      ],
+      mid: [
+        "Local traffic conditions are affecting delivery timing.",
+        "Warehouse coordination is keeping the supply flow stable.",
+        "Additional small buyers are showing interest in the shipment.",
+      ],
+      late: [
+        "Final delivery checks are being completed.",
+        "Local contract settlement is being prepared.",
+        "Distribution teams are closing the last delivery cycle.",
+      ],
+    },
+
+    REGIONAL_TRADE: {
+      early: [
+        "Trade convoy has entered the regional commercial route.",
+        "Regional buyers are reviewing supply terms.",
+        "Transport teams are checking route conditions before expansion.",
+      ],
+      mid: [
+        "Weather and route conditions are influencing transport efficiency.",
+        "Commercial negotiations are active across regional markets.",
+        "A stronger buyer group is reviewing the trade offer.",
+      ],
+      late: [
+        "Final regional trade settlement is being calculated.",
+        "Trade partners are confirming the last delivery reports.",
+        "Regional contract performance is being finalized.",
+      ],
+    },
+
+    IMPERIAL_EXPANSION: {
+      early: [
+        "Expansion teams are preparing industrial project documents.",
+        "Strategic advisors are reviewing expansion territory conditions.",
+        "Initial industrial partners are entering project discussions.",
+      ],
+      mid: [
+        "Investor confidence is shifting as negotiations continue.",
+        "Infrastructure conditions are affecting expansion planning.",
+        "A major partner is reviewing the project proposal.",
+      ],
+      late: [
+        "Final expansion report is being prepared by the project office.",
+        "Strategic contract terms are entering final review.",
+        "Expansion teams are consolidating the final operational result.",
+      ],
+    },
+  };
+
+  const selectedPool =
+    pools[type]?.[stage] ||
+    ["Operation is progressing through its current phase."];
+
+  const index = (seed + stage.length) % selectedPool.length;
+
+  return selectedPool[index];
+}
+function getOperationCountdown(endsAtRaw) {
+  const endsAt = new Date(endsAtRaw).getTime();
+  const now = Date.now();
+
+  if (!Number.isFinite(endsAt)) return "--";
+
+  const diffMs = endsAt - now;
+
+  if (diffMs <= 0) return "Ready to collect";
+
+  const totalSeconds = Math.floor(diffMs / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
+function renderEmpireOperations(area, operations, playerData) {
+
+  const activeOperation = playerData.activeOperation;
+
+  let html = `
+    <div class="summary-card" style="margin-bottom:16px;">
+      <div class="summary-label">
+        ⚡ Current Empire Production
+      </div>
+
+      <div class="summary-value">
+        ${Number(playerData.currentEP || 0).toFixed(2)} EP/day
+      </div>
+<div class="summary-sub" style="margin-top:6px;">
+  EMP Balance: <strong>${Number(
+    String(document.getElementById("summary-emp-balance")?.textContent || "0")
+      .replace(/,/g, "")
+      .trim()
+  ).toLocaleString()}</strong>
+</div>
+      <div class="summary-sub">
+        Higher EP unlocks larger industrial operations.
+      </div>
+    </div>
+  `;
+
+  if (activeOperation) {
+    html += `
+      <div class="summary-card" style="margin-bottom:20px; border:2px solid #f59e0b;">
+        <div class="summary-label">
+          🏭 Active Operation
+        </div>
+
+        <div class="summary-value">
+          ${activeOperation.operation_type.replaceAll("_", " ")}
+        </div>
+
+        <div class="summary-sub">
+          Budget: ${activeOperation.emp_committed} EMP
+        </div>
+<div
+  class="summary-sub"
+  style="
+    margin-top:10px;
+    padding:10px 12px;
+    background:#fff7ed;
+    border:1px solid #fdba74;
+    border-radius:12px;
+    color:#9a3412;
+    font-weight:600;
+    line-height:1.5;
+  "
+>
+  📡 ${getEmpireOperationStatusText(activeOperation)}
+</div>
+        <div class="summary-sub">
+          Time Remaining: ${getOperationCountdown(activeOperation.ends_at)}
+        </div>
+        <button
+  class="primary-button"
+  style="
+  margin-top:12px;
+  width:auto !important;
+  display:inline-flex !important;
+  max-width:max-content;
+  padding:12px 20px;
+"
+  onclick="collectEmpireOperation(${activeOperation.id})"
+>
+  Collect Operation Report
+</button>
+      </div>
+    `;
+  }
+
+  html += `<div class="summary-grid">`;
+
+  Object.entries(operations).forEach(([key, operation]) => {
+
+    const unlocked =
+      Number(playerData.currentEP || 0) >= operation.requiredEP;
+
+    html += `
+      <div class="summary-card">
+
+        <div class="summary-label">
+          🏭 ${operation.label}
+        </div>
+
+        <div class="summary-sub">
+          Required EP/day: ${operation.requiredEP}
+        </div>
+
+        <div class="summary-sub">
+          Duration: ${operation.durationHours} Hours
+        </div>
+
+        <div class="summary-sub">
+          Risk Profile: ${operation.risk}
+        </div>
+
+        <div class="summary-sub" style="margin-top:10px;">
+          Select Budget
+        </div>
+
+        <select id="operation-budget-${key}" class="primary-select">
+          ${operation.budgets
+            .map(
+              (b) =>
+                `<option value="${b}">${b} EMP</option>`
+            )
+            .join("")}
+        </select>
+
+        <button
+          class="primary-button"
+          style="margin-top:12px; width:100%;"
+          onclick="startEmpireOperation('${key}')"
+          ${!unlocked || activeOperation ? "disabled" : ""}
+        >
+          ${
+            !unlocked
+              ? `Requires ${operation.requiredEP} EP/day`
+              : activeOperation
+              ? "Operation Running"
+              : "Start Operation"
+          }
+        </button>
+
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+
+const history = Array.isArray(playerData.history) ? playerData.history : [];
+const completedHistory = history.filter((op) => op.status === "COMPLETED").slice(0, 5);
+
+if (completedHistory.length > 0) {
+  html += `
+    <div class="summary-card" style="margin-top:18px;">
+      <div class="summary-label">Recent Operation Reports</div>
+
+      ${completedHistory
+        .map(
+          (op) => `
+            <div
+              style="
+                margin-top:10px;
+                padding:12px;
+                border:1px solid #e5e7eb;
+                border-radius:12px;
+                background:#f8fafc;
+              "
+            >
+              <strong>${String(op.operation_type || "").replaceAll("_", " ")}</strong>
+              <div class="summary-sub">Result: ${op.result || "Completed"}</div>
+              <div class="summary-sub">Operational Revenue: ${Number(op.reward_emp || 0)} EMP</div>
+              <div class="summary-sub">Budget: ${Number(op.emp_committed || 0)} EMP</div>
+            </div>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+area.innerHTML = html;
+}
+async function startEmpireOperation(operationType) {
+  try {
+    const username = getLoggedInUser();
+
+    if (!username) {
+      alert("Please connect wallet first.");
+      return;
+    }
+
+    const budgetSelect = document.getElementById(
+      `operation-budget-${operationType}`,
+    );
+
+    const budget = Number(budgetSelect?.value || 0);
+
+    if (!budget) {
+      alert("Please select operational budget.");
+      return;
+    }
+
+    const confirmed = confirm(
+      `Start this operation with ${budget} EMP operational budget?`,
+    );
+
+    if (!confirmed) return;
+
+    const response = await fetch(`${API_BASE}/empire-operations/start`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": username,
+      },
+      body: JSON.stringify({
+        username,
+        operation_type: operationType,
+        budget,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      alert(data.error || "Failed to start operation.");
+      return;
+    }
+
+    alert("Empire Operation started successfully.");
+
+    loadDashboardSummary();
+    loadEmpireOperations();
+  } catch (err) {
+    console.error("Start Empire Operation failed:", err);
+    alert("Failed to start Empire Operation.");
+  }
+}
+async function collectEmpireOperation(operationId) {
+  try {
+    const username = getLoggedInUser();
+
+    if (!username) {
+      alert("Please connect wallet first.");
+      return;
+    }
+
+    const confirmed = confirm("Collect final operation report?");
+
+    if (!confirmed) return;
+
+    const response = await fetch(`${API_BASE}/empire-operations/collect`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": username,
+      },
+      body: JSON.stringify({
+        username,
+        operation_id: operationId,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      alert(data.error || "Failed to collect operation report.");
+      return;
+    }
+
+    alert(
+      `Operation Report:\n\n${data.outcome.result}\nOperational Revenue: ${data.outcome.revenue} EMP`
+    );
+
+    loadDashboardSummary();
+    loadEmpireOperations();
+  } catch (err) {
+    console.error("Collect Empire Operation failed:", err);
+    alert("Failed to collect operation report.");
+  }
+}
       function setLeaderboardTab(tabName) {
         console.log("Empire Surge loader called");
         console.log("Leaderboard tab clicked:", tabName);
