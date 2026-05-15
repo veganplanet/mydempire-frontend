@@ -1836,11 +1836,19 @@ async function startEmpireOperation(operationType) {
     const data = await response.json();
 
     if (!data.success) {
-      alert(data.error || "Failed to start operation.");
+      showPremiumPopup({
+  title: "Operation Failed",
+  message: data.error || "Failed to start operation.",
+  type: "error",
+});
       return;
     }
 
-    alert("Empire Operation started successfully.");
+    showPremiumPopup({
+  title: "Operation Started",
+  message: "Your industrial operation is now underway.",
+  type: "success",
+});
 
     loadDashboardSummary();
     loadEmpireOperations();
