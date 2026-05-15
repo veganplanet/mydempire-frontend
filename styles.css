@@ -8709,7 +8709,7 @@ input[type="range"]::-moz-range-thumb{
 /* section wrapper */
 .packs-layout{
   width:100%;
-  max-width:980px;
+  max-width:760px;
   margin:0 auto;
   padding:6px 0 18px;
 }
@@ -12929,4 +12929,290 @@ cursor:pointer;
 .leaderboard-metric {
   text-align: center !important;
   white-space: nowrap !important;
+}
+.operations-top-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.operations-hero-card {
+  background:
+    radial-gradient(circle at top left, rgba(245,158,11,0.16), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #fff7ed 100%);
+  border: 1px solid #fed7aa;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 14px 34px rgba(15,23,42,0.08);
+}
+
+.operations-active-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #f59e0b;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 18px 42px rgba(245,158,11,0.14);
+}
+
+.operations-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.operation-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e5e7eb;
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: 0 12px 28px rgba(15,23,42,0.08);
+  border-top: 5px solid #3b82f6;
+}
+
+.operation-card.local { border-top-color: #22c55e; }
+.operation-card.regional { border-top-color: #f59e0b; }
+.operation-card.imperial { border-top-color: #ef4444; }
+
+.operation-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.operation-meta {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.operation-live-status {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+  border-radius: 16px;
+  color: #9a3412;
+  font-weight: 800;
+  line-height: 1.55;
+}
+
+.operation-countdown-pill {
+  margin-top: 14px;
+  display: inline-flex;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-weight: 900;
+}
+
+@media (max-width: 900px) {
+  .operations-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* ============================= */
+/* EMPIRE OPERATIONS — PREMIUM UI */
+/* ============================= */
+
+[data-tab-panel="operations"] {
+  background:
+    radial-gradient(circle at top left, rgba(245,158,11,0.12), transparent 28%),
+    radial-gradient(circle at top right, rgba(59,130,246,0.10), transparent 26%),
+    linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 24px;
+  padding: 22px;
+}
+
+[data-tab-panel="operations"] .summary-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px !important;
+  padding: 22px !important;
+  background: linear-gradient(180deg,#ffffff 0%,#f8fafc 100%) !important;
+  border: 1px solid rgba(226,232,240,0.95) !important;
+  box-shadow: 0 14px 32px rgba(15,23,42,0.08) !important;
+}
+
+[data-tab-panel="operations"] .summary-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg,#3b82f6,#f59e0b,#22c55e);
+}
+
+[data-tab-panel="operations"] .summary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 44px rgba(15,23,42,0.13) !important;
+  transition: all .22s ease;
+}
+
+[data-tab-panel="operations"] .summary-label {
+  color: #64748b !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+[data-tab-panel="operations"] .summary-value,
+[data-tab-panel="operations"] h2 {
+  color: #111827 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.03em;
+}
+
+[data-tab-panel="operations"] .summary-sub {
+  color: #64748b !important;
+  font-size: 15px !important;
+  line-height: 1.65;
+}
+
+[data-tab-panel="operations"] button,
+[data-tab-panel="operations"] .primary-button,
+[data-tab-panel="operations"] .secondary-button {
+  border-radius: 16px !important;
+  font-weight: 900 !important;
+  box-shadow: 0 10px 22px rgba(37,99,235,0.14);
+}
+
+[data-tab-panel="operations"] select {
+  border-radius: 14px !important;
+  padding: 12px 14px !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  font-size: 15px !important;
+}
+/* ============================= */
+/* EMPIRE OPERATIONS FINAL ALIGN */
+/* ============================= */
+
+[data-tab-panel="operations"] {
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+}
+
+[data-tab-panel="operations"] .section-header {
+  max-width: 1180px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+#operations-live-area {
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+}
+
+#operations-live-area > div {
+  width: 100% !important;
+}
+
+#operations-live-area .operation-active-card {
+  width: 100% !important;
+  max-width: 1180px !important;
+}
+
+#operations-live-area .summary-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 18px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+}
+
+#operations-live-area .summary-grid .summary-card {
+  width: 100% !important;
+  min-height: 360px;
+}
+
+@media (max-width: 900px) {
+  #operations-live-area .summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+/* ============================= */
+/* OPERATION CARDS — FINAL COLORS */
+/* ============================= */
+
+[data-tab-panel="operations"] .summary-grid .summary-card:nth-child(1) {
+  background:
+    radial-gradient(circle at top right, rgba(34,197,94,0.20), transparent 34%),
+    linear-gradient(180deg, #ecfdf5 0%, #d1fae5 100%) !important;
+  border-color: #86efac !important;
+}
+
+[data-tab-panel="operations"] .summary-grid .summary-card:nth-child(2) {
+  background:
+    radial-gradient(circle at top right, rgba(250,204,21,0.24), transparent 34%),
+    linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%) !important;
+  border-color: #fde68a !important;
+}
+
+[data-tab-panel="operations"] .summary-grid .summary-card:nth-child(3) {
+  background:
+    radial-gradient(circle at top right, rgba(249,115,22,0.24), transparent 34%),
+    linear-gradient(180deg, #fff7ed 0%, #fed7aa 100%) !important;
+  border-color: #fdba74 !important;
+}
+
+[data-tab-panel="operations"] .summary-grid .summary-card:nth-child(1) .primary-button {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+  color: #ffffff !important;
+}
+
+[data-tab-panel="operations"] .summary-grid .summary-card:nth-child(2) .primary-button {
+  background: #facc15 !important;
+  border-color: #facc15 !important;
+  color: #111827 !important;
+}
+
+[data-tab-panel="operations"] .summary-grid .summary-card:nth-child(3) .primary-button {
+  background: #f97316 !important;
+  border-color: #f97316 !important;
+  color: #ffffff !important;
+}
+.empire-ops-intel {
+  background:
+    linear-gradient(135deg, rgba(255,247,237,0.96), rgba(248,250,252,0.98)) !important;
+  border: 1px solid rgba(251,191,36,0.28) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.empire-ops-intel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top right, rgba(245,158,11,0.10), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(59,130,246,0.08), transparent 28%);
+  pointer-events: none;
+}
+
+.empire-ops-intel-label {
+  color: #92400e !important;
+  font-size: 13px !important;
+  letter-spacing: 0.08em;
+}
+
+.empire-ops-intel-text {
+  position: relative;
+  z-index: 1;
+  margin-top: 12px;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.9;
+  font-weight: 500;
 }
