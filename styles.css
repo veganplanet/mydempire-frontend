@@ -13395,3 +13395,44 @@ cursor:pointer;
   box-shadow:
     0 8px 18px rgba(249,115,22,0.10);
 }
+/* ================================= */
+/* EMPIRE OPERATIONS LIVE TICKER */
+/* ================================= */
+
+.empire-ops-live-ticker {
+  margin-bottom: 16px;
+  padding: 14px 18px;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff7ed 0%,
+      #ffedd5 45%,
+      #fef3c7 100%
+    );
+
+  border: 1px solid rgba(249,115,22,0.22);
+
+  color: #9a3412;
+
+  font-size: 15px;
+  font-weight: 850;
+
+  box-shadow:
+    0 10px 22px rgba(249,115,22,0.10);
+
+  cursor: pointer;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.empire-ops-live-ticker:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 14px 28px rgba(249,115,22,0.16);
+}
