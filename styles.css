@@ -13216,3 +13216,182 @@ cursor:pointer;
   line-height: 1.9;
   font-weight: 500;
 }
+/* ============================= */
+/* EMPIRE OPERATIONS INTEL HYPE */
+/* ============================= */
+
+
+
+.empire-ops-intel-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  transform: translateX(-100%);
+  animation: opsIntelSweep 5s infinite;
+}
+
+@keyframes opsIntelSweep {
+  0% { transform: translateX(-100%); }
+  45% { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+.empire-ops-intel-top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.empire-ops-intel-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #facc15, #f97316);
+  color: #111827;
+  font-size: 22px;
+  font-weight: 900;
+  box-shadow: 0 10px 24px rgba(249,115,22,0.35);
+}
+
+
+
+.empire-ops-intel-title {
+  margin-top: 4px;
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 950;
+  letter-spacing: -0.03em;
+}
+
+.empire-ops-intel-body {
+  position: relative;
+  z-index: 1;
+  margin-top: 16px;
+  max-width: 860px;
+  color: #475569;
+  font-size: 16px;
+  line-height: 1.75;
+  font-weight: 600;
+}
+
+.empire-ops-intel-grid {
+  position: relative;
+  z-index: 1;
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+
+
+.empire-ops-intel-chip.green {
+  background: rgba(34,197,94,0.18);
+  color: #bbf7d0;
+}
+
+.empire-ops-intel-chip.gold {
+  background: rgba(250,204,21,0.18);
+  color: #fef3c7;
+}
+
+.empire-ops-intel-chip.orange {
+  background: rgba(249,115,22,0.20);
+  color: #fed7aa;
+}
+
+.empire-ops-intel-card {
+  position: relative;
+  margin-bottom: 22px;
+  padding: 24px;
+  border-radius: 26px;
+  overflow: hidden;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(245,158,11,0.20), transparent 32%),
+    radial-gradient(circle at 100% 100%, rgba(37,99,235,0.12), transparent 34%),
+    linear-gradient(135deg, #ffffff 0%, #f8fafc 45%, #fff7ed 100%);
+
+  border: 1px solid rgba(245,158,11,0.28);
+  box-shadow: 0 16px 34px rgba(15,23,42,0.12);
+  color: #0f172a;
+}
+
+.empire-ops-intel-card::after {
+  content: "";
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,158,11,0.16), transparent 65%);
+  pointer-events: none;
+}
+
+.empire-ops-intel-kicker {
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  color: #b45309;
+}
+
+.empire-ops-intel-chip {
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 900;
+  border: 1px solid rgba(15,23,42,0.08);
+  box-shadow: 0 8px 18px rgba(15,23,42,0.08);
+}
+
+/* individual chip colors */
+
+.empire-ops-intel-chip.green {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  color: #166534;
+}
+
+.empire-ops-intel-chip.yellow {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #78350f !important;
+}
+
+.empire-ops-intel-chip.orange {
+  background: linear-gradient(135deg, #ffedd5 0%, #fdba74 100%);
+  color: #9a3412;
+}
+
+.empire-ops-intel-note {
+  position: relative;
+  z-index: 1;
+
+  margin-top: 18px;
+  padding: 14px 16px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff7ed 0%,
+      #ffedd5 100%
+    );
+
+  border: 1px solid rgba(249,115,22,0.22);
+
+  color: #9a3412;
+
+  font-size: 15px;
+  font-weight: 850;
+
+  box-shadow:
+    0 8px 18px rgba(249,115,22,0.10);
+}

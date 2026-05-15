@@ -1621,18 +1621,37 @@ margin-right:auto;
   `;
 }
 html += `
-<div class="summary-card empire-ops-intel">
-  <div class="summary-label empire-ops-intel-label">
-    🛰️ Operations Intelligence
+<div class="empire-ops-intel-card">
+
+  <div class="empire-ops-intel-top">
+    <div class="empire-ops-intel-icon">◆</div>
+    <div>
+      <div class="empire-ops-intel-kicker">OPERATIONS INTELLIGENCE</div>
+      <div class="empire-ops-intel-title">Big contracts can open bigger doors</div>
+    </div>
   </div>
 
-  <div class="empire-ops-intel-text">
-    Launch industrial operations across your empire to secure contracts,
-    expand trade networks, and strengthen regional influence.
-    <br><br>
-    Larger operations require higher EP/day production and involve greater operational risk,
-    but can generate stronger profits  and strategic growth opportunities.
+  <div class="empire-ops-intel-body">
+    Every operation is a business move. Most contracts return standard EMP revenue,
+    but strong operations may uncover valuable expansion opportunities.
   </div>
+
+  <div class="empire-ops-intel-grid">
+    <div class="empire-ops-intel-chip green">
+      Supply access
+    </div>
+    <div class="empire-ops-intel-chip yellow">
+      Trade expansion
+    </div>
+    <div class="empire-ops-intel-chip orange">
+      Rare territory growth
+    </div>
+  </div>
+
+  <div class="empire-ops-intel-note">
+    The bigger the contract, the greater the chance your empire discovers something beyond normal revenue.
+  </div>
+
 </div>
 `;
   html += `<div class="summary-grid">`;
