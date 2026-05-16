@@ -4890,14 +4890,18 @@ wireEmptySlotBuildActions();
           renderBuildFactorySection();
 
           grid.innerHTML = "";
-const activeBlueprintFilter =
-  window.activeBlueprintFilter || "ALL";
+
           blueprints.forEach((b) => {
-            const tierText = JSON.stringify(b).toUpperCase();
+            const blueprintText = JSON.stringify(b).toUpperCase();
+
+const activeBlueprintFilters =
+  window.activeBlueprintFilters || [];
 
 if (
-  activeBlueprintFilter !== "ALL" &&
-  !tierText.includes(activeBlueprintFilter)
+  activeBlueprintFilters.length > 0 &&
+  !activeBlueprintFilters.every((filter) =>
+    blueprintText.includes(filter)
+  )
 ) {
   return;
 }
@@ -6236,16 +6240,45 @@ setTimeout(() => {
         .getElementById("claim-reward-btn")
         ?.addEventListener("click", claimReward);
       document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll(".blueprint-filter-btn").forEach((btn) => {
+        window.activeBlueprintFilters = [];
+
+document.querySelectorAll(".blueprint-filter-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
-    document
-      .querySelectorAll(".blueprint-filter-btn")
-      .forEach((b) => b.classList.remove("active"));
+    const filter = btn.dataset.blueprintFilter || "ALL";
 
-    btn.classList.add("active");
+    if (filter === "ALL") {
+      window.activeBlueprintFilters = [];
 
-    window.activeBlueprintFilter =
-      btn.dataset.blueprintFilter || "ALL";
+      document
+        .querySelectorAll(".blueprint-filter-btn")
+        .forEach((b) => b.classList.remove("active"));
+
+      btn.classList.add("active");
+      loadBlueprints();
+      return;
+    }
+
+    const allBtn = document.querySelector(
+      '.blueprint-filter-btn[data-blueprint-filter="ALL"]'
+    );
+
+    if (allBtn) {
+      allBtn.classList.remove("active");
+    }
+
+    if (window.activeBlueprintFilters.includes(filter)) {
+      window.activeBlueprintFilters =
+        window.activeBlueprintFilters.filter((f) => f !== filter);
+
+      btn.classList.remove("active");
+    } else {
+      window.activeBlueprintFilters.push(filter);
+      btn.classList.add("active");
+    }
+
+    if (window.activeBlueprintFilters.length === 0 && allBtn) {
+      allBtn.classList.add("active");
+    }
 
     loadBlueprints();
   });
