@@ -1281,7 +1281,26 @@ let seasonHistoryIndex = 0;
         if (s === "UPGRADING" || s === "BUILDING") return "status-upgrading";
         return "status-inactive";
       }
+function showEmpirePopup(title, message, type = "info") {
+  const oldPopup = document.getElementById("empire-custom-popup");
+  if (oldPopup) oldPopup.remove();
 
+  const popup = document.createElement("div");
+  popup.id = "empire-custom-popup";
+  popup.className = `empire-popup-overlay empire-popup-${type}`;
+
+  popup.innerHTML = `
+    <div class="empire-popup-box">
+      <div class="empire-popup-title">${title}</div>
+      <div class="empire-popup-message">${message}</div>
+      <button type="button" onclick="document.getElementById('empire-custom-popup').remove()">
+        OK
+      </button>
+    </div>
+  `;
+
+  document.body.appendChild(popup);
+}
       // ===== TABS HANDLING =====
       function setActiveTab(tabName) {
         const buttons = document.querySelectorAll(".subnav-btn");
@@ -1816,31 +1835,39 @@ area.innerHTML = html;
 startEmpireOperationsCountdownTicker();
 }
 async function startEmpireOperation(operationType) {
+  const username = getLoggedInUser();
+
+  if (!username) {
+    showEmpirePopup(
+      "⚠️ Wallet Required",
+      "Please connect wallet first.",
+      "error"
+    );
+    return;
+  }
+
+  const budgetSelect = document.getElementById(
+    `operation-budget-${operationType}`,
+  );
+
+  const budget = Number(budgetSelect?.value || 0);
+
+  if (!budget) {
+    showEmpirePopup(
+      "⚠️ Budget Required",
+      "Please select operational budget.",
+      "error"
+    );
+    return;
+  }
+
+  const confirmed = confirm(
+    `Start this operation with ${budget} EMP operational budget?`,
+  );
+
+  if (!confirmed) return;
+
   try {
-    const username = getLoggedInUser();
-
-    if (!username) {
-      alert("Please connect wallet first.");
-      return;
-    }
-
-    const budgetSelect = document.getElementById(
-      `operation-budget-${operationType}`,
-    );
-
-    const budget = Number(budgetSelect?.value || 0);
-
-    if (!budget) {
-      alert("Please select operational budget.");
-      return;
-    }
-
-    const confirmed = confirm(
-      `Start this operation with ${budget} EMP operational budget?`,
-    );
-
-    if (!confirmed) return;
-
     const response = await fetch(`${API_BASE}/empire-operations/start`, {
       method: "POST",
       headers: {
@@ -1856,41 +1883,58 @@ async function startEmpireOperation(operationType) {
 
     const data = await response.json();
 
-    if (!data.success) {
-      showPremiumPopup({
-  title: "Operation Failed",
-  message: data.error || "Failed to start operation.",
-  type: "error",
-});
+    if (!response.ok || !data.success) {
+      showEmpirePopup(
+        "⚠️ Operation Failed",
+        data.error || "Failed to start operation.",
+        "error"
+      );
       return;
     }
 
-    showPremiumPopup({
-  title: "Operation Started",
-  message: "Your industrial operation is now underway.",
-  type: "success",
-});
+    showEmpirePopup(
+      "✅ Operation Started",
+      "Your industrial operation is now underway.",
+      "success"
+    );
 
-    loadDashboardSummary();
-    loadEmpireOperations();
+    loadDashboardSummary().catch((refreshErr) => {
+      console.warn(
+        "Dashboard refresh failed after operation start:",
+        refreshErr,
+      );
+    });
+
+    loadEmpireOperations().catch((refreshErr) => {
+      console.warn(
+        "Operations refresh failed after operation start:",
+        refreshErr,
+      );
+    });
+
   } catch (err) {
-    console.error("Start Empire Operation failed:", err);
-    alert("Failed to start Empire Operation.");
+    console.error("Start Empire Operation request failed:", err);
+
+    showEmpirePopup(
+      "⚠️ Network Error",
+      "Operation request could not be completed. Please refresh and try again.",
+      "error"
+    );
   }
 }
 async function collectEmpireOperation(operationId) {
+  const username = getLoggedInUser();
+
+  if (!username) {
+    showEmpirePopup(
+      "⚠️ Wallet Required",
+      "Please connect wallet first.",
+      "error"
+    );
+    return;
+  }
+
   try {
-    const username = getLoggedInUser();
-
-    if (!username) {
-      alert("Please connect wallet first.");
-      return;
-    }
-
-    const confirmed = confirm("Collect final operation report?");
-
-    if (!confirmed) return;
-
     const response = await fetch(`${API_BASE}/empire-operations/collect`, {
       method: "POST",
       headers: {
@@ -1905,20 +1949,47 @@ async function collectEmpireOperation(operationId) {
 
     const data = await response.json();
 
-    if (!data.success) {
-      alert(data.error || "Failed to collect operation report.");
+    if (!response.ok || !data.success) {
+      showEmpirePopup(
+        "⚠️ Collection Failed",
+        data.error || "Failed to collect Empire Operation.",
+        "error"
+      );
       return;
     }
 
-    alert(
-      `Operation Report:\n\n${data.outcome.result}\nOperational Revenue: ${data.outcome.revenue} EMP`
+    const revenue = Number(data.outcome?.revenue || data.operation?.reward_emp || 0);
+    const result = data.outcome?.result || data.operation?.result || "Operation Completed";
+
+    showEmpirePopup(
+      "💰 Revenue Collected",
+      `
+<div style="font-size:20px;font-weight:700;margin-bottom:10px;">
+  ${result}
+</div>
+
+<div style="font-size:18px;line-height:1.7;">
+  <strong>${revenue} EMP</strong> has been added to your empire balance.
+</div>
+`,
+      "success"
     );
 
-    loadDashboardSummary();
-    loadEmpireOperations();
+    loadDashboardSummary().catch((refreshErr) => {
+      console.warn("Dashboard refresh failed after operation collect:", refreshErr);
+    });
+
+    loadEmpireOperations().catch((refreshErr) => {
+      console.warn("Operations refresh failed after operation collect:", refreshErr);
+    });
   } catch (err) {
-    console.error("Collect Empire Operation failed:", err);
-    alert("Failed to collect operation report.");
+    console.error("Collect Empire Operation request failed:", err);
+
+    showEmpirePopup(
+      "⚠️ Network Error",
+      "Collection request could not be completed. Please refresh and check once.",
+      "error"
+    );
   }
 }
       function setLeaderboardTab(tabName) {

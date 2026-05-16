@@ -13436,3 +13436,46 @@ cursor:pointer;
   box-shadow:
     0 14px 28px rgba(249,115,22,0.16);
 }
+.empire-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.48);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+.empire-popup-box {
+  width: min(420px, 92vw);
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.35);
+  text-align: center;
+  border: 1px solid #e5e7eb;
+}
+
+.empire-popup-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.empire-popup-message {
+  font-size: 15px;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.empire-popup-box button {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 24px;
+  font-weight: 900;
+  cursor: pointer;
+  background: linear-gradient(135deg, #8b5cf6, #f59e0b);
+  color: #ffffff;
+}
