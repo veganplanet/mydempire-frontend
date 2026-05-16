@@ -1394,7 +1394,12 @@ async function loadEmpireOperations() {
   const area = document.getElementById("operations-live-area");
 
   try {
-    const username = getLoggedInUser();
+    const params = new URLSearchParams(window.location.search);
+
+const username =
+  params.get("user") ||
+  params.get("view") ||
+  getLoggedInUser();
 
     if (!area) return;
 
@@ -1545,6 +1550,7 @@ function renderEmpireOperations(area, operations, playerData) {
 
   const activeOperation = playerData.activeOperation;
   const industrialAuthority = Number(playerData.industrialAuthority || 0);
+  
 
 const iaRewards = [
   { ia: 50, reward: "50 EMP" },
@@ -1583,7 +1589,7 @@ const iaRewards = [
       ).toLocaleString()}
     </div>
 <div style="font-weight:900; color:#0f172a;">
-  🏭 IA: ${industrialAuthority.toFixed(1)} / 800
+  🏭 IA: ${Number(playerData.industrialAuthority || 0).toFixed(1)} / 800
 </div>
     <div style="color:#64748b; font-weight:700;">
       Higher EP unlocks larger industrial operations.
@@ -1602,7 +1608,7 @@ const iaRewards = [
     <div
       style="
         height:100%;
-        width:${Math.max(Math.min((industrialAuthority / 800) * 100, 100), 2)}%;
+        width:${industrialAuthority > 0 ? Math.max(Math.min((industrialAuthority / 800) * 100, 100), 1) : 0}%;
         background:linear-gradient(90deg,#f59e0b,#facc15);
         box-shadow:0 0 18px rgba(251,191,36,0.75);
         border-radius:999px;
@@ -1636,7 +1642,8 @@ gap:100px;
   <span style="padding:4px 0;">50 IA → +50 EMP
 <br>
 <button
-  style="display:${industrialAuthority >= 50 ? "inline-block" : "none"};
+  onclick="claimIAReward(50)"
+style="display:${industrialAuthority >= 50 ? "inline-block" : "none"}";
   style="
     margin-top:4px;
     padding:4px 10px;
@@ -1992,9 +1999,14 @@ area.innerHTML = html;
 startEmpireOperationsCountdownTicker();
 }
 async function startEmpireOperation(operationType) {
-  const username = getLoggedInUser();
+  const params = new URLSearchParams(window.location.search);
 
-  if (!username) {
+const username =
+  params.get("user") ||
+  params.get("view") ||
+  getLoggedInUser();
+
+if (!username) {
     showEmpirePopup(
       "⚠️ Wallet Required",
       "Please connect wallet first.",
@@ -2077,6 +2089,41 @@ async function startEmpireOperation(operationType) {
       "Operation request could not be completed. Please refresh and try again.",
       "error"
     );
+  }
+}
+async function claimIAReward(requiredIA) {
+  const username = getLoggedInUser();
+
+  if (!username) {
+    showEmpirePopup("⚠️ Wallet Required", "Please connect wallet first.", "error");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/empire-operations/claim-ia-reward`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": username,
+      },
+      body: JSON.stringify({
+        username,
+        required_ia: requiredIA,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Failed to claim IA reward.");
+    }
+
+    showEmpirePopup("🏆 IA Reward Claimed", "+50 EMP added. IA reset to 0.", "success");
+
+    await loadDashboardSummary();
+    await loadEmpireOperations();
+  } catch (err) {
+    showEmpirePopup("❌ Claim Failed", err.message, "error");
   }
 }
 async function collectEmpireOperation(operationId) {
