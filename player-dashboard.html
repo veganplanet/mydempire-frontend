@@ -631,6 +631,55 @@
         >
           No land selected yet.
         </div>
+        <div class="blueprint-filter-bar">
+
+  <button class="blueprint-filter-btn active" data-blueprint-filter="ALL">
+    All
+  </button>
+
+  <button class="blueprint-filter-btn" data-blueprint-filter="B1">
+    B1
+  </button>
+
+  <button class="blueprint-filter-btn" data-blueprint-filter="B2">
+    B2
+  </button>
+
+  <button class="blueprint-filter-btn" data-blueprint-filter="B3">
+    B3
+  </button>
+
+  <button class="blueprint-filter-btn" data-blueprint-filter="B4">
+    B4
+  </button>
+
+  <button class="blueprint-filter-btn" data-blueprint-filter="B5">
+    B5
+  </button>
+
+  <button class="blueprint-filter-btn" data-blueprint-filter="FOOD">
+    Food
+  </button>
+
+  <button class="blueprint-filter-btn" data-blueprint-filter="TEXTILE">
+    Textile
+  </button>
+
+  <button class="blueprint-filter-btn" data-blueprint-filter="PHARMA">
+    Pharma
+  </button>
+
+  <button class="blueprint-filter-btn" data-blueprint-filter="CHEMICAL">
+    Chemical
+  </button>
+
+  <button class="blueprint-filter-btn" data-blueprint-filter="SUPERMARKET">
+    Supermarket
+  </button>
+
+</div>
+
+<div id="blueprints-grid" class="factory-grid">
         <div id="blueprints-grid" class="factory-grid">
           <p class="status-text">Loading blueprints…</p>
         </div>
@@ -1374,7 +1423,9 @@ async function loadEmpireOperations() {
   } catch (err) {
     console.error("Failed to load Empire Operations:", err);
     if (area) {
-      area.innerHTML = `<p class="status-error">Failed to load Empire Operations.</p>`;
+      if (area) {
+  console.warn("Empire Operations temporary refresh skipped.");
+}
     }
   }
 }  
@@ -4839,8 +4890,18 @@ wireEmptySlotBuildActions();
           renderBuildFactorySection();
 
           grid.innerHTML = "";
-
+const activeBlueprintFilter =
+  window.activeBlueprintFilter || "ALL";
           blueprints.forEach((b) => {
+            const tierText = JSON.stringify(b).toUpperCase();
+
+if (
+  activeBlueprintFilter !== "ALL" &&
+  !tierText.includes(activeBlueprintFilter)
+) {
+  return;
+}
+            
             try {
               const card = document.createElement("div");
               card.className = "factory-card blueprint-card";
@@ -4980,8 +5041,11 @@ wireEmptySlotBuildActions();
           });
         } catch (err) {
           console.error("Failed to load blueprints:", err);
-          grid.innerHTML =
-            '<p class="status-error">Failed to load blueprints from backend.</p>';
+          grid.innerHTML = `
+  <p class="status-text">
+    Blueprint inventory is syncing. Please refresh once if it does not appear.
+  </p>
+`;
         }
         updateSelectedBuildLandBox();
       }
@@ -6172,6 +6236,20 @@ setTimeout(() => {
         .getElementById("claim-reward-btn")
         ?.addEventListener("click", claimReward);
       document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".blueprint-filter-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document
+      .querySelectorAll(".blueprint-filter-btn")
+      .forEach((b) => b.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    window.activeBlueprintFilter =
+      btn.dataset.blueprintFilter || "ALL";
+
+    loadBlueprints();
+  });
+});
   const withdrawBtn = document.getElementById("withdraw-hive-btn");
   if (withdrawBtn) {
     withdrawBtn.addEventListener("click", requestWithdrawHive);

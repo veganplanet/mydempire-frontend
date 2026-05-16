@@ -12852,7 +12852,33 @@ cursor:pointer;
   gap:10px;
   margin-bottom:18px;
 }
+.blueprint-filter-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
 
+.blueprint-filter-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 9px 16px;
+  background: #e2e8f0;
+  color: #334155;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.blueprint-filter-btn:hover {
+  transform: translateY(-1px);
+}
+
+.blueprint-filter-btn.active {
+  background: linear-gradient(135deg, #8b5cf6, #f59e0b);
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.25);
+}
 .land-filter-btn{
   position: relative;
   border: 1px solid rgba(99,102,241,.22);
