@@ -1544,6 +1544,15 @@ function startEmpireOperationsCountdownTicker() {
 function renderEmpireOperations(area, operations, playerData) {
 
   const activeOperation = playerData.activeOperation;
+  const industrialAuthority = Number(playerData.industrialAuthority || 0);
+
+const iaRewards = [
+  { ia: 50, reward: "50 EMP" },
+  { ia: 100, reward: "120 EMP" },
+  { ia: 200, reward: "L1 Frontier" },
+  { ia: 400, reward: "L2 Estate" },
+  { ia: 800, reward: "L3 Industrial Zone" },
+];
 
   let html = `
   
@@ -1573,12 +1582,108 @@ function renderEmpireOperations(area, operations, playerData) {
           .trim()
       ).toLocaleString()}
     </div>
-
+<div style="font-weight:900; color:#0f172a;">
+  🏭 IA: ${industrialAuthority.toFixed(1)} / 800
+</div>
     <div style="color:#64748b; font-weight:700;">
       Higher EP unlocks larger industrial operations.
     </div>
   </div>
+  <div style="margin:10px 18px 18px;">
+  <div
+    style="
+      height:18px;
+      background:#e2e8f0;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid #cbd5e1;
+    "
+  >
+    <div
+      style="
+        height:100%;
+        width:${Math.max(Math.min((industrialAuthority / 800) * 100, 100), 2)}%;
+        background:linear-gradient(90deg,#f59e0b,#facc15);
+        box-shadow:0 0 18px rgba(251,191,36,0.75);
+        border-radius:999px;
+      "
+    ></div>
+  </div>
+</div>
+    
+
+  <div
+    style="
+      margin-top:6px;
+      display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:10px;
+    "
+  >
+    <div
+  style="
+    display:flex;
+flex-wrap:wrap;
+justify-content:space-between;
+gap:100px;
+    margin-top:14px;
+    font-size:11px;
+    font-weight:900;
+    color:#b45309;
+  "
+>
+  <span style="padding:4px 0;">50 IA → +50 EMP
+<br>
+<button
+  style="display:${industrialAuthority >= 50 ? "inline-block" : "none"};
+  style="
+    margin-top:4px;
+    padding:4px 10px;
+    border:none;
+    border-radius:999px;
+    background:#f59e0b;
+    color:white;
+    font-size:11px;
+    font-weight:800;
+    cursor:pointer;
+  "
+>
+  Claim
+</button></span>
+<span style="padding:4px 0;">100 IA → +120 EMP</span>
+<span style="padding:4px 0;">200 IA → L1 Frontier</span>
+<span style="padding:4px 0;">400 IA → L2 Estate</span>
+<span style="padding:4px 0;">800 IA → L3 Industrial Zone</span>
+</div>
+  </div>
+
+  <div style="margin-top:6px; font-size:12px; color:#64748b; font-weight:700;">
+    Claiming any IA reward resets IA back to 0.
+    
+    <div style="margin-top:4px; font-size:12px; color:#64748b; font-weight:700;">
+  IA (Industrial Authority) is earned by completing Empire Operations.
+</div>
+
+<div style="margin-top:4px; font-size:12px; color:#64748b;">
+  Local Supply gives +1 IA, Regional Trade +2 IA, and Imperial Expansion +3 IA.
+</div>
+
+<div style="margin-top:4px; font-size:12px; color:#64748b;">
+  Additional IA bonus based on EP/day:
+  100+ EP/day = +0.5 IA,
+  250+ EP/day = +1 IA,
+  500+ EP/day = +1.5 IA.
+</div>
+
+<div style="margin-top:4px; margin-bottom:18px; font-size:12px; color:#64748b;">
+  Only the first 3 completed Local Supply operations per day count toward IA progression.
+</div>
+  </div>
+</div>
 `;
+
+
 
  if (activeOperation) {
   console.log("ACTIVE OPERATION TIME CHECK:", {
@@ -1638,6 +1743,7 @@ margin-right:auto;
             class="summary-sub"
             style="
               margin-top:14px;
+              
               color:#64748b;
               font-style:italic;
             "
