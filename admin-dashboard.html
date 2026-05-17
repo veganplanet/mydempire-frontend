@@ -447,7 +447,13 @@
       <div class="value" id="wallet-treasury-balance">--</div>
       <div class="small" id="wallet-treasury-account">@mydempire-vault</div>
     </div>
+<div class="admin-card">
+  <h3>📊 EMP Economy (24h)</h3>
 
+  <div id="emp-economy-summary">
+    Loading EMP economy...
+  </div>
+</div>
     <div class="card">
       <div class="label">Reward Wallet</div>
       <div class="value" id="wallet-reward-balance">--</div>
@@ -737,6 +743,22 @@ async function loadEmpireOperationsLog() {
         });
 
         const data = await r.json();
+        try {
+  const empEcoResponse = await fetch(`${API_BASE}/admin/emp-economy-summary`);
+  const empEcoData = await empEcoResponse.json();
+
+  if (empEcoData.success) {
+    document.getElementById("emp-economy-summary").innerHTML = `
+      <div style="display:grid; gap:10px; font-weight:700; color:#334155;">
+        <div>📥 EMP Generated: <b style="color:#16a34a;">+${empEcoData.totalIn}</b></div>
+        <div>📤 EMP Burned: <b style="color:#dc2626;">-${empEcoData.totalOut}</b></div>
+        <div>⚖️ Net EMP Change: <b>${empEcoData.netChange}</b></div>
+      </div>
+    `;
+  }
+} catch (err) {
+  console.error("Failed to load EMP economy summary:", err);
+}
         console.log("admin overview:", data);
 
         if (!data.success) {
