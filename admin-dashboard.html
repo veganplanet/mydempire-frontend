@@ -284,7 +284,9 @@
 
    <div class="top-row">
   <button id="connect-admin-btn" class="primary">Connect Admin</button>
-
+<button id="logout-admin-btn" class="danger">
+  Logout Admin
+</button>
   <button id="run-rewards-btn" class="primary">
     Run Daily Rewards
   </button>
@@ -519,6 +521,23 @@
     </div>
   </div>
 </div>
+<div class="card">
+  <div class="label">Total EMP Generated</div>
+  <div class="value" id="metric-emp-grand-generated">--</div>
+  <div class="small">Since ledger started</div>
+</div>
+
+<div class="card">
+  <div class="label">Total EMP Burned</div>
+  <div class="value" id="metric-emp-grand-burned">--</div>
+  <div class="small">Since ledger started</div>
+</div>
+
+<div class="card">
+  <div class="label">Total Net EMP</div>
+  <div class="value" id="metric-emp-grand-net">--</div>
+  <div class="small">Generated minus burned</div>
+</div>
 
     <div class="section">
   <h2>Marketplace Listings (Pack)</h2>
@@ -671,7 +690,7 @@
 
     const API_BASE = isLocal ? LOCAL_API : PROD_API;
 
-    let ADMIN_KEY = "";
+    let ADMIN_KEY = localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || "";
 
     function setStatus(message) {
       document.getElementById("admin-status").textContent = message;
@@ -682,11 +701,17 @@
       if (!key) return;
 
       ADMIN_KEY = key.trim();
+      localStorage.setItem("MYDEMPIRE_ADMIN_KEY", ADMIN_KEY);
       setStatus("Admin connected. Loading overview...");
 
       await loadAdminOverview();
       await loadWalletBalances();
     }
+    function logoutAdmin() {
+  ADMIN_KEY = "";
+  localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
+  setStatus("Admin logged out.");
+}
 async function loadEmpireOperationsLog() {
   try {
     const response = await fetch(
@@ -775,6 +800,15 @@ document.getElementById("metric-emp-burned").textContent =
 
 document.getElementById("metric-emp-net").textContent =
   Number(empEcoData.netChange || 0).toLocaleString();
+
+document.getElementById("metric-emp-grand-generated").textContent =
+  `+${Number(empEcoData.grandTotalIn || 0).toLocaleString()}`;
+
+document.getElementById("metric-emp-grand-burned").textContent =
+  `-${Number(empEcoData.grandTotalOut || 0).toLocaleString()}`;
+
+document.getElementById("metric-emp-grand-net").textContent =
+  Number(empEcoData.grandNetChange || 0).toLocaleString();
 
 }
 } catch (err) {
@@ -1455,6 +1489,7 @@ async function completeWithdrawal(id) {
     document
       .getElementById("connect-admin-btn")
       .addEventListener("click", connectAdmin);
+      document.getElementById("logout-admin-btn").onclick = logoutAdmin;
 
     document
       .getElementById("player-search-btn")
@@ -2228,6 +2263,10 @@ document.getElementById("end-season-btn")?.addEventListener("click", async () =>
     status.textContent = `❌ ${data.error || "Failed to end season"}`;
   }
 });
+if (ADMIN_KEY) {
+  setStatus("Admin connected. Loading overview...");
+  loadAdminOverview();
+}
 </script>
 <div id="assets-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
   <div style="max-width:900px; margin:40px auto; background:#fff; border-radius:16px; padding:20px; max-height:85vh; overflow-y:auto; position:relative;">
