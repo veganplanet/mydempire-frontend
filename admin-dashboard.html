@@ -750,9 +750,9 @@ async function loadEmpireOperationsLog() {
   if (empEcoData.success) {
     document.getElementById("emp-economy-summary").innerHTML = `
       <div style="display:grid; gap:10px; font-weight:700; color:#334155;">
-        <div>📥 EMP Generated: <b style="color:#16a34a;">+${empEcoData.totalIn}</b></div>
-        <div>📤 EMP Burned: <b style="color:#dc2626;">-${empEcoData.totalOut}</b></div>
-        <div>⚖️ Net EMP Change: <b>${empEcoData.netChange}</b></div>
+        <div>EMP Generated: <b style="color:#16a34a;">+${empEcoData.totalIn}</b></div>
+<div>EMP Burned: <b style="color:#dc2626;">-${empEcoData.totalOut}</b></div>
+<div>Net EMP Change: <b>${empEcoData.netChange}</b></div>
       </div>
     `;
   }
