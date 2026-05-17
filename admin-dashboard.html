@@ -318,6 +318,7 @@
     <div class="section">
       <h2>Overview</h2>
       <div class="metrics">
+        
   <div class="card">
     <div class="label">Genesis Packs Sold</div>
     <div class="value" id="metric-packs-sold">--</div>
@@ -495,6 +496,30 @@
   </div>
 </div>
 </div>
+<div class="section">
+  <h2>EMP Economy (24h)</h2>
+
+  <div class="metrics">
+    <div class="card">
+      <div class="label">EMP Generated</div>
+      <div class="value" id="metric-emp-generated">--</div>
+      <div class="small">Last 24 hours</div>
+    </div>
+
+    <div class="card">
+      <div class="label">EMP Burned</div>
+      <div class="value" id="metric-emp-burned">--</div>
+      <div class="small">Last 24 hours</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Net EMP Change</div>
+      <div class="value" id="metric-emp-net">--</div>
+      <div class="small">Generated minus burned</div>
+    </div>
+  </div>
+</div>
+
     <div class="section">
   <h2>Marketplace Listings (Pack)</h2>
 
@@ -742,23 +767,16 @@ async function loadEmpireOperationsLog() {
   const empEcoData = await empEcoResponse.json();
 
   if (empEcoData.success) {
-    document.getElementById("emp-economy-summary").innerHTML = `
-      <div style="display:grid; gap:10px; font-weight:700; color:#334155;">
-        <div>EMP Generated: <b style="color:#16a34a;">+${empEcoData.totalIn}</b></div>
-<div>EMP Burned: <b style="color:#dc2626;">-${empEcoData.totalOut}</b></div>
-<div>Net EMP Change: <b>${empEcoData.netChange}</b></div>
-<div style="margin-top:12px; border-top:1px solid #e2e8f0; padding-top:10px;">
-  ${empEcoData.rows.map(row => `
-    <div style="font-size:12px; color:#64748b; margin-bottom:4px;">
-      ${row.source}: 
-      <b>${row.direction}</b> 
-      ${Number(row.total).toFixed(2)} EMP
-    </div>
-  `).join("")}
-</div>
-      </div>
-    `;
-  }
+    document.getElementById("metric-emp-generated").textContent =
+  `+${Number(empEcoData.totalIn || 0).toLocaleString()}`;
+
+document.getElementById("metric-emp-burned").textContent =
+  `-${Number(empEcoData.totalOut || 0).toLocaleString()}`;
+
+document.getElementById("metric-emp-net").textContent =
+  Number(empEcoData.netChange || 0).toLocaleString();
+
+}
 } catch (err) {
   console.error("Failed to load EMP economy summary:", err);
 }
