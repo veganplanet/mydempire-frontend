@@ -12064,9 +12064,9 @@ cursor:pointer;
 }
 .dashboard-feature-row {
   display: grid;
-  grid-template-columns: minmax(0, 1.65fr) minmax(320px, 1fr);
+  grid-template-columns: minmax(0, 1.55fr) minmax(360px, 1fr);
   gap: 18px;
-  align-items: stretch;
+  align-items: start;
 }
 
 .dashboard-feature-card {

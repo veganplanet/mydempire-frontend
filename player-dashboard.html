@@ -261,11 +261,12 @@
   ⚙️ Empire Operations are LIVE! Start your operation now and expand your industrial reach →
 </div>
         <!-- 🔹 Replace wide crate with 2 banners -->
-        <div
-          class="overview-block dashboard-feature-row"
-          style="margin-bottom: 16px"
+       <div
+  class="overview-block dashboard-feature-row"
+  style="margin-bottom: 16px; align-items: stretch;"
+
         >
-          <div class="dashboard-feature-card crate-feature-card">
+          <div class="dashboard-feature-card crate-feature-card" style="height:100%;">
             <div class="crate-card">
               <div class="crate-header">
                 <div class="crate-title">🎁 Imperial Supply Crate</div>
@@ -305,22 +306,114 @@
             </div>
           </div>
 
-          <div class="dashboard-feature-card redevelopment-feature-card">
-            <div class="feature-title">🏭 Factory Redevelopment</div>
+          <div
+  id="expansion-allocation-card"
+ class="dashboard-feature-card redevelopment-feature-card"
+style="
+  background:
+    radial-gradient(circle at top right, rgba(34,197,94,0.18), transparent 34%),
+    linear-gradient(135deg, #d1fae5 0%, #bbf7d0 45%, #86efac 100%);
+  border: 1px solid rgba(22,163,74,0.65);
+  box-shadow: 0 10px 24px rgba(22,163,74,0.14);
 
-            <div class="feature-text">
-              A new strategic ability is arriving.<br />
-              Prepare your empire for transformation.
-            </div>
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+gap: 18px;
+  position: relative;
+overflow: hidden;
+"
+ 
+>
+<div
+  style="
+    position:absolute;
+    top:0;
+    left:-35%;
+    width:120px;
+    height:100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,0.18),
+      transparent
+    );
+    transform: skewX(-18deg);
+    pointer-events:none;
+  "
+></div>
+  <div class="feature-title">🏛 Strategic Expansion Allocation</div>
+  <div
+  
+></div>
+ <div
+  style="
+    margin: 10px 0;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.65);
+    border: 1px solid rgba(245,158,11,0.35);
+    font-weight: 800;
+    color: #92400e;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  "
+>
+  <span>📦 10 Genesis Packs</span>
+  <span>💰 60 HIVE</span>
+</div>
+<div
+  style="
+    font-size: 14px;
+    font-weight: 700;
+    color: #14532d;
+    line-height: 1.5;
+    margin-top: 2px;
+  "
+>
+  Reserved for active empires • 100% supports treasury growth
+</div>
+  <div
+  style="
+    display:flex;
+align-items:center;
+justify-content:space-between;
+gap:14px;
+margin-top:12px;
+padding-top:8px;
+  "
+>
 
-            <button class="primary-button" type="button" disabled>
-              Coming Soon 🔒
-            </button>
+  <button
+    id="secure-expansion-allocation-btn"
+    class="primary-button"
+    type="button"
+    style="
+      width: 220px;
+      padding: 10px 18px;
+      flex-shrink:0;
+    "
+  >
+    Secure Allocation
+  </button>
 
-            <div class="status-text" style="margin-top: 8px">
-              Only prepared empires will benefit.
-            </div>
-          </div>
+  <div
+    id="expansion-allocation-timer"
+    style="
+      font-size: 13px;
+      font-weight: 800;
+      color: #7c2d12;
+      white-space: nowrap;
+    "
+  >
+    Closing in: loading...
+  </div>
+</div>
+
+ 
+</div>
         </div>
 
         <!-- ===== BLOCK 1: SNAPSHOT ===== -->
@@ -1388,6 +1481,269 @@ if (tabName === "operations") {
 }
 let empireOperationsRefreshInterval = null;
 let empireOperationsCountdownInterval = null;
+// ============================
+// 🏛 STRATEGIC EXPANSION ALLOCATION
+// ============================
+
+let expansionAllocationEndsAt = null;
+let expansionAllocationTimerInterval = null;
+
+function setExpansionAllocationButtonDisabled(disabled, text) {
+  const btn = document.getElementById("secure-expansion-allocation-btn");
+  if (!btn) return;
+
+  btn.disabled = disabled;
+  if (text) btn.textContent = text;
+
+  btn.style.opacity = disabled ? "0.65" : "1";
+  btn.style.cursor = disabled ? "not-allowed" : "pointer";
+}
+
+function updateExpansionAllocationTimer() {
+  const timerEl = document.getElementById("expansion-allocation-timer");
+  if (!timerEl || !expansionAllocationEndsAt) return;
+
+  const end = new Date(expansionAllocationEndsAt).getTime();
+  const now = Date.now();
+  const diff = end - now;
+
+  if (!Number.isFinite(end) || diff <= 0) {
+    timerEl.textContent = "Allocation closed";
+    setExpansionAllocationButtonDisabled(true, "Closed");
+    return;
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const mins = Math.floor((diff / (1000 * 60)) % 60);
+
+  timerEl.textContent = `Closing in: ${days}D ${hours}H ${mins}M`;
+}
+function isViewingOwnEmpire() {
+  const loggedInUser = String(getLoggedInUser() || "")
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+
+  const params = new URLSearchParams(window.location.search);
+
+  const viewedUser = String(
+    params.get("user") || params.get("username") || loggedInUser
+  )
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+
+  return loggedInUser && viewedUser && loggedInUser === viewedUser;
+}
+
+function applyReadOnlyModeForOtherEmpire() {
+  if (isViewingOwnEmpire()) return;
+
+  const actionButtons = document.querySelectorAll(
+    "button:not(.subnav-btn):not(#appbarAccountBtn):not(#visitOtherEmpireBtn):not(#appbarLogoutBtn)"
+  );
+
+  actionButtons.forEach((btn) => {
+    btn.disabled = true;
+    btn.style.opacity = "0.55";
+    btn.style.cursor = "not-allowed";
+
+    if (!btn.dataset.originalText) {
+      btn.dataset.originalText = btn.textContent;
+    }
+
+    if (
+      btn.id === "secure-expansion-allocation-btn" ||
+      btn.id === "open-crate-btn" ||
+      btn.id === "build-factory-btn" ||
+      btn.id === "claim-reward-btn" ||
+      btn.id === "withdraw-hive-btn"
+    ) {
+      btn.textContent = "Read-only";
+    }
+  });
+}
+async function loadExpansionAllocationStatus() {
+  try {
+    const username = getLoggedInUser();
+    const viewingUsername =
+  new URLSearchParams(window.location.search).get("username") || username;
+
+if (
+  String(viewingUsername || "").toLowerCase() !==
+  String(username || "").toLowerCase()
+) {
+  if (card) card.style.display = "none";
+  return;
+}
+    const card = document.getElementById("expansion-allocation-card");
+    const timerEl = document.getElementById("expansion-allocation-timer");
+
+    if (!card || !username) return;
+
+    const res = await fetch(`${API_BASE}/expansion-allocation/status/${username}`);
+    const data = await res.json();
+
+    if (!data.success || !data.active) {
+      card.style.display = "none";
+      return;
+    }
+
+    if (data.claimed) {
+  card.style.display = "";
+
+  setExpansionAllocationButtonDisabled(true, "Allocation Secured");
+
+  if (timerEl) {
+    timerEl.textContent = "Expansion completed";
+  }
+
+  return;
+}
+
+    card.style.display = "";
+    expansionAllocationEndsAt = data.ends_at;
+
+    if (timerEl) {
+      timerEl.textContent = "Closing in: loading...";
+    }
+
+    updateExpansionAllocationTimer();
+
+    if (expansionAllocationTimerInterval) {
+      clearInterval(expansionAllocationTimerInterval);
+    }
+
+    expansionAllocationTimerInterval = setInterval(
+      updateExpansionAllocationTimer,
+      30000
+    );
+  } catch (err) {
+    console.error("Expansion allocation status failed:", err);
+  }
+}
+
+async function secureExpansionAllocation() {
+  try {
+    const username = getLoggedInUser();
+    const viewingUsername =
+  new URLSearchParams(window.location.search).get("username") || username;
+
+if (
+  String(viewingUsername || "").toLowerCase() !==
+  String(username || "").toLowerCase()
+) {
+  alert("This allocation can only be secured from your own empire dashboard.");
+  return;
+}
+
+    if (!username) {
+      alert("Please connect wallet first.");
+      return;
+    }
+
+    if (!window.hive_keychain) {
+      alert("Hive Keychain not found.");
+      return;
+    }
+
+    const ok = confirm(
+      "Secure Strategic Expansion Allocation?\n\n" +
+      "You will receive 10 Genesis Packs for 60 HIVE.\n\n" +
+      "One allocation per empire."
+    );
+
+    if (!ok) return;
+
+    setExpansionAllocationButtonDisabled(true, "Creating order...");
+
+    const orderRes = await fetch(`${API_BASE}/create-expansion-allocation-order`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": username
+      },
+      body: JSON.stringify({ username })
+    });
+
+    const orderData = await orderRes.json();
+
+    if (!orderRes.ok || !orderData.success) {
+      alert(orderData.error || "Unable to create allocation order.");
+      setExpansionAllocationButtonDisabled(false, "Secure Allocation");
+      return;
+    }
+
+    const order = orderData.order;
+    const payment = orderData.payment;
+
+    setExpansionAllocationButtonDisabled(true, "Waiting payment...");
+
+    window.hive_keychain.requestTransfer(
+      username,
+      payment.to,
+      "60.000",
+      payment.memo,
+      "HIVE",
+      async function (response) {
+        if (!response || response.success !== true) {
+          alert("Transaction cancelled.");
+          setExpansionAllocationButtonDisabled(false, "Secure Allocation");
+          return;
+        }
+
+        const txid =
+          response?.result?.id ||
+          response?.result?.tx_id ||
+          response?.result?.trx_id ||
+          response?.id;
+
+        if (!txid) {
+          alert("Transaction completed but transaction ID missing.");
+          setExpansionAllocationButtonDisabled(false, "Secure Allocation");
+          return;
+        }
+
+        setExpansionAllocationButtonDisabled(true, "Confirming...");
+
+        const confirmRes = await fetch(`${API_BASE}/confirm-payment`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-mde-actor": username
+          },
+          body: JSON.stringify({
+            orderId: order.id,
+            txid,
+            username
+          })
+        });
+
+        const confirmData = await confirmRes.json();
+
+        if (!confirmRes.ok || !confirmData.success) {
+          alert(confirmData.error || "Payment confirmation failed.");
+          setExpansionAllocationButtonDisabled(false, "Secure Allocation");
+          return;
+        }
+
+        alert("✅ Strategic Expansion Allocation secured. 10 packs delivered.");
+
+        const card = document.getElementById("expansion-allocation-card");
+        if (card) card.style.display = "none";
+
+        if (typeof loadDashboardSummary === "function") {
+          await loadDashboardSummary();
+        }
+      }
+    );
+  } catch (err) {
+    console.error("Secure expansion allocation failed:", err);
+    alert(err.message || "Failed to secure allocation.");
+    setExpansionAllocationButtonDisabled(false, "Secure Allocation");
+  }
+}
 async function loadEmpireOperations() {
   const area = document.getElementById("operations-live-area");
 
@@ -6270,7 +6626,31 @@ if (
           box.innerHTML = "Failed to load history.";
         }
       }
+function applyReadOnlyModeForOtherEmpire() {
+  if (isViewingOwnEmpire()) return;
 
+  const actionButtons = document.querySelectorAll(
+    "button:not(.subnav-btn):not(#appbarAccountBtn):not(#visitOtherEmpireBtn):not(#appbarLogoutBtn):not(#mobileNavToggle)"
+  );
+
+  actionButtons.forEach((btn) => {
+    btn.disabled = true;
+    btn.setAttribute("disabled", "disabled");
+    btn.style.opacity = "0.55";
+    btn.style.cursor = "not-allowed";
+    btn.style.pointerEvents = "none";
+
+    if (
+      btn.id === "secure-expansion-allocation-btn" ||
+      btn.id === "open-crate-btn" ||
+      btn.id === "build-factory-btn" ||
+      btn.id === "claim-reward-btn" ||
+      btn.id === "withdraw-hive-btn"
+    ) {
+      btn.textContent = "Read-only";
+    }
+  });
+}
       function closeCrateHistoryModal() {
         const modal = document.getElementById("crate-history-modal");
         if (modal) modal.style.display = "none";
@@ -6399,8 +6779,14 @@ setTimeout(() => {
         .getElementById("claim-reward-btn")
         ?.addEventListener("click", claimReward);
       document.addEventListener("DOMContentLoaded", () => {
-        window.activeBlueprintFilters = [];
 
+        window.activeBlueprintFilters = [];
+loadExpansionAllocationStatus();
+
+const expansionBtn = document.getElementById("secure-expansion-allocation-btn");
+if (expansionBtn) {
+  expansionBtn.addEventListener("click", secureExpansionAllocation);
+}
 document.querySelectorAll(".blueprint-filter-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
     const filter = btn.dataset.blueprintFilter || "ALL";
@@ -6449,6 +6835,7 @@ document.querySelectorAll(".blueprint-filter-btn").forEach((btn) => {
 
   loadSeasonLiveBanner();
   setupLandFilters();
+  setInterval(applyReadOnlyModeForOtherEmpire, 1000);
 });
       function toggleBlueprintCardMenu(btn) {
         const menu = btn.nextElementSibling;
