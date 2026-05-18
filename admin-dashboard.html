@@ -609,6 +609,28 @@
     </div>
   </div>
 </div>
+
+<div class="section">
+  <h2>Tender Stats</h2>
+  <div class="small">
+    Check active factory strength by industry and level before creating tender criteria.
+  </div>
+
+  <div class="row" style="margin-top:12px;">
+    <button id="load-tender-stats-btn" class="primary">
+      Load Tender Stats
+    </button>
+  </div>
+
+  <div id="tender-stats-status" class="status">
+    Tender stats not loaded yet.
+  </div>
+
+  <div id="tender-stats-box" class="all-players-wrap" style="display:none; margin-top:12px;">
+    <div id="tender-overall-box"></div>
+    <div id="tender-player-box" style="margin-top:18px;"></div>
+  </div>
+</div>
     <div class="section">
       <h2>Player Inspector</h2>
 
@@ -2266,6 +2288,164 @@ document.getElementById("end-season-btn")?.addEventListener("click", async () =>
 if (ADMIN_KEY) {
   setStatus("Admin connected. Loading overview...");
   loadAdminOverview();
+}
+async function loadTenderStats() {
+  const statusEl = document.getElementById("tender-stats-status");
+  const boxEl = document.getElementById("tender-stats-box");
+  const overallEl = document.getElementById("tender-overall-box");
+  const playerEl = document.getElementById("tender-player-box");
+
+  try {
+    statusEl.textContent = "Loading tender stats...";
+
+    const res = await fetch(
+      `${API_BASE}/admin/tender-stats`,
+    );
+
+    const data = await res.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Failed to load.");
+    }
+
+    const overall = data.overall || {};
+    const players = data.players || [];
+
+    let overallHtml = `
+      <h3 style="margin-bottom:10px;">
+        Overall Industry Capacity
+      </h3>
+
+      <table class="all-players-table">
+        <thead>
+          <tr>
+            <th>Industry</th>
+            <th>B1</th>
+            <th>B2</th>
+            <th>B3</th>
+            <th>B4</th>
+            <th>B5</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    for (const [industry, stats] of Object.entries(overall)) {
+      overallHtml += `
+        <tr>
+          <td><strong>${industry}</strong></td>
+          <td>${stats.B1 || 0}</td>
+          <td>${stats.B2 || 0}</td>
+          <td>${stats.B3 || 0}</td>
+          <td>${stats.B4 || 0}</td>
+          <td>${stats.B5 || 0}</td>
+          <td><strong>${stats.total || 0}</strong></td>
+        </tr>
+      `;
+    }
+
+    overallHtml += `
+        </tbody>
+      </table>
+    `;
+
+    overallEl.innerHTML = overallHtml;
+    
+
+    let playerHtml = `
+  <h3 style="margin:18px 0 10px;">Player Industry-Level Matrix</h3>
+
+  <div style="overflow-x:auto;">
+    <table class="all-players-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Food B1</th><th>Food B2</th><th>Food B3</th><th>Food B4</th><th>Food B5</th>
+          <th>Textile B1</th><th>Textile B2</th><th>Textile B3</th><th>Textile B4</th><th>Textile B5</th>
+          <th>Pharma B1</th><th>Pharma B2</th><th>Pharma B3</th><th>Pharma B4</th><th>Pharma B5</th>
+          <th>Chemical B1</th><th>Chemical B2</th><th>Chemical B3</th><th>Chemical B4</th><th>Chemical B5</th>
+          <th>Supermarket B1</th><th>Supermarket B2</th><th>Supermarket B3</th><th>Supermarket B4</th><th>Supermarket B5</th>
+          <th>Total</th>
+          <th>L2</th>
+          <th>L3</th>
+        </tr>
+      </thead>
+      <tbody>
+`;
+
+for (const player of players) {
+  const i = player.industries || {};
+  const get = (industry, level) => i[industry]?.[level] || 0;
+
+  playerHtml += `
+    <tr>
+      <td><strong>${player.username}</strong></td>
+
+      <td>${get("FOOD", "B1")}</td>
+      <td>${get("FOOD", "B2")}</td>
+      <td>${get("FOOD", "B3")}</td>
+      <td>${get("FOOD", "B4")}</td>
+      <td>${get("FOOD", "B5")}</td>
+
+      <td>${get("TEXTILE", "B1")}</td>
+      <td>${get("TEXTILE", "B2")}</td>
+      <td>${get("TEXTILE", "B3")}</td>
+      <td>${get("TEXTILE", "B4")}</td>
+      <td>${get("TEXTILE", "B5")}</td>
+
+      <td>${get("PHARMA", "B1")}</td>
+      <td>${get("PHARMA", "B2")}</td>
+      <td>${get("PHARMA", "B3")}</td>
+      <td>${get("PHARMA", "B4")}</td>
+      <td>${get("PHARMA", "B5")}</td>
+
+      <td>${get("CHEMICAL", "B1")}</td>
+      <td>${get("CHEMICAL", "B2")}</td>
+      <td>${get("CHEMICAL", "B3")}</td>
+      <td>${get("CHEMICAL", "B4")}</td>
+      <td>${get("CHEMICAL", "B5")}</td>
+
+      <td>${get("SUPERMARKET", "B1")}</td>
+      <td>${get("SUPERMARKET", "B2")}</td>
+      <td>${get("SUPERMARKET", "B3")}</td>
+      <td>${get("SUPERMARKET", "B4")}</td>
+      <td>${get("SUPERMARKET", "B5")}</td>
+
+      <td><strong>${player.total_active_factories || 0}</strong></td>
+      <td>${player.lands?.L2 || 0}</td>
+      <td>${player.lands?.L3 || 0}</td>
+    </tr>
+  `;
+}
+
+playerHtml += `
+      </tbody>
+    </table>
+  </div>
+`;
+
+playerEl.innerHTML = playerHtml;
+    boxEl.style.display = "block";
+
+    statusEl.textContent =
+      "Tender stats loaded successfully.";
+  } catch (err) {
+    console.error(err);
+
+    statusEl.textContent =
+      "Failed to load tender stats.";
+  }
+}
+const loadTenderStatsBtn = document.getElementById(
+  "load-tender-stats-btn",
+);
+
+if (loadTenderStatsBtn) {
+  loadTenderStatsBtn.addEventListener(
+    "click",
+    loadTenderStats,
+  );
 }
 </script>
 <div id="assets-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
