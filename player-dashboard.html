@@ -2529,6 +2529,16 @@ async function collectEmpireOperation(operationId) {
 <div style="font-size:18px;line-height:1.7;">
   <strong>${revenue} EMP</strong> has been added to your empire balance.
 </div>
+
+${
+  outcome.jackpotLand
+    ? `
+<div style="margin-top:12px; font-size:18px; font-weight:800; color:#f59e0b;">
+  🎁 Bonus Reward: ${outcome.jackpotLand} Land acquired
+</div>
+`
+    : ""
+}
 `,
       "success"
     );
