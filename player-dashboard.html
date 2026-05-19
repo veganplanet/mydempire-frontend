@@ -1038,6 +1038,7 @@ padding-top:8px;
 class="leaderboard-subnav-btn"
 data-lb-tab="surge"
 onclick="setLeaderboardTab('surge')"
+style="display:none;"
 >
 Empire Surge
 <span class="season-new-badge">LIVE</span>
@@ -2796,28 +2797,7 @@ async function loadEmpireSurgeLeaderboard() {
     const data = await res.json();
 
     const rows = data.leaderboard || [];
-    const hasRealGrowth = rows.some(
-  (row) => Number(row.growth_ep || 0) > 0,
-);
-
-if (!hasRealGrowth) {
-  container.innerHTML = `
-    <div class="status-text" style="
-      padding:18px;
-      border:1px solid #dbeafe;
-      border-radius:16px;
-      background:#eff6ff;
-      color:#1e3a8a;
-      font-weight:700;
-      line-height:1.7;
-    ">
-      ⚔️ Empire Surge officially started.<br>
-      No empire has increased EP/day yet this week.<br>
-      The first industrial surge will appear here live.
-    </div>
-  `;
-  return;
-}
+    
     
 
     if (!data.success || rows.length === 0) {
