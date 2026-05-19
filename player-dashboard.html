@@ -2531,10 +2531,10 @@ async function collectEmpireOperation(operationId) {
 </div>
 
 ${
-  outcome.jackpotLand
+  data.outcome?.jackpotLand
     ? `
 <div style="margin-top:12px; font-size:18px; font-weight:800; color:#f59e0b;">
-  🎁 Bonus Reward: ${outcome.jackpotLand} Land acquired
+  🎁 Bonus Reward: ${data.outcome?.jackpotLand} Land acquired
 </div>
 `
     : ""
