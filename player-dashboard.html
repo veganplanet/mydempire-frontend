@@ -429,7 +429,25 @@ padding-top:8px;
                 EMP Balance
               </div>
               <div class="summary-value" id="summary-emp-balance">0</div>
-              <div class="summary-sub">Total EMP you currently own</div>
+              <div class="summary-sub">
+  Total EMP you currently own
+</div>
+
+<div class="summary-actions" style="margin-top:10px;">
+  <a
+    href="javascript:void(0)"
+    id="emp-history-link"
+    onclick="openEmpHistoryModal(event)"
+    style="
+      font-size:13px;
+      font-weight:700;
+      color:#2563eb;
+      text-decoration:none;
+    "
+  >
+    View EMP Transactions
+  </a>
+</div>
             </div>
 
             <div class="summary-card card-land">
@@ -6531,6 +6549,69 @@ if (!isOwnEmpireView()) {
           alert("Error opening crate.");
         }
       }
+      
+   function openEmpHistoryModal(event) {
+  if (event) event.preventDefault();
+
+  const modal = document.getElementById("emp-history-modal");
+  const list = document.getElementById("emp-history-list");
+
+  if (modal) modal.style.display = "flex";
+ if (list) {
+  list.innerHTML = '<div class="status-text">Loading EMP history...</div>';
+
+  const username =
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("mde_username");
+
+  fetch(API_BASE + "/player/" + username + "/emp-history")
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (data) {
+      const history = data.history || [];
+
+if (!history.length) {
+  list.innerHTML =
+    '<div class="status-text">No EMP history found yet.</div>';
+  return;
+}
+
+let html = '';
+
+history.forEach(function (item) {
+
+  const direction = String(item.direction || '').toUpperCase();
+  const isIn = direction === 'IN';
+  const sign = isIn ? '+' : '-';
+  const amount = Number(item.amount || 0).toFixed(2);
+
+ html += '<div class="emp-history-line ' + (isIn ? 'emp-in' : 'emp-out') + '">';
+html += '<span class="emp-history-main-text">';
+html += sign + amount + ' EMP';
+html += '</span>';
+html += '<span class="emp-history-source-text">';
+html += (item.source || 'EMP Movement').replaceAll('_', ' ');
+html += '</span>';
+html += '<span class="emp-history-date-text">';
+html += new Date(item.created_at).toLocaleDateString();
+html += '</span>';
+html += '</div>';
+});
+
+list.innerHTML = html;
+    })
+    .catch(function () {
+      list.innerHTML =
+        '<div class="status-text">Failed to load EMP history.</div>';
+    });
+}
+}
+
+function closeEmpHistoryModal() {
+  const modal = document.getElementById("emp-history-modal");
+  if (modal) modal.style.display = "none";
+}
       async function openCrateHistoryModal(e) {
           if (
     typeof IS_VISITOR_MODE !== "undefined" &&
@@ -7185,5 +7266,18 @@ if (openBtn) {
         </div>
       </div>
     </div>
+
+    <div id="emp-history-modal" class="modal-backdrop" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>EMP History</h3>
+      <button type="button" onclick="closeEmpHistoryModal()">×</button>
+    </div>
+
+    <div id="emp-history-list" class="modal-body">
+      Loading EMP history...
+    </div>
+  </div>
+</div>
   </body>
 </html>
