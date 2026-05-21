@@ -5102,7 +5102,7 @@ const ok = confirm(
                     await loadEmpireOverview();
                   } catch (err) {
                     console.error("Upgrade error:", err);
-                    alert("Upgrade failed.");
+                    alert(err.message || "Upgrade failed.");
                   }
                 });
               }
