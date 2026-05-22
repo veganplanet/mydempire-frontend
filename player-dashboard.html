@@ -3065,8 +3065,14 @@ function renderSeasonHistory() {
         </div>
 
         <div class="season-reward-badge">
-          ${Number(s.reward_pool_hive || 0).toFixed(3)} HIVE Pool
-        </div>
+  ${Number(s.reward_pool_hive || 0).toFixed(3)} HIVE Pool
+</div>
+
+<div class="season-prize-breakdown">
+  🥇 ${(Number(s.reward_pool_hive || 0) * 0.5).toFixed(3)} HIVE ·
+  🥈 ${(Number(s.reward_pool_hive || 0) * 0.3).toFixed(3)} HIVE ·
+  🥉 ${(Number(s.reward_pool_hive || 0) * 0.2).toFixed(3)} HIVE
+</div>
       </div>
 
       <div class="season-rank-list">
