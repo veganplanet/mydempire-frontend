@@ -2545,15 +2545,35 @@ async function collectEmpireOperation(operationId) {
   ${result}
 </div>
 
+${
+  data.outcome?.jackpotLand || data.outcome?.jackpotBlueprint
+    ? ""
+    : `
 <div style="font-size:18px;line-height:1.7;">
   <strong>${revenue} EMP</strong> has been added to your empire balance.
 </div>
+`
+}
 
 ${
   data.outcome?.jackpotLand
     ? `
 <div style="margin-top:12px; font-size:18px; font-weight:800; color:#f59e0b;">
-  🎁 Bonus Reward: ${data.outcome?.jackpotLand} Land acquired
+  ${
+  data.outcome?.jackpotLand
+    ? `
+<div style="margin-top:12px; font-size:18px; font-weight:800; color:#f59e0b;">
+  🎁 Bonus Reward: ${data.outcome.jackpotLand} Land acquired
+</div>
+`
+    : data.outcome?.jackpotBlueprint === true || data.outcome?.result === "Industrial Discovery B1 Blueprint"
+    ? `
+<div style="margin-top:12px; font-size:18px; font-weight:800; color:#8b5cf6;">
+  🎁 Bonus Reward: ${data.outcome.jackpotBlueprintTier || "Random B1 Blueprint"} acquired
+</div>
+`
+    : ""
+}
 </div>
 `
     : ""
