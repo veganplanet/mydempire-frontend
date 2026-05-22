@@ -7047,6 +7047,10 @@ function openSeasonLeaderboard() {
     }
   }, 100);
 }
+document.getElementById("close-emp-history-btn")?.addEventListener("click", () => {
+  const modal = document.getElementById("emp-history-modal");
+  if (modal) modal.style.display = "none";
+});
     </script>
 
     <script src="js/appbar.js"></script>
@@ -7192,11 +7196,23 @@ if (openBtn) {
         modal.style.display = "flex";
       }
 
-      document
-        .getElementById("close-crate-result-btn")
-        ?.addEventListener("click", () => {
-          document.getElementById("crate-result-modal").style.display = "none";
-        });
+      document.addEventListener("click", function (e) {
+  if (
+    e.target.id === "close-emp-history-btn" ||
+    e.target.classList.contains("emp-history-close") ||
+    e.target.textContent.trim() === "Close" ||
+    e.target.textContent.trim() === "×"
+  ) {
+    const modal =
+      document.getElementById("emp-history-modal") ||
+      document.getElementById("empHistoryModal");
+
+    if (modal) {
+      modal.style.display = "none";
+      modal.classList.remove("active", "show");
+    }
+  }
+});
      
     </script>
     <!-- IMPERIAL SUPPLY CRATE MODAL -->
