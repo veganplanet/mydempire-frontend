@@ -6491,6 +6491,11 @@ if (crateHistoryLink) {
 
         const epDay = window.dashboardData?.totalBaseEP || 0;
         const globalShare = window.dashboardData?.globalSharePercent || 0;
+        console.log("CRATE CHECK:", {
+  epDay,
+  globalShare,
+  dashboardData: window.dashboardData
+});
 
         const isFree =
           Number(epDay || 0) >= 100 && Number(globalShare || 0) >= 1.5;
