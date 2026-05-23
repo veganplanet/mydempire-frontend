@@ -600,7 +600,47 @@
   <div class="value" id="metric-emp-grand-net">--</div>
   <div class="small">Generated minus burned</div>
 </div>
+<div class="section">
+  <h2>🔥 Maintenance EMP Burn</h2>
 
+  <button id="load-maintenance-burn-btn" class="primary">
+    Load Maintenance Burn Report
+  </button>
+
+  <div class="metrics" style="margin-top:14px;">
+    <div class="card">
+      <div class="label">Today Burn</div>
+      <div class="value" id="maintenance-burn-today">--</div>
+      <div class="small">EMP burned today</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Last 7 Days</div>
+      <div class="value" id="maintenance-burn-7">--</div>
+      <div class="small">Maintenance EMP burn</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Last 30 Days</div>
+      <div class="value" id="maintenance-burn-30">--</div>
+      <div class="small">Maintenance EMP burn</div>
+    </div>
+  </div>
+
+  <h3>Player-wise Maintenance Burn</h3>
+  <div id="maintenance-burn-players" class="scroll-box">
+    Click load to view player-wise maintenance burn.
+  </div>
+
+  <h3>Daily Maintenance Burn Log</h3>
+  <div id="maintenance-burn-daily" class="scroll-box">
+    Click load to view daily maintenance burn history.
+  </div>
+
+  <div class="status" id="maintenance-burn-status">
+    No report loaded yet.
+  </div>
+</div>
     <div class="section">
   <h2>Marketplace Listings (Pack)</h2>
 
@@ -2764,6 +2804,80 @@ async function loadCrateFragmentReport() {
 document
   .getElementById("load-crate-fragment-report-btn")
   ?.addEventListener("click", loadCrateFragmentReport);
+  async function loadMaintenanceBurnReport() {
+  const status = document.getElementById("maintenance-burn-status");
+
+  try {
+    status.textContent = "Loading maintenance burn report...";
+
+    const res = await fetch(`${API_BASE}/admin/maintenance-burn-report`);
+    const data = await res.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Failed to load report.");
+    }
+
+    document.getElementById("maintenance-burn-today").textContent =
+      data.today || 0;
+
+    document.getElementById("maintenance-burn-7").textContent =
+      data.last7Days || 0;
+
+    document.getElementById("maintenance-burn-30").textContent =
+      data.last30Days || 0;
+
+    const playersBox = document.getElementById(
+      "maintenance-burn-players"
+    );
+
+    if (!data.players || data.players.length === 0) {
+      playersBox.innerHTML =
+        `<div class="assets-empty">No maintenance burn yet.</div>`;
+    } else {
+      playersBox.innerHTML = data.players
+        .map(
+          (p) => `
+            <div class="assets-item">
+              <strong>@${p.username}</strong>
+              <span>${p.total_burned} EMP</span>
+            </div>
+          `
+        )
+        .join("");
+    }
+
+    const dailyBox = document.getElementById(
+      "maintenance-burn-daily"
+    );
+
+    if (!data.daily || data.daily.length === 0) {
+      dailyBox.innerHTML =
+        `<div class="assets-empty">No daily burn history yet.</div>`;
+    } else {
+      dailyBox.innerHTML = data.daily
+        .map(
+          (d) => `
+            <div class="assets-item">
+              <strong>${d.day}</strong>
+              <span>${d.total_burned} EMP</span>
+            </div>
+          `
+        )
+        .join("");
+    }
+
+    status.textContent =
+      "Maintenance burn report loaded successfully.";
+  } catch (err) {
+    console.error("Maintenance burn report error:", err);
+    status.textContent =
+      err.message || "Failed to load maintenance burn report.";
+  }
+}
+
+document
+  .getElementById("load-maintenance-burn-btn")
+  ?.addEventListener("click", loadMaintenanceBurnReport);
 </script>
 <div id="assets-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
   <div style="max-width:900px; margin:40px auto; background:#fff; border-radius:16px; padding:20px; max-height:85vh; overflow-y:auto; position:relative;">
