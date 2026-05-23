@@ -776,6 +776,44 @@
     Click the button to load recent operation results.
   </div>
 </div>
+<div class="section">
+  <h2>💠 Crate & Fragment Report</h2>
+
+  <button id="load-crate-fragment-report-btn" class="primary">
+    Load Crate / Fragment Report
+  </button>
+
+  <div class="metrics" style="margin-top:14px;">
+    <div class="card">
+      <div class="label">Total Fragments Minted</div>
+      <div class="value" id="admin-total-fragments">--</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Total Crates Opened</div>
+      <div class="value" id="admin-total-crates">--</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Fragment Wins</div>
+      <div class="value" id="admin-fragment-wins">--</div>
+    </div>
+  </div>
+
+  <h3>Player-wise Fragments</h3>
+  <div id="admin-fragment-players" class="scroll-box">
+    Click load to view player fragment balances.
+  </div>
+
+  <h3>Recent Crate Opening Log</h3>
+  <div id="admin-crate-log" class="scroll-box">
+    Click load to view crate opening history.
+  </div>
+
+  <div class="status" id="admin-crate-fragment-status">
+    No report loaded yet.
+  </div>
+</div>
   <script>
     const LOCAL_API = "http://localhost:10000";
     const PROD_API = "https://mydempire-backend-1.onrender.com";
@@ -2652,6 +2690,80 @@ if (loadTenderStatsBtn) {
     loadTenderStats,
   );
 }
+async function loadCrateFragmentReport() {
+  const status = document.getElementById("admin-crate-fragment-status");
+  const totalFragmentsEl = document.getElementById("admin-total-fragments");
+  const totalCratesEl = document.getElementById("admin-total-crates");
+  const fragmentWinsEl = document.getElementById("admin-fragment-wins");
+  const playersBox = document.getElementById("admin-fragment-players");
+  const crateLogBox = document.getElementById("admin-crate-log");
+
+  try {
+    status.textContent = "Loading crate and fragment report...";
+
+    const res = await fetch(`${API_BASE}/admin/crate-fragment-report`);
+    const data = await res.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Failed to load report.");
+    }
+
+    totalFragmentsEl.textContent = data.total_fragments || 0;
+    totalCratesEl.textContent = data.summary?.total_crates_opened || 0;
+    fragmentWinsEl.textContent = data.summary?.fragment_crate_wins || 0;
+
+    if (!data.players || data.players.length === 0) {
+      playersBox.innerHTML = `<div class="assets-empty">No player has fragments yet.</div>`;
+    } else {
+      playersBox.innerHTML = data.players
+        .map(
+          (p) => `
+            <div class="assets-item">
+              <strong>@${p.username}</strong>
+              <span>${p.fragments} fragment(s)</span>
+            </div>
+          `
+        )
+        .join("");
+    }
+
+    if (!data.crate_log || data.crate_log.length === 0) {
+      crateLogBox.innerHTML = `<div class="assets-empty">No crate opening history yet.</div>`;
+    } else {
+      crateLogBox.innerHTML = data.crate_log
+        .map((row) => {
+          const dateText = row.created_at
+            ? new Date(row.created_at).toLocaleString()
+            : "--";
+
+          return `
+            <div class="assets-item">
+              <div>
+                <strong>@${row.username}</strong><br>
+                <span style="font-size:12px;color:#6b7280;">${dateText}</span>
+              </div>
+              <div style="text-align:right;">
+                <strong>${row.reward_type || "--"}</strong><br>
+                <span style="font-size:12px;color:#6b7280;">
+                  Cost: ${Number(row.crate_cost || 0) === 0 ? "FREE" : `${row.crate_cost} EMP`} | Value: ${row.reward_value || 0} | EMP: ${row.emp_change || 0}
+                </span>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    status.textContent = "Crate and fragment report loaded successfully.";
+  } catch (err) {
+    console.error("Crate fragment report error:", err);
+    status.textContent = err.message || "Failed to load crate and fragment report.";
+  }
+}
+
+document
+  .getElementById("load-crate-fragment-report-btn")
+  ?.addEventListener("click", loadCrateFragmentReport);
 </script>
 <div id="assets-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
   <div style="max-width:900px; margin:40px auto; background:#fff; border-radius:16px; padding:20px; max-height:85vh; overflow-y:auto; position:relative;">
