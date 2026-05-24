@@ -2637,7 +2637,7 @@ ${
             const parsed = JSON.parse(cached);
             const ageMs = Date.now() - parsed.savedAt;
 
-            if (ageMs < 60000 && parsed.html) {
+            if (false && ageMs < 60000 && parsed.html) {
               const container = document.getElementById(
                 "emperor-leaderboard-list",
               );
