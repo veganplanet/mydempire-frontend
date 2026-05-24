@@ -6665,6 +6665,8 @@ if (!isOwnEmpireView()) {
   new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString()
 );
           if (window.dashboardData) {
+           window.dashboardData.cratesOpenedToday =
+  Number(data.cratesOpenedToday || data.crates_opened_today || 1);
   window.dashboardData.lastCrateOpenedAt = new Date().toISOString();
 window.dashboardData.last_crate_opened_at = new Date().toISOString();
 localStorage.setItem("mde_crate_cooldown_until", new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString());
