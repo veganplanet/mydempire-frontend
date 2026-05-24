@@ -6479,13 +6479,12 @@ const cooldownUntil = cooldownUntilRaw ? new Date(cooldownUntilRaw) : null;
   dashboardData: window.dashboardData
 });
 
-        const openedToday =
-  Number(window.dashboardData?.cratesOpenedToday || 0) > 0 ||
-  !!localStorage.getItem("mde_crate_cooldown_until");
-
-const isFree = Number(epDay || 0) >= 100;
-
-const crateCost = openedToday ? 15 : isFree ? 0 : 25;
+        const crateCost =
+  Number(window.dashboardData?.cratesOpenedToday || 0) > 0
+    ? 15
+    : Number(epDay || 0) >= 100
+      ? 0
+      : 25;
 
 if (costText) {
   costText.innerHTML =
