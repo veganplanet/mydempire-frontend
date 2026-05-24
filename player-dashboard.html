@@ -2627,6 +2627,7 @@ ${
         if (tabName === "surge") loadEmpireSurgeLeaderboard();
         
       }
+      let emperorLeaderboardSort = "lifetime";
       async function loadEmperorLeaderboard() {
         try {
           const cacheKey = "myd_leaderboard_emperors_cache";
@@ -2636,7 +2637,7 @@ ${
             const parsed = JSON.parse(cached);
             const ageMs = Date.now() - parsed.savedAt;
 
-            if (ageMs < 60000 && parsed.html) {
+            if (false && ageMs < 60000 && parsed.html) {
               const container = document.getElementById(
                 "emperor-leaderboard-list",
               );
@@ -2700,23 +2701,53 @@ ${
 <div class="leaderboard-row leaderboard-header-row">
   <div class="leaderboard-rank">Rank</div>
   <div class="leaderboard-player">Player</div>
-  <div class="leaderboard-metric">Lifetime EP</div>
-  <div class="leaderboard-metric">EP/day</div>
+ <div
+  class="leaderboard-metric leaderboard-sort-header ${emperorLeaderboardSort === "lifetime" ? "active" : ""}"
+  id="sort-lifetime"
+  onclick="setLeaderboardSort('lifetime')"
+>
+  Lifetime EP
+</div>
+
+<div
+  class="leaderboard-metric leaderboard-sort-header ${emperorLeaderboardSort === "current" ? "active" : ""}"
+  id="sort-current"
+  onclick="setLeaderboardSort('current')"
+>
+  EP/day
+</div>
   <div class="leaderboard-metric">Daily Share</div>
 </div>
 `;
-
+          data.leaders.forEach((row, i) => {
+  row.lifetime_rank = i + 1;
+});
+if (emperorLeaderboardSort === "current") {
+  data.leaders.sort(
+    (a, b) =>
+      Number(b.current_ep_per_day || 0) -
+      Number(a.current_ep_per_day || 0)
+  );
+} else {
+  data.leaders.sort(
+    (a, b) =>
+      Number(b.lifetime_ep || 0) -
+      Number(a.lifetime_ep || 0)
+  );
+}
           data.leaders.forEach((row, index) => {
-            const rankLabel =
-              index === 0
-                ? "🥇"
-                : index === 1
-                  ? "🥈"
-                  : index === 2
-                    ? "🥉"
-                    : `#${index + 1}`;
+           const lifetimeRank = Number(row.lifetime_rank || index + 1);
 
-            const titleData = getPlayerTitle(index + 1);
+const rankLabel =
+  lifetimeRank === 1
+    ? "🥇"
+    : lifetimeRank === 2
+      ? "🥈"
+      : lifetimeRank === 3
+        ? "🥉"
+        : `#${lifetimeRank}`;
+
+const titleData = getPlayerTitle(lifetimeRank);
 
             html += `
     <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""} ${
@@ -2825,7 +2856,25 @@ data-tooltip="${
           console.error("Leaderboard error:", err);
         }
       }
+function setLeaderboardSort(sortType) {
+  emperorLeaderboardSort = sortType;
 
+  document
+    .getElementById("sort-lifetime")
+    ?.classList.toggle(
+      "active",
+      sortType === "lifetime"
+    );
+
+  document
+    .getElementById("sort-current")
+    ?.classList.toggle(
+      "active",
+      sortType === "current"
+    );
+
+  loadEmperorLeaderboard();
+}
 async function loadEmpireSurgeLeaderboard() {
   const container = document.getElementById("empire-surge-live-board");
   if (!container) return;
