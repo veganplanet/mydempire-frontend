@@ -2702,7 +2702,7 @@ ${
   <div class="leaderboard-rank">Rank</div>
   <div class="leaderboard-player">Player</div>
  <div
-  class="leaderboard-metric leaderboard-sort-header active"
+  class="leaderboard-metric leaderboard-sort-header ${emperorLeaderboardSort === "lifetime" ? "active" : ""}"
   id="sort-lifetime"
   onclick="setLeaderboardSort('lifetime')"
 >
@@ -2710,7 +2710,7 @@ ${
 </div>
 
 <div
-  class="leaderboard-metric leaderboard-sort-header"
+  class="leaderboard-metric leaderboard-sort-header ${emperorLeaderboardSort === "current" ? "active" : ""}"
   id="sort-current"
   onclick="setLeaderboardSort('current')"
 >
