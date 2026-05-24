@@ -270,7 +270,7 @@
             <div class="crate-card">
               <div class="crate-header">
                 <div class="crate-title">🎁 Imperial Supply Crate</div>
-                <div class="crate-badge" id="crate-badge">DAILY</div>
+                <div class="crate-badge" id="crate-badge">4 / DAY</div>
               </div>
 
               <div class="crate-main">
@@ -292,8 +292,8 @@
 
               <div class="crate-footer">
                 <div class="crate-rewards">
-                  💰 Rewards up to <strong>100 EMP</strong> & 🧩 Fragments
-                </div>
+  🎁 First crate may be FREE • Extra crates only <strong>15 EMP</strong>
+</div>
 
                 <a
                   href="javascript:void(0)"
@@ -3262,35 +3262,31 @@ renderSeasonHistory();
 }
       // ===== PLAYER SUMMARY =====
       async function loadDashboardSummary() {
-        try {
-          const username = encodeURIComponent(PLAYER_USERNAME);
+  try {
+    const username = encodeURIComponent(PLAYER_USERNAME);
 
-          const [dashboardRes, overviewRes, blueprintsRes] = await Promise.all([
-            fetch(apiUrl(`/player/${username}/dashboard`)),
-            fetch(apiUrl(`/player/${username}/empire-overview`)),
-            fetch(apiUrl(`/player/${username}/blueprints`)),
-          ]);
+    const dashboardRes = await fetch(
+      apiUrl(`/player/${username}/dashboard`)
+    );
 
-          if (!dashboardRes.ok) throw new Error("HTTP " + dashboardRes.status);
-          if (!overviewRes.ok) throw new Error("HTTP " + overviewRes.status);
-          if (!blueprintsRes.ok)
-            throw new Error("HTTP " + blueprintsRes.status);
+    if (!dashboardRes.ok) {
+      throw new Error("HTTP " + dashboardRes.status);
+    }
 
-          const data = await dashboardRes.json();
-          window.dashboardData = data;
-          updateCrateCardDisplay();
-          const overviewData = await overviewRes.json();
-          const blueprintsData = await blueprintsRes.json();
+    const data = await dashboardRes.json();
+    const overviewRes = await fetch(apiUrl(`/player/${username}/empire-overview`));
+const overviewData = overviewRes.ok ? await overviewRes.json() : {};
 
-          console.log("Dashboard summary:", data);
-          console.log("Empire overview summary:", overviewData);
-          console.log("Blueprint summary:", blueprintsData);
+    window.dashboardData = data;
 
-          const setText = (id, value) => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = value;
-          };
+    updateCrateCardDisplay();
 
+    console.log("Dashboard summary:", data);
+
+    const setText = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    };
           const usernameFromApi = data.username || PLAYER_USERNAME;
           setText("player-username-display", usernameFromApi);
           setText("player-username-raw", PLAYER_USERNAME);
@@ -3375,9 +3371,7 @@ renderSeasonHistory();
           );
 
           // ===== BLUEPRINTS =====
-          const totalBlueprints = Array.isArray(blueprintsData.blueprints)
-            ? blueprintsData.blueprints.length
-            : 0;
+          const totalBlueprints = 0;
 
           setText("summary-factories-total", totalFactories);
           setText(
@@ -3399,26 +3393,32 @@ renderSeasonHistory();
           const writCount = Number(data.writCount ?? 0);
           setText("summary-writ-count", writCount);
 
-          // ===== PRODUCTION =====
-          const totalBoostedEP = Number(data.totalBoostedEP ?? 0);
-          const totalClaimableEP = Number(data.totalClaimableEP ?? 0);
-          const totalEmpireEP = Number(
-            data.totalEmpireEP ?? totalClaimableEP ?? 0,
-          );
+         // ===== PRODUCTION =====
+const totalBaseEP = Number(data.totalBaseEP ?? 0);
+const totalBoostedEP = Number(data.totalBoostedEP ?? totalBaseEP);
+const totalClaimableEP = Number(data.totalClaimableEP ?? 0);
+const lifetimeEP = Number(data.lifetimeEP ?? 0);
 
-          setText(
-            "summary-production-rate",
-            `${totalBoostedEP.toFixed(2)} EP/day`,
-          );
-          setText(
-            "summary-claimable-ep",
-            `Accumulated EP: ${totalClaimableEP.toFixed(2)}`,
-          );
-          setText("summary-total-empire-ep", totalEmpireEP.toFixed(2));
+setText(
+  "summary-production-rate",
+  `${totalBoostedEP.toFixed(2)} EP/day`
+);
 
-          // ===== LIFETIME EP =====
-          const lifetimeEP = Number(data.lifetimeEP ?? 0);
-          setText("lifetime-ep", lifetimeEP.toFixed(2));
+setText(
+  "summary-claimable-ep",
+  `Accumulated EP: ${totalClaimableEP.toFixed(2)}`
+);
+
+setText(
+  "summary-total-empire-ep",
+  totalClaimableEP.toFixed(2)
+);
+
+setText(
+  "lifetime-ep",
+  lifetimeEP.toFixed(2)
+);
+        
 
           // ===== EMPIRE ASSETS =====
           let unopenedPacks = 0;
@@ -3437,58 +3437,8 @@ renderSeasonHistory();
             console.error("Failed to load packs for assets tab:", e);
           }
 
-          const bpBreakdown = {
-            FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-            TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-            PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-            CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-            SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
-          };
-
-          if (Array.isArray(blueprintsData.blueprints)) {
-            for (const bp of blueprintsData.blueprints) {
-              const rawIndustry = String(
-                bp.industry ||
-                  bp.industry_name ||
-                  bp.industry_type ||
-                  bp.industry_code ||
-                  bp.blueprint_industry ||
-                  "",
-              )
-                .toUpperCase()
-                .trim();
-
-              const rawTier = String(
-                bp.raw_tier || bp.tier || bp.level || bp.blueprint_tier || "",
-              )
-                .toUpperCase()
-                .trim();
-
-              let industry = rawIndustry;
-              let level = rawTier;
-
-              if (
-                (!industry || !level || !/^B[1-5]$/.test(level)) &&
-                rawTier.includes("_")
-              ) {
-                const parts = rawTier.split("_");
-                industry = parts[0] || industry;
-                level = parts[1] || level;
-              }
-
-              if (
-                bpBreakdown[industry] &&
-                bpBreakdown[industry][level] !== undefined
-              ) {
-                bpBreakdown[industry][level]++;
-              }
-            }
-          }
-          console.log(
-            "Assets blueprint breakdown:",
-            bpBreakdown,
-            blueprintsData.blueprints,
-          );
+          
+          console.log("Assets blueprint breakdown skipped in summary");
 
           function totalBp(obj) {
             return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
@@ -3498,35 +3448,7 @@ renderSeasonHistory();
           setText("asset-land-l2", `x ${l2}`);
           setText("asset-land-l3", `x ${l3}`);
 
-          setText("asset-bp-food", `x ${totalBp(bpBreakdown.FOOD)}`);
-          setText("asset-bp-textile", `x ${totalBp(bpBreakdown.TEXTILE)}`);
-          setText("asset-bp-pharma", `x ${totalBp(bpBreakdown.PHARMA)}`);
-          setText("asset-bp-chemical", `x ${totalBp(bpBreakdown.CHEMICAL)}`);
-          setText(
-            "asset-bp-supermarket",
-            `x ${totalBp(bpBreakdown.SUPERMARKET)}`,
-          );
-
-          setText(
-            "asset-bp-food-levels",
-            `B1: ${bpBreakdown.FOOD.B1} | B2: ${bpBreakdown.FOOD.B2} | B3: ${bpBreakdown.FOOD.B3} | B4: ${bpBreakdown.FOOD.B4} | B5: ${bpBreakdown.FOOD.B5}`,
-          );
-          setText(
-            "asset-bp-textile-levels",
-            `B1: ${bpBreakdown.TEXTILE.B1} | B2: ${bpBreakdown.TEXTILE.B2} | B3: ${bpBreakdown.TEXTILE.B3} | B4: ${bpBreakdown.TEXTILE.B4} | B5: ${bpBreakdown.TEXTILE.B5}`,
-          );
-          setText(
-            "asset-bp-pharma-levels",
-            `B1: ${bpBreakdown.PHARMA.B1} | B2: ${bpBreakdown.PHARMA.B2} | B3: ${bpBreakdown.PHARMA.B3} | B4: ${bpBreakdown.PHARMA.B4} | B5: ${bpBreakdown.PHARMA.B5}`,
-          );
-          setText(
-            "asset-bp-chemical-levels",
-            `B1: ${bpBreakdown.CHEMICAL.B1} | B2: ${bpBreakdown.CHEMICAL.B2} | B3: ${bpBreakdown.CHEMICAL.B3} | B4: ${bpBreakdown.CHEMICAL.B4} | B5: ${bpBreakdown.CHEMICAL.B5}`,
-          );
-          setText(
-            "asset-bp-supermarket-levels",
-            `B1: ${bpBreakdown.SUPERMARKET.B1} | B2: ${bpBreakdown.SUPERMARKET.B2} | B3: ${bpBreakdown.SUPERMARKET.B3} | B4: ${bpBreakdown.SUPERMARKET.B4} | B5: ${bpBreakdown.SUPERMARKET.B5}`,
-          );
+          
 
           setText("asset-packs", `x ${unopenedPacks}`);
           setText("asset-relics", `x ${relicCount}`);
@@ -4093,7 +4015,7 @@ renderSeasonHistory();
           showPackOpenModal(msg);
 
           await loadDashboardSummary();
-          await loadEmpireOverview();
+          // await loadEmpireOverview();
           await loadBlueprints();
           await loadUnopenedPacks(PLAYER_USERNAME);
         } catch (err) {
@@ -4136,7 +4058,7 @@ renderSeasonHistory();
           }
 
           await loadDashboardSummary();
-          await loadEmpireOverview();
+          // await loadEmpireOverview();
           await loadBlueprints();
           await loadPacks();
 await loadSeasonLiveBanner();
@@ -5070,7 +4992,7 @@ const blockedByExistingB5 =
 
                     alert("Factory renamed successfully!");
 
-                    await loadEmpireOverview();
+                    // await loadEmpireOverview();
                   } catch (err) {
                     console.error("Rename error:", err);
                     alert("Rename failed.");
@@ -5125,7 +5047,7 @@ const ok = confirm(
 
                     await loadDashboardSummary();
                     await loadRewardSummary();
-                    await loadEmpireOverview();
+                    // await loadEmpireOverview();
                   } catch (err) {
                     console.error("Upgrade error:", err);
                     alert(err.message || "Upgrade failed.");
@@ -5171,7 +5093,7 @@ const ok = confirm(
 
                     await loadDashboardSummary();
                     await loadRewardSummary();
-                    await loadEmpireOverview();
+                    // await loadEmpireOverview();
                   } catch (err) {
                     console.error("Maintenance payment error:", err);
                     alert("Maintenance payment failed.");
@@ -5341,7 +5263,7 @@ wireEmptySlotBuildActions();
 
                 alert("Factory renamed successfully!");
 
-                await loadEmpireOverview();
+                // await loadEmpireOverview();
               } catch (err) {
                 console.error("Rename error:", err);
                 alert("Rename failed.");
@@ -5406,26 +5328,7 @@ wireEmptySlotBuildActions();
             SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
           };
 
-          if (Array.isArray(blueprintsData.blueprints)) {
-            for (const bp of blueprintsData.blueprints) {
-              const tierRaw = String(
-                bp.tier || bp.raw_tier || bp.blueprint_tier || "",
-              )
-                .toUpperCase()
-                .trim();
-
-              const parts = tierRaw.split("_");
-              const industry = parts[0];
-              const level = parts[1];
-
-              if (
-                bpBreakdown[industry] &&
-                bpBreakdown[industry][level] !== undefined
-              ) {
-                bpBreakdown[industry][level]++;
-              }
-            }
-          }
+          
           if (!blueprints.length) {
             playerBlueprints = [];
             renderBuildFactorySection();
@@ -5630,8 +5533,8 @@ if (
           // ✅ SUCCESS FLOW
           showCrateResultModal(data.reward, data);
 
-          openBtn.disabled = true;
-          openBtn.textContent = "Opened Today";
+          openBtn.disabled = false;
+openBtn.textContent = "Open Extra Crate";
 
           loadDashboardSummary();
           showCrateResultModal(data.reward, data);
@@ -5644,7 +5547,7 @@ if (
           }
 
           await loadDashboardSummary();
-          await loadEmpireOverview();
+          // await loadEmpireOverview();
           loadBlueprints();
         } catch (err) {
           console.error("Failed to claim all production:", err);
@@ -6105,7 +6008,7 @@ if (loggedInUser !== viewedUser) {
           if (relicCheckbox) relicCheckbox.checked = false;
 
           await loadDashboardSummary();
-          await loadEmpireOverview();
+          // await loadEmpireOverview();
           await loadBlueprints();
         } catch (err) {
           console.error("Build factory error:", err);
@@ -6463,31 +6366,54 @@ if (crateHistoryLink) {
         );
       }
       function startCrateResetTimer() {
-        const cardEl = document.getElementById("crate-reset-timer");
-        const popupEl = document.getElementById("crate-popup-reset-timer");
+  const cardEl = document.getElementById("crate-reset-timer");
+  const popupEl = document.getElementById("crate-popup-reset-timer");
+  const openBtn = document.getElementById("open-crate-btn");
 
-        if (!cardEl && !popupEl) return;
+  if (!cardEl && !popupEl && !openBtn) return;
 
-        function updateTimer() {
-          const now = new Date();
-          const nextReset = new Date();
-          nextReset.setUTCHours(24, 0, 0, 0);
+  function updateTimer() {
+    const cooldownUntilRaw = localStorage.getItem("mde_crate_cooldown_until");
+const cooldownUntil = cooldownUntilRaw ? new Date(cooldownUntilRaw) : null;
 
-          const diff = nextReset - now;
+    let canOpenCrate = true;
+    let timerText = "Ready now";
 
-          const hours = Math.floor(diff / 3600000);
-          const minutes = Math.floor((diff % 3600000) / 60000);
-          const seconds = Math.floor((diff % 60000) / 1000);
+    if (cooldownUntil) {
+      const nextCrateAt = cooldownUntil;
 
-          const timerText = `${hours}h ${minutes}m ${seconds}s`;
+      const now = new Date();
 
-          if (cardEl) cardEl.textContent = timerText;
-          if (popupEl) popupEl.textContent = timerText;
-        }
+      if (now < nextCrateAt) {
+        canOpenCrate = false;
 
-        updateTimer();
-        setInterval(updateTimer, 1000);
+        const diff = nextCrateAt - now;
+        const hours = Math.floor(diff / 3600000);
+        const minutes = Math.floor((diff % 3600000) / 60000);
+        const seconds = Math.floor((diff % 60000) / 1000);
+
+        timerText = `${hours}h ${minutes}m ${seconds}s`;
       }
+    }
+
+    if (cardEl) cardEl.textContent = timerText;
+    if (popupEl) popupEl.textContent = timerText;
+
+    if (openBtn) {
+      openBtn.disabled = !canOpenCrate;
+      openBtn.textContent = canOpenCrate
+        ? cooldownUntil
+          ? "Open Extra Crate"
+          : "Open Crate"
+        : "Cooling Down";
+      openBtn.style.opacity = canOpenCrate ? "1" : "0.6";
+      openBtn.style.cursor = canOpenCrate ? "pointer" : "not-allowed";
+    }
+  }
+
+  updateTimer();
+  setInterval(updateTimer, 1000);
+}
       function openCrateModal() {
         const modal = document.getElementById("crate-modal");
         const costText = document.getElementById("crate-cost-text");
@@ -6496,6 +6422,7 @@ if (crateHistoryLink) {
         if (!modal) return;
 
         const epDay = window.dashboardData?.totalBaseEP || 0;
+        console.log("LAST CRATE:", window.dashboardData?.lastCrateOpenedAt);
         const globalShare = window.dashboardData?.globalSharePercent || 0;
         console.log("CRATE CHECK:", {
   epDay,
@@ -6503,20 +6430,31 @@ if (crateHistoryLink) {
   dashboardData: window.dashboardData
 });
 
-        const isFree =
-          Number(epDay || 0) >= 100 && Number(globalShare || 0) >= 1.5;
+        const openedToday =
+  Number(window.dashboardData?.cratesOpenedToday || 0) > 0 ||
+  !!localStorage.getItem("mde_crate_cooldown_until");
 
-        if (costText) {
-          costText.innerHTML = isFree
-            ? "<strong>Cost:</strong> FREE 🎁"
-            : "<strong>Cost:</strong> 25 EMP";
-        }
+const isFree = Number(epDay || 0) >= 100;
 
-        if (message) {
-          message.textContent = isFree
-            ? "You are eligible for a free crate. Open now?"
-            : "You are not eligible for a free crate. This will cost 25 EMP.";
-        }
+const crateCost = openedToday ? 15 : isFree ? 0 : 25;
+
+if (costText) {
+  costText.innerHTML =
+    crateCost === 0
+      ? "<strong>Cost:</strong> FREE 🎁"
+      : `<strong>Cost:</strong> ${crateCost} EMP`;
+}
+
+        if (crateCost === 0) {
+  message.textContent =
+    "You are eligible for a FREE crate. Open now?";
+} else if (crateCost === 15) {
+  message.textContent =
+    "This extra crate will cost 15 EMP.";
+} else {
+  message.textContent =
+    "You are not eligible for a free crate. This will cost 25 EMP.";
+}
 
         modal.style.display = "flex";
       }
@@ -6557,6 +6495,15 @@ if (!isOwnEmpireView()) {
 
           // 🔥 SHOW RESULT FIRST
           showCrateResultModal(data.reward, data);
+          localStorage.setItem(
+  "mde_crate_cooldown_until",
+  new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString()
+);
+          if (window.dashboardData) {
+  window.dashboardData.lastCrateOpenedAt = new Date().toISOString();
+window.dashboardData.last_crate_opened_at = new Date().toISOString();
+localStorage.setItem("mde_crate_cooldown_until", new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString());
+}
 
           // THEN CLOSE CONFIRM MODAL
           setTimeout(() => {
@@ -6565,8 +6512,8 @@ if (!isOwnEmpireView()) {
 
           // update button
           if (openBtn) {
-  openBtn.disabled = true;
-  openBtn.textContent = "Opened Today";
+  openBtn.disabled = false;
+openBtn.textContent = "Open Extra Crate";
 
   openBtn.classList.add("btn-disabled");
 
@@ -6806,10 +6753,10 @@ function applyReadOnlyModeForOtherEmpire() {
             closeHistoryBtn.addEventListener("click", closeCrateHistoryModal);
           }
           await loadRewardSummary();
-await loadEmpireOverview();
 
 // Load heavy sections after dashboard becomes usable
 setTimeout(() => {
+  loadEmpireOverview();
   loadBlueprints();
   loadPacks();
   loadGlobalHealth();
@@ -6953,8 +6900,8 @@ document.querySelectorAll(".blueprint-filter-btn").forEach((btn) => {
         window.location.href = "marketplace.html?blueprint=" + id;
       }
       function isCrateEligible(epDay, globalShare) {
-        return Number(epDay || 0) >= 100 && Number(globalShare || 0) >= 1.5;
-      }
+  return Number(epDay || 0) >= 100;
+}
 
     function updateCrateCardDisplay() {
   const epDay = window.dashboardData?.totalBaseEP || 0;
@@ -6964,7 +6911,9 @@ document.querySelectorAll(".blueprint-filter-btn").forEach((btn) => {
 
   const crateCostEl = document.getElementById("crate-cost-display");
   if (crateCostEl) {
-    crateCostEl.textContent = isFree ? "FREE 🎁" : "25 EMP";
+    crateCostEl.textContent = isFree
+  ? "FREE 🎁 • Extra 15 EMP"
+  : "25 EMP First • 15 EMP Extra";
   }
 
   const openBtn = document.getElementById("open-crate-btn");
@@ -6995,11 +6944,9 @@ if (lastOpened) {
 
 if (openBtn) {
   if (openedToday) {
-    openBtn.disabled = true;
-    openBtn.textContent = "Opened Today";
-    openBtn.style.opacity = "0.6";
-    openBtn.style.cursor = "not-allowed";
-  } else {
+  // Timer function controls cooldown button.
+  // Do not overwrite it here.
+} else {
     openBtn.disabled = false;
     openBtn.textContent = "Open Crate";
     openBtn.style.opacity = "1";
@@ -7174,7 +7121,8 @@ if (openBtn) {
       window.dashboardData?.lastCrateOpenedAt ||
       window.dashboardData?.last_crate_opened_at;
 
-    if (lastOpened) return;
+    // Extra crates allowed after first crate
+// if (lastOpened) return;
 
     const modal = document.getElementById("crate-modal");
     if (modal) modal.style.display = "flex";
@@ -7227,13 +7175,13 @@ if (openBtn) {
         <div class="crate-modal-header">🎁 Imperial Supply Crate</div>
 
         <div class="crate-modal-body">
-          <p id="crate-modal-message">Open your daily Imperial Supply Crate?</p>
+          <p id="crate-modal-message">Open your Imperial Supply Crate?</p>
           <p id="crate-cost-text"><strong>Cost:</strong> 25 EMP</p>
           <p
             id="crate-free-rule-text"
             style="font-size: 13px; color: #64748b; margin-top: 8px"
           >
-            Free crate requires 100 EP/day and 1.5% Daily Share.
+            First crate may be FREE if qualified. Extra crates get discounted access at 15 EMP.
           </p>
         </div>
 
