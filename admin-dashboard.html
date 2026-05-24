@@ -378,7 +378,37 @@
   </button>
 </div>
     <div class="pill" id="phase-pill">Game Phase: --</div>
+<div class="section">
+  <h2>🔔 Send Player Notification</h2>
 
+  <div class="row">
+    <input
+      id="notification-username-input"
+      placeholder="Username (empty = all players)"
+    />
+
+    <input
+      id="notification-title-input"
+      placeholder="Notification title"
+    />
+  </div>
+
+  <div class="row">
+    <input
+      id="notification-message-input"
+      placeholder="Notification message"
+      style="min-width: 520px;"
+    />
+
+    <button id="send-notification-btn" class="primary">
+      Send Notification
+    </button>
+  </div>
+
+  <div class="status" id="notification-admin-status">
+    No notification sent yet.
+  </div>
+</div>
     <div class="section">
       <h2>Overview</h2>
       <div class="metrics">
@@ -2878,6 +2908,60 @@ document
 document
   .getElementById("load-maintenance-burn-btn")
   ?.addEventListener("click", loadMaintenanceBurnReport);
+  const sendNotificationBtn = document.getElementById("send-notification-btn");
+
+if (sendNotificationBtn) {
+  sendNotificationBtn.addEventListener("click", async () => {
+    const username = document
+      .getElementById("notification-username-input")
+      .value.trim();
+
+    const title = document
+      .getElementById("notification-title-input")
+      .value.trim();
+
+    const message = document
+      .getElementById("notification-message-input")
+      .value.trim();
+
+    const statusBox = document.getElementById("notification-admin-status");
+
+    if (!title || !message) {
+      statusBox.textContent = "Please enter title and message.";
+      return;
+    }
+
+    statusBox.textContent = "Sending notification...";
+
+    try {
+      const res = await fetch(`${API_BASE}/admin/send-notification`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          title,
+          message,
+          type: "INFO",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        throw new Error(data.error || "Failed to send notification.");
+      }
+
+      statusBox.textContent = data.message;
+
+      document.getElementById("notification-title-input").value = "";
+      document.getElementById("notification-message-input").value = "";
+    } catch (err) {
+      statusBox.textContent = err.message;
+    }
+  });
+}
 </script>
 <div id="assets-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
   <div style="max-width:900px; margin:40px auto; background:#fff; border-radius:16px; padding:20px; max-height:85vh; overflow-y:auto; position:relative;">
