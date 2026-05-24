@@ -2719,6 +2719,9 @@ ${
   <div class="leaderboard-metric">Daily Share</div>
 </div>
 `;
+          data.leaders.forEach((row, i) => {
+  row.lifetime_rank = i + 1;
+});
 if (emperorLeaderboardSort === "current") {
   data.leaders.sort(
     (a, b) =>
@@ -2733,16 +2736,18 @@ if (emperorLeaderboardSort === "current") {
   );
 }
           data.leaders.forEach((row, index) => {
-            const rankLabel =
-              index === 0
-                ? "🥇"
-                : index === 1
-                  ? "🥈"
-                  : index === 2
-                    ? "🥉"
-                    : `#${index + 1}`;
+           const lifetimeRank = Number(row.lifetime_rank || index + 1);
 
-            const titleData = getPlayerTitle(index + 1);
+const rankLabel =
+  lifetimeRank === 1
+    ? "🥇"
+    : lifetimeRank === 2
+      ? "🥈"
+      : lifetimeRank === 3
+        ? "🥉"
+        : `#${lifetimeRank}`;
+
+const titleData = getPlayerTitle(lifetimeRank);
 
             html += `
     <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""} ${
