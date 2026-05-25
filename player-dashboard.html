@@ -3605,11 +3605,9 @@ setText(
 
           
           console.log("Assets blueprint breakdown skipped in summary");
-const assetBlueprints = Array.isArray(data.blueprints)
-  ? data.blueprints
-  : Array.isArray(data.assets?.blueprints)
-    ? data.assets.blueprints
-    : [];
+const assetBlueprints = Array.isArray(blueprints)
+  ? blueprints
+  : [];
 
 assetBlueprints.forEach((bp) => {
   const rawTier = String(
