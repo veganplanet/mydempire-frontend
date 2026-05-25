@@ -3542,7 +3542,7 @@ const overviewData = overviewRes.ok ? await overviewRes.json() : {};
           setText("summary-factories-total", totalFactories);
           setText(
             "summary-factories-breakdown",
-            `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories} | Blueprints: ${totalBlueprints}`,
+            `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories} | Blueprints: ${Number(data.blueprintCount || 0)},
           );
 
           // ===== RELICS =====
