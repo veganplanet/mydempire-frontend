@@ -5511,6 +5511,31 @@ wireEmptySlotBuildActions();
 
           blueprints.forEach((b) => {
             const blueprintText = JSON.stringify(b).toUpperCase();
+            const rawTier = String(
+  b.raw_tier ||
+  b.tier ||
+  b.blueprint_tier ||
+  ""
+).toUpperCase().trim();
+
+const rawIndustry = String(
+  b.industry ||
+  b.industry_name ||
+  b.industry_type ||
+  b.industry_code ||
+  ""
+).toUpperCase().trim();
+
+let industry = rawIndustry;
+let level = String(b.level || "").toUpperCase().trim();
+
+if (rawTier.includes("_")) {
+  const parts = rawTier.split("_");
+
+  industry = parts[0] || industry;
+  level = parts[1] || level;
+}
+
 
 const activeBlueprintFilters =
   window.activeBlueprintFilters || [];
