@@ -3623,6 +3623,40 @@ setText(
             "asset-imperial-fragments",
             `x ${Number(data.imperialFragments || 0)}`,
           );
+    function totalBp(obj) {
+  return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
+}
+
+setText("asset-bp-food", totalBp(bpBreakdown.FOOD));
+setText("asset-bp-textile", totalBp(bpBreakdown.TEXTILE));
+setText("asset-bp-pharma", totalBp(bpBreakdown.PHARMA));
+setText("asset-bp-chemical", totalBp(bpBreakdown.CHEMICAL));
+setText("asset-bp-supermarket", totalBp(bpBreakdown.SUPERMARKET));
+
+setText(
+  "asset-bp-food-levels",
+  `B1: ${bpBreakdown.FOOD.B1} | B2: ${bpBreakdown.FOOD.B2} | B3: ${bpBreakdown.FOOD.B3} | B4: ${bpBreakdown.FOOD.B4} | B5: ${bpBreakdown.FOOD.B5}`
+);
+
+setText(
+  "asset-bp-textile-levels",
+  `B1: ${bpBreakdown.TEXTILE.B1} | B2: ${bpBreakdown.TEXTILE.B2} | B3: ${bpBreakdown.TEXTILE.B3} | B4: ${bpBreakdown.TEXTILE.B4} | B5: ${bpBreakdown.TEXTILE.B5}`
+);
+
+setText(
+  "asset-bp-pharma-levels",
+  `B1: ${bpBreakdown.PHARMA.B1} | B2: ${bpBreakdown.PHARMA.B2} | B3: ${bpBreakdown.PHARMA.B3} | B4: ${bpBreakdown.PHARMA.B4} | B5: ${bpBreakdown.PHARMA.B5}`
+);
+
+setText(
+  "asset-bp-chemical-levels",
+  `B1: ${bpBreakdown.CHEMICAL.B1} | B2: ${bpBreakdown.CHEMICAL.B2} | B3: ${bpBreakdown.CHEMICAL.B3} | B4: ${bpBreakdown.CHEMICAL.B4} | B5: ${bpBreakdown.CHEMICAL.B5}`
+);
+
+setText(
+  "asset-bp-supermarket-levels",
+  `B1: ${bpBreakdown.SUPERMARKET.B1} | B2: ${bpBreakdown.SUPERMARKET.B2} | B3: ${bpBreakdown.SUPERMARKET.B3} | B4: ${bpBreakdown.SUPERMARKET.B4} | B5: ${bpBreakdown.SUPERMARKET.B5}`
+);
         } catch (err) {
           console.error("Failed to load dashboard summary:", err);
         }
