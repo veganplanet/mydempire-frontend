@@ -12,44 +12,7 @@
 <body class="page-root" data-requires-login="true">
 
 <!-- ===== NAVBAR (SAME AS ALL PAGES) ===== -->
-<header class="appbar">
-  <div class="appbar-inner">
-
-    <div class="appbar-left">
-      <a href="index.html" class="appbar-logo">
-        <img src="assets/logo.png" alt="MydEmpire">
-      </a>
-
-     <nav class="appbar-nav">
-  <a href="/" class="appbar-link">Home</a>
-  <a href="economy.html" class="appbar-link">Economy</a>
-  <a href="transparency.html" class="appbar-link">Transparency</a>
-  <a href="codex.html" class="appbar-link">Codex</a>
-
- <a href="player-dashboard.html" id="dashboardLink" class="appbar-link auth-only" style="display:none;">Dashboard</a>
-<a href="shop.html" id="shopLink" class="appbar-link auth-only" style="display:none;">Shop</a>
-<a href="marketplace.html" id="marketplaceLink" class="appbar-link auth-only" style="display:none;">Marketplace</a>
-</nav>
-      </nav>
-    </div>
-
-   <div class="appbar-right">
- <button id="appbarLoginBtn" class="appbar-login-btn" type="button" style="display:none;">Connect Wallet</button>
-
-  <div id="appbarAccountWrap" class="appbar-account-wrap" style="display:none;">
-    <button id="appbarAccountBtn" class="appbar-account-btn" type="button">@username ▼</button>
-
-    <div id="appbarDropdown" class="appbar-dropdown">
-      <div id="appbarDropdownHead" class="appbar-dropdown-head">@username</div>
-      <a id="visitMyEmpireLink" href="#" class="appbar-dropdown-link">Visit My Empire</a>
-      <button id="visitOtherEmpireBtn" type="button" class="appbar-dropdown-link">Visit Other Empire</button>
-      <button id="appbarLogoutBtn" type="button" class="appbar-dropdown-link">Logout</button>
-    </div>
-  </div>
-</div>
-
-  </div>
-</header>
+<div id="mde-navbar"></div>
 
 <!-- ===== PAGE ===== -->
 <main class="page-main">
@@ -1391,5 +1354,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 </script>
+<script src="js/navbar.js"></script>
   </body>
 </html>

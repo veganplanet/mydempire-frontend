@@ -1,25 +1,63 @@
 // nav-auth.js
 (function () {
-  // If wallet is connected, we expect a username stored here
-  const user = localStorage.getItem("mde_username");
-
-  // Show/Hide Dashboard link everywhere
-  document.querySelectorAll('[data-nav="dashboard"]').forEach((el) => {
-    el.style.display = user ? "inline-flex" : "none";
-  });
-
-  // If a page requires login, redirect to Home
-  const requiresLogin = document.body && document.body.dataset.requiresLogin === "true";
-  if (requiresLogin && !user) {
-    alert("Please connect your wallet first to access Dashboard.");
-    window.location.href = "index.html";
+  function getUser() {
+    return (
+      localStorage.getItem("mde_username") ||
+      localStorage.getItem("hiveUsername") ||
+      ""
+    ).trim();
   }
 
-  // If you’re on dashboard and it has ?user=, prefer it; otherwise use localStorage username
-  const url = new URL(window.location.href);
-  const hasUserParam = url.searchParams.get("user");
-  if (!hasUserParam && user && window.location.pathname.endsWith("player-dashboard.html")) {
-    url.searchParams.set("user", user);
-    window.location.replace(url.toString());
+  function updateNav() {
+    const user = getUser();
+
+    document.querySelectorAll("[data-nav]").forEach((el) => {
+      el.style.display = user ? "inline-flex" : "none";
+    });
+
+    const accountWrap = document.getElementById("appbarAccountWrap");
+    const loginBtn = document.getElementById("appbarLoginBtn");
+    const accountBtn = document.getElementById("appbarAccountBtn");
+    const dropdownHead = document.getElementById("appbarDropdownHead");
+
+    if (loginBtn) loginBtn.style.display = user ? "none" : "inline-flex";
+    if (accountWrap) accountWrap.style.display = user ? "block" : "none";
+    if (accountBtn && user) accountBtn.textContent = `@${user} ▼`;
+    if (dropdownHead && user) dropdownHead.textContent = `@${user}`;
+  }
+
+  updateNav();
+
+  const accountBtn = document.getElementById("appbarAccountBtn");
+  const dropdown = document.getElementById("appbarDropdown");
+
+  if (accountBtn && dropdown) {
+    accountBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropdown.classList.toggle("open");
+    });
+
+    document.addEventListener("click", () => {
+      dropdown.classList.remove("open");
+    });
+  }
+
+  const logoutBtn = document.getElementById("appbarLogoutBtn");
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("mde_username");
+      localStorage.removeItem("hiveUsername");
+      updateNav();
+      window.location.href = "index.html";
+    });
+  }
+
+  const requiresLogin =
+    document.body && document.body.dataset.requiresLogin === "true";
+
+  if (requiresLogin && !getUser()) {
+    window.location.href = "index.html";
   }
 })();

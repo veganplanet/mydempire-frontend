@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MydEmpire — Empire Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="assets/favicon.png" />
+  </head>
+
+  <body data-requires-login="true" class="player-dashboard-page empire-hub-wide">
+    <div id="mde-navbar"></div>
+
+   <div class="page empire-hub-page">
+      <section class="section">
+        <div class="section-header">
+          <h2>Empire Hub</h2>
+          <small> Industrial activity center of your empire </small>
+        </div>
+
+        <div class="subnav">
+          <button
+            type="button"
+            class="subnav-btn subnav-btn-active"
+            onclick="switchHubTab('operations')"
+          >
+            ⚙️ Empire Operations
+          </button>
+
+         <button
+  type="button"
+  class="subnav-btn"
+  onclick="switchHubTab('rats')"
+>
+  🐀 The Rat Situation
+</button>
+        </div>
+      
+
+        <section id="operations-panel" class="hub-panel">
+          
+          <div class="section-header">
+            <h2>Empire Operations</h2>
+            <small>A strategic industrial expansion layer for MydEmpire.</small>
+          </div>
+
+          <div id="operations-live-area">
+            <p class="status-text">Loading Empire Operations...</p>
+          </div>
+      
+      </section>
+      <section id="rats-panel" class="hub-panel" style="display: none;">
+
+  <div class="rat-situation-banner">
+    <img src="assets/rat.png" alt="The Rat Situation">
+  </div>
+
+</section>
+     
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        if (typeof loadEmpireOperations === "function") {
+          loadEmpireOperations();
+
+          setInterval(() => {
+            loadEmpireOperations();
+          }, 30000);
+        }
+      });
+    </script>
+    <script>
+      function getLoggedInUser() {
+        return (
+          localStorage.getItem("hiveUsername") ||
+          localStorage.getItem("mde_username") ||
+          ""
+        );
+      }
+    </script>
+    <script>
+      const API_BASE = "https://mydempire-backend-1.onrender.com";
+
+      function getLoggedInUser() {
+        return (
+          localStorage.getItem("hiveUsername") ||
+          localStorage.getItem("mde_username") ||
+          ""
+        );
+      }
+
+      function showEmpirePopup(title, message, type = "info") {
+        const oldPopup = document.getElementById("empire-custom-popup");
+        if (oldPopup) oldPopup.remove();
+        const popup = document.createElement("div");
+        popup.id = "empire-custom-popup";
+        popup.className = `empire-popup-overlay
+    empire-popup-${type}`;
+        popup.innerHTML = `
+    <div class="empire-popup-box">
+      <div class="empire-popup-title">${title}</div>
+      <div class="empire-popup-message">${message}</div>
+      <button
+        type="button"
+        onclick="document.getElementById('empire-custom-popup').remove()"
+      >
+        OK
+      </button>
+    </div>
+    `;
+        document.body.appendChild(popup);
+      }
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const user =
+          localStorage.getItem("hiveUsername") ||
+          localStorage.getItem("mde_username") ||
+          "";
+
+        if (user) {
+          document.querySelectorAll(".auth-only").forEach((el) => {
+            el.classList.remove("hidden-auth-link");
+            el.style.display = "";
+          });
+          const accountWrap = document.getElementById("appbarAccountWrap");
+
+          const accountBtn = document.getElementById("appbarAccountBtn");
+
+          const dropdownHead = document.getElementById("appbarDropdownHead");
+
+          if (accountWrap) {
+            accountWrap.style.display = "block";
+          }
+
+          if (accountBtn) {
+            accountBtn.textContent = `@${user} ▼`;
+          }
+
+          if (dropdownHead) {
+            dropdownHead.textContent = `@${user}`;
+          }
+        }
+        const accountBtn = document.getElementById("appbarAccountBtn");
+        const dropdown = document.getElementById("appbarDropdown");
+
+        if (accountBtn && dropdown) {
+          accountBtn.addEventListener("click", () => {
+            dropdown.classList.toggle("show");
+          });
+        }
+      });
+    </script>
+    <script>
+      var empireOperationsRefreshInterval = null;
+      var empireOperationsCountdownInterval = null;
+    </script>
+    <script src="empire-operations.js"></script>
+    <script>
+function switchHubTab(tab) {
+
+  const operations =
+    document.getElementById("operations-panel");
+
+  const rats =
+    document.getElementById("rats-panel");
+
+  const buttons =
+    document.querySelectorAll(".subnav-btn");
+
+  buttons.forEach((btn) => {
+    btn.classList.remove("subnav-btn-active");
+    btn.classList.remove("rat-active");
+  });
+
+  if (tab === "operations") {
+
+    operations.style.display = "block";
+    rats.style.display = "none";
+
+    buttons[0].classList.add("subnav-btn-active");
+
+  } else {
+
+    operations.style.display = "none";
+    rats.style.display = "block";
+
+    buttons[1].classList.add("rat-active");
+
+  }
+}
+</script>
+
+    <script src="js/navbar.js"></script>
+  </body>
+</html>

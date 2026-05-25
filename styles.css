@@ -13831,3 +13831,298 @@ cursor:pointer;
   align-items: center !important;
   justify-content: center !important;
 }
+.appbar-dropdown {
+  display: none;
+}
+
+.appbar-dropdown.open {
+  display: block;
+}
+.rat-situation-card {
+  margin-top: 22px;
+  padding: 24px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(245, 158, 11, 0.16), transparent 32%),
+    linear-gradient(180deg, #fffdf7 0%, #fff7ed 100%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #1f2937;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+}
+
+.rat-kicker {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #fffbeb;
+  border: 1px solid #fbbf24;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+
+.rat-situation-card h2 {
+  margin: 0 0 10px;
+  font-size: 30px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.rat-subtitle {
+  margin: 0 0 18px;
+  max-width: 720px;
+  color: #4b5563;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.rat-alert-box {
+  padding: 16px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #fed7aa;
+}
+
+.rat-alert-title {
+  font-size: 16px;
+  font-weight: 900;
+  color: #92400e;
+  margin-bottom: 10px;
+}
+
+.rat-alert-box p {
+  margin: 8px 0;
+  color: #374151;
+  line-height: 1.65;
+}
+
+.rat-footer-line {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 700;
+  border: 1px dashed #fbbf24;
+}
+.hub-panel {
+  width: 100%;
+}
+
+#rats-panel,
+#operations-panel {
+  width: 100%;
+}
+
+.rat-situation-card {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+.empire-hub-page {
+  width: 100%;
+  max-width: 1600px;
+}
+
+.empire-hub-page .section {
+  width: 100%;
+  max-width: 100%;
+}
+body.empire-hub-wide .page {
+  max-width: 1500px !important;
+  width: calc(100% - 48px) !important;
+  margin: 0 auto !important;
+}
+
+body.empire-hub-wide .section {
+  max-width: none !important;
+  width: 100% !important;
+}
+#rats-panel .rat-situation-card {
+  background:
+    radial-gradient(circle at top right, rgba(239, 68, 68, 0.18), transparent 32%),
+    linear-gradient(180deg, #fff5f5 0%, #ffe4e6 100%);
+
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+#rats-panel .rat-kicker {
+  background: #fef2f2;
+  border: 1px solid #ef4444;
+  color: #b91c1c;
+}
+
+#rats-panel .rat-alert-box {
+  border: 1px solid #fca5a5;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+#rats-panel .rat-alert-title {
+  color: #b91c1c;
+}
+
+#rats-panel .rat-footer-line {
+  background: #fef2f2;
+  border: 1px dashed #ef4444;
+  color: #991b1b;
+}
+.rat-situation-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.rat {
+  position: absolute;
+  font-size: 22px;
+  opacity: 0.22;
+  pointer-events: none;
+  animation: ratMove 6s ease-in-out infinite;
+}
+
+.rat-1 {
+  top: 20px;
+  right: 40px;
+  animation-duration: 12s;
+}
+
+.rat-2 {
+  bottom: 30px;
+  left: 50px;
+  animation-duration: 18s;
+}
+
+.rat-3 {
+  top: 120px;
+  right: 180px;
+  animation-duration: 15s;
+}
+
+@keyframes ratMove {
+
+  0% {
+    transform: translateX(0px) rotate(0deg);
+  }
+
+  25% {
+    transform: translateX(-18px) translateY(6px) rotate(-6deg);
+  }
+
+  50% {
+    transform: translateX(12px) translateY(-4px) rotate(4deg);
+  }
+
+  75% {
+    transform: translateX(-10px) translateY(3px) rotate(-3deg);
+  }
+
+  100% {
+    transform: translateX(0px) rotate(0deg);
+  }
+}
+.subnav-btn.rat-active {
+  background: linear-gradient(135deg, #dc2626, #991b1b);
+  color: white;
+  border-color: #ef4444;
+  box-shadow: 0 10px 22px rgba(220, 38, 38, 0.28);
+}
+.hub-panel {
+  margin-top: 14px;
+}
+
+
+.rat-situation-banner img {
+  width: 100%;
+  display: block;
+  border-radius: 22px;
+}
+#rats-panel {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+#rats-panel .rat-situation-banner {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 18px 0 0 !important;
+}
+
+#rats-panel .rat-situation-banner img {
+  width: 100% !important;
+  display: block;
+  border-radius: 24px;
+}
+.notification-bell-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+
+  padding: 8px 14px;
+  border-radius: 14px;
+
+  color: #fff8dc;
+  font-weight: 700;
+  font-size: 15px;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.notification-bell-btn:hover {
+  transform: translateY(-1px);
+
+  background: rgba(255,255,255,0.14);
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.18),
+    0 0 18px rgba(255,215,0,0.18);
+}
+#notification-count {
+  min-width: 18px;
+  height: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  background: #64748b;
+  color: white;
+
+  padding: 0 5px;
+}
+
+.notification-panel {
+  position: absolute;
+  top: 62px;
+  right: 20px;
+
+  width: 320px;
+
+  background: #ffffff;
+  border-radius: 18px;
+
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.18);
+
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.notification-item {
+  padding: 16px 18px;
+  border-bottom: 1px solid #f1f1f1;
+}
