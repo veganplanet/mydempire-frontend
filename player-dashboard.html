@@ -5523,7 +5523,34 @@ wireEmptySlotBuildActions();
           const blueprintsData = await blueprintsRes.json();
 
           // PASTE STEP 3 CODE HERE
+const realBlueprints = Array.isArray(blueprintsData.blueprints)
+  ? blueprintsData.blueprints
+  : [];
 
+realBlueprints.forEach((b) => {
+  const rawTier = String(
+    b.raw_tier ||
+    b.tier ||
+    b.blueprint_tier ||
+    ""
+  ).toUpperCase().trim();
+
+  let industry = String(b.industry || "").toUpperCase().trim();
+  let level = String(b.level || "").toUpperCase().trim();
+
+  if (rawTier.includes("_")) {
+    const parts = rawTier.split("_");
+    industry = parts[0];
+    level = parts[1];
+  }
+
+  if (
+    bpBreakdown[industry] &&
+    bpBreakdown[industry][level] !== undefined
+  ) {
+    bpBreakdown[industry][level]++;
+  }
+});
           const bpBreakdown = {
             FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
             TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
