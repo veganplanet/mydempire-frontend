@@ -3605,6 +3605,9 @@ setText(
 
           
           console.log("Assets blueprint breakdown skipped in summary");
+    console.log("SUMMARY DATA KEYS:", Object.keys(data || {}));
+console.log("SUMMARY DATA BLUEPRINTS:", data.blueprints);
+console.log("SUMMARY DATA ASSETS:", data.assets);
           function totalBp(obj) {
             return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
           }
