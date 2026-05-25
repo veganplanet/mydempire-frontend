@@ -3603,11 +3603,15 @@ setText(
             console.error("Failed to load packs for assets tab:", e);
           }
 
-          
+          const bpBreakdown = {
+  FOOD: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  TEXTILE: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  PHARMA: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  CHEMICAL: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+  SUPERMARKET: { B1: 0, B2: 0, B3: 0, B4: 0, B5: 0 },
+};
           console.log("Assets blueprint breakdown skipped in summary");
-    console.log("SUMMARY DATA KEYS:", Object.keys(data || {}));
-console.log("SUMMARY DATA BLUEPRINTS:", data.blueprints);
-console.log("SUMMARY DATA ASSETS:", data.assets);
+   
           function totalBp(obj) {
             return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
           }
