@@ -5517,6 +5517,15 @@ realBlueprints.forEach((b) => {
     bpBreakdown[industry][level]++;
   }
 });
+function totalBp(obj) {
+  return (
+    Number(obj.B1 || 0) +
+    Number(obj.B2 || 0) +
+    Number(obj.B3 || 0) +
+    Number(obj.B4 || 0) +
+    Number(obj.B5 || 0)
+  );
+}
        setText("asset-bp-food", totalBp(bpBreakdown.FOOD));
 setText("asset-bp-textile", totalBp(bpBreakdown.TEXTILE));
 setText("asset-bp-pharma", totalBp(bpBreakdown.PHARMA));
