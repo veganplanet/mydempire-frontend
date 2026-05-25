@@ -3605,7 +3605,36 @@ setText(
 
           
           console.log("Assets blueprint breakdown skipped in summary");
+const assetBlueprints = Array.isArray(data.blueprints)
+  ? data.blueprints
+  : Array.isArray(data.assets?.blueprints)
+    ? data.assets.blueprints
+    : [];
 
+assetBlueprints.forEach((bp) => {
+  const rawTier = String(
+    bp.raw_tier ||
+    bp.tier ||
+    bp.blueprint_tier ||
+    ""
+  ).toUpperCase().trim();
+
+  let industry = String(bp.industry || "").toUpperCase().trim();
+  let level = String(bp.level || "").toUpperCase().trim();
+
+  if (rawTier.includes("_")) {
+    const parts = rawTier.split("_");
+    industry = parts[0];
+    level = parts[1];
+  }
+
+  if (
+    bpBreakdown[industry] &&
+    bpBreakdown[industry][level] !== undefined
+  ) {
+    bpBreakdown[industry][level]++;
+  }
+});
           function totalBp(obj) {
             return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
           }
@@ -3623,9 +3652,7 @@ setText(
             "asset-imperial-fragments",
             `x ${Number(data.imperialFragments || 0)}`,
           );
-    function totalBp(obj) {
-  return obj.B1 + obj.B2 + obj.B3 + obj.B4 + obj.B5;
-}
+   
 
 setText("asset-bp-food", totalBp(bpBreakdown.FOOD));
 setText("asset-bp-textile", totalBp(bpBreakdown.TEXTILE));
