@@ -191,6 +191,13 @@ function switchHubTab(tab) {
 
   }
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.get("tab") === "rats") {
+    switchHubTab("rats");
+  }
+});
 </script>
 
     <script src="js/navbar.js"></script>
