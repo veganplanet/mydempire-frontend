@@ -838,10 +838,6 @@ ${
   } catch (err) {
     console.error("Collect Empire Operation request failed:", err);
 
-    showEmpirePopup(
-      "⚠️ Network Error",
-      "Collection request could not be completed. Please refresh and check once.",
-      "error",
-    );
+    console.error("Empire operation collection refresh error:", err);
   }
 }

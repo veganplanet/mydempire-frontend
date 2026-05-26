@@ -1396,125 +1396,7 @@ if (tabName === "operations") {
 }
 let empireOperationsRefreshInterval = null;
 let empireOperationsCountdownInterval = null;
-// =========================
-// 🔔 NOTIFICATIONS
-// =========================
 
-async function loadNotifications() {
-  try {
-    const username =
-      localStorage.getItem("hiveUsername") ||
-      localStorage.getItem("mde_username");
-
-    if (!username) return;
-
-    const res = await fetch(
-      `${API_BASE}/player/${username}/notifications`
-    );
-
-    const data = await res.json();
-
-    if (!data.success) return;
-
-    const countEl = document.getElementById("notification-count");
-    const listEl = document.getElementById("notification-list");
-
-    if (countEl) {
-  const unread = Number(data.unreadCount || 0);
-
-  countEl.textContent = unread;
-
-  countEl.style.background =
-    unread > 0 ? "#ef4444" : "#22c55e";
-}
-
-    if (!data.notifications.length) {
-      listEl.innerHTML = `
-        <div class="notification-item">
-          No notifications yet.
-        </div>
-      `;
-      return;
-    }
-
-   if (!listEl) return;
-
-listEl.innerHTML = data.notifications
-  .map((n) => {
-        return `
-          <div
-  class="notification-item ${n.is_read ? "" : "unread"}"
-  data-notification-id="${n.id}"
->
-            <div class="notification-title">
-              ${n.title}
-            </div>
-
-            <div class="notification-message">
-              ${n.message}
-            </div>
-
-            <div class="notification-time">
-              ${new Date(n.created_at).toLocaleString()}
-            </div>
-          </div>
-        `;
-      })
-      .join("");
-  } catch (err) {
-    console.error("Notification load failed:", err);
-  }
-}
-
-// Toggle panel
-const notificationBellBtn = document.getElementById("notification-bell-btn");
-
-if (notificationBellBtn) {
- notificationBellBtn.addEventListener("click", async () => {
-  const panel = document.getElementById("notification-panel");
-if (!panel) return;
-
-  if (panel.style.display === "none") {
-    panel.style.display = "block";
-
-    const username =
-      localStorage.getItem("hiveUsername") ||
-      localStorage.getItem("mde_username");
-
-    const unreadItems = document.querySelectorAll(".notification-item.unread");
-
-    for (const item of unreadItems) {
-      const id = item.getAttribute("data-notification-id");
-
-      if (!id || !username) continue;
-
-      await fetch(`${API_BASE}/player/${username}/notifications/${id}/read`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-mde-actor": username,
-          "x-player-actor": username,
-        },
-        body: JSON.stringify({ username }),
-      });
-       }
-       await loadNotifications();
-       const countEl = document.getElementById("notification-count");
-if (countEl) {
-  countEl.textContent = "0";
-  countEl.style.background = "#22c55e";
-}
-
-    document.getElementById("notification-count").textContent = "0";
-    await loadNotifications();
-  } else {
-    panel.style.display = "none";
-  }
-});
-}
-
-// Initial load
-loadNotifications();
 // ============================
 // 🏛 STRATEGIC EXPANSION ALLOCATION
 // ============================
@@ -6572,5 +6454,6 @@ if (openBtn) {
 </div>
 <script src="empire-operations.js"></script>
 <script src="js/navbar.js"></script>
+<script src="js/notifications.js"></script>
   </body>
 </html>

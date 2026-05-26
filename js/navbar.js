@@ -170,30 +170,4 @@
       window.location.href = "index.html";
     });
   }
-  function setupNotificationBell() {
-    const bell = document.getElementById("notification-bell-btn");
-    const panel = document.getElementById("notification-panel");
-
-    if (!bell || !panel) return;
-
-    bell.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      panel.style.display =
-        panel.style.display === "none" || !panel.style.display
-          ? "block"
-          : "none";
-    });
-
-    document.addEventListener("click", () => {
-      panel.style.display = "none";
-    });
-
-    panel.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
-  }
-
-  setTimeout(setupNotificationBell, 100);
 })();
