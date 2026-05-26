@@ -403,6 +403,42 @@
                 <button id="withdraw-hive-btn" class="primary-button">
                   Withdraw HIVE
                 </button>
+                <div style="margin-top:8px; display:flex; align-items:center; gap:6px;">
+
+  <button
+    id="reinvest-hive-btn"
+    class="primary-button"
+    type="button"
+    style="
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      border: 1px solid #86efac;
+      color:#166534;
+    "
+  >
+    Reinvest EMP
+  </button>
+
+  <span
+  onclick="alert('Convert Wallet HIVE into EMP instantly with 5% bonus.\n\n1 HIVE = 105 EMP.\n\nNo withdrawal queue required.')"
+  style="
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:#dbeafe;
+    color:#2563eb;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    flex-shrink:0;
+  "
+>
+  i
+</span>
+
+</div>
                 <div id="withdraw-hive-status" class="status-text">
                   Withdrawal not requested yet.
                 </div>
@@ -2942,6 +2978,75 @@ setText(
           }
         }
       }
+      async function reinvestWalletHive() {
+  try {
+    const username =
+      localStorage.getItem("hiveUsername") ||
+      localStorage.getItem("username");
+
+    if (!username) {
+      alert("Username not found.");
+      return;
+    }
+
+    const input = prompt(
+      "Enter Wallet HIVE amount to reinvest into EMP.\n\n1 HIVE = 105 EMP (+5% Bonus)"
+    );
+
+    if (!input) return;
+
+    const amount = Number(input);
+
+   if (!Number.isFinite(amount) || amount <= 0) {
+  alert("Invalid amount.");
+  return;
+}
+
+if (amount < 0.1) {
+  alert("Minimum reinvest amount is 0.1 HIVE.");
+  return;
+}
+
+const confirmed = confirm(
+  `Reinvest ${amount.toFixed(3)} HIVE into EMP?\n\nYou will receive approximately ${(amount * 105).toFixed(3)} EMP.`
+);
+
+    if (!confirmed) return;
+
+    const response = await fetch(
+      `${API_BASE}/player/${username}/reinvest-wallet-hive`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-player-actor": username,
+          "x-mde-actor": username,
+        },
+        body: JSON.stringify({
+          amount,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Reinvest failed.");
+    }
+
+    alert(
+      `Reinvestment successful!\n\n${data.hive_used} HIVE → ${data.emp_received} EMP`
+    );
+
+    if (typeof loadDashboardSummary === "function") {
+      loadDashboardSummary();
+    }
+
+  } catch (err) {
+    console.error("Reinvest wallet HIVE error:", err);
+    alert(err.message || "Failed to reinvest Wallet HIVE.");
+  }
+}
 
       async function loadUnopenedPacks(username) {
         try {
@@ -6024,6 +6129,10 @@ document.querySelectorAll(".blueprint-filter-btn").forEach((btn) => {
   if (withdrawBtn) {
     withdrawBtn.addEventListener("click", requestWithdrawHive);
   }
+  const reinvestBtn = document.getElementById("reinvest-hive-btn");
+if (reinvestBtn) {
+  reinvestBtn.addEventListener("click", reinvestWalletHive);
+}
 
   loadSeasonLiveBanner();
   setupLandFilters();
