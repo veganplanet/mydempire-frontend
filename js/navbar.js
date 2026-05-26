@@ -48,7 +48,7 @@
               </a>
 
               <a href="empire-hub.html" class="appbar-link">
-                Empire Hub
+                Empire Hub <span class="new-flag">NEW</span>
               </a>
             `
                 : ""
