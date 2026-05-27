@@ -3,13 +3,18 @@
     localStorage.getItem("mde_username") ||
     localStorage.getItem("hiveUsername") ||
     "";
+  const params = new URLSearchParams(window.location.search);
+  const viewedUser = params.get("user") || params.get("view") || user;
 
+  const empireHubLink = viewedUser
+    ? `empire-hub.html?user=${encodeURIComponent(viewedUser)}`
+    : "empire-hub.html";
   const authLinks = user
     ? `
     <a href="player-dashboard.html" class="appbar-link">Dashboard</a>
     <a href="shop.html" class="appbar-link">Shop</a>
     <a href="marketplace.html" class="appbar-link">Marketplace</a>
-    <a href="empire-hub.html" class="appbar-link">
+    <a href="${empireHubLink}" class="appbar-link">
       Empire Hub <span class="new-flag">NEW</span>
     </a>
   `
