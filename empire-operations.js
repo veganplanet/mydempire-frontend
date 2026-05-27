@@ -40,6 +40,7 @@ async function loadEmpireOperations() {
 
     const configData = await configResponse.json();
     const playerData = await playerResponse.json();
+    console.log("EMPIRE OPERATIONS PLAYER DATA:", playerData);
 
     if (!configData.success || !playerData.success) {
       throw new Error("Failed to load operations data.");
@@ -205,13 +206,7 @@ function renderEmpireOperations(area, operations, playerData) {
     </div>
 
     <div style="font-weight:800; color:#334155;">
-      EMP: ${Number(
-        String(
-          document.getElementById("summary-emp-balance")?.textContent || "0",
-        )
-          .replace(/,/g, "")
-          .trim(),
-      ).toLocaleString()}
+      EMP: ${Number(playerData.empBalance || 0).toLocaleString()}
     </div>
 <div style="font-weight:900; color:#0f172a;">
   🏭 IA: ${Number(playerData.industrialAuthority || 0).toFixed(1)} / 800
