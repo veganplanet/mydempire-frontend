@@ -591,6 +591,37 @@
 </div>
 </div>
 <div class="section">
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+  <h2>🔁 Reinvest Activity</h2>
+
+  <button type="button" onclick="loadReinvestSummary()">
+    Refresh
+  </button>
+</div>
+
+  <div class="metrics">
+    <div class="card">
+      <div class="label">Total Transactions</div>
+      <div class="value" id="metric-reinvest-transactions">--</div>
+      <div class="small">Wallet HIVE converted into EMP</div>
+    </div>
+
+    <div class="card">
+      <div class="label">EMP Minted</div>
+      <div class="value" id="metric-reinvest-emp">--</div>
+      <div class="small">EMP created through reinvest bonus</div>
+    </div>
+  </div>
+
+  <div class="small" style="margin-top:14px; font-weight:700;">
+    Recent Reinvestments
+  </div>
+
+  <div id="reinvest-recent-list" class="scroll-box" style="margin-top:8px;">
+    Loading reinvest activity...
+  </div>
+</div>
+<div class="section">
   <h2>EMP Economy (24h)</h2>
 
   <div class="metrics">
@@ -835,6 +866,44 @@
       </div>
     </div>
   </div>
+  <div class="section">
+ <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+  <h2>📊 Empire Operations EMP Economy</h2>
+
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <button type="button" onclick="loadOperationsEmpEconomy('24h')">24H</button>
+    <button type="button" onclick="loadOperationsEmpEconomy('7d')">7D</button>
+    <button type="button" onclick="loadOperationsEmpEconomy('30d')">30D</button>
+    <button type="button" onclick="loadOperationsEmpEconomy('all')">All</button>
+  </div>
+</div>
+
+  <div class="metrics">
+    <div class="card">
+      <div class="label">Operations</div>
+      <div class="value" id="metric-ops-total">--</div>
+      <div class="small">Completed operations</div>
+    </div>
+
+    <div class="card">
+      <div class="label">EMP Committed</div>
+      <div class="value" id="metric-ops-committed">--</div>
+      <div class="small">Total EMP spent by players</div>
+    </div>
+
+    <div class="card">
+      <div class="label">EMP Returned</div>
+      <div class="value" id="metric-ops-returned">--</div>
+      <div class="small">EMP paid back as operation revenue</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Net EMP Sink</div>
+      <div class="value" id="metric-ops-sink">--</div>
+      <div class="small" id="metric-ops-sink-rate">Sink rate: --</div>
+    </div>
+  </div>
+</div>
 <div class="section">
   <h2>⚙️ Empire Operations Log</h2>
 
@@ -909,12 +978,111 @@
       setStatus("Admin connected. Loading overview...");
 
       await loadAdminOverview();
-      await loadWalletBalances();
+await loadOperationsEmpEconomy();
+try {
+  await loadWalletBalances();
+} catch (err) {
+  console.error("loadWalletBalances failed:", err);
+}
+
+try {
+  
+await loadReinvestSummary();
+} catch (err) {
+  console.error("loadReinvestSummary failed:", err);
+}
     }
     function logoutAdmin() {
   ADMIN_KEY = "";
   localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
   setStatus("Admin logged out.");
+}
+async function loadReinvestSummary() {
+  try {
+
+    const response = await fetch(`${API_BASE}/admin/reinvest-summary`, {
+  headers: {
+    "x-admin-key": localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+  },
+});
+
+    const data = await response.json();
+  
+    console.log("REINVEST SUMMARY DATA:", data);
+
+
+    if (!data.success) {
+      throw new Error(data.error || "Failed to load reinvest summary.");
+    }
+
+    document.getElementById(
+      "metric-reinvest-transactions"
+    ).textContent =
+      data.totals.total_transactions || 0;
+
+    document.getElementById(
+      "metric-reinvest-emp"
+    ).textContent =
+      Number(data.totals.total_emp_minted || 0).toFixed(3);
+
+    const recentBox = document.getElementById(
+      "reinvest-recent-list"
+    );
+
+    if (!recentBox) return;
+
+    if (!data.recent.length) {
+      recentBox.innerHTML =
+        "<div class='small'>No reinvest activity yet.</div>";
+      return;
+    }
+
+    recentBox.innerHTML = data.recent
+      .map((row) => {
+        return `
+          <div class="history-row">
+            <strong>@${row.username}</strong>
+            → ${row.note || ""} (+${Number(row.amount || 0).toFixed(3)} EMP)
+          </div>
+        `;
+      })
+      .join("");
+
+  } catch (err) {
+    console.error("loadReinvestSummary error:", err);
+  }
+}
+async function loadOperationsEmpEconomy(range = "7d") {
+  try {
+    const response = await fetch(`${API_BASE}/admin/empire-operations-economy?range=${range}`, {
+      headers: {
+        "x-admin-key": localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Failed to load operations EMP economy.");
+    }
+
+    document.getElementById("metric-ops-total").textContent =
+      Number(data.total_operations || 0).toLocaleString();
+
+    document.getElementById("metric-ops-committed").textContent =
+      Number(data.total_emp_committed || 0).toLocaleString();
+
+    document.getElementById("metric-ops-returned").textContent =
+      Number(data.total_emp_returned || 0).toLocaleString();
+
+    document.getElementById("metric-ops-sink").textContent =
+      Number(data.net_emp_sink || 0).toLocaleString();
+
+    document.getElementById("metric-ops-sink-rate").textContent =
+      `Sink rate: ${Number(data.sink_rate_percent || 0).toFixed(2)}%`;
+  } catch (err) {
+    console.error("loadOperationsEmpEconomy error:", err);
+  }
 }
 async function loadEmpireOperationsLog() {
   try {
@@ -2601,6 +2769,7 @@ document.getElementById("end-season-btn")?.addEventListener("click", async () =>
 if (ADMIN_KEY) {
   setStatus("Admin connected. Loading overview...");
   loadAdminOverview();
+  loadReinvestSummary();
 }
 async function loadTenderStats() {
   const statusEl = document.getElementById("tender-stats-status");
