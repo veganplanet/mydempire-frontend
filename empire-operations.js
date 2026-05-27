@@ -251,8 +251,8 @@ margin-top:10px;
   style="
     display:flex;
 flex-wrap:wrap;
-justify-content:space-between;
-gap:100px;
+justify-content:flex-start;
+gap:12px;
     margin-top:14px;
     font-size:11px;
     font-weight:900;

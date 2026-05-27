@@ -47,29 +47,73 @@
             <div class="pill">1 HIVE = 100 EMP</div>
           </div>
 
-          <div class="market-toolbar">
-            <div class="field">
-              <label for="emp-view-select">View</label>
-              <select id="emp-view-select">
-                <option value="market">Market Listings</option>
-                <option value="mine">My Listings</option>
-              </select>
-            </div>
+          <div
+  class="emp-mobile-toolbar"
+  style="
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    width:100%;
+  "
+>
 
-            <div class="field">
-              <label for="emp-quantity">EMP Quantity</label>
-              <input id="emp-quantity" type="number" min="100" step="1" placeholder="e.g. 500" />
-              <div class="hint">Minimum listing: 100 EMP</div>
-            </div>
+  <div class="field" style="width:100%;">
+    <label for="emp-view-select">View</label>
 
-            <div class="field">
-              <label for="emp-price">Price per EMP (HIVE)</label>
-              <input id="emp-price" type="number" min="0.0075" step="0.0001" placeholder="e.g. 0.010" />
-            </div>
+    <select
+      id="emp-view-select"
+      style="width:100%; min-height:48px;"
+    >
+      <option value="market">Market Listings</option>
+      <option value="mine">My Listings</option>
+    </select>
+  </div>
 
-            <button class="primary-btn" id="create-emp-listing-btn">Create EMP Listing</button>
-            <button class="secondary-btn" id="refresh-emp-market-btn">Refresh</button>
-          </div>
+  <div class="field" style="width:100%;">
+    <label for="emp-quantity">EMP Quantity</label>
+
+    <input
+      id="emp-quantity"
+      type="number"
+      min="100"
+      step="1"
+      placeholder="e.g. 500"
+      style="width:100%; min-height:48px;"
+    />
+
+    <div class="hint">Minimum listing: 100 EMP</div>
+  </div>
+
+  <div class="field" style="width:100%;">
+    <label for="emp-price">Price per EMP (HIVE)</label>
+
+    <input
+      id="emp-price"
+      type="number"
+      min="0.0075"
+      step="0.0001"
+      placeholder="e.g. 0.010"
+      style="width:100%; min-height:48px;"
+    />
+  </div>
+
+  <button
+    class="primary-btn"
+    id="create-emp-listing-btn"
+    style="width:100%; min-height:50px;"
+  >
+    Create EMP Listing
+  </button>
+
+  <button
+    class="secondary-btn"
+    id="refresh-emp-market-btn"
+    style="width:100%; min-height:50px;"
+  >
+    Refresh
+  </button>
+
+</div>
 
           <div class="hint" id="listing-preview">Enter quantity and price to preview total, fee, and seller net.</div>
           <div class="status" id="create-listing-status"></div>
@@ -115,32 +159,58 @@
             <div class="pill">HIVE Only</div>
           </div>
 
-          <div class="market-toolbar">
-            <div class="field">
-              <label for="blueprint-view-select">View</label>
-              <select id="blueprint-view-select">
-                <option value="market">Market Listings</option>
-                <option value="mine">My Listings</option>
-                
-              </select>
-            </div>
+          <div
+  class="blueprint-mobile-toolbar"
+  style="
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    width:100%;
+  "
+>
 
-            <div class="field">
-              <label for="blueprint-select">Choose Blueprint</label>
-              <select id="blueprint-select">
-                <option value="">Loading blueprints...</option>
-              </select>
-              <div class="hint" id="blueprint-market-status">Loading blueprint inventory...</div>
-            </div>
+  <div class="field" style="width:100%;">
+    <label for="blueprint-select">Choose Blueprint</label>
+    <select
+      id="blueprint-select"
+      style="width:100%; min-height:48px;"
+    >
+      <option value="">Loading blueprints...</option>
+    </select>
+    <div class="hint" id="blueprint-market-status">
+      Loading blueprint inventory...
+    </div>
+  </div>
 
-            <div class="field">
-              <label for="blueprint-price-hive">Listing Price (HIVE)</label>
-              <input id="blueprint-price-hive" type="number" min="0.001" step="0.001" placeholder="e.g. 3.500" />
-            </div>
+  <div class="field" style="width:100%;">
+    <label for="blueprint-price-hive">Listing Price (HIVE)</label>
+    <input
+      id="blueprint-price-hive"
+      type="number"
+      min="0.001"
+      step="0.001"
+      placeholder="e.g. 3.500"
+      style="width:100%; min-height:48px;"
+    />
+  </div>
 
-            <button class="primary-btn" id="create-blueprint-listing-btn">Create Blueprint Listing</button>
-            <button class="secondary-btn" id="refresh-blueprint-market-btn">Refresh</button>
-          </div>
+  <button
+    class="primary-btn"
+    id="create-blueprint-listing-btn"
+    style="width:100%; min-height:50px;"
+  >
+    Create Blueprint Listing
+  </button>
+
+  <button
+    class="secondary-btn"
+    id="refresh-blueprint-market-btn"
+    style="width:100%; min-height:50px;"
+  >
+    Refresh
+  </button>
+
+</div>
 
           <div class="status" id="blueprint-create-status"></div>
         </div>
@@ -187,35 +257,72 @@
         <div class="pill">Marketplace</div>
       </div>
 
-      <div class="market-toolbar">
-        <div class="field">
-          <label>View</label>
-          <select id="pack-view-select" onchange="loadPackListings()">
-            <option value="market">Market Listings</option>
-            <option value="mine">My Listings</option>
-            
-          </select>
-        </div>
+      <div
+  class="pack-mobile-toolbar"
+  style="
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    width:100%;
+  "
+>
 
-        <div class="field">
-          <label>Quantity</label>
-          <input id="pack-quantity" type="number" min="1" step="1" placeholder="1">
-          <div class="hint">System will automatically use this many sealed packs.</div>
-        </div>
+  <div class="field" style="width:100%;">
+    <label>View</label>
+    <select
+      id="pack-view-select"
+      onchange="loadPackListings()"
+      style="width:100%; min-height:48px;"
+    >
+      <option value="market">Market Listings</option>
+      <option value="mine">My Listings</option>
+    </select>
+  </div>
 
-        <div class="field">
-          <label>Price per Pack (HIVE)</label>
-          <input id="pack-unit-price-hive" type="number" min="0.001" step="0.001" placeholder="1.000">
-        </div>
+  <div class="field" style="width:100%;">
+    <label>Quantity</label>
+    <input
+      id="pack-quantity"
+      type="number"
+      min="1"
+      step="1"
+      placeholder="1"
+      style="width:100%; min-height:48px;"
+    />
+    <div class="hint">System will automatically use this many sealed packs.</div>
+  </div>
 
-        <button class="primary-btn" type="button" onclick="createPackListing()">
-          Create Listing
-        </button>
+  <div class="field" style="width:100%;">
+    <label>Price per Pack (HIVE)</label>
+    <input
+      id="pack-unit-price-hive"
+      type="number"
+      min="0.001"
+      step="0.001"
+      placeholder="1.000"
+      style="width:100%; min-height:48px;"
+    />
+  </div>
 
-        <button class="secondary-btn" type="button" onclick="loadPackListings()">
-          Refresh
-        </button>
-      </div>
+  <button
+    class="primary-btn"
+    type="button"
+    onclick="createPackListing()"
+    style="width:100%; min-height:50px;"
+  >
+    Create Listing
+  </button>
+
+  <button
+    class="secondary-btn"
+    type="button"
+    onclick="loadPackListings()"
+    style="width:100%; min-height:50px;"
+  >
+    Refresh
+  </button>
+
+</div>
 
       <div id="pack-market-status" class="status"></div>
     </div>
