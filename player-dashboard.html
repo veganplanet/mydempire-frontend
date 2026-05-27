@@ -457,6 +457,20 @@
               <div class="summary-sub" id="summary-withdraw-sub">
                 Minimum withdrawal is 1.000 HIVE
               </div>
+              <div class="summary-actions" style="margin-top:10px;">
+  <a
+    href="javascript:void(0)"
+    onclick="openWithdrawalHistoryModal(event)"
+    style="
+      font-size:13px;
+      font-weight:700;
+      color:#2563eb;
+      text-decoration:none;
+    "
+  >
+    View Withdrawal History
+  </a>
+</div>
             </div>
             <div class="summary-card card-lifetime">
               <div class="summary-label">
@@ -6380,7 +6394,90 @@ if (openBtn) {
     if (modal) modal.style.display = "flex";
   });
 }
+async function openWithdrawalHistoryModal(event) {
+  if (event) event.preventDefault();
 
+  try {
+    const username =
+      localStorage.getItem("hiveUsername") ||
+      localStorage.getItem("mde_username") ||
+      localStorage.getItem("username");
+
+    if (!username) {
+      alert("Username not found.");
+      return;
+    }
+
+    const modal = document.getElementById("withdraw-history-modal");
+    const content = document.getElementById("withdraw-history-content");
+
+    if (!modal || !content) {
+      alert("Withdrawal history modal not found.");
+      return;
+    }
+
+    modal.style.display = "flex";
+
+    content.innerHTML = "Loading withdrawal history...";
+
+    const response = await fetch(
+      `${API_BASE}/player/${username}/withdrawal-history`
+    );
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Failed to load withdrawal history.");
+    }
+
+    const rows = data.withdrawals || [];
+
+    if (!rows.length) {
+      content.innerHTML =
+        `<div class="status-text">No withdrawal history yet.</div>`;
+      return;
+    }
+
+    content.innerHTML = rows
+      .map((w) => {
+        return `
+          <div style="
+            padding:10px 0;
+            border-bottom:1px solid #e5e7eb;
+            font-size:14px;
+          ">
+            <strong>${Number(w.amount || 0).toFixed(3)} HIVE</strong>
+            — ${String(w.status || "pending").toUpperCase()}
+
+            <div style="
+              color:#64748b;
+              font-size:12px;
+              margin-top:4px;
+            ">
+              ${
+                w.created_at
+                  ? new Date(w.created_at).toLocaleString()
+                  : ""
+              }
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+
+  } catch (err) {
+    console.error("Withdrawal history error:", err);
+    alert(err.message || "Failed to load withdrawal history.");
+  }
+}
+
+function closeWithdrawalHistoryModal() {
+  const modal = document.getElementById("withdraw-history-modal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
       function showCrateResultModal(reward, data) {
         const modal = document.getElementById("crate-result-modal");
         const rewardEl = document.getElementById("crate-result-reward");
@@ -6523,6 +6620,57 @@ if (openBtn) {
 
     <div id="emp-history-list" class="modal-body">
       Loading EMP history...
+    </div>
+  </div>
+</div>
+<div
+  id="withdraw-history-modal"
+  style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,0.65);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  "
+>
+  <div
+    style="
+      width:min(520px, 100%);
+      max-height:80vh;
+      overflow-y:auto;
+      background:white;
+      border-radius:18px;
+      padding:20px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.25);
+    "
+  >
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h2 style="margin:0;">Withdrawal History</h2>
+
+      <button
+        onclick="closeWithdrawalHistoryModal()"
+        style="
+          border:none;
+          background:#ef4444;
+          color:white;
+          border-radius:999px;
+          padding:6px 12px;
+          cursor:pointer;
+          font-weight:700;
+        "
+      >
+        Close
+      </button>
+    </div>
+
+    <div
+      id="withdraw-history-content"
+      style="margin-top:16px;"
+    >
+      Loading...
     </div>
   </div>
 </div>
