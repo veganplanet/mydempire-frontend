@@ -35,9 +35,27 @@
             ${
               user
                 ? `
-              <a href="player-dashboard.html" class="appbar-link">
-                Dashboard
-              </a>
+              <a
+  href="#"
+  class="appbar-link"
+  onclick="
+    event.preventDefault();
+
+    const params = new URLSearchParams(window.location.search);
+
+    const viewedUser =
+      params.get('user') ||
+      params.get('view') ||
+      localStorage.getItem('hiveUsername') ||
+      localStorage.getItem('mde_username');
+
+    window.location.href =
+      'player-dashboard.html?user=' +
+      encodeURIComponent(viewedUser);
+  "
+>
+  Dashboard
+</a>
 
               <a href="shop.html" class="appbar-link">
                 Shop
@@ -47,9 +65,27 @@
                 Marketplace
               </a>
 
-              <a href="empire-hub.html" class="appbar-link">
-                Empire Hub <span class="new-flag">NEW</span>
-              </a>
+              <a
+  href="#"
+  class="appbar-link"
+  onclick="
+    event.preventDefault();
+
+    const params = new URLSearchParams(window.location.search);
+
+    const viewedUser =
+      params.get('user') ||
+      params.get('view') ||
+      localStorage.getItem('hiveUsername') ||
+      localStorage.getItem('mde_username');
+
+    window.location.href =
+      'empire-hub.html?user=' +
+      encodeURIComponent(viewedUser);
+  "
+>
+  Empire Hub <span class="new-flag">NEW</span>
+</a>
             `
                 : ""
             }
@@ -168,6 +204,21 @@
       localStorage.removeItem("hiveUsername");
 
       window.location.href = "index.html";
+    });
+  }
+  const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
+
+  if (visitOtherEmpireBtn) {
+    visitOtherEmpireBtn.addEventListener("click", function () {
+      const target = prompt("Enter Hive username to visit:");
+
+      if (!target) return;
+
+      const cleanTarget = target.trim().replace("@", "").toLowerCase();
+
+      if (!cleanTarget) return;
+
+      window.location.href = `player-dashboard.html?user=${encodeURIComponent(cleanTarget)}`;
     });
   }
 })();

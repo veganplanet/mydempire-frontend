@@ -1,3 +1,18 @@
+function isEmpireOperationsVisitorMode() {
+  const params = new URLSearchParams(window.location.search);
+
+  const viewedUser = params.get("user") || params.get("view") || "";
+
+  const loggedInUser =
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    "";
+
+  if (!viewedUser || !loggedInUser) return false;
+
+  return viewedUser.toLowerCase() !== loggedInUser.toLowerCase();
+}
 async function loadEmpireOperations() {
   const area = document.getElementById("operations-live-area");
 
@@ -268,7 +283,26 @@ style="display:${industrialAuthority >= 50 ? "inline-block" : "none"}";
 >
   Claim
 </button></span>
-<span style="padding:4px 0;">100 IA → +120 EMP</span>
+<span style="padding:4px 0;">
+  100 IA → +120 EMP
+  <br>
+  <button
+    onclick="claimIAReward(100)"
+    style="display:${industrialAuthority >= 100 ? "inline-block" : "none"};
+      margin-top:4px;
+      padding:4px 10px;
+      border:none;
+      border-radius:999px;
+      background:#f59e0b;
+      color:white;
+      font-size:11px;
+      font-weight:800;
+      cursor:pointer;
+    "
+  >
+    Claim
+  </button>
+</span>
 <span style="padding:4px 0;">200 IA → L1 Frontier</span>
 <span style="padding:4px 0;">400 IA → L2 Estate</span>
 <span style="padding:4px 0;">800 IA → L3 Industrial Zone</span>
@@ -601,6 +635,22 @@ margin-right:auto;
   }
 
   area.innerHTML = html;
+  if (isEmpireOperationsVisitorMode()) {
+    area.querySelectorAll("button").forEach((btn) => {
+      btn.disabled = true;
+      btn.style.opacity = "0.55";
+      btn.style.cursor = "not-allowed";
+    });
+
+    area.insertAdjacentHTML(
+      "afterbegin",
+      `
+    <div class="status-text" style="margin-bottom:12px;">
+      Viewing another empire. Empire Operations are visible in read-only mode.
+    </div>
+    `,
+    );
+  }
   startEmpireOperationsCountdownTicker();
 }
 async function startEmpireOperation(operationType) {
