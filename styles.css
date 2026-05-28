@@ -14814,10 +14814,33 @@ left:auto !important;
   }
 
   .appbar-dropdown{
-    top:44px !important;
-    right:0 !important;
-    left:auto !important;
-  }
+  top:52px !important;
+  right:0 !important;
+  left:auto !important;
+
+  width:220px !important;
+  padding:10px !important;
+
+ background:rgba(255,255,255,0.96) !important;
+  border:1px solid rgba(255,255,255,0.08) !important;
+  border-radius:18px !important;
+
+  box-shadow:0 16px 34px rgba(15,23,42,0.16) !important;
+  backdrop-filter:blur(10px) !important;
+}
+.appbar-dropdown a{
+  padding:9px 12px !important;
+  border-radius:12px !important;
+
+  font-size:14px !important;
+  font-weight:800 !important;
+
+  color:#f8fafc !important;
+}
+
+.appbar-dropdown a:hover{
+  background:rgba(255,255,255,0.08) !important;
+}
 }
 /* ================================================= */
 /* EMPIRE HUB MOBILE FIX */
@@ -15081,4 +15104,126 @@ border:1px solid rgba(255,255,255,0.16);
   color:white;
   transform:translateX(4px);
   box-shadow:0 10px 24px rgba(139,92,246,0.28);
+}
+@media (max-width:768px){
+
+  nav#mobileNavMenu.appbar-nav{
+    width:190px !important;
+    max-width:190px !important;
+
+    padding:6px !important;
+    gap:2px !important;
+
+    background:rgba(51,65,85,0.82) !important;
+    border-radius:16px !important;
+    border:1px solid rgba(255,255,255,0.12) !important;
+
+    box-shadow:0 14px 28px rgba(15,23,42,0.18) !important;
+    backdrop-filter:blur(14px) !important;
+  }
+
+  nav#mobileNavMenu.appbar-nav a.appbar-link{
+    min-height:28px !important;
+    height:28px !important;
+
+    padding:4px 8px !important;
+    margin:0 !important;
+
+    font-size:13px !important;
+    line-height:1 !important;
+  }
+}
+@media (max-width:1100px){
+
+  nav#mobileNavMenu.appbar-nav{
+    width:190px !important;
+    max-width:190px !important;
+    min-width:190px !important;
+
+    padding:6px !important;
+    gap:2px !important;
+
+    background:rgba(51,65,85,0.82) !important;
+    border-radius:16px !important;
+    border:1px solid rgba(255,255,255,0.12) !important;
+
+    box-shadow:0 14px 28px rgba(15,23,42,0.18) !important;
+    backdrop-filter:blur(14px) !important;
+  }
+
+  nav#mobileNavMenu.appbar-nav a.appbar-link{
+    min-height:28px !important;
+    height:28px !important;
+    padding:4px 8px !important;
+
+    font-size:13px !important;
+    line-height:1 !important;
+  }
+}
+@media (max-width:1100px){
+
+  .appbar #mobileNavMenu{
+    position:absolute !important;
+    top:76px !important;
+    right:6px !important;
+    left:auto !important;
+
+    width:185px !important;
+    max-width:185px !important;
+    min-width:185px !important;
+
+    padding:6px !important;
+    gap:2px !important;
+
+    background:rgba(147,51,234,0.30) !important;
+    backdrop-filter:blur(18px) saturate(160%) !important;
+    border-radius:16px !important;
+    border:1px solid rgba(255,255,255,0.18) !important;
+
+    box-shadow:0 14px 28px rgba(15,23,42,0.20) !important;
+    backdrop-filter:blur(14px) !important;
+  }
+
+  .appbar #mobileNavMenu.show{
+    display:flex !important;
+    flex-direction:column !important;
+  }
+
+  .appbar #mobileNavMenu .appbar-link{
+    width:100% !important;
+    min-height:24px !important;
+height:24px !important;
+padding:2px 8px !important;
+    margin:0 !important;
+
+    font-size:13px !important;
+    line-height:1 !important;
+  }
+}
+@media (max-width:1100px){
+
+  .appbar #mobileNavMenu,
+  .appbar #mobileNavMenu.show{
+    width:165px !important;
+    min-width:165px !important;
+    max-width:165px !important;
+  }
+
+  .appbar #mobileNavMenu .appbar-link{
+    width:auto !important;
+    max-width:100% !important;
+    min-width:0 !important;
+  }
+}
+@media (max-width:1100px){
+
+  .appbar nav#mobileNavMenu.appbar-nav,
+  .appbar nav#mobileNavMenu.appbar-nav.show{
+    background-color:rgba(147,51,234,0.42) !important;
+    background-image:none !important;
+    background:rgba(147,51,234,0.42) !important;
+
+    border:1px solid rgba(255,255,255,0.20) !important;
+    backdrop-filter:blur(18px) saturate(160%) !important;
+  }
 }

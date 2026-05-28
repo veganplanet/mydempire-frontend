@@ -15,7 +15,7 @@
     <a href="shop.html" class="appbar-link">Shop</a>
     <a href="marketplace.html" class="appbar-link">Marketplace</a>
     <a href="${empireHubLink}" class="appbar-link">
-      Empire Hub <span class="new-flag">NEW</span>
+      Empire Hub 
     </a>
   `
     : "";
