@@ -14861,3 +14861,35 @@ left:auto !important;
     margin-bottom:12px !important;
   }
 }
+/* MOBILE FIX — Empire Hub active operation */
+@media (max-width: 640px) {
+  .empire-hub-page {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    overflow-x: hidden !important;
+  }
+
+  #operations-live-area {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  #operations-live-area .operations-active-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px !important;
+    overflow: visible !important;
+  }
+
+  #operations-live-area .operations-active-card > div {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  #operations-live-area button {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
