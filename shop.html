@@ -22,11 +22,13 @@
   <div class="shop-hero-eyebrow">GENESIS COMMERCE</div>
   <h1>Empire Shop</h1>
   <p>
-    Acquire Genesis Packs, secure strategic assets, and expand the industrial power
+    Secure Founder Assets, secure strategic assets, and expand the industrial power
     of your empire through the official MydEmpire platform shop.
   </p>
 </section>
-
+<div class="founder-era-strip">
+  👑 Founder Era • 5,000 Genesis Packs • Initial Wallet Cap: 50
+</div>
   <!-- PACK PURCHASE -->
  <section class="shop-section">
   <h2>Genesis Pack Purchase</h2>
@@ -162,8 +164,13 @@
         <div class="pack-showcase-kicker">Genesis Collection</div>
         <h3>Foundation Assets & Founder Bonus</h3>
         <p>
-          Lands and Relic can be obtained through Genesis packs. Writ is not a pack drop —
-          it is granted as a Founder bonus on every complete 10-pack bundle.
+          Lands and Relics can be obtained through Genesis packs.
+
+Founder Writ is not a random drop — it is granted on every complete 10-pack bundle
+and represents long-term Founder influence inside the MydEmpire economy.
+
+Writ holders will gain access to future strategic advantages, governance mechanics,
+and expansion-era opportunities as the empire evolves.
         </p>
       </div>
 
@@ -336,16 +343,21 @@
 
     <div class="shop-buy-dominant-right">
       <label for="pack-qty" class="shop-buy-field-label">Pack Quantity</label>
-      <input id="pack-qty" type="number" min="1" max="10" placeholder="Enter pack quantity" />
+      <input id="pack-qty" type="number" min="1" max="50" placeholder="Enter pack quantity" />
 <div class="shop-pack-live-price">
-  <div class="shop-pack-live-label">PRE-GENESIS PRICE</div>
-  <div class="shop-pack-live-value">3 HIVE per pack</div>
-  <div class="shop-pack-live-sub">
-    Invite only phase • Maximum 10 packs per approved wallet
+  <div class="shop-pack-live-label">
+    CURRENT GENESIS PRICE
   </div>
-</div>
-      <div class="shop-buy-helper">
-        Genesis limit: maximum 50 packs per wallet
+
+  <div class="shop-pack-live-value" id="live-pack-price-value">
+    Loading live HIVE price...
+  </div>
+
+  <div class="shop-pack-live-sub" id="shop-pack-live-total">
+    Enter quantity to preview total HIVE amount
+  </div>
+</div>      <div class="shop-buy-helper">
+        Initial Founder wallet cap: 50 packs
       </div>
 
       <button id="buy-packs-btn" class="shop-buy-main-btn" type="button">Buy Packs</button>
@@ -445,6 +457,18 @@
     <div class="blueprint-mint-shop-right">
       <div class="blueprint-mint-shop-cost-label">Current Mint Cost</div>
       <div class="blueprint-mint-shop-cost" id="blueprint-mint-cost">-- EMP</div>
+      <div
+  class="blueprint-mint-shop-note"
+  style="
+    margin-top:8px;
+    font-size:13px;
+    font-weight:600;
+    color:#64748b;
+    line-height:1.5;
+  "
+>
+   <strong>Mint cost dynamically adjusts to <strong>50% of current Genesis pack price</strong> with a maximum cap of <strong>250 EMP</strong>.</strong>.
+</div>
 
       <div class="blueprint-mint-shop-eligibility" id="blueprint-mint-eligibility">
         Checking slot eligibility...
@@ -820,7 +844,7 @@ async function loadBlueprintMintInfo() {
       shopApiUrl(`/player/${encodeURIComponent(activeUser)}/blueprints`)
     );
     const blueprintsData = await blueprintsRes.json();
-
+const mintCost = Number(overviewData.blueprintMintCost || 150);
     if (!overviewRes.ok || !blueprintsRes.ok) {
       throw new Error("Failed to load blueprint mint info.");
     }
@@ -848,8 +872,7 @@ async function loadBlueprintMintInfo() {
     const emptySlots = Math.max(totalSlots - totalFactories, 0);
     const eligibleMints = Math.max(emptySlots - totalBlueprints, 0);
 
-    if (costEl) costEl.textContent = "150 EMP";
-
+if (costEl) costEl.textContent = `${mintCost} EMP`;
     if (eligibilityEl) {
       eligibilityEl.textContent =
         eligibleMints > 0
@@ -870,8 +893,9 @@ async function mintExtraBlueprint() {
       setMintBlueprintStatus("Please connect wallet first.", "error");
       return;
     }
-
-    const ok = confirm("Mint extra blueprint for 150 EMP?");
+const mintCost =
+  Number(document.getElementById("blueprint-mint-cost")?.textContent.replace(/[^\d]/g, "")) || 0;
+    const ok = confirm(`Mint extra blueprint for ${mintCost} EMP?`);
     if (!ok) return;
 
     setMintBlueprintStatus("Minting blueprint...");
@@ -1028,28 +1052,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </script>
 <script>
-function updatePreGenesisPrice() {
+async function updateLiveGenesisPrice() {
   const qtyInput = document.getElementById("pack-qty");
-  const priceBox = document.querySelector(".shop-pack-live-value");
+  const priceBox = document.getElementById("live-pack-price-value");
+  const totalBox = document.getElementById("shop-pack-live-total");
 
-  if (!qtyInput || !priceBox) return;
+  if (!qtyInput || !priceBox || !totalBox) return;
 
-  const qty = Number(qtyInput.value);
+  const qty = Number(qtyInput.value || 0);
 
-  if (!qty || qty <= 0) {
-    priceBox.textContent = "3 HIVE per pack";
-    return;
+  try {
+    const res = await fetch(shopApiUrl("/genesis-sale-status"));
+    const data = await res.json();
+    console.log("SHOP LIVE PRICE DATA:", data);
+
+    if (!res.ok) {
+      throw new Error("Unable to load live price.");
+    }
+
+    const hivePerPack = Number(data.hive_price_per_pack || 0);
+
+    if (!hivePerPack || hivePerPack <= 0) {
+      priceBox.textContent = "Live price loading...";
+      totalBox.textContent = "Enter quantity to preview total HIVE amount";
+      return;
+    }
+
+    priceBox.textContent = `≈ ${hivePerPack.toFixed(3)} HIVE per pack`;
+
+    if (!qty || qty <= 0) {
+      totalBox.textContent = "Enter quantity to preview total HIVE amount";
+      return;
+    }
+
+    totalBox.textContent =
+      `${qty} pack${qty > 1 ? "s" : ""} ≈ ${(qty * hivePerPack).toFixed(3)} HIVE total`;
+  } catch (err) {
+    console.error("Live Genesis price error:", err);
+    priceBox.textContent = "Live price unavailable";
+    totalBox.textContent = "Final amount will be shown during payment";
   }
-
-  const total = qty * 3;
-  priceBox.textContent = total + " HIVE total";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   const qtyInput = document.getElementById("pack-qty");
-  if (!qtyInput) return;
 
-  qtyInput.addEventListener("input", updatePreGenesisPrice);
+  if (qtyInput) {
+    qtyInput.addEventListener("input", updateLiveGenesisPrice);
+  }
+
+  updateLiveGenesisPrice();
 });
 window.showWhitelistPopup = function () {
   const popup = document.getElementById("whitelist-popup");
@@ -1081,6 +1133,10 @@ async function buyPacks() {
     const packs = parseInt(qtyInput?.value || "1", 10);
 
     if (!packs || packs < 1) {
+      if (packs > 50) {
+  alert("Maximum 50 packs allowed per wallet during initial Genesis phase.");
+  return;
+}
       alert("Please enter a valid pack quantity.");
       return;
     }
@@ -1326,35 +1382,31 @@ if (visitOtherEmpireBtn) {
     });
   }
 }
-  async function handlePhaseDisplay() {
-  try {
-    const section = document.getElementById("genesis-progress-section");
-    if (section) {
-      section.style.display = "none";
-    }
-  } catch (err) {
-    console.error("Phase check failed:", err);
-  }
-}
-
-handlePhaseDisplay();
+  
 </script>
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    const res = await fetch(shopApiUrl("/game-phase"));
-    const data = await res.json();
 
-    if (data.phase === "PRE_GENESIS") {
-      const section = document.getElementById("genesis-progress-section");
-      if (section) section.style.display = "none";
-    }
-  } catch (err) {
-    console.error("Phase check failed:", err);
-  }
-});
-</script>
 <script src="js/navbar.js"></script>
 <script src="js/notifications.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const qtyInput = document.getElementById("pack-qty");
+
+  if (!qtyInput) return;
+
+  qtyInput.addEventListener("input", () => {
+    setTimeout(() => {
+      if (typeof updateLiveGenesisPrice === "function") {
+        updateLiveGenesisPrice();
+      }
+    }, 50);
+  });
+
+  setTimeout(() => {
+    if (typeof updateLiveGenesisPrice === "function") {
+      updateLiveGenesisPrice();
+    }
+  }, 500);
+});
+</script>
   </body>
 </html>
