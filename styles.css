@@ -14892,4 +14892,38 @@ left:auto !important;
     width: 100% !important;
     max-width: 100% !important;
   }
+}/* MOBILE HARD FIX — Empire Operations horizontal cut */
+@media (max-width: 640px) {
+  body,
+  html {
+    overflow-x: hidden !important;
+  }
+
+  .empire-hub-wide,
+  .empire-hub-page,
+  .hub-panel,
+  #operations-panel,
+  #operations-live-area {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  #operations-live-area * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  #operations-live-area [style*="grid-template-columns"],
+  #operations-live-area [style*="display:grid"],
+  #operations-live-area [style*="display: grid"],
+  #operations-live-area [style*="display:flex"],
+  #operations-live-area [style*="display: flex"] {
+    display: block !important;
+  }
+
+  #operations-live-area button {
+    width: 100% !important;
+    margin-top: 14px !important;
+  }
 }
