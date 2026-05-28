@@ -42,17 +42,19 @@
           </div>
         </section>
 
-        <nav class="codex-pill-nav">
-          <a href="#loop">Loop</a>
-          <a href="#land">Land</a>
-          <a href="#blueprint">Blueprints</a>
-          <a href="#factory">Factories</a>
-          <a href="#maintenance">Maintenance</a>
-          <a href="#upgrade">Upgrades</a>
-          <a href="#reward">Rewards</a>
-          <a href="#market">Market</a>
-          <a href="#start">Guide</a>
-        </nav>
+        <nav class="codex-side-nav">
+  <a href="#loop">Loop</a>
+  <a href="#land">Land</a>
+  <a href="#blueprint">Blueprints</a>
+  <a href="#factory">Factories</a>
+  <a href="#maintenance">Maintenance</a>
+  <a href="#operations">Operations</a>
+  <a href="#crate">Crate</a>
+  <a href="#upgrade">Upgrades</a>
+  <a href="#reward">Rewards</a>
+  <a href="#market">Market</a>
+  <a href="#start">Guide</a>
+</nav>
 
         <section id="loop" class="codex-card-block">
           <h2>Core Gameplay Loop</h2>
@@ -214,7 +216,40 @@
               <li><strong>L2 Estate</strong> → 2 slots</li>
               <li><strong>L3 Industrial Zone</strong> → 3 slots</li>
             </ul>
+<h3>Land Production Multiplier</h3>
 
+<div class="table-wrap">
+  <table class="codex-table">
+  <thead>
+    <tr>
+      <th>Land Tier</th>
+      <th>Slots</th>
+      <th>EP Multiplier</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>L1 Frontier</td>
+      <td>1</td>
+      <td>1.0×</td>
+    </tr>
+    <tr>
+      <td>L2 Estate</td>
+      <td>2</td>
+      <td>1.5×</td>
+    </tr>
+    <tr>
+      <td>L3 Industrial Zone</td>
+      <td>3</td>
+      <td>2.0×</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p class="codex-note">
+  Factory EP is calculated from base production, land multiplier, blueprint level multiplier,
+  and active relic boost. Higher land tiers increase both factory slots and production strength.
+</p>
             <h3>B5 Limitation</h3>
             <p><strong>Each land can contain maximum 1 B5 factory.</strong></p>
 
@@ -283,7 +318,45 @@
           EMP. After construction, it becomes a persistent production asset
           inside your empire.
         </p>
+<h3>How Factory EP is Calculated</h3>
 
+<div class="codex-flow-box">
+  Base EP × Land Multiplier × Blueprint Multiplier × Factory Level × Relic Boost
+</div>
+
+<p class="codex-note">
+  Factory production is determined by multiple strategic layers working together.
+  Higher land tiers provide stronger production multipliers, stronger blueprints
+  increase industrial efficiency, factory upgrades improve long-term output,
+  and relics can provide additional boost bonuses.
+</p>
+
+<table class="codex-table">
+  <thead>
+    <tr>
+      <th>System</th>
+      <th>Effect on Production</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Land Tier</td>
+      <td>Controls base production multiplier and factory slots</td>
+    </tr>
+    <tr>
+      <td>Blueprint Level</td>
+      <td>Higher blueprint tiers generate stronger production</td>
+    </tr>
+    <tr>
+      <td>Factory Level</td>
+      <td>Upgrades increase total EP generation over time</td>
+    </tr>
+    <tr>
+      <td>Relics</td>
+      <td>Provide additional percentage production boost</td>
+    </tr>
+  </tbody>
+</table>
         <div class="codex-grid-3">
           <div class="codex-mini-card">
             <h3>Initial Factory Setup Cost</h3>
@@ -458,6 +531,82 @@
         </div>
       </section>
 <div class="codex-grid-2">
+  <section
+  id="operations"
+  class="codex-card-block"
+  style="grid-column:1 / -1;"
+>
+  <h2>Empire Operations</h2>
+
+  <p class="codex-lead">
+    Empire Operations are active industrial missions where players use EMP to
+    run contracts, expand influence, and earn Industrial Authority.
+  </p>
+
+  <div class="codex-flow-box">
+    Spend EMP → Run Operation → Wait Timer → Collect Result → Gain IA
+  </div>
+
+  <h3>Operation Types</h3>
+
+  <table class="codex-table">
+    <thead>
+      <tr>
+        <th>Operation</th>
+        <th>Required EP/day</th>
+        <th>Duration</th>
+        <th>Risk</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Local Supply Contract</td>
+        <td>100 EP/day</td>
+        <td>3 hours</td>
+        <td>Low</td>
+      </tr>
+      <tr>
+        <td>Regional Trade Route</td>
+        <td>250 EP/day</td>
+        <td>6 hours</td>
+        <td>Moderate</td>
+      </tr>
+      <tr>
+        <td>Imperial Expansion Project</td>
+        <td>500 EP/day</td>
+        <td>12 hours</td>
+        <td>High</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="codex-note">
+    Operations are designed as an EMP utility and engagement layer. Results may
+    return EMP revenue, create a loss, or rarely award special assets.
+  </p>
+
+  <h3>Industrial Authority</h3>
+
+  <p>
+    Completed operations generate Industrial Authority (IA). IA represents your
+    empire’s long-term operational reputation and unlocks milestone rewards as
+    your empire becomes more active.
+  </p>
+
+  <ul>
+    <li>Local Supply gives smaller IA progress.</li>
+    <li>Regional Trade gives stronger IA progress.</li>
+    <li>Imperial Expansion gives the highest IA progress.</li>
+  </ul>
+
+  <h3>Rare Operation Rewards</h3>
+
+  <ul>
+    <li>Local Supply may rarely discover a B1 Blueprint.</li>
+    <li>Regional Trade may rarely award L1 Frontier land.</li>
+    <li>Imperial Expansion may rarely award L2 Estate land.</li>
+  </ul>
+</section>
       <section id="reward" class="codex-card-block">
         <h2>
           <svg class="ui-icon">
@@ -502,57 +651,90 @@
        </p>
 </section>
 
-<section id="crate" class="codex-card-block codex-highlight-block">
+<section id="crate" class="codex-card-block">
   <h2>
-    <svg class="ui-icon">
-      <use href="assets/icons.svg#icon-reward"></use>
-    </svg>
-    Imperial Supply Crate
-  </h2>
+  <svg class="ui-icon">
+    <use href="assets/icons.svg#icon-crate"></use>
+  </svg>
+  Imperial Supply Crate
+</h2>
 
-  <div class="crate-showcase">
-    <p class="crate-desc">
-      Open one Imperial Supply Crate daily to earn EMP rewards and rare Imperial Fragments used for premium asset creation.
-    </p>
-
-    <div class="crate-grid">
-      <div class="crate-card common">
-        <div class="crate-title">EMP Reward</div>
-        <div class="crate-rate">Up to 100 EMP</div>
-      </div>
-
-      <div class="crate-card ultra">
-        <div class="crate-title">Imperial Fragment</div>
-        <div class="crate-rate">Tradable premium crafting item</div>
-      </div>
-    </div>
-
-    <div class="crate-note">
-      Imperial Fragments can be used to construct Relics, premium blueprints like Data Center, and future premium blueprints.
-    </div>
-  </div>
+  <p class="codex-lead">
+    Imperial Supply Crates provide daily operational rewards, EMP resources,
+    fragments, and rare industrial discoveries.
+  </p>
 
   <div class="codex-flow-box">
-    1 crate per player per day
+    Open Daily Crate → Receive EMP or Rare Reward → Strengthen Empire Progression
   </div>
 
-  <h3>Access Rule</h3>
-  <ul>
-    <li>Free if ≥ <strong>1.5% of Global EP/day</strong></li>
-    <li>Minimum requirement: <strong>100 EP/day</strong></li>
-    <li>Otherwise: <strong>25 EMP</strong></li>
-  </ul>
+  <h3>Crate Access</h3>
 
-  <h3>Purpose</h3>
-  <ul>
-    <li>Rewards real economic contributors</li>
-    <li>Encourages competition for EP share</li>
-    <li>Maintains treasury sustainability</li>
-  </ul>
+  <table class="codex-table">
+    <thead>
+      <tr>
+        <th>Crate Type</th>
+        <th>Requirement</th>
+        <th>Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>First Daily Crate</td>
+        <td>100+ EP/day</td>
+        <td>FREE</td>
+      </tr>
+      <tr>
+        <td>Additional Crates</td>
+        <td>Available daily</td>
+        <td>15 EMP</td>
+      </tr>
+    </tbody>
+  </table>
 
   <p class="codex-note">
-    Crate access is earned through production strength, not passive holding.
+    Crates reset daily and are designed as a recurring progression and EMP utility system.
   </p>
+
+  <h3>Possible Rewards</h3>
+
+  <table class="codex-table">
+    <thead>
+      <tr>
+        <th>Reward</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>5–100 EMP</td>
+        <td>Resource Reward</td>
+      </tr>
+      <tr>
+        <td>Imperial Fragments</td>
+        <td>Strategic Material</td>
+      </tr>
+      <tr>
+  <td>Nothing / Better luck next time</td>
+  <td>No reward outcome</td>
+</tr>
+        <td>Special Empire Assets</td>
+        <td>Ultra Rare Reward</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Imperial Fragments</h3>
+
+  <p>
+    Imperial Fragments are collectible strategic materials obtained through crate rewards.
+    Fragments may later be combined into premium empire assets and future expansion systems.
+  </p>
+
+  <div class="codex-highlight-box">
+    Daily crate activity rewards active empires and creates continuous gameplay progression
+    beyond factory production alone.
+  </div>
 </section>
 </div>
       <div class="codex-grid-3">

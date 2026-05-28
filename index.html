@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MydEmpire — Pre Genesis</title>
+    <title>MydEmpire — Genesis Countdown</title>
     <link rel="icon" type="image/png" href="assets/favicon.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -21,31 +21,55 @@
         <div class="heroBelow">
           <img class="nameLogo" src="assets/logo.png" alt="MydEmpire" />
           <div class="tags">
-            <span class="tag phase-tag">🚧 Pre-Genesis Live</span>
-            <span class="tag">🔐 Hive Keychain Login</span>
-            <span class="tag">📦 Sealed Packs</span>
-            <span class="tag">🧪 Invite-Only Test</span>
-            <span class="tag">🧾 Max 10 packs/wallet</span>
+            <span class="tag phase-tag">🚀 Genesis Countdown Started</span>
+<span class="tag">🔐 Hive Keychain Login</span>
+<span class="tag">📦 Genesis Packs Coming</span>
+<span class="tag">🏛 Founder Era Opening Soon</span>
+<span class="tag">🧾 50 packs/wallet cap</span>
           </div>
           <div class="testing-progress-pill">
-  🧪 Pre-Genesis Testing: <strong>20 / 30 Players Joined</strong> • Ending soon..., Limited Spots Left
+  🚀 Genesis Founder Era begins soon • Final preparations in progress • Treasury-based economy launching shortly
 </div>
     </div>
+<div class="genesis-countdown-banner">
 
+  <div class="genesis-countdown-label">
+     GENESIS FOUNDER ERA
+  </div>
+
+  <div class="genesis-countdown-title">
+    Countdown to Genesis Launch
+  </div>
+
+  <div class="genesis-countdown-text">
+    Final systems preparation, treasury balancing, and Founder Era deployment in progress.
+  </div>
+
+  <div id="genesis-countdown-timer" class="genesis-countdown-timer">
+    Loading countdown...
+  </div>
+
+</div>
       <div class="mainGrid">
         <div class="card">
-          <h2 class="hTitle">PRE-GENESIS Pack Sale (Closed Testing)</h2>
+          <h2 class="hTitle">Genesis Launch Countdown</h2>
           <p class="hText">
-            Pre-Genesis is a controlled live test designed to validate core
-            gameplay, payments, minting, and platform stability before the
-            Genesis launch. Packs stay sealed after purchase and will appear
-            inside your Dashboard for opening.
-          </p>
-          <p class="hText">
-            <b>Price:</b> 3 HIVE per pack · <b>Cap:</b> 10 packs per wallet ·
-            <b>Phase:</b> Invite-only
-          </p>
+  The Pre-Genesis testing phase is now approaching completion. Core gameplay,
+  marketplace systems, treasury mechanics, mobile optimization, and industrial
+  expansion systems have been successfully tested in a live environment.
+</p>
 
+<p class="hText">
+  The Genesis Founder Era will soon begin with limited Founder pack supply,
+  strategic empire expansion, treasury-backed rewards, and long-term industrial
+  progression across the MydEmpire world.
+</p>
+
+<p class="hText">
+  <b>Founder Supply:</b> 5,000 Genesis Packs ·
+<b>Initial Wallet Cap:</b> 50 Packs ·
+<b>Currency:</b> HIVE
+</p>
           <div class="empire-path-card">
             <div class="empire-path-head">
               <div class="empire-path-eyebrow">Genesis Progression</div>
@@ -130,24 +154,26 @@
           </p>
 
           <div class="home-login-box">
-            <div class="home-login-title">Enter Closed Testing</div>
+            <div class="home-login-title">
+  Enter the Genesis World
+</div>
 
-            <div class="home-login-text">
-              Connect your Hive wallet to access the invite-only Pre-Genesis
-              phase. Only approved wallets can enter during closed testing.
-            </div>
+<div class="home-login-text">
+  Connect your Hive wallet to explore MydEmpire, manage your industrial empire,
+  and prepare for the upcoming Genesis Founder Era launch.
+</div>
 
-            <button
-              id="homeConnectWalletBtn"
-              class="home-login-btn"
-              type="button"
-            >
-              Connect Wallet
-            </button>
+<button
+  id="homeConnectWalletBtn"
+  class="home-login-btn"
+  type="button"
+>
+  Connect Wallet
+</button>
 
-            <div class="home-login-note">
-              Invite-only access • Closed testing
-            </div>
+<div class="home-login-note">
+  Genesis Countdown Active • Founder Era Approaching
+</div>
           </div>
 
           <div class="inside-pack-mini">
@@ -562,5 +588,63 @@
     <script src="js/nav-auth.js"></script>
     <script src="js/navbar.js"></script>
     <script src="js/notifications.js"></script>
+    <script>
+const genesisLaunchDate = new Date(
+  Date.now() + (3 * 24 * 60 * 60 * 1000)
+);
+
+function updateGenesisCountdown() {
+
+  const now = new Date();
+
+  const diff =
+    genesisLaunchDate.getTime() - now.getTime();
+
+  const countdown =
+    document.getElementById(
+      "genesis-countdown-timer"
+    );
+
+  if (!countdown) return;
+
+  if (diff <= 0) {
+
+    countdown.innerHTML =
+      "🚀 GENESIS IS LIVE";
+
+    return;
+  }
+
+  const days =
+    Math.floor(diff / (1000 * 60 * 60 * 24));
+
+  const hours =
+    Math.floor(
+      (diff % (1000 * 60 * 60 * 24)) /
+      (1000 * 60 * 60)
+    );
+
+  const minutes =
+    Math.floor(
+      (diff % (1000 * 60 * 60)) /
+      (1000 * 60)
+    );
+
+  const seconds =
+    Math.floor(
+      (diff % (1000 * 60)) / 1000
+    );
+
+  countdown.innerHTML =
+    `${days}D ${hours}H ${minutes}M ${seconds}S`;
+}
+
+updateGenesisCountdown();
+
+setInterval(
+  updateGenesisCountdown,
+  1000
+);
+</script>
   </body>
 </html>
