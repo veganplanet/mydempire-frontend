@@ -134,12 +134,18 @@
 
   const visitOtherEmpireBtn = document.getElementById("visitOtherEmpireBtn");
 
-  if (visitOtherEmpireBtn) {
-    visitOtherEmpireBtn.addEventListener("click", function () {
-      const target = prompt("Enter Hive username to visit:");
-      if (!target) return;
+  if (visitOtherEmpireBtn && visitOtherEmpireBtn.dataset.ready !== "true") {
+    visitOtherEmpireBtn.dataset.ready = "true";
 
-      const cleanTarget = target.trim().replace("@", "").toLowerCase();
+    visitOtherEmpireBtn.addEventListener("mousedown", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const target = prompt("Enter Hive username to visit:");
+      if (target === null) return;
+
+      const cleanTarget = String(target).trim().replace("@", "").toLowerCase();
+
       if (!cleanTarget) return;
 
       window.location.href = `player-dashboard.html?user=${encodeURIComponent(cleanTarget)}`;
