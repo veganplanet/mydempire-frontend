@@ -35,6 +35,13 @@
 >
   🐀 The Rat Situation
 </button>
+          <button
+  type="button"
+  class="subnav-btn"
+  onclick="switchHubTab('culture')"
+>
+  🏛 Empire Culture <span style="color:red;font-weight:900;">NEW</span>
+</button>
         </div>
       
 
@@ -57,7 +64,44 @@
   </div>
 
 </section>
-     
+    <section id="culture-panel" class="hub-panel" style="display: none;">
+
+  <div class="section-header">
+    <h2>🏛 Empire Culture</h2>
+    <small>Community creativity, factory identity, and future empire recognition.</small>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h3>🏭 Factory Spotlight Coming Soon</h3>
+    <p>
+      Creative and funny factory names will soon be featured for all players to see and like.
+      Factories using default names will not qualify.
+    </p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h3>💡 Naming Guidelines</h3>
+    <p>Good names should be funny, clean, original, industry-themed, or empire-themed.</p>
+    <p><strong>Examples:</strong></p>
+    <ul>
+      <li>Empire Fried Chicken</li>
+      <li>Pharmafia Labs</li>
+      <li>Definitely Not Poison Inc.</li>
+      <li>Rat Approved Foods</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>📜 Future Features</h3>
+    <ul>
+      <li>❤️ Community Likes</li>
+      <li>🏆 Monthly Culture Ranking</li>
+      <li>🏛 Hall of Fame</li>
+      <li>📰 Imperial Gazette</li>
+    </ul>
+  </div>
+
+</section> 
     </main>
 
     <script>
@@ -173,7 +217,8 @@ function switchHubTab(tab) {
 
   const rats =
     document.getElementById("rats-panel");
-
+const culture =
+  document.getElementById("culture-panel");
   const buttons =
     document.querySelectorAll(".subnav-btn");
 
@@ -184,19 +229,29 @@ function switchHubTab(tab) {
 
   if (tab === "operations") {
 
-    operations.style.display = "block";
-    rats.style.display = "none";
+  operations.style.display = "block";
+  rats.style.display = "none";
+  culture.style.display = "none";
 
-    buttons[0].classList.add("subnav-btn-active");
+  buttons[0].classList.add("subnav-btn-active");
 
-  } else {
+} else if (tab === "rats") {
 
-    operations.style.display = "none";
-    rats.style.display = "block";
+  operations.style.display = "none";
+  rats.style.display = "block";
+  culture.style.display = "none";
 
-    buttons[1].classList.add("rat-active");
+  buttons[1].classList.add("rat-active");
 
-  }
+} else if (tab === "culture") {
+
+  operations.style.display = "none";
+  rats.style.display = "none";
+  culture.style.display = "block";
+
+  buttons[2].classList.add("subnav-btn-active");
+
+}
 }
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
