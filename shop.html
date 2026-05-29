@@ -1130,7 +1130,7 @@ async function buyPacks() {
     }
 
     const qtyInput = document.getElementById("pack-qty");
-    const packs = parseInt(qtyInput?.value || "1", 10);
+    const packs = parseInt(qtyInput?.value, 10);
 
     if (!packs || packs < 1) {
       if (packs > 50) {
