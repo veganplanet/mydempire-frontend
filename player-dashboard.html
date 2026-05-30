@@ -3206,7 +3206,7 @@ const confirmed = confirm(
 
           await loadDashboardSummary();
           // await loadEmpireOverview();
-          await loadBlueprints();
+          // await loadBlueprints();
           await loadUnopenedPacks(PLAYER_USERNAME);
         } catch (err) {
           console.error("Open pack error:", err);
@@ -3249,7 +3249,7 @@ const confirmed = confirm(
 
           await loadDashboardSummary();
           // await loadEmpireOverview();
-          await loadBlueprints();
+          // await loadBlueprints();
           await loadPacks();
 await loadSeasonLiveBanner();
           if (typeof loadPackOpenHistory === "function") {
@@ -6049,7 +6049,6 @@ setTimeout(() => {
   loadPacks();
   loadGlobalHealth();
 }, 1200);
-
           const dashboardUrlParams = new URLSearchParams(
             window.location.search,
           );
@@ -6162,7 +6161,7 @@ document.querySelectorAll(".blueprint-filter-btn").forEach((btn) => {
       allBtn.classList.add("active");
     }
 
-    loadBlueprints();
+    // loadBlueprints();
   });
 });
   const withdrawBtn = document.getElementById("withdraw-hive-btn");
@@ -6176,7 +6175,7 @@ if (reinvestBtn) {
 
   loadSeasonLiveBanner();
   setupLandFilters();
-  setInterval(applyReadOnlyModeForOtherEmpire, 1000);
+  setInterval(applyReadOnlyModeForOtherEmpire, 5000);
 });
       function toggleBlueprintCardMenu(btn) {
         const menu = btn.nextElementSibling;

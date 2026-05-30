@@ -129,7 +129,7 @@
     setupNotificationBell();
     loadNotifications();
 
-    setInterval(loadNotifications, 10000);
+    setInterval(loadNotifications, 60000);
   }
 
   window.addEventListener("load", initNotifications);
