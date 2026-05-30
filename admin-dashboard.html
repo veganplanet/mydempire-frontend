@@ -1037,16 +1037,34 @@ async function loadReinvestSummary() {
       return;
     }
 
-    recentBox.innerHTML = data.recent
-      .map((row) => {
-        return `
-          <div class="history-row">
-            <strong>@${row.username}</strong>
-            → ${row.note || ""} (+${Number(row.amount || 0).toFixed(3)} EMP)
-          </div>
-        `;
-      })
-      .join("");
+    recentBox.innerHTML = `
+  <div style="max-height:300px; overflow-y:auto;">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>EMP Minted</th>
+          <th>Details</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${data.recent
+          .map(
+            (row) => `
+          <tr>
+            <td>@${row.username}</td>
+            <td>${Number(row.amount || 0).toFixed(3)}</td>
+            <td>${row.note || ""}</td>
+            <td>${new Date(row.created_at).toLocaleString()}</td>
+          </tr>
+        `
+          )
+          .join("")}
+      </tbody>
+    </table>
+  </div>
+`;
 
   } catch (err) {
     console.error("loadReinvestSummary error:", err);
@@ -1285,6 +1303,7 @@ document.getElementById("metric-pack-sales-updated").textContent =
   <button id="view-assets-btn" class="primary">View Assets</button>
   <button id="give-emp-btn">Give EMP</button>
   <button id="give-pack-btn">Give Pack</button>
+  <button id="give-relic-btn">Give Relic</button>
   <button id="create-starter-empire-btn" class="primary">Create Starter Empire</button>
   <button id="open-dashboard-btn">Open Dashboard</button>
 </div>
@@ -1462,6 +1481,44 @@ document.getElementById("give-emp-btn")?.addEventListener("click", async () => {
     console.error(err);
     document.getElementById("player-action-status").textContent =
       "Error giving EMP.";
+  }
+});
+// GIVE RELIC
+document.getElementById("give-relic-btn")?.addEventListener("click", async () => {
+  const ok = confirm(
+    `Are you sure you want to give a RELIC to @${inspectedUsername}?`
+  );
+
+  if (!ok) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/give-relic`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY,
+      },
+      body: JSON.stringify({
+        username: inspectedUsername,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      document.getElementById("player-action-status").textContent =
+        data.error || "Failed to give Relic.";
+      return;
+    }
+
+    document.getElementById("player-action-status").textContent =
+      `Relic granted to @${inspectedUsername}.`;
+
+    loadPlayerOverview(inspectedUsername);
+  } catch (err) {
+    console.error(err);
+    document.getElementById("player-action-status").textContent =
+      "Failed to give Relic.";
   }
 });
 // GIVE PACK
@@ -1824,11 +1881,13 @@ box.innerHTML = `
     <table class="withdrawal-table">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>User</th>
-          <th>Amount</th>
-          <th>Status</th>
-          <th>Action</th>
+         <th>ID</th>
+<th>User</th>
+<th>Amount</th>
+<th>Requested</th>
+<th>Processed</th>
+<th>Status</th>
+<th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -1838,11 +1897,13 @@ box.innerHTML = `
 
             return `
               <tr>
-                <td>#${w.id}</td>
-                <td>@${w.username}</td>
-                <td>${Number(w.amount || 0).toFixed(3)} HIVE</td>
-                <td>${w.status}</td>
-                <td>
+  <td>#${w.id}</td>
+  <td>@${w.username}</td>
+  <td>${Number(w.amount || 0).toFixed(3)} HIVE</td>
+  <td>${w.created_at ? new Date(w.created_at).toLocaleString() : "-"}</td>
+  <td>${w.processed_at ? new Date(w.processed_at).toLocaleString() : "-"}</td>
+  <td>${w.status}</td>
+  <td>
                   ${
                     status === "pending"
                       ? `<button onclick="completeWithdrawal(${w.id})">Mark Completed</button>`
