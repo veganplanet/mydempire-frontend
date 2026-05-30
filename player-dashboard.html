@@ -6044,17 +6044,11 @@ function applyReadOnlyModeForOtherEmpire() {
 
 // Load heavy sections after dashboard becomes usable
 setTimeout(() => {
+  loadEmpireOverview();
+  loadBlueprints();
   loadPacks();
   loadGlobalHealth();
 }, 1200);
-
-setTimeout(() => {
-  loadEmpireOverview();
-}, 2500);
-
-setTimeout(() => {
-  loadBlueprints();
-}, 3500);
           const dashboardUrlParams = new URLSearchParams(
             window.location.search,
           );
