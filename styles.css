@@ -13778,7 +13778,7 @@ cursor:pointer;
   top: 52px;
   width: 340px;
   max-height: calc(100vh - 90px);
-  overflow-y: auto;
+  overflow-y: scroll;
   background: white;
   border-radius: 16px;
   border: 1px solid #e5e7eb;
