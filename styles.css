@@ -13794,6 +13794,8 @@ cursor:pointer;
 
 .notification-list {
   padding: 10px;
+  height: 420px !important;
+overflow-y: auto !important;
 }
 
 .notification-item {
