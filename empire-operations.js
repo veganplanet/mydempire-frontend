@@ -741,10 +741,16 @@ async function claimIAReward(requiredIA) {
     showEmpirePopup(
       "⚠️ Wallet Required",
       "Please connect wallet first.",
-      "error",
+      "error"
     );
     return;
   }
+
+  const confirmed = confirm(
+    `Claim this IA reward?\n\nThis will reset your Industrial Authority to 0.`
+  );
+
+  if (!confirmed) return;
 
   try {
     const response = await fetch(
@@ -759,23 +765,31 @@ async function claimIAReward(requiredIA) {
           username,
           required_ia: requiredIA,
         }),
-      },
+      }
     );
 
     const data = await response.json();
 
-    if (!data.success) {
+    if (!response.ok || !data.success) {
       throw new Error(data.error || "Failed to claim IA reward.");
     }
 
+    const rewardLabel = data.reward?.label || "Reward";
+
     showEmpirePopup(
       "🏆 IA Reward Claimed",
-      "+50 EMP added. IA reset to 0.",
-      "success",
+      `${rewardLabel} claimed successfully. IA reset to 0.`,
+      "success"
     );
 
-    await loadDashboardSummary();
-    await loadEmpireOperations();
+    if (typeof loadDashboardSummary === "function") {
+      await loadDashboardSummary();
+    }
+
+    if (typeof loadEmpireOperations === "function") {
+      await loadEmpireOperations();
+    }
+
   } catch (err) {
     showEmpirePopup("❌ Claim Failed", err.message, "error");
   }
