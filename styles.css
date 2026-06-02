@@ -14126,19 +14126,16 @@ body.empire-hub-wide .section {
 
 .notification-panel {
   position: absolute;
-  top: 62px;
-  right: 20px;
-
-  width: 320px;
-
-  background: #ffffff;
-  border-radius: 18px;
-
-  box-shadow:
-    0 18px 40px rgba(0,0,0,0.18);
-
-  overflow: hidden;
-  z-index: 9999;
+  right: 0;
+  top: 52px;
+  width: 340px;
+  height: 420px;
+overflow-y: scroll;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.14);
+  z-index: 999;
 }
 
 .notification-item {
