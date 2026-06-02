@@ -13773,17 +13773,17 @@ cursor:pointer;
 }
 
 .notification-panel {
-  position: absolute;
-  right: 0;
-  top: 52px;
+  position: fixed;
+  right: 16px;
+  top: 90px;
+  bottom: 16px;
   width: 340px;
-  height: calc(100vh - 90px);
-overflow-y: scroll;
+  overflow-y: auto;
   background: white;
   border-radius: 16px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 12px 30px rgba(0,0,0,0.14);
-  z-index: 999;
+  z-index: 9999;
 }
 
 .notification-panel-title {
@@ -13794,9 +13794,7 @@ overflow-y: scroll;
 
 .notification-list {
   padding: 10px;
-  height: 420px !important;
-overflow-y: auto !important;
-}
+  }
 
 .notification-item {
   padding: 12px;
