@@ -803,6 +803,7 @@
           id="player-search-input"
           placeholder="Enter Hive username"
         />
+        <div id="player-search-suggestions" style="margin-top:8px;"></div>
         <button id="player-search-btn">Inspect Player</button>
       </div>
       </div>
@@ -1259,7 +1260,61 @@ document.getElementById("metric-pack-sales-updated").textContent =
         setStatus("Error loading admin overview.");
       }
     }
+let adminPlayersCache = [];
 
+async function loadAdminPlayersForSearch() {
+  if (!ADMIN_KEY) return;
+
+  const res = await fetch(`${API_BASE}/admin/players`, {
+    headers: { "x-admin-key": ADMIN_KEY }
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    adminPlayersCache = data.players || [];
+  }
+}
+
+function renderPlayerSearchSuggestions() {
+  const input = document.getElementById("player-search-input");
+  const box = document.getElementById("player-search-suggestions");
+
+  if (!input || !box) return;
+
+  const q = input.value.trim().replace("@", "").toLowerCase();
+
+  if (!q) {
+    box.innerHTML = "";
+    return;
+  }
+
+  const matches = adminPlayersCache
+    .filter((p) => String(p.username || "").toLowerCase().includes(q))
+    .slice(0, 8);
+
+  box.innerHTML = matches
+    .map((p) => `
+      <button
+        type="button"
+        onclick="selectPlayerFromSearch('${p.username}')"
+        style="display:block;width:100%;text-align:left;margin:4px 0;padding:8px 10px;border-radius:8px;"
+      >
+        @${p.username}
+      </button>
+    `)
+    .join("");
+}
+
+function selectPlayerFromSearch(username) {
+  document.getElementById("player-search-input").value = username;
+  document.getElementById("player-search-suggestions").innerHTML = "";
+  inspectPlayer();
+}
+
+document
+  .getElementById("player-search-input")
+  ?.addEventListener("input", renderPlayerSearchSuggestions);
     async function inspectPlayer() {
       const username = document
         .getElementById("player-search-input")
