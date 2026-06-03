@@ -2886,6 +2886,7 @@ if (ADMIN_KEY) {
   setStatus("Admin connected. Loading overview...");
   loadAdminOverview();
   loadReinvestSummary();
+  loadAdminPlayersForSearch();
 }
 async function loadTenderStats() {
   const statusEl = document.getElementById("tender-stats-status");
