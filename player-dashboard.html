@@ -787,6 +787,13 @@
               </div>
             </div>
           </div>
+          <div class="inventory-card inventory-salvage">
+  <img src="assets/salvage-part-v2.png" class="inventory-icon" />
+  <div class="inventory-info">
+    <div class="inventory-title">Salvage Parts</div>
+    <div class="inventory-count" id="asset-salvage-parts">0</div>
+  </div>
+</div>
         </div>
 
         <h3 style="margin: 24px 0 12px">Blueprints</h3>
@@ -2576,7 +2583,10 @@ setText(
             "asset-imperial-fragments",
             `x ${Number(data.imperialFragments || 0)}`,
           );
-   
+   setText(
+  "asset-salvage-parts",
+  `× ${Number(data.smpBalance || 0)}`,
+);
 
         } catch (err) {
           console.error("Failed to load dashboard summary:", err);

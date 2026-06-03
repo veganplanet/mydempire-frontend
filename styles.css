@@ -15224,3 +15224,158 @@ padding:2px 8px !important;
     backdrop-filter:blur(18px) saturate(160%) !important;
   }
 }
+.rat-situation-card {
+  padding: 28px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #fff7ed 0%, #fee2e2 100%);
+  border: 1px solid #fca5a5;
+  box-shadow: 0 14px 30px rgba(127, 29, 29, 0.12);
+}
+
+.rat-situation-card h2 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.rat-subtitle {
+  margin: 8px 0 22px;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.rat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.rat-stat {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid #fecaca;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.rat-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  color: #991b1b;
+  margin-bottom: 6px;
+}
+
+.rat-stat span:last-child {
+  font-size: 22px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.rat-message-box {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px dashed #fca5a5;
+  color: #7f1d1d;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+#rat-cleanup-btn {
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: none;
+  background: #dc2626;
+  color: white;
+  font-weight: 900;
+  cursor: pointer;
+}
+.rat-story {
+  margin: 18px 0 24px;
+  padding: 18px 22px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.75);
+  border-left: 5px solid #dc2626;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #374151;
+  font-style: italic;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.condition-badge {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 800;
+}
+.rat-guide-box {
+  margin: 0 0 24px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid #fed7aa;
+}
+
+.rat-guide-title {
+  font-size: 18px;
+  font-weight: 900;
+  color: #7c2d12;
+  margin-bottom: 12px;
+}
+
+.rat-guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.rat-guide-table th,
+.rat-guide-table td {
+  padding: 10px;
+  border-bottom: 1px solid #fed7aa;
+  text-align: left;
+}
+
+.rat-guide-table th {
+  background: #ffedd5;
+  color: #7c2d12;
+  font-weight: 900;
+}
+
+.rat-guide-note {
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #7c2d12;
+}
+.inventory-salvage img.inventory-icon {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+.inventory-salvage img {
+  width: 90px !important;
+  height: 90px !important;
+  object-fit: contain !important;
+}
+.inventory-card.inventory-salvage img.inventory-icon {
+  width: 96px !important;
+  height: 96px !important;
+  object-fit: contain !important;
+  transform: scale(1.35);
+}
+.salvage-icon-big {
+  width: 92px !important;
+  height: 92px !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+.inventory-salvage {
+  border-top: 4px solid #94a3b8 !important;
+}

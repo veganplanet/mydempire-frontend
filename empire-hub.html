@@ -59,9 +59,109 @@
       </section>
       <section id="rats-panel" class="hub-panel" style="display: none;">
 
-  <div class="rat-situation-banner">
-    <img src="assets/rat.png" alt="The Rat Situation">
+  <div class="rat-situation-card">
+
+  <h2>🐀 The Rat Situation</h2>
+ <div class="rat-story">
+  <strong>🏭 Every thriving empire has a dirty secret...</strong><br><br>
+
+  As your factories operate, old machine parts, damaged equipment,
+  forgotten tools, and industrial junk gradually pile up inside warehouse
+  storage areas. If left unattended, the mess attracts rats 🐀.
+
+  Cleanup crews can restore order and occasionally recover valuable
+  Salvage Parts hidden among the clutter. 🔧
+</div>
+<div class="rat-guide-box">
+  <div class="rat-guide-title">Cleanup Strategy</div>
+
+  <table class="rat-guide-table">
+    <thead>
+      <tr>
+        <th>Time Since Cleanup</th>
+        <th>Condition</th>
+        <th>Cost</th>
+        <th>Salvage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>0–7 Days</td>
+        <td>🟢 Spotless</td>
+        <td>Lowest</td>
+        <td>Minimal</td>
+      </tr>
+      <tr>
+        <td>8–14 Days</td>
+        <td>🔵 Clean</td>
+        <td>Low</td>
+        <td>Low</td>
+      </tr>
+      <tr>
+        <td>15–21 Days</td>
+        <td>🟡 Orderly</td>
+        <td>Moderate</td>
+        <td>Moderate</td>
+      </tr>
+      <tr>
+        <td>22–30 Days</td>
+        <td>🟠 Cluttered</td>
+        <td>High</td>
+        <td>Good</td>
+      </tr>
+      <tr>
+        <td>31+ Days</td>
+        <td>🔴 Infested</td>
+        <td>Highest</td>
+        <td>Best</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="rat-guide-note">
+    💡 Clean early to save EMP, or wait longer for a chance to recover more Salvage Parts from accumulated warehouse clutter.
   </div>
+</div>
+  <div class="rat-grid">
+
+    <div class="rat-stat">
+      <span class="rat-label">Warehouse Condition</span>
+      <span id="warehouse-condition" class="condition-badge">
+  Loading...
+</span>
+    </div>
+
+    <div class="rat-stat">
+      <span class="rat-label">Rat Activity</span>
+      <span id="rat-activity">0</span>
+    </div>
+
+    <div class="rat-stat">
+      <span class="rat-label">Cleanup Operation Cost</span>
+      <span id="rat-cleanup-cost">0 EMP</span>
+    </div>
+
+    <div class="rat-stat">
+      <span class="rat-label">🔧 Salvage Parts</span>
+      <span id="rat-smp-balance">0</span>
+    </div>
+
+  </div>
+
+  <div class="rat-message-box">
+    <span id="rat-status-message">
+      🐀 Workers reported no unusual activity.
+    </span>
+  </div>
+
+  <button
+  id="rat-cleanup-btn"
+  class="empire-action-btn"
+>
+  🧹 Loading...
+</button>
+
+</div>
 
 </section>
     <section id="culture-panel" class="hub-panel" style="display: none;">
@@ -225,6 +325,140 @@ const API_BASE = isLocal ? LOCAL_API : PROD_API;
       var empireOperationsRefreshInterval = null;
       var empireOperationsCountdownInterval = null;
     </script>
+    <script>
+async function loadRatSituation() {
+  const username = getLoggedInUser();
+  if (!username) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/player/${username}/dashboard`);
+    const data = await res.json();
+
+    const warehouseCondition =
+  data.warehouseCondition || "Spotless";
+
+let conditionLabel = "🟢 Spotless";
+
+if (warehouseCondition === "Clean") {
+  conditionLabel = "🔵 Clean";
+} else if (warehouseCondition === "Orderly") {
+  conditionLabel = "🟡 Orderly";
+} else if (warehouseCondition === "Cluttered") {
+  conditionLabel = "🟠 Cluttered";
+} else if (warehouseCondition === "Infested") {
+  conditionLabel = "🔴 Infested";
+}
+
+document.getElementById("warehouse-condition").textContent =
+  conditionLabel;
+
+    const ratActivity = Number(data.ratActivity || 0);
+
+let ratLabel = "🐀 No Activity";
+
+if (ratActivity >= 15) {
+  ratLabel = "🐀 Infestation";
+} else if (ratActivity >= 8) {
+  ratLabel = "🐀 Heavy Activity";
+} else if (ratActivity >= 4) {
+  ratLabel = "🐀 Moderate Activity";
+} else if (ratActivity >= 1) {
+  ratLabel = "🐀 Light Activity";
+}
+
+document.getElementById("rat-activity").textContent = ratLabel;
+
+    document.getElementById("rat-cleanup-cost").textContent =
+      `${data.ratCleanupCost || 0} EMP`;
+      console.log("Cleanup Cost:", data.ratCleanupCost);
+const cleanupCost = Number(data.ratCleanupCost || 0);
+
+const cleanupBtn =
+  document.getElementById("rat-cleanup-btn");
+
+if (warehouseCondition === "Spotless") {
+  cleanupBtn.textContent = "✅ Warehouse Clean";
+  cleanupBtn.disabled = true;
+} else {
+  cleanupBtn.disabled = false;
+
+  cleanupBtn.textContent =
+    cleanupCost > 0
+      ? `🧹 Start Cleanup (${cleanupCost} EMP)`
+      : "🧹 Quick Cleanup";
+}
+    document.getElementById("rat-smp-balance").textContent =
+  `⚙️ ${data.smpBalance || 0}`;
+
+  } catch (err) {
+    console.error("Rat Situation load error:", err);
+  }
+}
+async function startRatCleanup() {
+ const costText =
+  document.getElementById("rat-cleanup-cost").textContent || "0 EMP";
+
+const cleanupCost = Number(costText.replace(/[^0-9.]/g, "") || 0);
+
+if (cleanupCost > 0) {
+  const confirmed = confirm(
+    `Launch warehouse cleanup crew?\n\nCost: ${costText}`
+  );
+
+  if (!confirmed) {
+    return;
+  }
+}
+
+  const username = getLoggedInUser();
+
+  try {
+    const res = await fetch(
+      `${API_BASE}/player/${username}/rat-cleanup`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": username,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+   showEmpirePopup(
+  "🧹 Cleanup Completed!",
+  `
+  <div style="font-size:16px; line-height:1.8;">
+    <div>💰 <strong>EMP Spent:</strong> ${data.empSpent || 0}</div>
+    <div>⚙️ <strong>Salvage Parts Recovered:</strong> ${data.smpReward || 0}</div>
+    <div style="margin-top:10px; color:#64748b;">
+      Warehouse crews restored order and cleared the storage areas.
+    </div>
+  </div>
+  `,
+  "success"
+);
+
+    await loadRatSituation();
+
+  } catch (err) {
+    console.error(err);
+    showEmpirePopup(
+  "Cleanup Failed",
+  "The cleanup crew could not complete the operation. Please try again.",
+  "error"
+);
+  }
+}
+document.addEventListener("DOMContentLoaded", () => {
+  loadRatSituation();
+
+  document
+    .getElementById("rat-cleanup-btn")
+    ?.addEventListener("click", startRatCleanup);
+});
+</script>
     <script src="empire-operations.js"></script>
     <script>
 function switchHubTab(tab) {
