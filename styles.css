@@ -15794,3 +15794,6 @@ padding:2px 8px !important;
   max-height: 72px !important;
   object-fit: contain !important;
 }
+.inventory-salvage {
+  border-top: 4px solid #64748b !important;
+}
