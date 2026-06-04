@@ -15771,3 +15771,26 @@ padding:2px 8px !important;
     min-width: 0;
   }
 }
+/* ===== EMPIRE ASSET CARD IMAGE FIX ===== */
+
+.inventory-card {
+  overflow: hidden !important;
+}
+
+.inventory-icon {
+  width: 72px !important;
+  height: 72px !important;
+  max-width: 72px !important;
+  max-height: 72px !important;
+  object-fit: contain !important;
+  display: block !important;
+  flex-shrink: 0 !important;
+}
+
+.inventory-card img {
+  width: 72px !important;
+  height: 72px !important;
+  max-width: 72px !important;
+  max-height: 72px !important;
+  object-fit: contain !important;
+}
