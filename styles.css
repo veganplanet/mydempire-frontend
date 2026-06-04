@@ -15224,7 +15224,7 @@ padding:2px 8px !important;
     backdrop-filter:blur(18px) saturate(160%) !important;
   }
 }
-<<<<<<< HEAD
+
 .rat-situation-card {
   padding: 28px;
   border-radius: 24px;
@@ -15289,7 +15289,7 @@ padding:2px 8px !important;
   border-radius: 14px;
   border: none;
   background: #dc2626;
-=======
+
 .season-2-banner {
   width: 100%;
   margin: 0 0 18px;
@@ -15378,12 +15378,12 @@ padding:2px 8px !important;
   border: none;
   border-radius: 12px;
   background: #16a34a;
->>>>>>> fb135ed3233dbd5b9234bef07a3ccf72f0297e7f
+
   color: white;
   font-weight: 900;
   cursor: pointer;
 }
-<<<<<<< HEAD
+
 .rat-story {
   margin: 18px 0 24px;
   padding: 18px 22px;
@@ -15605,7 +15605,6 @@ padding:2px 8px !important;
   border: 2px solid #fecaca;
   border-radius: 18px;
 }
-=======
 
 @media (max-width: 760px) {
   .season-2-banner {
@@ -15623,4 +15622,152 @@ padding:2px 8px !important;
     min-width: 0;
   }
 }
->>>>>>> fb135ed3233dbd5b9234bef07a3ccf72f0297e7f
+}
+.rat-dashboard-card {
+  background:
+    radial-gradient(circle at top right, rgba(239, 68, 68, 0.14), transparent 32%),
+    linear-gradient(135deg, #fff7ed 0%, #fff1f2 100%) !important;
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+  border-radius: 22px !important;
+  padding: 22px !important;
+  box-shadow: 0 12px 28px rgba(127, 29, 29, 0.10) !important;
+  color: #111827 !important;
+}
+
+.rat-dashboard-title {
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  color: #7f1d1d !important;
+  margin-bottom: 10px !important;
+}
+
+.rat-dashboard-message {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  line-height: 1.55 !important;
+  color: #111827 !important;
+  margin-bottom: 8px !important;
+}
+
+.rat-dashboard-subtext {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #7f1d1d !important;
+  margin-bottom: 8px !important;
+}
+
+.rat-dashboard-link {
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  color: #991b1b !important;
+  text-decoration: none !important;
+}
+.season-2-banner {
+  width: 100%;
+  margin: 0 0 18px;
+  padding: 22px 26px;
+  border-radius: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 22px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(180, 83, 9, 0.45);
+  background:
+    radial-gradient(circle at 85% 20%, rgba(34,197,94,0.30), transparent 28%),
+    radial-gradient(circle at 20% 10%, rgba(250,204,21,0.35), transparent 30%),
+    linear-gradient(135deg, #fff7ed 0%, #fef3c7 42%, #ecfdf5 100%);
+  box-shadow: 0 16px 34px rgba(146, 64, 14, 0.16);
+}
+
+.season-2-banner::after {
+  content: "⚗️";
+  position: absolute;
+  right: 32px;
+  top: 8px;
+  font-size: 92px;
+  opacity: 0.12;
+  transform: rotate(-10deg);
+}
+
+.season-2-left,
+.season-2-right {
+  position: relative;
+  z-index: 1;
+}
+
+.season-2-pill {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #92400e;
+  color: #fff7ed;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.season-2-title {
+  font-size: 30px;
+  font-weight: 950;
+  color: #111827;
+  line-height: 1.05;
+}
+
+.season-2-sub {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.season-2-right {
+  min-width: 290px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.62);
+  border: 1px solid rgba(255,255,255,0.85);
+}
+
+.season-2-reward-main {
+  font-size: 18px;
+  font-weight: 950;
+  color: #14532d;
+}
+
+.season-2-reward-sub {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #7c2d12;
+}
+
+.season-2-btn {
+  margin-top: 10px;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 12px;
+  background: #16a34a;
+  color: white;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .season-2-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 18px;
+  }
+
+  .season-2-title {
+    font-size: 24px;
+  }
+
+  .season-2-right {
+    width: 100%;
+    min-width: 0;
+  }
+}
