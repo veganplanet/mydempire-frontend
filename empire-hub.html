@@ -9,7 +9,7 @@
     <link rel="icon" href="assets/favicon.png" />
   </head>
 
-  <body data-requires-login="true" class="player-dashboard-page empire-hub-wide">
+  <body class="player-dashboard-page empire-hub-wide">
     <div id="mde-navbar"></div>
 
    <div class="page empire-hub-page">
@@ -72,6 +72,7 @@
   Cleanup crews can restore order and occasionally recover valuable
   Salvage Parts hidden among the clutter. 🔧
 </div>
+
 <div class="rat-guide-box">
   <div class="rat-guide-title">Cleanup Strategy</div>
 
@@ -142,7 +143,7 @@
     </div>
 
     <div class="rat-stat">
-      <span class="rat-label">🔧 Salvage Parts</span>
+      <span class="rat-label">🔧 Expected Salvage</span>
       <span id="rat-smp-balance">0</span>
     </div>
 
@@ -150,7 +151,7 @@
 
   <div class="rat-message-box">
     <span id="rat-status-message">
-      🐀 Workers reported no unusual activity.
+      🐀 Loading warehouse activity report...
     </span>
   </div>
 
@@ -160,7 +161,14 @@
 >
   🧹 Loading...
 </button>
-
+<div class="rat-history-box">
+  <div class="rat-history-title">
+    📜 Recent Cleanup History (Last 10)
+  </div>
+  <div id="rat-cleanup-history" class="rat-history-content">
+  Loading cleanup history...
+</div>
+</div>
 </div>
 
 </section>
@@ -226,9 +234,8 @@
         if (typeof loadEmpireOperations === "function") {
           loadEmpireOperations();
 
-          setInterval(() => {
-            loadEmpireOperations();
-          }, 30000);
+          // Disabled auto-refresh to reduce Empire Hub loading pressure
+// Player can refresh page manually if needed
         }
       });
     </script>
@@ -251,13 +258,7 @@ const isLocal =
 
 const API_BASE = isLocal ? LOCAL_API : PROD_API;
 
-      function getLoggedInUser() {
-        return (
-          localStorage.getItem("hiveUsername") ||
-          localStorage.getItem("mde_username") ||
-          ""
-        );
-      }
+      
 
       function showEmpirePopup(title, message, type = "info") {
         const oldPopup = document.getElementById("empire-custom-popup");
@@ -326,8 +327,31 @@ const API_BASE = isLocal ? LOCAL_API : PROD_API;
       var empireOperationsCountdownInterval = null;
     </script>
     <script>
+      function getConditionEmoji(condition) {
+  if (condition === "Spotless") return "🟢";
+  if (condition === "Clean") return "🔵";
+  if (condition === "Orderly") return "🟡";
+  if (condition === "Cluttered") return "🟠";
+  if (condition === "Infested") return "🔴";
+  return "⚪";
+}
 async function loadRatSituation() {
-  const username = getLoggedInUser();
+ const params = new URLSearchParams(window.location.search);
+
+const username =
+  params.get("user") ||
+  params.get("view") ||
+  getLoggedInUser();
+  const loggedInUser = getLoggedInUser();
+
+if (
+  loggedInUser &&
+  username.toLowerCase() !== loggedInUser.toLowerCase()
+) {
+  document.getElementById("rat-cleanup-btn").disabled = true;
+  document.getElementById("rat-cleanup-btn").textContent =
+    "🔒 Visitor View";
+}
   if (!username) return;
 
   try {
@@ -356,21 +380,70 @@ document.getElementById("warehouse-condition").textContent =
 
 let ratLabel = "🐀 No Activity";
 
-if (ratActivity >= 15) {
-  ratLabel = "🐀 Infestation";
-} else if (ratActivity >= 8) {
-  ratLabel = "🐀 Heavy Activity";
-} else if (ratActivity >= 4) {
-  ratLabel = "🐀 Moderate Activity";
-} else if (ratActivity >= 1) {
+if (warehouseCondition === "Infested") {
+  ratLabel = "🐀🐀🐀🐀 Infestation";
+} else if (warehouseCondition === "Cluttered") {
+  ratLabel = "🐀🐀🐀 Heavy Activity";
+} else if (warehouseCondition === "Orderly") {
+  ratLabel = "🐀🐀 Moderate Activity";
+} else if (warehouseCondition === "Clean") {
   ratLabel = "🐀 Light Activity";
+} else {
+  ratLabel = "🐀 No Activity";
 }
 
 document.getElementById("rat-activity").textContent = ratLabel;
+let statusMessage = "🐀 Workers reported no unusual activity.";
+
+if (warehouseCondition === "Infested") {
+  statusMessage = "⚠️ Multiple rat sightings reported. Cleanup is strongly recommended.";
+} else if (warehouseCondition === "Cluttered") {
+  statusMessage = "🐀 Rat movement is increasing near storage areas.";
+} else if (warehouseCondition === "Orderly") {
+  statusMessage = "🧹 Light rat activity detected. Warehouse is mostly under control.";
+} else if (warehouseCondition === "Clean") {
+  statusMessage = "✅ Warehouse looks clean. No unusual activity reported.";
+}
+
+document.getElementById("rat-status-message").textContent = statusMessage;
 
     document.getElementById("rat-cleanup-cost").textContent =
       `${data.ratCleanupCost || 0} EMP`;
       console.log("Cleanup Cost:", data.ratCleanupCost);
+      const historyRes = await fetch(
+  `${API_BASE}/player/${username}/rat-history`
+);
+
+const historyData = await historyRes.json();
+
+console.log("Rat History:", historyData);
+const historyContainer =
+  document.getElementById("rat-cleanup-history");
+
+if (
+  !historyData.success ||
+  !historyData.history?.length
+) {
+  historyContainer.innerHTML =
+    "No cleanup history available.";
+} else {
+  historyContainer.innerHTML =
+    historyData.history
+      .map(
+  (entry) => `
+    <div class="rat-history-row">
+      <span>🗓️ ${new Date(entry.created_at).toLocaleDateString("en-GB", {
+  day: "2-digit",
+  month: "short",
+})}</span>
+      <span>${getConditionEmoji(entry.condition_before)} ${entry.condition_before}</span>
+      <span>💰 ${entry.emp_spent} EMP</span>
+      <span>⚙️ ${entry.smp_reward} Salvage Parts</span>
+    </div>
+  `
+)
+.join("");
+}
 const cleanupCost = Number(data.ratCleanupCost || 0);
 
 const cleanupBtn =
@@ -387,14 +460,27 @@ if (warehouseCondition === "Spotless") {
       ? `🧹 Start Cleanup (${cleanupCost} EMP)`
       : "🧹 Quick Cleanup";
 }
-    document.getElementById("rat-smp-balance").textContent =
-  `⚙️ ${data.smpBalance || 0}`;
+   const expectedMinSmp = Number(data.expectedSmpMin || data.smpMin || 0);
+const expectedMaxSmp = Number(data.expectedSmpMax || data.smpMax || 0);
+
+let expectedSmpText = "⚙️ 0";
+
+if (expectedMinSmp > 0 || expectedMaxSmp > 0) {
+  expectedSmpText =
+    expectedMinSmp === expectedMaxSmp
+      ? `⚙️ ${expectedMinSmp} SMP`
+      : `⚙️ ${expectedMinSmp} - ${expectedMaxSmp} SMP`;
+}
+
+document.getElementById("rat-smp-balance").textContent = expectedSmpText;
 
   } catch (err) {
     console.error("Rat Situation load error:", err);
   }
 }
 async function startRatCleanup() {
+  console.log("Cleanup clicked");
+
  const costText =
   document.getElementById("rat-cleanup-cost").textContent || "0 EMP";
 
@@ -425,6 +511,7 @@ if (cleanupCost > 0) {
     );
 
     const data = await res.json();
+    console.log("Rat cleanup response:", data);
 
    showEmpirePopup(
   "🧹 Cleanup Completed!",

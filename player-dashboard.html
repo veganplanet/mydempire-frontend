@@ -164,127 +164,70 @@
         </div>
 
         <!-- 🔹 Replace wide crate with 2 banners -->
-       <div
+      <div
   class="overview-block dashboard-feature-row"
   style="margin-bottom: 16px; align-items: stretch;"
+>
+  <div class="dashboard-feature-card crate-feature-card">
+    <div class="crate-card">
+      <div class="crate-header">
+        <div class="crate-title">🎁 Imperial Supply Crate</div>
+        <div class="crate-badge" id="crate-badge">4 / DAY</div>
+      </div>
 
-        >
-          <div class="dashboard-feature-card crate-feature-card" style="height:100%;">
-            <div class="crate-card">
-              <div class="crate-header">
-                <div class="crate-title">🎁 Imperial Supply Crate</div>
-                <div class="crate-badge" id="crate-badge">4 / DAY</div>
-              </div>
-
-              <div class="crate-main">
-                <div class="crate-status">
-                  <div class="crate-cost" id="crate-cost-display">25 EMP</div>
-                  <div class="crate-timer">
-                    Next crate in <span id="crate-reset-timer">--</span>
-                  </div>
-                </div>
-
-                <button
-                  class="primary-button crate-open-btn"
-                  id="open-crate-btn"
-                  type="button"
-                >
-                  Open Crate
-                </button>
-              </div>
-
-              <div class="crate-footer">
-                <div class="crate-rewards">
-  🎁 First crate may be FREE • Extra crates only <strong>15 EMP</strong>
-</div>
-
-                <a
-                  href="javascript:void(0)"
-                  id="crate-history-link"
-                  onclick="openCrateHistoryModal(event)"
-                >
-                  View history
-                </a>
-              </div>
-            </div>
+      <div class="crate-main">
+        <div class="crate-status">
+          <div class="crate-cost" id="crate-cost-display">25 EMP</div>
+          <div class="crate-timer">
+            Next crate in <span id="crate-reset-timer">--</span>
           </div>
+        </div>
 
-          <div
-  id="empire-monitor-card"
-  class="dashboard-feature-card redevelopment-feature-card"
-  style="
-    background:
-      radial-gradient(circle at top right, rgba(239,68,68,0.13), transparent 34%),
-      linear-gradient(135deg, #fff5f5 0%, #fff1f2 45%, #ffffff 100%);
-    border: 1px solid rgba(239,68,68,0.22);
-    box-shadow: 0 10px 24px rgba(239,68,68,0.08);
+        <button
+          class="primary-button crate-open-btn"
+          id="open-crate-btn"
+          type="button"
+        >
+          Open Crate
+        </button>
+      </div>
 
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 18px;
-    position: relative;
-    overflow: hidden;
-  "
->
-  <div
-    style="
-      position:absolute;
-      top:0;
-      left:-35%;
-      width:120px;
-      height:100%;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,0.20),
-        transparent
-      );
-      transform: skewX(-18deg);
-      pointer-events:none;
-    "
-  ></div>
+      <div class="crate-footer">
+        <div class="crate-rewards">
+          🎁 First crate may be FREE • Extra crates only <strong>15 EMP</strong>
+        </div>
 
-  <div class="feature-title">⚠ Industrial Monitoring Active</div>
-
-  <div
-    style="
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(239,68,68,0.06);
-      border: 1px solid rgba(239,68,68,0.14);
-      color: #991b1b;
-      font-size: 16px;
-      font-weight: 800;
-      line-height: 1.6;
-    "
-  >
-    🐀 Increased warehouse activity detected across abandoned sectors.
+        <a
+          href="javascript:void(0)"
+          id="crate-history-link"
+          onclick="openCrateHistoryModal(event)"
+        >
+          View history
+        </a>
+      </div>
+    </div>
   </div>
 
-  <div
-    style="
-      font-size: 14px;
-      font-weight: 700;
-      color: #7f1d1d;
-      line-height: 1.6;
-      margin-top: 2px;
-    "
-  >
-    Empire authorities are monitoring the situation.
-<a
+  <div class="dashboard-feature-card rat-dashboard-card">
+    <div class="rat-dashboard-title">🐀 Rat Situation Monitor</div>
+
+    <div id="dash-rat-message" class="rat-dashboard-message">
+      Warehouse crews report everything is in excellent order.
+    </div>
+
+    <div class="rat-dashboard-subtext">
+      Warehouse reports change as conditions deteriorate.
+    </div>
+
+    <a
+  class="rat-dashboard-link"
+  id="rat-dashboard-link"
   href="empire-hub.html?tab=rats"
-  style="
-    color:#b91c1c;
-    font-weight:800;
-    text-decoration:none;
-  "
 >
-  View The Rat Situation →
-</a>
+      Inspect Warehouse →
+    </a>
   </div>
 </div>
-        </div>
 
         <!-- ===== BLOCK 1: SNAPSHOT ===== -->
         <div class="overview-block">
@@ -788,7 +731,7 @@
             </div>
           </div>
           <div class="inventory-card inventory-salvage">
-  <img src="assets/salvage-part-v2.png" class="inventory-icon" />
+  <img src="assets/salvage-part-v2.png" class="salvage-icon-big" />
   <div class="inventory-info">
     <div class="inventory-title">Salvage Parts</div>
     <div class="inventory-count" id="asset-salvage-parts">0</div>
@@ -2587,7 +2530,33 @@ setText(
   "asset-salvage-parts",
   `× ${Number(data.smpBalance || 0)}`,
 );
+const ratLink = document.getElementById("rat-dashboard-link");
 
+if (ratLink) {
+  ratLink.href =
+    `empire-hub.html?tab=rats&user=${encodeURIComponent(PLAYER_USERNAME)}`;
+}
+const warehouseCondition =
+  data.warehouseCondition || "Spotless";
+
+let ratMessage =
+  "🧹 Warehouse crews report everything is in excellent order.";
+
+if (warehouseCondition === "Clean") {
+  ratMessage =
+    "📦 A few unattended crates were discovered during routine inspection.";
+} else if (warehouseCondition === "Orderly") {
+  ratMessage =
+    "🔧 Maintenance crews reported growing clutter around storage sectors.";
+} else if (warehouseCondition === "Cluttered") {
+  ratMessage =
+    "🐀 Workers reported signs of rodent activity near unused machinery.";
+} else if (warehouseCondition === "Infested") {
+  ratMessage =
+    "🚨 Heavy rat activity detected. Cleanup crews recommend immediate action.";
+}
+
+setText("dash-rat-message", ratMessage);
         } catch (err) {
           console.error("Failed to load dashboard summary:", err);
         }
