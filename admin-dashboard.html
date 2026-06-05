@@ -3589,7 +3589,7 @@ document
       const data = await res.json();
 
       if (!data.success) {
-        alert(data.error || "Distribution failed.");
+        alert(data.error || JSON.stringify(data));
         return;
       }
 
@@ -3599,7 +3599,7 @@ document
 
     } catch (err) {
       console.error(err);
-      alert("Distribution failed.");
+      alert(err.message || "Distribution failed.");
     }
 });
 </script>
