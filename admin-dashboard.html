@@ -3338,7 +3338,9 @@ if (sendNotificationBtn) {
     `;
 
     const res = await fetch(`${API_BASE}/admin/emp-balances`, {
-      headers: getAdminHeaders(),
+      headers: {
+  "x-admin-key": ADMIN_KEY
+},
     });
 
     const data = await res.json();
