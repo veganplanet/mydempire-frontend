@@ -3323,6 +3323,112 @@ if (sendNotificationBtn) {
     }
   });
 }
+    async function loadEmpEconomyControlCenter() {
+  const summaryBox = document.getElementById("emp-economy-summary");
+  const distributionBox = document.getElementById("emp-economy-distribution");
+  const tableBody = document.getElementById("emp-economy-table-body");
+
+  try {
+    summaryBox.innerHTML = `
+      <div class="card">
+        <div class="label">Status</div>
+        <div class="value" style="font-size:18px;">Loading...</div>
+        <div class="small">Fetching EMP economy data</div>
+      </div>
+    `;
+
+    const res = await fetch(`${API_BASE}/admin/emp-balances`, {
+      headers: getAdminHeaders(),
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Failed to load EMP balances.");
+    }
+
+    const s = data.summary || {};
+    const d = data.distribution || {};
+    const players = data.players || [];
+
+    summaryBox.innerHTML = `
+      <div class="card">
+        <div class="label">Total EMP Circulation</div>
+        <div class="value">${Number(s.total_emp_circulation || 0).toLocaleString()}</div>
+        <div class="small">Player-held EMP only</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Players</div>
+        <div class="value">${Number(s.player_count || 0).toLocaleString()}</div>
+        <div class="small">EMP holders counted</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Average EMP</div>
+        <div class="value">${Number(s.average_emp_per_player || 0).toLocaleString()}</div>
+        <div class="small">Mean balance per player</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Median EMP</div>
+        <div class="value">${Number(s.median_emp_per_player || 0).toLocaleString()}</div>
+        <div class="small">Better real-player indicator</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Top Holder</div>
+        <div class="value" style="font-size:18px;">@${s.top_holder?.username || "--"}</div>
+        <div class="small">${Number(s.top_holder?.emp_balance || 0).toLocaleString()} EMP</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Top 10 Control</div>
+        <div class="value">${Number(s.top_10_percent || 0).toFixed(2)}%</div>
+        <div class="small">${Number(s.top_10_emp || 0).toLocaleString()} EMP held by top 10</div>
+      </div>
+    `;
+
+    distributionBox.innerHTML = `
+      <strong>Distribution:</strong>
+      0–100 EMP: ${d["0-100"] || 0} players |
+      101–500 EMP: ${d["101-500"] || 0} players |
+      501–1000 EMP: ${d["501-1000"] || 0} players |
+      1001–5000 EMP: ${d["1001-5000"] || 0} players |
+      5000+ EMP: ${d["5000+"] || 0} players
+    `;
+
+    tableBody.innerHTML = players
+      .map(
+        (p) => `
+          <tr>
+            <td class="all-players-num">${p.rank}</td>
+            <td class="all-players-name">@${p.username}</td>
+            <td class="all-players-num">${Number(p.emp_balance || 0).toLocaleString()}</td>
+          </tr>
+        `
+      )
+      .join("");
+  } catch (err) {
+    console.error("EMP economy load error:", err);
+
+    summaryBox.innerHTML = `
+      <div class="card">
+        <div class="label">Error</div>
+        <div class="value" style="font-size:18px;color:#dc2626;">Failed</div>
+        <div class="small">${err.message}</div>
+      </div>
+    `;
+  }
+}
+
+document
+  .getElementById("load-emp-economy-btn")
+  ?.addEventListener("click", loadEmpEconomyControlCenter);
+
+document
+  .getElementById("refresh-emp-economy-btn")
+  ?.addEventListener("click", loadEmpEconomyControlCenter);
 </script>
 <div id="assets-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
   <div style="max-width:900px; margin:40px auto; background:#fff; border-radius:16px; padding:20px; max-height:85vh; overflow-y:auto; position:relative;">
