@@ -3526,6 +3526,82 @@ document
       Ready for distribution.
     `;
 });
+    document
+  .getElementById("send-emp-distribution-btn")
+  ?.addEventListener("click", async () => {
+
+    const note = document
+      .getElementById("emp-distribution-note")
+      .value
+      .trim();
+
+    const text = document
+      .getElementById("emp-distribution-list")
+      .value
+      .trim();
+
+    if (!text) {
+      alert("No recipients provided.");
+      return;
+    }
+
+    const recipients = text
+      .split("\n")
+      .map(line => line.trim())
+      .filter(Boolean)
+      .map(line => {
+        const [username, amount] = line.split(",");
+
+        return {
+          username: username.trim(),
+          amount: Number(amount || 0),
+        };
+      });
+
+    const totalEmp = recipients.reduce(
+      (sum, r) => sum + Number(r.amount || 0),
+      0
+    );
+
+    const confirmed = confirm(
+      `Distribute ${totalEmp.toLocaleString()} EMP to ${recipients.length} player(s)?`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(
+        `${API_BASE}/admin/distribute-emp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-key": ADMIN_KEY,
+          },
+          body: JSON.stringify({
+            mode: "BULK_LIST",
+            note,
+            recipients,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!data.success) {
+        alert(data.error || "Distribution failed.");
+        return;
+      }
+
+      alert(
+        `Success! Distributed ${data.total_distributed.toLocaleString()} EMP.`
+      );
+
+    } catch (err) {
+      console.error(err);
+      alert("Distribution failed.");
+    }
+});
 </script>
 <div id="assets-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
   <div style="max-width:900px; margin:40px auto; background:#fff; border-radius:16px; padding:20px; max-height:85vh; overflow-y:auto; position:relative;">
