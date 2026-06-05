@@ -3481,6 +3481,51 @@ document
 document
   .getElementById("refresh-emp-economy-btn")
   ?.addEventListener("click", loadEmpEconomyControlCenter);
+    document
+  .getElementById("preview-emp-distribution-btn")
+  ?.addEventListener("click", () => {
+
+    const text = document
+      .getElementById("emp-distribution-list")
+      .value
+      .trim();
+
+    const previewBox = document.getElementById(
+      "emp-distribution-preview"
+    );
+
+    if (!text) {
+      previewBox.innerHTML = "No distribution prepared.";
+      return;
+    }
+
+    const rows = text
+      .split("\n")
+      .map(line => line.trim())
+      .filter(Boolean);
+
+    let total = 0;
+
+    const parsed = rows.map(line => {
+      const [username, amount] = line.split(",");
+      const value = Number(amount || 0);
+
+      total += value;
+
+      return {
+        username: (username || "").trim(),
+        amount: value
+      };
+    });
+
+    previewBox.innerHTML = `
+      <strong>Recipients:</strong> ${parsed.length}
+      <br>
+      <strong>Total EMP:</strong> ${total.toLocaleString()}
+      <br><br>
+      Ready for distribution.
+    `;
+});
 </script>
 <div id="assets-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
   <div style="max-width:900px; margin:40px auto; background:#fff; border-radius:16px; padding:20px; max-height:85vh; overflow-y:auto; position:relative;">
