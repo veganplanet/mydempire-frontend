@@ -656,6 +656,49 @@
     </div>
   </div>
 </div>
+  <div class="section">
+  <h2>⚡ EMP Distribution Tool</h2>
+
+  <div class="row">
+    <input
+      id="emp-distribution-note"
+      placeholder="Distribution note"
+      style="min-width:520px;"
+    />
+  </div>
+
+  <div class="row">
+    <textarea
+      id="emp-distribution-list"
+      placeholder="Paste list like:
+newenx,1026
+paleshelter,555
+forkyishere,529"
+      style="
+        width:100%;
+        min-height:180px;
+        padding:12px;
+        border:1px solid #d1d5db;
+        border-radius:12px;
+        font-size:14px;
+      "
+    ></textarea>
+  </div>
+
+  <div class="row">
+    <button id="preview-emp-distribution-btn" class="primary">
+      Preview
+    </button>
+
+    <button id="send-emp-distribution-btn" class="danger">
+      Distribute EMP
+    </button>
+  </div>
+
+  <div id="emp-distribution-preview" class="status">
+    No distribution prepared.
+  </div>
+</div>
   <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
   <h2>🔁 Reinvest Activity</h2>
 
