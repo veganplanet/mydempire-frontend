@@ -3570,6 +3570,8 @@ document
     if (!confirmed) return;
 
     try {
+      console.log("EMP DISTRIBUTION URL:", `${API_BASE}/admin/distribute-emp`);
+console.log("ADMIN KEY EXISTS:", !!ADMIN_KEY);
       const res = await fetch(
         `${API_BASE}/admin/distribute-emp`,
         {
