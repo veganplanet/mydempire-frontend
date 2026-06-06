@@ -211,9 +211,9 @@ function renderEmpireOperations(area, operations, playerData) {
 <div style="font-weight:900; color:#0f172a;">
   🏭 IA: ${Number(playerData.industrialAuthority || 0).toFixed(1)} / 800
 </div>
-    <div style="color:#64748b; font-weight:700;">
-      Higher EP unlocks larger industrial operations.
-    </div>
+    <div style="color:#dc2626; font-weight:800;">
+  📜 Hold 1 Founder WRIT and reach Industrial Authority rewards 5% faster.
+</div>
   </div>
   <div style="margin:10px 18px 18px;">
   <div
