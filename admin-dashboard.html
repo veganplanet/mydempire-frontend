@@ -519,6 +519,19 @@
   </div>
 </div>
       <div class="status" id="admin-status">Not connected yet.</div>
+      <div class="section">
+  <h2>👥 Referral Tracking</h2>
+
+  <button id="load-referrals-btn" class="primary">
+    Load Referrals
+  </button>
+
+  <div id="referrals-status" class="status">
+    Referral list not loaded yet.
+  </div>
+
+  <div id="referrals-list" class="scroll-box"></div>
+</div>
           <div class="section">
       <h2>Blockchain Event Monitor</h2>
 
@@ -1287,6 +1300,96 @@ async function loadEmpireOperationsLog() {
       "Failed to load operations log.";
   }
 }
+async function approveReferral(referralId) {
+  if (!confirm("Approve this referral and credit 500 EMP?")) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/referrals/${referralId}/approve`, {
+      method: "POST",
+      headers: {
+        "x-admin-key": ADMIN_KEY,
+      },
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Failed to approve referral.");
+    }
+
+    alert(data.message || "Referral approved.");
+    loadReferrals();
+  } catch (err) {
+    console.error("Approve referral error:", err);
+    alert(err.message || "Failed to approve referral.");
+  }
+}
+
+async function loadReferrals() {
+  const statusEl = document.getElementById("referrals-status");
+  const listEl = document.getElementById("referrals-list");
+
+  try {
+    statusEl.textContent = "Loading referrals...";
+
+    const res = await fetch(`${API_BASE}/admin/referrals`, {
+  headers: {
+    "x-admin-key": ADMIN_KEY,
+  },
+});
+
+    const data = await res.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Failed to load referrals.");
+    }
+
+    if (!data.referrals.length) {
+      listEl.innerHTML = `<div class="assets-empty">No referrals found yet.</div>`;
+      statusEl.textContent = "No referrals found.";
+      return;
+    }
+
+    listEl.innerHTML = data.referrals
+      .map((r) => {
+        const ready = Number(r.packs_bought || 0) >= 10 && !r.reward_paid;
+
+        return `
+          <div class="assets-item">
+            <div>
+              <strong>${r.referrer_username}</strong>
+              → ${r.referred_username}
+              <br>
+              <small>
+                Packs: ${r.packs_bought}/10 |
+                Status: ${r.status} |
+                Reward paid: ${r.reward_paid ? "Yes" : "No"}
+              </small>
+            </div>
+
+            <div>
+  ${
+    ready
+      ? `<button class="primary" onclick="approveReferral(${r.id})">
+           Approve 500 EMP
+         </button>`
+      : "⏳ Pending"
+  }
+</div>
+          </div>
+        `;
+      })
+      .join("");
+
+    statusEl.textContent = `Loaded ${data.referrals.length} referral(s).`;
+  } catch (err) {
+    console.error("Load referrals error:", err);
+    statusEl.textContent = err.message || "Failed to load referrals.";
+  }
+}
+
     async function loadAdminOverview() {
       try {
         const r = await fetch(`${API_BASE}/admin/overview`, {
@@ -3005,6 +3108,9 @@ if (ADMIN_KEY) {
   loadAdminOverview();
   loadReinvestSummary();
   loadAdminPlayersForSearch();
+  document
+  .getElementById("load-referrals-btn")
+  ?.addEventListener("click", loadReferrals);
 }
 async function loadTenderStats() {
   const statusEl = document.getElementById("tender-stats-status");

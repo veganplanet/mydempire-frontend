@@ -162,6 +162,50 @@
             🌿 Loading empire status...
           </div>
         </div>
+        <div
+  id="referral-strip"
+  style="
+    display:none;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin:16px 0;
+    padding:14px 18px;
+    border-radius:16px;
+    background:linear-gradient(
+  90deg,
+  #fff7d6 0%,
+  #fff0b3 50%,
+  #ffe082 100%
+);
+
+border:2px solid #d4a017;
+color:#7a4b00;
+    font-weight:800;
+    box-shadow:0 8px 18px rgba(22,163,74,0.12);
+  "
+>
+  <span>
+    👥 Imperial Recruitment Program • Earn 500 EMP when your referral purchases 10 Genesis Packs in total
+  </span>
+
+  <button
+    id="copy-referral-link-btn"
+    type="button"
+    style="
+      padding:8px 12px;
+      border-radius:10px;
+      background:#a85507;
+color:#ffffff;
+border:1px solid #a85507;
+font-weight:900;
+      cursor:pointer;
+      white-space:nowrap;
+    "
+  >
+    Copy Referral Link
+  </button>
+</div>
 <!-- SEASON 2 ANNOUNCEMENT -->
 <div class="season-2-banner">
   <div class="season-2-left">
@@ -2374,7 +2418,27 @@ const overviewData = overviewRes.ok ? await overviewRes.json() : {};
     updateCrateCardDisplay();
 
     console.log("Dashboard summary:", data);
+const referralStrip = document.getElementById("referral-strip");
+const copyReferralBtn = document.getElementById("copy-referral-link-btn");
+const referralTotalFactories = Number(data.totalFactories || 0);
+console.log("REF STRIP FOUND:", !!referralStrip);
+console.log("REF FACTORIES:", referralTotalFactories);
+if (referralStrip && referralTotalFactories > 0) {
+  console.log("SHOWING REFERRAL STRIP");
+referralStrip.style.display = "block";
+  referralStrip.style.display = "flex";
+}
 
+if (copyReferralBtn) {
+  copyReferralBtn.onclick = async () => {
+    const username = getLoggedInUser();
+
+    const referralLink = `https://mydempire.com/shop.html?ref=${username}`;
+    await navigator.clipboard.writeText(referralLink);
+
+    alert("Referral link copied!");
+  };
+}
     const setText = (id, value) => {
       const el = document.getElementById(id);
       if (el) el.textContent = value;
@@ -3039,6 +3103,33 @@ const confirmed = confirm(
     );
 
     const data = await response.json();
+    console.log("DASHBOARD DATA", data);
+    const referralStrip = document.getElementById("referral-strip");
+const copyReferralBtn = document.getElementById("copy-referral-link-btn");
+
+const totalFactories = Number(data.totalFactories || 0);
+console.log("Referral check:", totalFactories);
+
+if (referralStrip && totalFactories > 0) {
+  referralStrip.style.display = "flex";
+}
+
+if (copyReferralBtn) {
+  copyReferralBtn.onclick = async () => {
+    const username = getLoggedInUser();
+
+    if (!username) {
+      alert("Please login first.");
+      return;
+    }
+
+    const referralLink = `https://mydempire.com/shop.html?ref=${username}`;
+
+    await navigator.clipboard.writeText(referralLink);
+
+    alert("Referral link copied!");
+  };
+}
 
     if (!response.ok || !data.success) {
       throw new Error(data.error || "Reinvest failed.");

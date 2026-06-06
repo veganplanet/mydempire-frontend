@@ -561,7 +561,54 @@ function getShopActiveUser() {
     ""
   ).trim().replace("@", "").toLowerCase();
 }
-  
+function getReferralFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return String(params.get("ref") || "")
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+}
+
+async function registerReferralFromLink() {
+  const referrer = getReferralFromUrl();
+  const referred = getShopActiveUser();
+  const lockedReferrer = localStorage.getItem("mydempire_referrer");
+
+if (lockedReferrer) {
+  console.log("Referral already locked:", lockedReferrer);
+  return;
+}
+
+  if (!referrer || !referred) return;
+  if (referrer === referred) return;
+
+  try {
+    console.log("REF TEST", {
+  referrer,
+  referred,
+  url: shopApiUrl("/referrals/register")
+});
+    const res = await fetch(shopApiUrl("/referrals/register"), {
+      method: "POST",
+      headers: getShopActorHeaders(),
+      body: JSON.stringify({
+        referrer,
+        referred,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      localStorage.setItem("mydempire_referrer", referrer);
+      console.log("Referral saved:", referrer, "→", referred);
+    } else {
+      console.log("Referral not saved:", data.error);
+    }
+  } catch (err) {
+    console.error("Referral link error:", err);
+  }
+}  
 function getShopActorHeaders(extra = {}) {
   return {
     "Content-Type": "application/json",
@@ -1095,6 +1142,8 @@ async function updateLiveGenesisPrice() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("REFERRAL CODE LIVE TEST 1");
+  registerReferralFromLink();
   const qtyInput = document.getElementById("pack-qty");
 
   if (qtyInput) {
