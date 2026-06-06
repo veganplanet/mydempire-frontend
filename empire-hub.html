@@ -197,7 +197,31 @@
       culture rankings, and future empire stories.
     </p>
   </div>
+<div
+  style="
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:18px;
+  "
+>
 
+  <div class="card">
+    <h3>🧩 Fragments</h3>
+    <div id="foundry-fragment-balance">--</div>
+  </div>
+
+  <div class="card">
+    <h3>🔧 SMP</h3>
+    <div id="foundry-smp-balance">--</div>
+  </div>
+
+  <div class="card">
+    <h3>⚡ EMP</h3>
+    <div id="foundry-emp-balance">--</div>
+  </div>
+
+</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
 
     <div class="card" style="border-top:5px solid #f97316;">
@@ -653,16 +677,38 @@ const culture =
   rats.style.display = "none";
   culture.style.display = "none";
   foundry.style.display = "block";
+  loadFoundryPreview();
 
   buttons[3].classList.add("subnav-btn-active");
 }
 }
+let foundryPreviewLoaded = false;
+
+function loadFoundryPreview() {
+  if (foundryPreviewLoaded) return;
+
+  foundryPreviewLoaded = true;
+document.getElementById("foundry-fragment-balance").textContent = "--";
+document.getElementById("foundry-smp-balance").textContent = "--";
+document.getElementById("foundry-emp-balance").textContent = "--";
+  console.log("🔥 Foundry preview loaded only after tab click.");
+}
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
 
-  if (params.get("tab") === "rats") {
-    switchHubTab("rats");
-  }
+  const initialTab = params.get("tab");
+
+if (initialTab === "rats") {
+  switchHubTab("rats");
+}
+
+if (initialTab === "culture") {
+  switchHubTab("culture");
+}
+
+if (initialTab === "foundry") {
+  switchHubTab("foundry");
+}
 });
 </script>
 
