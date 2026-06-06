@@ -376,7 +376,26 @@ font-weight:900;
                 Total accumulated EP across your factories
               </div>
             </div>
+<div class="summary-card card-industrial-support">
+  <div class="summary-label">
+    <svg class="ui-icon">
+      <use href="assets/icons.svg#icon-factory"></use>
+    </svg>
+    Industrial Support
+  </div>
 
+  <div class="summary-value" id="summary-industrial-support-pool">
+    0 EMP
+  </div>
+
+  <div class="summary-sub" id="summary-industrial-support-details">
+    Daily EMP support for active industrialists
+  </div>
+
+  <div class="summary-sub" id="summary-industrial-support-your-reward">
+    Your reward today: 0 EMP
+  </div>
+</div>
             <div class="summary-card card-reward">
               <div class="summary-label">
                 <svg class="ui-icon">
@@ -2465,7 +2484,31 @@ if (copyReferralBtn) {
               maximumFractionDigits: 2,
             }),
           );
+// ===== INDUSTRIAL SUPPORT =====
+const industrialSupport = data.industrialSupport || {};
 
+const supportPool = Number(industrialSupport.todayPool || 0);
+const qualifiedPlayers = Number(industrialSupport.qualifiedPlayers || 0);
+const minimumEP = Number(industrialSupport.minimumEP || 100);
+const yourSupportReward = Number(industrialSupport.yourReward || 0);
+
+setText(
+  "summary-industrial-support-pool",
+  `${yourSupportReward.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 3,
+  })} EMP`
+);
+
+setText(
+  "summary-industrial-support-details",
+  `Today's Pool: ${supportPool} EMP • ${qualifiedPlayers} Players`
+);
+
+setText(
+  "summary-industrial-support-your-reward",
+  `Minimum Requirement: ${minimumEP} EP/day`
+);
           // ===== FACTORIES =====
           const totalFactories = Number(
             data.totalFactories ?? data.totals?.totalFactories ?? 0,

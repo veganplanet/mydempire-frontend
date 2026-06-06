@@ -370,6 +370,9 @@
   <button id="run-rewards-btn" class="primary">
     Run Daily Rewards
   </button>
+  <button id="run-industrial-support-btn" class="primary">
+  Run Industrial Support
+</button>
 
   <button id="reset-cycle-btn" class="danger">
     Reset Today Reward Cycle
@@ -2378,7 +2381,41 @@ document
       console.error(err);
     }
   });
+// RUN INDUSTRIAL SUPPORT
+document
+  .getElementById("run-industrial-support-btn")
+  .addEventListener("click", async () => {
+    if (!ADMIN_KEY) {
+      alert("Connect Admin first");
+      return;
+    }
 
+    const ok = confirm(
+      "Run Industrial Support now?\n\nThis will distribute EMP to qualified players based on current EP/day."
+    );
+
+    if (!ok) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/admin/run-industrial-support-final`, {
+        headers: {
+          "x-admin-key": ADMIN_KEY
+        }
+      });
+
+      const data = await res.json();
+
+      alert(
+        "Industrial Support result:\n\n" +
+        JSON.stringify(data, null, 2)
+      );
+
+      loadAdminOverview();
+    } catch (err) {
+      alert("Error running Industrial Support.");
+      console.error(err);
+    }
+  });
 // RESET TODAY REWARD CYCLE
 document
   .getElementById("reset-cycle-btn")
