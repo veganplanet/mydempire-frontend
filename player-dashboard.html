@@ -5841,7 +5841,7 @@ const openedToday =
 const crateCost =
   openedToday > 0
     ? 15
-    : Number(epDay || 0) >= 100
+    : isCrateEligible(epDay, globalShare)
       ? 0
       : 25;
 
@@ -6320,8 +6320,11 @@ if (reinvestBtn) {
       function tradeBlueprint(id) {
         window.location.href = "marketplace.html?blueprint=" + id;
       }
-      function isCrateEligible(epDay, globalShare) {
-  return Number(epDay || 0) >= 100;
+    function isCrateEligible(epDay, globalShare) {
+  return (
+    Number(epDay || 0) >= 100 &&
+    Number(globalShare || 0) >= 1.5
+  );
 }
 
     function updateCrateCardDisplay() {
