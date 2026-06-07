@@ -5767,6 +5767,7 @@ if (crateHistoryLink) {
     const cooldownUntilRaw =
   window.dashboardData?.nextCrateAvailableAt ||
   window.dashboardData?.next_crate_available_at ||
+  localStorage.getItem("mde_crate_cooldown_until") ||
   null;
 
 const cooldownUntil = cooldownUntilRaw ? new Date(cooldownUntilRaw) : null;
@@ -5930,16 +5931,26 @@ localStorage.setItem("mde_crate_cooldown_until", new Date(Date.now() + 3 * 60 * 
 
           // update button
           if (openBtn) {
-  openBtn.disabled = false;
-openBtn.textContent = "Open Extra Crate";
+  const cooldownUntil = new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString();
 
-  openBtn.classList.add("btn-disabled");
+  window.dashboardData = window.dashboardData || {};
+  window.dashboardData.nextCrateAvailableAt = cooldownUntil;
+  window.dashboardData.next_crate_available_at = cooldownUntil;
 
-  // remove click completely
+  localStorage.setItem("mde_crate_cooldown_until", cooldownUntil);
+
+  openBtn.disabled = true;
+  openBtn.textContent = "Cooling Down";
+  openBtn.style.opacity = "0.6";
+  openBtn.style.cursor = "not-allowed";
   openBtn.onclick = null;
+
+  startCrateResetTimer();
 }
 
-          loadDashboardSummary();
+          loadDashboardSummary().then(() => {
+  startCrateResetTimer();
+});
         } catch (err) {
           console.error(err);
           alert("Error opening crate.");
