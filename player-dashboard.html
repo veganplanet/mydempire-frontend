@@ -2304,6 +2304,11 @@ renderSeasonHistory();
 }
 
     const season = data.season;
+    const oldBanner = document.getElementById("season-2-banner");
+
+if (oldBanner) {
+  oldBanner.style.display = "none";
+}
 
     status.textContent = "🔥 Season is live — climb the ranks!";
     box.style.display = "block";
