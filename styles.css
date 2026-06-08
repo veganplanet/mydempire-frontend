@@ -15797,3 +15797,135 @@ padding:2px 8px !important;
 .inventory-salvage {
   border-top: 4px solid #64748b !important;
 }
+/* ============================= */
+/* FOUNDRY BALANCE CARDS */
+/* ============================= */
+
+.foundry-balance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.foundry-balance-card {
+  padding: 22px 20px;
+  min-height: 150px;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.foundry-fragments-card {
+  border-top: 5px solid #f97316;
+}
+
+.foundry-smp-card {
+  border-top: 5px solid #eab308;
+}
+
+.foundry-emp-card {
+  border-top: 5px solid #8b5cf6;
+}
+
+.foundry-balance-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.foundry-balance-value {
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.foundry-fragments-card .foundry-balance-value {
+  color: #7c2d12;
+}
+
+.foundry-smp-card .foundry-balance-value {
+  color: #334155;
+}
+
+.foundry-emp-card .foundry-balance-value {
+  color: #b45309;
+}
+
+.foundry-balance-note {
+  font-size: 15px;
+  color: #475569;
+  margin-top: 12px;
+  font-weight: 600;
+}
+/* ============================= */
+/* FOUNDRY RECIPE CARDS */
+/* ============================= */
+
+.foundry-recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.foundry-recipe-card {
+  padding: 24px;
+  min-height: 165px;
+}
+
+.foundry-b4-card {
+  border-top: 5px solid #f97316;
+}
+
+.foundry-b5-card {
+  border-top: 5px solid #eab308;
+}
+
+.foundry-relic-card {
+  border-top: 5px solid #8b5cf6;
+}
+
+.foundry-recipe-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #0f172a;
+  margin-bottom: 18px;
+}
+
+.foundry-recipe-text {
+  font-size: 16px;
+  color: #0f172a;
+  margin: 0 0 18px;
+  line-height: 1.6;
+}
+
+.foundry-coming-soon {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 900;
+  color: #020617;
+}
+.foundry-hero-card {
+  border-radius: 22px;
+  padding: 24px;
+  margin-bottom: 18px;
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedb5 45%, #fef3c7 100%);
+  border: 1px solid #f97316;
+  box-shadow: 0 12px 28px rgba(249, 115, 22, 0.18);
+}
+
+.foundry-hero-title {
+  margin: 0 0 8px;
+  color: #7c2d12;
+}
+
+.foundry-hero-text {
+  margin: 0;
+  color: #9a3412;
+  font-weight: 700;
+  line-height: 1.6;
+}

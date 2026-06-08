@@ -197,31 +197,7 @@
       culture rankings, and future empire stories.
     </p>
   </div>
-<div
-  style="
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:16px;
-    margin-bottom:18px;
-  "
->
 
-  <div class="card">
-    <h3>🧩 Fragments</h3>
-    <div id="foundry-fragment-balance">--</div>
-  </div>
-
-  <div class="card">
-    <h3>🔧 SMP</h3>
-    <div id="foundry-smp-balance">--</div>
-  </div>
-
-  <div class="card">
-    <h3>⚡ EMP</h3>
-    <div id="foundry-emp-balance">--</div>
-  </div>
-
-</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
 
     <div class="card" style="border-top:5px solid #f97316;">
@@ -261,46 +237,82 @@
 </section>
 
 <section id="foundry-panel" class="hub-panel" style="display:none;">
+<div class="foundry-hero-card">
+  <h2 class="foundry-hero-title">🔥 Imperial Foundry</h2>
 
-  <div
-    style="
-      border-radius:22px;
-      padding:24px;
-      margin-bottom:18px;
-      background:linear-gradient(135deg,#fff7ed 0%,#ffedd5 45%,#fef3c7 100%);
-      border:1px solid #f97316;
-      box-shadow:0 12px 28px rgba(249,115,22,0.18);
-    "
-  >
-    <h2 style="margin:0 0 8px;color:#7c2d12;">🔥 Imperial Foundry</h2>
+  <p class="foundry-hero-text">
+    Combine Imperial Fragments, Salvaged Machinery Parts and EMP to forge
+    rare empire assets.
+  </p>
+</div>
+  <div class="foundry-balance-grid">
+  <div class="card foundry-balance-card foundry-fragments-card">
+    <div class="foundry-balance-title">🧩 Fragments</div>
 
-    <p style="margin:0;color:#9a3412;font-weight:700;line-height:1.6;">
-      Combine Imperial Fragments, Salvaged Machinery Parts and EMP to forge
-      rare empire assets.
+    <div id="foundry-fragment-balance" class="foundry-balance-value">
+      --
+    </div>
+
+    <div class="foundry-balance-note">
+      Rare crafting material
+    </div>
+  </div>
+
+  <div class="card foundry-balance-card foundry-smp-card">
+    <div class="foundry-balance-title">🔧 SMP</div>
+
+    <div id="foundry-smp-balance" class="foundry-balance-value">
+      --
+    </div>
+
+    <div class="foundry-balance-note">
+      Salvaged Machinery Parts
+    </div>
+  </div>
+
+  <div class="card foundry-balance-card foundry-emp-card">
+    <div class="foundry-balance-title">⚡ EMP</div>
+
+    <div id="foundry-emp-balance" class="foundry-balance-value">
+      --
+    </div>
+
+    <div class="foundry-balance-note">
+      Crafting energy balance
+    </div>
+  </div>
+</div>
+ <div class="foundry-recipe-grid">
+  <div class="card foundry-recipe-card foundry-b4-card">
+    <div class="foundry-recipe-title">🔴 Random B4 Blueprint</div>
+
+    <p class="foundry-recipe-text">
+      Fragment + SMP + EMP recipe.
     </p>
+
+    <strong class="foundry-coming-soon">Coming Soon</strong>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
+  <div class="card foundry-recipe-card foundry-b5-card">
+    <div class="foundry-recipe-title">🟡 Random B5 Blueprint</div>
 
-    <div class="card" style="border-top:5px solid #f97316;">
-      <h3>🟠 Random B4 Blueprint</h3>
-      <p>Fragment + SMP + EMP recipe.</p>
-      <strong>Coming Soon</strong>
-    </div>
+    <p class="foundry-recipe-text">
+      Fragment + SMP + EMP recipe.
+    </p>
 
-    <div class="card" style="border-top:5px solid #eab308;">
-      <h3>🟡 Random B5 Blueprint</h3>
-      <p>Fragment + SMP + EMP recipe.</p>
-      <strong>Coming Soon</strong>
-    </div>
-
-    <div class="card" style="border-top:5px solid #8b5cf6;">
-      <h3>💎 Imperial Relic</h3>
-      <p>Fragment + SMP + EMP recipe.</p>
-      <strong>Coming Soon</strong>
-    </div>
-
+    <strong class="foundry-coming-soon">Coming Soon</strong>
   </div>
+
+  <div class="card foundry-recipe-card foundry-relic-card">
+    <div class="foundry-recipe-title">💎 Imperial Relic</div>
+
+    <p class="foundry-recipe-text">
+      Fragment + SMP + EMP recipe.
+    </p>
+
+    <strong class="foundry-coming-soon">Coming Soon</strong>
+  </div>
+</div>
 
 </section>
 
@@ -684,14 +696,56 @@ const culture =
 }
 let foundryPreviewLoaded = false;
 
-function loadFoundryPreview() {
+async function loadFoundryPreview() {
   if (foundryPreviewLoaded) return;
 
   foundryPreviewLoaded = true;
-document.getElementById("foundry-fragment-balance").textContent = "--";
-document.getElementById("foundry-smp-balance").textContent = "--";
-document.getElementById("foundry-emp-balance").textContent = "--";
-  console.log("🔥 Foundry preview loaded only after tab click.");
+
+  const username = getLoggedInUser();
+
+  if (!username) {
+    document.getElementById("foundry-fragment-balance").textContent = "Connect wallet";
+    document.getElementById("foundry-smp-balance").textContent = "Connect wallet";
+    document.getElementById("foundry-emp-balance").textContent = "Connect wallet";
+    return;
+  }
+
+  try {
+    document.getElementById("foundry-fragment-balance").textContent = "Loading...";
+    document.getElementById("foundry-smp-balance").textContent = "Loading...";
+    document.getElementById("foundry-emp-balance").textContent = "Loading...";
+
+    const res = await fetch(
+      `${API_BASE}/player/${encodeURIComponent(username)}/dashboard`
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || data.success === false) {
+      throw new Error(data.error || "Failed to load Foundry balances.");
+    }
+
+    document.getElementById("foundry-fragment-balance").textContent =
+      Number(data.imperialFragments || 0).toLocaleString();
+
+    document.getElementById("foundry-smp-balance").textContent =
+      Number(data.smpBalance || 0).toLocaleString();
+
+    document.getElementById("foundry-emp-balance").textContent =
+      Number(data.empBalance || data.emp_balance || 0).toLocaleString();
+
+    console.log("🔥 Foundry balances loaded:", {
+      fragments: data.imperialFragments,
+      smp: data.smpBalance,
+      emp: data.empBalance || data.emp_balance,
+    });
+  } catch (err) {
+    console.error("Foundry balance load error:", err);
+
+    document.getElementById("foundry-fragment-balance").textContent = "0";
+    document.getElementById("foundry-smp-balance").textContent = "0";
+    document.getElementById("foundry-emp-balance").textContent = "0";
+  }
 }
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
