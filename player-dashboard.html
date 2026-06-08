@@ -4425,6 +4425,10 @@ const ok = confirm(
                     await loadDashboardSummary();
                     await loadRewardSummary();
                     await loadEmpireOverview();
+                    const oldBanner = document.getElementById("season-2-banner");
+if (oldBanner) {
+  oldBanner.style.display = "none";
+}
                   } catch (err) {
                     console.error("Maintenance payment error:", err);
                     alert("Maintenance payment failed.");
