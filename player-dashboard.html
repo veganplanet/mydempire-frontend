@@ -207,7 +207,7 @@ font-weight:900;
   </button>
 </div>
 <!-- SEASON 2 ANNOUNCEMENT -->
-<div class="season-2-banner">
+<div id="season-2-banner" class="season-2-banner">
   <div class="season-2-left">
     <div class="season-2-pill">🏆 SEASON 2 STARTS SOON</div>
     <div class="season-2-title">Chemical Chaos </div>
@@ -2281,6 +2281,10 @@ function showNextSeasonHistory() {
     if (!status || !box) return;
 
     if (!data.success || !data.season) {
+      const oldBanner = document.getElementById("season-2-banner");
+if (oldBanner) {
+  oldBanner.style.display = "none";
+}
   status.textContent = "No active industry season right now.";
   box.style.display = "none";
 
