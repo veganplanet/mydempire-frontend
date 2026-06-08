@@ -2282,6 +2282,7 @@ function showNextSeasonHistory() {
 
     if (!data.success || !data.season) {
       const oldBanner = document.getElementById("season-2-banner");
+      console.log("OLD BANNER:", oldBanner);
 if (oldBanner) {
   oldBanner.style.display = "none";
     console.log("Season 2 banner hidden");
