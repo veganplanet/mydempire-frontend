@@ -2290,11 +2290,9 @@ if (oldBanner) {
   box.style.display = "none";
 
   
-const oldBanner = document.getElementById("season-2-banner");
 
-if (oldBanner) {
-  oldBanner.style.display = "none";
-}
+
+document.getElementById("season-2-banner")?.style.setProperty("display", "none");
 
 const historyRes = await fetch(apiUrl("/season/history"));
 const historyData = await historyRes.json();
