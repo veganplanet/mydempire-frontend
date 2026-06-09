@@ -283,16 +283,30 @@
   </div>
 </div>
  <div class="foundry-recipe-grid">
-  <div class="card foundry-recipe-card foundry-b4-card">
-    <div class="foundry-recipe-title">🔴 Random B4 Blueprint</div>
+ <div class="card foundry-recipe-card foundry-b4-card">
+  <div class="foundry-recipe-title">🔴 Random B4 Blueprint</div>
 
-    <p class="foundry-recipe-text">
-      Fragment + SMP + EMP recipe.
-    </p>
+  <p class="foundry-recipe-text">
+    Cost: <strong>5 Fragments + 5 SMP + 100 EMP</strong>
+  </p>
 
-    <strong class="foundry-coming-soon">Coming Soon</strong>
+  <p class="foundry-recipe-text">
+    Result: 1 random B4 Blueprint
+  </p>
+
+  <button
+    id="craft-b4-btn"
+    class="primary-button foundry-craft-btn"
+    type="button"
+    onclick="craftFoundryB4()"
+  >
+    Craft Random B4 Blueprint
+  </button>
+
+  <div id="craft-b4-status" class="status-text foundry-craft-status">
+    Foundry B4 crafting is ready.
   </div>
-
+</div>
   <div class="card foundry-recipe-card foundry-b5-card">
     <div class="foundry-recipe-title">🟡 Random B5 Blueprint</div>
 
@@ -764,6 +778,7 @@ if (initialTab === "foundry") {
   switchHubTab("foundry");
 }
 });
+
 </script>
 
     <script src="js/navbar.js"></script>

@@ -15929,3 +15929,13 @@ padding:2px 8px !important;
   font-weight: 700;
   line-height: 1.6;
 }
+.foundry-craft-btn {
+  width: 100%;
+  margin-top: 8px;
+  min-height: 46px;
+}
+
+.foundry-craft-status {
+  margin-top: 10px;
+  font-size: 13px;
+}
