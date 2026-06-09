@@ -1001,16 +1001,7 @@ font-weight:900;
           >
             Season <span class="season-new-badge">NEW</span>
           </button>
-          <button
-  type="button"
-class="leaderboard-subnav-btn"
-data-lb-tab="surge"
-onclick="setLeaderboardTab('surge')"
-style="display:none;"
->
-Empire Surge
-<span class="season-new-badge">LIVE</span>
-</button>
+          
         </div>
         <div  
           class="leaderboard-tab-panel leaderboard-tab-panel-active"
@@ -1403,6 +1394,7 @@ function showEmpirePopup(title, message, type = "info") {
 }
       // ===== TABS HANDLING =====
       function setActiveTab(tabName) {
+        console.log("TAB CLICKED:", tabName);
         const buttons = document.querySelectorAll(".subnav-btn");
         const panels = document.querySelectorAll(".tab-panel");
 
@@ -1421,8 +1413,13 @@ function showEmpirePopup(title, message, type = "info") {
             panel.classList.remove("tab-panel-active");
           }
         });
-       if (tabName === "leaderboard") {
+      if (tabName === "leaderboard") {
   setLeaderboardTab("empire");
+}
+
+if (tabName === "global") {
+  console.log("GLOBAL TAB: calling loadGlobalHealth now");
+  loadGlobalHealth();
 }
 
 if (tabName === "operations") {
@@ -1706,33 +1703,39 @@ if (
   }
 }
       function setLeaderboardTab(tabName) {
-        console.log("Empire Surge loader called");
-        console.log("Leaderboard tab clicked:", tabName);
-        const buttons = document.querySelectorAll(".leaderboard-subnav-btn");
-        const panels = document.querySelectorAll(".leaderboard-tab-panel");
+  console.log("Leaderboard tab clicked:", tabName);
 
-        buttons.forEach((btn) => {
-          if (btn.dataset.lbTab === tabName) {
-            btn.classList.add("leaderboard-subnav-btn-active");
-          } else {
-            btn.classList.remove("leaderboard-subnav-btn-active");
-          }
-        });
+  const buttons = document.querySelectorAll(".leaderboard-subnav-btn");
+  const panels = document.querySelectorAll(".leaderboard-tab-panel");
 
-        panels.forEach((panel) => {
-          if (panel.dataset.lbPanel === tabName) {
-            panel.classList.add("leaderboard-tab-panel-active");
-          } else {
-            panel.classList.remove("leaderboard-tab-panel-active");
-          }
-        });
+  buttons.forEach((btn) => {
+    if (btn.dataset.lbTab === tabName) {
+      btn.classList.add("leaderboard-subnav-btn-active");
+    } else {
+      btn.classList.remove("leaderboard-subnav-btn-active");
+    }
+  });
 
-        if (tabName === "empire") loadEmperorLeaderboard();
-        if (tabName === "industry") loadIndustryLeaders();
-        if (tabName === "season") loadActiveSeason();
-        if (tabName === "surge") loadEmpireSurgeLeaderboard();
-        
-      }
+  panels.forEach((panel) => {
+    if (panel.dataset.lbPanel === tabName) {
+      panel.classList.add("leaderboard-tab-panel-active");
+    } else {
+      panel.classList.remove("leaderboard-tab-panel-active");
+    }
+  });
+
+  if (tabName === "empire") {
+    loadEmperorLeaderboard();
+  }
+
+  if (tabName === "industry") {
+    loadIndustryLeaders();
+  }
+
+  if (tabName === "season") {
+    loadActiveSeason();
+  }
+}
       let emperorLeaderboardSort = "lifetime";
       async function loadEmperorLeaderboard() {
         try {
@@ -5558,19 +5561,32 @@ if (loggedInUser !== viewedUser) {
         return `<span style="color:#2e7d32; font-weight:600;">🟢 Maintenance: active (${diffDays} day${diffDays === 1 ? "" : "s"} left)</span>`;
       }
       async function loadGlobalHealth() {
+        console.log("GLOBAL HEALTH: function started");
         try {
-          const [healthRes, statsRes] = await Promise.all([
-            fetch(apiUrl("/global-health")),
-            fetch(apiUrl("/global-stats")),
-          ]);
+          const healthUrl = apiUrl("/global-health");
+console.log("GLOBAL HEALTH URL:", healthUrl);
 
-          if (!healthRes.ok)
-            throw new Error("Global health HTTP " + healthRes.status);
-          if (!statsRes.ok)
-            throw new Error("Global stats HTTP " + statsRes.status);
+const healthRes = await fetch(healthUrl);
 
-          const data = await healthRes.json();
-          const stats = await statsRes.json();
+if (!healthRes.ok) {
+  throw new Error("Global health HTTP " + healthRes.status);
+}
+
+const data = await healthRes.json();
+console.log("GLOBAL HEALTH: health data received", data);
+let stats = {
+  success: false,
+};
+
+try {
+  const statsRes = await fetch(apiUrl("/global-stats"));
+
+  if (statsRes.ok) {
+    stats = await statsRes.json();
+  }
+} catch (statsErr) {
+  console.warn("Global stats loaded separately failed:", statsErr);
+}
 
           const setText = (id, value) => {
             const el = document.getElementById(id);
@@ -6208,7 +6224,7 @@ setTimeout(() => {
   loadEmpireOverview();
   loadBlueprints();
   loadPacks();
-  loadGlobalHealth();
+  // loadGlobalHealth(); // disabled on startup to keep dashboard fast
 }, 1200);
           const dashboardUrlParams = new URLSearchParams(
             window.location.search,

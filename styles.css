@@ -16267,3 +16267,31 @@ padding:2px 8px !important;
     grid-template-columns: 1fr !important;
   }
 }
+/* ============================= */
+/* MARKETPLACE PAGE WIDTH FIX */
+/* Keeps all marketplace tabs same centered width */
+/* ============================= */
+
+body:has(.tabbar) .page {
+  max-width: 1180px !important;
+  width: calc(100% - 48px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+body:has(.tabbar) .market-tab-panel {
+  width: 100% !important;
+}
+
+body:has(.tabbar) .market-tab-panel .stack {
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+@media (max-width: 700px) {
+  body:has(.tabbar) .page {
+    width: calc(100% - 24px) !important;
+  }
+}
