@@ -15797,6 +15797,7 @@ padding:2px 8px !important;
 .inventory-salvage {
   border-top: 4px solid #64748b !important;
 }
+<<<<<<< HEAD
 /* ============================= */
 /* FOUNDRY BALANCE CARDS */
 /* ============================= */
@@ -15939,3 +15940,305 @@ padding:2px 8px !important;
   margin-top: 10px;
   font-size: 13px;
 }
+=======
+/* ================================================= */
+/* MYDEMPIRE MOBILE CLEANUP — SEASON + HUB + RATS */
+/* Added for better mobile layout */
+/* ================================================= */
+
+@media (max-width: 768px){
+
+  /* ========================= */
+  /* GENERAL PAGE WIDTH FIX */
+  /* ========================= */
+
+  .page,
+  .empire-hub-page,
+  .player-dashboard-page .page{
+    width:100% !important;
+    max-width:100% !important;
+    padding-left:10px !important;
+    padding-right:10px !important;
+    overflow-x:hidden !important;
+  }
+
+  .section,
+  .overview-block,
+  .summary-card,
+  .card{
+    max-width:100% !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  /* ========================= */
+  /* DASHBOARD / HUB TAB BUTTONS */
+  /* ========================= */
+
+  .subnav,
+  .leaderboard-subnav{
+    display:flex !important;
+    flex-wrap:nowrap !important;
+    overflow-x:auto !important;
+    gap:8px !important;
+    padding-bottom:8px !important;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .subnav-btn,
+  .leaderboard-subnav-btn{
+    flex:0 0 auto !important;
+    white-space:nowrap !important;
+    font-size:13px !important;
+    padding:9px 12px !important;
+    border-radius:12px !important;
+  }
+
+  /* ========================= */
+  /* SEASON REWARD MOBILE FIX */
+  /* ========================= */
+
+  .season-reward-preview{
+    width:100% !important;
+    max-width:100% !important;
+    padding:14px !important;
+    border-radius:18px !important;
+    overflow:hidden !important;
+  }
+
+  .season-reward-title{
+    font-size:18px !important;
+    line-height:1.3 !important;
+    margin-bottom:12px !important;
+  }
+
+  .season-reward-grid{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:10px !important;
+  }
+
+  .season-reward-item,
+  .season-reward-item.wide{
+    width:100% !important;
+    min-width:0 !important;
+    min-height:auto !important;
+    padding:12px 14px !important;
+    border-radius:14px !important;
+
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:10px !important;
+
+    text-align:left !important;
+    font-size:14px !important;
+    line-height:1.35 !important;
+    word-break:normal !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  .season-reward-item span{
+    font-size:15px !important;
+    font-weight:900 !important;
+    text-align:right !important;
+    white-space:normal !important;
+  }
+
+  .season-reward-info{
+    font-size:13px !important;
+    line-height:1.55 !important;
+    margin-top:12px !important;
+  }
+
+  #season-live-leaderboard{
+    width:100% !important;
+    overflow-x:hidden !important;
+  }
+
+  .season-rank-row{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:flex-start !important;
+    gap:4px !important;
+    padding:10px 12px !important;
+  }
+
+  .season-rank-left{
+    width:100% !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:8px !important;
+  }
+
+  .season-rank-name{
+    font-size:15px !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  .season-rank-ep{
+    font-size:13px !important;
+    font-weight:800 !important;
+    margin-left:30px !important;
+  }
+
+  .season-history-head{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:10px !important;
+    align-items:flex-start !important;
+  }
+
+  .season-prize-breakdown,
+  .season-reward-badge,
+  .season-growth-badge{
+    width:100% !important;
+    font-size:13px !important;
+    white-space:normal !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  .season-history-nav{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:10px !important;
+  }
+
+  /* ========================= */
+  /* RAT SITUATION MOBILE FIX */
+  /* ========================= */
+
+  .rat-situation-card{
+    width:100% !important;
+    max-width:100% !important;
+    padding:16px !important;
+    border-radius:18px !important;
+    overflow:hidden !important;
+  }
+
+  .rat-situation-card h2{
+    font-size:22px !important;
+    line-height:1.25 !important;
+  }
+
+  .rat-story,
+  .rat-guide-note,
+  .rat-message-box{
+    font-size:14px !important;
+    line-height:1.6 !important;
+  }
+
+  .rat-guide-box{
+    width:100% !important;
+    overflow-x:auto !important;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .rat-guide-table{
+    min-width:560px !important;
+    font-size:13px !important;
+  }
+
+  .rat-guide-table th,
+  .rat-guide-table td{
+    padding:8px 10px !important;
+    white-space:nowrap !important;
+  }
+
+  .rat-grid{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+  }
+
+  .rat-stat{
+    width:100% !important;
+    min-width:0 !important;
+    padding:14px !important;
+  }
+
+  .rat-label{
+    font-size:12px !important;
+  }
+
+  #warehouse-condition,
+  #rat-activity,
+  #rat-cleanup-cost,
+  #rat-smp-balance{
+    font-size:18px !important;
+  }
+
+  #rat-cleanup-btn,
+  .empire-action-btn{
+    width:100% !important;
+    min-height:48px !important;
+    font-size:15px !important;
+    border-radius:14px !important;
+  }
+
+  .rat-history-box{
+    width:100% !important;
+    overflow:hidden !important;
+  }
+
+  .rat-history-row{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:4px !important;
+    padding:10px 12px !important;
+    font-size:13px !important;
+  }
+
+  /* ========================= */
+  /* EMPIRE HUB PANELS MOBILE */
+  /* ========================= */
+
+  .hub-panel{
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:hidden !important;
+  }
+
+  #operations-live-area{
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:hidden !important;
+  }
+
+  #operations-live-area .summary-grid,
+  #operations-live-area .empire-ops-intel-grid{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+  }
+
+  #operations-live-area .summary-card,
+  .empire-ops-intel-card{
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  #active-operation-countdown{
+    white-space:normal !important;
+    text-align:center !important;
+    line-height:1.4 !important;
+  }
+
+  #culture-panel > div,
+  #foundry-panel > div{
+    max-width:100% !important;
+  }
+
+  #culture-panel div[style*="grid-template-columns"],
+  #foundry-panel div[style*="grid-template-columns"]{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+  }
+
+  #culture-panel .card,
+  #foundry-panel .card{
+    width:100% !important;
+    max-width:100% !important;
+  }
+}
+>>>>>>> d7bc82e82cea50d2ef63cba24cb723e76e88bdbf
