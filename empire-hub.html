@@ -761,6 +761,56 @@ async function loadFoundryPreview() {
     document.getElementById("foundry-emp-balance").textContent = "0";
   }
 }
+async function craftFoundryB4() {
+  const btn = document.getElementById("craft-b4-btn");
+  const status = document.getElementById("craft-b4-status");
+
+  const username = getLoggedInUser();
+
+  if (!username) {
+    status.textContent = "Please connect wallet first.";
+    return;
+  }
+
+  const confirmed = confirm(
+    "Craft Random B4 Blueprint?\n\nCost:\n5 Imperial Fragments\n5 SMP\n100 EMP\n\nResult: 1 random B4 Blueprint"
+  );
+
+  if (!confirmed) return;
+
+  try {
+    btn.disabled = true;
+    status.textContent = "Crafting B4 blueprint...";
+
+    const res = await fetch(
+      `${API_BASE}/player/${encodeURIComponent(username)}/foundry/craft-b4`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": username,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || data.success === false) {
+      throw new Error(data.error || "Crafting failed.");
+    }
+
+    status.textContent = `✅ Crafted successfully: ${data.blueprint?.tier || "Random B4 Blueprint"}`;
+
+    foundryPreviewLoaded = false;
+    await loadFoundryPreview();
+  } catch (err) {
+    console.error("Foundry B4 craft error:", err);
+    status.textContent = `❌ ${err.message || "Crafting failed."}`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+window.craftFoundryB4 = craftFoundryB4;
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
 

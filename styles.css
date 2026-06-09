@@ -15797,7 +15797,7 @@ padding:2px 8px !important;
 .inventory-salvage {
   border-top: 4px solid #64748b !important;
 }
-<<<<<<< HEAD
+
 /* ============================= */
 /* FOUNDRY BALANCE CARDS */
 /* ============================= */
@@ -15940,7 +15940,6 @@ padding:2px 8px !important;
   margin-top: 10px;
   font-size: 13px;
 }
-=======
 /* ================================================= */
 /* MYDEMPIRE MOBILE CLEANUP — SEASON + HUB + RATS */
 /* Added for better mobile layout */
@@ -16241,4 +16240,30 @@ padding:2px 8px !important;
     max-width:100% !important;
   }
 }
->>>>>>> d7bc82e82cea50d2ef63cba24cb723e76e88bdbf
+/* ============================= */
+/* FOUNDRY FINAL LAYOUT FIX */
+/* ============================= */
+
+.foundry-balance-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+  margin: 22px 0 34px !important;
+}
+
+.foundry-balance-grid .foundry-balance-card {
+  width: 100% !important;
+  min-height: 170px !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+@media (max-width: 900px) {
+  .foundry-balance-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
