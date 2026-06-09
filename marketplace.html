@@ -362,166 +362,44 @@
 </section>
   </div>
 <!-- PREMIUM ASSETS -->
-<section class="market-tab-panel premium-market-panel" data-market-tab-panel="premium">
-  <div class="stack">
+<section class="market-tab-panel" data-market-tab-panel="premium">
+  <div class="card coming-soon-card premium-soon">
 
-    <div class="card">
-      <div class="market-header">
-        <div class="market-header-left">
-          <h2>Premium Materials Marketplace</h2>
-          <div class="market-header-sub">
-            Trade Imperial Fragments and SMP directly using EMP. Relics and Writs will remain Coming Soon.
-          </div>
-        </div>
-        <div class="pill">EMP Only</div>
-      </div>
+    <div class="coming-soon-kicker">🏛 PREMIUM MARKET</div>
 
-      <div
-        class="premium-mobile-toolbar"
-        style="
-          display:flex;
-          flex-direction:column;
-          gap:14px;
-          width:100%;
-        "
-      >
+    <h2>Premium Assets Marketplace</h2>
 
-        <div class="field" style="width:100%;">
-          <label for="premium-view-select">View</label>
-          <select
-            id="premium-view-select"
-            style="width:100%; min-height:48px;"
-          >
-            <option value="market">Market Listings</option>
-            <option value="mine">My Listings</option>
-          </select>
-        </div>
+    <p>
+      Rare strategic collectibles and Genesis-era premium assets will become
+      tradable in a future marketplace expansion.
+    </p>
 
-        <div class="premium-subtabs" id="premium-subtabs">
-  <button
-    type="button"
-    class="premium-subtab active"
-    data-premium-material="IMPERIAL_FRAGMENT"
-  >
-    🧩 Fragments
-  </button>
+    <div class="premium-preview-grid">
 
-  <button
-    type="button"
-    class="premium-subtab"
-    data-premium-material="SMP"
-  >
-    🔧 SMP
-  </button>
-
-  <button
-    type="button"
-    class="premium-subtab disabled"
-    disabled
-  >
-    💎 Relics Soon
-  </button>
-
-  <button
-    type="button"
-    class="premium-subtab disabled"
-    disabled
-  >
-    📜 Writs Soon
-  </button>
-</div>
-
-<input
-  id="premium-material-type"
-  type="hidden"
-  value="IMPERIAL_FRAGMENT"
-/>
-
-        <div class="field" style="width:100%;">
-          <label for="premium-material-quantity">Quantity</label>
-          <input
-            id="premium-material-quantity"
-            type="number"
-            min="1"
-            step="1"
-            placeholder="e.g. 5"
-            style="width:100%; min-height:48px;"
-          />
-          <div class="hint">Only whole numbers allowed.</div>
-        </div>
-
-        <div class="field" style="width:100%;">
-          <label for="premium-material-price-emp">Price per Item (EMP)</label>
-          <input
-            id="premium-material-price-emp"
-            type="number"
-            min="1"
-            step="1"
-            placeholder="e.g. 25"
-            style="width:100%; min-height:48px;"
-          />
-        </div>
-
-        <button
-          class="primary-btn"
-          id="create-premium-material-listing-btn"
-          type="button"
-          style="width:100%; min-height:50px;"
-        >
-          Create Listing
-        </button>
-
-        <button
-          class="secondary-btn"
-          id="refresh-premium-material-market-btn"
-          type="button"
-          style="width:100%; min-height:50px;"
-        >
-          Refresh
-        </button>
-
-      </div>
-
-      <div class="hint" id="premium-material-preview">
-        Choose material, quantity, and EMP price to preview listing.
-      </div>
-
-      <div class="status" id="premium-material-status">
-        Frontend ready. Backend activation coming next.
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="market-header">
-        <div class="market-header-left">
-          <h2 id="premium-material-feed-title">Premium Material Listings</h2>
-          <div class="market-header-sub" id="premium-material-feed-subtitle">
-            Browse active Fragment and SMP listings.
-          </div>
-        </div>
-        <div class="pill" id="premium-material-count-pill">0 Items</div>
-      </div>
-
-      <div id="premium-material-list" class="listing-list">
-        <div class="empty">Premium materials marketplace is being prepared...</div>
-      </div>
-    </div>
-
-    
-
-    <div class="card">
-      <div class="market-header">
-        <div class="market-header-left">
-          <h2>Recent Premium Material Trade History</h2>
-          <div class="market-header-sub">
-            Last 10 completed Fragment and SMP trades
-          </div>
+      <div class="premium-preview-card">
+        <div class="premium-preview-icon">🏛</div>
+        <div class="premium-preview-title">Relics</div>
+        <div class="premium-preview-text">
+          Rare Founder collectibles with permanent EP boost utility.
         </div>
       </div>
 
-      <div id="premium-material-history-list" class="listing-list">
-        <div class="empty">No premium material trade history yet.</div>
+      <div class="premium-preview-card">
+        <div class="premium-preview-icon">💠</div>
+        <div class="premium-preview-title">Imperial Fragments</div>
+        <div class="premium-preview-text">
+          Premium crafting material obtained from Imperial Supply Crates.
+        </div>
       </div>
+
+      <div class="premium-preview-card">
+        <div class="premium-preview-icon">📜</div>
+        <div class="premium-preview-title">Writs</div>
+        <div class="premium-preview-text">
+          Founder-era strategic documents connected to future ecosystem utility.
+        </div>
+      </div>
+
     </div>
 
   </div>
