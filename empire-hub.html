@@ -715,7 +715,17 @@ async function loadFoundryPreview() {
 
   foundryPreviewLoaded = true;
 
-  const username = getLoggedInUser();
+const params = new URLSearchParams(window.location.search);
+
+const username =
+  params.get("user") || params.get("view") || getLoggedInUser();
+
+const loggedInUser = getLoggedInUser();
+
+const isVisitorMode =
+  username &&
+  loggedInUser &&
+  username.toLowerCase() !== loggedInUser.toLowerCase();
 
   if (!username) {
     document.getElementById("foundry-fragment-balance").textContent = "Connect wallet";
@@ -747,6 +757,13 @@ async function loadFoundryPreview() {
 
     document.getElementById("foundry-emp-balance").textContent =
       Number(data.empBalance || data.emp_balance || 0).toLocaleString();
+      const craftBtn = document.getElementById("craft-b4-btn");
+const craftStatus = document.getElementById("craft-b4-status");
+
+if (craftBtn && craftStatus && isVisitorMode) {
+  craftBtn.disabled = true;
+  craftStatus.textContent = "Viewing another empire. Crafting is available only in your own empire.";
+}
 
     console.log("🔥 Foundry balances loaded:", {
       fragments: data.imperialFragments,
