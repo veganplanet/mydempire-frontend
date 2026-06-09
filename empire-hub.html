@@ -308,24 +308,32 @@
   </div>
 </div>
   <div class="card foundry-recipe-card foundry-b5-card">
-    <div class="foundry-recipe-title">🟡 Random B5 Blueprint</div>
+  <div class="foundry-recipe-title">🟡 Random B5 Blueprint</div>
 
-    <p class="foundry-recipe-text">
-      Fragment + SMP + EMP recipe.
-    </p>
+  <p class="foundry-recipe-text">
+    Cost: <strong>9 Fragments + 12 SMP + 200 EMP</strong>
+  </p>
 
-    <strong class="foundry-coming-soon">Coming Soon</strong>
-  </div>
+  <p class="foundry-recipe-text">
+    Result: 1 random B5 Blueprint
+  </p>
+
+  <strong class="foundry-coming-soon">Coming Soon</strong>
+</div>
 
   <div class="card foundry-recipe-card foundry-relic-card">
-    <div class="foundry-recipe-title">💎 Imperial Relic</div>
+  <div class="foundry-recipe-title">💎 Imperial Relic</div>
 
-    <p class="foundry-recipe-text">
-      Fragment + SMP + EMP recipe.
-    </p>
+  <p class="foundry-recipe-text">
+    Cost: <strong>13 Fragments + 18 SMP + 400 EMP</strong>
+  </p>
 
-    <strong class="foundry-coming-soon">Coming Soon</strong>
-  </div>
+  <p class="foundry-recipe-text">
+    Result: 1 Imperial Relic
+  </p>
+
+  <strong class="foundry-coming-soon">Coming Soon</strong>
+</div>
 </div>
 
 </section>
@@ -847,7 +855,17 @@ if (initialTab === "foundry") {
 });
 
 </script>
+<footer class="global-footer">
+  <div id="global-footer"></div>
+</footer>
 
+<script>
+  fetch("footer.html")
+    .then((res) => res.text())
+    .then((html) => {
+      document.getElementById("global-footer").innerHTML = html;
+    });
+</script>
     <script src="js/navbar.js"></script>
     <script src="js/notifications.js"></script>
   </body>
