@@ -1127,7 +1127,9 @@ async function updateLiveGenesisPrice() {
   const qty = Number(qtyInput.value || 0);
 
   try {
-    const res = await fetch(shopApiUrl("/genesis-sale-status"));
+    const res = await fetch(
+  shopApiUrl(`/genesis-sale-status?qty=${encodeURIComponent(qty || 0)}`)
+);
     const data = await res.json();
     console.log("SHOP LIVE PRICE DATA:", data);
 
@@ -1150,8 +1152,21 @@ async function updateLiveGenesisPrice() {
       return;
     }
 
-    totalBox.textContent =
-      `${qty} pack${qty > 1 ? "s" : ""} ≈ ${(qty * hivePerPack).toFixed(3)} HIVE total`;
+    const previewTotalHive = Number(data.preview_total_hive || 0);
+const breakdown = Array.isArray(data.price_breakdown)
+  ? data.price_breakdown
+  : [];
+
+if (previewTotalHive > 0) {
+  const splitText =
+    breakdown.length > 1 ? " • slab price split applied" : "";
+
+  totalBox.textContent =
+    `${qty} pack${qty > 1 ? "s" : ""} ≈ ${previewTotalHive.toFixed(3)} HIVE total${splitText}`;
+} else {
+  totalBox.textContent =
+    `${qty} pack${qty > 1 ? "s" : ""} ≈ ${(qty * hivePerPack).toFixed(3)} HIVE total`;
+}
   } catch (err) {
     console.error("Live Genesis price error:", err);
     priceBox.textContent = "Live price unavailable";
