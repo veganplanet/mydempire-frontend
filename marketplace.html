@@ -25,7 +25,7 @@
   <button class="tab-btn" data-market-tab="blueprints">Blueprints</button>
   <button class="tab-btn" data-market-tab="packs">Packs</button>
  <button class="tab-btn" data-market-tab="premium">
-  Premium Assets <span class="soon-pill">SOON</span>
+  Premium Assets
 </button>
   <button class="tab-btn" data-market-tab="land">
   Land <span class="soon-pill">SOON</span>
@@ -360,51 +360,194 @@
 </div>
   </div>
 </section>
-  </div>
+  
 <!-- PREMIUM ASSETS -->
 <section class="market-tab-panel" data-market-tab-panel="premium">
-  <div class="card coming-soon-card premium-soon">
+  <div class="stack">
 
-    <div class="coming-soon-kicker">🏛 PREMIUM MARKET</div>
+    <!-- Premium Materials Controls -->
+    <div class="card">
+      <div class="market-header">
+        <div class="market-header-left">
+          <h2>Premium Materials Marketplace</h2>
+          <div class="market-header-sub">
+            EMP-only trading for Imperial Fragments and Salvaged Machinery Parts.
+          </div>
+        </div>
+        <div class="pill">EMP Only</div>
+      </div>
 
-    <h2>Premium Assets Marketplace</h2>
+      <div class="premium-material-tabs">
+        <button
+          type="button"
+          class="premium-material-tab active"
+          data-material-tab="IMPERIAL_FRAGMENT"
+        >
+          🧩 Fragments
+        </button>
 
-    <p>
-      Rare strategic collectibles and Genesis-era premium assets will become
-      tradable in a future marketplace expansion.
-    </p>
+        <button
+          type="button"
+          class="premium-material-tab"
+          data-material-tab="SMP"
+        >
+          🔧 SMP
+        </button>
 
-    <div class="premium-preview-grid">
+        <button
+          type="button"
+          class="premium-material-tab disabled"
+          disabled
+        >
+          💎 Relics Soon
+        </button>
 
-      <div class="premium-preview-card">
-        <div class="premium-preview-icon">🏛</div>
-        <div class="premium-preview-title">Relics</div>
-        <div class="premium-preview-text">
-          Rare Founder collectibles with permanent EP boost utility.
+        <button
+          type="button"
+          class="premium-material-tab disabled"
+          disabled
+        >
+          📜 Writs Soon
+        </button>
+      </div>
+
+      <input
+        type="hidden"
+        id="premium-selected-material"
+        value="IMPERIAL_FRAGMENT"
+      />
+
+      <div
+        class="premium-material-mobile-toolbar"
+        style="
+          display:flex;
+          flex-direction:column;
+          gap:14px;
+          width:100%;
+        "
+      >
+
+        <div class="field" style="width:100%;">
+          <label for="premium-material-view-select">View</label>
+          <select
+            id="premium-material-view-select"
+            style="width:100%; min-height:48px;"
+          >
+            <option value="market">Market Listings</option>
+            <option value="mine">My Listings</option>
+          </select>
+        </div>
+
+        <div class="field" style="width:100%;">
+          <label for="premium-material-quantity">Quantity</label>
+          <input
+            id="premium-material-quantity"
+            type="number"
+            min="1"
+            step="1"
+            placeholder="e.g. 5"
+            style="width:100%; min-height:48px;"
+          />
+          <div class="hint">How many materials you want to list.</div>
+        </div>
+
+        <div class="field" style="width:100%;">
+          <label for="premium-material-price-emp">Price per Item (EMP)</label>
+          <input
+            id="premium-material-price-emp"
+            type="number"
+            min="1"
+            step="1"
+            placeholder="e.g. 25"
+            style="width:100%; min-height:48px;"
+          />
+        </div>
+
+        <button
+  class="primary-btn"
+  id="create-premium-material-listing-btn"
+  type="button"
+  onclick="createPremiumMaterialListing()"
+  style="width:100%; min-height:50px;"
+>
+  Create Listing
+</button>
+
+        <button
+          class="secondary-btn"
+          id="refresh-premium-material-market-btn"
+          type="button"
+          style="width:100%; min-height:50px;"
+        >
+          Refresh
+        </button>
+
+      </div>
+
+      <div
+        class="hint"
+        id="premium-material-listing-preview"
+      >
+        Example: 5 Fragments × 25 EMP = 125 EMP total.
+      </div>
+
+      <div
+        class="status"
+        id="premium-material-create-status"
+      ></div>
+    </div>
+
+    <!-- Premium Materials Feed -->
+    <div class="card">
+      <div class="market-header">
+        <div class="market-header-left">
+          <h2 id="premium-material-feed-title">Fragment Market Listings</h2>
+          <div
+            class="market-header-sub"
+            id="premium-material-feed-subtitle"
+          >
+            Browse active Imperial Fragment listings.
+          </div>
+        </div>
+        <div
+          class="pill"
+          id="premium-material-count-pill"
+        >
+          0 Listings
         </div>
       </div>
 
-      <div class="premium-preview-card">
-        <div class="premium-preview-icon">💠</div>
-        <div class="premium-preview-title">Imperial Fragments</div>
-        <div class="premium-preview-text">
-          Premium crafting material obtained from Imperial Supply Crates.
+      <div
+        id="premium-material-list"
+        class="listing-list"
+      >
+        <div class="empty">
+          Material marketplace backend will be connected in the next step.
+        </div>
+      </div>
+    </div>
+
+    <!-- Premium Materials History -->
+    <div class="card">
+      <div class="market-header">
+        <div class="market-header-left">
+          <h2>Recent Material Trade History</h2>
+          <div class="market-header-sub">
+            Last 10 completed Fragments / SMP trades
+          </div>
         </div>
       </div>
 
-      <div class="premium-preview-card">
-        <div class="premium-preview-icon">📜</div>
-        <div class="premium-preview-title">Writs</div>
-        <div class="premium-preview-text">
-          Founder-era strategic documents connected to future ecosystem utility.
-        </div>
+      <div
+        id="premium-material-history-list"
+        class="listing-list"
+      >
+        <div class="empty">No material trade history yet.</div>
       </div>
-
     </div>
 
   </div>
 </section>
-
 <!-- LAND -->
 <section class="market-tab-panel" data-market-tab-panel="land">
   <div class="card coming-soon-card">
@@ -604,6 +747,9 @@ const VIEWED_USER = getMarketplaceViewedUser() || ACTIVE_USER;
     } else if (tabName === "packs") {
   loadPacks();
   loadPackListings();
+} else if (tabName === "premium") {
+  setPremiumMaterial(currentPremiumMaterial || "IMPERIAL_FRAGMENT");
+  loadPremiumMaterialListings();
 }
     }
 
@@ -955,7 +1101,293 @@ async function buyEmpListing(listingId) {
     empBuyInProgress = false;
   }
 }
+// ============================
+// PREMIUM MATERIALS FRONTEND
+// ============================
 
+let currentPremiumMaterial = "IMPERIAL_FRAGMENT";
+
+function getPremiumMaterialLabel(materialType = currentPremiumMaterial) {
+  const type = String(materialType || "").toUpperCase();
+
+  if (type === "SMP") {
+    return {
+      short: "SMP",
+      full: "Salvaged Machinery Parts",
+      title: "SMP Market Listings",
+      subtitle: "Browse active Salvaged Machinery Parts listings.",
+      example: "Example: 5 SMP × 25 EMP = 125 EMP total."
+    };
+  }
+
+  return {
+    short: "Fragments",
+    full: "Imperial Fragments",
+    title: "Fragment Market Listings",
+    subtitle: "Browse active Imperial Fragment listings.",
+    example: "Example: 5 Fragments × 25 EMP = 125 EMP total."
+  };
+}
+
+function updatePremiumMaterialPreview() {
+  const qtyInput = document.getElementById("premium-material-quantity");
+  const priceInput = document.getElementById("premium-material-price-emp");
+  const preview = document.getElementById("premium-material-listing-preview");
+
+  if (!preview) return;
+
+  const qty = Number(qtyInput?.value || 0);
+  const price = Number(priceInput?.value || 0);
+  const label = getPremiumMaterialLabel();
+
+  if (!qty || !price) {
+    preview.textContent = label.example;
+    return;
+  }
+
+  const total = qty * price;
+
+  preview.textContent =
+    `${qty} ${label.short} × ${price} EMP = ${total.toLocaleString()} EMP total.`;
+}
+
+async function loadPremiumMaterialListings() {
+  const username =
+    typeof ACTIVE_USER !== "undefined" && ACTIVE_USER
+      ? ACTIVE_USER
+      : getMarketplaceLoggedInUser();
+
+  const materialType =
+    document.getElementById("premium-selected-material")?.value ||
+    currentPremiumMaterial ||
+    "IMPERIAL_FRAGMENT";
+
+  const view =
+    document.getElementById("premium-material-view-select")?.value || "market";
+
+  const listBox = document.getElementById("premium-material-list");
+  const countPill = document.getElementById("premium-material-count-pill");
+
+  if (!listBox) return;
+
+  try {
+    listBox.innerHTML = `<div class="empty">Loading material listings...</div>`;
+
+    const url =
+      apiUrl("/marketplace/materials/listings") +
+      `?material_type=${encodeURIComponent(materialType)}` +
+      `&view=${encodeURIComponent(view)}` +
+      `&username=${encodeURIComponent(username || "")}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Failed to load material listings.");
+    }
+
+    const listings = data.listings || [];
+
+    if (countPill) {
+      countPill.textContent = `${listings.length} LISTINGS`;
+    }
+
+    if (!listings.length) {
+      listBox.innerHTML = `<div class="empty">No active listings yet.</div>`;
+      return;
+    }
+
+    listBox.innerHTML = `
+  <div class="compact-list">
+    ${listings
+      .map((listing) => {
+        const qty = Number(listing.quantity_remaining || 0);
+        const price = Number(listing.price_per_item_emp || 0);
+        const total = qty * price;
+        const materialLabel = getPremiumMaterialLabel(materialType).full;
+
+        return `
+          <div class="compact-row">
+
+            <div class="compact-cell">
+              <div class="compact-asset-title">
+                ${qty} ${materialLabel}
+              </div>
+              <div class="compact-asset-sub">
+                Listing #${listing.id || "--"}
+              </div>
+            </div>
+
+            <div class="compact-cell">
+              <div class="compact-seller">
+                @${listing.seller || "--"}
+              </div>
+              <div class="compact-asset-sub">
+                Seller
+              </div>
+            </div>
+
+            <div class="compact-cell compact-details">
+              <strong>Price / Item:</strong> ${price.toLocaleString()} EMP<br>
+              <strong>Quantity:</strong> ${qty}
+            </div>
+
+            <div class="compact-cell compact-price">
+              ${total.toLocaleString()} EMP
+            </div>
+
+            <div class="compact-cell compact-action">
+              <button class="compact-buy-btn" type="button" disabled>
+                Buy Soon
+              </button>
+            </div>
+
+          </div>
+        `;
+      })
+      .join("")}
+  </div>
+`;
+  } catch (err) {
+    console.error("Load premium material listings error:", err);
+    listBox.innerHTML = `<div class="empty">Failed to load material listings.</div>`;
+  }
+}
+
+window.loadPremiumMaterialListings = loadPremiumMaterialListings;
+
+async function createPremiumMaterialListing() {
+  try {
+    const username =
+      typeof ACTIVE_USER !== "undefined" && ACTIVE_USER
+        ? ACTIVE_USER
+        : getMarketplaceLoggedInUser();
+
+    const materialType =
+      document.getElementById("premium-selected-material")?.value ||
+      currentPremiumMaterial ||
+      "IMPERIAL_FRAGMENT";
+
+    const quantity = Number(
+      document.getElementById("premium-material-quantity")?.value || 0
+    );
+
+    const pricePerItemEmp = Number(
+      document.getElementById("premium-material-price-emp")?.value || 0
+    );
+
+    if (!username) {
+      setStatus("premium-material-create-status", "Please login first.", true);
+      return;
+    }
+
+    if (!ensureOwnMarketplaceAction()) {
+      return;
+    }
+
+    if (!quantity || quantity <= 0) {
+      setStatus("premium-material-create-status", "Enter valid quantity.", true);
+      return;
+    }
+
+    if (!pricePerItemEmp || pricePerItemEmp <= 0) {
+      setStatus(
+        "premium-material-create-status",
+        "Enter valid EMP price per item.",
+        true
+      );
+      return;
+    }
+
+    setStatus("premium-material-create-status", "Creating material listing...");
+
+    const response = await fetch(apiUrl("/marketplace/materials/list"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": username
+      },
+      body: JSON.stringify({
+        username,
+        material_type: materialType,
+        quantity,
+        price_per_item_emp: pricePerItemEmp
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Failed to create material listing.");
+    }
+
+    setStatus(
+      "premium-material-create-status",
+      "✅ Material listing created successfully."
+    );
+
+    document.getElementById("premium-material-quantity").value = "";
+    document.getElementById("premium-material-price-emp").value = "";
+
+    updatePremiumMaterialPreview();
+  } catch (err) {
+    console.error("Create premium material listing error:", err);
+    setStatus(
+      "premium-material-create-status",
+      err.message || "Failed to create material listing.",
+      true
+    );
+  }
+}
+
+window.createPremiumMaterialListing = createPremiumMaterialListing;
+function setPremiumMaterial(materialType) {
+  const cleanType = String(materialType || "IMPERIAL_FRAGMENT").toUpperCase();
+
+  currentPremiumMaterial = cleanType === "SMP" ? "SMP" : "IMPERIAL_FRAGMENT";
+
+  const hiddenInput = document.getElementById("premium-selected-material");
+  if (hiddenInput) {
+    hiddenInput.value = currentPremiumMaterial;
+  }
+
+  document.querySelectorAll(".premium-material-tab[data-material-tab]").forEach((btn) => {
+    btn.classList.toggle(
+      "active",
+      String(btn.dataset.materialTab || "").toUpperCase() === currentPremiumMaterial
+    );
+  });
+
+  const label = getPremiumMaterialLabel();
+
+  const selectedLabel = document.getElementById("premium-selected-material-label");
+  if (selectedLabel) {
+    selectedLabel.textContent = label.full;
+  }
+
+  const feedTitle = document.getElementById("premium-material-feed-title");
+  if (feedTitle) {
+    feedTitle.textContent = label.title;
+  }
+
+  const feedSubtitle = document.getElementById("premium-material-feed-subtitle");
+  if (feedSubtitle) {
+    feedSubtitle.textContent = label.subtitle;
+  }
+
+  const listBox = document.getElementById("premium-material-list");
+  if (listBox) {
+    listBox.innerHTML = `
+      <div class="empty">
+        ${label.full} marketplace backend will be connected in the next step.
+      </div>
+    `;
+  }
+
+  updatePremiumMaterialPreview();
+  loadPremiumMaterialListings();
+  loadPremiumMaterialListings();
+}
     /* BLUEPRINTS */
     let playerBlueprintInventory = [];
     let allBlueprintListings = [];
@@ -1436,6 +1868,30 @@ if (packSelect) {
       currentEmpView = e.target.value;
       renderEmpMarket();
     });
+// Premium material sub-tabs
+document.querySelectorAll(".premium-material-tab[data-material-tab]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    setPremiumMaterial(btn.dataset.materialTab);
+  });
+});
+
+document
+  .getElementById("premium-material-quantity")
+  ?.addEventListener("input", updatePremiumMaterialPreview);
+
+document
+  .getElementById("premium-material-price-emp")
+  ?.addEventListener("input", updatePremiumMaterialPreview);
+
+document
+  .getElementById("premium-material-view-select")
+  ?.addEventListener("change", () => {
+    updatePremiumMaterialPreview();
+  });
+
+document
+  .getElementById("refresh-premium-material-market-btn")
+  ?.addEventListener("click", loadPremiumMaterialListings);
 
     document.getElementById("create-blueprint-listing-btn").addEventListener("click", createBlueprintListing);
     document.getElementById("refresh-blueprint-market-btn").addEventListener("click", async () => {
@@ -1453,6 +1909,7 @@ if (packSelect) {
     loadEmpListings();
     loadActiveUserEmpBalance();
     updateListingPreview();
+    setPremiumMaterial("IMPERIAL_FRAGMENT");
 
     
   </script>
