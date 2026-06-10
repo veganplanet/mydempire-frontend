@@ -1154,6 +1154,82 @@ function updatePremiumMaterialPreview() {
   preview.textContent =
     `${qty} ${label.short} × ${price} EMP = ${total.toLocaleString()} EMP total.`;
 }
+
+async function cancelPremiumMaterialListing(listingId) {
+  const username =
+    typeof ACTIVE_USER !== "undefined" && ACTIVE_USER
+      ? ACTIVE_USER
+      : getMarketplaceLoggedInUser();
+
+  if (!username) {
+    alert("Please login first.");
+    return;
+  }
+
+  if (!ensureOwnMarketplaceAction()) {
+    return;
+  }
+
+  const confirmed = confirm(
+    "Cancel this listing? Unsold materials will return to your inventory."
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    const response = await fetch(apiUrl("/marketplace/materials/cancel"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": username
+      },
+      body: JSON.stringify({
+        username,
+        listing_id: listingId
+      })
+    });
+
+   const rawText = await response.text();
+
+let data = null;
+
+try {
+  data = JSON.parse(rawText);
+} catch (parseErr) {
+  console.error("Cancel route returned non-JSON:", {
+    status: response.status,
+    url: response.url,
+    body: rawText
+  });
+
+  throw new Error(
+    `Cancel route returned non-JSON. Status: ${response.status}. Check console for URL/body.`
+  );
+}
+
+if (!response.ok || !data.success) {
+  throw new Error(data.error || "Failed to cancel listing.");
+}
+
+    alert(
+      `✅ Listing cancelled. Returned: ${data.returned_quantity} ${data.material_type}`
+    );
+
+    await loadPremiumMaterialListings();
+
+    if (typeof loadActiveUserEmpBalance === "function") {
+      await loadActiveUserEmpBalance();
+    }
+  } catch (err) {
+    console.error("Cancel premium material listing error:", err);
+    alert(err.message || "Failed to cancel material listing.");
+  }
+}
+
+window.cancelPremiumMaterialListing = cancelPremiumMaterialListing;
+
 async function buyPremiumMaterialListing(listingId, maxAvailable) {
   const username =
     typeof ACTIVE_USER !== "undefined" && ACTIVE_USER
@@ -1315,13 +1391,27 @@ async function loadPremiumMaterialListings() {
             </div>
 
             <div class="compact-cell compact-action">
-              <button
-  class="compact-buy-btn"
-  type="button"
-  onclick="buyPremiumMaterialListing(${listing.id}, ${qty})"
->
-  Buy
-</button>
+            ${
+  String(listing.seller || "").toLowerCase() === String(username || "").toLowerCase()
+    ? `
+      <button
+        class="compact-buy-btn"
+        type="button"
+        onclick="cancelPremiumMaterialListing(${listing.id})"
+      >
+        Cancel
+      </button>
+    `
+    : `
+      <button
+        class="compact-buy-btn"
+        type="button"
+        onclick="buyPremiumMaterialListing(${listing.id}, ${qty})"
+      >
+        Buy
+      </button>
+    `
+}
             </div>
 
           </div>
