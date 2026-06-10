@@ -891,7 +891,12 @@ async function loadBlueprintMintInfo() {
       shopApiUrl(`/player/${encodeURIComponent(activeUser)}/blueprints`)
     );
     const blueprintsData = await blueprintsRes.json();
-const mintCost = Number(overviewData.blueprintMintCost || 150);
+const mintCostRaw = overviewData.blueprintMintCost;
+
+const mintCost =
+  mintCostRaw === null || mintCostRaw === undefined
+    ? null
+    : Number(mintCostRaw);
     if (!overviewRes.ok || !blueprintsRes.ok) {
       throw new Error("Failed to load blueprint mint info.");
     }
@@ -919,7 +924,12 @@ const mintCost = Number(overviewData.blueprintMintCost || 150);
     const emptySlots = Math.max(totalSlots - totalFactories, 0);
     const eligibleMints = Math.max(emptySlots - totalBlueprints, 0);
 
-if (costEl) costEl.textContent = `${mintCost} EMP`;
+if (costEl) {
+  costEl.textContent =
+    mintCost && mintCost > 0
+      ? `${mintCost} EMP`
+      : "Price temporarily unavailable";
+}
     if (eligibilityEl) {
       eligibilityEl.textContent =
         eligibleMints > 0
@@ -940,10 +950,18 @@ async function mintExtraBlueprint() {
       setMintBlueprintStatus("Please connect wallet first.", "error");
       return;
     }
-const mintCost =
-  Number(document.getElementById("blueprint-mint-cost")?.textContent.replace(/[^\d]/g, "")) || 0;
-    const ok = confirm(`Mint extra blueprint for ${mintCost} EMP?`);
-    if (!ok) return;
+const mintCostText =
+  document.getElementById("blueprint-mint-cost")?.textContent || "";
+
+const mintCost = Number(mintCostText.replace(/[^\d]/g, "")) || 0;
+
+if (!mintCost || mintCost <= 0) {
+  alert("Blueprint mint price is temporarily unavailable. Please try again shortly.");
+  return;
+}
+
+const ok = confirm(`Mint extra blueprint for ${mintCost} EMP?`);
+if (!ok) return;
 
     setMintBlueprintStatus("Minting blueprint...");
 
