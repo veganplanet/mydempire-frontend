@@ -750,6 +750,10 @@ const VIEWED_USER = getMarketplaceViewedUser() || ACTIVE_USER;
 } else if (tabName === "premium") {
   setPremiumMaterial(currentPremiumMaterial || "IMPERIAL_FRAGMENT");
   loadPremiumMaterialListings();
+
+  if (typeof loadActiveUserEmpBalance === "function") {
+    loadActiveUserEmpBalance();
+  }
 }
     }
 
@@ -1150,6 +1154,80 @@ function updatePremiumMaterialPreview() {
   preview.textContent =
     `${qty} ${label.short} × ${price} EMP = ${total.toLocaleString()} EMP total.`;
 }
+async function buyPremiumMaterialListing(listingId, maxAvailable) {
+  const username =
+    typeof ACTIVE_USER !== "undefined" && ACTIVE_USER
+      ? ACTIVE_USER
+      : getMarketplaceLoggedInUser();
+
+  if (!username) {
+    alert("Please login first.");
+    return;
+  }
+
+  if (!ensureOwnMarketplaceAction()) {
+    return;
+  }
+
+  const quantityText = prompt(
+    `How many do you want to buy? Available: ${maxAvailable}`,
+    "1"
+  );
+
+  if (quantityText === null) {
+    return;
+  }
+
+  const quantity = parseInt(quantityText, 10);
+
+  if (!Number.isInteger(quantity) || quantity <= 0) {
+    alert("Enter a valid whole number.");
+    return;
+  }
+
+  if (quantity > Number(maxAvailable || 0)) {
+    alert(`Only ${maxAvailable} item(s) available.`);
+    return;
+  }
+
+  try {
+    const confirmed = confirm(`Confirm purchase of ${quantity} item(s)?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    const response = await fetch(apiUrl("/marketplace/materials/buy"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": username
+      },
+      body: JSON.stringify({
+        username,
+        listing_id: listingId,
+        quantity
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Purchase failed.");
+    }
+
+    alert("✅ Material purchase completed successfully.");
+    loadPremiumMaterialListings();
+    if (typeof loadActiveUser === "function") {
+  loadActiveUser();
+}
+  } catch (err) {
+    console.error("Buy premium material listing error:", err);
+    alert(err.message || "Failed to buy material listing.");
+  }
+}
+
+window.buyPremiumMaterialListing = buyPremiumMaterialListing;
 
 async function loadPremiumMaterialListings() {
   const username =
@@ -1237,9 +1315,13 @@ async function loadPremiumMaterialListings() {
             </div>
 
             <div class="compact-cell compact-action">
-              <button class="compact-buy-btn" type="button" disabled>
-                Buy Soon
-              </button>
+              <button
+  class="compact-buy-btn"
+  type="button"
+  onclick="buyPremiumMaterialListing(${listing.id}, ${qty})"
+>
+  Buy
+</button>
             </div>
 
           </div>
@@ -1907,7 +1989,11 @@ document
 
     /* init */
     loadEmpListings();
+    setTimeout(() => {
+  if (typeof loadActiveUserEmpBalance === "function") {
     loadActiveUserEmpBalance();
+  }
+}, 500);;
     updateListingPreview();
     setPremiumMaterial("IMPERIAL_FRAGMENT");
 
