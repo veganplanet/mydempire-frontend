@@ -1629,8 +1629,14 @@ function setPremiumMaterial(materialType) {
   }
 
   updatePremiumMaterialPreview();
+
+if (typeof loadPremiumMaterialListings === "function") {
   loadPremiumMaterialListings();
-  loadPremiumMaterialListings();
+}
+
+if (typeof loadPremiumMaterialHistory === "function") {
+  loadPremiumMaterialHistory();
+}
 }
     /* BLUEPRINTS */
     let playerBlueprintInventory = [];
