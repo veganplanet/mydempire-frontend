@@ -2149,10 +2149,10 @@ document
       await loadBlueprintListings();
       renderBlueprintFeed();
     });
-    document.getElementById("blueprint-view-select").addEventListener("change", (e) => {
-      currentBlueprintView = e.target.value;
-      renderBlueprintFeed();
-    });
+    document.getElementById("blueprint-view-select")?.addEventListener("change", (e) => {
+  currentBlueprintView = e.target.value;
+  renderBlueprintFeed();
+});
 
 
     /* init */
