@@ -750,6 +750,7 @@ const VIEWED_USER = getMarketplaceViewedUser() || ACTIVE_USER;
 } else if (tabName === "premium") {
   setPremiumMaterial(currentPremiumMaterial || "IMPERIAL_FRAGMENT");
   loadPremiumMaterialListings();
+  loadPremiumMaterialHistory();
 
   if (typeof loadActiveUserEmpBalance === "function") {
     loadActiveUserEmpBalance();
@@ -1191,23 +1192,7 @@ async function cancelPremiumMaterialListing(listingId) {
       })
     });
 
-   const rawText = await response.text();
-
-let data = null;
-
-try {
-  data = JSON.parse(rawText);
-} catch (parseErr) {
-  console.error("Cancel route returned non-JSON:", {
-    status: response.status,
-    url: response.url,
-    body: rawText
-  });
-
-  throw new Error(
-    `Cancel route returned non-JSON. Status: ${response.status}. Check console for URL/body.`
-  );
-}
+   const data = await response.json();
 
 if (!response.ok || !data.success) {
   throw new Error(data.error || "Failed to cancel listing.");
@@ -1218,6 +1203,7 @@ if (!response.ok || !data.success) {
     );
 
     await loadPremiumMaterialListings();
+    await loadPremiumMaterialHistory();
 
     if (typeof loadActiveUserEmpBalance === "function") {
       await loadActiveUserEmpBalance();
@@ -1304,7 +1290,93 @@ async function buyPremiumMaterialListing(listingId, maxAvailable) {
 }
 
 window.buyPremiumMaterialListing = buyPremiumMaterialListing;
+async function loadPremiumMaterialHistory() {
+  const materialType =
+    document.getElementById("premium-selected-material")?.value ||
+    currentPremiumMaterial ||
+    "IMPERIAL_FRAGMENT";
 
+  const historyBox = document.getElementById("premium-material-history-list");
+
+  if (!historyBox) return;
+
+  try {
+    historyBox.innerHTML = `<div class="empty">Loading material trade history...</div>`;
+
+    const url =
+      apiUrl("/marketplace/materials/history") +
+      `?material_type=${encodeURIComponent(materialType)}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Failed to load material trade history.");
+    }
+
+    const history = data.history || [];
+
+    if (!history.length) {
+      historyBox.innerHTML = `<div class="empty">No material trade history yet.</div>`;
+      return;
+    }
+
+    historyBox.innerHTML = `
+      <div class="compact-list">
+        ${history
+          .map((trade) => {
+            const qty = Number(trade.quantity || 0);
+            const price = Number(trade.price_per_item_emp || 0);
+            const total = Number(trade.total_emp || 0);
+            const materialLabel = getPremiumMaterialLabel(trade.material_type).full;
+
+            const dateText = trade.created_at
+              ? new Date(trade.created_at).toLocaleString()
+              : "--";
+
+            return `
+              <div class="compact-row">
+
+                <div class="compact-cell">
+                  <div class="compact-asset-title">
+                    ${qty} ${materialLabel}
+                  </div>
+                  <div class="compact-asset-sub">
+                    Trade #${trade.id || "--"}
+                  </div>
+                </div>
+
+                <div class="compact-cell">
+                  <div class="compact-seller">
+                    @${trade.seller || "--"} → @${trade.buyer || "--"}
+                  </div>
+                  <div class="compact-asset-sub">
+                    Seller → Buyer
+                  </div>
+                </div>
+
+                <div class="compact-cell compact-details">
+                  <strong>Price:</strong> ${price.toLocaleString()} EMP each<br>
+                  <strong>Total:</strong> ${total.toLocaleString()} EMP
+                </div>
+
+                <div class="compact-cell compact-price">
+                  ${dateText}
+                </div>
+
+              </div>
+            `;
+          })
+          .join("")}
+      </div>
+    `;
+  } catch (err) {
+    console.error("Load material history error:", err);
+    historyBox.innerHTML = `<div class="empty">Failed to load material trade history.</div>`;
+  }
+}
+
+window.loadPremiumMaterialHistory = loadPremiumMaterialHistory;
 async function loadPremiumMaterialListings() {
   const username =
     typeof ACTIVE_USER !== "undefined" && ACTIVE_USER
