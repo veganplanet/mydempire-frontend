@@ -2445,8 +2445,15 @@ renderSeasonHistory();
     }
 
     const data = await dashboardRes.json();
-    const overviewRes = await fetch(apiUrl(`/player/${username}/empire-overview`));
-const overviewData = overviewRes.ok ? await overviewRes.json() : {};
+    let overviewData = window.cachedEmpireOverviewData || {};
+
+if (!Array.isArray(overviewData.lands)) {
+  const overviewRes = await fetch(
+    apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/empire-overview`)
+  );
+  overviewData = overviewRes.ok ? await overviewRes.json() : {};
+  window.cachedEmpireOverviewData = overviewData;
+}
 
     window.dashboardData = data;
 
@@ -3761,7 +3768,8 @@ await loadSeasonLiveBanner();
           if (!res.ok) throw new Error("HTTP " + res.status);
 
           const data = await res.json();
-          console.log("Empire overview:", data);
+window.cachedEmpireOverviewData = data;
+console.log("Empire overview:", data);
 
           const lands = data.lands || [];
           const totals = data.totals || {};
