@@ -84,50 +84,50 @@
   <div class="rat-guide-title">Cleanup Strategy</div>
 
   <table class="rat-guide-table">
-    <thead>
-      <tr>
-        <th>Time Since Cleanup</th>
-        <th>Condition</th>
-        <th>Cost</th>
-        <th>Salvage</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>0–7 Days</td>
-        <td>🟢 Spotless</td>
-        <td>Lowest</td>
-        <td>Minimal</td>
-      </tr>
-      <tr>
-        <td>8–14 Days</td>
-        <td>🔵 Clean</td>
-        <td>Low</td>
-        <td>Low</td>
-      </tr>
-      <tr>
-        <td>15–21 Days</td>
-        <td>🟡 Orderly</td>
-        <td>Moderate</td>
-        <td>Moderate</td>
-      </tr>
-      <tr>
-        <td>22–30 Days</td>
-        <td>🟠 Cluttered</td>
-        <td>High</td>
-        <td>Good</td>
-      </tr>
-      <tr>
-        <td>31+ Days</td>
-        <td>🔴 Infested</td>
-        <td>Highest</td>
-        <td>Best</td>
-      </tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr>
+      <th>Warehouse Condition</th>
+      <th>Rat Activity</th>
+      <th>Cleanup Cost</th>
+      <th>Salvage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🟢 Spotless</td>
+      <td>0 rats</td>
+      <td>None</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>🔵 Clean</td>
+      <td>1–3 rats</td>
+      <td>Low</td>
+      <td>Small chance</td>
+    </tr>
+    <tr>
+      <td>🟡 Orderly</td>
+      <td>4–8 rats</td>
+      <td>Moderate</td>
+      <td>Low</td>
+    </tr>
+    <tr>
+      <td>🟠 Cluttered</td>
+      <td>8–15 rats</td>
+      <td>High</td>
+      <td>Better</td>
+    </tr>
+    <tr>
+      <td>🔴 Infested</td>
+      <td>15–30 rats</td>
+      <td>Highest</td>
+      <td>Best</td>
+    </tr>
+  </tbody>
+</table>
 
   <div class="rat-guide-note">
-    💡 Clean early to save EMP, or wait longer for a chance to recover more Salvage Parts from accumulated warehouse clutter.
+    💡 Larger empires create more warehouse pressure over time. Regular cleanup keeps rat activity under control and may recover Salvaged Machinery Parts.
   </div>
 </div>
   <div class="rat-grid">
@@ -469,8 +469,10 @@ if (
     const res = await fetch(`${API_BASE}/player/${username}/dashboard`);
     const data = await res.json();
 
-    const warehouseCondition =
-  data.warehouseCondition || "Spotless";
+    const ratInfo = data.ratSituation || data;
+
+const warehouseCondition =
+  ratInfo.warehouseCondition || "Spotless";
 
 let conditionLabel = "🟢 Spotless";
 
@@ -487,7 +489,7 @@ if (warehouseCondition === "Clean") {
 document.getElementById("warehouse-condition").textContent =
   conditionLabel;
 
-    const ratActivity = Number(data.ratActivity || 0);
+    const ratActivity = Number(ratInfo.ratActivity || 0);
 
 let ratLabel = "🐀 No Activity";
 
@@ -503,7 +505,8 @@ if (warehouseCondition === "Infested") {
   ratLabel = "🐀 No Activity";
 }
 
-document.getElementById("rat-activity").textContent = ratLabel;
+document.getElementById("rat-activity").textContent =
+  `🐀 ${Number(ratInfo.ratActivity || 0)} Activity`;
 let statusMessage = "🐀 Workers reported no unusual activity.";
 
 if (warehouseCondition === "Infested") {
@@ -519,8 +522,8 @@ if (warehouseCondition === "Infested") {
 document.getElementById("rat-status-message").textContent = statusMessage;
 
     document.getElementById("rat-cleanup-cost").textContent =
-      `${data.ratCleanupCost || 0} EMP`;
-      console.log("Cleanup Cost:", data.ratCleanupCost);
+  `${ratInfo.ratCleanupCost || 0} EMP`;
+console.log("Cleanup Cost:", ratInfo.ratCleanupCost);
       const historyRes = await fetch(
   `${API_BASE}/player/${username}/rat-history`
 );
@@ -571,8 +574,10 @@ if (warehouseCondition === "Spotless") {
       ? `🧹 Start Cleanup (${cleanupCost} EMP)`
       : "🧹 Quick Cleanup";
 }
-   const expectedMinSmp = Number(data.expectedSmpMin || data.smpMin || 0);
-const expectedMaxSmp = Number(data.expectedSmpMax || data.smpMax || 0);
+   const expectedMinSmp = Number(ratInfo.expectedSmpMin
+ || data.smpMin || 0);
+const expectedMaxSmp = Number(ratInfo.expectedSmpMax
+ || data.smpMax || 0);
 
 let expectedSmpText = "⚙️ 0";
 
@@ -761,7 +766,8 @@ const isVisitorMode =
       Number(data.imperialFragments || 0).toLocaleString();
 
     document.getElementById("foundry-smp-balance").textContent =
-      Number(data.smpBalance || 0).toLocaleString();
+      Number(ratInfo.smpBalance
+ || 0).toLocaleString();
 
     document.getElementById("foundry-emp-balance").textContent =
       Number(data.empBalance || data.emp_balance || 0).toLocaleString();
