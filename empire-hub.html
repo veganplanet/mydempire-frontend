@@ -491,18 +491,14 @@ document.getElementById("warehouse-condition").textContent =
 
     const ratActivity = Number(ratInfo.ratActivity || 0);
 
-let ratLabel = "🐀 No Activity";
+let ratLabel = "🐀 0 Rats";
 
-if (warehouseCondition === "Infested") {
-  ratLabel = "🐀🐀🐀🐀 Infestation";
-} else if (warehouseCondition === "Cluttered") {
-  ratLabel = "🐀🐀🐀 Heavy Activity";
-} else if (warehouseCondition === "Orderly") {
-  ratLabel = "🐀🐀 Moderate Activity";
-} else if (warehouseCondition === "Clean") {
-  ratLabel = "🐀 Light Activity";
+if (ratActivity >= 15) {
+  ratLabel = `🐀 ${ratActivity} Rats`;
+} else if (ratActivity >= 1) {
+  ratLabel = `🐀 ${ratActivity} Rats`;
 } else {
-  ratLabel = "🐀 No Activity";
+  ratLabel = "🐀 0 Rats";
 }
 
 document.getElementById("rat-activity").textContent =
@@ -516,7 +512,7 @@ if (warehouseCondition === "Infested") {
 } else if (warehouseCondition === "Orderly") {
   statusMessage = "🧹 Light rat activity detected. Warehouse is mostly under control.";
 } else if (warehouseCondition === "Clean") {
-  statusMessage = "✅ Warehouse looks clean. No unusual activity reported.";
+  statusMessage = "✅ Warehouse looks clean. Minor rat activity has been spotted.";
 }
 
 document.getElementById("rat-status-message").textContent = statusMessage;
