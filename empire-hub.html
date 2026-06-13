@@ -1199,35 +1199,44 @@ function renderFactoryFulfillmentBoard(area, username, configData, playerData) {
           ></div>
         </div>
 
-        <h4 style="margin:0 0 8px;color:#0f172a;">📦 Product Manifest</h4>
+        <div class="fulfillment-manifest-box">
+  <div class="fulfillment-manifest-title">
+    📦 Product Manifest
+    <span>Industrial Order Sheet</span>
+  </div>
 
-        <div style="display:grid;gap:8px;margin-bottom:16px;">
-          ${
-            manifest.length
-              ? manifest
-                  .map(
-                    (item) => `
-                      <div
-                        style="
-                          padding:10px 12px;
-                          border-radius:12px;
-                          background:#ffffff;
-                          border:1px solid #e5e7eb;
-                          display:flex;
-                          justify-content:space-between;
-                          gap:12px;
-                          flex-wrap:wrap;
-                        "
-                      >
-                        <strong>${item.product}</strong>
-                        <span>${Number(item.quantity || 0).toLocaleString()} units</span>
+  <div class="fulfillment-manifest-list">
+    ${
+      manifest.length
+        ? manifest
+            .map(
+              (item, index) => `
+                <div class="fulfillment-product-card">
+                  <div class="fulfillment-product-left">
+                    <div class="fulfillment-product-icon">📦</div>
+
+                    <div>
+                      <div class="fulfillment-product-name">
+                        ${item.product || item.name || "Industrial Product"}
                       </div>
-                    `
-                  )
-                  .join("")
-              : `<div class="status-text">No manifest found.</div>`
-          }
-        </div>
+                      <div class="fulfillment-product-meta">
+                        Order Line #${index + 1} • Production Item
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="fulfillment-product-qty">
+                    ${Number(item.quantity || item.qty || 0).toLocaleString()}
+                    <span>units</span>
+                  </div>
+                </div>
+              `
+            )
+            .join("")
+        : `<div class="status-text">No manifest found.</div>`
+    }
+  </div>
+</div>
 
                 <button
           class="primary-button"
@@ -1422,6 +1431,17 @@ async function confirmStartFactoryFulfillment() {
 
   const details = pendingFactoryFulfillmentStart;
 
+  const username =
+  localStorage.getItem("hiveUsername") ||
+  localStorage.getItem("mde_username") ||
+  localStorage.getItem("username") ||
+  "";
+
+  if (!username) {
+    alert("Please reconnect wallet before starting fulfillment.");
+    return;
+  }
+
   try {
     const confirmBtn = document.querySelector(".fulfillment-start-confirm-btn");
 
@@ -1433,11 +1453,11 @@ async function confirmStartFactoryFulfillment() {
     const response = await fetch(`${API_BASE}/factory-fulfillment/start`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        ...authHeaders(),
-      },
+  "Content-Type": "application/json",
+  "x-mde-actor": username,
+},
       body: JSON.stringify({
-        username: currentUsername,
+        username,
         fulfillmentType: details.fulfillmentType,
         industry: details.industry,
       }),
@@ -1445,8 +1465,10 @@ async function confirmStartFactoryFulfillment() {
 
     const data = await response.json();
 
+    console.log("Factory fulfillment start response:", data);
+
     if (!data.success) {
-      alert(data.error || "Failed to start fulfillment.");
+      alert(data.error || "Failed to start fulfillment. Please try again.");
       return;
     }
 
@@ -1455,7 +1477,7 @@ async function confirmStartFactoryFulfillment() {
 
   } catch (err) {
     console.error("Factory fulfillment start confirm failed:", err);
-    alert("Failed to start fulfillment. Please try again.");
+    alert(err?.message || "Failed to start fulfillment. Please try again.");
   } finally {
     const confirmBtn = document.querySelector(".fulfillment-start-confirm-btn");
 
@@ -1464,8 +1486,7 @@ async function confirmStartFactoryFulfillment() {
       confirmBtn.textContent = "Accept Fulfillment";
     }
   }
-}
-async function startFactoryFulfillment(fulfillmentType) {
+}async function startFactoryFulfillment(fulfillmentType) {
   const select = document.getElementById(`fulfillment-industry-${fulfillmentType}`);
 
   const username =
@@ -1550,33 +1571,6 @@ const empRange = `${minEmp.toLocaleString()} - ${maxEmp.toLocaleString()} EMP`;
 
 return;
 
-  try {
-    const response = await fetch(`${API_BASE}/factory-fulfillment/start`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-mde-actor": username,
-      },
-      body: JSON.stringify({
-        username,
-        fulfillmentType,
-        industry: selectedIndustry,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (!data.success) {
-      alert(data.error || "Failed to start fulfillment.");
-      return;
-    }
-
-    alert("Factory fulfillment started successfully.");
-    loadFactoryFulfillmentBoard();
-  } catch (err) {
-    console.error("Start fulfillment frontend error:", err);
-    alert("Failed to start fulfillment.");
-  }
 }
 function showFulfillmentClaimModal(outcome) {
   const modal = document.getElementById("fulfillment-claim-modal");
@@ -2213,14 +2207,15 @@ if (initialTab === "fulfillment") {
 
 .fulfillment-start-box {
   position: relative;
-  max-width: 680px;
-  margin: 7vh auto;
+  max-width: 620px;
+  max-height: 88vh;
+  overflow-y: auto;
+  margin: 4vh auto;
   background:
     radial-gradient(circle at top left, rgba(59, 130, 246, 0.16), transparent 30%),
     radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.14), transparent 30%),
     linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border-radius: 26px;
-  overflow: hidden;
+  border-radius: 24px;
   box-shadow: 0 28px 80px rgba(15, 23, 42, 0.35);
   border: 1px solid #bfdbfe;
 }
@@ -2230,7 +2225,7 @@ if (initialTab === "fulfillment") {
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 22px 24px;
+  padding: 16px 20px;
   background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #047857 100%);
   color: #ffffff;
 }
@@ -2261,7 +2256,7 @@ if (initialTab === "fulfillment") {
 }
 
 .fulfillment-start-body {
-  padding: 24px;
+  padding: 18px 20px 20px;
 }
 
 .fulfillment-start-summary {
@@ -2272,9 +2267,9 @@ if (initialTab === "fulfillment") {
 .fulfillment-start-row {
   display: flex;
   justify-content: space-between;
-  gap: 14px;
-  padding: 12px 14px;
-  border-radius: 14px;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: 12px;
   background: #ffffff;
   border: 1px solid #e5e7eb;
 }
@@ -2292,9 +2287,9 @@ if (initialTab === "fulfillment") {
 }
 
 .fulfillment-start-warning {
-  margin-top: 16px;
-  padding: 13px 15px;
-  border-radius: 16px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
   background: #fffbeb;
   border: 1px solid #fde68a;
   color: #92400e;
@@ -2306,14 +2301,14 @@ if (initialTab === "fulfillment") {
   display: grid;
   grid-template-columns: 1fr 1.4fr;
   gap: 12px;
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .fulfillment-start-cancel-btn,
 .fulfillment-start-confirm-btn {
-  min-height: 48px;
+  min-height: 44px;
   border: none;
-  border-radius: 16px;
+  border-radius: 14px;
   font-weight: 950;
   cursor: pointer;
 }
@@ -2340,6 +2335,120 @@ if (initialTab === "fulfillment") {
 
   .fulfillment-start-actions {
     grid-template-columns: 1fr;
+  }
+}
+.fulfillment-manifest-box {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top left, rgba(245, 158, 11, 0.12), transparent 32%),
+    linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.fulfillment-manifest-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: 950;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.fulfillment-manifest-title span {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fde68a;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.fulfillment-manifest-list {
+  display: grid;
+  gap: 10px;
+}
+
+.fulfillment-product-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.06);
+}
+
+.fulfillment-product-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fulfillment-product-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 18px;
+}
+
+.fulfillment-product-name {
+  font-size: 17px;
+  font-weight: 950;
+  color: #0f172a;
+}
+
+.fulfillment-product-meta {
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.fulfillment-product-qty {
+  min-width: 110px;
+  padding: 9px 12px;
+  border-radius: 14px;
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  font-size: 18px;
+  font-weight: 950;
+  text-align: center;
+}
+
+.fulfillment-product-qty span {
+  display: block;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #15803d;
+}
+
+@media (max-width: 700px) {
+  .fulfillment-manifest-title {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .fulfillment-product-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .fulfillment-product-qty {
+    width: 100%;
   }
 }
 </style>
