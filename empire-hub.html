@@ -21,33 +21,43 @@
 
         <div class="subnav">
           <button
-            type="button"
-            class="subnav-btn subnav-btn-active"
-            onclick="switchHubTab('operations')"
-          >
-            ⚙️ Empire Operations
-          </button>
+  type="button"
+  class="subnav-btn subnav-btn-active"
+  onclick="switchHubTab('operations')"
+>
+  ⚙️ Empire Operations
+</button>
 
-         <button
+<button
+  type="button"
+  class="subnav-btn"
+  onclick="switchHubTab('fulfillment')"
+>
+  🏭 Factory Fulfillment <span style="color:red;font-weight:900;">NEW</span>
+</button>
+
+<button
   type="button"
   class="subnav-btn"
   onclick="switchHubTab('rats')"
 >
   🐀 The Rat Situation
 </button>
-          <button
-  type="button"
-  class="subnav-btn"
-  onclick="switchHubTab('culture')"
->
-  🏛 Empire Culture <span style="color:red;font-weight:900;">NEW</span>
-</button>
+
 <button
   type="button"
   class="subnav-btn"
   onclick="switchHubTab('foundry')"
 >
   🔥 Foundry <span style="color:red;font-weight:900;">NEW</span>
+</button>
+
+<button
+  type="button"
+  class="subnav-btn"
+  onclick="switchHubTab('culture')"
+>
+  🏛 Empire Culture <span style="color:red;font-weight:900;">NEW</span>
 </button>
         </div>
       
@@ -179,6 +189,193 @@
 </div>
 
 </section>
+
+<section id="fulfillment-panel" class="hub-panel" style="display: none;">
+
+  <div class="card" style="border-top:5px solid #2563eb;">
+    <div class="fulfillment-title-row">
+  <h2>🏭 Factory Fulfillment Board</h2>
+
+  <button
+    type="button"
+    class="fulfillment-guide-link"
+    onclick="openFulfillmentGuide()"
+  >
+    How to Play?
+  </button>
+</div>
+    <p
+  style="
+    color:#475569;
+    font-weight:700;
+    line-height:1.6;
+    max-width:850px;
+    white-space:normal;
+    overflow-wrap:anywhere;
+    margin-bottom:18px;
+  "
+>
+  Accept industrial fulfillment requests, generate product manifests,
+  complete production targets over time, and claim EMP plus Fulfillment Credits.
+</p>
+
+ <div
+  id="factory-fulfillment-area"
+  style="
+    margin-top:16px;
+    min-height:140px;
+  "
+>
+  <p class="status-text">Loading Factory Fulfillment Board...</p>
+</div>
+<div id="fulfillment-guide-modal" class="fulfillment-guide-modal" style="display:none;">
+  <div class="fulfillment-guide-backdrop" onclick="closeFulfillmentGuide()"></div>
+
+  <div class="fulfillment-guide-box">
+    <div class="fulfillment-guide-head">
+      <h3>🏭 Factory Fulfillment Guide</h3>
+      <button type="button" onclick="closeFulfillmentGuide()">×</button>
+    </div>
+
+    <div class="fulfillment-guide-body">
+      <p>
+        Factory Fulfillment Board lets your active industries complete real-feeling
+        production orders over time.
+      </p>
+
+      <div class="fulfillment-guide-step">
+        <strong>1. Choose Fulfillment Type</strong>
+        <span>Standard Batch is easiest, Bulk Shipment is medium, and Grand Consignment is largest.</span>
+      </div>
+
+      <div class="fulfillment-guide-step">
+        <strong>2. Choose Industry</strong>
+        <span>Your selected industry EP/day decides how fast progress grows.</span>
+      </div>
+
+      <div class="fulfillment-guide-step">
+        <strong>3. Complete Target</strong>
+        <span>Progress = selected industry EP/day × elapsed days.</span>
+      </div>
+
+      <div class="fulfillment-guide-step">
+  <strong>4. Claim Reward</strong>
+  <span>
+    When target is complete, claim variable EMP plus fixed Fulfillment Credits.
+    EMP outcome has 20% settlement tax deducted at claim.
+    Fulfillment Credits are fixed and not affected by tax.
+  </span>
+</div>
+
+      <div class="fulfillment-guide-note">
+        💡 Weak industries should usually choose Standard Batch. Strong industries can handle Bulk or Grand faster.
+      </div>
+    </div>
+  </div>
+</div>
+<div id="fulfillment-claim-modal" class="fulfillment-claim-modal" style="display:none;">
+  <div class="fulfillment-claim-backdrop" onclick="closeFulfillmentClaimModal()"></div>
+
+  <div class="fulfillment-claim-box">
+    <div class="fulfillment-claim-head">
+      <div>
+        <div class="fulfillment-claim-kicker">FULFILLMENT SETTLED</div>
+        <h3>🏭 Factory Fulfillment Complete</h3>
+      </div>
+
+      <button type="button" onclick="closeFulfillmentClaimModal()">×</button>
+    </div>
+
+    <div class="fulfillment-claim-body">
+      <div id="fulfillment-claim-outcome" class="fulfillment-claim-outcome">
+        Loading outcome...
+      </div>
+
+      <div class="fulfillment-claim-grid">
+        <div class="fulfillment-claim-stat">
+          <span>Base EMP</span>
+          <strong id="claim-base-emp">0</strong>
+        </div>
+
+        <div class="fulfillment-claim-stat">
+          <span>Outcome</span>
+          <strong id="claim-multiplier">0%</strong>
+        </div>
+
+        <div class="fulfillment-claim-stat tax">
+          <span>Settlement Tax</span>
+          <strong>20%</strong>
+        </div>
+
+        <div class="fulfillment-claim-stat reward">
+          <span>Final EMP</span>
+          <strong id="claim-final-emp">0</strong>
+        </div>
+
+        <div class="fulfillment-claim-stat credits">
+          <span>Fulfillment Credits</span>
+          <strong id="claim-credits">0</strong>
+        </div>
+      </div>
+
+      <div class="fulfillment-claim-note">
+        EMP reward is affected by outcome and settlement tax. Fulfillment Credits are fixed.
+      </div>
+
+      <button
+        type="button"
+        class="fulfillment-claim-close-btn"
+        onclick="closeFulfillmentClaimModal()"
+      >
+        Continue
+      </button>
+    </div>
+  </div>
+</div>
+<div id="fulfillment-start-modal" class="fulfillment-start-modal" style="display:none;">
+  <div class="fulfillment-start-backdrop" onclick="closeFulfillmentStartModal()"></div>
+
+  <div class="fulfillment-start-box">
+    <div class="fulfillment-start-head">
+      <div>
+        <div class="fulfillment-start-kicker">ACCEPT FULFILLMENT ORDER</div>
+        <h3>🏭 Confirm Factory Fulfillment</h3>
+      </div>
+
+      <button type="button" onclick="closeFulfillmentStartModal()">×</button>
+    </div>
+
+    <div class="fulfillment-start-body">
+      <div class="fulfillment-start-summary" id="fulfillment-start-summary">
+        Loading order details...
+      </div>
+
+      <div class="fulfillment-start-warning">
+        ⚠️ Fulfillment cannot be cancelled after start. Choose carefully before accepting the order.
+      </div>
+
+      <div class="fulfillment-start-actions">
+        <button
+          type="button"
+          class="fulfillment-start-cancel-btn"
+          onclick="closeFulfillmentStartModal()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="fulfillment-start-confirm-btn"
+          onclick="confirmStartFactoryFulfillment()"
+        >
+          Accept Fulfillment
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
     <section id="culture-panel" class="hub-panel" style="display: none;">
 
   <div
@@ -661,10 +858,14 @@ document.addEventListener("DOMContentLoaded", () => {
     <script src="empire-operations.js"></script>
     <script>
 window.switchHubTab = function switchHubTab(tab) {
-  const operations = document.getElementById("operations-panel");
-  const rats = document.getElementById("rats-panel");
-  const culture = document.getElementById("culture-panel");
-  const foundry = document.getElementById("foundry-panel");
+  const panels = {
+    operations: document.getElementById("operations-panel"),
+    rats: document.getElementById("rats-panel"),
+    culture: document.getElementById("culture-panel"),
+    foundry: document.getElementById("foundry-panel"),
+    fulfillment: document.getElementById("fulfillment-panel"),
+  };
+
   const buttons = document.querySelectorAll(".subnav-btn");
 
   buttons.forEach((btn) => {
@@ -672,42 +873,795 @@ window.switchHubTab = function switchHubTab(tab) {
     btn.classList.remove("rat-active");
   });
 
-  if (!operations || !rats || !culture || !foundry) {
-    console.warn("Empire Hub panel missing.");
+  Object.values(panels).forEach((panel) => {
+    if (panel) {
+      panel.style.display = "none";
+    }
+  });
+
+  if (!panels[tab]) {
+    console.warn("Empire Hub tab panel missing:", tab);
     return;
   }
 
-  operations.style.display = "none";
-  rats.style.display = "none";
-  culture.style.display = "none";
-  foundry.style.display = "none";
+  panels[tab].style.display = "block";
 
-  if (tab === "operations") {
-    operations.style.display = "block";
-    buttons[0]?.classList.add("subnav-btn-active");
-    return;
-  }
+  const tabOrder = ["operations", "fulfillment", "rats", "foundry", "culture"];
+  const buttonIndex = tabOrder.indexOf(tab);
 
   if (tab === "rats") {
-    rats.style.display = "block";
-    buttons[1]?.classList.add("rat-active");
-    return;
+    buttons[buttonIndex]?.classList.add("rat-active");
+  } else {
+    buttons[buttonIndex]?.classList.add("subnav-btn-active");
   }
 
-  if (tab === "culture") {
-    culture.style.display = "block";
-    buttons[2]?.classList.add("subnav-btn-active");
-    return;
+  if (tab === "operations" && typeof loadEmpireOperations === "function") {
+    loadEmpireOperations();
   }
 
-  if (tab === "foundry") {
-    foundry.style.display = "block";
-    buttons[3]?.classList.add("subnav-btn-active");
+  if (tab === "rats" && typeof loadRatSituation === "function") {
+    loadRatSituation();
+  }
+
+  if (tab === "foundry" && typeof loadFoundryPreview === "function") {
     loadFoundryPreview();
+  }
+
+  if (tab === "fulfillment" && typeof loadFactoryFulfillmentBoard === "function") {
+  loadFactoryFulfillmentBoard();
+}
+};
+async function loadFactoryFulfillmentBoard() {
+  const area = document.getElementById("factory-fulfillment-area");
+
+  if (!area) return;
+
+  try {
+    const params = new URLSearchParams(window.location.search);
+
+    const username =
+      params.get("user") ||
+      params.get("view") ||
+      localStorage.getItem("hiveUsername") ||
+      localStorage.getItem("mde_username") ||
+      localStorage.getItem("username") ||
+      "";
+
+    if (!username) {
+      area.innerHTML = `
+        <p class="status-text">
+          Please connect wallet to view Factory Fulfillment Board.
+        </p>
+      `;
+      return;
+    }
+
+    area.innerHTML = `<p class="status-text">Loading Factory Fulfillment Board...</p>`;
+
+    const [configResponse, playerResponse] = await Promise.all([
+      fetch(`${API_BASE}/factory-fulfillment/config`),
+      fetch(`${API_BASE}/player/${username}/factory-fulfillment`),
+    ]);
+
+    const configData = await configResponse.json();
+    const playerData = await playerResponse.json();
+
+    if (!configData.success || !playerData.success) {
+      throw new Error("Failed to load fulfillment data.");
+    }
+
+    renderFactoryFulfillmentBoard(area, username, configData, playerData);
+  } catch (err) {
+    console.error("Factory Fulfillment load error:", err);
+
+    area.innerHTML = `
+      <div class="status-error">
+        Failed to load Factory Fulfillment Board.
+      </div>
+    `;
+  }
+}
+function formatFulfillmentEstimatedTime(target, epPerDay) {
+  const safeTarget = Number(target || 0);
+  const safeEp = Number(epPerDay || 0);
+
+  if (!Number.isFinite(safeTarget) || safeTarget <= 0) return "--";
+  if (!Number.isFinite(safeEp) || safeEp <= 0) return "No active production";
+
+  const days = safeTarget / safeEp;
+
+  if (days < 1) {
+    const hours = Math.max(1, Math.ceil(days * 24));
+    return `about ${hours} hour${hours === 1 ? "" : "s"}`;
+  }
+
+  return `about ${days.toFixed(1)} day${days >= 1.05 ? "s" : ""}`;
+}
+function isFactoryFulfillmentVisitorMode() {
+  const params = new URLSearchParams(window.location.search);
+
+  const viewedUser = params.get("user") || params.get("view") || "";
+
+  const loggedInUser =
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    "";
+
+  if (!viewedUser || !loggedInUser) return false;
+
+  return viewedUser.toLowerCase() !== loggedInUser.toLowerCase();
+}
+function renderFulfillmentHistory(history) {
+  if (!Array.isArray(history) || history.length === 0) {
+    return `
+      <div class="fulfillment-history-box">
+        <div class="fulfillment-history-title">📜 Recent Fulfillment History</div>
+        <div class="status-text">No fulfillment history yet.</div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="fulfillment-history-box">
+      <div class="fulfillment-history-title">📜 Recent Fulfillment History</div>
+
+      <div class="fulfillment-history-list">
+        ${history
+          .map((item) => {
+            const typeLabel = String(item.fulfillment_type || "")
+              .replaceAll("_", " ");
+
+            const dateText = item.claimed_at
+              ? new Date(item.claimed_at).toLocaleString()
+              : item.started_at
+                ? new Date(item.started_at).toLocaleString()
+                : "--";
+
+            const status = String(item.status || "").toUpperCase();
+            const isAborted = status === "ABORTED";
+
+            return `
+              <div class="fulfillment-history-item">
+                <div class="fulfillment-history-main">
+                  <strong>${typeLabel}</strong>
+                  <span>${item.industry || "--"} • ${dateText}</span>
+                </div>
+
+                <div class="fulfillment-history-details">
+                  <span class="${isAborted ? "history-status-aborted" : "history-status-claimed"}">
+                    ${status}
+                  </span>
+
+                  <span>
+                    Outcome: ${item.outcome_label || (isAborted ? "Aborted" : "--")}
+                  </span>
+
+                  <span>
+                    EMP: ${Number(item.final_emp_reward || 0).toLocaleString()}
+                  </span>
+
+                  <span>
+                    Credits: ${Number(item.credits_reward || 0).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            `;
+          })
+          .join("")}
+      </div>
+    </div>
+  `;
+}
+function renderFactoryFulfillmentBoard(area, username, configData, playerData) {
+  const active = playerData.activeFulfillment;
+  const progress = playerData.activeProgress;
+  const credits = Number(playerData.fulfillmentCredits || 0);
+  const industryEP = playerData.industryEP || {};
+  const producingIndustries = playerData.producingIndustries || [];
+    const fulfillmentHistory = playerData.fulfillmentHistory || [];
+    const isVisitorMode = isFactoryFulfillmentVisitorMode();
+
+  let html = `
+    <div
+      style="
+        display:flex;
+        justify-content:space-between;
+        gap:14px;
+        flex-wrap:wrap;
+        margin-bottom:18px;
+      "
+    >
+      <div
+        style="
+          flex:1;
+          min-width:220px;
+          padding:14px 16px;
+          border-radius:16px;
+          background:#eff6ff;
+          border:1px solid #bfdbfe;
+          font-weight:900;
+          color:#1e3a8a;
+        "
+      >
+        🧾 Available Fulfillment Credits: ${credits}
+      </div>
+
+      <div
+        style="
+          flex:1;
+          min-width:220px;
+          padding:14px 16px;
+          border-radius:16px;
+          background:#f8fafc;
+          border:1px solid #e2e8f0;
+          font-weight:900;
+          color:#334155;
+        "
+      >
+        🏭 Producing Industries: ${producingIndustries.length || 0}
+      </div>
+    </div>
+  `;
+
+  if (active) {
+    const manifest = Array.isArray(active.manifest_json)
+      ? active.manifest_json
+      : [];
+
+    const progressValue = Number(progress?.progress || 0);
+    const targetValue = Number(progress?.target || active.target_points || 0);
+    const percent = Number(progress?.percent || 0);
+
+    const canClaim = progress?.isTargetComplete === true;
+        const estimatedCompletion = formatFulfillmentEstimatedTime(
+      targetValue,
+      Number(active.industry_ep_per_day || 0)
+    );
+        const cycleEndsAt = active.cycle_ends_at
+      ? new Date(active.cycle_ends_at).toLocaleString()
+      : "--";
+
+    html += `
+      <div
+        style="
+          border-radius:20px;
+          padding:18px;
+          background:linear-gradient(135deg,#ffffff 0%,#f0f9ff 100%);
+          border:1px solid #bfdbfe;
+          box-shadow:0 10px 24px rgba(15,23,42,0.08);
+          margin-bottom:18px;
+        "
+      >
+        <h3 style="margin:0 0 8px;color:#0f172a;">
+          Active Fulfillment
+        </h3>
+
+        <div style="color:#475569;font-weight:800;margin-bottom:12px;">
+          ${active.fulfillment_type.replaceAll("_", " ")} • ${active.industry}
+        </div>
+
+        <div
+          style="
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+            gap:12px;
+            margin-bottom:14px;
+          "
+        >
+          <div style="padding:12px;border-radius:14px;background:#ffffff;border:1px solid #e5e7eb;">
+            <strong>Target</strong><br>
+            ${targetValue.toLocaleString()} production points
+          </div>
+
+          <div style="padding:12px;border-radius:14px;background:#ffffff;border:1px solid #e5e7eb;">
+            <strong>Industry EP/day</strong><br>
+            ${Number(active.industry_ep_per_day || 0).toLocaleString()}
+          </div>
+
+                   <div style="padding:12px;border-radius:14px;background:#fff7ed;border:1px solid #fed7aa;">
+            <strong>Settlement Tax</strong><br>
+            20% deducted from EMP outcome
+          </div>
+
+          <div style="padding:12px;border-radius:14px;background:#ffffff;border:1px solid #e5e7eb;">
+            <strong>Fixed Credits</strong><br>
+            ${Number(active.credits_reward || 0).toLocaleString()} Credits
+          </div>
+                    <div style="padding:12px;border-radius:14px;background:#ffffff;border:1px solid #e5e7eb;">
+            <strong>Estimated Completion</strong><br>
+            ${estimatedCompletion}
+          </div>
+        </div>
+          <div style="padding:12px;border-radius:14px;background:#ffffff;border:1px solid #e5e7eb;">
+            <strong>Cycle Ends</strong><br>
+            ${cycleEndsAt}
+          </div>
+        <div style="margin-bottom:8px;font-weight:900;color:#0f172a;">
+          Fulfillment Progress: ${progressValue.toLocaleString()} / ${targetValue.toLocaleString()} — ${percent}% complete
+        </div>
+
+        <div
+          style="
+            height:14px;
+            background:#e2e8f0;
+            border-radius:999px;
+            overflow:hidden;
+            margin-bottom:16px;
+          "
+        >
+          <div
+            style="
+              height:100%;
+              width:${Math.min(100, percent)}%;
+              background:linear-gradient(90deg,#22c55e,#2563eb);
+            "
+          ></div>
+        </div>
+
+        <h4 style="margin:0 0 8px;color:#0f172a;">📦 Product Manifest</h4>
+
+        <div style="display:grid;gap:8px;margin-bottom:16px;">
+          ${
+            manifest.length
+              ? manifest
+                  .map(
+                    (item) => `
+                      <div
+                        style="
+                          padding:10px 12px;
+                          border-radius:12px;
+                          background:#ffffff;
+                          border:1px solid #e5e7eb;
+                          display:flex;
+                          justify-content:space-between;
+                          gap:12px;
+                          flex-wrap:wrap;
+                        "
+                      >
+                        <strong>${item.product}</strong>
+                        <span>${Number(item.quantity || 0).toLocaleString()} units</span>
+                      </div>
+                    `
+                  )
+                  .join("")
+              : `<div class="status-text">No manifest found.</div>`
+          }
+        </div>
+
+                <button
+          class="primary-button"
+          type="button"
+          onclick="claimFactoryFulfillment()"
+          ${canClaim && !isVisitorMode ? "" : "disabled"}
+          style="
+            width:100%;
+            opacity:${canClaim && !isVisitorMode ? "1" : "0.55"};
+            cursor:${canClaim && !isVisitorMode ? "pointer" : "not-allowed"};
+          "
+        >
+          ${
+            isVisitorMode
+              ? "Visitor Mode — Claim Disabled"
+              : canClaim
+                ? "Claim Fulfillment Reward"
+                : "Target Not Complete Yet"
+          }
+        </button>
+
+        <div id="factory-fulfillment-status" class="status-text" style="margin-top:10px;">
+          ${canClaim ? "Ready to claim." : "Production crews are still working on this fulfillment."}
+        </div>
+      </div>
+    `;
+
+        html += renderFulfillmentHistory(fulfillmentHistory);
+
+    area.innerHTML = html;
     return;
   }
-};
 
+  html += `
+    <div
+      style="
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+        gap:14px;
+      "
+    >
+  `;
+
+  for (const type of configData.fulfillmentTypes || []) {
+    html += `
+      <div
+        style="
+          padding:16px;
+          border-radius:18px;
+          background:#ffffff;
+          border:1px solid #e5e7eb;
+          box-shadow:0 8px 18px rgba(15,23,42,0.06);
+        "
+      >
+        <h3 style="margin:0 0 8px;color:#0f172a;">${type.label}</h3>
+
+        <div style="font-size:14px;color:#475569;font-weight:700;line-height:1.7;">
+  Target: ${(type.targetPercent * 100).toFixed(1)}% of global EP/day<br>
+  Base Reward: ${(type.baseRewardPercent * 100).toFixed(0)}% of target<br>
+  Cycle Time: ${type.cycleHours} hours<br>
+  Credits: ${type.credits}<br>
+  <span style="color:#1d4ed8;">
+    Choose an industry to see estimated completion.
+  </span>
+</div>
+
+        <label style="display:block;margin-top:12px;font-weight:900;color:#334155;">
+          Choose Industry
+        </label>
+
+        <select
+          id="fulfillment-industry-${type.type}"
+          style="
+            width:100%;
+            padding:10px;
+            border-radius:10px;
+            border:1px solid #d1d5db;
+            margin-top:6px;
+          "
+        >
+          ${(configData.industries || [])
+            .map((industry) => {
+              const ep = Number(industryEP[industry] || 0);
+              return `
+                <option value="${industry}" ${ep <= 0 ? "disabled" : ""}>
+                  ${industry} — ${ep} EP/day
+                </option>
+              `;
+            })
+            .join("")}
+        </select>
+
+                <button
+          class="primary-button"
+          type="button"
+          onclick="startFactoryFulfillment('${type.type}')"
+          ${isVisitorMode ? "disabled" : ""}
+          style="
+            width:100%;
+            margin-top:12px;
+            opacity:${isVisitorMode ? "0.55" : "1"};
+            cursor:${isVisitorMode ? "not-allowed" : "pointer"};
+          "
+        >
+          ${isVisitorMode ? "Visitor Mode — Start Disabled" : `Start ${type.label}`}
+        </button>
+      </div>
+    `;
+  }
+
+  html += `</div>`;
+
+    html += renderFulfillmentHistory(fulfillmentHistory);
+
+  area.innerHTML = html;
+}
+let pendingFactoryFulfillmentStart = null;
+
+function openFulfillmentStartModal(details) {
+  pendingFactoryFulfillmentStart = details;
+
+  const modal = document.getElementById("fulfillment-start-modal");
+  const summary = document.getElementById("fulfillment-start-summary");
+
+  if (!modal || !summary || !details) return;
+
+  summary.innerHTML = `
+    <div class="fulfillment-start-row">
+      <span>Fulfillment Type</span>
+      <strong>${details.typeLabel}</strong>
+    </div>
+
+    <div class="fulfillment-start-row">
+      <span>Selected Industry</span>
+      <strong>${details.industry}</strong>
+    </div>
+
+    <div class="fulfillment-start-row">
+      <span>Industry Power</span>
+      <strong>${Number(details.industryEP || 0).toLocaleString()} EP/day</strong>
+    </div>
+
+    <div class="fulfillment-start-row">
+      <span>Production Target</span>
+      <strong>${Number(details.targetPoints || 0).toLocaleString()} points</strong>
+    </div>
+
+    <div class="fulfillment-start-row">
+      <span>Estimated Completion</span>
+      <strong>${details.estimatedTime}</strong>
+    </div>
+
+    <div class="fulfillment-start-row">
+      <span>Cycle Time</span>
+      <strong>${details.cycleHours} hours</strong>
+    </div>
+
+    <div class="fulfillment-start-row">
+      <span>Base EMP Reward</span>
+      <strong>${Number(details.baseReward || 0).toLocaleString()} EMP</strong>
+    </div>
+
+    <div class="fulfillment-start-row">
+      <span>Possible EMP After Tax</span>
+      <strong>${details.empRange}</strong>
+    </div>
+
+    <div class="fulfillment-start-row">
+      <span>Fixed Credits</span>
+      <strong>${Number(details.credits || 0).toLocaleString()}</strong>
+    </div>
+  `;
+
+  modal.style.display = "block";
+}
+
+function closeFulfillmentStartModal() {
+
+  const modal = document.getElementById("fulfillment-start-modal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+
+  pendingFactoryFulfillmentStart = null;
+}
+async function confirmStartFactoryFulfillment() {
+  if (!pendingFactoryFulfillmentStart) {
+    alert("No fulfillment order selected.");
+    return;
+  }
+
+  const details = pendingFactoryFulfillmentStart;
+
+  try {
+    const confirmBtn = document.querySelector(".fulfillment-start-confirm-btn");
+
+    if (confirmBtn) {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = "Starting...";
+    }
+
+    const response = await fetch(`${API_BASE}/factory-fulfillment/start`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...authHeaders(),
+      },
+      body: JSON.stringify({
+        username: currentUsername,
+        fulfillmentType: details.fulfillmentType,
+        industry: details.industry,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      alert(data.error || "Failed to start fulfillment.");
+      return;
+    }
+
+    closeFulfillmentStartModal();
+    await loadFactoryFulfillmentBoard();
+
+  } catch (err) {
+    console.error("Factory fulfillment start confirm failed:", err);
+    alert("Failed to start fulfillment. Please try again.");
+  } finally {
+    const confirmBtn = document.querySelector(".fulfillment-start-confirm-btn");
+
+    if (confirmBtn) {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = "Accept Fulfillment";
+    }
+  }
+}
+async function startFactoryFulfillment(fulfillmentType) {
+  const select = document.getElementById(`fulfillment-industry-${fulfillmentType}`);
+
+  const username =
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    "";
+
+  if (!username || !select) {
+    alert("Unable to start fulfillment. Please reconnect wallet.");
+    return;
+  }
+
+  const selectedIndustry = select.value;
+  const selectedOption = select.options[select.selectedIndex];
+  const epText = selectedOption ? selectedOption.textContent : "";
+  const epMatch = epText.match(/—\s*([0-9.]+)\s*EP\/day/i);
+  const selectedIndustryEP = epMatch ? Number(epMatch[1]) : 0;
+
+  const configResponse = await fetch(`${API_BASE}/factory-fulfillment/config`);
+  const configData = await configResponse.json();
+
+  if (!configData.success) {
+    alert("Unable to load fulfillment config.");
+    return;
+  }
+
+  const typeConfig = (configData.fulfillmentTypes || []).find(
+    (item) => item.type === fulfillmentType
+  );
+
+  if (!typeConfig) {
+    alert("Invalid fulfillment type.");
+    return;
+  }
+
+  const playerResponse = await fetch(`${API_BASE}/player/${username}/factory-fulfillment`);
+  const playerData = await playerResponse.json();
+
+  if (!playerData.success) {
+    alert("Unable to load player fulfillment data.");
+    return;
+  }
+
+  const globalEP =
+    Number(playerData.activeFulfillment?.global_ep_per_day || 0) ||
+    15220; // fallback only for display if cache is not returned here
+
+  const target = Math.max(
+    1,
+    Math.round(globalEP * Number(typeConfig.targetPercent || 0))
+  );
+
+  const baseReward = Math.max(
+    1,
+    Math.round(target * Number(typeConfig.baseRewardPercent || 0))
+  );
+
+  const minEmp = Math.round(baseReward * 0.4 * 0.8);
+  const maxEmp = Math.round(baseReward * 1.6 * 0.8);
+
+  const estimatedTime = formatFulfillmentEstimatedTime(
+    target,
+    selectedIndustryEP
+  );
+
+  const targetPoints = target;
+const empRange = `${minEmp.toLocaleString()} - ${maxEmp.toLocaleString()} EMP`;
+    
+  openFulfillmentStartModal({
+  fulfillmentType,
+  typeLabel: typeConfig.label,
+  industry: selectedIndustry,
+  industryEP: selectedIndustryEP,
+  targetPoints,
+  estimatedTime,
+  cycleHours: typeConfig.cycleHours,
+  baseReward,
+  empRange,
+  credits: typeConfig.credits,
+});
+
+return;
+
+  try {
+    const response = await fetch(`${API_BASE}/factory-fulfillment/start`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": username,
+      },
+      body: JSON.stringify({
+        username,
+        fulfillmentType,
+        industry: selectedIndustry,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      alert(data.error || "Failed to start fulfillment.");
+      return;
+    }
+
+    alert("Factory fulfillment started successfully.");
+    loadFactoryFulfillmentBoard();
+  } catch (err) {
+    console.error("Start fulfillment frontend error:", err);
+    alert("Failed to start fulfillment.");
+  }
+}
+function showFulfillmentClaimModal(outcome) {
+  const modal = document.getElementById("fulfillment-claim-modal");
+
+  if (!modal || !outcome) return;
+
+  document.getElementById("fulfillment-claim-outcome").textContent =
+    `Outcome: ${outcome.label || "Settlement Complete"}`;
+
+  document.getElementById("claim-base-emp").textContent =
+    `${Number(outcome.baseReward || 0).toLocaleString()} EMP`;
+
+  document.getElementById("claim-multiplier").textContent =
+    `${Math.round(Number(outcome.multiplier || 1) * 100)}%`;
+
+  document.getElementById("claim-final-emp").textContent =
+    `${Number(outcome.finalEmpReward || 0).toLocaleString()} EMP`;
+
+  document.getElementById("claim-credits").textContent =
+    `${Number(outcome.creditsReward || 0).toLocaleString()}`;
+
+  modal.style.display = "block";
+}
+
+function closeFulfillmentClaimModal() {
+  const modal = document.getElementById("fulfillment-claim-modal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+async function claimFactoryFulfillment() {
+  const username =
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    "";
+
+  if (!username) {
+    alert("Please reconnect wallet.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/factory-fulfillment/claim`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": username,
+      },
+      body: JSON.stringify({
+        username,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      alert(data.error || "Failed to claim fulfillment.");
+      return;
+    }
+
+    showFulfillmentClaimModal(data.outcome);
+
+loadFactoryFulfillmentBoard();
+
+    loadFactoryFulfillmentBoard();
+  } catch (err) {
+    console.error("Claim fulfillment frontend error:", err);
+    alert("Failed to claim fulfillment.");
+  }
+}
+function openFulfillmentGuide() {
+  const modal = document.getElementById("fulfillment-guide-modal");
+  if (modal) {
+    modal.style.display = "block";
+  }
+}
+
+function closeFulfillmentGuide() {
+  const modal = document.getElementById("fulfillment-guide-modal");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
 async function loadFoundryPreview() {
   const fragmentEl = document.getElementById("foundry-fragment-balance");
   const smpEl = document.getElementById("foundry-smp-balance");
@@ -831,6 +1785,9 @@ if (initialTab === "culture") {
 if (initialTab === "foundry") {
   switchHubTab("foundry");
 }
+if (initialTab === "fulfillment") {
+  switchHubTab("fulfillment");
+}
 });
 
 </script>
@@ -847,5 +1804,544 @@ if (initialTab === "foundry") {
 </script>
     <script src="js/navbar.js"></script>
     <script src="js/notifications.js"></script>
+    <style>
+  .fulfillment-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .fulfillment-title-row h2 {
+    margin: 0;
+    font-size: 28px;
+    color: #0f172a;
+  }
+
+  .fulfillment-guide-link {
+    border: 1px solid #bfdbfe;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    color: #1d4ed8;
+    padding: 9px 14px;
+    border-radius: 999px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.12);
+  }
+
+  .fulfillment-guide-link:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  }
+
+  #fulfillment-panel > .card {
+    background:
+      radial-gradient(circle at top left, rgba(37, 99, 235, 0.10), transparent 28%),
+      radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.10), transparent 28%),
+      linear-gradient(135deg, #ffffff 0%, #f8fbff 55%, #f0fdf4 100%);
+    border: 1px solid #bfdbfe !important;
+    border-top: 6px solid #2563eb !important;
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.10);
+  }
+
+  #factory-fulfillment-area {
+    border-radius: 22px;
+  }
+
+  #factory-fulfillment-area h3 {
+    letter-spacing: -0.01em;
+  }
+
+  #factory-fulfillment-area select {
+    background: #ffffff;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  #factory-fulfillment-area button.primary-button {
+    border-radius: 14px;
+    min-height: 46px;
+    font-weight: 900;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.16);
+  }
+
+  .fulfillment-guide-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+  }
+
+  .fulfillment-guide-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
+  }
+
+  .fulfillment-guide-box {
+    position: relative;
+    max-width: 680px;
+    margin: 8vh auto;
+    background: #ffffff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.32);
+    border: 1px solid #dbeafe;
+  }
+
+  .fulfillment-guide-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    color: #ffffff;
+  }
+
+  .fulfillment-guide-head h3 {
+    margin: 0;
+    font-size: 22px;
+  }
+
+  .fulfillment-guide-head button {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    font-size: 26px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .fulfillment-guide-body {
+    padding: 22px;
+    color: #334155;
+    font-weight: 700;
+    line-height: 1.65;
+  }
+
+  .fulfillment-guide-step {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    margin-top: 12px;
+  }
+
+  .fulfillment-guide-step strong {
+    display: block;
+    color: #0f172a;
+    margin-bottom: 4px;
+  }
+
+  .fulfillment-guide-step span {
+    color: #475569;
+  }
+
+  .fulfillment-guide-note {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #ecfdf5;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    font-weight: 900;
+  }
+
+  @media (max-width: 700px) {
+    .fulfillment-guide-box {
+      margin: 5vh 14px;
+    }
+
+    .fulfillment-title-row h2 {
+      font-size: 22px;
+    }
+  }
+  .fulfillment-history-box {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.fulfillment-history-title {
+  font-size: 18px;
+  font-weight: 900;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.fulfillment-history-list {
+  display: grid;
+  gap: 10px;
+}
+
+.fulfillment-history-item {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+.fulfillment-history-main {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.fulfillment-history-main strong {
+  color: #0f172a;
+  font-weight: 900;
+  text-transform: capitalize;
+}
+
+.fulfillment-history-main span {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.fulfillment-history-details {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.fulfillment-history-details span {
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.history-status-claimed {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+}
+
+.history-status-aborted {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+}
+.fulfillment-claim-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+}
+
+.fulfillment-claim-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(4px);
+}
+
+.fulfillment-claim-box {
+  position: relative;
+  max-width: 640px;
+  margin: 8vh auto;
+  background:
+    radial-gradient(circle at top left, rgba(250, 204, 21, 0.18), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.16), transparent 30%),
+    linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 28px 80px rgba(15, 23, 42, 0.35);
+  border: 1px solid #fde68a;
+}
+
+.fulfillment-claim-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 22px 24px;
+  background: linear-gradient(135deg, #78350f 0%, #b45309 45%, #2563eb 100%);
+  color: #ffffff;
+}
+
+.fulfillment-claim-kicker {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+
+.fulfillment-claim-head h3 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.fulfillment-claim-head button {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.fulfillment-claim-body {
+  padding: 24px;
+}
+
+.fulfillment-claim-outcome {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  font-size: 20px;
+  font-weight: 950;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.fulfillment-claim-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 12px;
+}
+
+.fulfillment-claim-stat {
+  padding: 14px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.fulfillment-claim-stat span {
+  display: block;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.fulfillment-claim-stat strong {
+  display: block;
+  color: #0f172a;
+  font-size: 22px;
+  font-weight: 950;
+}
+
+.fulfillment-claim-stat.tax {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.fulfillment-claim-stat.reward {
+  background: #ecfdf5;
+  border-color: #bbf7d0;
+}
+
+.fulfillment-claim-stat.reward strong {
+  color: #166534;
+}
+
+.fulfillment-claim-stat.credits {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.fulfillment-claim-stat.credits strong {
+  color: #1d4ed8;
+}
+
+.fulfillment-claim-note {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-weight: 800;
+  text-align: center;
+}
+
+.fulfillment-claim-close-btn {
+  margin-top: 18px;
+  width: 100%;
+  min-height: 48px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  font-weight: 950;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
+}
+
+@media (max-width: 700px) {
+  .fulfillment-claim-box {
+    margin: 5vh 14px;
+  }
+
+  .fulfillment-claim-head h3 {
+    font-size: 20px;
+  }
+}
+.fulfillment-start-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+}
+
+.fulfillment-start-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(4px);
+}
+
+.fulfillment-start-box {
+  position: relative;
+  max-width: 680px;
+  margin: 7vh auto;
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.16), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.14), transparent 30%),
+    linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 28px 80px rgba(15, 23, 42, 0.35);
+  border: 1px solid #bfdbfe;
+}
+
+.fulfillment-start-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 22px 24px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #047857 100%);
+  color: #ffffff;
+}
+
+.fulfillment-start-kicker {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+
+.fulfillment-start-head h3 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.fulfillment-start-head button {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.fulfillment-start-body {
+  padding: 24px;
+}
+
+.fulfillment-start-summary {
+  display: grid;
+  gap: 10px;
+}
+
+.fulfillment-start-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+.fulfillment-start-row span {
+  color: #64748b;
+  font-weight: 900;
+  font-size: 13px;
+}
+
+.fulfillment-start-row strong {
+  color: #0f172a;
+  font-weight: 950;
+  text-align: right;
+}
+
+.fulfillment-start-warning {
+  margin-top: 16px;
+  padding: 13px 15px;
+  border-radius: 16px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  font-weight: 900;
+  text-align: center;
+}
+
+.fulfillment-start-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.fulfillment-start-cancel-btn,
+.fulfillment-start-confirm-btn {
+  min-height: 48px;
+  border: none;
+  border-radius: 16px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.fulfillment-start-cancel-btn {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.fulfillment-start-confirm-btn {
+  background: linear-gradient(135deg, #2563eb 0%, #047857 100%);
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
+}
+
+@media (max-width: 700px) {
+  .fulfillment-start-box {
+    margin: 5vh 14px;
+  }
+
+  .fulfillment-start-head h3 {
+    font-size: 20px;
+  }
+
+  .fulfillment-start-actions {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
   </body>
 </html>
