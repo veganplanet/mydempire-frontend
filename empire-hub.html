@@ -1057,10 +1057,18 @@ function renderFactoryFulfillmentBoard(area, username, configData, playerData) {
   const active = playerData.activeFulfillment;
   const progress = playerData.activeProgress;
   const credits = Number(playerData.fulfillmentCredits || 0);
-  const industryEP = playerData.industryEP || {};
-  const producingIndustries = playerData.producingIndustries || [];
-    const fulfillmentHistory = playerData.fulfillmentHistory || [];
-    const isVisitorMode = isFactoryFulfillmentVisitorMode();
+ const industryEP = playerData.industryEP || {};
+const producingIndustries = playerData.producingIndustries || [];
+const rotationStatus = playerData.rotationStatus || {};
+const usedRotationIndustries = Array.isArray(rotationStatus.usedIndustries)
+  ? rotationStatus.usedIndustries
+  : [];
+const remainingRotationIndustries = Array.isArray(rotationStatus.remainingIndustries)
+  ? rotationStatus.remainingIndustries
+  : producingIndustries;
+const singleIndustryMode = rotationStatus.singleIndustryMode === true;
+const fulfillmentHistory = playerData.fulfillmentHistory || [];
+const isVisitorMode = isFactoryFulfillmentVisitorMode();
 
   let html = `
     <div
@@ -1121,7 +1129,45 @@ function renderFactoryFulfillmentBoard(area, username, configData, playerData) {
         const cycleEndsAt = active.cycle_ends_at
       ? new Date(active.cycle_ends_at).toLocaleString()
       : "--";
+html += `
+  <div
+    style="
+      margin-bottom:18px;
+      padding:14px 16px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#ecfdf5 0%,#f8fafc 100%);
+      border:1px solid #bbf7d0;
+      color:#14532d;
+      font-weight:850;
+      line-height:1.6;
+    "
+  >
+    <div style="font-size:16px;font-weight:950;margin-bottom:6px;">
+      🔁 Industry Rotation Cycle
+    </div>
 
+    ${
+      singleIndustryMode
+        ? `You have only one producing industry, so repeat fulfillment is allowed.`
+        : `
+          Use each producing industry once before repeating any used industry.<br>
+          ✅ Remaining this cycle:
+          <strong>
+            ${
+              remainingRotationIndustries.length
+                ? remainingRotationIndustries.join(", ")
+                : "Cycle will reset on next fulfillment"
+            }
+          </strong><br>
+          ${
+            usedRotationIndustries.length
+              ? `⏳ Already used: <strong>${usedRotationIndustries.join(", ")}</strong>`
+              : `No industry used yet in this new rotation cycle.`
+          }
+        `
+    }
+  </div>
+`;
     html += `
       <div
         style="
@@ -1319,13 +1365,29 @@ function renderFactoryFulfillmentBoard(area, username, configData, playerData) {
         >
           ${(configData.industries || [])
             .map((industry) => {
-              const ep = Number(industryEP[industry] || 0);
-              return `
-                <option value="${industry}" ${ep <= 0 ? "disabled" : ""}>
-                  ${industry} — ${ep} EP/day
-                </option>
-              `;
-            })
+  const ep = Number(industryEP[industry] || 0);
+  const isUsedInRotation =
+    !singleIndustryMode && usedRotationIndustries.includes(industry);
+
+  let disabled = "";
+  let label = "";
+
+  if (ep <= 0) {
+    disabled = "disabled";
+    label = `${industry} — No active production`;
+  } else if (isUsedInRotation) {
+    disabled = "disabled";
+    label = `${industry} — Already used this cycle`;
+  } else {
+    label = `${industry} — ${ep} EP/day`;
+  }
+
+  return `
+    <option value="${industry}" ${disabled}>
+      ${label}
+    </option>
+  `;
+})
             .join("")}
         </select>
 
