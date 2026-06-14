@@ -16319,3 +16319,301 @@ padding:2px 8px !important;
   background:#f8fafc;
   border-color:#e5e7eb;
 }
+/* ============================= */
+/* CLEAN APPBAR HOME DROPDOWN */
+/* ============================= */
+
+.appbar-nav .appbar-dropdown {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  width: auto !important;
+  min-width: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+.appbar-nav .appbar-dropdown-menu {
+  display: none !important;
+  position: absolute !important;
+  top: 42px !important;
+  left: 0 !important;
+  width: 170px !important;
+  min-width: 170px !important;
+  padding: 8px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.18) !important;
+  z-index: 99999 !important;
+}
+
+.appbar-nav .appbar-dropdown:hover .appbar-dropdown-menu {
+  display: block !important;
+}
+
+.appbar-nav .appbar-dropdown-item {
+  display: block !important;
+  padding: 10px 12px !important;
+  border-radius: 10px !important;
+  color: #111827 !important;
+  background: transparent !important;
+  text-decoration: none !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  white-space: nowrap !important;
+}
+
+.appbar-nav .appbar-dropdown-item:hover {
+  background: #f1f5f9 !important;
+  color: #2563eb !important;
+}
+/* ============================= */
+/* SHARE MARKET NAV BADGE */
+/* ============================= */
+
+.share-market-nav-link {
+  gap: 7px;
+}
+
+.nav-new-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: #facc15;
+  color: #7c2d12;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-shadow: none;
+  transform: translateY(-1px);
+}
+/* ============================= */
+/* EMPIRE SHARE MARKET — SOFT TEASER */
+/* ============================= */
+
+.share-market-page {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(147, 197, 253, 0.28), transparent 26%),
+    radial-gradient(circle at 88% 18%, rgba(216, 180, 254, 0.22), transparent 28%),
+    radial-gradient(circle at 70% 86%, rgba(187, 247, 208, 0.22), transparent 26%),
+    linear-gradient(135deg, #f8fafc 0%, #eef2ff 45%, #f8fafc 100%);
+}
+
+.share-market-shell {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 116px 0 60px;
+}
+
+.share-teaser-hero {
+  width: 100%;
+  min-height: 430px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 54px 22px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.82), rgba(239,246,255,0.9)),
+    radial-gradient(circle at top right, rgba(168,85,247,0.18), transparent 34%);
+  border-bottom: 1px solid rgba(148,163,184,0.22);
+}
+
+.share-teaser-inner {
+  max-width: 1040px;
+  text-align: center;
+}
+
+.share-kicker {
+  display: inline-flex;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #5b21b6;
+  border: 1px solid #c4b5fd;
+  font-size: 13px;
+  font-weight: 1000;
+  margin-bottom: 18px;
+}
+
+.share-teaser-hero h1 {
+  margin: 0;
+  font-size: clamp(42px, 7vw, 78px);
+  line-height: 0.95;
+  color: #111827;
+  font-weight: 1000;
+  letter-spacing: -0.04em;
+}
+
+.share-lead {
+  max-width: 780px;
+  margin: 22px auto 0;
+  font-size: 20px;
+  line-height: 1.75;
+  color: #475569;
+  font-weight: 650;
+}
+
+.share-mystery-line {
+  max-width: 880px;
+  margin: 28px auto 0;
+  padding: 18px 22px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.78);
+  border: 1px solid rgba(148,163,184,0.24);
+  box-shadow: 0 16px 34px rgba(15,23,42,0.08);
+  color: #334155;
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 900;
+}
+
+.share-teaser-actions {
+  margin-top: 26px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.share-teaser-chip {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 900;
+  box-shadow: 0 8px 18px rgba(15,23,42,0.05);
+}
+
+.share-teaser-grid {
+  width: min(1180px, calc(100% - 36px));
+  margin: 30px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.share-teaser-card {
+  min-height: 260px;
+  padding: 26px;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.86);
+  border: 1px solid rgba(226,232,240,0.9);
+  box-shadow: 0 18px 36px rgba(15,23,42,0.07);
+}
+
+.share-card-symbol {
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+.share-teaser-card h2 {
+  margin: 0 0 10px;
+  color: #0f172a;
+  font-size: 24px;
+  line-height: 1.15;
+}
+
+.share-teaser-card p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.share-hidden-rule {
+  margin-top: 18px;
+  padding: 11px 13px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  color: #475569;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.share-teaser-banner {
+  width: min(1180px, calc(100% - 36px));
+  margin: 26px auto 0;
+  padding: 30px;
+  border-radius: 30px;
+  background:
+    linear-gradient(135deg, #ffffff 0%, #f8fafc 48%, #eef2ff 100%);
+  color: #0f172a;
+  border: 1px solid rgba(196, 181, 253, 0.45);
+  box-shadow: 0 18px 40px rgba(15,23,42,0.08);
+}
+
+.share-banner-label {
+  color: #7c3aed;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 1000;
+  margin-bottom: 8px;
+}
+
+.share-teaser-banner h2 {
+  margin: 0 0 10px;
+  font-size: 30px;
+  line-height: 1.2;
+  color: #111827;
+}
+
+.share-teaser-banner p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.share-teaser-warning {
+  width: min(1180px, calc(100% - 36px));
+  margin: 20px auto 0;
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #9a3412;
+  font-weight: 850;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .share-market-shell {
+    padding-top: 104px;
+  }
+
+  .share-teaser-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .share-teaser-hero {
+    min-height: auto;
+    padding: 38px 16px;
+  }
+
+  .share-lead {
+    font-size: 17px;
+  }
+
+  .share-teaser-banner h2 {
+    font-size: 24px;
+  }
+}

@@ -34,11 +34,27 @@
           </button>
 
           <nav id="mobileNavMenu" class="appbar-nav">
-            <a href="index.html" class="appbar-link">Home</a>
-            <a href="economy.html" class="appbar-link">Economy</a>
-            <a href="codex.html" class="appbar-link">Codex</a>
-            ${authLinks}
-          </nav>
+            <div class="appbar-dropdown">
+  <a href="index.html" class="appbar-link appbar-home-link">
+    Home ▾
+  </a>
+
+  <div class="appbar-dropdown-menu">
+    <a href="index.html" class="appbar-link">
+    <a href="economy.html" class="appbar-dropdown-item">Economy</a>
+    <a href="codex.html" class="appbar-dropdown-item">Codex</a>
+  </div>
+</div>
+
+${authLinks}
+
+${
+  user
+    ? `<a href="share-market.html" class="appbar-link share-market-nav-link">
+        Share Market <span class="nav-new-pill">SOON</span>
+      </a>`
+    : ``
+}          </nav>
         </div>
 
         <div class="appbar-right">
