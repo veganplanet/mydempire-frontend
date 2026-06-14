@@ -1046,6 +1046,20 @@ forkyishere,529"
         </div>
 
         <div class="section">
+          <h2>🏭 Factory Fulfillment Log</h2>
+          <button onclick="loadFactoryFulfillmentLog()" class="primary">
+            Load Fulfillment Log
+          </button>
+          <div
+            id="admin-fulfillment-log"
+            class="scroll-box"
+            style="margin-top: 12px"
+          >
+            Click the button to load recent Factory Fulfillment results.
+          </div>
+        </div>
+
+        <div class="section">
           <h2>💠 Crate & Fragment Report</h2>
           <button id="load-crate-fragment-report-btn" class="primary">
             Load Crate / Fragment Report
@@ -1408,6 +1422,117 @@ forkyishere,529"
             "Failed to load operations log.";
         }
       }
+      async function loadFactoryFulfillmentLog() {
+        const box = document.getElementById("admin-fulfillment-log");
+
+        if (!box) return;
+
+        box.innerHTML = "Loading Factory Fulfillment log...";
+
+        try {
+          const res = await fetch(`${API_BASE}/admin/factory-fulfillment-log`, {
+            headers: {
+              "x-admin-key": ADMIN_KEY,
+            },
+          });
+
+          const data = await res.json();
+
+          if (!data.success) {
+            box.innerHTML = `<div style="color:#b91c1c;font-weight:800;">${data.error || "Failed to load fulfillment log."}</div>`;
+            return;
+          }
+
+          const rows = data.fulfillments || [];
+
+          if (!rows.length) {
+            box.innerHTML = `<div class="assets-empty">No Factory Fulfillment records found yet.</div>`;
+            return;
+          }
+
+          box.innerHTML = `
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:#f1f5f9;">
+            <th style="padding:8px;text-align:left;">Player</th>
+            <th style="padding:8px;text-align:left;">Type</th>
+            <th style="padding:8px;text-align:left;">Industry</th>
+            <th style="padding:8px;text-align:right;">Target</th>
+            <th style="padding:8px;text-align:right;">EP/day</th>
+            <th style="padding:8px;text-align:right;">Time Req.</th>
+            <th style="padding:8px;text-align:right;">Base EMP</th>
+            <th style="padding:8px;text-align:left;">Outcome</th>
+            <th style="padding:8px;text-align:right;">Final EMP</th>
+            <th style="padding:8px;text-align:right;">Credits</th>
+            <th style="padding:8px;text-align:left;">Status</th>
+            <th style="padding:8px;text-align:left;">Claimed</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          ${rows
+            .map((item) => {
+              const typeText = String(item.fulfillment_type || "").replaceAll(
+                "_",
+                " ",
+              );
+
+              const claimedText = item.claimed_at
+                ? new Date(item.claimed_at).toLocaleString()
+                : "-";
+
+              const status = String(item.status || "-").toUpperCase();
+              const target = Number(item.target_points || 0);
+              const epDay = Number(item.industry_ep_per_day || 0);
+
+              let timeRequired = "-";
+
+              if (target > 0 && epDay > 0) {
+                const days = target / epDay;
+
+                if (days < 1) {
+                  timeRequired = `${Math.ceil(days * 24)}h`;
+                } else {
+                  timeRequired = `${days.toFixed(1)}d`;
+                }
+              }
+
+              const statusColor =
+                status === "CLAIMED"
+                  ? "#166534"
+                  : status === "ACTIVE"
+                    ? "#1d4ed8"
+                    : status === "ABORTED"
+                      ? "#991b1b"
+                      : "#475569";
+
+              return `
+                <tr style="border-bottom:1px solid #e5e7eb;">
+                  <td style="padding:8px;font-weight:800;">${item.username || "-"}</td>
+                  <td style="padding:8px;">${typeText}</td>
+                  <td style="padding:8px;font-weight:800;">${item.industry || "-"}</td>
+                  <td style="padding:8px;text-align:right;">${Number(item.target_points || 0).toLocaleString()}</td>
+                  <td style="padding:8px;text-align:right;">${Number(item.industry_ep_per_day || 0).toLocaleString()}</td>
+                  <td style="padding:8px;text-align:right;font-weight:800;color:#1d4ed8;">${timeRequired}</td>
+                  <td style="padding:8px;text-align:right;">${Number(item.base_emp_reward || 0).toLocaleString()}</td>
+                  <td style="padding:8px;">${item.outcome_label || "-"}</td>
+                  <td style="padding:8px;text-align:right;font-weight:900;color:#166534;">${Number(item.final_emp_reward || 0).toLocaleString()}</td>
+                  <td style="padding:8px;text-align:right;">${Number(item.credits_reward || 0).toLocaleString()}</td>
+                  <td style="padding:8px;font-weight:900;color:${statusColor};">${status}</td>
+                  <td style="padding:8px;">${claimedText}</td>
+                </tr>
+              `;
+            })
+            .join("")}
+        </tbody>
+      </table>
+    `;
+        } catch (err) {
+          console.error("Factory Fulfillment admin log load failed:", err);
+          box.innerHTML = `<div style="color:#b91c1c;font-weight:800;">Failed to load Factory Fulfillment log.</div>`;
+        }
+      }
+
       async function approveReferral(referralId) {
         if (!confirm("Approve this referral and credit 500 EMP?")) {
           return;
