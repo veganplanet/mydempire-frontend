@@ -1097,18 +1097,55 @@ forkyishere,529"
           <h2>🛠 System Controls</h2>
           <div class="top-row">
             <button id="run-rewards-btn" class="primary">
-              Run Daily Rewards</button
-            ><input
-              id="industrial-support-multiplier"
-              type="number"
-              step="0.01"
-              min="0"
-              max="10"
-              value="2"
-              style="width: 90px"
-            /><button id="run-industrial-support-btn" class="primary">
-              Run Industrial Support</button
-            ><button id="reset-cycle-btn" class="danger">
+              Run Daily Rewards</button>
+            <div
+  style="
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    padding:10px;
+    border:1px solid #dbeafe;
+    background:#eff6ff;
+    border-radius:12px;
+  "
+>
+  <strong style="color:#1e3a8a;">Industrial Support</strong>
+
+  <input
+    id="industrial-support-multiplier"
+    type="number"
+    step="0.01"
+    min="0"
+    max="10"
+    value="2"
+    style="width:90px;"
+  />
+
+  <button id="save-industrial-support-config-btn" class="primary">
+    Save
+  </button>
+
+  <button id="pause-industrial-support-btn" class="danger">
+    Pause
+  </button>
+
+  <button id="resume-industrial-support-btn">
+    Resume
+  </button>
+
+  <button id="run-industrial-support-btn" class="primary">
+    Run Now
+  </button>
+
+  <span
+    id="industrial-support-config-status"
+    style="font-size:13px;font-weight:700;color:#334155;"
+  >
+    Loading...
+  </span>
+</div>
+            <button id="reset-cycle-btn" class="danger">
               Reset Today Reward Cycle</button
             ><button id="distribute-btn">Distribute Revenue</button
             ><button id="pause-pack-sales-btn" class="danger">
@@ -1228,6 +1265,7 @@ forkyishere,529"
         setStatus("Admin connected. Loading overview...");
 
         await loadAdminOverview();
+        await loadIndustrialSupportConfig();
         await loadOperationsEmpEconomy();
         try {
           await loadWalletBalances();
@@ -2640,51 +2678,154 @@ forkyishere,529"
             console.error(err);
           }
         });
-      // RUN INDUSTRIAL SUPPORT
-      document
-        .getElementById("run-industrial-support-btn")
-        .addEventListener("click", async () => {
-          if (!ADMIN_KEY) {
-            alert("Connect Admin first");
-            return;
-          }
+      // ===============================
+// ⚙️ INDUSTRIAL SUPPORT CONTROL
+// ===============================
 
-          const ok = confirm(
-            "Run Industrial Support now?\n\nThis will distribute EMP to qualified players based on current EP/day.",
-          );
+async function loadIndustrialSupportConfig() {
+  const statusEl = document.getElementById("industrial-support-config-status");
 
-          if (!ok) return;
+  if (!ADMIN_KEY) {
+    if (statusEl) statusEl.textContent = "Connect admin first.";
+    return;
+  }
 
-          try {
-            const multiplier = Number(
-              document.getElementById("industrial-support-multiplier")?.value ||
-                2,
-            );
+  try {
+    const res = await fetch(`${API_BASE}/admin/industrial-support-config`, {
+      headers: {
+        "x-admin-key": ADMIN_KEY,
+      },
+    });
 
-            const safeMultiplier = Math.min(10, Math.max(0, multiplier));
+    const data = await res.json();
 
-            const res = await fetch(
-              `${API_BASE}/admin/run-industrial-support-final?multiplier=${safeMultiplier}`,
-              {
-                headers: {
-                  "x-admin-key": ADMIN_KEY,
-                },
-              },
-            );
+    if (!data.success) {
+      throw new Error(data.error || "Failed to load config.");
+    }
 
-            const data = await res.json();
+    const multiplierInput = document.getElementById("industrial-support-multiplier");
 
-            alert(
-              "Industrial Support result:\n\n" + JSON.stringify(data, null, 2),
-            );
+    if (multiplierInput) {
+      multiplierInput.value = data.config.multiplier;
+    }
 
-            loadAdminOverview();
-          } catch (err) {
-            alert("Error running Industrial Support.");
-            console.error(err);
-          }
-        });
-      // RESET TODAY REWARD CYCLE
+    if (statusEl) {
+      statusEl.textContent = data.config.enabled
+        ? `Active • Multiplier: ${data.config.multiplier}`
+        : `Paused • Multiplier: ${data.config.multiplier}`;
+    }
+  } catch (err) {
+    console.error("Industrial Support config load error:", err);
+    if (statusEl) statusEl.textContent = "Failed to load config.";
+  }
+}
+
+async function saveIndustrialSupportConfig(enabledOverride = null) {
+  const statusEl = document.getElementById("industrial-support-config-status");
+
+  if (!ADMIN_KEY) {
+    alert("Connect Admin first");
+    return;
+  }
+
+  const multiplierInput = document.getElementById("industrial-support-multiplier");
+  const multiplierRaw = Number(multiplierInput?.value || 0);
+  const multiplier = Math.min(10, Math.max(0, multiplierRaw));
+
+  let enabled = true;
+
+  if (enabledOverride === false) enabled = false;
+  if (enabledOverride === true) enabled = true;
+
+  try {
+    if (statusEl) statusEl.textContent = "Saving...";
+
+    const res = await fetch(`${API_BASE}/admin/industrial-support-config`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": ADMIN_KEY,
+      },
+      body: JSON.stringify({
+        multiplier,
+        enabled,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Failed to save config.");
+    }
+
+    if (multiplierInput) {
+      multiplierInput.value = data.config.multiplier;
+    }
+
+    if (statusEl) {
+      statusEl.textContent = data.config.enabled
+        ? `Active • Multiplier: ${data.config.multiplier}`
+        : `Paused • Multiplier: ${data.config.multiplier}`;
+    }
+
+    alert(data.message || "Industrial Support config saved.");
+  } catch (err) {
+    console.error("Industrial Support config save error:", err);
+    if (statusEl) statusEl.textContent = "Save failed.";
+    alert(err.message || "Failed to save Industrial Support config.");
+  }
+}
+
+document
+  .getElementById("save-industrial-support-config-btn")
+  ?.addEventListener("click", () => saveIndustrialSupportConfig(true));
+
+document
+  .getElementById("pause-industrial-support-btn")
+  ?.addEventListener("click", () => saveIndustrialSupportConfig(false));
+
+document
+  .getElementById("resume-industrial-support-btn")
+  ?.addEventListener("click", () => saveIndustrialSupportConfig(true));
+
+document
+  .getElementById("run-industrial-support-btn")
+  ?.addEventListener("click", async () => {
+    if (!ADMIN_KEY) {
+      alert("Connect Admin first");
+      return;
+    }
+
+    const ok = confirm(
+      "Run Industrial Support now?\n\nThis will distribute EMP to qualified players using the current saved multiplier."
+    );
+
+    if (!ok) return;
+
+    try {
+      const res = await fetch(
+        `${API_BASE}/admin/run-industrial-support-final`,
+        {
+          headers: {
+            "x-admin-key": ADMIN_KEY,
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      alert(
+        "Industrial Support result:\n\n" +
+        JSON.stringify(data, null, 2)
+      );
+
+      await loadIndustrialSupportConfig();
+      loadAdminOverview();
+    } catch (err) {
+      alert("Error running Industrial Support.");
+      console.error(err);
+    }
+  });      // RESET TODAY REWARD CYCLE
       document
         .getElementById("reset-cycle-btn")
         .addEventListener("click", async () => {
