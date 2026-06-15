@@ -1378,8 +1378,25 @@ forkyishere,529"
             container.innerHTML = "No operations found.";
             return;
           }
-
+          const totalEmpDistributed = data.operations.reduce((sum, op) => {
+            return sum + Number(op.reward_emp || 0);
+          }, 0);
           container.innerHTML = `
+      <div
+        style="
+          margin-bottom:12px;
+          padding:12px 14px;
+          border-radius:12px;
+          background:#ecfdf5;
+          border:1px solid #86efac;
+          color:#166534;
+          font-weight:900;
+        "
+      >
+        🎁 Total EMP Distributed as Reward:
+        ${totalEmpDistributed.toFixed(3)} EMP
+      </div>
+
       <table style="width:100%; border-collapse:collapse;">
         <thead>
           <tr style="background:#f8fafc;">
