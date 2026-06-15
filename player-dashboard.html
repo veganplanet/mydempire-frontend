@@ -2724,7 +2724,19 @@ setText("dash-rat-message", ratMessage);
           console.error("Failed to load dashboard summary:", err);
         }
       }
+function formatHiveTinyDisplay(value) {
+  const num = Number(value || 0);
 
+  if (!Number.isFinite(num) || num <= 0) {
+    return `0.000<span style="font-size:0.62em;opacity:0.7;">00</span>`;
+  }
+
+  const fixed = num.toFixed(5);
+  const mainPart = fixed.slice(0, -2);
+  const tinyPart = fixed.slice(-2);
+
+  return `${mainPart}<span style="font-size:0.62em;opacity:0.7;">${tinyPart}</span>`;
+}
       async function loadRewardSummary() {
         try {
           const res = await fetch(
@@ -2765,7 +2777,10 @@ setText("dash-rat-message", ratMessage);
 
           EXACT_WALLET_HIVE = walletHive;
 
-          setText("summary-claimable-hive", claimableHive.toFixed(3));
+          const claimableHiveEl = document.getElementById("summary-claimable-hive");
+if (claimableHiveEl) {
+  claimableHiveEl.innerHTML = formatHiveTinyDisplay(claimableHive);
+}
           setText("summary-wallet-hive", Math.max(0, walletHive).toFixed(3));
 
           if (pendingWithdrawCount > 0) {
