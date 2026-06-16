@@ -205,6 +205,34 @@ function startEmpireOperationsCountdownTicker() {
     countdownEl.textContent = `Time Remaining: ${getOperationCountdown(endsAt)}`;
   }, 1000);
 }
+function startFactoryFulfillmentCooldownTicker() {
+  clearInterval(window.factoryFulfillmentCooldownInterval);
+
+  window.factoryFulfillmentCooldownInterval = setInterval(() => {
+    const box = document.getElementById("factory-fulfillment-cooldown-box");
+    const timer = document.getElementById("factory-fulfillment-cooldown-timer");
+
+    if (!box || !timer) return;
+
+    const endsAt = box.dataset.cooldownEndsAt;
+    if (!endsAt) return;
+
+    const countdown = getFulfillmentCooldownCountdown(endsAt);
+
+    if (countdown === "Available now") {
+      timer.textContent = "Available now. Refreshing...";
+      clearInterval(window.factoryFulfillmentCooldownInterval);
+
+      setTimeout(() => {
+        loadEmpireOperations();
+      }, 1200);
+
+      return;
+    }
+
+    timer.textContent = `Available again in: ${countdown}`;
+  }, 1000);
+}
 function renderEmpireOperations(area, operations, playerData) {
   const activeOperation = playerData.activeOperation;
   const industrialAuthority = Number(playerData.industrialAuthority || 0);
@@ -253,6 +281,46 @@ function renderEmpireOperations(area, operations, playerData) {
   📜 Hold 1 Founder WRIT and reach Industrial Authority rewards 5% faster.
 </div>
   </div>
+  ${fulfillmentCooldown.active ? `
+  <div
+    id="factory-fulfillment-cooldown-box"
+    data-cooldown-ends-at="${fulfillmentCooldown.cooldownEndsAt || ""}"
+    style="
+      margin:14px 0 18px;
+      padding:16px 18px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#fff7ed 0%,#ffedd5 100%);
+      border:1px solid #fdba74;
+      color:#9a3412;
+      font-weight:900;
+      box-shadow:0 10px 24px rgba(251,146,60,0.12);
+    "
+  >
+    ⏳ Factory Fulfillment cooldown active<br>
+    <span style="font-weight:800;">
+      Last completed: ${getFulfillmentLabel(fulfillmentCooldown.lastCompletedType)}
+    </span><br>
+    <span id="factory-fulfillment-cooldown-timer">
+      Available again in: ${getFulfillmentCooldownCountdown(fulfillmentCooldown.cooldownEndsAt)}
+    </span>
+  </div>
+` : `
+  <div
+    id="factory-fulfillment-cooldown-box"
+    style="
+      margin:14px 0 18px;
+      padding:14px 18px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#ecfdf5 0%,#dcfce7 100%);
+      border:1px solid #86efac;
+      color:#166534;
+      font-weight:900;
+      box-shadow:0 10px 24px rgba(34,197,94,0.10);
+    "
+  >
+    ✅ Factory Fulfillment available now
+  </div>
+`}
   <div style="margin:10px 18px 18px;">
   <div
     style="
@@ -668,6 +736,25 @@ margin-right:auto;
   }
 
   area.innerHTML = html;
+    startFactoryFulfillmentCooldownTicker();
+
+  if (fulfillmentCooldown.active) {
+    const startButtons = area.querySelectorAll("button");
+
+    startButtons.forEach((btn) => {
+      const text = String(btn.textContent || "").toLowerCase();
+
+      if (
+        text.includes("start") ||
+        text.includes("fulfillment") ||
+        text.includes("contract")
+      ) {
+        btn.disabled = true;
+        btn.style.opacity = "0.55";
+        btn.style.cursor = "not-allowed";
+      }
+    });
+  }
   if (isEmpireOperationsVisitorMode()) {
     area.querySelectorAll("button").forEach((btn) => {
       btn.disabled = true;
