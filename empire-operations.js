@@ -160,7 +160,9 @@ function getOperationCountdown(endsAtRaw) {
   return `${hours}h ${minutes}m ${seconds}s`;
 }
 function getFulfillmentLabel(operationType) {
-  const type = String(operationType || "").trim().toUpperCase();
+  const type = String(operationType || "")
+    .trim()
+    .toUpperCase();
 
   if (type === "LOCAL_SUPPLY") return "Local Factory Fulfillment";
   if (type === "REGIONAL_TRADE") return "Regional Factory Fulfillment";
@@ -201,8 +203,17 @@ function startEmpireOperationsCountdownTicker() {
     if (!countdownEl) return;
 
     const endsAt = countdownEl.dataset.endsAt;
+    const countdownText = getOperationCountdown(endsAt);
 
-    countdownEl.textContent = `Time Remaining: ${getOperationCountdown(endsAt)}`;
+    countdownEl.textContent = `Time Remaining: ${countdownText}`;
+
+    if (countdownText === "Ready to collect") {
+      clearInterval(empireOperationsCountdownInterval);
+
+      setTimeout(() => {
+        loadEmpireOperations();
+      }, 1200);
+    }
   }, 1000);
 }
 
@@ -210,10 +221,10 @@ function renderEmpireOperations(area, operations, playerData) {
   const activeOperation = playerData.activeOperation;
   const industrialAuthority = Number(playerData.industrialAuthority || 0);
   const fulfillmentCooldown = playerData.fulfillmentCooldown || {
-  active: false,
-  cooldownEndsAt: null,
-  lastCompletedType: null,
-};
+    active: false,
+    cooldownEndsAt: null,
+    lastCompletedType: null,
+  };
 
   const iaRewards = [
     { ia: 50, reward: "50 EMP" },
@@ -254,7 +265,9 @@ function renderEmpireOperations(area, operations, playerData) {
   📜 Hold 1 Founder WRIT and reach Industrial Authority rewards 5% faster.
 </div>
   </div>
-  ${fulfillmentCooldown.active ? `
+  ${
+    fulfillmentCooldown.active
+      ? `
   <div
     id="factory-fulfillment-cooldown-box"
     data-cooldown-ends-at="${fulfillmentCooldown.cooldownEndsAt || ""}"
@@ -277,9 +290,11 @@ function renderEmpireOperations(area, operations, playerData) {
       Available again in: ${getFulfillmentCooldownCountdown(fulfillmentCooldown.cooldownEndsAt)}
     </span>
   </div>
-` : `
+`
+      : `
  
-`}
+`
+  }
   <div style="margin:10px 18px 18px;">
   <div
     style="
@@ -695,7 +710,6 @@ margin-right:auto;
   }
 
   area.innerHTML = html;
- 
 
   if (fulfillmentCooldown.active) {
     const startButtons = area.querySelectorAll("button");
@@ -799,19 +813,17 @@ async function startEmpireOperation(operationType) {
       "success",
     );
 
-    loadDashboardSummary().catch((refreshErr) => {
-      console.warn(
-        "Dashboard refresh failed after operation start:",
-        refreshErr,
-      );
-    });
+    try {
+      if (typeof loadDashboardSummary === "function") {
+        await loadDashboardSummary();
+      }
 
-    loadEmpireOperations().catch((refreshErr) => {
-      console.warn(
-        "Operations refresh failed after operation start:",
-        refreshErr,
-      );
-    });
+      if (typeof loadEmpireOperations === "function") {
+        await loadEmpireOperations();
+      }
+    } catch (refreshErr) {
+      console.warn("Refresh failed after operation start:", refreshErr);
+    }
   } catch (err) {
     console.error("Start Empire Operation request failed:", err);
 
@@ -825,13 +837,13 @@ async function claimIAReward(requiredIA) {
     showEmpirePopup(
       "⚠️ Wallet Required",
       "Please connect wallet first.",
-      "error"
+      "error",
     );
     return;
   }
 
   const confirmed = confirm(
-    `Claim this IA reward?\n\nThis will reset your Industrial Authority to 0.`
+    `Claim this IA reward?\n\nThis will reset your Industrial Authority to 0.`,
   );
 
   if (!confirmed) return;
@@ -849,7 +861,7 @@ async function claimIAReward(requiredIA) {
           username,
           required_ia: requiredIA,
         }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -863,7 +875,7 @@ async function claimIAReward(requiredIA) {
     showEmpirePopup(
       "🏆 IA Reward Claimed",
       `${rewardLabel} claimed successfully. IA reset to 0.`,
-      "success"
+      "success",
     );
 
     if (typeof loadDashboardSummary === "function") {
@@ -873,7 +885,6 @@ async function claimIAReward(requiredIA) {
     if (typeof loadEmpireOperations === "function") {
       await loadEmpireOperations();
     }
-
   } catch (err) {
     showEmpirePopup("❌ Claim Failed", err.message, "error");
   }
