@@ -205,34 +205,7 @@ function startEmpireOperationsCountdownTicker() {
     countdownEl.textContent = `Time Remaining: ${getOperationCountdown(endsAt)}`;
   }, 1000);
 }
-function startFactoryFulfillmentCooldownTicker() {
-  clearInterval(window.factoryFulfillmentCooldownInterval);
 
-  window.factoryFulfillmentCooldownInterval = setInterval(() => {
-    const box = document.getElementById("factory-fulfillment-cooldown-box");
-    const timer = document.getElementById("factory-fulfillment-cooldown-timer");
-
-    if (!box || !timer) return;
-
-    const endsAt = box.dataset.cooldownEndsAt;
-    if (!endsAt) return;
-
-    const countdown = getFulfillmentCooldownCountdown(endsAt);
-
-    if (countdown === "Available now") {
-      timer.textContent = "Available now. Refreshing...";
-      clearInterval(window.factoryFulfillmentCooldownInterval);
-
-      setTimeout(() => {
-        loadEmpireOperations();
-      }, 1200);
-
-      return;
-    }
-
-    timer.textContent = `Available again in: ${countdown}`;
-  }, 1000);
-}
 function renderEmpireOperations(area, operations, playerData) {
   const activeOperation = playerData.activeOperation;
   const industrialAuthority = Number(playerData.industrialAuthority || 0);
@@ -305,21 +278,7 @@ function renderEmpireOperations(area, operations, playerData) {
     </span>
   </div>
 ` : `
-  <div
-    id="factory-fulfillment-cooldown-box"
-    style="
-      margin:14px 0 18px;
-      padding:14px 18px;
-      border-radius:18px;
-      background:linear-gradient(135deg,#ecfdf5 0%,#dcfce7 100%);
-      border:1px solid #86efac;
-      color:#166534;
-      font-weight:900;
-      box-shadow:0 10px 24px rgba(34,197,94,0.10);
-    "
-  >
-    ✅ Factory Fulfillment available now
-  </div>
+ 
 `}
   <div style="margin:10px 18px 18px;">
   <div
@@ -736,7 +695,7 @@ margin-right:auto;
   }
 
   area.innerHTML = html;
-    startFactoryFulfillmentCooldownTicker();
+ 
 
   if (fulfillmentCooldown.active) {
     const startButtons = area.querySelectorAll("button");
