@@ -378,9 +378,68 @@ style="display:${industrialAuthority >= 50 ? "inline-block" : "none"}";
     Claim
   </button>
 </span>
-<span style="padding:4px 0;">200 IA → L1 Frontier</span>
-<span style="padding:4px 0;">400 IA → L2 Estate</span>
-<span style="padding:4px 0;">800 IA → L3 Industrial Zone</span>
+<span style="padding:4px 0;">
+  200 IA → L1 Frontier
+  <br>
+  <button
+    onclick="claimIAReward(200)"
+    style="display:${industrialAuthority >= 200 ? "inline-block" : "none"};
+      margin-top:4px;
+      padding:4px 10px;
+      border:none;
+      border-radius:999px;
+      background:#f59e0b;
+      color:white;
+      font-size:11px;
+      font-weight:800;
+      cursor:pointer;
+    "
+  >
+    Claim
+  </button>
+</span>
+
+<span style="padding:4px 0;">
+  400 IA → L2 Estate
+  <br>
+  <button
+    onclick="claimIAReward(400)"
+    style="display:${industrialAuthority >= 400 ? "inline-block" : "none"};
+      margin-top:4px;
+      padding:4px 10px;
+      border:none;
+      border-radius:999px;
+      background:#f59e0b;
+      color:white;
+      font-size:11px;
+      font-weight:800;
+      cursor:pointer;
+    "
+  >
+    Claim
+  </button>
+</span>
+
+<span style="padding:4px 0;">
+  800 IA → L3 Industrial Zone
+  <br>
+  <button
+    onclick="claimIAReward(800)"
+    style="display:${industrialAuthority >= 800 ? "inline-block" : "none"};
+      margin-top:4px;
+      padding:4px 10px;
+      border:none;
+      border-radius:999px;
+      background:#f59e0b;
+      color:white;
+      font-size:11px;
+      font-weight:800;
+      cursor:pointer;
+    "
+  >
+    Claim
+  </button>
+</span>
 </div>
   </div>
 
