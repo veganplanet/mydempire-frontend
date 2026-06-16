@@ -1278,6 +1278,32 @@ forkyishere,529"
           console.error("loadReinvestSummary failed:", err);
         }
       }
+      async function autoLoadAdminAfterRefresh() {
+  if (!ADMIN_KEY) return;
+
+  setStatus("Admin connected. Loading overview...");
+
+  try {
+    await loadAdminOverview();
+    await loadIndustrialSupportConfig();
+    await loadOperationsEmpEconomy();
+
+    try {
+      await loadWalletBalances();
+    } catch (err) {
+      console.error("loadWalletBalances failed:", err);
+    }
+
+    try {
+      await loadReinvestSummary();
+    } catch (err) {
+      console.error("loadReinvestSummary failed:", err);
+    }
+  } catch (err) {
+    console.error("Auto admin load failed:", err);
+    setStatus("Admin saved key found, but auto-load failed.");
+  }
+}
       function logoutAdmin() {
         ADMIN_KEY = "";
         localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
@@ -4393,6 +4419,7 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           });
         }
       });
+      autoLoadAdminAfterRefresh();
     </script>
     <div
       id="assets-modal"
