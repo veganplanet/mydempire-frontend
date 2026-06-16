@@ -218,7 +218,24 @@
   Accept industrial fulfillment requests, generate product manifests,
   complete production targets over time, and claim EMP plus Fulfillment Credits.
 </p>
-
+<div
+  id="fulfillment-cooldown-box"
+  style="
+    display:none;
+    margin:14px 0 16px;
+    padding:14px 16px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#fff7ed 0%,#ffedd5 100%);
+    border:1px solid #fdba74;
+    color:#9a3412;
+    font-weight:900;
+    box-shadow:0 10px 24px rgba(251,146,60,0.12);
+  "
+>
+  ⏳ Factory Fulfillment cooldown active<br>
+  <span id="fulfillment-cooldown-last">Last completed: --</span><br>
+  <span id="fulfillment-cooldown-timer">Available again in: --</span>
+</div>
  <div
   id="factory-fulfillment-area"
   style="
