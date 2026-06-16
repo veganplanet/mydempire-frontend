@@ -63,8 +63,8 @@ function getEmpireOperationStatusText(operation) {
   const result = String(operation.planned_result || "").toUpperCase();
   const seed = Number(operation.narrative_seed || 0);
 
-  const startedAt = new Date(operation.started_at).getTime();
-  const endsAt = new Date(operation.ends_at).getTime();
+  const startedAt = parseOperationTime(operation.started_at);
+  const endsAt = parseOperationTime(operation.ends_at);
   const now = Date.now();
 
   let progress = 0;
@@ -138,12 +138,22 @@ function getEmpireOperationStatusText(operation) {
 
   return selectedPool[index];
 }
-function getOperationCountdown(endsAtRaw) {
-  const safeEndsAtRaw = String(endsAtRaw || "").endsWith("Z")
-    ? endsAtRaw
-    : `${endsAtRaw}Z`;
+function parseOperationTime(raw) {
+  if (!raw) return NaN;
 
-  const endsAt = new Date(safeEndsAtRaw).getTime();
+  const text = String(raw).trim();
+
+  // If backend already sends timezone info, use it directly.
+  if (text.endsWith("Z") || /[+-]\d{2}:\d{2}$/.test(text)) {
+    return new Date(text).getTime();
+  }
+
+  // Render/Postgres timestamps should be treated as UTC.
+  return new Date(`${text.replace(" ", "T")}Z`).getTime();
+}
+
+function getOperationCountdown(endsAtRaw) {
+  const endsAt = parseOperationTime(endsAtRaw);
   const now = Date.now();
 
   if (!Number.isFinite(endsAt)) return "--";
