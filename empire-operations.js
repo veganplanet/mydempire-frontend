@@ -159,6 +159,39 @@ function getOperationCountdown(endsAtRaw) {
 
   return `${hours}h ${minutes}m ${seconds}s`;
 }
+function getFulfillmentLabel(operationType) {
+  const type = String(operationType || "").trim().toUpperCase();
+
+  if (type === "LOCAL_SUPPLY") return "Local Factory Fulfillment";
+  if (type === "REGIONAL_TRADE") return "Regional Factory Fulfillment";
+  if (type === "IMPERIAL_EXPANSION") return "Grand Factory Fulfillment";
+
+  return "Factory Fulfillment";
+}
+
+function getFulfillmentCooldownCountdown(endsAtRaw) {
+  if (!endsAtRaw) return "--";
+
+  const safeEndsAtRaw = String(endsAtRaw).endsWith("Z")
+    ? endsAtRaw
+    : `${endsAtRaw}Z`;
+
+  const endsAt = new Date(safeEndsAtRaw).getTime();
+  const now = Date.now();
+
+  if (!Number.isFinite(endsAt)) return "--";
+
+  const diffMs = endsAt - now;
+
+  if (diffMs <= 0) return "Available now";
+
+  const totalSeconds = Math.floor(diffMs / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
 function startEmpireOperationsCountdownTicker() {
   clearInterval(empireOperationsCountdownInterval);
 
@@ -175,6 +208,11 @@ function startEmpireOperationsCountdownTicker() {
 function renderEmpireOperations(area, operations, playerData) {
   const activeOperation = playerData.activeOperation;
   const industrialAuthority = Number(playerData.industrialAuthority || 0);
+  const fulfillmentCooldown = playerData.fulfillmentCooldown || {
+  active: false,
+  cooldownEndsAt: null,
+  lastCompletedType: null,
+};
 
   const iaRewards = [
     { ia: 50, reward: "50 EMP" },
