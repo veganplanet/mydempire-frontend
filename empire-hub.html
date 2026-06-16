@@ -1070,6 +1070,75 @@ function renderFulfillmentHistory(history) {
     </div>
   `;
 }
+      function getFactoryFulfillmentTypeLabel(type) {
+  const t = String(type || "").trim().toUpperCase();
+
+  if (t === "STANDARD_BATCH") return "Standard Batch";
+  if (t === "BULK_SHIPMENT") return "Bulk Shipment";
+  if (t === "GRAND_CONSIGNMENT") return "Grand Consignment";
+
+  return "Factory Fulfillment";
+}
+
+function getFactoryFulfillmentCooldownText(endsAtRaw) {
+  if (!endsAtRaw) return "--";
+
+  const endsAt = new Date(
+    String(endsAtRaw).endsWith("Z") ? endsAtRaw : `${endsAtRaw}Z`
+  ).getTime();
+
+  if (!Number.isFinite(endsAt)) return "--";
+
+  const diffMs = endsAt - Date.now();
+
+  if (diffMs <= 0) return "Available now";
+
+  const totalSeconds = Math.floor(diffMs / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
+      function updateFactoryFulfillmentCooldownBox(cooldown) {
+  const box = document.getElementById("fulfillment-cooldown-box");
+  const lastEl = document.getElementById("fulfillment-cooldown-last");
+  const timerEl = document.getElementById("fulfillment-cooldown-timer");
+
+  if (!box || !lastEl || !timerEl) return;
+
+  clearInterval(window.factoryFulfillmentCooldownTimer);
+
+  if (!cooldown || cooldown.active !== true || !cooldown.cooldownEndsAt) {
+    box.style.display = "none";
+    return;
+  }
+
+  box.style.display = "block";
+
+  function tick() {
+    const countdown = getFactoryFulfillmentCooldownText(cooldown.cooldownEndsAt);
+
+    lastEl.textContent =
+      `Last completed: ${getFactoryFulfillmentTypeLabel(cooldown.lastCompletedType)}`;
+
+    if (countdown === "Available now") {
+      timerEl.textContent = "Available again: now. Refreshing...";
+      clearInterval(window.factoryFulfillmentCooldownTimer);
+
+      setTimeout(() => {
+        loadFactoryFulfillmentBoard();
+      }, 1200);
+
+      return;
+    }
+
+    timerEl.textContent = `Available again in: ${countdown}`;
+  }
+
+  tick();
+  window.factoryFulfillmentCooldownTimer = setInterval(tick, 1000);
+}
 function renderFactoryFulfillmentBoard(area, username, configData, playerData) {
   const active = playerData.activeFulfillment;
   const progress = playerData.activeProgress;
@@ -1086,7 +1155,12 @@ const remainingRotationIndustries = Array.isArray(rotationStatus.remainingIndust
 const singleIndustryMode = rotationStatus.singleIndustryMode === true;
 const fulfillmentHistory = playerData.fulfillmentHistory || [];
 const isVisitorMode = isFactoryFulfillmentVisitorMode();
-
+const fulfillmentCooldown = playerData.fulfillmentCooldown || {
+  active: false,
+  lastCompletedType: null,
+  cooldownEndsAt: null,
+};
+  updateFactoryFulfillmentCooldownBox(fulfillmentCooldown);
   let html = `
     <div
       style="
@@ -1431,6 +1505,25 @@ html += `
     html += renderFulfillmentHistory(fulfillmentHistory);
 
   area.innerHTML = html;
+    if (fulfillmentCooldown.active) {
+    const buttons = area.querySelectorAll("button");
+
+    buttons.forEach((btn) => {
+      const text = String(btn.textContent || "").toLowerCase();
+
+      if (
+        text.includes("start") ||
+        text.includes("batch") ||
+        text.includes("shipment") ||
+        text.includes("consignment")
+      ) {
+        btn.disabled = true;
+        btn.style.opacity = "0.55";
+        btn.style.cursor = "not-allowed";
+        btn.title = "Factory Fulfillment is cooling down.";
+      }
+    });
+  }
 }
 let pendingFactoryFulfillmentStart = null;
 
