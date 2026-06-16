@@ -232,9 +232,8 @@
     box-shadow:0 10px 24px rgba(251,146,60,0.12);
   "
 >
-  ⏳ Factory Fulfillment cooldown active<br>
-  <span id="fulfillment-cooldown-last">Last completed: --</span><br>
-  <span id="fulfillment-cooldown-timer">Available again in: --</span>
+  
+  <span id="fulfillment-cooldown-timer">Next fulfillment available in: --</span>
 </div>
  <div
   id="factory-fulfillment-area"
@@ -1102,10 +1101,10 @@ function getFactoryFulfillmentCooldownText(endsAtRaw) {
 }
       function updateFactoryFulfillmentCooldownBox(cooldown) {
   const box = document.getElementById("fulfillment-cooldown-box");
-  const lastEl = document.getElementById("fulfillment-cooldown-last");
+  
   const timerEl = document.getElementById("fulfillment-cooldown-timer");
 
-  if (!box || !lastEl || !timerEl) return;
+  if (!box || !timerEl) return;
 
   clearInterval(window.factoryFulfillmentCooldownTimer);
 
@@ -1119,11 +1118,10 @@ function getFactoryFulfillmentCooldownText(endsAtRaw) {
   function tick() {
     const countdown = getFactoryFulfillmentCooldownText(cooldown.cooldownEndsAt);
 
-    lastEl.textContent =
-      `Last completed: ${getFactoryFulfillmentTypeLabel(cooldown.lastCompletedType)}`;
+   
 
     if (countdown === "Available now") {
-      timerEl.textContent = "Available again: now. Refreshing...";
+     timerEl.textContent = "Next fulfillment available now. Refreshing...";
       clearInterval(window.factoryFulfillmentCooldownTimer);
 
       setTimeout(() => {
@@ -1133,7 +1131,7 @@ function getFactoryFulfillmentCooldownText(endsAtRaw) {
       return;
     }
 
-    timerEl.textContent = `Available again in: ${countdown}`;
+    timerEl.textContent = `⏳ Next fulfillment available in: ${countdown}`;
   }
 
   tick();
