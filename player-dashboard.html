@@ -6593,8 +6593,35 @@ function applyReadOnlyModeForOtherEmpire() {
         const modal = document.getElementById("crate-history-modal");
         if (modal) modal.style.display = "none";
       }
+      // =====================================================
+// 🖼 SAFE DASHBOARD IMAGE LOADER
+// Prevents images from blocking dashboard load
+// =====================================================
+
+function enableSafeDashboardImages() {
+  const images = document.querySelectorAll("img");
+
+  images.forEach((img) => {
+    if (!img.hasAttribute("loading")) {
+      img.setAttribute("loading", "lazy");
+    }
+
+    if (!img.hasAttribute("decoding")) {
+      img.setAttribute("decoding", "async");
+    }
+
+    img.addEventListener(
+      "error",
+      () => {
+        img.style.display = "none";
+      },
+      { once: true },
+    );
+  });
+}
      document.addEventListener("DOMContentLoaded", async () => {
         try {
+          enableSafeDashboardImages();
           setupDashboardNavbar();
 
           await loadDashboardSummary();
