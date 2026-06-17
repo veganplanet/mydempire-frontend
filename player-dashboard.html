@@ -4992,68 +4992,13 @@ wireEmptySlotBuildActions();
       console.error("Rename error:", err);
       alert("Rename failed.");
     }
-  });
-}
-            renameBtn.addEventListener("click", async () => {
-              const newName = prompt("Enter new factory name:", factoryName);
-              if (!newName) return;
-
-              try {
-                const res = await fetch(apiUrl("/factory/rename"), {
-                  method: "POST",
-                  headers: {
-  "Content-Type": "application/json",
-  "x-mde-actor": PLAYER_USERNAME,
-},
-                  body: JSON.stringify({
-                    username: PLAYER_USERNAME,
-                    factory_id: factoryId,
-                    factory_name: newName,
-                  }),
-                });
-
-                const data = await res.json();
-
-                if (!res.ok || !data.success) {
-                  alert(data.error || "Rename failed.");
-                  return;
-                }
-
-              alert(data.message || "Factory renamed successfully!");
-
-// ✅ Force fresh data after rename
-
-
-// ✅ Instantly update visible factory name without page refresh
-const titleEl = row.querySelector(".factory-title");
-if (titleEl) {
-  titleEl.textContent = clean;
+   });
 }
 
-// ✅ Refresh data in background
-if (typeof loadDashboard === "function") {
-  await loadDashboard();
+container.appendChild(card);
 }
-
-if (typeof loadLands === "function") {
-  await loadLands();
-}
-
-if (typeof renderConstructionTab === "function") {
-  renderConstructionTab();
-}
-
-                // await loadEmpireOverview();
-              } catch (err) {
-                console.error("Rename error:", err);
-                alert("Rename failed.");
-              }
-            });
-          }
-          container.appendChild(card);
-        }
       
-
+      }
       // Small helpers for blueprint visuals
       const BP_INDUSTRY_IMAGES = {
         PHARMA: "assets/pharma.png",
