@@ -6593,7 +6593,7 @@ function applyReadOnlyModeForOtherEmpire() {
         const modal = document.getElementById("crate-history-modal");
         if (modal) modal.style.display = "none";
       }
-      window.addEventListener("load", async () => {
+     document.addEventListener("DOMContentLoaded", async () => {
         try {
           setupDashboardNavbar();
 
