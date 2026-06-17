@@ -289,7 +289,199 @@ font-weight:900;
     </a>
   </div>
 </div>
+<!-- ===== EMPIRE CULTURE + MAINTENANCE ROW ===== -->
+<div
+  class="overview-block dashboard-feature-row"
+  style="margin-bottom: 16px; align-items: stretch;"
+>
+  <!-- 🏛 Empire Culture Spotlight -->
+  <div
+    class="dashboard-feature-card"
+    style="
+      flex:1;
+      min-width:280px;
+      border:1px solid #facc15;
+      background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 10px 22px rgba(245,158,11,0.12);
+    "
+  >
+    <div style="font-size:15px;font-weight:900;color:#78350f;margin-bottom:8px;">
+      🏛 Empire Culture Spotlight
+    </div>
 
+    <div
+      id="culture-spotlight-empty"
+      style="font-size:13px;color:#92400e;font-weight:700;line-height:1.5;"
+    >
+      Loading creative factory names...
+    </div>
+
+    <div id="culture-spotlight-content" style="display:none;">
+      <div
+        id="culture-spotlight-name"
+        style="
+          font-size:22px;
+          font-weight:900;
+          color:#111827;
+          margin:8px 0 6px;
+          line-height:1.2;
+        "
+      >
+        Factory Name
+      </div>
+
+      <div
+        id="culture-spotlight-owner"
+        style="font-size:13px;color:#78350f;font-weight:800;margin-bottom:8px;"
+      >
+        @player • Industry Factory
+      </div>
+
+      <div
+        id="culture-spotlight-votes"
+        style="font-size:13px;color:#92400e;font-weight:800;margin-bottom:12px;"
+      >
+        Votes this week: 0
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button
+          id="culture-like-btn"
+          type="button"
+          style="
+            padding:8px 12px;
+            border-radius:10px;
+            border:1px solid #d97706;
+            background:#f59e0b;
+            color:#ffffff;
+            font-weight:900;
+            cursor:pointer;
+          "
+        >
+          👍 Like
+        </button>
+<button
+  id="culture-prev-btn"
+  type="button"
+  style="
+    padding:8px 12px;
+    border-radius:10px;
+    border:1px solid #f59e0b;
+    background:#ffffff;
+    color:#92400e;
+    font-weight:900;
+    cursor:pointer;
+  "
+>
+  ← Back
+</button>
+        <button
+          id="culture-next-btn"
+          type="button"
+          style="
+            padding:8px 12px;
+            border-radius:10px;
+            border:1px solid #f59e0b;
+            background:#ffffff;
+            color:#92400e;
+            font-weight:900;
+            cursor:pointer;
+          "
+        >
+          Next →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🛠 Factory Maintenance -->
+  <div
+    class="dashboard-feature-card"
+    style="
+      flex:1;
+      min-width:280px;
+      border:1px solid #93c5fd;
+      background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 10px 22px rgba(37,99,235,0.10);
+    "
+  >
+    <div style="font-size:15px;font-weight:900;color:#1e3a8a;margin-bottom:8px;">
+      🛠 Factory Maintenance
+    </div>
+
+    <div
+      style="
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+        margin:10px 0 12px;
+      "
+    >
+      <div
+        style="
+          background:#ffffff;
+          border:1px solid #bfdbfe;
+          border-radius:12px;
+          padding:10px;
+        "
+      >
+        <div style="font-size:11px;color:#64748b;font-weight:800;">
+          Active Factories
+        </div>
+        <div
+          id="maintenance-active-count"
+          style="font-size:22px;font-weight:900;color:#111827;"
+        >
+          --
+        </div>
+      </div>
+
+      <div
+        style="
+          background:#ffffff;
+          border:1px solid #bfdbfe;
+          border-radius:12px;
+          padding:10px;
+        "
+      >
+        <div style="font-size:11px;color:#64748b;font-weight:800;">
+          Need Attention
+        </div>
+        <div
+          id="maintenance-attention-count"
+          style="font-size:22px;font-weight:900;color:#dc2626;"
+        >
+          --
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;color:#1e40af;font-weight:700;line-height:1.5;">
+      Keep factories active to protect your EP/day and reward share.
+    </div>
+
+    <button
+      type="button"
+      onclick="setActiveTab('lands')"
+      style="
+        margin-top:12px;
+        padding:8px 12px;
+        border-radius:10px;
+        border:1px solid #2563eb;
+        background:#2563eb;
+        color:#ffffff;
+        font-weight:900;
+        cursor:pointer;
+      "
+    >
+      Review Factories
+    </button>
+  </div>
+</div>
         <!-- ===== BLOCK 1: SNAPSHOT ===== -->
         <div class="overview-block">
           <div class="overview-block-title">Empire Snapshot</div>
@@ -2616,7 +2808,8 @@ setText(
             "summary-factories-breakdown",
            `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories} | Blueprints: ${Number(data.blueprintCount || 0)}`,
           );
-
+setText("maintenance-active-count", activeFactories);
+setText("maintenance-attention-count", inactiveFactories);
           // ===== RELICS =====
           const relicCount = Number(data.relicCount ?? 0);
           const activeRelicBoost = Number(data.activeRelicBoost ?? 0);
@@ -4349,8 +4542,9 @@ const blockedByExistingB5 =
                     const res = await fetch(apiUrl("/factory/rename"), {
                       method: "POST",
                       headers: {
-                        "Content-Type": "application/json",
-                      },
+  "Content-Type": "application/json",
+  "x-mde-actor": PLAYER_USERNAME,
+},
                       body: JSON.stringify({
                         username: PLAYER_USERNAME,
                         factory_id: factoryId,
@@ -4365,7 +4559,22 @@ const blockedByExistingB5 =
                       return;
                     }
 
-                    alert("Factory renamed successfully!");
+                   alert(data.message || "Factory renamed successfully!");
+
+// ✅ Force fresh data after rename
+
+
+if (typeof loadDashboard === "function") {
+  await loadDashboard();
+}
+
+if (typeof loadLands === "function") {
+  await loadLands();
+}
+
+if (typeof renderConstructionTab === "function") {
+  renderConstructionTab();
+}
 
                     // await loadEmpireOverview();
                   } catch (err) {
@@ -4536,6 +4745,84 @@ wireEmptySlotBuildActions();
           });
         });
       }
+      async function renameFactoryAndUpdateUI({
+  factoryId,
+  currentName,
+  titleElement,
+  refreshConstruction = false,
+}) {
+  const newName = prompt("Enter new factory name:", currentName || "");
+
+  if (newName === null) return;
+
+  const cleanName = String(newName || "").trim();
+
+  if (cleanName.length < 3) {
+    alert("Factory name must be at least 3 characters.");
+    return;
+  }
+
+  if (cleanName.length > 30) {
+    alert("Factory name must be 30 characters or less.");
+    return;
+  }
+
+  if (
+    currentName &&
+    cleanName.toLowerCase() === String(currentName).trim().toLowerCase()
+  ) {
+    alert("New factory name is same as current name.");
+    return;
+  }
+
+  try {
+    const res = await fetch(apiUrl("/factory/rename"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": PLAYER_USERNAME,
+      },
+      body: JSON.stringify({
+        username: PLAYER_USERNAME,
+        factory_id: factoryId,
+        factory_name: cleanName,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      alert(data.error || "Rename failed.");
+      return;
+    }
+
+    // ✅ Update only visible name, no full page reload
+    if (titleElement) {
+      titleElement.textContent = data.factory_name || cleanName;
+    }
+
+    // ✅ Update local cached factory data if available
+    if (Array.isArray(allFactoriesFlat)) {
+      const found = allFactoriesFlat.find(
+        (f) => String(f.id || f.factory_id) === String(factoryId),
+      );
+
+      if (found) {
+        found.factory_name = data.factory_name || cleanName;
+      }
+    }
+
+    alert(data.message || "Factory renamed successfully!");
+
+    // ✅ Only refresh construction tab if rename happened there
+    if (refreshConstruction && typeof renderConstructionTab === "function") {
+      renderConstructionTab();
+    }
+  } catch (err) {
+    console.error("Rename error:", err);
+    alert("Rename failed.");
+  }
+}
       function renderConstructionTab() {
         const container = document.getElementById("construction-grid");
         if (!container) return;
@@ -4616,6 +4903,79 @@ wireEmptySlotBuildActions();
           const renameBtn = card.querySelector(".rename-factory-btn");
 
           if (renameBtn) {
+  renameBtn.addEventListener("click", async () => {
+    const currentName = String(factory.factory_name || factory.factoryName || "").trim();
+
+    const newName = prompt(
+      "Enter new factory name:",
+      currentName || "My Factory",
+    );
+
+    if (newName === null) return;
+
+    const cleanName = String(newName || "").trim();
+
+    if (cleanName.length < 3) {
+      alert("Factory name must be at least 3 characters.");
+      return;
+    }
+
+    if (cleanName.length > 30) {
+      alert("Factory name must be 30 characters or less.");
+      return;
+    }
+
+    if (
+      currentName &&
+      cleanName.toLowerCase() === currentName.toLowerCase()
+    ) {
+      alert("New factory name is same as current name.");
+      return;
+    }
+
+    try {
+      const res = await fetch(apiUrl("/factory/rename"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": PLAYER_USERNAME,
+        },
+        body: JSON.stringify({
+          username: PLAYER_USERNAME,
+          factory_id: factoryId,
+          factory_name: cleanName,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        alert(data.error || "Rename failed.");
+        return;
+      }
+
+      const finalName = data.factory_name || cleanName;
+
+      // ✅ Update visible name immediately, without full page reload
+      const titleEl =
+        card.querySelector(".factory-card-title") ||
+        card.querySelector(".factory-title");
+
+      if (titleEl) {
+        titleEl.textContent = finalName;
+      }
+
+      // ✅ Update local object also, so old name does not return immediately
+      factory.factory_name = finalName;
+      factory.factoryName = finalName;
+
+      alert(data.message || "Factory renamed successfully.");
+    } catch (err) {
+      console.error("Rename error:", err);
+      alert("Rename failed.");
+    }
+  });
+}
             renameBtn.addEventListener("click", async () => {
               const newName = prompt("Enter new factory name:", factoryName);
               if (!newName) return;
@@ -4624,8 +4984,9 @@ wireEmptySlotBuildActions();
                 const res = await fetch(apiUrl("/factory/rename"), {
                   method: "POST",
                   headers: {
-                    "Content-Type": "application/json",
-                  },
+  "Content-Type": "application/json",
+  "x-mde-actor": PLAYER_USERNAME,
+},
                   body: JSON.stringify({
                     username: PLAYER_USERNAME,
                     factory_id: factoryId,
@@ -4640,7 +5001,29 @@ wireEmptySlotBuildActions();
                   return;
                 }
 
-                alert("Factory renamed successfully!");
+              alert(data.message || "Factory renamed successfully!");
+
+// ✅ Force fresh data after rename
+
+
+// ✅ Instantly update visible factory name without page refresh
+const titleEl = row.querySelector(".factory-title");
+if (titleEl) {
+  titleEl.textContent = clean;
+}
+
+// ✅ Refresh data in background
+if (typeof loadDashboard === "function") {
+  await loadDashboard();
+}
+
+if (typeof loadLands === "function") {
+  await loadLands();
+}
+
+if (typeof renderConstructionTab === "function") {
+  renderConstructionTab();
+}
 
                 // await loadEmpireOverview();
               } catch (err) {
@@ -4651,7 +5034,7 @@ wireEmptySlotBuildActions();
           }
           container.appendChild(card);
         }
-      }
+      
 
       // Small helpers for blueprint visuals
       const BP_INDUSTRY_IMAGES = {
@@ -6511,6 +6894,433 @@ document.getElementById("close-emp-history-btn")?.addEventListener("click", () =
   const modal = document.getElementById("emp-history-modal");
   if (modal) modal.style.display = "none";
 });
+// =====================================================
+// ✅ CLEAN MASTER FACTORY RENAME HANDLER
+// This handles all .rename-factory-btn clicks in one place.
+// It updates only visible factory name, not full page.
+// =====================================================
+
+document.addEventListener(
+  "click",
+  async function handleFactoryRenameClick(event) {
+    const renameBtn = event.target.closest(".rename-factory-btn");
+
+    if (!renameBtn) return;
+
+    // Stop older rename handlers from also running
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    const factoryId = renameBtn.dataset.factoryId;
+
+    if (!factoryId) {
+      alert("Factory ID missing.");
+      return;
+    }
+
+    const visibleContainer =
+      renameBtn.closest(".factory-card") ||
+      renameBtn.closest(".factory-main") ||
+      renameBtn.closest(".land-slot-pad") ||
+      renameBtn.closest(".card") ||
+      renameBtn.parentElement;
+
+    const titleElement =
+      visibleContainer?.querySelector(".factory-card-title") ||
+      visibleContainer?.querySelector(".factory-title");
+
+    const currentName = String(titleElement?.textContent || "").trim();
+
+    const newName = prompt(
+      "Enter new factory name:",
+      currentName || "My Factory",
+    );
+
+    if (newName === null) return;
+
+    const cleanName = String(newName || "").trim();
+
+    if (cleanName.length < 3) {
+      alert("Factory name must be at least 3 characters.");
+      return;
+    }
+
+    if (cleanName.length > 30) {
+      alert("Factory name must be 30 characters or less.");
+      return;
+    }
+
+    if (
+      currentName &&
+      cleanName.toLowerCase() === currentName.toLowerCase()
+    ) {
+      alert("New factory name is same as current name.");
+      return;
+    }
+
+    try {
+      renameBtn.disabled = true;
+      const oldBtnText = renameBtn.textContent;
+      renameBtn.textContent = "Saving...";
+
+      const res = await fetch(apiUrl("/factory/rename"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": PLAYER_USERNAME,
+        },
+        body: JSON.stringify({
+          username: PLAYER_USERNAME,
+          factory_id: factoryId,
+          factory_name: cleanName,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        alert(data.error || "Rename failed.");
+        return;
+      }
+
+      const finalName = data.factory_name || cleanName;
+
+      // ✅ Update this visible card/title immediately
+      if (titleElement) {
+        titleElement.textContent = finalName;
+      }
+
+      // ✅ Also update any other visible title for same factory id
+      document
+        .querySelectorAll(`.rename-factory-btn[data-factory-id="${factoryId}"]`)
+        .forEach((btn) => {
+          const box =
+            btn.closest(".factory-card") ||
+            btn.closest(".factory-main") ||
+            btn.closest(".land-slot-pad") ||
+            btn.closest(".card") ||
+            btn.parentElement;
+
+          const title =
+            box?.querySelector(".factory-card-title") ||
+            box?.querySelector(".factory-title");
+
+          if (title) {
+            title.textContent = finalName;
+          }
+        });
+
+      // ✅ Update cached factory objects if available
+      if (Array.isArray(window.allFactoriesFlat)) {
+        window.allFactoriesFlat.forEach((f) => {
+          if (String(f.id || f.factory_id) === String(factoryId)) {
+            f.factory_name = finalName;
+            f.factoryName = finalName;
+          }
+        });
+      }
+
+      alert(data.message || "Factory renamed successfully.");
+    } catch (err) {
+      console.error("Rename error:", err);
+      alert("Rename failed.");
+    } finally {
+      renameBtn.disabled = false;
+      renameBtn.textContent = "Rename";
+    }
+  },
+  true,
+);
+// =====================================================
+// 🏛 EMPIRE CULTURE SPOTLIGHT + 🛠 MAINTENANCE CARD
+// Dashboard Overview helper
+// =====================================================
+
+let cultureSpotlightItems = [];
+let cultureSpotlightIndex = 0;
+let cultureSpotlightTimer = null;
+
+function getCultureViewerUsername() {
+  const fromFunction =
+    typeof getLoggedInUser === "function" ? getLoggedInUser() : "";
+
+  return String(
+    fromFunction ||
+      localStorage.getItem("hiveUsername") ||
+      localStorage.getItem("mde_username") ||
+      localStorage.getItem("username") ||
+      PLAYER_USERNAME ||
+      "",
+  )
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+}
+
+function getCultureIndustryLabel(item) {
+  const raw =
+    item?.industry ||
+    item?.blueprint_tier ||
+    item?.blueprintTier ||
+    "";
+
+  const text = String(raw || "").toUpperCase();
+
+  if (text.includes("PHARMA")) return "Pharma";
+  if (text.includes("FOOD")) return "Food";
+  if (text.includes("TEXTILE")) return "Textile";
+  if (text.includes("CHEMICAL")) return "Chemical";
+  if (text.includes("SUPERMARKET")) return "Supermarket";
+
+  return "Factory";
+}
+
+function renderCultureSpotlightCard() {
+  const emptyEl = document.getElementById("culture-spotlight-empty");
+  const contentEl = document.getElementById("culture-spotlight-content");
+  const nameEl = document.getElementById("culture-spotlight-name");
+  const ownerEl = document.getElementById("culture-spotlight-owner");
+  const votesEl = document.getElementById("culture-spotlight-votes");
+  const likeBtn = document.getElementById("culture-like-btn");
+
+  if (!emptyEl || !contentEl || !nameEl || !ownerEl || !votesEl || !likeBtn) {
+    return;
+  }
+
+  if (!cultureSpotlightItems.length) {
+    emptyEl.style.display = "block";
+    emptyEl.textContent = "No eligible factory names in Spotlight yet.";
+    contentEl.style.display = "none";
+    return;
+  }
+
+  if (cultureSpotlightIndex >= cultureSpotlightItems.length) {
+    cultureSpotlightIndex = 0;
+  }
+
+  const item = cultureSpotlightItems[cultureSpotlightIndex];
+  const industryLabel = getCultureIndustryLabel(item);
+
+  emptyEl.style.display = "none";
+  contentEl.style.display = "block";
+
+  nameEl.textContent = `“${item.factory_name || "Unnamed Factory"}”`;
+  ownerEl.textContent = `@${item.username || "unknown"} • ${industryLabel} Factory`;
+  votesEl.textContent = `Votes this week: ${Number(item.votes || 0)}`;
+
+  likeBtn.dataset.factoryId = item.factory_id;
+
+  if (item.is_own_factory) {
+    likeBtn.disabled = true;
+    likeBtn.textContent = "Own Factory";
+    likeBtn.style.opacity = "0.65";
+    return;
+  }
+
+  if (item.viewer_voted) {
+    likeBtn.disabled = true;
+    likeBtn.textContent = "✓ Liked";
+    likeBtn.style.opacity = "0.65";
+    return;
+  }
+
+  likeBtn.disabled = false;
+  likeBtn.textContent = "👍 Like";
+  likeBtn.style.opacity = "1";
+}
+
+function showNextCultureSpotlight() {
+  if (!cultureSpotlightItems.length) return;
+
+  cultureSpotlightIndex =
+    (cultureSpotlightIndex + 1) % cultureSpotlightItems.length;
+
+  renderCultureSpotlightCard();
+}
+
+async function loadCultureSpotlightCard() {
+  const emptyEl = document.getElementById("culture-spotlight-empty");
+  const viewer = getCultureViewerUsername();
+
+  if (!viewer) {
+    if (emptyEl) {
+      emptyEl.textContent = "Connect wallet to view Culture Spotlight.";
+    }
+    return;
+  }
+
+  try {
+    if (emptyEl) {
+      emptyEl.textContent = "Loading creative factory names...";
+    }
+
+    const res = await fetch(
+      apiUrl(`/empire-culture/spotlight?username=${encodeURIComponent(viewer)}`),
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to load Culture Spotlight.");
+    }
+
+    cultureSpotlightItems = Array.isArray(data.spotlight)
+      ? data.spotlight
+      : [];
+
+    cultureSpotlightIndex = 0;
+    renderCultureSpotlightCard();
+
+    if (cultureSpotlightTimer) {
+      clearInterval(cultureSpotlightTimer);
+    }
+
+    cultureSpotlightTimer = setInterval(() => {
+      showNextCultureSpotlight();
+    }, 10000);
+  } catch (err) {
+    console.error("Culture Spotlight load error:", err);
+
+    if (emptyEl) {
+      emptyEl.style.display = "block";
+      emptyEl.textContent = "Unable to load Culture Spotlight.";
+    }
+  }
+}
+
+async function voteForCurrentCultureFactory() {
+  const likeBtn = document.getElementById("culture-like-btn");
+  const factoryId = likeBtn?.dataset?.factoryId;
+  const viewer = getCultureViewerUsername();
+
+  if (!factoryId || !viewer) {
+    alert("Unable to vote right now.");
+    return;
+  }
+
+  try {
+    likeBtn.disabled = true;
+    likeBtn.textContent = "Saving...";
+
+    const res = await fetch(apiUrl("/empire-culture/vote"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": viewer,
+      },
+      body: JSON.stringify({
+        username: viewer,
+        factory_id: Number(factoryId),
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      alert(data.error || "Vote failed.");
+      renderCultureSpotlightCard();
+      return;
+    }
+
+    const item = cultureSpotlightItems.find(
+      (x) => String(x.factory_id) === String(factoryId),
+    );
+
+    if (item) {
+      item.votes = Number(data.votes || item.votes || 0);
+      item.viewer_voted = true;
+    }
+
+    renderCultureSpotlightCard();
+  } catch (err) {
+    console.error("Culture vote error:", err);
+    alert("Vote failed.");
+    renderCultureSpotlightCard();
+  }
+}
+
+function updateMaintenanceDashboardCard() {
+  const activeEl = document.getElementById("maintenance-active-count");
+  const attentionEl = document.getElementById("maintenance-attention-count");
+
+  if (!activeEl || !attentionEl) return;
+
+  const factories =
+    typeof allFactoriesFlat !== "undefined" && Array.isArray(allFactoriesFlat)
+      ? allFactoriesFlat
+      : [];
+
+  if (!factories.length) {
+    activeEl.textContent = "0";
+    attentionEl.textContent = "0";
+    return;
+  }
+
+  const activeFactories = factories.filter((f) => {
+    const status = String(f.status || "").trim().toUpperCase();
+    return status === "ACTIVE";
+  });
+
+  const needAttention = activeFactories.filter((f) => {
+    const directRemaining = Number(f.remaining_maintenance_days);
+
+    if (Number.isFinite(directRemaining)) {
+      return directRemaining <= 2;
+    }
+
+    if (f.maintenance_ends_at) {
+      const endsAt = new Date(f.maintenance_ends_at).getTime();
+      if (Number.isFinite(endsAt)) {
+        const daysLeft = (endsAt - Date.now()) / (1000 * 60 * 60 * 24);
+        return daysLeft <= 2;
+      }
+    }
+
+    return false;
+  });
+
+  activeEl.textContent = String(activeFactories.length);
+  attentionEl.textContent = String(needAttention.length);
+}
+
+function setupCultureAndMaintenanceCards() {
+  const prevBtn = document.getElementById("culture-prev-btn");
+
+if (prevBtn && prevBtn.dataset.ready !== "true") {
+  prevBtn.dataset.ready = "true";
+  prevBtn.addEventListener("click", showPreviousCultureSpotlight);
+}
+  const nextBtn = document.getElementById("culture-next-btn");
+  const likeBtn = document.getElementById("culture-like-btn");
+
+  if (nextBtn && nextBtn.dataset.ready !== "true") {
+    nextBtn.dataset.ready = "true";
+    nextBtn.addEventListener("click", showNextCultureSpotlight);
+  }
+
+  if (likeBtn && likeBtn.dataset.ready !== "true") {
+    likeBtn.dataset.ready = "true";
+    likeBtn.addEventListener("click", voteForCurrentCultureFactory);
+  }
+
+  loadCultureSpotlightCard();
+
+  
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(setupCultureAndMaintenanceCards, 800);
+});
+function showPreviousCultureSpotlight() {
+  if (!cultureSpotlightItems.length) return;
+
+  cultureSpotlightIndex =
+    (cultureSpotlightIndex - 1 + cultureSpotlightItems.length) %
+    cultureSpotlightItems.length;
+
+  renderCultureSpotlightCard();
+}
     </script>
 
     <script src="js/appbar.js"></script>

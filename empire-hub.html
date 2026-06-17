@@ -392,60 +392,259 @@
 </div>
 </section>
 
-    <section id="culture-panel" class="hub-panel" style="display: none;">
+   <section id="culture-panel" class="hub-panel" style="display: none;">
 
   <div
     style="
       border-radius:22px;
       padding:22px;
       margin-bottom:18px;
-      background:linear-gradient(135deg,#fef3c7 0%,#fde68a 35%,#fef9c3 100%);
+      background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 60%,#ffffff 100%);
       border:1px solid #f59e0b;
-      box-shadow:0 12px 28px rgba(245,158,11,0.18);
+      box-shadow:0 12px 28px rgba(245,158,11,0.14);
     "
   >
-    <h2 style="margin:0 0 8px;color:#78350f;">🏛 Empire Culture</h2>
-    <p style="margin:0;color:#92400e;font-weight:700;line-height:1.6;">
-      A new community space for creative factory names, player recognition,
-      culture rankings, and future empire stories.
-    </p>
+    <div
+      style="
+        display:flex;
+        justify-content:space-between;
+        gap:14px;
+        flex-wrap:wrap;
+        align-items:center;
+      "
+    >
+      <div>
+        <h2 style="margin:0 0 8px;color:#78350f;">
+          🏛 Empire Culture
+        </h2>
+
+        <p style="margin:0;color:#92400e;font-weight:700;line-height:1.6;">
+          Vote for creative factory names from active empires. Generic factory names are not shown here.
+        </p>
+      </div>
+
+      <div
+        style="
+          padding:10px 14px;
+          border-radius:14px;
+          background:#ffffff;
+          border:1px solid #facc15;
+          color:#78350f;
+          font-weight:900;
+          white-space:nowrap;
+        "
+      >
+        Weekly Prize: 100 EMP
+      </div>
+    </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
+  <div
+    style="
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+    "
+  >
+    <!-- ROUND INFO -->
+    <div
+      class="card"
+      style="
+        border-left:5px solid #f59e0b;
+        background:linear-gradient(180deg,#ffffff 0%,#fffbeb 100%);
+      "
+    >
+      <h3 style="margin-top:0;color:#78350f;">🏆 Current Culture Round</h3>
 
-    <div class="card" style="border-top:5px solid #f97316;">
-      <h3>🏭 Factory Spotlight</h3>
-      <p>
-        Funny and creative factory names will soon be featured for all players to see and like.
-      </p>
-      <strong>Default factory names will not qualify.</strong>
+      <div
+        style="
+          display:grid;
+          grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+          gap:12px;
+        "
+      >
+        <div
+          style="
+            padding:12px;
+            border-radius:12px;
+            background:#ffffff;
+            border:1px solid #fde68a;
+          "
+        >
+          <div style="font-size:12px;color:#92400e;font-weight:800;">
+            Round
+          </div>
+          <div
+            id="culture-round-key"
+            style="font-size:20px;color:#111827;font-weight:900;"
+          >
+            --
+          </div>
+        </div>
+
+        <div
+          style="
+            padding:12px;
+            border-radius:12px;
+            background:#ffffff;
+            border:1px solid #fde68a;
+          "
+        >
+          <div style="font-size:12px;color:#92400e;font-weight:800;">
+            Reward
+          </div>
+          <div
+            id="culture-round-reward"
+            style="font-size:20px;color:#111827;font-weight:900;"
+          >
+            100 EMP
+          </div>
+        </div>
+
+        <div
+          style="
+            padding:12px;
+            border-radius:12px;
+            background:#ffffff;
+            border:1px solid #fde68a;
+          "
+        >
+          <div style="font-size:12px;color:#92400e;font-weight:800;">
+            Eligible Names
+          </div>
+          <div
+            id="culture-name-count"
+            style="font-size:20px;color:#111827;font-weight:900;"
+          >
+            0
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          margin-top:12px;
+          font-size:13px;
+          color:#92400e;
+          font-weight:700;
+          line-height:1.5;
+        "
+      >
+        Self-vote is not allowed. A winning factory name retires from future rounds unless the owner renames it.
+      </div>
+    </div>
+<!-- HALL OF FAME -->
+<div
+  class="card"
+  style="
+    border-left:5px solid #6366f1;
+    background:linear-gradient(180deg,#ffffff 0%,#eef2ff 100%);
+  "
+>
+  <div
+    style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    "
+  >
+    <div>
+      <h3 style="margin:0;color:#3730a3;">👑 Culture Hall of Fame</h3>
+      <div style="font-size:13px;color:#4f46e5;font-weight:700;">
+        Declared weekly winners and pending rewards.
+      </div>
     </div>
 
-    <div class="card" style="border-top:5px solid #ec4899;">
-      <h3>💡 Naming Guidelines</h3>
-      <p>
-        Use clean, original, funny, industry-themed, or empire-themed names.
-      </p>
-      <p><strong>Examples:</strong></p>
-      <ul>
-        <li>Wheat Happens</li>
-        <li>Pharmafia Labs</li>
-        <li>Definitely Not Poison Inc.</li>
-        <li>Rat Approved Foods</li>
-      </ul>
-    </div>
-
-    <div class="card" style="border-top:5px solid #6366f1;">
-      <h3>📜 Coming Features</h3>
-      <ul>
-        <li>❤️ Community Likes</li>
-        <li>🏆 Monthly Culture Ranking</li>
-        <li>🏛 Hall of Fame</li>
-        <li>📰 Imperial Gazette</li>
-      </ul>
-    </div>
-
+    <button
+      type="button"
+      onclick="loadEmpireCultureWinners()"
+      style="
+        padding:8px 12px;
+        border-radius:10px;
+        border:1px solid #6366f1;
+        background:#6366f1;
+        color:#ffffff;
+        font-weight:900;
+        cursor:pointer;
+      "
+    >
+      Refresh
+    </button>
   </div>
+
+  <div id="culture-winners-list">
+    <div
+      style="
+        padding:14px;
+        border-radius:12px;
+        background:#ffffff;
+        border:1px solid #c7d2fe;
+        color:#4f46e5;
+        font-weight:700;
+      "
+    >
+      Loading Culture Hall of Fame...
+    </div>
+  </div>
+</div>
+    <!-- FULL LIST -->
+    <div class="card">
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:12px;
+          flex-wrap:wrap;
+          margin-bottom:12px;
+        "
+      >
+        <div>
+          <h3 style="margin:0;color:#111827;">
+            🌟 Weekly Spotlight List
+          </h3>
+          <div style="font-size:13px;color:#64748b;font-weight:700;">
+            Creative factory names competing this week.
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onclick="loadEmpireCultureHubList()"
+          style="
+            padding:8px 12px;
+            border-radius:10px;
+            border:1px solid #f59e0b;
+            background:#f59e0b;
+            color:#ffffff;
+            font-weight:900;
+            cursor:pointer;
+          "
+        >
+          Refresh
+        </button>
+      </div>
+
+      <div id="culture-hub-list">
+        <div
+          style="
+            padding:14px;
+            border-radius:12px;
+            background:#f8fafc;
+            border:1px solid #e5e7eb;
+            color:#64748b;
+            font-weight:700;
+          "
+        >
+          Loading Empire Culture list...
+        </div>
+      </div>
+    </div>
+
+    
 
 </section>
 
@@ -562,6 +761,485 @@
 // Player can refresh page manually if needed
         }
       });
+      // =====================================================
+// 🏛 EMPIRE CULTURE HUB LIST
+// Full weekly spotlight list inside Empire Hub
+// =====================================================
+
+let empireCultureHubItems = [];
+
+function getEmpireCultureHubViewer() {
+  const params = new URLSearchParams(window.location.search);
+
+  const fromUrl = params.get("user") || params.get("view") || "";
+
+  const fromStorage =
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    "";
+
+  return String(fromUrl || fromStorage || "")
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+}
+
+function isGenericFactoryCultureName(name) {
+  const cleanName = String(name || "").trim();
+
+  return /^[A-Z]+\s+Factory\s+B[1-5]\s+#?\d+$/i.test(cleanName);
+}
+
+function getCultureHubIndustryLabel(item) {
+  const raw =
+    item?.industry ||
+    item?.blueprint_tier ||
+    item?.blueprintTier ||
+    "";
+
+  const text = String(raw || "").toUpperCase();
+
+  if (text.includes("PHARMA")) return "Pharma";
+  if (text.includes("FOOD")) return "Food";
+  if (text.includes("TEXTILE")) return "Textile";
+  if (text.includes("CHEMICAL")) return "Chemical";
+  if (text.includes("SUPERMARKET")) return "Supermarket";
+
+  return "Factory";
+}
+
+function renderEmpireCultureHubList(data) {
+  const listEl = document.getElementById("culture-hub-list");
+  const roundKeyEl = document.getElementById("culture-round-key");
+  const rewardEl = document.getElementById("culture-round-reward");
+  const countEl = document.getElementById("culture-name-count");
+
+  if (!listEl) return;
+
+  const roundKey = data?.round_key || "--";
+  const rewardEmp = Number(data?.reward_emp || 100);
+
+  empireCultureHubItems = Array.isArray(data?.spotlight)
+    ? data.spotlight.filter((item) => {
+        const name = String(item.factory_name || "").trim();
+        return name && !isGenericFactoryCultureName(name);
+      })
+    : [];
+
+  if (roundKeyEl) roundKeyEl.textContent = roundKey;
+  if (rewardEl) rewardEl.textContent = `${rewardEmp} EMP`;
+  if (countEl) countEl.textContent = String(empireCultureHubItems.length);
+
+  if (!empireCultureHubItems.length) {
+    listEl.innerHTML = `
+      <div
+        style="
+          padding:14px;
+          border-radius:12px;
+          background:#f8fafc;
+          border:1px solid #e5e7eb;
+          color:#64748b;
+          font-weight:700;
+        "
+      >
+        No eligible creative factory names yet. Rename an active factory with a custom name to enter the weekly Spotlight.
+      </div>
+    `;
+    return;
+  }
+
+  listEl.innerHTML = empireCultureHubItems
+    .map((item) => {
+      const industry = getCultureHubIndustryLabel(item);
+      const votes = Number(item.votes || 0);
+      const owner = String(item.username || "unknown").replace("@", "");
+      const factoryName = String(item.factory_name || "Unnamed Factory").trim();
+
+      let actionButton = "";
+
+      if (item.is_own_factory) {
+        actionButton = `
+          <button
+            type="button"
+            disabled
+            style="
+              padding:8px 12px;
+              border-radius:10px;
+              border:1px solid #d1d5db;
+              background:#f3f4f6;
+              color:#64748b;
+              font-weight:900;
+              cursor:not-allowed;
+            "
+          >
+            Own Factory
+          </button>
+        `;
+      } else if (item.viewer_voted) {
+        actionButton = `
+          <button
+            type="button"
+            disabled
+            style="
+              padding:8px 12px;
+              border-radius:10px;
+              border:1px solid #d1d5db;
+              background:#f3f4f6;
+              color:#64748b;
+              font-weight:900;
+              cursor:not-allowed;
+            "
+          >
+            ✓ Liked
+          </button>
+        `;
+      } else {
+        actionButton = `
+          <button
+            type="button"
+            data-culture-factory-id="${item.factory_id}"
+            onclick="voteEmpireCultureHubFactory(${Number(item.factory_id)})"
+            style="
+              padding:8px 12px;
+              border-radius:10px;
+              border:1px solid #d97706;
+              background:#f59e0b;
+              color:#ffffff;
+              font-weight:900;
+              cursor:pointer;
+            "
+          >
+            👍 Like
+          </button>
+        `;
+      }
+
+      return `
+        <div
+          style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:14px;
+            flex-wrap:wrap;
+            padding:14px;
+            margin-bottom:10px;
+            border-radius:16px;
+            background:linear-gradient(135deg,#ffffff 0%,#fffbeb 100%);
+            border:1px solid #fde68a;
+            box-shadow:0 8px 18px rgba(15,23,42,0.05);
+          "
+        >
+          <div style="min-width:220px;flex:1;">
+            <div
+              style="
+                font-size:18px;
+                font-weight:900;
+                color:#111827;
+                margin-bottom:4px;
+              "
+            >
+              “${factoryName}”
+            </div>
+
+            <div
+              style="
+                font-size:13px;
+                color:#92400e;
+                font-weight:800;
+              "
+            >
+              @${owner} • ${industry} Factory
+            </div>
+          </div>
+
+          <div
+            style="
+              min-width:110px;
+              font-size:14px;
+              color:#78350f;
+              font-weight:900;
+            "
+          >
+            Votes: ${votes}
+          </div>
+
+          <div>
+            ${actionButton}
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+async function loadEmpireCultureHubList() {
+  const listEl = document.getElementById("culture-hub-list");
+  const viewer = getEmpireCultureHubViewer();
+
+  if (!listEl) return;
+
+  if (!viewer) {
+    listEl.innerHTML = `
+      <div
+        style="
+          padding:14px;
+          border-radius:12px;
+          background:#fee2e2;
+          border:1px solid #fca5a5;
+          color:#991b1b;
+          font-weight:800;
+        "
+      >
+        Please connect wallet to view Empire Culture.
+      </div>
+    `;
+    return;
+  }
+
+  try {
+    listEl.innerHTML = `
+      <div
+        style="
+          padding:14px;
+          border-radius:12px;
+          background:#f8fafc;
+          border:1px solid #e5e7eb;
+          color:#64748b;
+          font-weight:700;
+        "
+      >
+        Loading Empire Culture list...
+      </div>
+    `;
+
+    const res = await fetch(
+      `${API_BASE}/empire-culture/spotlight?username=${encodeURIComponent(viewer)}`
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to load Empire Culture list.");
+    }
+
+    renderEmpireCultureHubList(data);
+  } catch (err) {
+    console.error("Empire Culture hub load error:", err);
+
+    listEl.innerHTML = `
+      <div
+        style="
+          padding:14px;
+          border-radius:12px;
+          background:#fee2e2;
+          border:1px solid #fca5a5;
+          color:#991b1b;
+          font-weight:800;
+        "
+      >
+        Unable to load Empire Culture list.
+      </div>
+    `;
+  }
+}
+
+async function voteEmpireCultureHubFactory(factoryId) {
+  const viewer = getEmpireCultureHubViewer();
+
+  if (!viewer || !factoryId) {
+    alert("Unable to vote right now.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/empire-culture/vote`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": viewer,
+      },
+      body: JSON.stringify({
+        username: viewer,
+        factory_id: Number(factoryId),
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      alert(data.error || "Vote failed.");
+      return;
+    }
+
+    await loadEmpireCultureHubList();
+  } catch (err) {
+    console.error("Empire Culture hub vote error:", err);
+    alert("Vote failed.");
+  }
+}
+// =====================================================
+// 👑 EMPIRE CULTURE HALL OF FAME
+// Shows declared weekly winners
+// =====================================================
+
+async function loadEmpireCultureWinners() {
+  const listEl = document.getElementById("culture-winners-list");
+
+  if (!listEl) return;
+
+  try {
+    listEl.innerHTML = `
+      <div
+        style="
+          padding:14px;
+          border-radius:12px;
+          background:#ffffff;
+          border:1px solid #c7d2fe;
+          color:#4f46e5;
+          font-weight:700;
+        "
+      >
+        Loading Culture Hall of Fame...
+      </div>
+    `;
+
+    const res = await fetch(`${API_BASE}/empire-culture/winners`);
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to load winners.");
+    }
+
+    const winners = Array.isArray(data.winners) ? data.winners : [];
+
+    if (!winners.length) {
+      listEl.innerHTML = `
+        <div
+          style="
+            padding:14px;
+            border-radius:12px;
+            background:#ffffff;
+            border:1px solid #c7d2fe;
+            color:#4f46e5;
+            font-weight:700;
+            line-height:1.5;
+          "
+        >
+          No Culture winner declared yet. First winner will appear here after the weekly round ends.
+        </div>
+      `;
+      return;
+    }
+
+    listEl.innerHTML = winners
+      .map((winner, index) => {
+        const name = String(winner.winning_name || "Unnamed Factory").trim();
+        const owner = String(winner.username || "unknown").replace("@", "");
+        const roundKey = String(winner.round_key || "--");
+        const votes = Number(winner.votes || 0);
+        const rewardEmp = Number(winner.reward_emp || 100);
+        const status = String(winner.reward_status || "PENDING_ADMIN_TRANSFER");
+
+        const statusLabel =
+          status === "PAID"
+            ? "✅ Paid"
+            : "⏳ Pending Admin Transfer";
+
+        return `
+          <div
+            style="
+              padding:14px;
+              margin-bottom:10px;
+              border-radius:16px;
+              background:#ffffff;
+              border:1px solid #c7d2fe;
+              box-shadow:0 8px 18px rgba(79,70,229,0.08);
+            "
+          >
+            <div
+              style="
+                display:flex;
+                justify-content:space-between;
+                gap:12px;
+                flex-wrap:wrap;
+                align-items:flex-start;
+              "
+            >
+              <div style="flex:1;min-width:220px;">
+                <div
+                  style="
+                    font-size:13px;
+                    color:#6366f1;
+                    font-weight:900;
+                    margin-bottom:4px;
+                  "
+                >
+                  ${index === 0 ? "Latest Winner" : "Previous Winner"} • ${roundKey}
+                </div>
+
+                <div
+                  style="
+                    font-size:19px;
+                    color:#111827;
+                    font-weight:900;
+                    margin-bottom:4px;
+                  "
+                >
+                  “${name}”
+                </div>
+
+                <div
+                  style="
+                    font-size:13px;
+                    color:#4f46e5;
+                    font-weight:800;
+                  "
+                >
+                  @${owner} • Votes: ${votes}
+                </div>
+              </div>
+
+              <div
+                style="
+                  padding:9px 12px;
+                  border-radius:12px;
+                  background:#eef2ff;
+                  border:1px solid #c7d2fe;
+                  color:#3730a3;
+                  font-weight:900;
+                  min-width:170px;
+                  text-align:center;
+                "
+              >
+                ${rewardEmp} EMP<br>
+                <span style="font-size:12px;">${statusLabel}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+  } catch (err) {
+    console.error("Empire Culture winners load error:", err);
+
+    listEl.innerHTML = `
+      <div
+        style="
+          padding:14px;
+          border-radius:12px;
+          background:#fee2e2;
+          border:1px solid #fca5a5;
+          color:#991b1b;
+          font-weight:800;
+        "
+      >
+        Unable to load Culture Hall of Fame.
+      </div>
+    `;
+  }
+}
     </script>
     <script>
       function getLoggedInUser() {
@@ -901,6 +1579,16 @@ window.switchHubTab = function switchHubTab(tab) {
   }
 
   panels[tab].style.display = "block";
+
+ if (tab === "culture") {
+  if (typeof loadEmpireCultureHubList === "function") {
+    loadEmpireCultureHubList();
+  }
+
+  if (typeof loadEmpireCultureWinners === "function") {
+    loadEmpireCultureWinners();
+  }
+}
 
   const tabOrder = ["operations", "fulfillment", "rats", "foundry", "culture"];
   const buttonIndex = tabOrder.indexOf(tab);
