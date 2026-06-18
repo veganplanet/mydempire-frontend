@@ -1606,10 +1606,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
     </script>
-    <script>
-      var empireOperationsRefreshInterval = null;
-      var empireOperationsCountdownInterval = null;
-    </script>
+   <script>
+  function getLoggedInUser() {
+    return String(
+      localStorage.getItem("hiveUsername") ||
+        localStorage.getItem("mde_username") ||
+        localStorage.getItem("username") ||
+        ""
+    )
+      .replace("@", "")
+      .trim()
+      .toLowerCase();
+  }
+
+  var empireOperationsRefreshInterval = null;
+  var empireOperationsCountdownInterval = null;
+</script>
     <script>
       function getConditionEmoji(condition) {
   if (condition === "Spotless") return "🟢";
