@@ -1044,7 +1044,35 @@ async function loadEmpireCultureHubList() {
     `;
   }
 }
+function getLoggedInCultureUserOnly() {
+  const loggedIn =
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    "";
 
+  return String(loggedIn || "")
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+}
+
+function isCultureVisitorMode() {
+  const params = new URLSearchParams(window.location.search);
+
+  const viewedUser = String(
+    params.get("user") || params.get("view") || ""
+  )
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+
+  const loggedIn = getLoggedInCultureUserOnly();
+
+  if (!viewedUser || !loggedIn) return false;
+
+  return viewedUser !== loggedIn;
+}
 async function voteEmpireCultureHubFactory(factoryId) {
   const viewer = getEmpireCultureHubViewer();
 
