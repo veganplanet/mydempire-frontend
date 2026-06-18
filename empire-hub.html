@@ -1268,6 +1268,201 @@ async function loadEmpireCultureWinners() {
     `;
   }
 }
+      // =====================================================
+// 🔒 UNIVERSAL VISITOR MODE ACTION LOCK — STRONG VERSION
+// Visitors can view another empire, but cannot perform actions.
+// =====================================================
+
+function getVisitorLockLoggedInUser() {
+  return String(
+    localStorage.getItem("hiveUsername") ||
+      localStorage.getItem("mde_username") ||
+      localStorage.getItem("username") ||
+      "",
+  )
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+}
+
+function getVisitorLockViewedUser() {
+  const params = new URLSearchParams(window.location.search);
+
+  return String(params.get("user") || params.get("view") || "")
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+}
+
+function isVisitorModeActive() {
+  const viewedUser = getVisitorLockViewedUser();
+  const loggedInUser = getVisitorLockLoggedInUser();
+
+  if (!viewedUser || !loggedInUser) return false;
+
+  return viewedUser !== loggedInUser;
+}
+
+function isVisitorActionElement(target) {
+  if (!target) return false;
+
+  const el = target.closest("button, a, input, select");
+  if (!el) return false;
+
+  const id = String(el.id || "").toLowerCase();
+  const cls = String(el.className || "").toLowerCase();
+  const text = String(el.textContent || el.value || "").toLowerCase();
+  const onclick = String(el.getAttribute("onclick") || "").toLowerCase();
+  const href = String(el.getAttribute("href") || "").toLowerCase();
+
+  // Safe navigation/view buttons
+  const safeWords = [
+    "view",
+    "history",
+    "refresh",
+    "back",
+    "next",
+    "close",
+    "how to play",
+    "inspect",
+    "open empire culture",
+  ];
+
+  if (safeWords.some((word) => text.includes(word))) {
+    return false;
+  }
+
+  // Hard protected IDs
+  const protectedIds = [
+    "open-crate-btn",
+    "claim-reward-btn",
+    "withdraw-hive-btn",
+    "reinvest-hive-btn",
+    "culture-like-btn",
+    "rat-cleanup-btn",
+  ];
+
+  if (protectedIds.includes(id)) return true;
+
+  // Protected classes
+  const protectedClasses = [
+    "visitor-lock-action",
+    "rename-factory-btn",
+    "build-factory-btn",
+    "upgrade-factory-btn",
+    "pay-maintenance-btn",
+    "claim-production-btn",
+    "claim-all-production-btn",
+    "factory-action-btn",
+    "empire-action-btn",
+    "primary-button",
+    "primary-btn",
+  ];
+
+  if (protectedClasses.some((c) => cls.includes(c))) return true;
+
+  // Protected action words
+  const actionWords = [
+    "claim",
+    "withdraw",
+    "reinvest",
+    "like",
+    "vote",
+    "rename",
+    "build",
+    "upgrade",
+    "maintenance",
+    "pay",
+    "cleanup",
+    "start",
+    "accept",
+    "collect",
+    "create",
+    "list",
+    "buy",
+    "cancel",
+    "craft",
+    "mint",
+    "open crate",
+  ];
+
+  if (actionWords.some((word) => text.includes(word))) return true;
+  if (actionWords.some((word) => onclick.includes(word))) return true;
+  if (actionWords.some((word) => href.includes(word))) return true;
+  if (actionWords.some((word) => id.includes(word))) return true;
+
+  return false;
+}
+
+function lockVisitorActionElement(el) {
+  if (!el) return;
+
+  el.dataset.visitorLocked = "true";
+  el.style.opacity = "0.55";
+  el.style.cursor = "not-allowed";
+  el.title = "Visitor mode: actions are disabled when viewing another empire.";
+
+  if (
+    el.tagName === "BUTTON" ||
+    el.tagName === "INPUT" ||
+    el.tagName === "SELECT"
+  ) {
+    el.disabled = true;
+  }
+}
+
+function applyVisitorModeActionLock() {
+  if (!isVisitorModeActive()) return;
+
+  document.body.classList.add("visitor-mode-active");
+
+  document.querySelectorAll("button, a, input, select").forEach((el) => {
+    if (isVisitorActionElement(el)) {
+      lockVisitorActionElement(el);
+    }
+  });
+}
+
+function startVisitorModeActionLock() {
+  if (!isVisitorModeActive()) return;
+
+  applyVisitorModeActionLock();
+
+  document.addEventListener(
+    "click",
+    (event) => {
+      if (!isVisitorModeActive()) return;
+
+      const clickedAction = isVisitorActionElement(event.target);
+
+      if (!clickedAction) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      alert(
+        "Visitor mode: you can view this empire, but actions are only available from your own account.",
+      );
+
+      return false;
+    },
+    true,
+  );
+
+  const observer = new MutationObserver(() => {
+    applyVisitorModeActionLock();
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  setTimeout(applyVisitorModeActionLock, 300);
+  setTimeout(applyVisitorModeActionLock, 1000);
+  setTimeout(applyVisitorModeActionLock, 2500);
+}
     </script>
     <script>
       function getLoggedInUser() {
