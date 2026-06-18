@@ -1540,6 +1540,31 @@ const API_BASE = isLocal ? LOCAL_API : PROD_API;
     `;
         document.body.appendChild(popup);
       }
+      // =====================================================
+// 🏛 EMPIRE CULTURE AUTO LOAD SAFETY
+// Ensures Culture list loads when opening Empire Hub directly with ?tab=culture
+// =====================================================
+
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    const params = new URLSearchParams(window.location.search);
+    const requestedTab = String(params.get("tab") || "").toLowerCase();
+
+    if (requestedTab === "culture") {
+      if (typeof switchHubTab === "function") {
+        switchHubTab("culture");
+      }
+
+      if (typeof loadEmpireCultureHubList === "function") {
+        loadEmpireCultureHubList();
+      }
+
+      if (typeof loadEmpireCultureWinners === "function") {
+        loadEmpireCultureWinners();
+      }
+    }
+  }, 600);
+});
     </script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
