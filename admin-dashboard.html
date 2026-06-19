@@ -1030,7 +1030,47 @@ forkyishere,529"
             </div>
           </div>
         </div>
+        <div class="section">
+          <h2>🏷 Factory Name Change EMP Sink</h2>
 
+          <div class="row">
+            <select id="rename-sink-range">
+              <option value="24h">Last 24 Hours</option>
+              <option value="7d">Last 7 Days</option>
+              <option value="30d" selected>Last 30 Days</option>
+              <option value="all">All Time</option>
+            </select>
+
+            <button type="button" onclick="loadFactoryRenameEmpSink()">
+              Load Name Change Sink
+            </button>
+          </div>
+
+          <div class="metrics">
+            <div class="card">
+              <div class="label">Paid Name Changes</div>
+              <div class="value" id="metric-rename-count">--</div>
+              <div class="small">Only paid renames counted</div>
+            </div>
+
+            <div class="card">
+              <div class="label">EMP Burned / Sink</div>
+              <div class="value" id="metric-rename-emp-sink">--</div>
+              <div class="small">From 5 EMP factory name-change fee</div>
+            </div>
+          </div>
+
+          <div
+            id="factory-rename-sink-log"
+            class="scroll-box"
+            style="margin-top: 12px"
+          >
+            <div class="kv">
+              <span>Status</span>
+              <span>No rename sink data loaded yet.</span>
+            </div>
+          </div>
+        </div>
         <div class="section">
           <h2>⚙️ Empire Operations Log</h2>
           <button onclick="loadEmpireOperationsLog()" class="primary">
@@ -1279,31 +1319,31 @@ forkyishere,529"
         }
       }
       async function autoLoadAdminAfterRefresh() {
-  if (!ADMIN_KEY) return;
+        if (!ADMIN_KEY) return;
 
-  setStatus("Admin connected. Loading overview...");
+        setStatus("Admin connected. Loading overview...");
 
-  try {
-    await loadAdminOverview();
-    await loadIndustrialSupportConfig();
-    await loadOperationsEmpEconomy();
+        try {
+          await loadAdminOverview();
+          await loadIndustrialSupportConfig();
+          await loadOperationsEmpEconomy();
 
-    try {
-      await loadWalletBalances();
-    } catch (err) {
-      console.error("loadWalletBalances failed:", err);
-    }
+          try {
+            await loadWalletBalances();
+          } catch (err) {
+            console.error("loadWalletBalances failed:", err);
+          }
 
-    try {
-      await loadReinvestSummary();
-    } catch (err) {
-      console.error("loadReinvestSummary failed:", err);
-    }
-  } catch (err) {
-    console.error("Auto admin load failed:", err);
-    setStatus("Admin saved key found, but auto-load failed.");
-  }
-}
+          try {
+            await loadReinvestSummary();
+          } catch (err) {
+            console.error("loadReinvestSummary failed:", err);
+          }
+        } catch (err) {
+          console.error("Auto admin load failed:", err);
+          setStatus("Admin saved key found, but auto-load failed.");
+        }
+      }
       function logoutAdmin() {
         ADMIN_KEY = "";
         localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
@@ -3747,6 +3787,11 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
         } catch (err) {
           console.error("loadAdminPlayersForSearch failed:", err);
         }
+        try {
+          await loadFactoryRenameEmpSink();
+        } catch (err) {
+          console.error("loadFactoryRenameEmpSink failed:", err);
+        }
 
         adminInitialLoadDone = true;
       }
@@ -4420,6 +4465,107 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
         }
       });
       autoLoadAdminAfterRefresh();
+      async function loadFactoryRenameEmpSink() {
+        const box = document.getElementById("factory-rename-sink-log");
+
+        try {
+          if (!ADMIN_KEY) {
+            alert("Connect Admin first.");
+            return;
+          }
+
+          const range =
+            document.getElementById("rename-sink-range")?.value || "30d";
+
+          if (box) {
+            box.innerHTML = `
+        <div class="kv">
+          <span>Status</span>
+          <span>Loading factory rename EMP sink...</span>
+        </div>
+      `;
+          }
+
+          const response = await fetch(
+            `${API_BASE}/admin/factory-rename-emp-sink?range=${encodeURIComponent(range)}`,
+            {
+              headers: {
+                "x-admin-key":
+                  localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (!data.success) {
+            throw new Error(data.error || "Failed to load rename sink.");
+          }
+
+          document.getElementById("metric-rename-count").textContent = Number(
+            data.total_paid_renames || 0,
+          ).toLocaleString();
+
+          document.getElementById("metric-rename-emp-sink").textContent =
+            `${Number(data.total_emp_sink || 0).toLocaleString()} EMP`;
+
+          const recent = data.recent || [];
+
+          if (!box) return;
+
+          if (!recent.length) {
+            box.innerHTML = `
+        <div class="kv">
+          <span>Status</span>
+          <span>No paid factory name changes found for this period.</span>
+        </div>
+      `;
+            return;
+          }
+
+          box.innerHTML = `
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="background:#f8fafc;">
+            <th style="padding:10px; text-align:left;">Player</th>
+            <th style="padding:10px; text-align:left;">EMP Sink</th>
+            <th style="padding:10px; text-align:left;">Detail</th>
+            <th style="padding:10px; text-align:left;">Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${recent
+            .map(
+              (row) => `
+                <tr style="border-top:1px solid #e5e7eb;">
+                  <td style="padding:10px; font-weight:700;">@${row.username}</td>
+                  <td style="padding:10px; color:#dc2626; font-weight:900;">
+                    -${Number(row.amount || 0).toLocaleString()} EMP
+                  </td>
+                  <td style="padding:10px;">${row.note || "Factory name changed"}</td>
+                  <td style="padding:10px;">
+                    ${row.created_at ? new Date(row.created_at).toLocaleString() : "--"}
+                  </td>
+                </tr>
+              `,
+            )
+            .join("")}
+        </tbody>
+      </table>
+    `;
+        } catch (err) {
+          console.error("loadFactoryRenameEmpSink error:", err);
+
+          if (box) {
+            box.innerHTML = `
+        <div class="kv">
+          <span>Error</span>
+          <span>Failed to load factory rename EMP sink.</span>
+        </div>
+      `;
+          }
+        }
+      }
     </script>
     <div
       id="assets-modal"
