@@ -20,46 +20,54 @@
         </div>
 
         <div class="subnav">
-          <button
-  type="button"
-  class="subnav-btn subnav-btn-active"
-  onclick="switchHubTab('operations')"
->
-  ⚙️ Empire Operations
-</button>
+  <button
+    type="button"
+    class="subnav-btn subnav-btn-active"
+    onclick="switchHubTab('operations')"
+  >
+    ⚙️ Empire Operations
+  </button>
 
-<button
-  type="button"
-  class="subnav-btn"
-  onclick="switchHubTab('fulfillment')"
->
-  🏭 Factory Fulfillment <span style="color:red;font-weight:900;">NEW</span>
-</button>
+  <button
+    type="button"
+    class="subnav-btn"
+    onclick="switchHubTab('fulfillment')"
+  >
+    🏭 Factory Fulfillment <span style="color:red;font-weight:900;"></span>
+  </button>
 
-<button
-  type="button"
-  class="subnav-btn"
-  onclick="switchHubTab('rats')"
->
-  🐀 The Rat Situation
-</button>
+  <button
+    type="button"
+    class="subnav-btn"
+    onclick="switchHubTab('management')"
+  >
+    👔 Empire Management <span style="color:#dc2626;font-weight:900;">SOON</span>
+  </button>
 
-<button
-  type="button"
-  class="subnav-btn"
-  onclick="switchHubTab('foundry')"
->
-  🔥 Foundry <span style="color:red;font-weight:900;">NEW</span>
-</button>
+  <button
+    type="button"
+    class="subnav-btn"
+    onclick="switchHubTab('rats')"
+  >
+    🐀 The Rat Situation
+  </button>
 
-<button
-  type="button"
-  class="subnav-btn"
-  onclick="switchHubTab('culture')"
->
-  🏛 Empire Culture <span style="color:red;font-weight:900;">NEW</span>
-</button>
-        </div>
+  <button
+    type="button"
+    class="subnav-btn"
+    onclick="switchHubTab('foundry')"
+  >
+    🔥 Foundry <span style="color:red;font-weight:900;"></span>
+  </button>
+
+  <button
+    type="button"
+    class="subnav-btn"
+    onclick="switchHubTab('culture')"
+  >
+    🏛 Empire Culture <span style="color:red;font-weight:900;"></span>
+  </button>
+</div>
       
 
         <section id="operations-panel" class="hub-panel">
@@ -391,7 +399,227 @@
   </div>
 </div>
 </section>
+</section>
 
+<section id="management-panel" class="hub-panel" style="display:none;">
+
+  <div
+    style="
+      border-radius:26px;
+      padding:26px;
+      background:
+        radial-gradient(circle at top right, rgba(250,204,21,0.18), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(37,99,235,0.14), transparent 32%),
+        linear-gradient(135deg,#ffffff 0%,#f8fafc 48%,#fff7ed 100%);
+      border:1px solid #fbbf24;
+      box-shadow:0 16px 36px rgba(15,23,42,0.10);
+      overflow:hidden;
+      position:relative;
+    "
+  >
+
+    <div
+      style="
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        padding:7px 13px;
+        border-radius:999px;
+        background:#fffbeb;
+        border:1px solid #f59e0b;
+        color:#92400e;
+        font-size:12px;
+        font-weight:900;
+        letter-spacing:0.08em;
+        margin-bottom:14px;
+      "
+    >
+      👔 COMING SOON
+    </div>
+
+    <h2
+      style="
+        margin:0 0 10px;
+        font-size:34px;
+        line-height:1.12;
+        color:#111827;
+        font-weight:1000;
+      "
+    >
+      Industrial Management Office
+    </h2>
+
+    <p
+      style="
+        margin:0 0 20px;
+        max-width:900px;
+        color:#475569;
+        font-size:16px;
+        line-height:1.75;
+        font-weight:700;
+      "
+    >
+      A private management layer for stronger empires. Hire a Procurement Manager,
+      contact confidential suppliers, and unlock exclusive industrial deals at
+      attractive private terms.
+    </p>
+
+    <div
+      style="
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+        gap:14px;
+        margin:20px 0;
+      "
+    >
+
+      <div
+        style="
+          background:#ffffff;
+          border:1px solid #bfdbfe;
+          border-radius:18px;
+          padding:16px;
+          box-shadow:0 8px 18px rgba(37,99,235,0.08);
+        "
+      >
+        <div style="font-size:13px;font-weight:900;color:#1d4ed8;margin-bottom:6px;">
+          🔓 Eligibility
+        </div>
+        <div style="font-size:22px;font-weight:1000;color:#111827;">
+          500+ EP/day
+        </div>
+        <div style="font-size:13px;color:#64748b;font-weight:700;margin-top:6px;line-height:1.5;">
+          Designed for advanced industrialists with established production power.
+        </div>
+      </div>
+
+      <div
+        style="
+          background:#ffffff;
+          border:1px solid #fed7aa;
+          border-radius:18px;
+          padding:16px;
+          box-shadow:0 8px 18px rgba(249,115,22,0.08);
+        "
+      >
+        <div style="font-size:13px;font-weight:900;color:#c2410c;margin-bottom:6px;">
+          👔 Manager Hiring
+        </div>
+        <div style="font-size:22px;font-weight:1000;color:#111827;">
+          25 EMP / week + 5 Fulfillment Credits
+        </div>
+        <div style="font-size:13px;color:#64748b;font-weight:700;margin-top:6px;line-height:1.5;">
+          Procurement Manager access fee. Deal cost will be separate.
+        </div>
+      </div>
+
+      <div
+        style="
+          background:#ffffff;
+          border:1px solid #bbf7d0;
+          border-radius:18px;
+          padding:16px;
+          box-shadow:0 8px 18px rgba(22,163,74,0.08);
+        "
+      >
+        <div style="font-size:13px;font-weight:900;color:#15803d;margin-bottom:6px;">
+          ♻️ Conditional Refund
+        </div>
+        <div style="font-size:22px;font-weight:1000;color:#111827;">
+          2 Credits may return
+        </div>
+        <div style="font-size:13px;color:#64748b;font-weight:700;margin-top:6px;line-height:1.5;">
+          If no supplier deal is finalized during the management window.
+        </div>
+      </div>
+
+    </div>
+
+    <div
+      <div
+  <div
+  style="
+    margin-top:18px;
+    padding:20px;
+    border-radius:22px;
+    background:
+      radial-gradient(circle at top right, rgba(212,175,55,0.20), transparent 32%),
+      linear-gradient(135deg,#0f172a 0%,#1e293b 48%,#334155 100%);
+    color:#f8fafc;
+    border:1px solid rgba(212,175,55,0.45);
+    box-shadow:0 18px 38px rgba(15,23,42,0.22);
+  "
+>
+      <div style="font-size:16px;font-weight:1000;margin-bottom:8px;">
+        🔒 What happens inside?
+      </div>
+
+      <div
+        style="
+          display:grid;
+          grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+          gap:12px;
+          margin-top:12px;
+        "
+      >
+        <div style="background:linear-gradient(135deg,#f8fafc 0%,#fff7ed 100%);border:1px solid rgba(212,175,55,0.45);border-radius:15px;padding:14px;font-weight:900;color:#1e293b;box-shadow:0 8px 18px rgba(15,23,42,0.18);">
+          📞 Contact private suppliers
+        </div>
+
+       <div style="background:linear-gradient(135deg,#f8fafc 0%,#fff7ed 100%);border:1px solid rgba(212,175,55,0.45);border-radius:15px;padding:14px;font-weight:900;color:#1e293b;box-shadow:0 8px 18px rgba(15,23,42,0.18);">
+          💼 Reveal exclusive offers
+        </div>
+
+        <div style="background:linear-gradient(135deg,#f8fafc 0%,#fff7ed 100%);border:1px solid rgba(212,175,55,0.45);border-radius:15px;padding:14px;font-weight:900;color:#1e293b;box-shadow:0 8px 18px rgba(15,23,42,0.18);">
+          ⚙️ Acquire rare materials
+        </div>
+
+        <div style="background:linear-gradient(135deg,#f8fafc 0%,#fff7ed 100%);border:1px solid rgba(212,175,55,0.45);border-radius:15px;padding:14px;font-weight:900;color:#1e293b;box-shadow:0 8px 18px rgba(15,23,42,0.18);">
+          📦 Chance for sealed supply deals
+        </div>
+      </div>
+
+      <div
+        <div
+  style="
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:15px;
+    background:linear-gradient(135deg,#78350f 0%,#92400e 100%);
+    border:1px solid rgba(251,191,36,0.65);
+    color:#fde68a;
+    font-size:14px;
+    font-weight:900;
+    line-height:1.6;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.12);
+  "
+>
+        Supplier prices, deal terms, and negotiation details will remain confidential.
+        Only finalized acquisitions will be broadcast publicly.
+      </div>
+    </div>
+
+    <div
+      style="
+        margin-top:18px;
+        padding:15px 16px;
+        border-radius:16px;
+        background:#f8fafc;
+        border:1px solid #e5e7eb;
+        color:#475569;
+        font-size:14px;
+        font-weight:800;
+        line-height:1.65;
+      "
+    >
+      🏭 Factory Fulfillment → earn Credits → hire Procurement Manager → negotiate private deals → spend EMP → expand your empire.
+    </div>
+
+  </div>
+
+</section>
+
+   <section id="culture-panel" class="hub-panel" style="display: none;">
    <section id="culture-panel" class="hub-panel" style="display: none;">
 
   <div
@@ -1866,10 +2094,11 @@ document.addEventListener("DOMContentLoaded", () => {
 window.switchHubTab = function switchHubTab(tab) {
   const panels = {
     operations: document.getElementById("operations-panel"),
-    rats: document.getElementById("rats-panel"),
-    culture: document.getElementById("culture-panel"),
-    foundry: document.getElementById("foundry-panel"),
     fulfillment: document.getElementById("fulfillment-panel"),
+    management: document.getElementById("management-panel"),
+    rats: document.getElementById("rats-panel"),
+    foundry: document.getElementById("foundry-panel"),
+    culture: document.getElementById("culture-panel"),
   };
 
   const buttons = document.querySelectorAll(".subnav-btn");
@@ -1892,17 +2121,25 @@ window.switchHubTab = function switchHubTab(tab) {
 
   panels[tab].style.display = "block";
 
- if (tab === "culture") {
-  if (typeof loadEmpireCultureHubList === "function") {
-    loadEmpireCultureHubList();
+  if (tab === "culture") {
+    if (typeof loadEmpireCultureHubList === "function") {
+      loadEmpireCultureHubList();
+    }
+
+    if (typeof loadEmpireCultureWinners === "function") {
+      loadEmpireCultureWinners();
+    }
   }
 
-  if (typeof loadEmpireCultureWinners === "function") {
-    loadEmpireCultureWinners();
-  }
-}
+  const tabOrder = [
+    "operations",
+    "fulfillment",
+    "management",
+    "rats",
+    "foundry",
+    "culture",
+  ];
 
-  const tabOrder = ["operations", "fulfillment", "rats", "foundry", "culture"];
   const buttonIndex = tabOrder.indexOf(tab);
 
   if (tab === "rats") {
@@ -1915,6 +2152,10 @@ window.switchHubTab = function switchHubTab(tab) {
     loadEmpireOperations();
   }
 
+  if (tab === "fulfillment" && typeof loadFactoryFulfillmentBoard === "function") {
+    loadFactoryFulfillmentBoard();
+  }
+
   if (tab === "rats" && typeof loadRatSituation === "function") {
     loadRatSituation();
   }
@@ -1922,10 +2163,6 @@ window.switchHubTab = function switchHubTab(tab) {
   if (tab === "foundry" && typeof loadFoundryPreview === "function") {
     loadFoundryPreview();
   }
-
-  if (tab === "fulfillment" && typeof loadFactoryFulfillmentBoard === "function") {
-  loadFactoryFulfillmentBoard();
-}
 };
 async function loadFactoryFulfillmentBoard() {
   const area = document.getElementById("factory-fulfillment-area");
@@ -2951,6 +3188,9 @@ if (initialTab === "foundry") {
 }
 if (initialTab === "fulfillment") {
   switchHubTab("fulfillment");
+}
+if (initialTab === "management") {
+  switchHubTab("management");
 }
 });
 
