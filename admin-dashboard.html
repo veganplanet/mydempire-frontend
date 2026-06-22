@@ -1098,7 +1098,167 @@ forkyishere,529"
             Click the button to load recent Factory Fulfillment results.
           </div>
         </div>
+        <div class="section">
+          <h2>👔 Empire Management Control</h2>
 
+          <div class="metrics" style="margin-top: 14px">
+            <div class="card">
+              <div class="label">Management Status</div>
+              <div class="value" id="admin-management-status">--</div>
+              <div class="small">Enable / disable Management Office</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Total EMP Used</div>
+              <div class="value" id="admin-management-emp-used">--</div>
+              <div class="small">From management logs</div>
+            </div>
+
+            <div class="card">
+              <div class="label">FC Used / Refunded</div>
+              <div class="value" id="admin-management-fc-summary">--</div>
+              <div class="small">Fulfillment Credit economy</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Recent Records</div>
+              <div class="value" id="admin-management-log-count">--</div>
+              <div class="small">Latest management actions</div>
+            </div>
+          </div>
+
+          <div
+            style="
+              margin-top: 16px;
+              padding: 14px;
+              border: 1px solid #e5e7eb;
+              border-radius: 14px;
+              background: #f8fafc;
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+              gap: 12px;
+            "
+          >
+            <label>
+              <strong>Management Enabled</strong><br />
+              <select id="managementOfficeEnabled">
+                <option value="true">Enabled</option>
+                <option value="false">Disabled</option>
+              </select>
+            </label>
+
+            <label>
+              <strong>Pack Deals</strong><br />
+              <select id="packDealsEnabled">
+                <option value="true">Enabled</option>
+                <option value="false">Disabled</option>
+              </select>
+            </label>
+
+            <label>
+              <strong>Land Deals</strong><br />
+              <select id="landDealsEnabled">
+                <option value="true">Enabled</option>
+                <option value="false">Disabled</option>
+              </select>
+            </label>
+
+            <label>
+              <strong>Entry EMP Cost</strong><br />
+              <input
+                id="managementEntryEmpCost"
+                type="number"
+                min="0"
+                step="1"
+              />
+            </label>
+
+            <label>
+              <strong>Entry FC Cost</strong><br />
+              <input
+                id="managementEntryFcCost"
+                type="number"
+                min="0"
+                step="1"
+              />
+            </label>
+
+            <label>
+              <strong>No Deal Refund FC</strong><br />
+              <input
+                id="managementRefundFcIfNoDeal"
+                type="number"
+                min="0"
+                step="1"
+              />
+            </label>
+
+            <label>
+              <strong>Supplier Calls</strong><br />
+              <input
+                id="managementSupplierCalls"
+                type="number"
+                min="1"
+                step="1"
+              />
+            </label>
+
+            <label>
+              <strong>Pack Cooldown Days</strong><br />
+              <input
+                id="managementPackCooldownDays"
+                type="number"
+                min="0"
+                step="1"
+              />
+            </label>
+
+            <label>
+              <strong>Pack Monthly Limit</strong><br />
+              <input
+                id="managementPackMonthlyLimit"
+                type="number"
+                min="0"
+                step="1"
+              />
+            </label>
+          </div>
+
+          <div
+            style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap"
+          >
+            <button
+              class="primary"
+              onclick="loadManagementOfficeAdminSettings()"
+            >
+              Load Management Settings
+            </button>
+
+            <button
+              class="primary"
+              onclick="saveManagementOfficeAdminSettings()"
+            >
+              Save Management Settings
+            </button>
+
+            <button onclick="loadManagementOfficeAdminLogs()">
+              Load Management Logs
+            </button>
+          </div>
+
+          <div
+            id="admin-management-message"
+            class="status"
+            style="margin-top: 12px"
+          >
+            Management control not loaded yet.
+          </div>
+
+          <h3>📜 Empire Management Logs</h3>
+          <div id="admin-management-log" class="scroll-box">
+            Click load to view recent Management Office activity.
+          </div>
+        </div>
         <div class="section">
           <h2>💠 Crate & Fragment Report</h2>
           <button id="load-crate-fragment-report-btn" class="primary">
@@ -4563,6 +4723,278 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           <span>Failed to load factory rename EMP sink.</span>
         </div>
       `;
+          }
+        }
+      }
+      async function loadManagementOfficeAdminSettings() {
+        const messageBox = document.getElementById("admin-management-message");
+
+        try {
+          if (messageBox)
+            messageBox.textContent = "Loading Management settings...";
+
+          const res = await fetch(
+            `${API_BASE}/admin/management-office/settings`,
+            {
+              headers: {
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await res.json();
+
+          if (!data.success) {
+            if (messageBox) {
+              messageBox.textContent =
+                data.error || "Failed to load Management settings.";
+            }
+            return;
+          }
+
+          const settings = data.settings || {};
+
+          document.getElementById("managementOfficeEnabled").value = String(
+            settings.managementOfficeEnabled === true,
+          );
+
+          document.getElementById("packDealsEnabled").value = String(
+            settings.packDealsEnabled === true,
+          );
+
+          document.getElementById("landDealsEnabled").value = String(
+            settings.landDealsEnabled === true,
+          );
+
+          document.getElementById("managementEntryEmpCost").value =
+            settings.entryEmpCost ?? 25;
+
+          document.getElementById("managementEntryFcCost").value =
+            settings.entryFcCost ?? 5;
+
+          document.getElementById("managementRefundFcIfNoDeal").value =
+            settings.refundFcIfNoDeal ?? 2;
+
+          document.getElementById("managementSupplierCalls").value =
+            settings.supplierCalls ?? 3;
+
+          document.getElementById("managementPackCooldownDays").value =
+            settings.packCooldownDays ?? 84;
+
+          document.getElementById("managementPackMonthlyLimit").value =
+            settings.packMonthlyLimit ?? 1;
+
+          const statusBox = document.getElementById("admin-management-status");
+          if (statusBox) {
+            statusBox.textContent = settings.managementOfficeEnabled
+              ? "Enabled"
+              : "Disabled";
+          }
+
+          if (messageBox) {
+            messageBox.textContent = "Management settings loaded.";
+          }
+        } catch (err) {
+          console.error("Load Management settings failed:", err);
+
+          if (messageBox) {
+            messageBox.textContent = "Failed to load Management settings.";
+          }
+        }
+      }
+
+      async function saveManagementOfficeAdminSettings() {
+        const messageBox = document.getElementById("admin-management-message");
+
+        try {
+          const payload = {
+            managementOfficeEnabled:
+              document.getElementById("managementOfficeEnabled").value ===
+              "true",
+
+            packDealsEnabled:
+              document.getElementById("packDealsEnabled").value === "true",
+
+            landDealsEnabled:
+              document.getElementById("landDealsEnabled").value === "true",
+
+            entryEmpCost: Number(
+              document.getElementById("managementEntryEmpCost").value || 25,
+            ),
+
+            entryFcCost: Number(
+              document.getElementById("managementEntryFcCost").value || 5,
+            ),
+
+            refundFcIfNoDeal: Number(
+              document.getElementById("managementRefundFcIfNoDeal").value || 2,
+            ),
+
+            supplierCalls: Number(
+              document.getElementById("managementSupplierCalls").value || 3,
+            ),
+
+            packCooldownDays: Number(
+              document.getElementById("managementPackCooldownDays").value || 84,
+            ),
+
+            packMonthlyLimit: Number(
+              document.getElementById("managementPackMonthlyLimit").value || 1,
+            ),
+          };
+
+          if (messageBox)
+            messageBox.textContent = "Saving Management settings...";
+
+          const res = await fetch(
+            `${API_BASE}/admin/management-office/settings`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-admin-key": ADMIN_KEY,
+              },
+              body: JSON.stringify(payload),
+            },
+          );
+
+          const data = await res.json();
+
+          if (!data.success) {
+            if (messageBox) {
+              messageBox.textContent =
+                data.error || "Failed to save Management settings.";
+            }
+            return;
+          }
+
+          if (messageBox) {
+            messageBox.textContent = "Management settings saved successfully.";
+          }
+
+          await loadManagementOfficeAdminSettings();
+        } catch (err) {
+          console.error("Save Management settings failed:", err);
+
+          if (messageBox) {
+            messageBox.textContent = "Failed to save Management settings.";
+          }
+        }
+      }
+
+      async function loadManagementOfficeAdminLogs() {
+        const box = document.getElementById("admin-management-log");
+        const messageBox = document.getElementById("admin-management-message");
+
+        if (!box) return;
+
+        box.innerHTML = "Loading Management logs...";
+
+        try {
+          const res = await fetch(
+            `${API_BASE}/admin/management-office/logs?limit=100`,
+            {
+              headers: {
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await res.json();
+
+          if (!data.success) {
+            box.innerHTML = `<div style="color:#b91c1c;font-weight:800;">${
+              data.error || "Failed to load Management logs."
+            }</div>`;
+            return;
+          }
+
+          const logs = data.logs || [];
+
+          const totalEmpUsed = logs.reduce((sum, item) => {
+            const emp = Number(item.emp_amount || 0);
+            return sum + (Number.isFinite(emp) ? emp : 0);
+          }, 0);
+
+          const totalFcMovement = logs.reduce((sum, item) => {
+            const fc = Number(item.fc_amount || 0);
+            return sum + (Number.isFinite(fc) ? fc : 0);
+          }, 0);
+
+          const fcRefunded = logs.reduce((sum, item) => {
+            const action = String(item.action || "").toUpperCase();
+            const fc = Number(item.fc_amount || 0);
+
+            if (action.includes("REFUND")) {
+              return sum + (Number.isFinite(fc) ? fc : 0);
+            }
+
+            return sum;
+          }, 0);
+
+          document.getElementById("admin-management-emp-used").textContent =
+            `${totalEmpUsed.toFixed(3)} EMP`;
+
+          document.getElementById("admin-management-fc-summary").textContent =
+            `${totalFcMovement} / ${fcRefunded}`;
+
+          document.getElementById("admin-management-log-count").textContent =
+            logs.length;
+
+          if (!logs.length) {
+            box.innerHTML = `<div class="assets-empty">No Management Office logs found yet.</div>`;
+            return;
+          }
+
+          box.innerHTML = `
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:#f1f5f9;">
+            <th style="padding:8px;text-align:left;">Time</th>
+            <th style="padding:8px;text-align:left;">Player</th>
+            <th style="padding:8px;text-align:left;">Action</th>
+            <th style="padding:8px;text-align:right;">EMP</th>
+            <th style="padding:8px;text-align:right;">FC</th>
+            <th style="padding:8px;text-align:left;">Deal Key</th>
+            <th style="padding:8px;text-align:left;">Reward</th>
+            <th style="padding:8px;text-align:left;">Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${logs
+            .map((item) => {
+              const createdAt = item.created_at
+                ? new Date(item.created_at).toLocaleString()
+                : "-";
+
+              return `
+                <tr style="border-bottom:1px solid #e5e7eb;">
+                  <td style="padding:8px;">${createdAt}</td>
+                  <td style="padding:8px;font-weight:800;">${item.username || "-"}</td>
+                  <td style="padding:8px;font-weight:800;">${item.action || "-"}</td>
+                  <td style="padding:8px;text-align:right;">${item.emp_amount || 0}</td>
+                  <td style="padding:8px;text-align:right;">${item.fc_amount || 0}</td>
+                  <td style="padding:8px;">${item.deal_key || "-"}</td>
+                  <td style="padding:8px;">${item.reward_summary || "-"}</td>
+                  <td style="padding:8px;">${item.detail || "-"}</td>
+                </tr>
+              `;
+            })
+            .join("")}
+        </tbody>
+      </table>
+    `;
+
+          if (messageBox) {
+            messageBox.textContent = "Management logs loaded.";
+          }
+        } catch (err) {
+          console.error("Load Management logs failed:", err);
+
+          box.innerHTML = "Failed to load Management logs.";
+
+          if (messageBox) {
+            messageBox.textContent = "Failed to load Management logs.";
           }
         }
       }
