@@ -2218,8 +2218,8 @@ async function hireManagementOfficeManager() {
       ? "Hire Rescue Manager?"
       : "Hire Procurement Manager?";
 
-    const empCost = isRescueManager ? 50 : 25;
-    const fcCost = 5;
+const empCost = Number(eligibility.entryEmpCost || rescueManager.empCost || 25);
+const fcCost = Number(eligibility.entryFcCost || rescueManager.fcCost || 5);
 
     const managerMessage = isRescueManager
       ? `
@@ -2999,9 +2999,12 @@ function renderManagementOffice(area, username, data) {
     eligibility.rescueManagerAvailable === true ||
     String(eligibility.managerType || "").toUpperCase() === "RESCUE_MANAGER";
 
-  const hireButtonText = isRescueManager
-    ? "⚠️ Hire Rescue Manager — 50 EMP + 5 FC"
-    : "👔 Hire Procurement Manager — 25 EMP + 5 FC";
+  const empCost = Number(eligibility.entryEmpCost || 25);
+const fcCost = Number(eligibility.entryFcCost || 5);
+
+const hireButtonText = isRescueManager
+  ? `⚠️ Hire Rescue Manager — ${empCost} EMP + ${fcCost} FC`
+  : `👔 Hire Procurement Manager — ${empCost} EMP + ${fcCost} FC`;
 
   const hireButtonStyle = isRescueManager
     ? "padding:13px 18px;border-radius:14px;border:1px solid #f59e0b;background:#f59e0b;color:#ffffff;font-weight:1000;cursor:pointer;"
