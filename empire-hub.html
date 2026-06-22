@@ -416,7 +416,6 @@
 </section>
 
    <section id="culture-panel" class="hub-panel" style="display: none;">
-   <section id="culture-panel" class="hub-panel" style="display: none;">
 
   <div
     style="
@@ -1887,7 +1886,16 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
     <script src="empire-operations.js"></script>
     <script>
-window.switchHubTab = function switchHubTab(tab) {
+function switchHubTab(tab) {
+  console.log("TAB CLICK DEBUG:", {
+    tab,
+    hasFoundryPanel: !!document.getElementById("foundry-panel"),
+    hasCulturePanel: !!document.getElementById("culture-panel"),
+    loadFoundryPreview: typeof loadFoundryPreview,
+    loadEmpireCultureHubList: typeof loadEmpireCultureHubList,
+    loadEmpireCultureWinners: typeof loadEmpireCultureWinners,
+  });
+
   const panels = {
     operations: document.getElementById("operations-panel"),
     fulfillment: document.getElementById("fulfillment-panel"),
@@ -1897,9 +1905,7 @@ window.switchHubTab = function switchHubTab(tab) {
     culture: document.getElementById("culture-panel"),
   };
 
-  const buttons = document.querySelectorAll(".subnav-btn");
-
-  buttons.forEach((btn) => {
+  document.querySelectorAll(".subnav-btn").forEach((btn) => {
     btn.classList.remove("subnav-btn-active");
     btn.classList.remove("rat-active");
   });
@@ -1917,31 +1923,16 @@ window.switchHubTab = function switchHubTab(tab) {
 
   panels[tab].style.display = "block";
 
-  if (tab === "culture") {
-    if (typeof loadEmpireCultureHubList === "function") {
-      loadEmpireCultureHubList();
+  const tabButton = document.querySelector(
+    `.subnav-btn[onclick*="switchHubTab('${tab}')"]`,
+  );
+
+  if (tabButton) {
+    if (tab === "rats") {
+      tabButton.classList.add("rat-active");
+    } else {
+      tabButton.classList.add("subnav-btn-active");
     }
-
-    if (typeof loadEmpireCultureWinners === "function") {
-      loadEmpireCultureWinners();
-    }
-  }
-
-  const tabOrder = [
-    "operations",
-    "fulfillment",
-    "management",
-    "rats",
-    "foundry",
-    "culture",
-  ];
-
-  const buttonIndex = tabOrder.indexOf(tab);
-
-  if (tab === "rats") {
-    buttons[buttonIndex]?.classList.add("rat-active");
-  } else {
-    buttons[buttonIndex]?.classList.add("subnav-btn-active");
   }
 
   if (tab === "operations" && typeof loadEmpireOperations === "function") {
@@ -1951,9 +1942,11 @@ window.switchHubTab = function switchHubTab(tab) {
   if (tab === "fulfillment" && typeof loadFactoryFulfillmentBoard === "function") {
     loadFactoryFulfillmentBoard();
   }
-if (tab === "management" && typeof loadManagementOffice === "function") {
-  loadManagementOffice();
-}
+
+  if (tab === "management" && typeof loadManagementOffice === "function") {
+    loadManagementOffice();
+  }
+
   if (tab === "rats" && typeof loadRatSituation === "function") {
     loadRatSituation();
   }
@@ -1961,7 +1954,19 @@ if (tab === "management" && typeof loadManagementOffice === "function") {
   if (tab === "foundry" && typeof loadFoundryPreview === "function") {
     loadFoundryPreview();
   }
-};
+
+  if (tab === "culture") {
+    if (typeof loadEmpireCultureHubList === "function") {
+      loadEmpireCultureHubList();
+    }
+
+    if (typeof loadEmpireCultureWinners === "function") {
+      loadEmpireCultureWinners();
+    }
+  }
+}
+
+window.switchHubTab = switchHubTab;
 function isManagementOfficeVisitorMode() {
   const params = new URLSearchParams(window.location.search);
 
@@ -2004,11 +2009,87 @@ function formatManagementCountdown(expiresAtRaw) {
 
   return `${hours}h ${minutes}m`;
 }
+function renderManagementOfficeLoadingShell(area) {
+  area.innerHTML = `
+    <div
+      style="
+        border-radius:26px;
+        padding:26px;
+        background:
+          radial-gradient(circle at top right, rgba(212,175,55,0.18), transparent 30%),
+          linear-gradient(135deg,#ffffff 0%,#f8fafc 48%,#fff7ed 100%);
+        border:1px solid rgba(212,175,55,0.45);
+        box-shadow:0 16px 36px rgba(15,23,42,0.10);
+      "
+    >
+      <div style="display:inline-flex;padding:7px 13px;border-radius:999px;background:#0f172a;color:#facc15;font-size:12px;font-weight:1000;letter-spacing:0.08em;margin-bottom:14px;">
+        👔 EXECUTIVE OFFICE
+      </div>
 
-async function loadManagementOffice() {
+      <h2 style="margin:0 0 10px;font-size:34px;line-height:1.12;color:#111827;font-weight:1000;">
+        Industrial Management Office
+      </h2>
+
+      <p style="margin:0 0 20px;max-width:900px;color:#475569;font-size:16px;line-height:1.75;font-weight:800;">
+        Hire a Procurement Manager, contact confidential suppliers, and finalize one private supplier deal during the 7-day management window.
+      </p>
+
+      <div
+        style="
+          display:grid;
+          grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+          gap:14px;
+          margin:18px 0;
+        "
+      >
+        <div style="background:#ffffff;border:1px solid #bfdbfe;border-radius:16px;padding:14px;">
+          <div style="font-size:12px;font-weight:900;color:#2563eb;">EP/day</div>
+          <div style="font-size:22px;font-weight:1000;color:#94a3b8;">Loading...</div>
+        </div>
+
+        <div style="background:#ffffff;border:1px solid #fed7aa;border-radius:16px;padding:14px;">
+          <div style="font-size:12px;font-weight:900;color:#c2410c;">EMP Balance</div>
+          <div style="font-size:22px;font-weight:1000;color:#94a3b8;">Loading...</div>
+        </div>
+
+        <div style="background:#ffffff;border:1px solid #bbf7d0;border-radius:16px;padding:14px;">
+          <div style="font-size:12px;font-weight:900;color:#15803d;">Fulfillment Credits</div>
+          <div style="font-size:22px;font-weight:1000;color:#94a3b8;">Loading...</div>
+        </div>
+      </div>
+
+      <div style="padding:16px;border-radius:18px;background:#0f172a;color:#f8fafc;border:1px solid rgba(212,175,55,0.45);margin-bottom:16px;">
+        <div style="font-weight:1000;margin-bottom:8px;color:#facc15;">Manager Terms</div>
+        <div style="font-weight:800;line-height:1.7;">
+          Hiring: 25 EMP + 5 Fulfillment Credits •
+          2 Credits refundable if no deal is finalized •
+          3 Supplier Calls • 7-day timer
+        </div>
+      </div>
+
+      <div id="management-offer-area">
+        <div style="
+          padding:18px;
+          border-radius:18px;
+          background:#ffffff;
+          border:1px solid #e5e7eb;
+          color:#475569;
+          font-weight:900;
+          line-height:1.6;
+          text-align:center;
+        ">
+          👔 Loading Management Office status...
+        </div>
+      </div>
+    </div>
+  `;
+}
+async function loadManagementOffice(options = {}) {
   const area = document.getElementById("management-office-area");
 
   if (!area) return;
+
+  const silent = Boolean(options.silent);
 
   try {
     const params = new URLSearchParams(window.location.search);
@@ -2036,7 +2117,11 @@ async function loadManagementOffice() {
       return;
     }
 
-    area.innerHTML = `<p class="status-text">Loading Industrial Management Office...</p>`;
+    // Normal tab switch: show full Management Office shell immediately.
+    // Action refresh: keep current UI and only refresh silently.
+    if (!silent) {
+      renderManagementOfficeLoadingShell(area);
+    }
 
     const response = await fetch(
       `${API_BASE}/player/${encodeURIComponent(username)}/management-office`,
@@ -2057,11 +2142,27 @@ async function loadManagementOffice() {
   } catch (err) {
     console.error("Management Office load error:", err);
 
-    area.innerHTML = `
-      <div class="status-error">
-        Failed to load Industrial Management Office.
-      </div>
-    `;
+    if (!silent) {
+      const offerBox = document.getElementById("management-offer-area");
+
+      if (offerBox) {
+        offerBox.innerHTML = `
+          <div class="status-error">
+            Failed to load Industrial Management Office.
+          </div>
+        `;
+      } else {
+        area.innerHTML = `
+          <div class="status-error">
+            Failed to load Industrial Management Office.
+          </div>
+        `;
+      }
+    } else {
+      showManagementOfficeWorkingMessage(
+        "⚠️ Office refresh failed. Please try again.",
+      );
+    }
   }
 }
 async function hireManagementOfficeManager() {
@@ -2083,15 +2184,86 @@ async function hireManagementOfficeManager() {
       "";
 
     if (!username || !loggedInUser) {
-      alert("Please connect wallet first.");
+      await showManagementOfficePopup({
+        title: "Wallet Required",
+        message: "Please connect your wallet first to hire a manager.",
+        type: "warning",
+        confirmText: "OK",
+      });
       return;
     }
 
-    const confirmed = confirm(
-      "Hire Procurement Manager for 25 EMP + 5 Fulfillment Credits?\n\nTimer starts immediately and runs for 7 days."
+    // Load latest Management Office status before showing popup
+    const statusResponse = await fetch(
+      `${API_BASE}/player/${encodeURIComponent(username)}/management-office`,
+      {
+        headers: {
+          "x-mde-actor": loggedInUser || "",
+        },
+      },
     );
 
+    const statusData = await statusResponse.json();
+
+    const eligibility = statusData.eligibility || {};
+    const rescueManager = statusData.rescueManager || {};
+
+    const isRescueManager =
+      eligibility.canHireRescueManager === true ||
+      eligibility.rescueManagerAvailable === true ||
+      rescueManager.available === true ||
+      String(eligibility.managerType || "").toUpperCase() === "RESCUE_MANAGER";
+
+    const managerTitle = isRescueManager
+      ? "Hire Rescue Manager?"
+      : "Hire Procurement Manager?";
+
+    const empCost = isRescueManager ? 50 : 25;
+    const fcCost = 5;
+
+    const managerMessage = isRescueManager
+      ? `
+        Cost: <strong>${empCost} EMP + ${fcCost} Fulfillment Credits</strong><br><br>
+        Rescue Manager is a second chance after a failed first negotiation.
+        It uses the same 7-day management window and does not reset the timer.
+      `
+      : `
+        Cost: <strong>${empCost} EMP + ${fcCost} Fulfillment Credits</strong><br><br>
+        The 7-day management window starts immediately after hiring.
+      `;
+
+    const confirmed = await showManagementOfficePopup({
+      title: managerTitle,
+      message: managerMessage,
+      type: isRescueManager ? "warning" : "info",
+      confirmText: isRescueManager ? "Hire Rescue Manager" : "Hire Manager",
+      cancelText: "Cancel",
+      showCancel: true,
+    });
+
     if (!confirmed) return;
+
+    showManagementOfficeWorkingMessage(
+      isRescueManager
+        ? "⚠️ Activating Rescue Manager..."
+        : "👔 Reviewing manager appointment...",
+    );
+
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage("📋 Preparing management contract...");
+    }, 500);
+
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage("🔐 Locking confidential office access...");
+    }, 1000);
+
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage(
+        isRescueManager
+          ? "✅ Rescue Manager entering negotiation room..."
+          : "✅ Activating Procurement Manager...",
+      );
+    }, 1500);
 
     const response = await fetch(
       `${API_BASE}/player/${encodeURIComponent(username)}/management-office/hire`,
@@ -2108,18 +2280,233 @@ async function hireManagementOfficeManager() {
     const data = await response.json();
 
     if (!data.success) {
-      alert(data.error || "Failed to hire Procurement Manager.");
+      await showManagementOfficePopup({
+        title: "Hiring Failed",
+        message: data.error || "Failed to hire manager.",
+        type: "error",
+        confirmText: "OK",
+      });
+
+      await loadManagementOffice({ silent: true });
       return;
     }
 
-    alert("Procurement Manager hired successfully.");
-    await loadManagementOffice();
+    setTimeout(async () => {
+      showManagementOfficeWorkingMessage(
+        data.isRescueManager
+          ? "🎉 Rescue Manager hired successfully!"
+          : "🎉 Procurement Manager hired successfully!",
+      );
+
+      setTimeout(async () => {
+        await loadManagementOffice({ silent: true });
+      }, 900);
+    }, 1800);
   } catch (err) {
     console.error("Hire manager error:", err);
-    alert("Failed to hire Procurement Manager.");
+
+    await showManagementOfficePopup({
+      title: "Hiring Failed",
+      message: "Failed to hire manager. Please try again.",
+      type: "error",
+      confirmText: "OK",
+    });
   }
 }
+function showManagementOfficePopup({
+  title = "Management Office",
+  message = "",
+  type = "info",
+  confirmText = "OK",
+  cancelText = "",
+  showCancel = false,
+} = {}) {
+  return new Promise((resolve) => {
+    const oldPopup = document.getElementById("management-office-popup");
+    if (oldPopup) oldPopup.remove();
 
+    const colors = {
+      success: {
+        border: "#22c55e",
+        bg: "linear-gradient(135deg,#ecfdf5,#ffffff)",
+        title: "#166534",
+        button: "#16a34a",
+      },
+      error: {
+        border: "#ef4444",
+        bg: "linear-gradient(135deg,#fef2f2,#ffffff)",
+        title: "#991b1b",
+        button: "#dc2626",
+      },
+      warning: {
+        border: "#f59e0b",
+        bg: "linear-gradient(135deg,#fffbeb,#ffffff)",
+        title: "#92400e",
+        button: "#f59e0b",
+      },
+      info: {
+        border: "#2563eb",
+        bg: "linear-gradient(135deg,#eff6ff,#ffffff)",
+        title: "#1e3a8a",
+        button: "#2563eb",
+      },
+    };
+
+    const theme = colors[type] || colors.info;
+
+    const popup = document.createElement("div");
+    popup.id = "management-office-popup";
+
+    popup.style.cssText = `
+      position:fixed;
+      inset:0;
+      z-index:999999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(15,23,42,0.55);
+      backdrop-filter:blur(4px);
+      padding:18px;
+    `;
+
+    popup.innerHTML = `
+      <div style="
+        width:min(460px,100%);
+        border-radius:24px;
+        background:${theme.bg};
+        border:1px solid ${theme.border};
+        box-shadow:0 28px 80px rgba(15,23,42,0.32);
+        overflow:hidden;
+      ">
+        <div style="
+          padding:20px 22px;
+          background:#0f172a;
+          color:#facc15;
+          font-size:13px;
+          font-weight:1000;
+          letter-spacing:0.10em;
+        ">
+          👔 MANAGEMENT OFFICE
+        </div>
+
+        <div style="padding:24px;">
+          <div style="
+            font-size:24px;
+            font-weight:1000;
+            color:${theme.title};
+            margin-bottom:10px;
+          ">
+            ${title}
+          </div>
+
+          <div style="
+            color:#334155;
+            font-size:15px;
+            font-weight:800;
+            line-height:1.65;
+            margin-bottom:20px;
+          ">
+            ${message}
+          </div>
+
+          <div style="
+            display:flex;
+            gap:12px;
+            justify-content:flex-end;
+            flex-wrap:wrap;
+          ">
+            ${
+              showCancel
+                ? `
+                  <button
+                    type="button"
+                    id="management-popup-cancel"
+                    style="
+                      padding:11px 15px;
+                      border-radius:14px;
+                      border:1px solid #cbd5e1;
+                      background:#ffffff;
+                      color:#334155;
+                      font-weight:1000;
+                      cursor:pointer;
+                    "
+                  >
+                    ${cancelText || "Cancel"}
+                  </button>
+                `
+                : ""
+            }
+
+            <button
+              type="button"
+              id="management-popup-confirm"
+              style="
+                padding:11px 16px;
+                border-radius:14px;
+                border:1px solid ${theme.button};
+                background:${theme.button};
+                color:#ffffff;
+                font-weight:1000;
+                cursor:pointer;
+              "
+            >
+              ${confirmText || "OK"}
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    const confirmBtn = document.getElementById("management-popup-confirm");
+    const cancelBtn = document.getElementById("management-popup-cancel");
+
+    confirmBtn?.addEventListener("click", () => {
+      popup.remove();
+      resolve(true);
+    });
+
+    cancelBtn?.addEventListener("click", () => {
+      popup.remove();
+      resolve(false);
+    });
+  });
+}
+function showManagementOfficeWorkingMessage(message) {
+  const offerBox = document.getElementById("management-offer-area");
+
+  if (!offerBox) {
+    console.warn("management-offer-area not found. Working message skipped.");
+    return;
+  }
+
+  offerBox.innerHTML = `
+    <div class="management-working-card" style="
+      margin-top: 14px;
+      padding: 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255,251,235,0.98), rgba(240,253,244,0.94));
+      border: 1px solid rgba(245,158,11,0.35);
+      box-shadow: 0 10px 28px rgba(15,23,42,0.08);
+      text-align: center;
+    ">
+      <div style="font-size: 28px; margin-bottom: 8px;">👔</div>
+
+      <div style="font-size: 17px; font-weight: 900; color: #78350f;">
+        Procurement Manager
+      </div>
+
+      <div style="margin-top: 8px; color: #14532d; font-weight: 800;">
+        ${message}
+      </div>
+
+      <div style="margin-top: 10px; color: #64748b; font-size: 13px;">
+        Supplier negotiation is in progress...
+      </div>
+    </div>
+  `;
+}
 async function callManagementOfficeSupplier() {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -2138,11 +2525,41 @@ async function callManagementOfficeSupplier() {
       localStorage.getItem("username") ||
       "";
 
-    const confirmed = confirm(
-      "Contact supplier now?\n\nThis will use 1 supplier call."
-    );
+    if (!username || !loggedInUser) {
+      await showManagementOfficePopup({
+        title: "Wallet Required",
+        message: "Please connect your wallet first to contact suppliers.",
+        type: "warning",
+        confirmText: "OK",
+      });
+      return;
+    }
+
+    const confirmed = await showManagementOfficePopup({
+      title: "Contact Supplier?",
+      message:
+        "This will use <strong>1 supplier call</strong> from your active management window.",
+      type: "info",
+      confirmText: "Contact Supplier",
+      cancelText: "Cancel",
+      showCancel: true,
+    });
 
     if (!confirmed) return;
+
+    showManagementOfficeWorkingMessage("📞 Contacting private supplier...");
+
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage("📦 Checking hidden inventory...");
+    }, 500);
+
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage("🤝 Negotiating confidential terms...");
+    }, 1000);
+
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage("⏳ Preparing supplier offer...");
+    }, 1500);
 
     const response = await fetch(
       `${API_BASE}/player/${encodeURIComponent(username)}/management-office/call-supplier`,
@@ -2159,18 +2576,31 @@ async function callManagementOfficeSupplier() {
     const data = await response.json();
 
     if (!data.success) {
-      alert(data.error || "Failed to contact supplier.");
+      await showManagementOfficePopup({
+        title: "Supplier Call Failed",
+        message: data.error || "Failed to contact supplier.",
+        type: "error",
+        confirmText: "OK",
+      });
+
+      await loadManagementOffice({ silent: true });
       return;
     }
 
-    alert("Supplier offer revealed.");
-    await loadManagementOffice();
+    setTimeout(async () => {
+      await loadManagementOffice({ silent: true });
+    }, 1800);
   } catch (err) {
     console.error("Supplier call error:", err);
-    alert("Failed to contact supplier.");
+
+    await showManagementOfficePopup({
+      title: "Supplier Call Failed",
+      message: "Failed to contact supplier. Please try again.",
+      type: "error",
+      confirmText: "OK",
+    });
   }
 }
-
 async function skipManagementOfficeOffer() {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -2189,11 +2619,41 @@ async function skipManagementOfficeOffer() {
       localStorage.getItem("username") ||
       "";
 
-    const confirmed = confirm(
-      "Skip this supplier offer?\n\nYou cannot return to this offer later."
-    );
+    if (!username || !loggedInUser) {
+      await showManagementOfficePopup({
+        title: "Wallet Required",
+        message: "Please connect your wallet first to call the next supplier.",
+        type: "warning",
+        confirmText: "OK",
+      });
+      return;
+    }
+
+    const confirmed = await showManagementOfficePopup({
+      title: "Call Next Supplier?",
+      message:
+        "This will skip the current offer permanently.<br><br>You cannot return to this offer later.",
+      type: "warning",
+      confirmText: "Call Next Supplier",
+      cancelText: "Cancel",
+      showCancel: true,
+    });
 
     if (!confirmed) return;
+
+    showManagementOfficeWorkingMessage("📞 Closing current supplier offer...");
+
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage("📦 Contacting next private supplier...");
+    }, 500);
+
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage("🤝 Negotiating fresh terms...");
+    }, 1000);
+
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage("⏳ Preparing next supplier offer...");
+    }, 1500);
 
     const response = await fetch(
       `${API_BASE}/player/${encodeURIComponent(username)}/management-office/skip-offer`,
@@ -2210,18 +2670,31 @@ async function skipManagementOfficeOffer() {
     const data = await response.json();
 
     if (!data.success) {
-      alert(data.error || "Failed to skip supplier offer.");
+      await showManagementOfficePopup({
+        title: "Supplier Call Failed",
+        message: data.error || "Failed to call next supplier.",
+        type: "error",
+        confirmText: "OK",
+      });
+
+      await loadManagementOffice({ silent: true });
       return;
     }
 
-    alert("Supplier offer skipped.");
-    await loadManagementOffice();
+    setTimeout(async () => {
+      await loadManagementOffice({ silent: true });
+    }, 1800);
   } catch (err) {
     console.error("Skip offer error:", err);
-    alert("Failed to skip supplier offer.");
+
+    await showManagementOfficePopup({
+      title: "Supplier Call Failed",
+      message: "Failed to call next supplier. Please try again.",
+      type: "error",
+      confirmText: "OK",
+    });
   }
 }
-
 async function acceptManagementOfficeOffer() {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -2240,11 +2713,41 @@ async function acceptManagementOfficeOffer() {
       localStorage.getItem("username") ||
       "";
 
-    const confirmed = confirm(
-      "Accept this supplier deal?\n\nEMP will be deducted and the reward will be delivered immediately."
-    );
+    if (!username || !loggedInUser) {
+      await showManagementOfficePopup({
+        title: "Wallet Required",
+        message: "Please connect your wallet first to accept supplier deals.",
+        type: "warning",
+        confirmText: "OK",
+      });
+      return;
+    }
+
+    const confirmed = await showManagementOfficePopup({
+      title: "Accept Supplier Deal?",
+      message:
+        "EMP will be spent and the acquired supply package will be delivered to your empire.<br><br>This will close your current management negotiation.",
+      type: "success",
+      confirmText: "Accept Deal",
+      cancelText: "Cancel",
+      showCancel: true,
+    });
 
     if (!confirmed) return;
+
+    showManagementOfficeWorkingMessage("✅ Preparing supplier deal acceptance...");
+
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage("🔐 Verifying EMP balance...");
+    }, 500);
+
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage("📦 Reserving acquired supply package...");
+    }, 1000);
+
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage("🏛 Finalizing confidential supplier deal...");
+    }, 1500);
 
     const response = await fetch(
       `${API_BASE}/player/${encodeURIComponent(username)}/management-office/accept-offer`,
@@ -2260,28 +2763,55 @@ async function acceptManagementOfficeOffer() {
 
     const data = await response.json();
 
-    if (!data.success && data.needsEmp) {
-      const goShop = confirm(
-        `${data.error}\n\nRequired EMP: ${data.requiredEmp}\nYour EMP: ${data.empBalance}\n\nGo to shop now?`
-      );
+    if (!data.success) {
+      if (data.needsEmp) {
+        const shopUrl = data.shopUrl || "shop.html";
 
-      if (goShop) {
-        window.location.href = "shop.html#emp-purchase";
+        await showManagementOfficePopup({
+          title: "Not Enough EMP",
+          message:
+            "You do not have enough EMP to finalize this supplier deal.<br><br>You can buy EMP from the shop and then return to accept the pending offer.",
+          type: "warning",
+          confirmText: "Go to Shop",
+          cancelText: "Stay Here",
+          showCancel: true,
+        }).then((goShop) => {
+          if (goShop) {
+            window.location.href = shopUrl;
+          }
+        });
+
+        await loadManagementOffice({ silent: true });
+        return;
       }
 
+      await showManagementOfficePopup({
+        title: "Deal Failed",
+        message: data.error || "Failed to accept supplier deal.",
+        type: "error",
+        confirmText: "OK",
+      });
+
+      await loadManagementOffice({ silent: true });
       return;
     }
 
-    if (!data.success) {
-      alert(data.error || "Failed to accept supplier offer.");
-      return;
-    }
+    setTimeout(() => {
+      showManagementOfficeWorkingMessage("🎉 Supplier deal finalized successfully!");
+    }, 1800);
 
-    alert(`Supplier deal accepted.\n\nAcquired: ${data.acceptedDeal?.rewardSummary || "Supply package"}`);
-    await loadManagementOffice();
+    setTimeout(async () => {
+      await loadManagementOffice({ silent: true });
+    }, 2600);
   } catch (err) {
     console.error("Accept offer error:", err);
-    alert("Failed to accept supplier offer.");
+
+    await showManagementOfficePopup({
+      title: "Deal Failed",
+      message: "Failed to accept supplier deal. Please try again.",
+      type: "error",
+      confirmText: "OK",
+    });
   }
 }
 function renderManagementOffice(area, username, data) {
@@ -2365,26 +2895,26 @@ function renderManagementOffice(area, username, data) {
   }
 
   let bodyHtml = "";
-  let actionsHtml = ""; 
+  let actionsHtml = "";
 
   if (acceptedOffer) {
-  const lockWindow = data.currentWindow || data.activeSession || {};
-  const nextUnlock = formatManagementCountdown(
-    lockWindow.expires_at || lockWindow.expiresAt
-  );
+    const lockWindow = data.currentWindow || data.activeSession || {};
+    const nextUnlock = formatManagementCountdown(
+      lockWindow.expires_at || lockWindow.expiresAt,
+    );
 
-  bodyHtml = `
-    <div style="padding:18px;border-radius:18px;background:#ecfdf5;border:1px solid #86efac;color:#166534;font-weight:900;line-height:1.6;">
-      ✅ Supplier deal finalized.<br>
-      Acquired: <strong>${acceptedOffer.rewardSummary || "Confidential supply package"}</strong><br>
-      Supplier terms: Confidential.<br><br>
-      ⏳ Next manager hiring unlocks after this 7-day management window expires.<br>
-      Time remaining: <strong>${nextUnlock}</strong>
-    </div>
-  `;
-} else if (pendingOffer) {
     bodyHtml = `
-      <div style="padding:18px;border-radius:18px;background:#fffbeb;border:1px solid #facc15;color:#78350f;font-weight:900;line-height:1.6;">
+      <div style="padding:18px;border-radius:18px;background:#ecfdf5;border:1px solid #86efac;color:#166534;font-weight:900;line-height:1.6;">
+        ✅ Supplier deal finalized.<br>
+        Acquired: <strong>${acceptedOffer.rewardSummary || "Confidential supply package"}</strong><br>
+        Supplier terms: Confidential.<br><br>
+        ⏳ Next manager hiring unlocks after this 7-day management window expires.<br>
+        Time remaining: <strong>${nextUnlock}</strong>
+      </div>
+    `;
+  } else if (pendingOffer) {
+    bodyHtml = `
+      <div style="padding:18px;border-radius:18px;background:#fff7eb;border:1px solid #facc15;color:#78350f;font-weight:700;">
         📞 Current Supply Offer Pending<br>
         <strong>${pendingOffer.name}</strong><br>
         Category: ${pendingOffer.category} • Rarity: ${pendingOffer.rarity}<br>
@@ -2392,7 +2922,8 @@ function renderManagementOffice(area, username, data) {
         Deal cost: <strong>${Number(pendingOffer.acceptEmpCost || 0).toLocaleString()} EMP</strong>
       </div>
     `;
-        actionsHtml = `
+
+    actionsHtml = `
       <div style="display:flex;gap:12px;flex-wrap:wrap;">
         <button
           type="button"
@@ -2421,7 +2952,11 @@ function renderManagementOffice(area, username, data) {
     `;
   } else if (activeSession) {
     const callsUsed = Number(activeSession.calls_used || activeSession.callsUsed || 0);
-    const totalCalls = Number(activeSession.total_calls_allowed || activeSession.totalCallsAllowed || supplierCalls);
+    const totalCalls = Number(
+      activeSession.total_calls_allowed ||
+        activeSession.totalCallsAllowed ||
+        supplierCalls,
+    );
 
     bodyHtml = `
       <div style="padding:18px;border-radius:18px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;font-weight:900;line-height:1.6;">
@@ -2431,7 +2966,8 @@ function renderManagementOffice(area, username, data) {
         Contact suppliers to reveal private supply offers.
       </div>
     `;
-        actionsHtml = `
+
+    actionsHtml = `
       <div style="display:flex;gap:12px;flex-wrap:wrap;">
         <button
           type="button"
@@ -2456,17 +2992,31 @@ function renderManagementOffice(area, username, data) {
         Hire a Procurement Manager to unlock private supplier calls for 7 days.
       </div>
     `;
-        if (eligibility.canHireManager) {
-      actionsHtml = `
-        <button
-          type="button"
-          onclick="hireManagementOfficeManager()"
-          style="padding:13px 18px;border-radius:14px;border:1px solid #0f172a;background:#0f172a;color:#facc15;font-weight:1000;cursor:pointer;"
-        >
-          👔 Hire Procurement Manager
-        </button>
-      `;
-    } else {
+
+    if (eligibility.canHireManager) {
+  const isRescueManager =
+    eligibility.canHireRescueManager === true ||
+    eligibility.rescueManagerAvailable === true ||
+    String(eligibility.managerType || "").toUpperCase() === "RESCUE_MANAGER";
+
+  const hireButtonText = isRescueManager
+    ? "⚠️ Hire Rescue Manager — 50 EMP + 5 FC"
+    : "👔 Hire Procurement Manager — 25 EMP + 5 FC";
+
+  const hireButtonStyle = isRescueManager
+    ? "padding:13px 18px;border-radius:14px;border:1px solid #f59e0b;background:#f59e0b;color:#ffffff;font-weight:1000;cursor:pointer;"
+    : "padding:13px 18px;border-radius:14px;border:1px solid #0f172a;background:#0f172a;color:#facc15;font-weight:1000;cursor:pointer;";
+
+  actionsHtml = `
+    <button
+      type="button"
+      onclick="hireManagementOfficeManager()"
+      style="${hireButtonStyle}"
+    >
+      ${hireButtonText}
+    </button>
+  `;
+} else {  
       actionsHtml = `
         <div style="padding:13px 15px;border-radius:14px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:900;">
           ${eligibility.reason || "Manager hiring is not available right now."}
@@ -2532,11 +3082,13 @@ function renderManagementOffice(area, username, data) {
         </div>
       </div>
 
-      ${bodyHtml}
+      <div id="management-offer-area">
+        ${bodyHtml}
 
-     <div id="management-office-actions" style="margin-top:16px;">
-  ${actionsHtml}
-</div>
+        <div id="management-office-actions" style="margin-top:16px;">
+          ${actionsHtml}
+        </div>
+      </div>
     </div>
   `;
 }
@@ -3440,12 +3992,46 @@ function closeFulfillmentGuide() {
   }
 }
 async function loadFoundryPreview() {
-  const fragmentEl = document.getElementById("foundry-fragment-balance");
-  const smpEl = document.getElementById("foundry-smp-balance");
-  const empEl = document.getElementById("foundry-emp-balance");
+  
+  const foundryPanel = document.getElementById("foundry-panel");
+
+  if (!foundryPanel) {
+    console.warn("Foundry panel missing.");
+    return;
+  }
+
+  // Support both old and new possible balance IDs
+  const fragmentEl =
+    document.getElementById("foundry-fragment-balance") ||
+    document.getElementById("foundry-fragments-balance") ||
+    document.getElementById("foundry-imperial-fragment-balance");
+
+  const smpEl =
+    document.getElementById("foundry-smp-balance") ||
+    document.getElementById("foundrySmpBalance");
+
+  const empEl =
+    document.getElementById("foundry-emp-balance") ||
+    document.getElementById("foundryEmpBalance");
+
 
   if (!fragmentEl || !smpEl || !empEl) {
-    console.warn("Foundry balance elements missing.");
+    foundryPanel.insertAdjacentHTML(
+      "afterbegin",
+      `
+        <div style="
+          margin-bottom:14px;
+          padding:14px;
+          border-radius:16px;
+          background:#fff7ed;
+          border:1px solid #fb923c;
+          color:#9a3412;
+          font-weight:900;
+        ">
+          ⚠️ Foundry balance display elements are missing in HTML.
+        </div>
+      `,
+    );
     return;
   }
 
@@ -3453,9 +4039,9 @@ async function loadFoundryPreview() {
 
   const username = String(
     params.get("user") ||
-    params.get("view") ||
-    getLoggedInUser() ||
-    ""
+      params.get("view") ||
+      getLoggedInUser() ||
+      "",
   )
     .replace("@", "")
     .trim()
@@ -3473,21 +4059,48 @@ async function loadFoundryPreview() {
     smpEl.textContent = "Loading...";
     empEl.textContent = "Loading...";
 
-    const res = await fetch(
-      `${API_BASE}/player/${encodeURIComponent(username)}/dashboard`
-    );
+    const controller = new AbortController();
 
-    const data = await res.json();
+const timeoutId = setTimeout(() => {
+  controller.abort();
+}, 8000);
 
-    console.log("🔥 Foundry dashboard balance data:", data);
+const res = await fetch(
+  `${API_BASE}/player/${encodeURIComponent(username)}/foundry-balances?ts=${Date.now()}`,
+  {
+    signal: controller.signal,
+  },
+);
+clearTimeout(timeoutId);
+
+const data = await res.json();
+
+    
 
     if (!res.ok || data.success === false) {
       throw new Error(data.error || "Failed to load Foundry balances.");
     }
 
-    fragmentEl.textContent = Number(data.imperialFragments || 0).toLocaleString();
-    smpEl.textContent = Number(data.smpBalance || 0).toLocaleString();
-    empEl.textContent = Number(data.empBalance || 0).toLocaleString();
+    const fragmentValue = Number(data.imperialFragments || 0).toLocaleString();
+const smpValue = Number(data.smpBalance || 0).toLocaleString();
+const empValue = Number(data.empBalance || 0).toLocaleString();
+
+fragmentEl.textContent = fragmentValue;
+smpEl.textContent = smpValue;
+empEl.textContent = empValue;
+
+fragmentEl.innerText = fragmentValue;
+smpEl.innerText = smpValue;
+empEl.innerText = empValue;
+
+console.log("🔥 FOUNDRY VALUES APPLIED:", {
+  fragmentValue,
+  smpValue,
+  empValue,
+  fragmentText: fragmentEl.textContent,
+  smpText: smpEl.textContent,
+  empText: empEl.textContent,
+});
   } catch (err) {
     console.error("Foundry balance load error:", err);
 
