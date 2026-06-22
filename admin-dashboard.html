@@ -1099,6 +1099,48 @@ forkyishere,529"
           </div>
         </div>
         <div class="section">
+          <h2>🏆 Empire Culture Rewards</h2>
+
+          <div class="metrics" style="margin-top: 14px">
+            <div class="card">
+              <div class="label">Pending Culture Rewards</div>
+              <div class="value" id="culture-pending-rewards-count">--</div>
+              <div class="small">Manual EMP transfers waiting</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Paid Culture Rewards</div>
+              <div class="value" id="culture-paid-rewards-count">--</div>
+              <div class="small">Marked as paid by admin</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Total Pending EMP</div>
+              <div class="value" id="culture-pending-emp-total">--</div>
+              <div class="small">Still needs transfer</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 14px">
+            <button class="primary" onclick="loadEmpireCultureRewardAdmin()">
+              Load Culture Rewards
+            </button>
+          </div>
+
+          <div
+            id="culture-reward-admin-message"
+            class="status"
+            style="margin-top: 12px"
+          >
+            Culture reward control not loaded yet.
+          </div>
+
+          <h3>📜 Culture Winner Reward Log</h3>
+          <div id="culture-reward-admin-list" class="scroll-box">
+            Click load to view Empire Culture reward status.
+          </div>
+        </div>
+        <div class="section">
           <h2>👔 Empire Management Control</h2>
 
           <div class="metrics" style="margin-top: 14px">
@@ -1897,6 +1939,7 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           box.innerHTML = `<div style="color:#b91c1c;font-weight:800;">Failed to load Factory Fulfillment log.</div>`;
         }
       }
+      //loadEmpireCultureRewardAdmin();
 
       async function approveReferral(referralId) {
         if (!confirm("Approve this referral and credit 500 EMP?")) {
@@ -4995,6 +5038,189 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
 
           if (messageBox) {
             messageBox.textContent = "Failed to load Management logs.";
+          }
+        }
+      }
+
+      async function markEmpireCultureRewardPaid(winnerId) {
+        const messageBox = document.getElementById(
+          "culture-reward-admin-message",
+        );
+
+        const confirmed = confirm(
+          "Mark this Empire Culture reward as PAID? Do this only after manual EMP transfer is completed.",
+        );
+
+        if (!confirmed) return;
+
+        try {
+          if (messageBox) {
+            messageBox.textContent = "Marking Culture reward as paid...";
+          }
+
+          const res = await fetch(
+            `${API_BASE}/admin/empire-culture/mark-reward-paid`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-admin-key": ADMIN_KEY,
+              },
+              body: JSON.stringify({
+                winner_id: Number(winnerId),
+              }),
+            },
+          );
+
+          const data = await res.json();
+
+          if (!data.success) {
+            alert(data.error || "Failed to mark reward as paid.");
+            return;
+          }
+
+          if (messageBox) {
+            messageBox.textContent = "Culture reward marked as paid.";
+          }
+
+          await loadEmpireCultureRewardAdmin();
+        } catch (err) {
+          console.error("Mark Culture reward paid failed:", err);
+          alert("Failed to mark reward as paid.");
+        }
+      }
+      async function loadEmpireCultureRewardAdmin() {
+        const box = document.getElementById("culture-reward-admin-list");
+        const messageBox = document.getElementById(
+          "culture-reward-admin-message",
+        );
+
+        if (!box) return;
+
+        box.innerHTML = "Loading Empire Culture rewards...";
+
+        try {
+          const res = await fetch(
+            `${API_BASE}/admin/empire-culture/winners?limit=100`,
+            {
+              headers: {
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await res.json();
+
+          if (!data.success) {
+            box.innerHTML = `<div style="color:#b91c1c;font-weight:800;">${
+              data.error || "Failed to load Culture rewards."
+            }</div>`;
+            return;
+          }
+
+          const winners = data.winners || [];
+
+          const pending = winners.filter(
+            (item) => String(item.reward_status || "").toUpperCase() !== "PAID",
+          );
+
+          const paid = winners.filter(
+            (item) => String(item.reward_status || "").toUpperCase() === "PAID",
+          );
+
+          const pendingEmp = pending.reduce((sum, item) => {
+            const amount = Number(item.reward_emp || 0);
+            return sum + (Number.isFinite(amount) ? amount : 0);
+          }, 0);
+
+          document.getElementById("culture-pending-rewards-count").textContent =
+            pending.length;
+
+          document.getElementById("culture-paid-rewards-count").textContent =
+            paid.length;
+
+          document.getElementById("culture-pending-emp-total").textContent =
+            `${pendingEmp} EMP`;
+
+          if (!winners.length) {
+            box.innerHTML = `<div class="assets-empty">No Empire Culture winners found yet.</div>`;
+            return;
+          }
+
+          box.innerHTML = `
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:#f1f5f9;">
+            <th style="padding:8px;text-align:left;">Time</th>
+            <th style="padding:8px;text-align:left;">Player</th>
+            <th style="padding:8px;text-align:left;">Winning Name</th>
+            <th style="padding:8px;text-align:right;">Votes</th>
+            <th style="padding:8px;text-align:right;">Reward</th>
+            <th style="padding:8px;text-align:left;">Status</th>
+            <th style="padding:8px;text-align:left;">Paid At</th>
+            <th style="padding:8px;text-align:left;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${winners
+            .map((item) => {
+              const createdAt = item.created_at
+                ? new Date(item.created_at).toLocaleString()
+                : "-";
+
+              const paidAt = item.paid_at
+                ? new Date(item.paid_at).toLocaleString()
+                : "-";
+
+              const status = String(
+                item.reward_status || "PENDING",
+              ).toUpperCase();
+
+              const statusBadge =
+                status === "PAID"
+                  ? `<span style="color:#15803d;font-weight:900;">✅ PAID</span>`
+                  : `<span style="color:#b45309;font-weight:900;">⏳ PENDING</span>`;
+
+              const actionButton =
+                status === "PAID"
+                  ? `<span style="color:#64748b;font-weight:800;">Done</span>`
+                  : `
+                    <button
+                      onclick="markEmpireCultureRewardPaid(${Number(item.id)})"
+                      style="padding:7px 10px;border-radius:10px;border:1px solid #16a34a;background:#16a34a;color:white;font-weight:900;cursor:pointer;"
+                    >
+                      Mark Paid
+                    </button>
+                  `;
+
+              return `
+                <tr style="border-bottom:1px solid #e5e7eb;">
+                  <td style="padding:8px;">${createdAt}</td>
+                  <td style="padding:8px;font-weight:900;">${item.username || "-"}</td>
+                  <td style="padding:8px;">${item.winning_name || "-"}</td>
+                  <td style="padding:8px;text-align:right;">${item.votes || 0}</td>
+                  <td style="padding:8px;text-align:right;font-weight:900;">${item.reward_emp || 0} EMP</td>
+                  <td style="padding:8px;">${statusBadge}</td>
+                  <td style="padding:8px;">${paidAt}</td>
+                  <td style="padding:8px;">${actionButton}</td>
+                </tr>
+              `;
+            })
+            .join("")}
+        </tbody>
+      </table>
+    `;
+
+          if (messageBox) {
+            messageBox.textContent = "Empire Culture rewards loaded.";
+          }
+        } catch (err) {
+          console.error("Load Empire Culture rewards failed:", err);
+
+          box.innerHTML = "Failed to load Empire Culture rewards.";
+
+          if (messageBox) {
+            messageBox.textContent = "Failed to load Empire Culture rewards.";
           }
         }
       }
