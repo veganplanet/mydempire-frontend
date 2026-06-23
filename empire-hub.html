@@ -3806,9 +3806,13 @@ async function confirmStartFactoryFulfillment() {
     console.log("Factory fulfillment start response:", data);
 
     if (!data.success) {
-      alert(data.error || "Failed to start fulfillment. Please try again.");
-      return;
-    }
+  showEmpirePopup(
+    "Fulfillment Rejected",
+    data.error || "Failed to start fulfillment. Please try again.",
+    "warning"
+  );
+  return;
+}
 
     closeFulfillmentStartModal();
     await loadFactoryFulfillmentBoard();
@@ -3924,6 +3928,38 @@ async function startFactoryFulfillment(fulfillmentType) {
     targetPoints,
     selectedIndustryEP
   );
+const estimatedDays =
+  Number(selectedIndustryEP || 0) > 0
+    ? Number(targetPoints || 0) / Number(selectedIndustryEP)
+    : Infinity;
+
+if (!Number.isFinite(estimatedDays) || estimatedDays > 10) {
+  showEmpirePopup(
+    "Fulfillment Too Large",
+    `
+      This fulfillment is too large for your selected industry.<br><br>
+
+      <strong>Estimated time:</strong>
+      ${Number.isFinite(estimatedDays) ? estimatedDays.toFixed(1) + " days" : "Not possible"}<br>
+
+      <strong>Maximum allowed:</strong> 10 days<br><br>
+
+      Please choose <strong>Standard Batch</strong> or select a stronger industry.
+    `,
+    "warning"
+  );
+  return;
+}
+
+if (!Number.isFinite(estimatedDays) || estimatedDays > 10) {
+  alert(
+    "This fulfillment is too large for your selected industry.\n\n" +
+    `Estimated time: ${Number.isFinite(estimatedDays) ? estimatedDays.toFixed(1) + " days" : "Not possible"}\n` +
+    "Maximum allowed: 10 days\n\n" +
+    "Please choose Standard Batch or select a stronger industry."
+  );
+  return;
+}
 
   const empRange = `${minEmp.toLocaleString()} - ${maxEmp.toLocaleString()} EMP`;
 
