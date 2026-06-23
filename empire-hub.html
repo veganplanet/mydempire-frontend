@@ -3824,8 +3824,11 @@ async function confirmStartFactoryFulfillment() {
       confirmBtn.textContent = "Accept Fulfillment";
     }
   }
-}async function startFactoryFulfillment(fulfillmentType) {
-  const select = document.getElementById(`fulfillment-industry-${fulfillmentType}`);
+}
+async function startFactoryFulfillment(fulfillmentType) {
+  const select = document.getElementById(
+    `fulfillment-industry-${fulfillmentType}`
+  );
 
   const username =
     localStorage.getItem("hiveUsername") ||
@@ -3839,77 +3842,105 @@ async function confirmStartFactoryFulfillment() {
   }
 
   const selectedIndustry = select.value;
-  const selectedOption = select.options[select.selectedIndex];
-  const epText = selectedOption ? selectedOption.textContent : "";
-  const epMatch = epText.match(/—\s*([0-9.]+)\s*EP\/day/i);
-  const selectedIndustryEP = epMatch ? Number(epMatch[1]) : 0;
 
-  const configResponse = await fetch(`${API_BASE}/factory-fulfillment/config`);
-  const configData = await configResponse.json();
-
-  if (!configData.success) {
-    alert("Unable to load fulfillment config.");
+  if (!selectedIndustry) {
+    alert("Please select an industry first.");
     return;
   }
 
-  const typeConfig = (configData.fulfillmentTypes || []).find(
-    (item) => item.type === fulfillmentType
-  );
+  const selectedOption = select.options[select.selectedIndex];
+  const epText = selectedOption ? selectedOption.textContent : "";
+  const epMatch = epText.match(/([0-9.]+)\s*EP\/day/i);
+  const selectedIndustryEP = epMatch ? Number(epMatch[1]) : 0;
+
+  const FULFILLMENT_PREVIEW_CONFIG = {
+    STANDARD_BATCH: {
+      label: "Standard Batch",
+      targetPercent: 0.01,
+      baseRewardPercent: 0.08,
+      cycleHours: 24,
+      credits: 1,
+    },
+    BULK_SHIPMENT: {
+      label: "Bulk Shipment",
+      targetPercent: 0.025,
+      baseRewardPercent: 0.1,
+      cycleHours: 48,
+      credits: 2,
+    },
+    GRAND_CONSIGNMENT: {
+      label: "Grand Consignment",
+      targetPercent: 0.05,
+      baseRewardPercent: 0.12,
+      cycleHours: 72,
+      credits: 4,
+    },
+  };
+
+  const typeConfig = FULFILLMENT_PREVIEW_CONFIG[String(fulfillmentType || "").toUpperCase()];
 
   if (!typeConfig) {
     alert("Invalid fulfillment type.");
     return;
   }
 
-  const playerResponse = await fetch(`${API_BASE}/player/${username}/factory-fulfillment`);
-  const playerData = await playerResponse.json();
+  let globalEP = 16960;
 
-  if (!playerData.success) {
-    alert("Unable to load player fulfillment data.");
-    return;
+  try {
+    const playerResponse = await fetch(
+      `${API_BASE}/player/${username}/factory-fulfillment`
+    );
+
+    const playerData = await playerResponse.json();
+
+    if (playerData && playerData.success) {
+      const possibleGlobalEP =
+        Number(playerData.globalEP || 0) ||
+        Number(playerData.global_ep_per_day || 0) ||
+        Number(playerData.activeFulfillment?.global_ep_per_day || 0);
+
+      if (Number.isFinite(possibleGlobalEP) && possibleGlobalEP > 0) {
+        globalEP = possibleGlobalEP;
+      }
+    }
+  } catch (err) {
+    console.warn("Fulfillment preview using fallback Global EP:", err);
   }
 
-  const globalEP =
-    Number(playerData.activeFulfillment?.global_ep_per_day || 0) ||
-    15220; // fallback only for display if cache is not returned here
-
-  const target = Math.max(
+  const targetPoints = Math.max(
     1,
     Math.round(globalEP * Number(typeConfig.targetPercent || 0))
   );
 
   const baseReward = Math.max(
     1,
-    Math.round(target * Number(typeConfig.baseRewardPercent || 0))
+    Math.round(targetPoints * Number(typeConfig.baseRewardPercent || 0))
   );
 
   const minEmp = Math.round(baseReward * 0.4 * 0.8);
   const maxEmp = Math.round(baseReward * 1.6 * 0.8);
 
   const estimatedTime = formatFulfillmentEstimatedTime(
-    target,
+    targetPoints,
     selectedIndustryEP
   );
 
-  const targetPoints = target;
-const empRange = `${minEmp.toLocaleString()} - ${maxEmp.toLocaleString()} EMP`;
-    
+  const empRange = `${minEmp.toLocaleString()} - ${maxEmp.toLocaleString()} EMP`;
+
   openFulfillmentStartModal({
-  fulfillmentType,
-  typeLabel: typeConfig.label,
-  industry: selectedIndustry,
-  industryEP: selectedIndustryEP,
-  targetPoints,
-  estimatedTime,
-  cycleHours: typeConfig.cycleHours,
-  baseReward,
-  empRange,
-  credits: typeConfig.credits,
-});
-
-return;
-
+    fulfillmentType,
+    typeLabel: typeConfig.label,
+    industry: selectedIndustry,
+    industryEP: selectedIndustryEP,
+    targetPoints,
+    estimatedTime,
+    cycleHours: typeConfig.cycleHours,
+    baseReward,
+    empRange,
+    credits: typeConfig.credits,
+  });
 }
+
 function showFulfillmentClaimModal(outcome) {
   const modal = document.getElementById("fulfillment-claim-modal");
 
