@@ -27,7 +27,7 @@
   </p>
 </section>
 <div class="founder-era-strip">
-  👑 Founder Era • 5,000 Genesis Packs • Initial Wallet Cap: 50
+  👑 Genesis Open Expansion • 5,000 Founder Packs • Max 9 HIVE per pack protection
 </div>
   <!-- PACK PURCHASE -->
  <section class="shop-section">
@@ -89,9 +89,17 @@
             <td>5,000</td>
           </tr>
           <tr>
-            <th>Genesis Wallet Cap</th>
-            <td>50 packs</td>
-          </tr>
+  <th>Wallet Cap</th>
+  <td>No lifetime cap</td>
+</tr>
+<tr>
+  <th>Transaction Cap</th>
+  <td>50 packs per transaction</td>
+</tr>
+<tr>
+  <th>HIVE Protection</th>
+  <td>Max 9 HIVE per pack</td>
+</tr>
           <tr>
             <th>Payment Currency</th>
             <td>HIVE only</td>
@@ -357,8 +365,8 @@ and expansion-era opportunities as the empire evolves.
     Enter quantity to preview total HIVE amount
   </div>
 </div>      <div class="shop-buy-helper">
-        Initial Founder wallet cap: 50 packs
-      </div>
+  No lifetime wallet cap • Max 50 packs per transaction • Max 9 HIVE per pack protection
+</div>
 
       <button id="buy-packs-btn" class="shop-buy-main-btn" type="button">Buy Packs</button>
     </div>
@@ -1145,7 +1153,16 @@ async function updateLiveGenesisPrice() {
       return;
     }
 
-    priceBox.textContent = `≈ ${hivePerPack.toFixed(3)} HIVE per pack`;
+    const capActive = data.hive_cap_active === true;
+const hiveCap = Number(data.genesis_hive_cap_per_pack || 9);
+
+priceBox.textContent = capActive
+  ? `≈ ${hivePerPack.toFixed(3)} HIVE per pack — capped from live USD price`
+  : `≈ ${hivePerPack.toFixed(3)} HIVE per pack`;
+
+if (capActive) {
+  priceBox.textContent += ` (max ${hiveCap} HIVE)`;
+}
 
     if (!qty || qty <= 0) {
       totalBox.textContent = "Enter quantity to preview total HIVE amount";
