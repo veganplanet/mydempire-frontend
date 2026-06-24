@@ -356,6 +356,79 @@
     </div>
   </div>
 </div>
+<div id="fulfillment-credit-shop-modal" class="fulfillment-start-modal" style="display:none;">
+  <div class="fulfillment-start-backdrop" onclick="closeFulfillmentCreditShopModal()"></div>
+
+  <div class="fulfillment-start-box">
+    <div class="fulfillment-start-head">
+      <div>
+        <div class="fulfillment-start-kicker">FULFILLMENT CREDIT SHOP</div>
+        <h3>🏪 Spend Fulfillment Credits</h3>
+      </div>
+
+      <button type="button" onclick="closeFulfillmentCreditShopModal()">×</button>
+    </div>
+
+    <div class="fulfillment-start-body">
+      <div
+        style="
+          display:grid;
+          grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+          gap:12px;
+        "
+      >
+        <div style="border:1px solid #e5e7eb;border-radius:16px;padding:14px;background:#ffffff;">
+          <div style="font-weight:950;color:#111827;font-size:17px;">SMP</div>
+          <div style="margin-top:8px;color:#475569;font-weight:800;">Cost: 10 Credits</div>
+          <button
+  type="button"
+  onclick="redeemFulfillmentCreditShopItem('SMP')"
+  style="margin-top:12px;width:100%;padding:10px;border-radius:12px;border:1px solid #2563eb;background:#2563eb;color:#ffffff;font-weight:900;cursor:pointer;"
+>
+  Redeem SMP
+</button>
+        </div>
+
+        <div style="border:1px solid #e5e7eb;border-radius:16px;padding:14px;background:#ffffff;">
+          <div style="font-weight:950;color:#111827;font-size:17px;">Imperial Fragment</div>
+          <div style="margin-top:8px;color:#475569;font-weight:800;">Cost: 20 Credits</div>
+          <button
+  type="button"
+  onclick="redeemFulfillmentCreditShopItem('IMPERIAL_FRAGMENT')"
+  style="margin-top:12px;width:100%;padding:10px;border-radius:12px;border:1px solid #7c3aed;background:#7c3aed;color:#ffffff;font-weight:900;cursor:pointer;"
+>
+  Redeem Fragment
+</button>
+        </div>
+
+        <div style="border:1px solid #f59e0b;border-radius:16px;padding:14px;background:#fffbeb;">
+          <div style="font-weight:950;color:#111827;font-size:17px;">L2 Estate Land</div>
+          <div style="margin-top:8px;color:#475569;font-weight:800;">Cost: 25 Credits + 250 EMP</div>
+          <div
+  id="fulfillment-credit-shop-l2-progress"
+  style="margin-top:8px;color:#92400e;font-weight:900;"
+>
+  Batch Progress: Loading...
+</div>
+          <button
+  type="button"
+  onclick="redeemFulfillmentCreditShopItem('L2_LAND')"
+  style="margin-top:12px;width:100%;padding:10px;border-radius:12px;border:1px solid #d97706;background:#d97706;color:#ffffff;font-weight:900;cursor:pointer;"
+>
+  Redeem L2 Land
+</button>
+        </div>
+      </div>
+
+      <div
+  id="fulfillment-credit-shop-status"
+  style="margin-top:14px;color:#64748b;font-size:13px;font-weight:800;line-height:1.5;"
+>
+  Select an item to redeem from the Credit Shop.
+</div>
+    </div>
+  </div>
+</div>
 <div id="fulfillment-start-modal" class="fulfillment-start-modal" style="display:none;">
   <div class="fulfillment-start-backdrop" onclick="closeFulfillmentStartModal()"></div>
 
@@ -3145,6 +3218,115 @@ async function loadFactoryFulfillmentBoard() {
     `;
   }
 }
+async function openFulfillmentCreditShopModal() {
+  const modal = document.getElementById("fulfillment-credit-shop-modal");
+  if (modal) modal.style.display = "block";
+
+  await loadFulfillmentCreditShopStatus();
+}
+
+async function loadFulfillmentCreditShopStatus() {
+  const progressEl = document.getElementById(
+    "fulfillment-credit-shop-l2-progress",
+  );
+
+  try {
+    if (progressEl) {
+      progressEl.textContent = "Batch Progress: Loading...";
+    }
+
+    const response = await fetch(`${API_BASE}/fulfillment-credit-shop/status`);
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Failed to load shop status.");
+    }
+
+    const redeemed = Number(data.l2Progress?.redeemed || 0);
+    const stockLimit = Number(data.l2Progress?.stockLimit || 10);
+
+    if (progressEl) {
+      progressEl.textContent = `Batch Progress: ${redeemed} / ${stockLimit} redeemed`;
+    }
+  } catch (err) {
+    console.error("Credit Shop status load failed:", err);
+
+    if (progressEl) {
+      progressEl.textContent = "Batch Progress: Unable to load";
+    }
+  }
+}
+function closeFulfillmentCreditShopModal() {
+  const modal = document.getElementById("fulfillment-credit-shop-modal");
+  if (modal) modal.style.display = "none";
+}
+async function redeemFulfillmentCreditShopItem(itemKey) {
+  const statusEl = document.getElementById("fulfillment-credit-shop-status");
+
+  try {
+    const params = new URLSearchParams(window.location.search);
+
+    const username =
+      params.get("user") || params.get("view") || getLoggedInUser();
+
+    const actor = getLoggedInUser();
+
+    if (!username || !actor) {
+      if (statusEl) statusEl.textContent = "Please connect wallet first.";
+      return;
+    }
+
+    if (username.toLowerCase() !== actor.toLowerCase()) {
+      if (statusEl) {
+        statusEl.textContent =
+          "Visitor mode: shop redemption is only allowed in your own empire.";
+      }
+      return;
+    }
+
+    const confirmed = confirm("Redeem this Credit Shop item now?");
+    if (!confirmed) return;
+
+    if (statusEl) statusEl.textContent = "Processing redemption...";
+
+    const response = await fetch(
+      `${API_BASE}/player/${username}/fulfillment-credit-shop/redeem`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": actor,
+        },
+        body: JSON.stringify({ itemKey }),
+      },
+    );
+
+    const data = await response.json();
+
+    if (!data.success) {
+      if (statusEl) {
+        statusEl.textContent = data.error || "Redemption failed.";
+      }
+      return;
+    }
+
+    if (statusEl) {
+      statusEl.textContent = data.message || "Redeemed successfully.";
+    }
+
+    await loadFactoryFulfillmentBoard();
+
+    if (typeof loadPlayerDashboard === "function") {
+      await loadPlayerDashboard();
+    }
+  } catch (err) {
+    console.error("Credit Shop redeem failed:", err);
+
+    if (statusEl) {
+      statusEl.textContent = "Redemption failed. Please try again.";
+    }
+  }
+}
 function formatFulfillmentEstimatedTime(target, epPerDay) {
   const safeTarget = Number(target || 0);
   const safeEp = Number(epPerDay || 0);
@@ -3327,20 +3509,17 @@ const fulfillmentCooldown = playerData.fulfillmentCooldown || {
   cooldownEndsAt: null,
 };
   updateFactoryFulfillmentCooldownBox(fulfillmentCooldown);
-  let html = `
+let html = `
     <div
       style="
-        display:flex;
-        justify-content:space-between;
+        display:grid;
+        grid-template-columns:1.2fr 0.8fr;
         gap:14px;
-        flex-wrap:wrap;
         margin-bottom:18px;
       "
     >
       <div
         style="
-          flex:1;
-          min-width:220px;
           padding:14px 16px;
           border-radius:16px;
           background:#eff6ff;
@@ -3349,26 +3528,40 @@ const fulfillmentCooldown = playerData.fulfillmentCooldown || {
           color:#1e3a8a;
         "
       >
-        🧾 Available Fulfillment Credits: ${credits}
+        <div style="font-size:15px;margin-bottom:6px;">
+          🧾 Available Fulfillment Credits: ${credits}
+        </div>
+
+        <div style="font-size:14px;color:#334155;">
+          Producing Industries: ${producingIndustries.length || 0}
+        </div>
       </div>
 
-      <div
+      <button
+        type="button"
+        onclick="openFulfillmentCreditShopModal()"
         style="
-          flex:1;
-          min-width:220px;
+          width:100%;
           padding:14px 16px;
           border-radius:16px;
-          background:#f8fafc;
-          border:1px solid #e2e8f0;
-          font-weight:900;
-          color:#334155;
+          background:linear-gradient(135deg,#fff7ed 0%,#fffbeb 100%);
+          border:1px solid #f59e0b;
+          color:#78350f;
+          font-weight:950;
+          cursor:pointer;
+          text-align:left;
+          box-shadow:0 10px 22px rgba(245,158,11,0.12);
         "
       >
-        🏭 Producing Industries: ${producingIndustries.length || 0}
-      </div>
+        <div style="font-size:16px;margin-bottom:6px;">
+          🏪 Fulfillment Credit Shop
+        </div>
+        <div style="font-size:13px;color:#92400e;line-height:1.4;">
+          Spend credits for SMP, Fragments, and L2 Estate Land.
+        </div>
+      </button>
     </div>
   `;
-
   if (active) {
     const manifest = Array.isArray(active.manifest_json)
       ? active.manifest_json
