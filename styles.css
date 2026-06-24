@@ -16617,3 +16617,296 @@ padding:2px 8px !important;
     font-size: 24px;
   }
 }
+/* ============================= */
+/* EMPIRE RANK PROGRESS STRIP */
+/* ============================= */
+
+.empire-rank-strip {
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 16px 0;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at top left, rgba(250, 204, 21, 0.22), transparent 34%),
+    linear-gradient(90deg, #f5f3ff 0%, #eef2ff 52%, #fff7ed 100%);
+  border: 2px solid #a78bfa;
+  color: #312e81;
+  box-shadow: 0 10px 24px rgba(124, 58, 237, 0.13);
+  font-weight: 800;
+}
+
+.empire-rank-left {
+  flex: 1;
+  min-width: 260px;
+}
+
+.empire-rank-kicker {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6d28d9;
+  margin-bottom: 5px;
+}
+
+.empire-rank-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 19px;
+  font-weight: 950;
+  color: #111827;
+}
+
+#empire-rank-title {
+  color: #7c2d12;
+}
+
+#empire-rank-next {
+  color: #4f46e5;
+}
+
+.empire-rank-arrow {
+  color: #a16207;
+}
+
+.empire-rank-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.empire-rank-progress-bar {
+  flex: 1;
+  height: 10px;
+  min-width: 180px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(124, 58, 237, 0.22);
+  overflow: hidden;
+}
+
+.empire-rank-progress-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f59e0b 0%, #8b5cf6 100%);
+  transition: width 0.4s ease;
+}
+
+#empire-rank-progress-text {
+  min-width: 42px;
+  font-size: 13px;
+  font-weight: 950;
+  color: #4c1d95;
+}
+
+.empire-rank-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #4c1d95;
+}
+
+#empire-rank-current-ep,
+#empire-rank-need {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  white-space: nowrap;
+}
+
+.empire-rank-guide-btn {
+  padding: 8px 13px;
+  border-radius: 999px;
+  border: 1px solid #7c3aed;
+  background: #7c3aed;
+  color: #ffffff;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.empire-rank-guide-btn:hover {
+  filter: brightness(0.96);
+}
+
+@media (max-width: 760px) {
+  .empire-rank-strip {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .empire-rank-right {
+    justify-content: flex-start;
+  }
+
+  .empire-rank-progress-bar {
+    min-width: 0;
+  }
+}
+/* ============================= */
+/* EMPIRE RANK GUIDE POPUP */
+/* ============================= */
+
+.empire-rank-guide-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.empire-rank-guide-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(3px);
+}
+
+.empire-rank-guide-box {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #a78bfa;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+  overflow: hidden;
+}
+
+.empire-rank-guide-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 20px;
+  background:
+    radial-gradient(circle at top left, rgba(250, 204, 21, 0.24), transparent 35%),
+    linear-gradient(90deg, #f5f3ff 0%, #eef2ff 100%);
+  border-bottom: 1px solid #ddd6fe;
+}
+
+.empire-rank-guide-kicker {
+  font-size: 12px;
+  font-weight: 900;
+  color: #6d28d9;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.empire-rank-guide-head h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #111827;
+}
+
+.empire-rank-guide-head button {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid #c4b5fd;
+  background: #ffffff;
+  color: #4c1d95;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.empire-rank-guide-body {
+  padding: 20px;
+}
+
+.empire-rank-guide-body p {
+  margin: 0 0 16px;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.rank-guide-list {
+  display: grid;
+  gap: 10px;
+}
+
+.rank-guide-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 14px;
+}
+
+.rank-guide-row span {
+  font-weight: 900;
+  color: #111827;
+}
+
+.rank-guide-row strong {
+  font-weight: 900;
+  color: #4c1d95;
+  white-space: nowrap;
+}
+
+.rank-guide-row.emperor {
+  background: #fffbeb;
+  border-color: #facc15;
+}
+
+.rank-guide-row.grand {
+  background: #f5f3ff;
+  border-color: #c4b5fd;
+}
+
+.rank-guide-row.magnate {
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.rank-guide-row.builder {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.empire-rank-guide-note {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #ecfdf5;
+  border: 1px solid #86efac;
+  color: #166534;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.empire-rank-guide-close-btn {
+  width: 100%;
+  margin-top: 16px;
+  padding: 11px 14px;
+  border-radius: 14px;
+  border: 1px solid #7c3aed;
+  background: #7c3aed;
+  color: #ffffff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.empire-rank-guide-close-btn:hover {
+  filter: brightness(0.96);
+}

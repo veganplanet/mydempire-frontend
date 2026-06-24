@@ -206,6 +206,35 @@ font-weight:900;
     Copy Referral Link
   </button>
 </div>
+
+<!-- 🏛 EMPIRE RANK PROGRESS STRIP -->
+<!-- 🏛 EMPIRE RANK COMPETITIVE STRIP -->
+<div id="empire-rank-strip" class="empire-rank-strip" style="display:none;">
+  <div class="empire-rank-left">
+    <div class="empire-rank-kicker">🏛 Empire Rank</div>
+
+    <div class="empire-rank-title-row">
+      <span id="empire-rank-title">Empire Builder</span>
+      <span class="empire-rank-arrow">→</span>
+      <span id="empire-rank-next">Industrial Magnate</span>
+    </div>
+
+    <div id="empire-rank-subtext" class="empire-rank-subtext">
+      Titles are based on Lifetime EP leaderboard position.
+    </div>
+  </div>
+
+  <div class="empire-rank-right">
+    <div id="empire-rank-current-ep">Lifetime EP: 0</div>
+    <div id="empire-rank-position">Position: --</div>
+    <div id="empire-rank-target">Next Target: --</div>
+
+    <button type="button" class="empire-rank-guide-btn" onclick="openEmpireRankGuide()">
+      Rank Guide
+    </button>
+  </div>
+</div>
+
 <!-- SEASON 2 ANNOUNCEMENT -->
 <div id="season-2-banner" class="season-2-banner" style="display:none;">
   <div class="season-2-left">
@@ -2657,7 +2686,141 @@ renderSeasonHistory();
   console.error("Active season error:", err);
 }
 }
-      // ===== PLAYER SUMMARY =====
+function getCompetitiveEmpireTitle(rank) {
+  const r = Number(rank || 999999);
+
+  if (r === 1) return "Emperor";
+  if (r <= 5) return "Grand Lord";
+  if (r <= 20) return "Industrial Magnate";
+  return "Empire Builder";
+}
+
+function getCompetitiveNextTarget(rank) {
+  const r = Number(rank || 999999);
+
+  if (r === 1) {
+    return {
+      nextTitle: "Top Empire",
+      targetText: "You are Rank #1",
+    };
+  }
+
+  if (r <= 5) {
+    return {
+      nextTitle: "Emperor",
+      targetText: "Overtake Rank #1",
+    };
+  }
+
+  if (r <= 20) {
+    return {
+      nextTitle: "Grand Lord",
+      targetText: "Enter Top 5",
+    };
+  }
+
+  return {
+    nextTitle: "Industrial Magnate",
+    targetText: "Enter Top 20",
+  };
+}
+
+async function updateEmpireRankStripCompetitive(username, lifetimeEP) {
+  const strip = document.getElementById("empire-rank-strip");
+  if (!strip) return;
+
+  const playerName = String(username || "").trim().toLowerCase();
+  const playerLifetimeEP = Number(lifetimeEP || 0);
+
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+
+  try {
+    const res = await fetch(apiUrl("/leaderboard/emperors"));
+    const data = await res.json();
+
+    const leaders = Array.isArray(data.leaders) ? data.leaders : [];
+
+    const sorted = leaders
+      .slice()
+      .sort((a, b) => Number(b.lifetime_ep || 0) - Number(a.lifetime_ep || 0));
+
+    const playerIndex = sorted.findIndex(
+      (row) => String(row.username || "").trim().toLowerCase() === playerName
+    );
+
+    strip.style.display = "flex";
+
+    setText(
+      "empire-rank-current-ep",
+      `Lifetime EP: ${playerLifetimeEP.toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}`
+    );
+
+    if (playerIndex < 0) {
+  const excludedRankUsers = new Set([
+    "mydempire",
+    "mydempire-test",
+    "mydempiregain",
+  ]);
+
+  if (excludedRankUsers.has(playerName)) {
+    setText("empire-rank-title", "System Account");
+    setText("empire-rank-next", "Not Ranked");
+    setText("empire-rank-position", "Position: Not ranked");
+    setText("empire-rank-target", "Next Target: Not applicable");
+    return;
+  }
+
+  setText("empire-rank-title", "Empire Builder");
+  setText("empire-rank-next", "Industrial Magnate");
+  setText("empire-rank-position", "Position: Not in current leaderboard list");
+  setText("empire-rank-target", "Next Target: Enter Top 20");
+  return;
+}
+
+    const currentRank = playerIndex + 1;
+    const currentTitle = getCompetitiveEmpireTitle(currentRank);
+    const target = getCompetitiveNextTarget(currentRank);
+
+    setText("empire-rank-title", currentTitle);
+    setText("empire-rank-next", target.nextTitle);
+    setText("empire-rank-position", `Position: #${currentRank}`);
+    setText("empire-rank-target", `Next Target: ${target.targetText}`);
+  } catch (err) {
+    console.error("Empire rank strip failed:", err);
+
+    strip.style.display = "flex";
+
+    setText("empire-rank-title", "Empire Rank");
+    setText("empire-rank-next", "Leaderboard");
+    setText(
+      "empire-rank-current-ep",
+      `Lifetime EP: ${playerLifetimeEP.toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })}`
+    );
+    setText("empire-rank-position", "Position: unavailable");
+    setText("empire-rank-target", "Next Target: leaderboard unavailable");
+  }
+}
+function openEmpireRankGuide() {
+  const modal = document.getElementById("empire-rank-guide-modal");
+  if (modal) {
+    modal.style.display = "flex";
+  }
+}
+
+function closeEmpireRankGuide() {
+  const modal = document.getElementById("empire-rank-guide-modal");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}     
+// ===== PLAYER SUMMARY =====
       async function loadDashboardSummary() {
   try {
     const username = encodeURIComponent(PLAYER_USERNAME);
@@ -2867,7 +3030,7 @@ setText(
   "lifetime-ep",
   lifetimeEP.toFixed(2)
 );
-        
+updateEmpireRankStripCompetitive(PLAYER_USERNAME, lifetimeEP);
 
           // ===== EMPIRE ASSETS =====
           let unopenedPacks = 0;
@@ -7280,7 +7443,19 @@ function updateMaintenanceDashboardCard() {
     return status === "ACTIVE";
   });
 
-  const needAttention = activeFactories.filter((f) => {
+  const needAttention = factories.filter((f) => {
+    const status = String(f.status || "").trim().toUpperCase();
+
+    // ✅ Already inactive = needs attention
+    if (status === "INACTIVE") {
+      return true;
+    }
+
+    // ✅ Only active factories can be close to maintenance expiry
+    if (status !== "ACTIVE") {
+      return false;
+    }
+
     const directRemaining = Number(f.remaining_maintenance_days);
 
     if (Number.isFinite(directRemaining)) {
@@ -7289,6 +7464,7 @@ function updateMaintenanceDashboardCard() {
 
     if (f.maintenance_ends_at) {
       const endsAt = new Date(f.maintenance_ends_at).getTime();
+
       if (Number.isFinite(endsAt)) {
         const daysLeft = (endsAt - Date.now()) / (1000 * 60 * 60 * 24);
         return daysLeft <= 2;
@@ -7301,7 +7477,6 @@ function updateMaintenanceDashboardCard() {
   activeEl.textContent = String(activeFactories.length);
   attentionEl.textContent = String(needAttention.length);
 }
-
 function setupCultureAndMaintenanceCards() {
   const prevBtn = document.getElementById("culture-prev-btn");
 
@@ -7990,6 +8165,58 @@ function closeWithdrawalHistoryModal() {
       style="margin-top:16px;"
     >
       Loading...
+    </div>
+  </div>
+</div>
+<!-- 🏛 Empire Rank Guide Popup -->
+<div id="empire-rank-guide-modal" class="empire-rank-guide-modal" style="display:none;">
+  <div class="empire-rank-guide-backdrop" onclick="closeEmpireRankGuide()"></div>
+
+  <div class="empire-rank-guide-box">
+    <div class="empire-rank-guide-head">
+      <div>
+        <div class="empire-rank-guide-kicker">🏛 Empire Rank Guide</div>
+        <h3>Competitive Empire Titles</h3>
+      </div>
+
+      <button type="button" onclick="closeEmpireRankGuide()">×</button>
+    </div>
+
+    <div class="empire-rank-guide-body">
+      <p>
+        Empire Rank is competitive and based on your position in the
+        <strong>Lifetime EP leaderboard</strong>.
+      </p>
+
+      <div class="rank-guide-list">
+        <div class="rank-guide-row emperor">
+          <span>👑 Emperor</span>
+          <strong>Rank #1</strong>
+        </div>
+
+        <div class="rank-guide-row grand">
+          <span>🏰 Grand Lord</span>
+          <strong>Rank #2 to #5</strong>
+        </div>
+
+        <div class="rank-guide-row magnate">
+          <span>🏭 Industrial Magnate</span>
+          <strong>Rank #6 to #20</strong>
+        </div>
+
+        <div class="rank-guide-row builder">
+          <span>🧱 Empire Builder</span>
+          <strong>Rank #21 and below</strong>
+        </div>
+      </div>
+
+      <div class="empire-rank-guide-note">
+        Increase your Lifetime EP and climb above other players to reach a higher title.
+      </div>
+
+      <button type="button" class="empire-rank-guide-close-btn" onclick="closeEmpireRankGuide()">
+        Got it
+      </button>
     </div>
   </div>
 </div>
