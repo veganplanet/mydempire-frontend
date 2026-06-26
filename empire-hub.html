@@ -1774,14 +1774,16 @@ const warehouseCondition =
   ratInfo.warehouseCondition || "Spotless";
 
 let conditionLabel = "🟢 Spotless";
-
+console.log("Full ratInfo:", ratInfo);
+console.log("Warehouse condition:", warehouseCondition);
+console.log("Cleanup cost:", ratInfo.ratCleanupCost);
 if (warehouseCondition === "Clean") {
   conditionLabel = "🔵 Clean";
 } else if (warehouseCondition === "Orderly") {
   conditionLabel = "🟡 Orderly";
 } else if (warehouseCondition === "Cluttered") {
   conditionLabel = "🟠 Cluttered";
-} else if (warehouseCondition === "Infested") {
+} else if (warehouseCondition == "Infested" || warehouseCondition == "infested") {
   conditionLabel = "🔴 Infested";
 }
 
@@ -1816,8 +1818,8 @@ if (warehouseCondition === "Infested") {
 
 document.getElementById("rat-status-message").textContent = statusMessage;
 
-    document.getElementById("rat-cleanup-cost").textContent =
-  `${ratInfo.ratCleanupCost || 0} EMP`;
+    document.getElementById("rat-cleanup-cost").textContent = 
+    `${ratInfo.ratCleanupCost || ratInfo.cleanupCost || 0} EMP`;
 console.log("Cleanup Cost:", ratInfo.ratCleanupCost);
       const historyRes = await fetch(
   `${API_BASE}/player/${username}/rat-history`
