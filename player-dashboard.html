@@ -3006,9 +3006,28 @@ setText("maintenance-attention-count", inactiveFactories);
           setText("summary-writ-count", writCount);
 
          // ===== PRODUCTION =====
-const totalBaseEP = Number(data.totalBaseEP ?? 0);
-const totalBoostedEP = Number(data.totalBoostedEP ?? totalBaseEP);
-const totalClaimableEP = Number(data.totalClaimableEP ?? 0);
+const totalBaseEP = Number(
+  data.totalBaseEP ??
+  data.currentEpDay ??
+  data.currentEPDay ??
+  data.epPerDay ??
+  0
+);
+
+const totalBoostedEP = Number(
+  data.totalBoostedEP ??
+  data.currentEpDay ??
+  data.currentEPDay ??
+  totalBaseEP
+);
+
+const totalClaimableEP = Number(
+  data.totalClaimableEP ??
+  data.claimableEp ??
+  data.accumulatedEP ??
+  0
+);
+
 const lifetimeEP = Number(data.lifetimeEP ?? 0);
 
 setText(
