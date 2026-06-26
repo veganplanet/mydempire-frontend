@@ -6976,7 +6976,11 @@ if (reinvestBtn) {
 function updateCrateCardDisplay() {
   const epDay = Number(window.dashboardData?.totalBaseEP || 0);
   const globalShare = Number(window.dashboardData?.globalSharePercent || 0);
-
+console.log("CRATE FRONTEND DEBUG:", {
+  epDay,
+  globalShare,
+  dashboardData: window.dashboardData,
+});
   const lastOpened =
     window.dashboardData?.lastCrateOpenedAt ||
     window.dashboardData?.last_crate_opened_at ||
