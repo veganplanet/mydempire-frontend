@@ -1099,6 +1099,47 @@ forkyishere,529"
           </div>
         </div>
         <div class="section">
+  <h2>🔥 Foundry Craft Log</h2>
+
+  <div class="metrics" style="margin-top: 14px">
+    <div class="card">
+      <div class="label">Total Crafts</div>
+      <div class="value" id="foundry-total-crafts">--</div>
+      <div class="small">All Foundry crafts recorded</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Fragments Used</div>
+      <div class="value" id="foundry-total-fragments">--</div>
+      <div class="small">Total Imperial Fragments spent</div>
+    </div>
+
+    <div class="card">
+      <div class="label">SMP Used</div>
+      <div class="value" id="foundry-total-smp">--</div>
+      <div class="small">Total SMP spent</div>
+    </div>
+
+    <div class="card">
+      <div class="label">EMP Burned</div>
+      <div class="value" id="foundry-total-emp">--</div>
+      <div class="small">Total EMP spent in Foundry</div>
+    </div>
+  </div>
+
+  <button onclick="loadFoundryLog()" class="primary" style="margin-top:14px;">
+    Load Foundry Log
+  </button>
+
+  <div
+    id="admin-foundry-log"
+    class="scroll-box"
+    style="margin-top: 12px"
+  >
+    Click the button to load recent Foundry craft history.
+  </div>
+</div>
+        <div class="section">
           <h2>🏆 Empire Culture Rewards</h2>
 
           <div class="metrics" style="margin-top: 14px">
@@ -1939,6 +1980,94 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           box.innerHTML = `<div style="color:#b91c1c;font-weight:800;">Failed to load Factory Fulfillment log.</div>`;
         }
       }
+      async function loadFoundryLog() {
+  const box = document.getElementById("admin-foundry-log");
+
+  if (!box) return;
+
+  box.innerHTML = "Loading Foundry craft log...";
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/foundry-log?limit=100`, {
+      headers: {
+        "x-admin-key": ADMIN_KEY,
+      },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to load Foundry log.");
+    }
+
+    const totals = data.totals || {};
+    const logs = data.logs || [];
+
+    document.getElementById("foundry-total-crafts").textContent = Number(
+      totals.total_crafts || 0,
+    ).toLocaleString();
+
+    document.getElementById("foundry-total-fragments").textContent = Number(
+      totals.total_fragments_spent || 0,
+    ).toLocaleString();
+
+    document.getElementById("foundry-total-smp").textContent = Number(
+      totals.total_smp_spent || 0,
+    ).toLocaleString();
+
+    document.getElementById("foundry-total-emp").textContent =
+      `${Number(totals.total_emp_spent || 0).toLocaleString()} EMP`;
+
+    if (!logs.length) {
+      box.innerHTML = "No Foundry craft history yet.";
+      return;
+    }
+
+    box.innerHTML = `
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="background:#f8fafc;">
+            <th style="padding:10px; text-align:left;">Time</th>
+            <th style="padding:10px; text-align:left;">Player</th>
+            <th style="padding:10px; text-align:left;">Craft</th>
+            <th style="padding:10px; text-align:left;">Result</th>
+            <th style="padding:10px; text-align:left;">NFT ID</th>
+            <th style="padding:10px; text-align:left;">Fragments</th>
+            <th style="padding:10px; text-align:left;">SMP</th>
+            <th style="padding:10px; text-align:left;">EMP</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${logs
+            .map((item) => {
+              const time = item.created_at
+                ? new Date(item.created_at).toLocaleString()
+                : "--";
+
+              return `
+                <tr style="border-top:1px solid #e5e7eb;">
+                  <td style="padding:10px;">${time}</td>
+                  <td style="padding:10px; font-weight:800;">@${item.username || "-"}</td>
+                  <td style="padding:10px;">${item.craft_type || "-"}</td>
+                  <td style="padding:10px; font-weight:800;">${item.result_tier || "-"}</td>
+                  <td style="padding:10px;">${item.result_nft_id || "-"}</td>
+                  <td style="padding:10px;">${Number(item.fragments_spent || 0).toLocaleString()}</td>
+                  <td style="padding:10px;">${Number(item.smp_spent || 0).toLocaleString()}</td>
+                  <td style="padding:10px; color:#dc2626; font-weight:900;">
+                    -${Number(item.emp_spent || 0).toLocaleString()} EMP
+                  </td>
+                </tr>
+              `;
+            })
+            .join("")}
+        </tbody>
+      </table>
+    `;
+  } catch (err) {
+    console.error("Load Foundry log failed:", err);
+    box.innerHTML = "Failed to load Foundry craft log.";
+  }
+}
       //loadEmpireCultureRewardAdmin();
 
       async function approveReferral(referralId) {
