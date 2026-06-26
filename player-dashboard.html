@@ -6944,73 +6944,69 @@ if (reinvestBtn) {
       function tradeBlueprint(id) {
         window.location.href = "marketplace.html?blueprint=" + id;
       }
-    function isCrateEligible(epDay, globalShare) {
+  function isCrateEligible(epDay, globalShare) {
   return Number(globalShare || 0) > 1.5;
 }
 
-    function updateCrateCardDisplay() {
-  const epDay = window.dashboardData?.totalBaseEP || 0;
-  const globalShare = window.dashboardData?.globalSharePercent || 0;
-
-  const lastCrate = window.lastCrateResult || null;
-
-const cratesOpenedToday = lastCrate ? 1 : 0;
-console.log("CRATE CHECK:", {
-  epDay,
-  globalShare,
-  lastCrate,
-  cratesOpenedToday
-});
-
-const isFree =
-  cratesOpenedToday === 0 && isCrateEligible(epDay, globalShare);
-
-const crateCostEl = document.getElementById("crate-cost-display");
-if (crateCostEl) {
-  crateCostEl.textContent = isFree
-    ? "FREE 🎁"
-    : cratesOpenedToday > 0
-      ? "15 EMP"
-      : "25 EMP";
-}
-
-  const openBtn = document.getElementById("open-crate-btn");
-  if (openBtn && !isOwnEmpireView()) {
-  openBtn.disabled = true;
-  openBtn.textContent = "Read-only";
-  openBtn.style.opacity = "0.6";
-  openBtn.style.cursor = "not-allowed";
-  openBtn.title = "You can only open crates from your own empire.";
-  return;
-}
+function updateCrateCardDisplay() {
+  const epDay = Number(window.dashboardData?.totalBaseEP || 0);
+  const globalShare = Number(window.dashboardData?.globalSharePercent || 0);
 
   const lastOpened =
     window.dashboardData?.lastCrateOpenedAt ||
-    window.dashboardData?.last_crate_opened_at;
+    window.dashboardData?.last_crate_opened_at ||
+    null;
 
   let openedToday = false;
 
-if (lastOpened) {
-  const last = new Date(lastOpened);
-  const now = new Date();
+  if (lastOpened) {
+    const last = new Date(lastOpened);
+    const now = new Date();
 
-  openedToday =
-    last.getUTCFullYear() === now.getUTCFullYear() &&
-    last.getUTCMonth() === now.getUTCMonth() &&
-    last.getUTCDate() === now.getUTCDate();
-}
+    openedToday =
+      last.getUTCFullYear() === now.getUTCFullYear() &&
+      last.getUTCMonth() === now.getUTCMonth() &&
+      last.getUTCDate() === now.getUTCDate();
+  }
 
-if (openBtn) {
-  if (openedToday) {
-  // Timer function controls cooldown button.
-  // Do not overwrite it here.
-} else {
+  const isFree =
+    !openedToday && isCrateEligible(epDay, globalShare);
+
+  const crateCostEl = document.getElementById("crate-cost-display");
+
+  if (crateCostEl) {
+    crateCostEl.textContent = isFree
+      ? "FREE 🎁"
+      : openedToday
+        ? "15 EMP"
+        : "25 EMP";
+  }
+
+  console.log("CRATE DISPLAY CHECK:", {
+    epDay,
+    globalShare,
+    openedToday,
+    isFree,
+    shownCost: crateCostEl?.textContent || null,
+  });
+
+  const openBtn = document.getElementById("open-crate-btn");
+
+  if (openBtn && !isOwnEmpireView()) {
+    openBtn.disabled = true;
+    openBtn.textContent = "Read-only";
+    openBtn.style.opacity = "0.6";
+    openBtn.style.cursor = "not-allowed";
+    openBtn.title = "You can only open crates from your own empire.";
+    return;
+  }
+
+  if (openBtn && !openedToday) {
     openBtn.disabled = false;
     openBtn.textContent = "Open Crate";
     openBtn.style.opacity = "1";
     openBtn.style.cursor = "pointer";
   }
-}
 }
 async function loadSeasonLiveBanner() {
   console.log("LOAD SEASON BANNER FUNCTION STARTED");
