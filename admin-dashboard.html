@@ -4621,53 +4621,142 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
         if (shell) shell.style.display = "none";
       }
 
-      function showAdminDashboard(key) {
-        ADMIN_KEY = String(key || "").trim();
-        if (ADMIN_KEY) {
-          localStorage.setItem("MYDEMPIRE_ADMIN_KEY", ADMIN_KEY);
-        }
-        const gate = document.getElementById("admin-login-gate");
-        const shell = document.getElementById("admin-dashboard-shell");
-        if (gate) gate.style.display = "none";
-        if (shell) shell.style.display = "block";
+     // =============================
+// CLEAN ADMIN LOGIN GATE + TABS
+// =============================
 
-        switchAdminTab("overview");
-        loadAdminInitialData();
+function switchAdminTab(tabName) {
+  document.querySelectorAll(".admin-tab-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.adminTab === tabName);
+  });
+
+  document.querySelectorAll(".admin-tab-panel").forEach((panel) => {
+    panel.classList.toggle(
+      "active",
+      panel.dataset.adminPanel === tabName,
+    );
+  });
+}
+
+function showAdminGate() {
+  const gate = document.getElementById("admin-login-gate");
+  const shell = document.getElementById("admin-dashboard-shell");
+
+  if (gate) gate.style.display = "flex";
+  if (shell) shell.style.display = "none";
+}
+
+function showAdminDashboardOnly() {
+  const gate = document.getElementById("admin-login-gate");
+  const shell = document.getElementById("admin-dashboard-shell");
+
+  if (gate) gate.style.display = "none";
+  if (shell) shell.style.display = "block";
+
+  switchAdminTab("overview");
+}
+
+async function verifyAdminKey(key) {
+  const cleanKey = String(key || "").trim();
+
+  if (!cleanKey) {
+    return false;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/overview`, {
+      headers: {
+        "x-admin-key": cleanKey,
+      },
+    });
+
+    const data = await res.json().catch(() => ({}));
+
+    return res.ok && data.success === true;
+  } catch (err) {
+    console.error("Admin key verification failed:", err);
+    return false;
+  }
+}
+
+async function unlockAdminWithKey(key) {
+  const loginStatus = document.getElementById("admin-login-status");
+
+  const cleanKey = String(key || "").trim();
+
+  if (!cleanKey) {
+    if (loginStatus) loginStatus.textContent = "Please enter ADMIN_KEY.";
+    return;
+  }
+
+  if (loginStatus) loginStatus.textContent = "Checking ADMIN_KEY...";
+
+  const isValid = await verifyAdminKey(cleanKey);
+
+  if (!isValid) {
+    ADMIN_KEY = "";
+    localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
+
+    if (loginStatus) {
+      loginStatus.textContent = "❌ Invalid ADMIN_KEY. Dashboard locked.";
+    }
+
+    showAdminGate();
+    return;
+  }
+
+  ADMIN_KEY = cleanKey;
+  localStorage.setItem("MYDEMPIRE_ADMIN_KEY", ADMIN_KEY);
+
+  if (loginStatus) loginStatus.textContent = "✅ Admin unlocked.";
+
+  showAdminDashboardOnly();
+  await loadAdminInitialData();
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const savedKey = localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || "";
+  const unlockBtn = document.getElementById("unlock-admin-btn");
+  const keyInput = document.getElementById("admin-key-input");
+  const loginStatus = document.getElementById("admin-login-status");
+  const logoutBtn = document.getElementById("logout-admin-btn");
+
+  showAdminGate();
+
+  if (savedKey) {
+    await unlockAdminWithKey(savedKey);
+  }
+
+  if (unlockBtn) {
+    unlockBtn.addEventListener("click", async () => {
+      const key = keyInput ? keyInput.value.trim() : "";
+      await unlockAdminWithKey(key);
+    });
+  }
+
+  if (keyInput) {
+    keyInput.addEventListener("keydown", async (event) => {
+      if (event.key === "Enter") {
+        await unlockAdminWithKey(keyInput.value.trim());
       }
+    });
+  }
 
-      document.addEventListener("DOMContentLoaded", () => {
-        const savedKey = localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || "";
-        const unlockBtn = document.getElementById("unlock-admin-btn");
-        const keyInput = document.getElementById("admin-key-input");
-        const loginStatus = document.getElementById("admin-login-status");
-        const logoutBtn = document.getElementById("logout-admin-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      ADMIN_KEY = "";
+      localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
 
-        if (savedKey) showAdminDashboard(savedKey);
-        else showAdminGate();
+      if (keyInput) keyInput.value = "";
+      if (loginStatus) loginStatus.textContent = "Dashboard locked.";
 
-        if (unlockBtn) {
-          unlockBtn.addEventListener("click", () => {
-            const key = keyInput ? keyInput.value.trim() : "";
-            if (!key) {
-              if (loginStatus)
-                loginStatus.textContent = "Please enter ADMIN_KEY.";
-              return;
-            }
-            showAdminDashboard(key);
-          });
-        }
-
-        if (logoutBtn) {
-          logoutBtn.addEventListener("click", () => {
-            ADMIN_KEY = "";
-            localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
-            if (keyInput) keyInput.value = "";
-            if (loginStatus) loginStatus.textContent = "Dashboard locked.";
-            showAdminGate();
-          });
+      showAdminGate();
+    });
+  }
+});
         }
       });
-      autoLoadAdminAfterRefresh();
+     
       async function loadFactoryRenameEmpSink() {
         const box = document.getElementById("factory-rename-sink-log");
 
