@@ -2112,8 +2112,7 @@ const titleData = getPlayerTitle(lifetimeRank);
 
             html += `
     <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""} ${
-      Number(row.current_ep_per_day || row.ep_per_day || 0) >= 100 &&
-      Number(row.global_ep_share_percent || 0) >= 1.5
+     Number(row.global_ep_share_percent || 0) > 1.5
         ? "crate-qualified"
         : ""
     }" 
@@ -6946,10 +6945,7 @@ if (reinvestBtn) {
         window.location.href = "marketplace.html?blueprint=" + id;
       }
     function isCrateEligible(epDay, globalShare) {
-  return (
-    Number(epDay || 0) >= 100 &&
-    Number(globalShare || 0) >= 1.5
-  );
+  return Number(globalShare || 0) > 1.5;
 }
 
     function updateCrateCardDisplay() {
