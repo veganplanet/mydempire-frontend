@@ -6342,39 +6342,59 @@ if (crateHistoryLink) {
           true,
         );
       }
-      function startCrateResetTimer() {
+   function startCrateResetTimer() {
   const cardEl = document.getElementById("crate-reset-timer");
   const popupEl = document.getElementById("crate-popup-reset-timer");
   const openBtn = document.getElementById("open-crate-btn");
 
   if (!cardEl && !popupEl && !openBtn) return;
 
+  function hasOpenedToday() {
+    const lastOpenedRaw =
+      window.dashboardData?.lastCrateOpenedAt ||
+      window.dashboardData?.last_crate_opened_at ||
+      null;
+
+    if (!lastOpenedRaw) return false;
+
+    const last = new Date(lastOpenedRaw);
+    const now = new Date();
+
+    if (isNaN(last.getTime())) return false;
+
+    return (
+      last.getUTCFullYear() === now.getUTCFullYear() &&
+      last.getUTCMonth() === now.getUTCMonth() &&
+      last.getUTCDate() === now.getUTCDate()
+    );
+  }
+
   function updateTimer() {
     const cooldownUntilRaw =
-  window.dashboardData?.nextCrateAvailableAt ||
-  window.dashboardData?.next_crate_available_at ||
-  localStorage.getItem("mde_crate_cooldown_until") ||
-  null;
+      window.dashboardData?.nextCrateAvailableAt ||
+      window.dashboardData?.next_crate_available_at ||
+      localStorage.getItem("mde_crate_cooldown_until") ||
+      null;
 
-const cooldownUntil = cooldownUntilRaw ? new Date(cooldownUntilRaw) : null;
+    const cooldownUntil = cooldownUntilRaw ? new Date(cooldownUntilRaw) : null;
 
     let canOpenCrate = true;
     let timerText = "Ready now";
 
-    if (cooldownUntil) {
-      const nextCrateAt = cooldownUntil;
-
+    if (cooldownUntil && !isNaN(cooldownUntil.getTime())) {
       const now = new Date();
 
-      if (now < nextCrateAt) {
+      if (now < cooldownUntil) {
         canOpenCrate = false;
 
-        const diff = nextCrateAt - now;
+        const diff = cooldownUntil - now;
         const hours = Math.floor(diff / 3600000);
         const minutes = Math.floor((diff % 3600000) / 60000);
         const seconds = Math.floor((diff % 60000) / 1000);
 
         timerText = `${hours}h ${minutes}m ${seconds}s`;
+      } else {
+        localStorage.removeItem("mde_crate_cooldown_until");
       }
     }
 
@@ -6383,11 +6403,15 @@ const cooldownUntil = cooldownUntilRaw ? new Date(cooldownUntilRaw) : null;
 
     if (openBtn) {
       openBtn.disabled = !canOpenCrate;
-      openBtn.textContent = canOpenCrate
-        ? cooldownUntil
+
+      if (!canOpenCrate) {
+        openBtn.textContent = "Cooling Down";
+      } else {
+        openBtn.textContent = hasOpenedToday()
           ? "Open Extra Crate"
-          : "Open Crate"
-        : "Cooling Down";
+          : "Open Crate";
+      }
+
       openBtn.style.opacity = canOpenCrate ? "1" : "0.6";
       openBtn.style.cursor = canOpenCrate ? "pointer" : "not-allowed";
     }
@@ -6535,6 +6559,7 @@ localStorage.setItem("mde_crate_cooldown_until", new Date(Date.now() + 3 * 60 * 
 }
 
           loadDashboardSummary().then(() => {
+            updateCrateCardDisplay();
   startCrateResetTimer();
 });
         } catch (err) {
