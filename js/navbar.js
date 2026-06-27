@@ -12,11 +12,14 @@
   const authLinks = user
     ? `
     <a href="player-dashboard.html" class="appbar-link">Dashboard</a>
-    <a href="shop.html" class="appbar-link">Shop</a>
-    <a href="marketplace.html" class="appbar-link">Marketplace</a>
-    <a href="${empireHubLink}" class="appbar-link">
-      Empire Hub 
-    </a>
+<a href="shop.html" class="appbar-link">Shop</a>
+<a href="marketplace.html" class="appbar-link">Marketplace</a>
+<a href="${empireHubLink}" class="appbar-link">
+  Empire Hub
+</a>
+<a href="factory-products.html" class="appbar-link">
+  Goods <span class="nav-new-pill">SOON</span>
+</a>
   `
     : "";
 
