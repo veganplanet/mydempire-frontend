@@ -3004,8 +3004,24 @@ setText("maintenance-attention-count", inactiveFactories);
           const writCount = Number(data.writCount ?? 0);
           setText("summary-writ-count", writCount);
 
-         // ===== PRODUCTION =====
-const totalBaseEP = Number(
+        // ===== PRODUCTION =====
+// Use empire-overview as source of truth for current EP/day,
+// because it now corrects factory status from maintenance.
+const overviewTotals = overviewData?.totals || {};
+
+const overviewBaseEP = Number(
+  overviewTotals.totalBaseEP ??
+  overviewTotals.total_base_ep ??
+  0
+);
+
+const overviewBoostedEP = Number(
+  overviewTotals.totalBoostedEP ??
+  overviewTotals.total_boosted_ep ??
+  0
+);
+
+const dashboardBaseEP = Number(
   data.totalBaseEP ??
   data.currentEpDay ??
   data.currentEPDay ??
@@ -3013,12 +3029,16 @@ const totalBaseEP = Number(
   0
 );
 
-const totalBoostedEP = Number(
+const dashboardBoostedEP = Number(
   data.totalBoostedEP ??
   data.currentEpDay ??
   data.currentEPDay ??
-  totalBaseEP
+  dashboardBaseEP
 );
+
+// Prefer corrected overview EP/day. Fallback to dashboard EP/day.
+const totalBaseEP = overviewBaseEP || dashboardBaseEP || 0;
+const totalBoostedEP = overviewBoostedEP || dashboardBoostedEP || totalBaseEP || 0;
 
 const totalClaimableEP = Number(
   data.totalClaimableEP ??
@@ -3048,8 +3068,8 @@ setText(
   "lifetime-ep",
   lifetimeEP.toFixed(2)
 );
-updateEmpireRankStripCompetitive(PLAYER_USERNAME, lifetimeEP);
 
+updateEmpireRankStripCompetitive(PLAYER_USERNAME, lifetimeEP);
           // ===== EMPIRE ASSETS =====
           let unopenedPacks = 0;
 
