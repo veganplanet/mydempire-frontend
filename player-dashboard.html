@@ -3004,8 +3004,24 @@ setText("maintenance-attention-count", inactiveFactories);
           const writCount = Number(data.writCount ?? 0);
           setText("summary-writ-count", writCount);
 
-         // ===== PRODUCTION =====
-const totalBaseEP = Number(
+        // ===== PRODUCTION =====
+// Use empire-overview as source of truth for current EP/day,
+// because it now corrects factory status from maintenance.
+const overviewTotals = overviewData?.totals || {};
+
+const overviewBaseEP = Number(
+  overviewTotals.totalBaseEP ??
+  overviewTotals.total_base_ep ??
+  0
+);
+
+const overviewBoostedEP = Number(
+  overviewTotals.totalBoostedEP ??
+  overviewTotals.total_boosted_ep ??
+  0
+);
+
+const dashboardBaseEP = Number(
   data.totalBaseEP ??
   data.currentEpDay ??
   data.currentEPDay ??
@@ -3013,12 +3029,16 @@ const totalBaseEP = Number(
   0
 );
 
-const totalBoostedEP = Number(
+const dashboardBoostedEP = Number(
   data.totalBoostedEP ??
   data.currentEpDay ??
   data.currentEPDay ??
-  totalBaseEP
+  dashboardBaseEP
 );
+
+// Prefer corrected overview EP/day. Fallback to dashboard EP/day.
+const totalBaseEP = overviewBaseEP || dashboardBaseEP || 0;
+const totalBoostedEP = overviewBoostedEP || dashboardBoostedEP || totalBaseEP || 0;
 
 const totalClaimableEP = Number(
   data.totalClaimableEP ??
@@ -3048,8 +3068,8 @@ setText(
   "lifetime-ep",
   lifetimeEP.toFixed(2)
 );
-updateEmpireRankStripCompetitive(PLAYER_USERNAME, lifetimeEP);
 
+updateEmpireRankStripCompetitive(PLAYER_USERNAME, lifetimeEP);
           // ===== EMPIRE ASSETS =====
           let unopenedPacks = 0;
 
@@ -4167,12 +4187,19 @@ await loadSeasonLiveBanner();
         return end > new Date();
       }
 
-      function isTrulyActiveFactory(factory) {
-        const s = String(factory?.status || "")
-          .trim()
-          .toUpperCase();
-        return s === "ACTIVE" && hasValidMaintenance(factory);
-      }
+ function isTrulyActiveFactory(factory) {
+  const s = String(factory?.status || "").trim().toUpperCase();
+
+  if (s === "BUILDING" || s === "CONSTRUCTING" || s === "UPGRADING") {
+    return false;
+  }
+
+  if (s === "ACTIVE") {
+    return true;
+  }
+
+  return factory?.is_active === true || factory?.active === true;
+}
       // ===== EMPIRE OVERVIEW =====
       async function loadEmpireOverview() {
         const landsContainer = document.getElementById("lands-container");
@@ -4202,12 +4229,7 @@ console.log("Empire overview:", data);
           allFactoriesFlat = [];
           for (const land of lands) {
             const factories = land.factories || [];
-            console.log(
-              "STATUS DEBUG (land",
-              land.land_id || "",
-              "):",
-              factories.map((f) => f.status),
-            );
+           
 
             for (const f of factories) {
               allFactoriesFlat.push({
@@ -4399,8 +4421,35 @@ console.log("Empire overview:", data);
           return;
         }
 
-        const normalize = (s) => (s || "").toString().trim().toUpperCase();
+       const normalize = (value) => String(value || "").trim().toUpperCase();
+        const getEffectiveFactoryStatus = (factory) => {
+  const rawStatus = String(factory?.status || "")
+    .trim()
+    .toUpperCase();
 
+  if (
+    rawStatus === "BUILDING" ||
+    rawStatus === "CONSTRUCTING" ||
+    rawStatus === "UPGRADING"
+  ) {
+    return rawStatus;
+  }
+
+  const maintenanceEndsAt =
+    factory?.maintenance_ends_at ||
+    factory?.maintenanceEndsAt ||
+    null;
+
+  if (maintenanceEndsAt) {
+    const endTime = new Date(maintenanceEndsAt).getTime();
+
+    if (!Number.isNaN(endTime) && endTime > Date.now()) {
+      return "ACTIVE";
+    }
+  }
+
+  return rawStatus || "INACTIVE";
+};
         // Safe days helper (does NOT crash if date missing)
         const safeDaysAgo = (dateStr) => {
           if (!dateStr) return null;
@@ -4467,29 +4516,30 @@ console.log("Empire overview:", data);
                 : 1;
           const slotsUsed = factories.length;
 
-          // ===== status counts (strict + correct) =====
-          let activeCount = 0;
-          let upgradingCount = 0;
-          let buildingCount = 0;
-          let inactiveCount = 0;
+// ==== status counts (backend status based) ====
+let activeCount = 0;
+let upgradingCount = 0;
+let buildingCount = 0;
+let inactiveCount = 0;
 
-          for (const f of factories) {
-            const s = normalize(f.status);
+for (const f of factories) {
+  const s = getEffectiveFactoryStatus(f);
 
-            if (isTrulyActiveFactory(f)) activeCount++;
-            else if (s === "UPGRADING") upgradingCount++;
-            else if (s === "BUILDING" || s === "CONSTRUCTING") buildingCount++;
-            else inactiveCount++;
-          }
+  if (s === "UPGRADING") upgradingCount++;
+  else if (s === "BUILDING" || s === "CONSTRUCTING") buildingCount++;
+  else if (s === "ACTIVE") activeCount++;
+  else inactiveCount++;
+}
 
+// Backward-compatible alias in case template uses upgradeCount
+const upgradeCount = upgradingCount;
           // ===== land production + unclaimed EP (ACTIVE only) =====
           let landUnclaimedEP = 0;
           let landRatePerDay = 0;
 
-          for (const f of factories) {
-            if (!isTrulyActiveFactory(f)) continue;
-
-            const unclaimed = Number(f.ep_unclaimed ?? f.factoryEP ?? 0);
+        for (const f of factories) {
+  if (getEffectiveFactoryStatus(f) !== "ACTIVE") continue;
+   const unclaimed = Number(f.ep_unclaimed ?? f.factoryEP ?? 0);
             if (!isNaN(unclaimed)) {
               landUnclaimedEP += unclaimed;
             }
@@ -4508,9 +4558,9 @@ if (!isNaN(rate)) {
           // ✅ Claim info should only consider ACTIVE factories
           let oldestClaimDays = null;
 
-          for (const f of factories) {
-            const st = (f.status || "").toString().trim().toUpperCase();
-            if (st !== "ACTIVE") continue;
+         for (const f of factories) {
+  const st = getEffectiveFactoryStatus(f);
+  if (st !== "ACTIVE") continue;
 
             const da = safeDaysAgo(f.last_claimed_at);
             if (da === null) continue;
@@ -4558,8 +4608,7 @@ landCard.dataset.industry = (factories || [])
 </div>
 
       <div class="land-matrix-row">
-  <div class="matrix-line">Active: <b>${activeCount}</b> • Inactive: <b>${inactiveCount}</b> • Building: <b>${buildingCount}</b> • Upgrading: <b>${upgradingCount}</b></div>
-  <div class="matrix-line">EP/day: <b>${landRatePerDayText}</b> • Accumulated EP: <b>${landUnclaimedEPText}</b></div>
+ <div class="matrix-line">Active: <b>${activeCount}</b> • Inactive: <b>${inactiveCount}</b> • Building: <b>${buildingCount}</b> • Upgrading: <b>${upgradingCount}</b></div>  <div class="matrix-line">EP/day: <b>${landRatePerDayText}</b> • Accumulated EP: <b>${landUnclaimedEPText}</b></div>
   <div class="matrix-line">${daysInfoText}</div>
 </div>
 
@@ -4633,10 +4682,8 @@ landCard.dataset.industry = (factories || [])
               const factoryName =
                 String(f.factory_name || "").trim() || `Factory #${factoryId}`;
 
-              const status = String(f.status || "")
-                .trim()
-                .toUpperCase();
-              const canRename = status === "ACTIVE";
+            const status = getEffectiveFactoryStatus(f);
+const canRename = status === "ACTIVE";
 
               const activeDays = Number(f.active_days || 0);
               const requiredDays =
@@ -5029,22 +5076,40 @@ wireEmptySlotBuildActions();
         container.innerHTML = "";
 
         const underConstruction = (allFactoriesFlat || []).filter((f) => {
-          const s = String(f.status || "")
-            .trim()
-            .toUpperCase();
+  const s = String(f.status || "")
+    .trim()
+    .toUpperCase();
 
-          if (s !== "BUILDING" && s !== "UPGRADING") return false;
+  if (s !== "BUILDING" && s !== "CONSTRUCTING" && s !== "UPGRADING") {
+    return false;
+  }
 
-          const readyAt =
-            f.upgrade_complete_at || f.build_complete_at || f.built_at;
-          if (!readyAt) return true;
+  const readyAt =
+    f.upgrade_complete_at ||
+    f.upgradeCompleteAt ||
+    f.upgrade_ends_at ||
+    f.upgradeEndsAt ||
+    f.upgrade_finish_at ||
+    f.upgradeFinishAt ||
+    f.build_complete_at ||
+    f.buildCompleteAt ||
+    f.build_ends_at ||
+    f.buildEndsAt ||
+    f.built_at ||
+    f.builtAt ||
+    null;
 
-          const readyDate = new Date(readyAt);
-          if (isNaN(readyDate.getTime())) return true;
+  // Show under-construction/upgrading card even if date is missing
+  if (!readyAt) return true;
 
-          // ✅ If time is already completed, do not show in construction tab
-          return readyDate.getTime() > Date.now();
-        });
+  const readyDate = new Date(readyAt);
+
+  // Show card if date is invalid instead of hiding it
+  if (isNaN(readyDate.getTime())) return true;
+
+  // Show only if still in future
+  return readyDate > new Date();
+});
 
         if (!underConstruction.length) {
           container.innerHTML =
@@ -5056,11 +5121,15 @@ wireEmptySlotBuildActions();
           const card = document.createElement("div");
           card.className = "factory-card";
 
-          const status = String(f.status || "UNKNOWN")
-            .trim()
-            .toUpperCase();
-          const canRename = status === "ACTIVE";
-          const statusCls = statusClass(status);
+         const status = String(f.status || "UNKNOWN")
+  .trim()
+  .toUpperCase();
+
+const constructionLabel =
+  status === "UPGRADING" ? "Upgrading" : "Building";
+
+const canRename = false;
+const statusCls = statusClass(status);
 
           const factoryId = f.id ?? f.factory_id ?? "?";
           const factoryName =
