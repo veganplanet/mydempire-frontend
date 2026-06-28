@@ -4167,27 +4167,18 @@ await loadSeasonLiveBanner();
         return end > new Date();
       }
 
-     function isTrulyActiveFactory(factory) {
-  const s = normalize(factory.status);
+ function isTrulyActiveFactory(factory) {
+  const s = String(factory?.status || "").trim().toUpperCase();
 
-  if (
-    s === "BUILDING" ||
-    s === "CONSTRUCTING" ||
-    s === "UPGRADING"
-  ) {
+  if (s === "BUILDING" || s === "CONSTRUCTING" || s === "UPGRADING") {
     return false;
   }
 
-  if (
-    s === "ACTIVE" ||
-    factory.status === "active" ||
-    factory.is_active === true ||
-    factory.active === true
-  ) {
+  if (s === "ACTIVE") {
     return true;
   }
 
-  return false;
+  return factory?.is_active === true || factory?.active === true;
 }
       // ===== EMPIRE OVERVIEW =====
       async function loadEmpireOverview() {
@@ -4477,7 +4468,7 @@ console.log("Empire overview:", data);
                 : 1;
           const slotsUsed = factories.length;
 
-  // ==== status counts (backend status based) ====
+// ==== status counts (backend status based) ====
 let activeCount = 0;
 let upgradingCount = 0;
 let buildingCount = 0;
