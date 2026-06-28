@@ -4402,6 +4402,34 @@ console.log("Empire overview:", data);
         }
 
        const normalize = (value) => String(value || "").trim().toUpperCase();
+        const getEffectiveFactoryStatus = (factory) => {
+  const rawStatus = String(factory?.status || "")
+    .trim()
+    .toUpperCase();
+
+  if (
+    rawStatus === "BUILDING" ||
+    rawStatus === "CONSTRUCTING" ||
+    rawStatus === "UPGRADING"
+  ) {
+    return rawStatus;
+  }
+
+  const maintenanceEndsAt =
+    factory?.maintenance_ends_at ||
+    factory?.maintenanceEndsAt ||
+    null;
+
+  if (maintenanceEndsAt) {
+    const endTime = new Date(maintenanceEndsAt).getTime();
+
+    if (!Number.isNaN(endTime) && endTime > Date.now()) {
+      return "ACTIVE";
+    }
+  }
+
+  return rawStatus || "INACTIVE";
+};
         // Safe days helper (does NOT crash if date missing)
         const safeDaysAgo = (dateStr) => {
           if (!dateStr) return null;
@@ -4475,17 +4503,12 @@ let buildingCount = 0;
 let inactiveCount = 0;
 
 for (const f of factories) {
-  const s = String(f.status || "").trim().toUpperCase();
+  const s = getEffectiveFactoryStatus(f);
 
-  if (s === "UPGRADING") {
-    upgradingCount++;
-  } else if (s === "BUILDING" || s === "CONSTRUCTING") {
-    buildingCount++;
-  } else if (s === "ACTIVE") {
-    activeCount++;
-  } else {
-    inactiveCount++;
-  }
+  if (s === "UPGRADING") upgradingCount++;
+  else if (s === "BUILDING" || s === "CONSTRUCTING") buildingCount++;
+  else if (s === "ACTIVE") activeCount++;
+  else inactiveCount++;
 }
 
 // Backward-compatible alias in case template uses upgradeCount
@@ -4494,10 +4517,9 @@ const upgradeCount = upgradingCount;
           let landUnclaimedEP = 0;
           let landRatePerDay = 0;
 
-          for (const f of factories) {
-            if (!isTrulyActiveFactory(f)) continue;
-
-            const unclaimed = Number(f.ep_unclaimed ?? f.factoryEP ?? 0);
+        for (const f of factories) {
+  if (getEffectiveFactoryStatus(f) !== "ACTIVE") continue;
+   const unclaimed = Number(f.ep_unclaimed ?? f.factoryEP ?? 0);
             if (!isNaN(unclaimed)) {
               landUnclaimedEP += unclaimed;
             }
@@ -4516,9 +4538,9 @@ if (!isNaN(rate)) {
           // ✅ Claim info should only consider ACTIVE factories
           let oldestClaimDays = null;
 
-          for (const f of factories) {
-            const st = (f.status || "").toString().trim().toUpperCase();
-            if (st !== "ACTIVE") continue;
+         for (const f of factories) {
+  const st = getEffectiveFactoryStatus(f);
+  if (st !== "ACTIVE") continue;
 
             const da = safeDaysAgo(f.last_claimed_at);
             if (da === null) continue;
@@ -4640,10 +4662,8 @@ landCard.dataset.industry = (factories || [])
               const factoryName =
                 String(f.factory_name || "").trim() || `Factory #${factoryId}`;
 
-              const status = String(f.status || "")
-                .trim()
-                .toUpperCase();
-              const canRename = status === "ACTIVE";
+            const status = getEffectiveFactoryStatus(f);
+const canRename = status === "ACTIVE";
 
               const activeDays = Number(f.active_days || 0);
               const requiredDays =
