@@ -4467,20 +4467,46 @@ console.log("Empire overview:", data);
                 : 1;
           const slotsUsed = factories.length;
 
-          // ===== status counts (strict + correct) =====
-          let activeCount = 0;
-          let upgradingCount = 0;
-          let buildingCount = 0;
-          let inactiveCount = 0;
+        // ==== status counts (maintenance based) ====
+let activeCount = 0;
+let upgradingCount = 0;
+let buildingCount = 0;
+let inactiveCount = 0;
 
-          for (const f of factories) {
-            const s = normalize(f.status);
+for (const f of factories) {
+  console.log("Factory maintenance field check:", f);
+  const s = normalize(f.status);
 
-            if (isTrulyActiveFactory(f)) activeCount++;
-            else if (s === "UPGRADING") upgradingCount++;
-            else if (s === "BUILDING" || s === "CONSTRUCTING") buildingCount++;
-            else inactiveCount++;
-          }
+  const maintenanceDaysLeft = Number(
+    f.maintenance_days_left ??
+    f.maintenanceDaysLeft ??
+    f.maintenance_days_remaining ??
+    f.maintenanceDaysRemaining ??
+    f.days_left ??
+    0
+  );
+
+  const isBuilding =
+    s === "BUILDING" ||
+    s === "CONSTRUCTING" ||
+    f.is_building === true ||
+    f.building === true;
+
+  const isUpgrading =
+    s === "UPGRADING" ||
+    f.is_upgrading === true ||
+    f.upgrading === true;
+
+  if (isUpgrading) {
+    upgradingCount++;
+  } else if (isBuilding) {
+    buildingCount++;
+  } else if (maintenanceDaysLeft > 0) {
+    activeCount++;
+  } else {
+    inactiveCount++;
+  }
+}
 
           // ===== land production + unclaimed EP (ACTIVE only) =====
           let landUnclaimedEP = 0;
