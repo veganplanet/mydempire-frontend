@@ -3005,23 +3005,10 @@ setText("maintenance-attention-count", inactiveFactories);
           setText("summary-writ-count", writCount);
 
         // ===== PRODUCTION =====
-// Use empire-overview as source of truth for current EP/day,
-// because it now corrects factory status from maintenance.
-const overviewTotals = overviewData?.totals || {};
-
-const overviewBaseEP = Number(
-  overviewTotals.totalBaseEP ??
-  overviewTotals.total_base_ep ??
-  0
-);
-
-const overviewBoostedEP = Number(
-  overviewTotals.totalBoostedEP ??
-  overviewTotals.total_boosted_ep ??
-  0
-);
-
-const dashboardBaseEP = Number(
+// ===== PRODUCTION =====
+// Dashboard EP/day must come from player_status.current_ep_day.
+// This is the same value used by rewards, support, crate eligibility, and admin SQL.
+const totalBaseEP = Number(
   data.totalBaseEP ??
   data.currentEpDay ??
   data.currentEPDay ??
@@ -3029,16 +3016,12 @@ const dashboardBaseEP = Number(
   0
 );
 
-const dashboardBoostedEP = Number(
+const totalBoostedEP = Number(
   data.totalBoostedEP ??
   data.currentEpDay ??
   data.currentEPDay ??
-  dashboardBaseEP
+  totalBaseEP
 );
-
-// Prefer corrected overview EP/day. Fallback to dashboard EP/day.
-const totalBaseEP = overviewBaseEP || dashboardBaseEP || 0;
-const totalBoostedEP = overviewBoostedEP || dashboardBoostedEP || totalBaseEP || 0;
 
 const totalClaimableEP = Number(
   data.totalClaimableEP ??
