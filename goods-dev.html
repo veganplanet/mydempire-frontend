@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MydEmpire — Factory Goods</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="assets/favicon.png" />
+  </head>
+
+  <body
+    class="player-dashboard-page factory-goods-page"
+    data-requires-login="true"
+  >
+    <div id="mde-navbar"></div>
+
+    <div class="page goods-page-shell">
+      <section class="section goods-hero-section">
+        <div class="section-header">
+          <h2>📦 Factory Goods</h2>
+          <small>
+            Collectible product layer for active factories. Hidden testing page
+            for now.
+          </small>
+        </div>
+
+        <div class="goods-alert">
+          This page is for safe testing only. Public teaser page is not touched.
+        </div>
+
+        <div class="summary-grid goods-summary-grid">
+          <div class="summary-card goods-summary-card">
+            <div class="summary-label">Active User</div>
+            <div class="summary-value">
+              @<span id="goods-active-user">--</span>
+            </div>
+          </div>
+
+          <div class="summary-card goods-summary-card">
+            <div class="summary-label">EP/day</div>
+            <div class="summary-value" id="goods-ep-day">--</div>
+          </div>
+
+          <div class="summary-card goods-summary-card">
+            <div class="summary-label">Goods Capacity</div>
+            <div class="summary-value" id="goods-capacity">--</div>
+          </div>
+
+          <div class="summary-card goods-summary-card">
+            <div class="summary-label">Ready Factories</div>
+            <div class="summary-value" id="goods-ready-count">--</div>
+          </div>
+        </div>
+
+        <div class="goods-action-row">
+          <button id="goods-refresh-btn" class="secondary-btn" type="button">
+            Refresh Preview
+          </button>
+
+          <button
+            id="goods-claim-btn"
+            class="primary-button"
+            type="button"
+            disabled
+          >
+            Claim All Goods
+          </button>
+        </div>
+
+        <div id="goods-status" class="status-text">
+          Loading Goods preview...
+        </div>
+        <div
+          id="goods-rotation-status"
+          class="status-text goods-rotation-status"
+        >
+          Rotation loading...
+        </div>
+      </section>
+
+      <section class="section goods-rule-section">
+        <div class="section-header">
+          <h2>🌿 Production Capacity Rule</h2>
+          <small>Expansion unlocks more Goods production.</small>
+        </div>
+
+        <div class="goods-rules-grid">
+          <div class="goods-rule-card">
+            <strong>&lt;100 EP/day</strong>
+            <p>Goods locked. Build and activate more factories first.</p>
+          </div>
+
+          <div class="goods-rule-card">
+            <strong>100–499 EP/day</strong>
+            <p>30% of active factories can produce Goods.</p>
+          </div>
+
+          <div class="goods-rule-card">
+            <strong>500–999 EP/day</strong>
+            <p>75% of active factories can produce Goods.</p>
+          </div>
+
+          <div class="goods-rule-card">
+            <strong>1000+ EP/day</strong>
+            <p>100% of active factories can produce Goods.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2>🏭 Producing Factories</h2>
+          <small>Higher-level factories are selected first.</small>
+        </div>
+
+        <div id="goods-selected-list" class="goods-factory-list">
+          Loading...
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2>⏸ Skipped Factories</h2>
+          <small
+            >Lower-level factories stay out first when capacity is
+            limited.</small
+          >
+        </div>
+
+        <div id="goods-skipped-list" class="goods-factory-list">Loading...</div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2>🎒 Goods Inventory</h2>
+          <small
+            >Collected Goods from your active factories. Product Value will be
+            used for future redemption events.</small
+          >
+        </div>
+
+        <div id="goods-inventory-list" class="goods-inventory-grid">
+          <div class="goods-empty-card">
+            Goods inventory is not connected yet.
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="js/nav-auth.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/goods-dev.js"></script>
+  </body>
+</html>
