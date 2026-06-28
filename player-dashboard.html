@@ -4167,12 +4167,28 @@ await loadSeasonLiveBanner();
         return end > new Date();
       }
 
-      function isTrulyActiveFactory(factory) {
-        const s = String(factory?.status || "")
-          .trim()
-          .toUpperCase();
-        return s === "ACTIVE" && hasValidMaintenance(factory);
-      }
+     function isTrulyActiveFactory(factory) {
+  const s = normalize(factory.status);
+
+  if (
+    s === "BUILDING" ||
+    s === "CONSTRUCTING" ||
+    s === "UPGRADING"
+  ) {
+    return false;
+  }
+
+  if (
+    s === "ACTIVE" ||
+    factory.status === "active" ||
+    factory.is_active === true ||
+    factory.active === true
+  ) {
+    return true;
+  }
+
+  return false;
+}
       // ===== EMPIRE OVERVIEW =====
       async function loadEmpireOverview() {
         const landsContainer = document.getElementById("lands-container");
@@ -4394,8 +4410,7 @@ console.log("Empire overview:", data);
           return;
         }
 
-        const normalize = (s) => (s || "").toString().trim().toUpperCase();
-
+       const normalize = (value) => String(value || "").trim().toUpperCase();
         // Safe days helper (does NOT crash if date missing)
         const safeDaysAgo = (dateStr) => {
           if (!dateStr) return null;
@@ -4462,7 +4477,7 @@ console.log("Empire overview:", data);
                 : 1;
           const slotsUsed = factories.length;
 
-      // ==== status counts (backend status based) ====
+     // ==== status counts (final backend status based) ====
 let activeCount = 0;
 let upgradingCount = 0;
 let buildingCount = 0;
@@ -4471,27 +4486,11 @@ let inactiveCount = 0;
 for (const f of factories) {
   const s = normalize(f.status);
 
-  const isBuilding =
-    s === "BUILDING" ||
-    s === "CONSTRUCTING" ||
-    f.is_building === true ||
-    f.building === true;
-
-  const isUpgrading =
-    s === "UPGRADING" ||
-    f.is_upgrading === true ||
-    f.upgrading === true;
-
-  const isActive =
-    s === "ACTIVE" ||
-    f.is_active === true ||
-    f.active === true;
-
-  if (isUpgrading) {
+  if (s === "UPGRADING") {
     upgradingCount++;
-  } else if (isBuilding) {
+  } else if (s === "BUILDING" || s === "CONSTRUCTING") {
     buildingCount++;
-  } else if (isActive) {
+  } else if (s === "ACTIVE") {
     activeCount++;
   } else {
     inactiveCount++;
