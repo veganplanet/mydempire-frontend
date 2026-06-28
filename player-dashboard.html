@@ -4477,14 +4477,14 @@ console.log("Empire overview:", data);
                 : 1;
           const slotsUsed = factories.length;
 
-    // ==== status counts (final backend status based) ====
+  // ==== status counts (backend status based) ====
 let activeCount = 0;
 let upgradingCount = 0;
 let buildingCount = 0;
 let inactiveCount = 0;
 
 for (const f of factories) {
-  const s = normalize(f.status);
+  const s = String(f.status || "").trim().toUpperCase();
 
   if (s === "UPGRADING") {
     upgradingCount++;
@@ -4496,6 +4496,9 @@ for (const f of factories) {
     inactiveCount++;
   }
 }
+
+// Backward-compatible alias in case template uses upgradeCount
+const upgradeCount = upgradingCount;
           // ===== land production + unclaimed EP (ACTIVE only) =====
           let landUnclaimedEP = 0;
           let landRatePerDay = 0;
