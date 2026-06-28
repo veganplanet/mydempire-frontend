@@ -5076,22 +5076,40 @@ wireEmptySlotBuildActions();
         container.innerHTML = "";
 
         const underConstruction = (allFactoriesFlat || []).filter((f) => {
-          const s = String(f.status || "")
-            .trim()
-            .toUpperCase();
+  const s = String(f.status || "")
+    .trim()
+    .toUpperCase();
 
-          if (s !== "BUILDING" && s !== "UPGRADING") return false;
+  if (s !== "BUILDING" && s !== "CONSTRUCTING" && s !== "UPGRADING") {
+    return false;
+  }
 
-          const readyAt =
-            f.upgrade_complete_at || f.build_complete_at || f.built_at;
-          if (!readyAt) return true;
+  const readyAt =
+    f.upgrade_complete_at ||
+    f.upgradeCompleteAt ||
+    f.upgrade_ends_at ||
+    f.upgradeEndsAt ||
+    f.upgrade_finish_at ||
+    f.upgradeFinishAt ||
+    f.build_complete_at ||
+    f.buildCompleteAt ||
+    f.build_ends_at ||
+    f.buildEndsAt ||
+    f.built_at ||
+    f.builtAt ||
+    null;
 
-          const readyDate = new Date(readyAt);
-          if (isNaN(readyDate.getTime())) return true;
+  // Show under-construction/upgrading card even if date is missing
+  if (!readyAt) return true;
 
-          // ✅ If time is already completed, do not show in construction tab
-          return readyDate.getTime() > Date.now();
-        });
+  const readyDate = new Date(readyAt);
+
+  // Show card if date is invalid instead of hiding it
+  if (isNaN(readyDate.getTime())) return true;
+
+  // Show only if still in future
+  return readyDate > new Date();
+});
 
         if (!underConstruction.length) {
           container.innerHTML =
@@ -5103,11 +5121,15 @@ wireEmptySlotBuildActions();
           const card = document.createElement("div");
           card.className = "factory-card";
 
-          const status = String(f.status || "UNKNOWN")
-            .trim()
-            .toUpperCase();
-          const canRename = status === "ACTIVE";
-          const statusCls = statusClass(status);
+         const status = String(f.status || "UNKNOWN")
+  .trim()
+  .toUpperCase();
+
+const constructionLabel =
+  status === "UPGRADING" ? "Upgrading" : "Building";
+
+const canRename = false;
+const statusCls = statusClass(status);
 
           const factoryId = f.id ?? f.factory_id ?? "?";
           const factoryName =
