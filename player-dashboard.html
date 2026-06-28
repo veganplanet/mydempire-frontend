@@ -4202,12 +4202,7 @@ console.log("Empire overview:", data);
           allFactoriesFlat = [];
           for (const land of lands) {
             const factories = land.factories || [];
-            console.log(
-              "STATUS DEBUG (land",
-              land.land_id || "",
-              "):",
-              factories.map((f) => f.status),
-            );
+           
 
             for (const f of factories) {
               allFactoriesFlat.push({
@@ -4467,65 +4462,14 @@ console.log("Empire overview:", data);
                 : 1;
           const slotsUsed = factories.length;
 
-        // ==== status counts (maintenance based) ====
+      // ==== status counts (backend status based) ====
 let activeCount = 0;
 let upgradingCount = 0;
 let buildingCount = 0;
 let inactiveCount = 0;
 
 for (const f of factories) {
- console.log("Factory maintenance field check:", {
-  id: f.id,
-  name: f.factory_name,
-  status: f.status,
-
-  maintenance_days_left: f.maintenance_days_left,
-  maintenanceDaysLeft: f.maintenanceDaysLeft,
-  maintenance_days_remaining: f.maintenance_days_remaining,
-  maintenanceDaysRemaining: f.maintenanceDaysRemaining,
-  days_left: f.days_left,
-
-  maintenance_paid_until: f.maintenance_paid_until,
-  maintenancePaidUntil: f.maintenancePaidUntil,
-  maintenance_until: f.maintenance_until,
-  maintenanceUntil: f.maintenanceUntil,
-
-  next_maintenance_due: f.next_maintenance_due,
-  nextMaintenanceDue: f.nextMaintenanceDue,
-
-  is_active: f.is_active,
-  active: f.active
-});
   const s = normalize(f.status);
-
-  let maintenanceDaysLeft = Number(
-  f.maintenance_days_left ??
-  f.maintenanceDaysLeft ??
-  f.maintenance_days_remaining ??
-  f.maintenanceDaysRemaining ??
-  f.days_left ??
-  0
-);
-
-const paidUntilRaw =
-  f.maintenance_paid_until ??
-  f.maintenancePaidUntil ??
-  f.maintenance_until ??
-  f.maintenanceUntil ??
-  f.next_maintenance_due ??
-  f.nextMaintenanceDue ??
-  null;
-
-if ((!maintenanceDaysLeft || maintenanceDaysLeft <= 0) && paidUntilRaw) {
-  const paidUntilTime = new Date(paidUntilRaw).getTime();
-  const nowTime = Date.now();
-
-  if (!Number.isNaN(paidUntilTime) && paidUntilTime > nowTime) {
-    maintenanceDaysLeft = Math.ceil(
-      (paidUntilTime - nowTime) / (1000 * 60 * 60 * 24)
-    );
-  }
-}
 
   const isBuilding =
     s === "BUILDING" ||
@@ -4538,17 +4482,21 @@ if ((!maintenanceDaysLeft || maintenanceDaysLeft <= 0) && paidUntilRaw) {
     f.is_upgrading === true ||
     f.upgrading === true;
 
+  const isActive =
+    s === "ACTIVE" ||
+    f.is_active === true ||
+    f.active === true;
+
   if (isUpgrading) {
     upgradingCount++;
   } else if (isBuilding) {
     buildingCount++;
-  } else if (maintenanceDaysLeft > 0) {
+  } else if (isActive) {
     activeCount++;
   } else {
     inactiveCount++;
   }
 }
-
           // ===== land production + unclaimed EP (ACTIVE only) =====
           let landUnclaimedEP = 0;
           let landRatePerDay = 0;
