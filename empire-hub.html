@@ -2084,6 +2084,37 @@ function formatManagementCountdown(expiresAtRaw) {
 
   return `${hours}h ${minutes}m`;
 }
+
+let managementOfficeCountdownTimer = null;
+
+function startManagementOfficeCountdownTicker() {
+  clearInterval(managementOfficeCountdownTimer);
+
+  function tick() {
+    const timerEl = document.getElementById("management-office-countdown");
+
+    if (!timerEl) {
+      clearInterval(managementOfficeCountdownTimer);
+      return;
+    }
+
+    const expiresAt = timerEl.dataset.expiresAt;
+    const countdown = formatManagementCountdown(expiresAt);
+
+    timerEl.textContent = countdown;
+
+    if (countdown === "Expired" || countdown === "Available now") {
+      clearInterval(managementOfficeCountdownTimer);
+
+      setTimeout(() => {
+        loadManagementOffice({ silent: true });
+      }, 1200);
+    }
+  }
+
+  tick();
+  managementOfficeCountdownTimer = setInterval(tick, 1000);
+}
 function renderManagementOfficeLoadingShell(area) {
   area.innerHTML = `
     <div
@@ -2293,8 +2324,13 @@ async function hireManagementOfficeManager() {
       ? "Hire Rescue Manager?"
       : "Hire Procurement Manager?";
 
-const empCost = Number(eligibility.entryEmpCost || rescueManager.empCost || 25);
-const fcCost = Number(eligibility.entryFcCost || rescueManager.fcCost || 5);
+const empCost = isRescueManager
+  ? Number(rescueManager.empCost || eligibility.entryEmpCost || 50)
+  : Number(eligibility.entryEmpCost || 25);
+
+const fcCost = isRescueManager
+  ? Number(rescueManager.fcCost || eligibility.entryFcCost || 5)
+  : Number(eligibility.entryFcCost || 5);
 
     const managerMessage = isRescueManager
       ? `
@@ -2928,13 +2964,15 @@ function renderManagementOffice(area, username, data) {
   const empBalance = Number(data.empBalance || 0);
   const fulfillmentCredits = Number(data.fulfillmentCredits || 0);
   const settings = data.settings || {};
-  const activeSession = data.activeSession || null;
-  const pendingOffer = data.pendingOffer || null;
-  const acceptedOffer = data.acceptedOffer || null;
-  const eligibility = data.eligibility || {};
+const activeSession = data.activeSession || null;
+const currentWindow = data.currentWindow || null;
+const pendingOffer = data.pendingOffer || null;
+const acceptedOffer = data.acceptedOffer || null;
+const eligibility = data.eligibility || {};
+const rescueManager = data.rescueManager || eligibility.rescueManager || {};
 
-  const entryEmpCost = Number(settings.entryEmpCost || 25);
-  const entryFcCost = Number(settings.entryFcCost || 5);
+  const entryEmpCost = Number(settings.entryEmpCost || eligibility.entryEmpCost || 25);
+  const entryFcCost = Number(settings.entryFcCost || eligibility.entryFcCost || 5);
   const refundFc = Number(settings.refundFcIfNoDeal || 2);
   const supplierCalls = Number(settings.supplierCalls || 3);
 
@@ -2974,9 +3012,7 @@ function renderManagementOffice(area, username, data) {
 
   if (acceptedOffer) {
     const lockWindow = data.currentWindow || data.activeSession || {};
-    const nextUnlock = formatManagementCountdown(
-      lockWindow.expires_at || lockWindow.expiresAt,
-    );
+    const lockExpiresAt = lockWindow.expires_at || lockWindow.expiresAt || "";
 
     bodyHtml = `
       <div style="padding:18px;border-radius:18px;background:#ecfdf5;border:1px solid #86efac;color:#166534;font-weight:900;line-height:1.6;">
@@ -2984,7 +3020,13 @@ function renderManagementOffice(area, username, data) {
         Acquired: <strong>${acceptedOffer.rewardSummary || "Confidential supply package"}</strong><br>
         Supplier terms: Confidential.<br><br>
         ⏳ Next manager hiring unlocks after this 7-day management window expires.<br>
-        Time remaining: <strong>${nextUnlock}</strong>
+        Time remaining:
+        <strong
+          id="management-office-countdown"
+          data-expires-at="${lockExpiresAt}"
+        >
+          ${formatManagementCountdown(lockExpiresAt)}
+        </strong>
       </div>
     `;
   } else if (pendingOffer) {
@@ -3033,11 +3075,19 @@ function renderManagementOffice(area, username, data) {
         supplierCalls,
     );
 
+    const activeExpiresAt = activeSession.expires_at || activeSession.expiresAt || "";
+
     bodyHtml = `
       <div style="padding:18px;border-radius:18px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;font-weight:900;line-height:1.6;">
         👔 Procurement Manager Active<br>
         Supplier Calls: <strong>${callsUsed} / ${totalCalls}</strong><br>
-        Time Remaining: <strong>${formatManagementCountdown(activeSession.expires_at || activeSession.expiresAt)}</strong><br>
+        Time Remaining:
+        <strong
+          id="management-office-countdown"
+          data-expires-at="${activeExpiresAt}"
+        >
+          ${formatManagementCountdown(activeExpiresAt)}
+        </strong><br>
         Contact suppliers to reveal private supply offers.
       </div>
     `;
@@ -3061,43 +3111,75 @@ function renderManagementOffice(area, username, data) {
         </button>
       </div>
     `;
-  } else {
-    bodyHtml = `
-      <div style="padding:18px;border-radius:18px;background:#ffffff;border:1px solid #e5e7eb;color:#334155;font-weight:900;line-height:1.6;">
-        Hire a Procurement Manager to unlock private supplier calls for 7 days.
-      </div>
-    `;
+    } else {
+    const currentWindowExpiresAt =
+      currentWindow?.expires_at ||
+      currentWindow?.expiresAt ||
+      "";
+
+    const hasRunningWindow =
+      currentWindowExpiresAt &&
+      formatManagementCountdown(currentWindowExpiresAt) !== "Expired" &&
+      formatManagementCountdown(currentWindowExpiresAt) !== "Available now";
+
+    if (hasRunningWindow) {
+      bodyHtml = `
+        <div style="padding:18px;border-radius:18px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;font-weight:900;line-height:1.6;">
+          ⏳ 7-day Management Window Running<br>
+          Window Remaining:
+          <strong
+            id="management-office-countdown"
+            data-expires-at="${currentWindowExpiresAt}"
+          >
+            ${formatManagementCountdown(currentWindowExpiresAt)}
+          </strong><br><br>
+          Rescue Manager is a second-chance manager inside this same 7-day window.
+        </div>
+      `;
+    } else {
+      bodyHtml = `
+        <div style="padding:18px;border-radius:18px;background:#ffffff;border:1px solid #e5e7eb;color:#334155;font-weight:900;line-height:1.6;">
+          Hire a Procurement Manager to unlock private supplier calls for 7 days.
+        </div>
+      `;
+    }
 
     if (eligibility.canHireManager) {
-  const isRescueManager =
-    eligibility.canHireRescueManager === true ||
-    eligibility.rescueManagerAvailable === true ||
-    String(eligibility.managerType || "").toUpperCase() === "RESCUE_MANAGER";
+      const isRescueManager =
+        eligibility.canHireRescueManager === true ||
+        eligibility.rescueManagerAvailable === true ||
+        rescueManager.available === true ||
+        String(eligibility.managerType || "").toUpperCase() === "RESCUE_MANAGER";
 
-  const empCost = Number(eligibility.entryEmpCost || 25);
-const fcCost = Number(eligibility.entryFcCost || 5);
+      const empCost = isRescueManager
+        ? Number(rescueManager.empCost || eligibility.entryEmpCost || 50)
+        : Number(eligibility.entryEmpCost || 25);
 
-const hireButtonText = isRescueManager
-  ? `⚠️ Hire Rescue Manager — ${empCost} EMP + ${fcCost} FC`
-  : `👔 Hire Procurement Manager — ${empCost} EMP + ${fcCost} FC`;
+      const fcCost = isRescueManager
+        ? Number(rescueManager.fcCost || eligibility.entryFcCost || 5)
+        : Number(eligibility.entryFcCost || 5);
 
-  const hireButtonStyle = isRescueManager
-    ? "padding:13px 18px;border-radius:14px;border:1px solid #f59e0b;background:#f59e0b;color:#ffffff;font-weight:1000;cursor:pointer;"
-    : "padding:13px 18px;border-radius:14px;border:1px solid #0f172a;background:#0f172a;color:#facc15;font-weight:1000;cursor:pointer;";
+      const hireButtonText = isRescueManager
+        ? `⚠️ Hire Rescue Manager — ${empCost} EMP + ${fcCost} FC`
+        : `👔 Hire Procurement Manager — ${empCost} EMP + ${fcCost} FC`;
 
-  actionsHtml = `
-    <button
-      type="button"
-      onclick="hireManagementOfficeManager()"
-      style="${hireButtonStyle}"
-    >
-      ${hireButtonText}
-    </button>
-  `;
-} else {  
+      const hireButtonStyle = isRescueManager
+        ? "padding:13px 18px;border-radius:14px;border:1px solid #f59e0b;background:#f59e0b;color:#ffffff;font-weight:1000;cursor:pointer;"
+        : "padding:13px 18px;border-radius:14px;border:1px solid #0f172a;background:#0f172a;color:#facc15;font-weight:1000;cursor:pointer;";
+
+      actionsHtml = `
+        <button
+          type="button"
+          onclick="hireManagementOfficeManager()"
+          style="${hireButtonStyle}"
+        >
+          ${hireButtonText}
+        </button>
+      `;
+    } else {
       actionsHtml = `
         <div style="padding:13px 15px;border-radius:14px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:900;">
-          ${eligibility.reason || "Manager hiring is not available right now."}
+          ${eligibility.reason || rescueManager.reason || "Manager hiring is not available right now."}
         </div>
       `;
     }
@@ -3169,6 +3251,8 @@ const hireButtonText = isRescueManager
       </div>
     </div>
   `;
+
+  startManagementOfficeCountdownTicker();
 }
 async function loadFactoryFulfillmentBoard() {
   const area = document.getElementById("factory-fulfillment-area");
