@@ -4394,544 +4394,597 @@ console.log("Empire overview:", data);
         html += `</div></div>`;
         return html;
       }
-      function renderLandsTab() {
-        const landsContainer = document.getElementById("lands-container");
-        landsContainer.innerHTML = "";
+      function getFactoryEffectiveLevelForDisplay(factory) {
+  const blueprintTier = String(
+    factory.blueprint_tier ||
+    factory.blueprintTier ||
+    ""
+  ).toUpperCase();
 
-        if (!empireLands || !empireLands.length) {
-          landsContainer.innerHTML =
-            '<p class="status-text">You don\'t own any lands yet. Buy and open packs to unlock lands.</p>';
-          return;
-        }
+  const originalLevel = Number(blueprintTier.match(/B([1-5])/)?.[1] || 1);
 
-       const normalize = (value) => String(value || "").trim().toUpperCase();
-        const getEffectiveFactoryStatus = (factory) => {
-  const rawStatus = String(factory?.status || "")
-    .trim()
-    .toUpperCase();
+  const factoryLevel = Number(factory.level || 1);
+  const upgradeSteps = Math.max(0, factoryLevel - 1);
 
-  if (
-    rawStatus === "BUILDING" ||
-    rawStatus === "CONSTRUCTING" ||
-    rawStatus === "UPGRADING"
-  ) {
-    return rawStatus;
+  return Math.min(5, originalLevel + upgradeSteps);
+}
+
+function getFactoryEpForLandDisplay(factory, landTierKey) {
+  const status = getEffectiveFactoryStatus(factory);
+
+  if (status !== "ACTIVE") return 0;
+
+  const landBase =
+    landTierKey === "L3" ? 20 :
+    landTierKey === "L2" ? 15 :
+    10;
+
+  const effectiveLevel = getFactoryEffectiveLevelForDisplay(factory);
+
+  const multiplier =
+    effectiveLevel === 5 ? 2.5 :
+    effectiveLevel === 4 ? 1.9 :
+    effectiveLevel === 3 ? 1.5 :
+    effectiveLevel === 2 ? 1.2 :
+    1.0;
+
+  return landBase * multiplier;
+}
+function renderLandsTab() {
+  const landsContainer = document.getElementById("lands-container");
+  if (!landsContainer) return;
+
+  landsContainer.innerHTML = "";
+
+  if (!empireLands || !empireLands.length) {
+    landsContainer.innerHTML =
+      '<p class="status-text">You don\'t own any lands yet. Buy and open packs to unlock lands.</p>';
+    return;
   }
 
-  const maintenanceEndsAt =
-    factory?.maintenance_ends_at ||
-    factory?.maintenanceEndsAt ||
-    null;
+  const normalize = (value) => String(value || "").trim().toUpperCase();
 
-  if (maintenanceEndsAt) {
-    const endTime = new Date(maintenanceEndsAt).getTime();
+  const getLandTierKeyForDisplay = (rawTier) => {
+    if (rawTier === 1 || rawTier === "1") return "L1";
+    if (rawTier === 2 || rawTier === "2") return "L2";
+    if (rawTier === 3 || rawTier === "3") return "L3";
 
-    if (!Number.isNaN(endTime) && endTime > Date.now()) {
+    const text = normalize(rawTier);
+    if (text.startsWith("L")) return text;
+
+    return "L1";
+  };
+
+  const getEffectiveFactoryStatusForDisplay = (factory) => {
+    const rawStatus = normalize(factory?.status);
+
+    if (
+      rawStatus === "BUILDING" ||
+      rawStatus === "CONSTRUCTING" ||
+      rawStatus === "UPGRADING"
+    ) {
+      return rawStatus;
+    }
+
+    if (rawStatus === "ACTIVE") {
       return "ACTIVE";
     }
-  }
-
-  return rawStatus || "INACTIVE";
-};
-        // Safe days helper (does NOT crash if date missing)
-        const safeDaysAgo = (dateStr) => {
-          if (!dateStr) return null;
-          const d = new Date(dateStr);
-          if (isNaN(d.getTime())) return null;
-          const diff = (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24);
-          return diff < 0 ? 0 : diff;
-        };
-        empireLands.sort((a, b) => {
-          const tierSlots = (tier) =>
-            tier === "L3" ? 3 : tier === "L2" ? 2 : 1;
-
-          const aSlots = tierSlots(a.land_tier);
-          const bSlots = tierSlots(b.land_tier);
-
-          const aUsed = (a.factories || []).length;
-          const bUsed = (b.factories || []).length;
-
-          const aRatio = aUsed / aSlots;
-          const bRatio = bUsed / bSlots;
-
-          // fuller lands first
-          if (bRatio !== aRatio) return bRatio - aRatio;
-
-          // more factories first
-          if (bUsed !== aUsed) return bUsed - aUsed;
-
-          // larger lands first
-          return bSlots - aSlots;
-        });
-        for (let idx = 0; idx < empireLands.length; idx++) {
-          const land = empireLands[idx];
-
-          const factories = land.factories || [];
-          const rawTier = land.land_tier;
-
-          // tier key
-          let landTierKey = "L1";
-          if (rawTier === 1 || rawTier === "1") landTierKey = "L1";
-          else if (rawTier === 2 || rawTier === "2") landTierKey = "L2";
-          else if (rawTier === 3 || rawTier === "3") landTierKey = "L3";
-          else if (
-            typeof rawTier === "string" &&
-            rawTier.toUpperCase().startsWith("L")
-          )
-            landTierKey = rawTier.toUpperCase();
-
-          const borderColor =
-            (LAND_TIER_COLORS_BY_KEY && LAND_TIER_COLORS_BY_KEY[landTierKey]) ||
-            "#64748b";
-
-          const tierName = landTierLabel ? landTierLabel(rawTier) : landTierKey;
-          const shortLabel =
-            (LAND_TIER_SHORT_LABEL && LAND_TIER_SHORT_LABEL[landTierKey]) ||
-            tierName ||
-            "Land";
-
-          const slotsTotal = landSlotCount
-            ? landSlotCount(rawTier)
-            : landTierKey === "L3"
-              ? 3
-              : landTierKey === "L2"
-                ? 2
-                : 1;
-          const slotsUsed = factories.length;
-
-// ==== status counts (backend status based) ====
-let activeCount = 0;
-let upgradingCount = 0;
-let buildingCount = 0;
-let inactiveCount = 0;
-
-for (const f of factories) {
-  const s = getEffectiveFactoryStatus(f);
-
-  if (s === "UPGRADING") upgradingCount++;
-  else if (s === "BUILDING" || s === "CONSTRUCTING") buildingCount++;
-  else if (s === "ACTIVE") activeCount++;
-  else inactiveCount++;
-}
-
-// Backward-compatible alias in case template uses upgradeCount
-const upgradeCount = upgradingCount;
-          // ===== land production + unclaimed EP (ACTIVE only) =====
-          let landUnclaimedEP = 0;
-          let landRatePerDay = 0;
-
-        for (const f of factories) {
-  if (getEffectiveFactoryStatus(f) !== "ACTIVE") continue;
-   const unclaimed = Number(f.ep_unclaimed ?? f.factoryEP ?? 0);
-            if (!isNaN(unclaimed)) {
-              landUnclaimedEP += unclaimed;
-            }
-
-           const rate = Number(f.factoryEP ?? f.ep_per_day ?? 0);
-
-if (!isNaN(rate)) {
-  landRatePerDay += rate;
-}
-          }
-
-          const landUnclaimedEPText = landUnclaimedEP.toFixed(2);
-          const landRatePerDayText = landRatePerDay.toFixed(2);
-
-          // ===== days info =====
-          // ✅ Claim info should only consider ACTIVE factories
-          let oldestClaimDays = null;
-
-         for (const f of factories) {
-  const st = getEffectiveFactoryStatus(f);
-  if (st !== "ACTIVE") continue;
-
-            const da = safeDaysAgo(f.last_claimed_at);
-            if (da === null) continue;
-
-            if (oldestClaimDays === null || da > oldestClaimDays) {
-              oldestClaimDays = da;
-            }
-          }
-
-          const daysInfoText = "";
-
-          // ===== Build Land Row Card =====
-          const landCard = document.createElement("div");
-          landCard.className = `land-card-row land-tier-${landTierKey.toLowerCase()}`;
-          landCard.dataset.landTier = landTierKey;
-landCard.dataset.industry = (factories || [])
-  .map((f) => String(f.blueprint_tier || "").split("_")[0].toUpperCase())
-  .filter(Boolean)
-  .join(",");
-          landCard.style.setProperty("--tier-border", borderColor);
-
-          // Slot bar HTML
-          let slotBarHTML = "";
-          for (let i = 1; i <= slotsTotal; i++) {
-            slotBarHTML += `<div class="slot-pill ${i <= slotsUsed ? "filled" : "empty"}"></div>`;
-          }
-          const territoryHtml = renderTerritorySlots(
-            factories,
-            slotsTotal,
-            land.land_id,
-          );
-          // Matrix HTML (clean + compact)
-
-          landCard.innerHTML = `
-     <div class="land-left">
-  <div class="land-title-row">
-    <div style="display:flex; align-items:center; gap:10px;">
-      <div class="land-badge-row" style="background:${borderColor};">${landTierKey}</div>
-      <div class="land-name">${shortLabel}</div>
-    </div>
-    <div class="land-sub-row">GENESIS • Slots: <b>${slotsUsed}/${slotsTotal}</b></div>
-  </div>
-
-  ${territoryHtml}
-</div>
-
-      <div class="land-matrix-row">
- <div class="matrix-line">Active: <b>${activeCount}</b> • Inactive: <b>${inactiveCount}</b> • Building: <b>${buildingCount}</b> • Upgrading: <b>${upgradingCount}</b></div>  <div class="matrix-line">EP/day: <b>${landRatePerDayText}</b> • Accumulated EP: <b>${landUnclaimedEPText}</b></div>
-  <div class="matrix-line">${daysInfoText}</div>
-</div>
-
-      <div class="land-factories-col" id="land-factories-${idx}">
-      </div>
-    `;
-
-          // ===== Factories list (right column) =====
-          const factoriesList = document.createElement("div");
-          factoriesList.className = "factories-list";
-
-          if (!factories.length) {
-            const emptyRow = document.createElement("div");
-            emptyRow.className = "factory-row";
-            emptyRow.innerHTML = `
-    <div class="factory-main">
-      <div class="factory-title">No factory built yet</div>
-      <div class="factory-sub">Use a blueprint to construct your first factory.</div>
-    </div>
-  `;
-            factoriesList.appendChild(emptyRow);
-          } else {
-            for (const f of factories) {
-              const row = document.createElement("div");
-              row.className = "factory-row";
-
-              // ✅ Normalize status
-              const st = (f.status || "UNKNOWN")
-                .toString()
-                .trim()
-                .toUpperCase();
-
-              // ✅ Robust blueprint tier fallback (fixes ? for most schemas)
-              const blueprintTier =
-                f.blueprint_tier ??
-                f.bp_tier ??
-                f.blueprintTier ??
-                f.blueprint ??
-                f.tier ??
-                f.blueprint_level ??
-                f.blueprintLevel ??
-                "?";
-
-              // ✅ Level fallback
-              const levelText = f.level ?? f.factory_level ?? "?";
-
-              // ✅ EP/day only if ACTIVE + number exists
-              const epRaw =
-                f.factoryEP ?? f.ep ?? f.ep_per_day ?? f.production ?? null;
-              const epNum = typeof epRaw === "number" ? epRaw : null;
-              const epText =
-                st === "ACTIVE" && epNum !== null
-                  ? `${epNum.toFixed(2)} EP/day`
-                  : "—";
-
-              // ✅ Status pill class based on st (NOT undefined "status")
-              const statusCls =
-                typeof statusClass === "function" ? statusClass(st) : "";
-
-              // ✅ Claim text ONLY for ACTIVE factories
-              let claimText = "";
-              if (st === "ACTIVE") {
-                const claimDays = safeDaysAgo(f.last_claimed_at);
-                claimText =
-                  claimDays === null
-                    ? ""
-                    : ` • ${claimDays.toFixed(1)}d since claim`;
-              }
-
-              const factoryId = f.factory_id ?? f.id ?? "?";
-              const factoryName =
-                String(f.factory_name || "").trim() || `Factory #${factoryId}`;
-
-            const status = getEffectiveFactoryStatus(f);
-const canRename = status === "ACTIVE";
-
-              const activeDays = Number(f.active_days || 0);
-              const requiredDays =
-                getRequiredActiveDaysForUpgradeTier(blueprintTier);
-              const nextUpgradeLabel = getNextUpgradeLabel(blueprintTier);
-              const landMaxUpgradeLevel =
-  landTierKey === "L1" ? 3 :
-  landTierKey === "L2" ? 4 :
-  landTierKey === "L3" ? 5 :
-  1;
-
-const currentBlueprintLevel = Number(
-  String(blueprintTier || "").match(/B([1-5])/)?.[1] || 1
-);
-
-const reachedLandUpgradeCap =
-  currentBlueprintLevel >= landMaxUpgradeLevel;
-  const landAlreadyHasB5 = factories.some((otherFactory) => {
-  if (String(otherFactory.id) === String(f.id)) return false;
-
-  return String(otherFactory.blueprint_tier || "")
-    .toUpperCase()
-    .includes("_B5");
-});
-
-const blockedByExistingB5 =
-  nextUpgradeLabel === "B5" && landAlreadyHasB5;
-              let maintenanceText = "";
-
-              if (status === "BUILDING") {
-                maintenanceText =
-                  "Construction in progress • Maintenance starts after build completion";
-              } else if (status === "UPGRADING") {
-                maintenanceText =
-                  "Upgrade in progress • Maintenance starts after upgrade completion";
-              } else {
-                maintenanceText = getMaintenanceStatusText(
-                  f.maintenance_ends_at,
-                );
-              }
-              const isMaxTier = !requiredDays || !nextUpgradeLabel;
-              const isReadyToUpgrade =
-                status === "ACTIVE" && !isMaxTier && activeDays >= requiredDays;
-
-              const canUpgrade = isReadyToUpgrade;
-
-              let upgradeMatrix = "";
-
-              if (isMaxTier) {
-                upgradeMatrix = `✅ Max tier reached`;
-              } else if (status !== "ACTIVE") {
-                upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Upgrade unavailable while ${status.toLowerCase()}`;
-              } else if (reachedLandUpgradeCap) {
-  upgradeMatrix = `Max level reached for this land`;
-} else if (blockedByExistingB5) {
-  upgradeMatrix = `This land already has a B5 factory`;
-} else if (isReadyToUpgrade) {
-  upgradeMatrix = `✅ Factory is ready to upgrade to ${nextUpgradeLabel}`;
-} else {
-  upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Needs ${requiredDays - activeDays} more day(s) for ${nextUpgradeLabel}`;
-}
-
-              let subLine = `Blueprint tier: ${blueprintTier}<br>${upgradeMatrix}<br>${maintenanceText}`;
-
-              row.innerHTML = `
-  <div class="factory-main">
-    <div class="factory-title-row">
-      <div class="factory-title">${factoryName}</div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        ${canRename ? `<button class="rename-factory-btn" data-factory-id="${factoryId}">Rename</button>` : ""}
-        ${canUpgrade ? `<button class="upgrade-factory-btn" data-factory-id="${factoryId}">Upgrade</button>` : ""}
-        ${
-          status !== "BUILDING" &&
-          status !== "UPGRADING" &&
-          Number(f.remaining_maintenance_days || 0) <= 2
-            ? `<button class="maintenance-factory-btn" data-factory-id="${factoryId}">Pay Maintenance (7 days)</button>`
-            : ""
-        }
-      </div>
-    </div>
-    <div class="factory-sub">${subLine}</div>
-  </div>
-`;
-
-              const renameBtn = row.querySelector(".rename-factory-btn");
-
-              if (renameBtn) {
-                renameBtn.addEventListener("click", async (e) => {
-                  e.stopPropagation();
-
-                  const newName = prompt(
-                    "Enter new factory name:",
-                    factoryName,
-                  );
-                  const clean = newName.trim();
-                  if (clean.length < 3) {
-                    alert("Factory name must be at least 3 characters.");
-                    return;
-                  }
-
-                  try {
-                    const res = await fetch(apiUrl("/factory/rename"), {
-                      method: "POST",
-                      headers: {
-  "Content-Type": "application/json",
-  "x-mde-actor": PLAYER_USERNAME,
-},
-                      body: JSON.stringify({
-                        username: PLAYER_USERNAME,
-                        factory_id: factoryId,
-                        factory_name: newName,
-                      }),
-                    });
-
-                    const data = await res.json();
-
-                    if (!res.ok || !data.success) {
-                      alert(data.error || "Rename failed.");
-                      return;
-                    }
-
-                   alert(data.message || "Factory renamed successfully!");
-
-// ✅ Force fresh data after rename
-
-
-if (typeof loadDashboard === "function") {
-  await loadDashboard();
-}
-
-if (typeof loadLands === "function") {
-  await loadLands();
-}
-
-if (typeof renderConstructionTab === "function") {
-  renderConstructionTab();
-}
-
-                    // await loadEmpireOverview();
-                  } catch (err) {
-                    console.error("Rename error:", err);
-                    alert("Rename failed.");
-                  }
-                });
-              }
-
-              const upgradeBtn = row.querySelector(".upgrade-factory-btn");
-
-              if (upgradeBtn) {
-                upgradeBtn.addEventListener("click", async (e) => {
-                  e.stopPropagation();
-
-                  const upgradeCostByTier = {
-  B1: 50,
-  B2: 100,
-  B3: 200,
-  B4: 400,
-};
-
-const currentTierShort = String(blueprintTier || "")
-  .toUpperCase()
-  .match(/B[1-5]/)?.[0];
-
-const upgradeCost = upgradeCostByTier[currentTierShort] || "?";
-
-const ok = confirm(
-  `Upgrade ${factoryName}?\n\nCost: ${upgradeCost} EMP\nNext level: ${nextUpgradeLabel}`
-);
-                  if (!ok) return;
-
-                  try {
-                    const res = await fetch(apiUrl("/factory/upgrade"), {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        username: PLAYER_USERNAME,
-                        factory_id: factoryId,
-                      }),
-                    });
-
-                    const data = await res.json();
-
-                    if (!res.ok || !data.success) {
-                      alert(data.error || "Upgrade failed.");
-                      return;
-                    }
-
-                    alert(data.message || "Factory upgraded successfully!");
-
-                    await loadDashboardSummary();
-                    await loadRewardSummary();
-                    // await loadEmpireOverview();
-                  } catch (err) {
-                    console.error("Upgrade error:", err);
-                    alert(err.message || "Upgrade failed.");
-                  }
-                });
-              }
-              const maintenanceBtn = row.querySelector(
-                ".maintenance-factory-btn",
-              );
-
-              if (maintenanceBtn) {
-                maintenanceBtn.addEventListener("click", async (e) => {
-                  e.stopPropagation();
-
-                  const days = 7;
-
-                  try {
-                    const res = await fetch(
-                      apiUrl("/factory/pay-maintenance"),
-                      {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                          username: PLAYER_USERNAME,
-                          factory_id: factoryId,
-                          days,
-                        }),
-                      },
-                    );
-
-                    const data = await res.json();
-
-                    if (!res.ok || !data.success) {
-                      alert(data.error || "Maintenance payment failed.");
-                      return;
-                    }
-
-                    alert(
-                      `Maintenance paid successfully! Added ${data.days_added} day(s). EMP spent: ${data.emp_spent}`,
-                    );
-
-                    await loadDashboardSummary();
-                    await loadRewardSummary();
-                    await loadEmpireOverview();
-                    const oldBanner = document.getElementById("season-2-banner");
-if (oldBanner) {
-  oldBanner.style.display = "none";
-}
-                  } catch (err) {
-                    console.error("Maintenance payment error:", err);
-                    alert("Maintenance payment failed.");
-                  }
-                });
-              }
-              factoriesList.appendChild(row);
-            }
-          }
-
-          const rightCol = landCard.querySelector(`#land-factories-${idx}`);
-          if (rightCol) rightCol.appendChild(factoriesList);
-
-          landsContainer.appendChild(landCard);
-}
-
-updateLandFilterCounts();
-
-wireEmptySlotBuildActions();
+
+    if (factory?.is_active === true || factory?.active === true) {
+      return "ACTIVE";
+    }
+
+    return rawStatus || "INACTIVE";
+  };
+
+  const getOriginalBlueprintLevelForDisplay = (factory) => {
+    const blueprintTier = normalize(
+      factory?.blueprint_tier ||
+        factory?.bp_tier ||
+        factory?.blueprintTier ||
+        factory?.blueprint ||
+        factory?.tier ||
+        factory?.raw_tier ||
+        factory?.blueprint_level ||
+        factory?.blueprintLevel ||
+        ""
+    );
+
+    const match = blueprintTier.match(/B([1-5])/);
+    const level = Number(match?.[1] || 1);
+
+    if (!Number.isFinite(level) || level < 1) return 1;
+
+    return Math.min(level, 5);
+  };
+
+  const getEffectiveFactoryLevelForDisplay = (factory) => {
+    const originalBlueprintLevel = getOriginalBlueprintLevelForDisplay(factory);
+
+    const factoryLevel = Number(factory?.level || factory?.factory_level || 1);
+    const upgradeSteps = Math.max(0, factoryLevel - 1);
+
+    return Math.min(5, originalBlueprintLevel + upgradeSteps);
+  };
+
+  const getFactoryEpForLandDisplay = (factory, landTierKey) => {
+    const status = getEffectiveFactoryStatusForDisplay(factory);
+    if (status !== "ACTIVE") return 0;
+
+    const landBase =
+      landTierKey === "L3" ? 20 :
+      landTierKey === "L2" ? 15 :
+      10;
+
+    const effectiveLevel = getEffectiveFactoryLevelForDisplay(factory);
+
+    const multiplier =
+      effectiveLevel === 5 ? 2.5 :
+      effectiveLevel === 4 ? 1.9 :
+      effectiveLevel === 3 ? 1.5 :
+      effectiveLevel === 2 ? 1.2 :
+      1.0;
+
+    return Number((landBase * multiplier).toFixed(4));
+  };
+
+  const safeDaysAgo = (dateStr) => {
+    if (!dateStr) return null;
+
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return null;
+
+    const diff = (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24);
+    return diff < 0 ? 0 : diff;
+  };
+
+  empireLands.sort((a, b) => {
+    const tierSlots = (tier) => {
+      const key = getLandTierKeyForDisplay(tier);
+      return key === "L3" ? 3 : key === "L2" ? 2 : 1;
+    };
+
+    const aSlots = tierSlots(a.land_tier);
+    const bSlots = tierSlots(b.land_tier);
+
+    const aUsed = (a.factories || []).length;
+    const bUsed = (b.factories || []).length;
+
+    const aRatio = aUsed / aSlots;
+    const bRatio = bUsed / bSlots;
+
+    if (bRatio !== aRatio) return bRatio - aRatio;
+    if (bUsed !== aUsed) return bUsed - aUsed;
+
+    return bSlots - aSlots;
+  });
+
+  for (let idx = 0; idx < empireLands.length; idx++) {
+    const land = empireLands[idx];
+    const factories = land.factories || [];
+    const rawTier = land.land_tier;
+    const landTierKey = getLandTierKeyForDisplay(rawTier);
+
+    const borderColor =
+      (LAND_TIER_COLORS_BY_KEY && LAND_TIER_COLORS_BY_KEY[landTierKey]) ||
+      "#64748b";
+
+    const tierName = landTierLabel ? landTierLabel(rawTier) : landTierKey;
+
+    const shortLabel =
+      (LAND_TIER_SHORT_LABEL && LAND_TIER_SHORT_LABEL[landTierKey]) ||
+      tierName ||
+      "Land";
+
+    const slotsTotal = landSlotCount
+      ? landSlotCount(rawTier)
+      : landTierKey === "L3"
+        ? 3
+        : landTierKey === "L2"
+          ? 2
+          : 1;
+
+    const slotsUsed = factories.length;
+
+    let activeCount = 0;
+    let upgradingCount = 0;
+    let buildingCount = 0;
+    let inactiveCount = 0;
+
+    for (const f of factories) {
+      const status = getEffectiveFactoryStatusForDisplay(f);
+
+      if (status === "UPGRADING") upgradingCount++;
+      else if (status === "BUILDING" || status === "CONSTRUCTING") buildingCount++;
+      else if (status === "ACTIVE") activeCount++;
+      else inactiveCount++;
+    }
+
+    const upgradeCount = upgradingCount;
+
+    let landUnclaimedEP = 0;
+    let landRatePerDay = 0;
+
+    for (const f of factories) {
+      if (getEffectiveFactoryStatusForDisplay(f) !== "ACTIVE") continue;
+
+      const unclaimed = Number(f.ep_unclaimed ?? 0);
+      if (!isNaN(unclaimed)) {
+        landUnclaimedEP += unclaimed;
       }
 
+      landRatePerDay += getFactoryEpForLandDisplay(f, landTierKey);
+    }
+
+    const landUnclaimedEPText = landUnclaimedEP.toFixed(2);
+    const landRatePerDayText = landRatePerDay.toFixed(2);
+
+    let oldestClaimDays = null;
+
+    for (const f of factories) {
+      const status = getEffectiveFactoryStatusForDisplay(f);
+      if (status !== "ACTIVE") continue;
+
+      const daysAgo = safeDaysAgo(f.last_claimed_at);
+      if (daysAgo === null) continue;
+
+      if (oldestClaimDays === null || daysAgo > oldestClaimDays) {
+        oldestClaimDays = daysAgo;
+      }
+    }
+
+    const daysInfoText = "";
+
+    const landCard = document.createElement("div");
+    landCard.className = `land-card-row land-tier-${landTierKey.toLowerCase()}`;
+    landCard.dataset.landTier = landTierKey;
+
+    landCard.dataset.industry = factories
+      .map((f) => String(f.blueprint_tier || "").split("_")[0].toUpperCase())
+      .filter(Boolean)
+      .join(",");
+
+    landCard.style.setProperty("--tier-border", borderColor);
+
+    const territoryHtml = renderTerritorySlots(
+      factories,
+      slotsTotal,
+      land.land_id
+    );
+
+    landCard.innerHTML = `
+      <div class="land-left">
+        <div class="land-title-row">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="land-badge-row" style="background:${borderColor};">${landTierKey}</div>
+            <div class="land-name">${shortLabel}</div>
+          </div>
+          <div class="land-sub-row">GENESIS • Slots: <b>${slotsUsed}/${slotsTotal}</b></div>
+        </div>
+
+        ${territoryHtml}
+      </div>
+
+      <div class="land-matrix-row">
+        <div class="matrix-line">
+          Active: <b>${activeCount}</b> • Inactive: <b>${inactiveCount}</b> • Building: <b>${buildingCount}</b> • Upgrading: <b>${upgradingCount}</b>
+        </div>
+        <div class="matrix-line">
+          EP/day: <b>${landRatePerDayText}</b> • Accumulated EP: <b>${landUnclaimedEPText}</b>
+        </div>
+        <div class="matrix-line">${daysInfoText}</div>
+      </div>
+
+      <div class="land-factories-col" id="land-factories-${idx}"></div>
+    `;
+
+    const factoriesList = document.createElement("div");
+    factoriesList.className = "factories-list";
+
+    if (!factories.length) {
+      const emptyRow = document.createElement("div");
+      emptyRow.className = "factory-row";
+      emptyRow.innerHTML = `
+        <div class="factory-main">
+          <div class="factory-title">No factory built yet</div>
+          <div class="factory-sub">Use a blueprint to construct your first factory.</div>
+        </div>
+      `;
+      factoriesList.appendChild(emptyRow);
+    } else {
+      for (const f of factories) {
+        const row = document.createElement("div");
+        row.className = "factory-row";
+
+        const status = getEffectiveFactoryStatusForDisplay(f);
+
+        const blueprintTier =
+          f.blueprint_tier ??
+          f.bp_tier ??
+          f.blueprintTier ??
+          f.blueprint ??
+          f.tier ??
+          f.blueprint_level ??
+          f.blueprintLevel ??
+          "?";
+
+        const factoryId = f.factory_id ?? f.id ?? "?";
+
+        const factoryName =
+          String(f.factory_name || "").trim() || `Factory #${factoryId}`;
+
+        const displayEP = getFactoryEpForLandDisplay(f, landTierKey);
+        const epText =
+          status === "ACTIVE" ? `${displayEP.toFixed(2)} EP/day` : "—";
+
+        const canRename = status === "ACTIVE";
+
+        const activeDays = Number(f.active_days || 0);
+
+        const requiredDays =
+          getRequiredActiveDaysForUpgradeTier(blueprintTier);
+
+        const nextUpgradeLabel = getNextUpgradeLabel(blueprintTier);
+
+        const landMaxUpgradeLevel =
+          landTierKey === "L1" ? 3 :
+          landTierKey === "L2" ? 4 :
+          landTierKey === "L3" ? 5 :
+          1;
+
+        const currentBlueprintLevel = Number(
+          String(blueprintTier || "").match(/B([1-5])/)?.[1] || 1
+        );
+
+        const reachedLandUpgradeCap =
+          currentBlueprintLevel >= landMaxUpgradeLevel;
+
+        const landAlreadyHasB5 = factories.some((otherFactory) => {
+          if (String(otherFactory.id) === String(f.id)) return false;
+
+          return String(otherFactory.blueprint_tier || "")
+            .toUpperCase()
+            .includes("_B5");
+        });
+
+        const blockedByExistingB5 =
+          nextUpgradeLabel === "B5" && landAlreadyHasB5;
+
+        let maintenanceText = "";
+
+        if (status === "BUILDING") {
+          maintenanceText =
+            "Construction in progress • Maintenance starts after build completion";
+        } else if (status === "UPGRADING") {
+          maintenanceText =
+            "Upgrade in progress • Maintenance starts after upgrade completion";
+        } else {
+          maintenanceText = getMaintenanceStatusText(f.maintenance_ends_at);
+        }
+
+        const isMaxTier = !requiredDays || !nextUpgradeLabel;
+
+        const isReadyToUpgrade =
+          status === "ACTIVE" && !isMaxTier && activeDays >= requiredDays;
+
+        const canUpgrade = isReadyToUpgrade;
+
+        let upgradeMatrix = "";
+
+        if (isMaxTier) {
+          upgradeMatrix = `✅ Max tier reached`;
+        } else if (status !== "ACTIVE") {
+          upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Upgrade unavailable while ${status.toLowerCase()}`;
+        } else if (reachedLandUpgradeCap) {
+          upgradeMatrix = `Max level reached for this land`;
+        } else if (blockedByExistingB5) {
+          upgradeMatrix = `This land already has a B5 factory`;
+        } else if (isReadyToUpgrade) {
+          upgradeMatrix = `✅ Factory is ready to upgrade to ${nextUpgradeLabel}`;
+        } else {
+          upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Needs ${requiredDays - activeDays} more day(s) for ${nextUpgradeLabel}`;
+        }
+
+        const subLine = `
+          Blueprint tier: ${blueprintTier}<br>
+          EP/day: ${epText}<br>
+          ${upgradeMatrix}<br>
+          ${maintenanceText}
+        `;
+
+        row.innerHTML = `
+          <div class="factory-main">
+            <div class="factory-title-row">
+              <div class="factory-title">${factoryName}</div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                ${canRename ? `<button class="rename-factory-btn" data-factory-id="${factoryId}">Rename</button>` : ""}
+                ${canUpgrade ? `<button class="upgrade-factory-btn" data-factory-id="${factoryId}">Upgrade</button>` : ""}
+                ${
+                  status !== "BUILDING" &&
+                  status !== "UPGRADING" &&
+                  Number(f.remaining_maintenance_days || 0) <= 2
+                    ? `<button class="maintenance-factory-btn" data-factory-id="${factoryId}">Pay Maintenance (7 days)</button>`
+                    : ""
+                }
+              </div>
+            </div>
+            <div class="factory-sub">${subLine}</div>
+          </div>
+        `;
+
+        const renameBtn = row.querySelector(".rename-factory-btn");
+
+        if (renameBtn) {
+          renameBtn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+
+            const newName = prompt("Enter new factory name:", factoryName);
+            if (newName === null) return;
+
+            const clean = String(newName || "").trim();
+
+            if (clean.length < 3) {
+              alert("Factory name must be at least 3 characters.");
+              return;
+            }
+
+            try {
+              const res = await fetch(apiUrl("/factory/rename"), {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "x-mde-actor": PLAYER_USERNAME,
+                },
+                body: JSON.stringify({
+                  username: PLAYER_USERNAME,
+                  factory_id: factoryId,
+                  factory_name: clean,
+                }),
+              });
+
+              const data = await res.json();
+
+              if (!res.ok || !data.success) {
+                alert(data.error || "Rename failed.");
+                return;
+              }
+
+              alert(data.message || "Factory renamed successfully!");
+
+              if (typeof loadDashboard === "function") {
+                await loadDashboard();
+              }
+
+              if (typeof loadLands === "function") {
+                await loadLands();
+              }
+
+              if (typeof renderConstructionTab === "function") {
+                renderConstructionTab();
+              }
+            } catch (err) {
+              console.error("Rename error:", err);
+              alert("Rename failed.");
+            }
+          });
+        }
+
+        const upgradeBtn = row.querySelector(".upgrade-factory-btn");
+
+        if (upgradeBtn) {
+          upgradeBtn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+
+            const upgradeCostByTier = {
+              B1: 50,
+              B2: 100,
+              B3: 200,
+              B4: 400,
+            };
+
+            const currentTierShort = String(blueprintTier || "")
+              .toUpperCase()
+              .match(/B[1-5]/)?.[0];
+
+            const upgradeCost = upgradeCostByTier[currentTierShort] || "?";
+
+            const ok = confirm(
+              `Upgrade ${factoryName}?\n\nCost: ${upgradeCost} EMP\nNext level: ${nextUpgradeLabel}`
+            );
+
+            if (!ok) return;
+
+            try {
+              const res = await fetch(apiUrl("/factory/upgrade"), {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  username: PLAYER_USERNAME,
+                  factory_id: factoryId,
+                }),
+              });
+
+              const data = await res.json();
+
+              if (!res.ok || !data.success) {
+                alert(data.error || "Upgrade failed.");
+                return;
+              }
+
+              alert(data.message || "Factory upgraded successfully!");
+
+              await loadDashboardSummary();
+              await loadRewardSummary();
+              await loadEmpireOverview();
+            } catch (err) {
+              console.error("Upgrade error:", err);
+              alert(err.message || "Upgrade failed.");
+            }
+          });
+        }
+
+        const maintenanceBtn = row.querySelector(".maintenance-factory-btn");
+
+        if (maintenanceBtn) {
+          maintenanceBtn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+
+            const days = 7;
+
+            try {
+              const res = await fetch(apiUrl("/factory/pay-maintenance"), {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  username: PLAYER_USERNAME,
+                  factory_id: factoryId,
+                  days,
+                }),
+              });
+
+              const data = await res.json();
+
+              if (!res.ok || !data.success) {
+                alert(data.error || "Maintenance payment failed.");
+                return;
+              }
+
+              alert(
+                `Maintenance paid successfully! Added ${data.days_added} day(s). EMP spent: ${data.emp_spent}`
+              );
+
+              await loadDashboardSummary();
+              await loadRewardSummary();
+              await loadEmpireOverview();
+
+              const oldBanner = document.getElementById("season-2-banner");
+              if (oldBanner) {
+                oldBanner.style.display = "none";
+              }
+            } catch (err) {
+              console.error("Maintenance payment error:", err);
+              alert("Maintenance payment failed.");
+            }
+          });
+        }
+
+        factoriesList.appendChild(row);
+      }
+    }
+
+    const rightCol = landCard.querySelector(`#land-factories-${idx}`);
+    if (rightCol) rightCol.appendChild(factoriesList);
+
+    landsContainer.appendChild(landCard);
+  }
+
+  updateLandFilterCounts();
+  wireEmptySlotBuildActions();
+}
       function wireEmptySlotBuildActions() {
         const slots = document.querySelectorAll(".land-slot-pad.empty");
 

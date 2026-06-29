@@ -236,7 +236,67 @@ function renderGoodsPreview(data) {
     readyFactoryCount > 0 ? "Claim All Goods" : "Claim Cooldown",
   );
 }
+async function loadGoodsRedemptionPosition(username) {
+  try {
+    const response = await fetch(
+      `${GOODS_API_BASE}/goods-redemption/${username}/position`,
+    );
 
+    const data = await response.json();
+
+    if (!data.success || !data.hasActiveCycle) {
+      setGoodsText("goods-redemption-status", "No active cycle");
+      setGoodsText("goods-redemption-pool", "--");
+      setGoodsText("goods-redemption-total-pv", "--");
+      setGoodsText("goods-redemption-live-rate", "--");
+      setGoodsText("goods-redemption-player-pv", "--");
+      setGoodsText("goods-redemption-share", "--");
+      setGoodsText("goods-redemption-estimated-emp", "--");
+      setGoodsText(
+        "goods-redemption-note",
+        "No Goods redemption cycle is active right now.",
+      );
+      return;
+    }
+
+    const cycle = data.cycle || {};
+    const player = data.player || {};
+
+    const empPool = Number(cycle.emp_pool || 0);
+    const totalPV = Number(cycle.total_product_value || 0);
+    const liveRate = Number(cycle.live_emp_per_product_value || 0);
+
+    const playerPV = Number(player.product_value_in_cycle || 0);
+    const sharePercent = Number(player.share_percent || 0);
+    const estimatedEmp = Number(player.estimated_emp_now || 0);
+
+    setGoodsText("goods-redemption-status", "OPEN");
+    setGoodsText("goods-redemption-pool", `${empPool.toFixed(2)} EMP`);
+    setGoodsText("goods-redemption-total-pv", `${totalPV.toFixed(0)} PV`);
+    setGoodsText(
+      "goods-redemption-live-rate",
+      `${liveRate.toFixed(4)} EMP / PV`,
+    );
+    setGoodsText("goods-redemption-player-pv", `${playerPV.toFixed(0)} PV`);
+    setGoodsText("goods-redemption-share", `${sharePercent.toFixed(2)}%`);
+    setGoodsText(
+      "goods-redemption-estimated-emp",
+      `${estimatedEmp.toFixed(2)} EMP`,
+    );
+
+    setGoodsText(
+      "goods-redemption-note",
+      "Final EMP may change until the cycle ends as more players burn Goods.",
+    );
+  } catch (err) {
+    console.error("Failed to load Goods redemption position:", err);
+    setGoodsText("goods-redemption-status", "Error");
+    setGoodsText(
+      "goods-redemption-note",
+      "Could not load Goods redemption cycle right now.",
+    );
+  }
+}
 async function loadGoodsInventory() {
   const username = getGoodsLoggedInUser();
 
@@ -413,4 +473,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   loadGoodsPreview();
+  loadGoodsRedemptionPosition(getGoodsLoggedInUser());
 });
