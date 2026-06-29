@@ -113,30 +113,138 @@ function renderGoodsInventory(items, summary) {
     return;
   }
 
-  box.innerHTML = items
-    .map((item) => {
-      const qualityClass = `goods-quality-${String(item.quality || "").toLowerCase()}`;
-      const levelClass = `goods-level-${String(item.product_level || "").toLowerCase()}`;
+  const groupedGoods = new Map();
+
+  items.forEach((item) => {
+    const status = String(item.status || "AVAILABLE").toUpperCase();
+
+    if (status !== "AVAILABLE") return;
+
+    const groupKey = [
+      item.industry || "UNKNOWN",
+      item.product_name || "Unknown Product",
+      item.product_level || "--",
+      item.quality || "STANDARD",
+      Number(item.final_value || 0),
+    ].join("|");
+
+    if (!groupedGoods.has(groupKey)) {
+      groupedGoods.set(groupKey, {
+        industry: item.industry || "UNKNOWN",
+        product_name: item.product_name || "Unknown Product",
+        product_level: item.product_level || "--",
+        quality: item.quality || "STANDARD",
+        final_value: Number(item.final_value || 0),
+        goods_ids: [],
+        quantity: 0,
+      });
+    }
+
+    const group = groupedGoods.get(groupKey);
+
+    if (item.id) {
+      group.goods_ids.push(Number(item.id));
+    }
+
+    group.quantity += 1;
+  });
+
+  const groups = Array.from(groupedGoods.values());
+
+  if (groups.length === 0) {
+    box.innerHTML = `
+      <div class="goods-empty-card">
+        No available Goods in inventory. Submitted Goods are already in redemption.
+      </div>
+    `;
+    return;
+  }
+
+  box.innerHTML = groups
+    .map((group, index) => {
+      const qualitySlug = String(group.quality || "STANDARD").toLowerCase();
+      const levelSlug = String(group.product_level || "").toLowerCase();
+
+      const qualityClass = `goods-quality-${qualitySlug}`;
+      const levelClass = `goods-level-${levelSlug}`;
+
+      const qualityUpper = String(group.quality || "STANDARD").toUpperCase();
+
+      const qualityDots =
+        qualityUpper === "SUPERIOR"
+          ? "◆◆◆"
+          : qualityUpper === "FINE"
+            ? "◆◆"
+            : "◆";
+      const levelUpper = String(
+        group.product_level || "ESSENTIAL",
+      ).toUpperCase();
+
+      const rarityMark =
+        levelUpper === "LUXURY"
+          ? "R5"
+          : levelUpper === "PREMIUM"
+            ? "R4"
+            : levelUpper === "VALUE"
+              ? "R3"
+              : levelUpper === "STANDARD"
+                ? "R2"
+                : "R1";
+      const goodsIdsText = group.goods_ids.join(",");
 
       return `
-        <div class="goods-product-card ${qualityClass} ${levelClass}">
-          <div class="goods-product-top">
-            <span class="goods-product-industry">${escapeGoodsHtml(item.industry || "UNKNOWN")}</span>
-            <span class="goods-product-quality">${escapeGoodsHtml(item.quality || "STANDARD")}</span>
+        <div class="goods-product-card goods-collectible-card ${qualityClass} ${levelClass}">
+          <div class="goods-collectible-frame">
+            <div class="goods-card-topline">
+              <span class="goods-card-name">${escapeGoodsHtml(group.product_name)}</span>
+              <span class="goods-card-qty">x${group.quantity}</span>
+<span class="goods-card-rarity">${rarityMark}</span>
+            </div>
+
+            <div class="goods-card-industry">
+              ${escapeGoodsHtml(group.industry)}
+            </div>
+
+            <div
+              class="goods-card-quality goods-quality-dots-${qualitySlug}"
+              title="${escapeGoodsHtml(group.quality)} Quality"
+            >
+              ${qualityDots}
+            </div>
+
+            <div class="goods-card-image-area">
+              📦
+            </div>
+
+            <div class="goods-card-pv">
+              ${group.final_value} PV
+            </div>
           </div>
 
-          <div class="goods-product-name">
-            ${escapeGoodsHtml(item.product_name || "Unknown Product")}
-          </div>
+          <div class="goods-card-control-row">
+            <label class="goods-submit-check">
+              <input
+                type="checkbox"
+                class="goods-submit-checkbox"
+                value="${escapeGoodsHtml(goodsIdsText)}"
+                data-good-value="${group.final_value}"
+                data-good-count="${group.quantity}"
+                data-qty-input-id="goods-submit-qty-${index}"
+              />
+              <span>Select</span>
+            </label>
 
-          <div class="goods-product-meta">
-            <span>${escapeGoodsHtml(item.product_level || "--")}</span>
-            <span>Value: ${escapeGoodsHtml(item.final_value || 0)}</span>
-          </div>
-
-          <div class="goods-product-footer">
-            <span>Factory #${escapeGoodsHtml(item.factory_id || "--")}</span>
-            <span>${escapeGoodsHtml(formatGoodsDate(item.claimed_at))}</span>
+            <div class="goods-submit-qty-box">
+              <span>Qty</span>
+              <input
+                id="goods-submit-qty-${index}"
+                class="goods-submit-qty-input"
+                type="number"
+                min="1"
+                max="${group.quantity}"
+                value="1"
+              />
+            </div>
           </div>
         </div>
       `;
@@ -151,7 +259,67 @@ function renderGoodsInventory(items, summary) {
     `Inventory: ${totalGoods} available Goods • Total Product Value: ${totalValue}`,
   );
 }
+function updateGoodsSelectedSummary() {
+  const selectedBoxes = Array.from(
+    document.querySelectorAll(".goods-submit-checkbox:checked"),
+  );
 
+  let selectedGoodsCount = 0;
+  let selectedPV = 0;
+
+  selectedBoxes.forEach((box) => {
+    const qtyInputId = box.dataset.qtyInputId;
+    const qtyInput = qtyInputId ? document.getElementById(qtyInputId) : null;
+
+    const maxQty = Number(box.dataset.goodCount || 0);
+    const eachPV = Number(box.dataset.goodValue || 0);
+
+    let qty = qtyInput ? Number(qtyInput.value || 0) : maxQty;
+
+    if (!Number.isFinite(qty) || qty < 1) qty = 1;
+    if (maxQty > 0 && qty > maxQty) qty = maxQty;
+
+    if (qtyInput) {
+      qtyInput.value = qty;
+    }
+
+    selectedGoodsCount += qty;
+    selectedPV += qty * eachPV;
+  });
+
+  setGoodsText("goods-selected-count", String(selectedGoodsCount));
+  setGoodsText("goods-selected-pv", `${selectedPV} PV`);
+
+  const submitBtn = document.getElementById("goods-submit-selected-btn");
+
+  if (submitBtn) {
+    submitBtn.disabled = selectedGoodsCount <= 0;
+  }
+}
+function setupGoodsInventorySelection() {
+  const inventoryBox = document.getElementById("goods-inventory-list");
+
+  if (!inventoryBox) return;
+
+  inventoryBox.addEventListener("change", (event) => {
+    const target = event.target;
+
+    if (
+      target.classList.contains("goods-submit-checkbox") ||
+      target.classList.contains("goods-submit-qty-input")
+    ) {
+      updateGoodsSelectedSummary();
+    }
+  });
+
+  inventoryBox.addEventListener("input", (event) => {
+    const target = event.target;
+
+    if (target.classList.contains("goods-submit-qty-input")) {
+      updateGoodsSelectedSummary();
+    }
+  });
+}
 function renderGoodsLockedState(data) {
   const ep = Number(data?.epPerDay || 0);
 
@@ -297,6 +465,84 @@ async function loadGoodsRedemptionPosition(username) {
     );
   }
 }
+async function loadGoodsRedemptionLeaderboard() {
+  try {
+    const response = await fetch(
+      `${GOODS_API_BASE}/goods-redemption/leaderboard`,
+    );
+
+    const data = await response.json();
+
+    const list = document.getElementById("goods-redemption-leaderboard-list");
+
+    if (!list) return;
+
+    if (!data.success || !data.hasActiveCycle) {
+      list.innerHTML = `
+        <div class="goods-empty-state">
+          No active Goods redemption cycle right now.
+        </div>
+      `;
+      return;
+    }
+
+    const leaderboard = Array.isArray(data.leaderboard) ? data.leaderboard : [];
+
+    if (leaderboard.length === 0) {
+      list.innerHTML = `
+        <div class="goods-empty-state">
+          No Goods have been submitted into this cycle yet.
+        </div>
+      `;
+      return;
+    }
+
+    list.innerHTML = leaderboard
+      .map((row) => {
+        const rank = Number(row.rank || 0);
+        const username = String(row.username || "unknown");
+        const goodsCount = Number(row.burned_goods_count || 0);
+        const productValue = Number(row.product_value || 0);
+        const sharePercent = Number(row.share_percent || 0);
+        const estimatedEmp = Number(row.estimated_emp_now || 0);
+
+        return `
+          <div class="goods-redemption-leaderboard-row">
+            <div class="goods-redemption-rank">#${rank}</div>
+            <div class="goods-redemption-player">
+              <strong>@${username}</strong>
+              <span>${goodsCount} Goods submitted</span>
+            </div>
+            <div class="goods-redemption-leaderboard-stat">
+              <span>Product Value</span>
+              <strong>${productValue.toFixed(0)} PV</strong>
+            </div>
+            <div class="goods-redemption-leaderboard-stat">
+              <span>Share</span>
+              <strong>${sharePercent.toFixed(2)}%</strong>
+            </div>
+            <div class="goods-redemption-leaderboard-stat reward">
+              <span>Estimated EMP</span>
+              <strong>${estimatedEmp.toFixed(2)} EMP</strong>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+  } catch (err) {
+    console.error("Failed to load Goods redemption leaderboard:", err);
+
+    const list = document.getElementById("goods-redemption-leaderboard-list");
+
+    if (list) {
+      list.innerHTML = `
+        <div class="goods-empty-state">
+          Could not load leaderboard right now.
+        </div>
+      `;
+    }
+  }
+}
 async function loadGoodsInventory() {
   const username = getGoodsLoggedInUser();
 
@@ -399,70 +645,237 @@ function buildGoodsClaimSummary(data) {
 
 async function claimAllGoods() {
   const username = getGoodsLoggedInUser();
+  const button = document.getElementById("goods-claim-btn");
 
   if (!username) {
-    alert("Please connect wallet first.");
-    return;
-  }
-
-  if (goodsClaimInProgress) {
-    return;
-  }
-
-  const readyFactoryCount = Number(latestGoodsPreview?.readyFactoryCount || 0);
-
-  if (readyFactoryCount <= 0) {
-    alert("No Goods are ready yet.");
+    alert("Please login first.");
     return;
   }
 
   const confirmClaim = confirm(
-    `Claim Goods from ${readyFactoryCount} ready factories now?`,
+    "Claim Goods from ready factories now?\n\nThis will start the 24-hour Goods claim cooldown.",
   );
 
-  if (!confirmClaim) {
-    return;
-  }
-
-  goodsClaimInProgress = true;
-  setGoodsClaimButtonState(false, "Claiming...");
-  setGoodsText("goods-status", "Claiming Goods...");
+  if (!confirmClaim) return;
 
   try {
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Claiming...";
+    }
+
     const response = await fetch(`${GOODS_API_BASE}/goods/${username}/claim`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-mde-actor": username,
       },
-      body: JSON.stringify({
-        username,
-      }),
+      body: JSON.stringify({ username }),
     });
 
     const data = await response.json();
 
     if (!data.success) {
-      throw new Error(data.error || "Failed to claim Goods.");
+      alert(data.error || "Failed to claim Goods.");
+      return;
     }
 
-    alert(buildGoodsClaimSummary(data));
+    const factoriesProcessed = Number(
+      data.factories_processed ?? data.factoriesProcessed ?? 0,
+    );
+
+    const goodsReceived = Number(
+      data.goods_received ??
+        data.goodsReceived ??
+        (Array.isArray(data.goods) ? data.goods.length : 0),
+    );
+
+    const totalProductValue = Number(
+      data.total_product_value ?? data.totalProductValue ?? 0,
+    );
+
+    const byLevel = data.byLevel || {};
+    const byQuality = data.byQuality || {};
+
+    const levelText =
+      Object.keys(byLevel).length > 0
+        ? Object.entries(byLevel)
+            .map(([level, count]) => `${level}: ${count}`)
+            .join(", ")
+        : "None";
+
+    const qualityText =
+      Object.keys(byQuality).length > 0
+        ? Object.entries(byQuality)
+            .map(([quality, count]) => `${quality}: ${count}`)
+            .join(", ")
+        : "None";
+
+    alert(
+      `Goods claimed successfully!\n\n` +
+        `Factories processed: ${factoriesProcessed}\n` +
+        `Goods received: ${goodsReceived}\n` +
+        `Total Product Value: ${totalProductValue}\n\n` +
+        `By Level: ${levelText}\n` +
+        `By Quality: ${qualityText}`,
+    );
 
     await loadGoodsPreview();
+    await loadGoodsInventory(username);
+    await loadGoodsRedemptionPosition(username);
+    await loadGoodsRedemptionLeaderboard();
   } catch (err) {
-    console.error("Goods claim error:", err);
-
-    alert(err.message || "Failed to claim Goods.");
-
-    await loadGoodsPreview();
+    console.error("Claim Goods error:", err);
+    alert("Failed to claim Goods.");
   } finally {
-    goodsClaimInProgress = false;
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Claim All Goods";
+    }
   }
 }
+async function submitSelectedGoodsForRedemption() {
+  const username = getGoodsLoggedInUser();
+  const button = document.getElementById("goods-submit-selected-btn");
 
+  const selectedBoxes = Array.from(
+    document.querySelectorAll(".goods-submit-checkbox:checked"),
+  );
+
+  if (!username) {
+    alert("Please login first.");
+    return;
+  }
+
+  if (selectedBoxes.length === 0) {
+    alert("Please select at least one Good to submit.");
+    return;
+  }
+
+  let goodsIds = [];
+  let selectedGoodsCount = 0;
+  let selectedValue = 0;
+
+  selectedBoxes.forEach((box) => {
+    const allIds = String(box.value || "")
+      .split(",")
+      .map((id) => Number(id))
+      .filter((id) => Number.isInteger(id) && id > 0);
+
+    const qtyInputId = box.dataset.qtyInputId;
+    const qtyInput = qtyInputId ? document.getElementById(qtyInputId) : null;
+
+    const maxQty = Number(box.dataset.goodCount || allIds.length || 0);
+    const eachPV = Number(box.dataset.goodValue || 0);
+
+    let qty = qtyInput ? Number(qtyInput.value || 0) : 1;
+
+    if (!Number.isFinite(qty) || qty < 1) qty = 1;
+    if (maxQty > 0 && qty > maxQty) qty = maxQty;
+    if (qty > allIds.length) qty = allIds.length;
+
+    if (qtyInput) {
+      qtyInput.value = qty;
+    }
+
+    const idsToSubmit = allIds.slice(0, qty);
+
+    goodsIds = goodsIds.concat(idsToSubmit);
+    selectedGoodsCount += idsToSubmit.length;
+    selectedValue += idsToSubmit.length * eachPV;
+  });
+
+  if (goodsIds.length === 0) {
+    alert("Please select at least one valid Good.");
+    return;
+  }
+
+  const confirmSubmit = confirm(
+    `Submit ${selectedGoodsCount} Goods with ${selectedValue} PV into the active redemption cycle?\n\nAfter submission, these Goods cannot be returned to inventory.`,
+  );
+
+  if (!confirmSubmit) return;
+
+  try {
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Submitting...";
+    }
+
+    const response = await fetch(
+      `${GOODS_API_BASE}/goods-redemption/${username}/burn`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": username,
+        },
+        body: JSON.stringify({
+          username,
+          goods_ids: goodsIds,
+        }),
+      },
+    );
+
+    const data = await response.json();
+
+    if (!data.success) {
+      alert(data.error || "Failed to submit Goods.");
+      return;
+    }
+
+    alert(
+      `Goods submitted successfully!\n\n` +
+        `Submitted Goods: ${selectedGoodsCount}\n` +
+        `Submitted PV: ${Number(data.burned_product_value || 0).toFixed(0)}\n` +
+        `Estimated EMP now: ${Number(
+          data.player?.estimated_emp_now || 0,
+        ).toFixed(2)} EMP`,
+    );
+
+    await loadGoodsInventory(username);
+    await loadGoodsRedemptionPosition(username);
+    await loadGoodsRedemptionLeaderboard();
+    updateGoodsSelectedSummary();
+  } catch (err) {
+    console.error("Submit Goods redemption error:", err);
+    alert("Failed to submit Goods. Please try again.");
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Submit to Redemption";
+    }
+  }
+}
+function setupGoodsSubnav() {
+  const buttons = document.querySelectorAll(".goods-subnav-btn");
+  const panels = document.querySelectorAll(".goods-tab-panel");
+
+  if (!buttons.length || !panels.length) return;
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const targetTab = button.dataset.goodsTab;
+
+      buttons.forEach((btn) => {
+        btn.classList.toggle("active", btn === button);
+      });
+
+      panels.forEach((panel) => {
+        panel.classList.toggle(
+          "active",
+          panel.dataset.goodsPanel === targetTab,
+        );
+      });
+    });
+  });
+}
 document.addEventListener("DOMContentLoaded", () => {
+  setupGoodsSubnav();
+  setupGoodsInventorySelection();
   const refreshBtn = document.getElementById("goods-refresh-btn");
   const claimBtn = document.getElementById("goods-claim-btn");
+  const submitBtn = document.getElementById("goods-submit-selected-btn");
 
   if (refreshBtn) {
     refreshBtn.addEventListener("click", loadGoodsPreview);
@@ -471,7 +884,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (claimBtn) {
     claimBtn.addEventListener("click", claimAllGoods);
   }
+  if (submitBtn) {
+    submitBtn.addEventListener("click", submitSelectedGoodsForRedemption);
+  }
 
   loadGoodsPreview();
   loadGoodsRedemptionPosition(getGoodsLoggedInUser());
+  loadGoodsRedemptionLeaderboard();
 });

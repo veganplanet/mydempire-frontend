@@ -58,6 +58,21 @@
             Refresh Preview
           </button>
 
+          <div class="goods-subnav">
+            <button class="goods-subnav-btn active" data-goods-tab="overview">
+              Overview
+            </button>
+            <button class="goods-subnav-btn" data-goods-tab="redemption">
+              Redemption
+            </button>
+            <button class="goods-subnav-btn" data-goods-tab="inventory">
+              Inventory
+            </button>
+            <button class="goods-subnav-btn" data-goods-tab="production">
+              Production Details
+            </button>
+          </div>
+
           <button
             id="goods-claim-btn"
             class="primary-button"
@@ -71,6 +86,7 @@
         <div id="goods-status" class="status-text">
           Loading Goods preview...
         </div>
+
         <div
           id="goods-rotation-status"
           class="status-text goods-rotation-status"
@@ -79,122 +95,181 @@
         </div>
       </section>
 
-      <section class="section goods-rule-section">
-        <div class="section-header">
-          <h2>🌿 Production Capacity Rule</h2>
-          <small>Expansion unlocks more Goods production.</small>
-        </div>
-
-        <div class="goods-rules-grid">
-          <div class="goods-rule-card">
-            <strong>&lt;100 EP/day</strong>
-            <p>Goods locked. Build and activate more factories first.</p>
+      <section class="goods-tab-panel active" data-goods-panel="overview">
+        <section class="section goods-rule-section">
+          <div class="section-header">
+            <h2>🌿 Production Capacity Rule</h2>
+            <small>Expansion unlocks more Goods production.</small>
           </div>
 
-          <div class="goods-rule-card">
-            <strong>100–499 EP/day</strong>
-            <p>30% of active factories can produce Goods.</p>
-          </div>
+          <div class="goods-rules-grid">
+            <div class="goods-rule-card">
+              <strong>&lt;100 EP/day</strong>
+              <p>Goods locked. Build and activate more factories first.</p>
+            </div>
 
-          <div class="goods-rule-card">
-            <strong>500–999 EP/day</strong>
-            <p>75% of active factories can produce Goods.</p>
-          </div>
+            <div class="goods-rule-card">
+              <strong>100–499 EP/day</strong>
+              <p>30% of active factories can produce Goods.</p>
+            </div>
 
-          <div class="goods-rule-card">
-            <strong>1000+ EP/day</strong>
-            <p>100% of active factories can produce Goods.</p>
+            <div class="goods-rule-card">
+              <strong>500–999 EP/day</strong>
+              <p>75% of active factories can produce Goods.</p>
+            </div>
+
+            <div class="goods-rule-card">
+              <strong>1000+ EP/day</strong>
+              <p>100% of active factories can produce Goods.</p>
+            </div>
           </div>
-        </div>
+        </section>
       </section>
-      <section class="goods-redemption-card">
-        <div class="goods-redemption-head">
-          <div>
-            <div class="goods-section-kicker">DYNAMIC POOL</div>
-            <h2>🏭 Goods Redemption Cycle</h2>
-            <p>
-              Burn factory Goods into the active cycle to compete for the EMP
-              pool. Live rate changes whenever players burn more Product Value.
-            </p>
+
+      <section class="goods-tab-panel" data-goods-panel="redemption">
+        <section class="goods-redemption-card">
+          <div class="goods-redemption-head">
+            <div>
+              <div class="goods-section-kicker">DYNAMIC POOL</div>
+              <h2>🏭 Goods Redemption Cycle</h2>
+              <p>
+                Submit factory Goods into the active cycle to compete for the
+                EMP pool. Live rate changes whenever players submit more Product
+                Value.
+              </p>
+            </div>
+
+            <div id="goods-redemption-status" class="goods-redemption-status">
+              Loading...
+            </div>
           </div>
-          <div id="goods-redemption-status" class="goods-redemption-status">
+
+          <div class="goods-redemption-grid">
+            <div class="goods-redemption-stat">
+              <span>EMP Pool</span>
+              <strong id="goods-redemption-pool">--</strong>
+            </div>
+
+            <div class="goods-redemption-stat">
+              <span>Total Submitted PV</span>
+              <strong id="goods-redemption-total-pv">--</strong>
+            </div>
+
+            <div class="goods-redemption-stat">
+              <span>Live Rate</span>
+              <strong id="goods-redemption-live-rate">--</strong>
+            </div>
+
+            <div class="goods-redemption-stat">
+              <span>Your Submitted PV</span>
+              <strong id="goods-redemption-player-pv">--</strong>
+            </div>
+
+            <div class="goods-redemption-stat">
+              <span>Your Share</span>
+              <strong id="goods-redemption-share">--</strong>
+            </div>
+
+            <div class="goods-redemption-stat reward">
+              <span>Estimated EMP</span>
+              <strong id="goods-redemption-estimated-emp">--</strong>
+            </div>
+          </div>
+
+          <div class="goods-redemption-note" id="goods-redemption-note">
+            Final EMP may change until the cycle ends.
+          </div>
+        </section>
+
+        <section class="goods-redemption-leaderboard-card">
+          <div class="goods-redemption-leaderboard-head">
+            <div>
+              <div class="goods-section-kicker">LIVE RANKING</div>
+              <h2>🏆 Redemption Leaderboard</h2>
+              <p>
+                Players are ranked by Product Value submitted into the current
+                Goods redemption cycle.
+              </p>
+            </div>
+          </div>
+
+          <div
+            id="goods-redemption-leaderboard-list"
+            class="goods-redemption-leaderboard-list"
+          >
+            Loading leaderboard...
+          </div>
+        </section>
+      </section>
+
+      <section class="goods-tab-panel" data-goods-panel="inventory">
+        <section class="section">
+          <div class="section-header">
+            <h2>🎒 Goods Inventory</h2>
+            <small>
+              Collected Goods from your active factories. Product Value will be
+              used for future redemption events.
+            </small>
+          </div>
+
+          <div id="goods-inventory-list" class="goods-inventory-grid">
+            <div class="goods-empty-card">
+              Goods inventory is not connected yet.
+            </div>
+          </div>
+
+          <div class="goods-submit-sticky-bar">
+            <div class="goods-submit-summary">
+              <div>
+                Selected Goods:
+                <strong id="goods-selected-count">0</strong>
+              </div>
+
+              <div>
+                Selected Product Value:
+                <strong id="goods-selected-pv">0 PV</strong>
+              </div>
+            </div>
+
+            <button
+              id="goods-submit-selected-btn"
+              class="primary-button goods-submit-sticky-btn"
+              type="button"
+              disabled
+            >
+              Submit to Redemption
+            </button>
+          </div>
+        </section>
+      </section>
+
+      <section class="goods-tab-panel" data-goods-panel="production">
+        <section class="section">
+          <div class="section-header">
+            <h2>🏭 Producing This Claim</h2>
+            <small>
+              These factories are selected by your current Goods capacity and
+              rotation.
+            </small>
+          </div>
+
+          <div id="goods-selected-list" class="goods-factory-list">
             Loading...
           </div>
-        </div>
+        </section>
 
-        <div class="goods-redemption-grid">
-          <div class="goods-redemption-stat">
-            <span>EMP Pool</span>
-            <strong id="goods-redemption-pool">--</strong>
+        <section class="section">
+          <div class="section-header">
+            <h2>⏸ Waiting for Next Production</h2>
+            <small>
+              These factories stay in rotation and may produce in future claims.
+            </small>
           </div>
 
-          <div class="goods-redemption-stat">
-            <span>Total Burned PV</span>
-            <strong id="goods-redemption-total-pv">--</strong>
+          <div id="goods-skipped-list" class="goods-factory-list">
+            Loading...
           </div>
-
-          <div class="goods-redemption-stat">
-            <span>Live Rate</span>
-            <strong id="goods-redemption-live-rate">--</strong>
-          </div>
-
-          <div class="goods-redemption-stat">
-            <span>Your Burned PV</span>
-            <strong id="goods-redemption-player-pv">--</strong>
-          </div>
-
-          <div class="goods-redemption-stat">
-            <span>Your Share</span>
-            <strong id="goods-redemption-share">--</strong>
-          </div>
-
-          <div class="goods-redemption-stat reward">
-            <span>Estimated EMP</span>
-            <strong id="goods-redemption-estimated-emp">--</strong>
-          </div>
-        </div>
-
-        <div class="goods-redemption-note" id="goods-redemption-note">
-          Final EMP may change until the cycle ends.
-        </div>
-      </section>
-      <section class="section">
-        <div class="section-header">
-          <h2>🏭 Producing Factories</h2>
-          <small>Higher-level factories are selected first.</small>
-        </div>
-
-        <div id="goods-selected-list" class="goods-factory-list">
-          Loading...
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-header">
-          <h2>⏸ Skipped Factories</h2>
-          <small
-            >Lower-level factories stay out first when capacity is
-            limited.</small
-          >
-        </div>
-
-        <div id="goods-skipped-list" class="goods-factory-list">Loading...</div>
-      </section>
-
-      <section class="section">
-        <div class="section-header">
-          <h2>🎒 Goods Inventory</h2>
-          <small
-            >Collected Goods from your active factories. Product Value will be
-            used for future redemption events.</small
-          >
-        </div>
-
-        <div id="goods-inventory-list" class="goods-inventory-grid">
-          <div class="goods-empty-card">
-            Goods inventory is not connected yet.
-          </div>
-        </div>
+        </section>
       </section>
     </div>
 

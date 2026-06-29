@@ -17271,3 +17271,582 @@ padding:2px 8px !important;
     grid-template-columns: 1fr;
   }
 }
+/* ============================
+   GOODS SUB NAV TABS
+============================ */
+
+.goods-subnav {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.goods-subnav-btn {
+  border: 1px solid rgba(54, 105, 76, 0.18);
+  background: rgba(255, 255, 255, 0.72);
+  color: #17365d;
+  font-weight: 800;
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.goods-subnav-btn:hover {
+  transform: translateY(-1px);
+  background: #f1fff5;
+  box-shadow: 0 8px 20px rgba(38, 80, 54, 0.08);
+}
+
+.goods-subnav-btn.active {
+  background: linear-gradient(135deg, #dcfce7 0%, #e6f2ff 100%);
+  color: #14532d;
+  border-color: rgba(34, 197, 94, 0.45);
+  box-shadow: 0 8px 22px rgba(34, 197, 94, 0.12);
+}
+
+.goods-tab-panel {
+  display: none;
+}
+
+.goods-tab-panel.active {
+  display: block;
+}
+/* ============================
+   GOODS ACTION ROW CLEANUP
+============================ */
+
+.goods-action-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 180px;
+  gap: 16px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.goods-action-row .secondary-btn,
+.goods-action-row .primary-button {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 18px;
+}
+
+.goods-subnav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.goods-subnav-btn {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(54, 105, 76, 0.18);
+  background: rgba(255, 255, 255, 0.78);
+  color: #17365d;
+  font-weight: 800;
+  padding: 10px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.goods-subnav-btn:hover {
+  transform: translateY(-1px);
+  background: #f1fff5;
+  box-shadow: 0 8px 20px rgba(38, 80, 54, 0.08);
+}
+
+.goods-subnav-btn.active {
+  background: linear-gradient(135deg, #dcfce7 0%, #e6f2ff 100%);
+  color: #14532d;
+  border-color: rgba(34, 197, 94, 0.45);
+  box-shadow: 0 8px 22px rgba(34, 197, 94, 0.12);
+}
+
+@media (max-width: 920px) {
+  .goods-action-row {
+    grid-template-columns: 1fr;
+  }
+
+  .goods-subnav {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+/* ============================
+   GOODS REDEMPTION LEADERBOARD
+============================ */
+
+.goods-redemption-leaderboard-card {
+  margin: 24px 0;
+  padding: 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(61, 126, 82, 0.16);
+  background: linear-gradient(135deg, #ffffff 0%, #f2fff7 100%);
+  box-shadow: 0 14px 34px rgba(38, 80, 54, 0.07);
+}
+
+.goods-redemption-leaderboard-head {
+  margin-bottom: 16px;
+}
+
+.goods-redemption-leaderboard-head h2 {
+  margin: 0 0 8px;
+  color: #16345c;
+}
+
+.goods-redemption-leaderboard-head p {
+  margin: 0;
+  color: #4b5f73;
+  line-height: 1.45;
+}
+
+.goods-redemption-leaderboard-list {
+  display: grid;
+  gap: 12px;
+}
+
+.goods-redemption-leaderboard-row {
+  display: grid;
+  grid-template-columns: 70px 1.5fr repeat(3, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(61, 126, 82, 0.12);
+}
+
+.goods-redemption-rank {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #dcfce7 0%, #e6f2ff 100%);
+  color: #14532d;
+  font-weight: 900;
+}
+
+.goods-redemption-player strong {
+  display: block;
+  color: #17365d;
+  font-size: 1rem;
+}
+
+.goods-redemption-player span {
+  display: block;
+  margin-top: 4px;
+  color: #64748b;
+  font-size: 0.86rem;
+}
+
+.goods-redemption-leaderboard-stat span {
+  display: block;
+  color: #64748b;
+  font-size: 0.76rem;
+  margin-bottom: 4px;
+}
+
+.goods-redemption-leaderboard-stat strong {
+  color: #17365d;
+  font-size: 0.98rem;
+}
+
+.goods-redemption-leaderboard-stat.reward {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #fff8df;
+  border: 1px solid rgba(217, 166, 47, 0.28);
+}
+
+@media (max-width: 900px) {
+  .goods-redemption-leaderboard-row {
+    grid-template-columns: 52px 1fr;
+  }
+
+  .goods-redemption-leaderboard-stat {
+    grid-column: 2;
+  }
+}
+/* ============================
+   GOODS CARD — IMAGE DOMINANT CLEAN OVERRIDE
+============================ */
+
+.goods-collectible-card {
+  padding: 10px;
+  border-radius: 22px;
+}
+
+.goods-collectible-frame {
+  height: 310px;
+  border-radius: 22px;
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.55), transparent 34%),
+    linear-gradient(135deg, #ddffe6 0%, #eaf6ff 100%);
+}
+
+/* Image area should dominate */
+.goods-card-image-area {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 7rem;
+  z-index: 1;
+}
+
+/* Top matrix line — no boxes */
+.goods-card-topline {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  right: 12px;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.goods-card-name {
+  max-width: 72%;
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #102a4c;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  backdrop-filter: none !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+}
+
+.goods-card-qty {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #102a4c;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+}
+
+/* Industry small bottom-left, no pill */
+.goods-card-industry {
+  position: absolute;
+  left: 12px;
+  bottom: 36px;
+  z-index: 3;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #14532d;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+}
+
+/* Quality dots small on right side */
+.goods-card-quality {
+  position: absolute;
+  right: 12px;
+  top: 48px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 0.9rem;
+  line-height: 0.9;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+}
+
+/* PV small bottom-left, no dark box */
+.goods-card-pv {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 3;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #102a4c;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+}
+
+/* Controls below image should be light */
+.goods-card-control-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 2px 0;
+  font-size: 0.9rem;
+}
+
+.goods-submit-check {
+  font-weight: 700;
+  color: #17365d;
+}
+
+.goods-submit-qty-box span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #47617a;
+}
+
+.goods-submit-qty-input {
+  width: 52px;
+  padding: 5px 7px;
+  border-radius: 9px;
+  border: 1px solid rgba(54, 105, 76, 0.22);
+  font-weight: 700;
+}
+/* ============================
+   GOODS QUALITY COLOR THEMES
+============================ */
+
+/* STANDARD = GREEN */
+.goods-product-card.goods-quality-standard .goods-collectible-frame {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.45), transparent 34%),
+    linear-gradient(135deg, #dff9e5 0%, #bff0ca 100%);
+  border: 1px solid rgba(46, 125, 50, 0.28);
+}
+
+.goods-product-card.goods-quality-standard {
+  box-shadow: 0 10px 24px rgba(46, 125, 50, 0.12);
+}
+
+/* FINE = REDDISH / ROSE */
+.goods-product-card.goods-quality-fine .goods-collectible-frame {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.45), transparent 34%),
+    linear-gradient(135deg, #ffe3e6 0%, #ffc7d1 100%);
+  border: 1px solid rgba(211, 47, 47, 0.28);
+}
+
+.goods-product-card.goods-quality-fine {
+  box-shadow: 0 10px 24px rgba(211, 47, 47, 0.12);
+}
+
+/* SUPERIOR = GOLDEN */
+.goods-product-card.goods-quality-superior .goods-collectible-frame {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.42), transparent 34%),
+    linear-gradient(135deg, #fff4c9 0%, #ffe08a 100%);
+  border: 1px solid rgba(217, 166, 47, 0.35);
+}
+
+.goods-product-card.goods-quality-superior {
+  box-shadow: 0 10px 24px rgba(217, 166, 47, 0.16);
+}
+
+/* matching dot colors */
+.goods-quality-dots-standard {
+  color: #2e7d32 !important;
+}
+
+.goods-quality-dots-fine {
+  color: #c62828 !important;
+}
+
+.goods-quality-dots-superior {
+  color: #c79200 !important;
+}
+/* ============================
+   GOODS QUALITY DOTS — BIGGER & STYLISH
+============================ */
+
+.goods-card-quality {
+  position: absolute;
+  right: 12px;
+  top: 52px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 1.35rem;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.9);
+}
+
+.goods-quality-dots-standard,
+.goods-quality-dots-fine,
+.goods-quality-dots-superior {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+}
+
+.goods-quality-dots-standard {
+  color: #1f9d45 !important;
+  text-shadow:
+    0 0 4px rgba(31, 157, 69, 0.35),
+    0 0 10px rgba(31, 157, 69, 0.22),
+    0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.goods-quality-dots-fine {
+  color: #d6455d !important;
+  text-shadow:
+    0 0 4px rgba(214, 69, 93, 0.35),
+    0 0 10px rgba(214, 69, 93, 0.22),
+    0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.goods-quality-dots-superior {
+  color: #d4a017 !important;
+  text-shadow:
+    0 0 4px rgba(212, 160, 23, 0.4),
+    0 0 12px rgba(212, 160, 23, 0.28),
+    0 1px 2px rgba(255, 255, 255, 0.85);
+}
+/* ============================
+   GOODS QUALITY GEMS + RARITY
+============================ */
+
+.goods-card-quality {
+  position: absolute;
+  right: 12px;
+  top: 54px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 1.25rem;
+  line-height: 0.9;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.goods-quality-dots-standard,
+.goods-quality-dots-fine,
+.goods-quality-dots-superior {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+}
+
+.goods-quality-dots-standard {
+  color: #1f9d45 !important;
+  text-shadow:
+    0 0 5px rgba(31, 157, 69, 0.38),
+    0 0 12px rgba(31, 157, 69, 0.24),
+    0 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+.goods-quality-dots-fine {
+  color: #d6455d !important;
+  text-shadow:
+    0 0 5px rgba(214, 69, 93, 0.38),
+    0 0 12px rgba(214, 69, 93, 0.24),
+    0 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+.goods-quality-dots-superior {
+  color: #d4a017 !important;
+  text-shadow:
+    0 0 6px rgba(212, 160, 23, 0.42),
+    0 0 14px rgba(212, 160, 23, 0.3),
+    0 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+.goods-card-rarity {
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #102a4c;
+  background: rgba(255, 255, 255, 0.38);
+  border: 1px solid rgba(16, 42, 76, 0.12);
+  border-radius: 999px;
+  padding: 3px 7px;
+  margin-left: 6px;
+  backdrop-filter: blur(3px);
+}
+/* ============================
+   GOODS STICKY SUBMIT BAR
+============================ */
+
+.goods-submit-sticky-bar {
+  position: sticky;
+  bottom: 12px;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-top: 22px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(54, 105, 76, 0.18);
+  box-shadow: 0 16px 38px rgba(18, 42, 76, 0.14);
+  backdrop-filter: blur(8px);
+}
+
+.goods-submit-summary {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  color: #47617a;
+  font-weight: 700;
+}
+
+.goods-submit-summary strong {
+  color: #102a4c;
+  font-weight: 900;
+}
+
+.goods-submit-sticky-btn {
+  min-width: 210px;
+  min-height: 46px;
+  border-radius: 16px;
+}
+
+.goods-submit-sticky-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 760px) {
+  .goods-submit-sticky-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .goods-submit-summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .goods-submit-sticky-btn {
+    width: 100%;
+  }
+}
