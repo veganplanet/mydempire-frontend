@@ -10,6 +10,15 @@ const GOODS_API_BASE =
   window.location.hostname === "127.0.0.1"
     ? GOODS_LOCAL_API
     : GOODS_PROD_API;
+function getGoodsImagePath(productKey) {
+  const key = String(productKey || "").trim();
+
+  if (!key) {
+    return "";
+  }
+
+  return `assets/goods/${key}.png`;
+}
 
 let latestGoodsPreview = null;
 let goodsClaimInProgress = false;
@@ -131,6 +140,7 @@ function renderGoodsInventory(items, summary) {
     if (!groupedGoods.has(groupKey)) {
       groupedGoods.set(groupKey, {
         industry: item.industry || "UNKNOWN",
+        product_key: item.product_key || "",
         product_name: item.product_name || "Unknown Product",
         product_level: item.product_level || "--",
         quality: item.quality || "STANDARD",
@@ -212,9 +222,14 @@ function renderGoodsInventory(items, summary) {
               ${qualityDots}
             </div>
 
-            <div class="goods-card-image-area">
-              📦
-            </div>
+           <div class="goods-card-image-area">
+  <img
+    src="${getGoodsImagePath(group.product_key)}"
+    alt="${escapeGoodsHtml(group.product_name)}"
+    loading="lazy"
+    onerror="this.style.display='none'; this.parentElement.classList.add('goods-image-missing');"
+  />
+</div>
 
             <div class="goods-card-pv">
               ${group.final_value} PV
@@ -642,7 +657,122 @@ function buildGoodsClaimSummary(data) {
     `By Quality: ${qualityText || "None"}`,
   ].join("\n");
 }
+function closeGoodsClaimConfirmModal() {
+  const modal = document.getElementById("goods-claim-confirm-modal");
 
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+}
+
+function openGoodsClaimConfirmModal() {
+  const modal = document.getElementById("goods-claim-confirm-modal");
+
+  if (modal) {
+    modal.classList.remove("hidden");
+  }
+}
+function closeGoodsClaimModal() {
+  const modal = document.getElementById("goods-claim-modal");
+
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+}
+
+function showGoodsClaimModal(data) {
+  const modal = document.getElementById("goods-claim-modal");
+  const list = document.getElementById("goods-claim-modal-list");
+
+  if (!modal || !list) return;
+
+  const goods = Array.isArray(data.goods) ? data.goods : [];
+
+  const groupedGoods = new Map();
+
+  goods.forEach((item) => {
+    const groupKey = [
+      item.product_key || "",
+      item.product_name || "Unknown Product",
+      item.quality || "STANDARD",
+      item.product_level || "--",
+      Number(item.final_value || 0),
+    ].join("|");
+
+    if (!groupedGoods.has(groupKey)) {
+      groupedGoods.set(groupKey, {
+        product_key: item.product_key || "",
+        product_name: item.product_name || "Unknown Product",
+        quality: item.quality || "STANDARD",
+        product_level: item.product_level || "--",
+        final_value: Number(item.final_value || 0),
+        quantity: 0,
+        total_value: 0,
+      });
+    }
+
+    const group = groupedGoods.get(groupKey);
+    group.quantity += 1;
+    group.total_value += Number(item.final_value || 0);
+  });
+
+  setGoodsText(
+    "goods-claim-modal-factories",
+    String(Number(data.factories_processed ?? data.factoriesProcessed ?? 0)),
+  );
+
+  setGoodsText(
+    "goods-claim-modal-count",
+    String(
+      Number(
+        data.goods_received ??
+          data.goodsReceived ??
+          (Array.isArray(data.goods) ? data.goods.length : 0),
+      ),
+    ),
+  );
+
+  setGoodsText(
+    "goods-claim-modal-pv",
+    String(Number(data.total_product_value ?? data.totalProductValue ?? 0)),
+  );
+
+  const groups = Array.from(groupedGoods.values());
+
+  if (groups.length === 0) {
+    list.innerHTML = `
+      <div class="goods-empty-card">
+        No Goods received.
+      </div>
+    `;
+  } else {
+    list.innerHTML = groups
+      .map((group) => {
+        return `
+          <div class="goods-claim-reward-card">
+            <div class="goods-claim-reward-image">
+              <img
+                src="${getGoodsImagePath(group.product_key)}"
+                alt="${escapeGoodsHtml(group.product_name)}"
+                loading="lazy"
+              />
+            </div>
+
+            <div class="goods-claim-reward-name">
+              ${escapeGoodsHtml(group.product_name)}
+            </div>
+
+            <div class="goods-claim-reward-meta">
+              x${group.quantity} • ${escapeGoodsHtml(group.quality)} • ${group.total_value} PV
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+  }
+
+  modal.classList.remove("hidden");
+}
 async function claimAllGoods() {
   const username = getGoodsLoggedInUser();
   const button = document.getElementById("goods-claim-btn");
@@ -651,12 +781,6 @@ async function claimAllGoods() {
     alert("Please login first.");
     return;
   }
-
-  const confirmClaim = confirm(
-    "Claim Goods from ready factories now?\n\nThis will start the 24-hour Goods claim cooldown.",
-  );
-
-  if (!confirmClaim) return;
 
   try {
     if (button) {
@@ -711,15 +835,7 @@ async function claimAllGoods() {
             .join(", ")
         : "None";
 
-    alert(
-      `Goods claimed successfully!\n\n` +
-        `Factories processed: ${factoriesProcessed}\n` +
-        `Goods received: ${goodsReceived}\n` +
-        `Total Product Value: ${totalProductValue}\n\n` +
-        `By Level: ${levelText}\n` +
-        `By Quality: ${qualityText}`,
-    );
-
+    showGoodsClaimModal(data);
     await loadGoodsPreview();
     await loadGoodsInventory(username);
     await loadGoodsRedemptionPosition(username);
@@ -876,16 +992,49 @@ document.addEventListener("DOMContentLoaded", () => {
   const refreshBtn = document.getElementById("goods-refresh-btn");
   const claimBtn = document.getElementById("goods-claim-btn");
   const submitBtn = document.getElementById("goods-submit-selected-btn");
+  const claimModalCloseBtn = document.getElementById("goods-claim-modal-close");
+  const claimModalOkBtn = document.getElementById("goods-claim-modal-ok");
+  const claimConfirmCloseBtn = document.getElementById(
+    "goods-claim-confirm-close",
+  );
+  const claimConfirmCancelBtn = document.getElementById(
+    "goods-claim-confirm-cancel",
+  );
+  const claimConfirmOkBtn = document.getElementById("goods-claim-confirm-ok");
 
   if (refreshBtn) {
     refreshBtn.addEventListener("click", loadGoodsPreview);
   }
 
   if (claimBtn) {
-    claimBtn.addEventListener("click", claimAllGoods);
+    claimBtn.addEventListener("click", openGoodsClaimConfirmModal);
   }
   if (submitBtn) {
     submitBtn.addEventListener("click", submitSelectedGoodsForRedemption);
+  }
+  if (claimModalCloseBtn) {
+    claimModalCloseBtn.addEventListener("click", closeGoodsClaimModal);
+  }
+
+  if (claimModalOkBtn) {
+    claimModalOkBtn.addEventListener("click", closeGoodsClaimModal);
+  }
+  if (claimConfirmCloseBtn) {
+    claimConfirmCloseBtn.addEventListener("click", closeGoodsClaimConfirmModal);
+  }
+
+  if (claimConfirmCancelBtn) {
+    claimConfirmCancelBtn.addEventListener(
+      "click",
+      closeGoodsClaimConfirmModal,
+    );
+  }
+
+  if (claimConfirmOkBtn) {
+    claimConfirmOkBtn.addEventListener("click", () => {
+      closeGoodsClaimConfirmModal();
+      claimAllGoods();
+    });
   }
 
   loadGoodsPreview();

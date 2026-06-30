@@ -272,7 +272,101 @@
         </section>
       </section>
     </div>
+    <div id="goods-claim-modal" class="goods-modal-overlay hidden">
+      <div class="goods-claim-modal-box">
+        <div class="goods-claim-modal-head">
+          <div>
+            <div class="goods-section-kicker">GOODS CLAIMED</div>
+            <h2>🎉 Factory Goods Received</h2>
+            <p>Your active factories produced these Goods.</p>
+          </div>
 
+          <button
+            id="goods-claim-modal-close"
+            class="goods-modal-close"
+            type="button"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="goods-claim-modal-stats">
+          <div>
+            <span>Factories</span>
+            <strong id="goods-claim-modal-factories">0</strong>
+          </div>
+
+          <div>
+            <span>Goods</span>
+            <strong id="goods-claim-modal-count">0</strong>
+          </div>
+
+          <div>
+            <span>Total PV</span>
+            <strong id="goods-claim-modal-pv">0</strong>
+          </div>
+        </div>
+
+        <div id="goods-claim-modal-list" class="goods-claim-modal-list">
+          Loading...
+        </div>
+
+        <div class="goods-claim-modal-actions">
+          <button
+            id="goods-claim-modal-ok"
+            class="primary-button"
+            type="button"
+          >
+            Nice!
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="goods-claim-confirm-modal" class="goods-modal-overlay hidden">
+      <div class="goods-confirm-modal-box">
+        <div class="goods-claim-modal-head">
+          <div>
+            <div class="goods-section-kicker">CONFIRM CLAIM</div>
+            <h2>📦 Claim Factory Goods?</h2>
+            <p>
+              Your ready factories will produce Goods now. This will start the
+              24-hour Goods claim cooldown.
+            </p>
+          </div>
+
+          <button
+            id="goods-claim-confirm-close"
+            class="goods-modal-close"
+            type="button"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="goods-confirm-note">
+          Make sure you are ready to claim. After claiming, the next Goods claim
+          will be available after the cooldown ends.
+        </div>
+
+        <div class="goods-confirm-actions">
+          <button
+            id="goods-claim-confirm-cancel"
+            class="secondary-btn"
+            type="button"
+          >
+            Cancel
+          </button>
+
+          <button
+            id="goods-claim-confirm-ok"
+            class="primary-button"
+            type="button"
+          >
+            Claim Goods
+          </button>
+        </div>
+      </div>
+    </div>
     <script src="js/nav-auth.js"></script>
     <script src="js/navbar.js"></script>
     <script src="js/notifications.js"></script>

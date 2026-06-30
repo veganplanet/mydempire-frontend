@@ -17850,3 +17850,214 @@ padding:2px 8px !important;
     width: 100%;
   }
 }
+/* ============================
+   GOODS REAL PRODUCT IMAGES
+============================ */
+
+.goods-card-image-area img {
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+  filter: drop-shadow(0 10px 14px rgba(18, 42, 76, 0.18));
+}
+
+.goods-card-image-area.goods-image-missing::after {
+  content: "📦";
+  font-size: 5.8rem;
+}
+/* ============================
+   GOODS CLAIM RESULT MODAL
+============================ */
+
+.goods-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(12, 28, 46, 0.48);
+  backdrop-filter: blur(7px);
+}
+
+.goods-modal-overlay.hidden {
+  display: none;
+}
+
+.goods-claim-modal-box {
+  width: min(920px, 96vw);
+  max-height: 88vh;
+  overflow: auto;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #f7fff7 0%, #eef7ff 100%);
+  border: 1px solid rgba(61, 126, 82, 0.18);
+  box-shadow: 0 28px 80px rgba(12, 28, 46, 0.28);
+  padding: 24px;
+}
+
+.goods-claim-modal-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.goods-claim-modal-head h2 {
+  margin: 0 0 6px;
+  color: #102a4c;
+}
+
+.goods-claim-modal-head p {
+  margin: 0;
+  color: #52677c;
+}
+
+.goods-modal-close {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  color: #102a4c;
+  font-size: 1.6rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.goods-claim-modal-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.goods-claim-modal-stats div {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(61, 126, 82, 0.12);
+}
+
+.goods-claim-modal-stats span {
+  display: block;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.goods-claim-modal-stats strong {
+  color: #102a4c;
+  font-size: 1.25rem;
+  font-weight: 950;
+}
+
+.goods-claim-modal-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 14px;
+}
+
+.goods-claim-reward-card {
+  border-radius: 20px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(61, 126, 82, 0.12);
+  text-align: center;
+}
+
+.goods-claim-reward-image {
+  height: 118px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 10px;
+}
+
+.goods-claim-reward-image img {
+  max-width: 100%;
+  max-height: 112px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 10px rgba(18, 42, 76, 0.16));
+}
+
+.goods-claim-reward-name {
+  font-weight: 900;
+  color: #102a4c;
+  font-size: 0.92rem;
+  line-height: 1.2;
+}
+
+.goods-claim-reward-meta {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: #52677c;
+  font-weight: 800;
+}
+
+.goods-claim-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+@media (max-width: 680px) {
+  .goods-claim-modal-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .goods-claim-modal-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+/* ============================
+   GOODS CLAIM CONFIRM MODAL
+============================ */
+
+.goods-confirm-modal-box {
+  width: min(560px, 94vw);
+  border-radius: 26px;
+  background: linear-gradient(135deg, #f7fff7 0%, #eef7ff 100%);
+  border: 1px solid rgba(61, 126, 82, 0.18);
+  box-shadow: 0 28px 80px rgba(12, 28, 46, 0.28);
+  padding: 24px;
+}
+
+.goods-confirm-note {
+  margin: 18px 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(61, 126, 82, 0.12);
+  color: #52677c;
+  line-height: 1.45;
+}
+
+.goods-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  align-items: center;
+}
+
+.goods-confirm-actions .secondary-btn,
+.goods-confirm-actions .primary-button {
+  min-width: 130px;
+  min-height: 44px;
+  border-radius: 16px;
+}
+
+@media (max-width: 560px) {
+  .goods-confirm-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .goods-confirm-actions .secondary-btn,
+  .goods-confirm-actions .primary-button {
+    width: 100%;
+  }
+}
