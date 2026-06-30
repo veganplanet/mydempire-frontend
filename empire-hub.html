@@ -650,25 +650,43 @@
     <div>
       <h3 style="margin:0;color:#3730a3;">👑 Culture Hall of Fame</h3>
       <div style="font-size:13px;color:#4f46e5;font-weight:700;">
-        Declared weekly winners and pending rewards.
+        Latest weekly winner. Full history is available separately.
       </div>
     </div>
 
-    <button
-      type="button"
-      onclick="loadEmpireCultureWinners()"
-      style="
-        padding:8px 12px;
-        border-radius:10px;
-        border:1px solid #6366f1;
-        background:#6366f1;
-        color:#ffffff;
-        font-weight:900;
-        cursor:pointer;
-      "
-    >
-      Refresh
-    </button>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button
+        type="button"
+        onclick="openCultureHallOfFameModal()"
+        style="
+          padding:8px 12px;
+          border-radius:10px;
+          border:1px solid #6366f1;
+          background:#ffffff;
+          color:#3730a3;
+          font-weight:900;
+          cursor:pointer;
+        "
+      >
+        🏆 View History
+      </button>
+
+      <button
+        type="button"
+        onclick="loadEmpireCultureWinners()"
+        style="
+          padding:8px 12px;
+          border-radius:10px;
+          border:1px solid #6366f1;
+          background:#6366f1;
+          color:#ffffff;
+          font-weight:900;
+          cursor:pointer;
+        "
+      >
+        Refresh
+      </button>
+    </div>
   </div>
 
   <div id="culture-winners-list">
@@ -683,6 +701,79 @@
       "
     >
       Loading Culture Hall of Fame...
+    </div>
+  </div>
+</div>
+
+<!-- CULTURE HALL OF FAME HISTORY MODAL -->
+<div
+  id="culture-hall-history-modal"
+  style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,0.55);
+    z-index:9999;
+    padding:20px;
+  "
+>
+  <div
+    style="
+      max-width:850px;
+      margin:40px auto;
+      background:#ffffff;
+      border-radius:22px;
+      border:1px solid #c7d2fe;
+      box-shadow:0 24px 60px rgba(15,23,42,0.22);
+      max-height:82vh;
+      overflow:hidden;
+    "
+  >
+    <div
+      style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:12px;
+        padding:18px 20px;
+        border-bottom:1px solid #e0e7ff;
+        background:linear-gradient(135deg,#eef2ff 0%,#ffffff 100%);
+      "
+    >
+      <div>
+        <h3 style="margin:0;color:#3730a3;">🏛 Culture Hall of Fame History</h3>
+        <div style="font-size:13px;color:#4f46e5;font-weight:800;">
+          Showing latest 30 weekly winners.
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onclick="closeCultureHallOfFameModal()"
+        style="
+          padding:8px 12px;
+          border-radius:10px;
+          border:1px solid #c7d2fe;
+          background:#ffffff;
+          color:#3730a3;
+          font-weight:900;
+          cursor:pointer;
+        "
+      >
+        Close
+      </button>
+    </div>
+
+    <div
+      id="culture-hall-history-list"
+      style="
+        padding:16px;
+        max-height:65vh;
+        overflow-y:auto;
+        background:#f8fafc;
+      "
+    >
+      Loading history...
     </div>
   </div>
 </div>
@@ -1228,8 +1319,146 @@ async function voteEmpireCultureHubFactory(factoryId) {
 }
 // =====================================================
 // 👑 EMPIRE CULTURE HALL OF FAME
-// Shows declared weekly winners
+// Main page shows latest winner only.
+// Popup shows latest 30 winners from backend.
+// DB still keeps all winners permanently.
 // =====================================================
+
+let empireCultureWinnerHistoryCache = [];
+
+function renderCultureWinnerCard(winner, labelText) {
+  const name = String(winner.winning_name || "Unnamed Factory").trim();
+  const owner = String(winner.username || "unknown").replace("@", "");
+  const roundKey = String(winner.round_key || "--");
+  const votes = Number(winner.votes || 0);
+  const rewardEmp = Number(winner.reward_emp || 100);
+  const status = String(winner.reward_status || "PENDING_ADMIN_TRANSFER");
+
+  const statusLabel =
+    status === "PAID"
+      ? "✅ Paid"
+      : "⏳ Pending Admin Transfer";
+
+  return `
+    <div
+      style="
+        padding:14px;
+        margin-bottom:10px;
+        border-radius:16px;
+        background:#ffffff;
+        border:1px solid #c7d2fe;
+        box-shadow:0 8px 18px rgba(79,70,229,0.08);
+      "
+    >
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          gap:12px;
+          flex-wrap:wrap;
+          align-items:flex-start;
+        "
+      >
+        <div style="flex:1;min-width:220px;">
+          <div
+            style="
+              font-size:13px;
+              color:#6366f1;
+              font-weight:900;
+              margin-bottom:4px;
+            "
+          >
+            ${labelText} • ${roundKey}
+          </div>
+
+          <div
+            style="
+              font-size:21px;
+              color:#111827;
+              font-weight:900;
+              margin-bottom:4px;
+            "
+          >
+            “${name}”
+          </div>
+
+          <div
+            style="
+              font-size:13px;
+              color:#4f46e5;
+              font-weight:800;
+            "
+          >
+            @${owner} • Votes: ${votes}
+          </div>
+        </div>
+
+        <div
+          style="
+            padding:9px 12px;
+            border-radius:12px;
+            background:#eef2ff;
+            border:1px solid #c7d2fe;
+            color:#3730a3;
+            font-weight:900;
+            min-width:170px;
+            text-align:center;
+          "
+        >
+          ${rewardEmp} EMP<br>
+          <span style="font-size:12px;">${statusLabel}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function openCultureHallOfFameModal() {
+  const modal = document.getElementById("culture-hall-history-modal");
+  const historyEl = document.getElementById("culture-hall-history-list");
+
+  if (!modal || !historyEl) return;
+
+  const winners = Array.isArray(empireCultureWinnerHistoryCache)
+    ? empireCultureWinnerHistoryCache
+    : [];
+
+  if (!winners.length) {
+    historyEl.innerHTML = `
+      <div
+        style="
+          padding:14px;
+          border-radius:12px;
+          background:#ffffff;
+          border:1px solid #c7d2fe;
+          color:#4f46e5;
+          font-weight:800;
+        "
+      >
+        No Culture Hall of Fame history available yet.
+      </div>
+    `;
+  } else {
+    historyEl.innerHTML = winners
+      .map((winner, index) =>
+        renderCultureWinnerCard(
+          winner,
+          index === 0 ? "Latest Winner" : "Previous Winner"
+        )
+      )
+      .join("");
+  }
+
+  modal.style.display = "block";
+}
+
+function closeCultureHallOfFameModal() {
+  const modal = document.getElementById("culture-hall-history-modal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
 
 async function loadEmpireCultureWinners() {
   const listEl = document.getElementById("culture-winners-list");
@@ -1260,6 +1489,7 @@ async function loadEmpireCultureWinners() {
     }
 
     const winners = Array.isArray(data.winners) ? data.winners : [];
+    empireCultureWinnerHistoryCache = winners.slice(0, 30);
 
     if (!winners.length) {
       listEl.innerHTML = `
@@ -1280,94 +1510,12 @@ async function loadEmpireCultureWinners() {
       return;
     }
 
-    listEl.innerHTML = winners
-      .map((winner, index) => {
-        const name = String(winner.winning_name || "Unnamed Factory").trim();
-        const owner = String(winner.username || "unknown").replace("@", "");
-        const roundKey = String(winner.round_key || "--");
-        const votes = Number(winner.votes || 0);
-        const rewardEmp = Number(winner.reward_emp || 100);
-        const status = String(winner.reward_status || "PENDING_ADMIN_TRANSFER");
+    const latestWinner = winners[0];
 
-        const statusLabel =
-          status === "PAID"
-            ? "✅ Paid"
-            : "⏳ Pending Admin Transfer";
-
-        return `
-          <div
-            style="
-              padding:14px;
-              margin-bottom:10px;
-              border-radius:16px;
-              background:#ffffff;
-              border:1px solid #c7d2fe;
-              box-shadow:0 8px 18px rgba(79,70,229,0.08);
-            "
-          >
-            <div
-              style="
-                display:flex;
-                justify-content:space-between;
-                gap:12px;
-                flex-wrap:wrap;
-                align-items:flex-start;
-              "
-            >
-              <div style="flex:1;min-width:220px;">
-                <div
-                  style="
-                    font-size:13px;
-                    color:#6366f1;
-                    font-weight:900;
-                    margin-bottom:4px;
-                  "
-                >
-                  ${index === 0 ? "Latest Winner" : "Previous Winner"} • ${roundKey}
-                </div>
-
-                <div
-                  style="
-                    font-size:19px;
-                    color:#111827;
-                    font-weight:900;
-                    margin-bottom:4px;
-                  "
-                >
-                  “${name}”
-                </div>
-
-                <div
-                  style="
-                    font-size:13px;
-                    color:#4f46e5;
-                    font-weight:800;
-                  "
-                >
-                  @${owner} • Votes: ${votes}
-                </div>
-              </div>
-
-              <div
-                style="
-                  padding:9px 12px;
-                  border-radius:12px;
-                  background:#eef2ff;
-                  border:1px solid #c7d2fe;
-                  color:#3730a3;
-                  font-weight:900;
-                  min-width:170px;
-                  text-align:center;
-                "
-              >
-                ${rewardEmp} EMP<br>
-                <span style="font-size:12px;">${statusLabel}</span>
-              </div>
-            </div>
-          </div>
-        `;
-      })
-      .join("");
+    listEl.innerHTML = renderCultureWinnerCard(
+      latestWinner,
+      "Latest Winner"
+    );
   } catch (err) {
     console.error("Empire Culture winners load error:", err);
 
@@ -1387,7 +1535,7 @@ async function loadEmpireCultureWinners() {
     `;
   }
 }
-      // =====================================================
+// =====================================================
 // 🔒 UNIVERSAL VISITOR MODE ACTION LOCK — SELF RUNNING
 // Visitors can view another empire, but cannot perform actions.
 // No startup call required.
