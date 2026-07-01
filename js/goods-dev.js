@@ -854,7 +854,15 @@ function showGoodsClaimModal(data) {
   if (!modal || !list) return;
 
   const goods = Array.isArray(data.goods) ? data.goods : [];
-
+  const processingCap = data.processing_cap || data.processingCap || {};
+  const processingCapLabel = processingCap.label || "Processing Cap";
+  const processingCapMaxGoods = Number(
+    processingCap.max_goods ?? processingCap.maxGoods ?? 0,
+  );
+  const processingCapReached = Boolean(
+    processingCap.cap_reached ?? processingCap.capReached ?? false,
+  );
+  const capReachedText = processingCapReached ? "Yes" : "No";
   const groupedGoods = new Map();
 
   goods.forEach((item) => {
@@ -904,6 +912,10 @@ function showGoodsClaimModal(data) {
     String(Number(data.total_product_value ?? data.totalProductValue ?? 0)),
   );
 
+  setGoodsText(
+    "goods-claim-modal-cap",
+    `${processingCapLabel} · Max ${processingCapMaxGoods} Goods · Cap Reached: ${capReachedText}`,
+  );
   const groups = Array.from(groupedGoods.values());
 
   if (groups.length === 0) {
