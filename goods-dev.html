@@ -367,6 +367,104 @@
         </div>
       </div>
     </div>
+    <div id="goods-submit-confirm-modal" class="goods-modal-overlay hidden">
+      <div class="goods-confirm-modal-box">
+        <div class="goods-claim-modal-head">
+          <div>
+            <div class="goods-section-kicker">CONFIRM REDEMPTION</div>
+            <h2>🏭 Submit Goods to Redemption?</h2>
+            <p>
+              Selected Goods will enter the active EMP pool cycle. Final EMP may
+              change until the cycle ends.
+            </p>
+          </div>
+
+          <button
+            id="goods-submit-confirm-close"
+            class="goods-modal-close"
+            type="button"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="goods-confirm-note">
+          <strong id="goods-submit-confirm-count">0</strong> Goods selected with
+          <strong id="goods-submit-confirm-pv">0 PV</strong>.
+          <br />
+          After submission, these Goods cannot be returned to inventory.
+        </div>
+
+        <div class="goods-confirm-actions">
+          <button
+            id="goods-submit-confirm-cancel"
+            class="secondary-btn"
+            type="button"
+          >
+            Cancel
+          </button>
+
+          <button
+            id="goods-submit-confirm-ok"
+            class="primary-button"
+            type="button"
+          >
+            Submit Goods
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="goods-submit-success-modal" class="goods-modal-overlay hidden">
+      <div class="goods-confirm-modal-box">
+        <div class="goods-claim-modal-head">
+          <div>
+            <div class="goods-section-kicker">REDEMPTION SUBMITTED</div>
+            <h2>✅ Goods Submitted Successfully</h2>
+            <p>Your Goods entered the active EMP pool cycle.</p>
+          </div>
+
+          <button
+            id="goods-submit-success-close"
+            class="goods-modal-close"
+            type="button"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="goods-claim-modal-stats">
+          <div>
+            <span>Submitted Goods</span>
+            <strong id="goods-submit-success-count">0</strong>
+          </div>
+
+          <div>
+            <span>Submitted PV</span>
+            <strong id="goods-submit-success-pv">0</strong>
+          </div>
+
+          <div>
+            <span>Estimated EMP</span>
+            <strong id="goods-submit-success-emp">0</strong>
+          </div>
+        </div>
+
+        <div class="goods-confirm-note">
+          Final EMP may change until the cycle ends as more players submit
+          Product Value.
+        </div>
+
+        <div class="goods-confirm-actions">
+          <button
+            id="goods-submit-success-ok"
+            class="primary-button"
+            type="button"
+          >
+            Nice!
+          </button>
+        </div>
+      </div>
+    </div>
     <script src="js/nav-auth.js"></script>
     <script src="js/navbar.js"></script>
     <script src="js/notifications.js"></script>

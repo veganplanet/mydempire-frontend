@@ -19,7 +19,27 @@ function getGoodsImagePath(productKey) {
 
   return `assets/goods/${key}.png`;
 }
+const GOODS_INDUSTRY_ORDER = {
+  FOOD: 1,
+  TEXTILE: 2,
+  PHARMA: 3,
+  CHEMICAL: 4,
+  SUPERMARKET: 5,
+};
 
+const GOODS_LEVEL_ORDER = {
+  ESSENTIAL: 1,
+  STANDARD: 2,
+  VALUE: 3,
+  PREMIUM: 4,
+  LUXURY: 5,
+};
+
+const GOODS_QUALITY_ORDER = {
+  STANDARD: 1,
+  FINE: 2,
+  SUPERIOR: 3,
+};
 let latestGoodsPreview = null;
 let goodsClaimInProgress = false;
 
@@ -159,7 +179,32 @@ function renderGoodsInventory(items, summary) {
     group.quantity += 1;
   });
 
-  const groups = Array.from(groupedGoods.values());
+  const groups = Array.from(groupedGoods.values()).sort((a, b) => {
+    const industryA =
+      GOODS_INDUSTRY_ORDER[String(a.industry || "").toUpperCase()] || 999;
+    const industryB =
+      GOODS_INDUSTRY_ORDER[String(b.industry || "").toUpperCase()] || 999;
+
+    if (industryA !== industryB) return industryA - industryB;
+
+    const levelA =
+      GOODS_LEVEL_ORDER[String(a.product_level || "").toUpperCase()] || 999;
+    const levelB =
+      GOODS_LEVEL_ORDER[String(b.product_level || "").toUpperCase()] || 999;
+
+    if (levelA !== levelB) return levelA - levelB;
+
+    const qualityA =
+      GOODS_QUALITY_ORDER[String(a.quality || "").toUpperCase()] || 999;
+    const qualityB =
+      GOODS_QUALITY_ORDER[String(b.quality || "").toUpperCase()] || 999;
+
+    if (qualityA !== qualityB) return qualityA - qualityB;
+
+    return String(a.product_name || "").localeCompare(
+      String(b.product_name || ""),
+    );
+  });
 
   if (groups.length === 0) {
     box.innerHTML = `
@@ -657,7 +702,129 @@ function buildGoodsClaimSummary(data) {
     `By Quality: ${qualityText || "None"}`,
   ].join("\n");
 }
+function closeGoodsSubmitSuccessModal() {
+  const modal = document.getElementById("goods-submit-success-modal");
+
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+}
+
+function showGoodsSubmitSuccessModal(data, selectedGoodsCount) {
+  const modal = document.getElementById("goods-submit-success-modal");
+
+  if (!modal) return;
+
+  setGoodsText(
+    "goods-submit-success-count",
+    String(Number(selectedGoodsCount || data.burned_count || 0)),
+  );
+
+  setGoodsText(
+    "goods-submit-success-pv",
+    `${Number(data.burned_product_value || 0).toFixed(0)} PV`,
+  );
+
+  setGoodsText(
+    "goods-submit-success-emp",
+    `${Number(data.player?.estimated_emp_now || 0).toFixed(2)} EMP`,
+  );
+
+  modal.classList.remove("hidden");
+}
+function closeGoodsSubmitConfirmModal() {
+  const modal = document.getElementById("goods-submit-confirm-modal");
+
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+}
+
+function openGoodsSubmitConfirmModal() {
+  const selectedBoxes = Array.from(
+    document.querySelectorAll(".goods-submit-checkbox:checked"),
+  );
+
+  let selectedGoodsCount = 0;
+  let selectedPV = 0;
+
+  selectedBoxes.forEach((box) => {
+    const qtyInputId = box.dataset.qtyInputId;
+    const qtyInput = qtyInputId ? document.getElementById(qtyInputId) : null;
+
+    const maxQty = Number(box.dataset.goodCount || 0);
+    const eachPV = Number(box.dataset.goodValue || 0);
+
+    let qty = qtyInput ? Number(qtyInput.value || 0) : 1;
+
+    if (!Number.isFinite(qty) || qty < 1) qty = 1;
+    if (maxQty > 0 && qty > maxQty) qty = maxQty;
+
+    selectedGoodsCount += qty;
+    selectedPV += qty * eachPV;
+  });
+
+  if (selectedGoodsCount <= 0) {
+    alert("Please select at least one Good to submit.");
+    return;
+  }
+
+  setGoodsText("goods-submit-confirm-count", String(selectedGoodsCount));
+  setGoodsText("goods-submit-confirm-pv", `${selectedPV} PV`);
+
+  const modal = document.getElementById("goods-submit-confirm-modal");
+
+  if (modal) {
+    modal.classList.remove("hidden");
+  }
+}
+
 function closeGoodsClaimConfirmModal() {
+  const modal = document.getElementById("goods-claim-confirm-modal");
+
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+}
+function closeGoodsClaimConfirmModal() {
+  function openGoodsSubmitConfirmModal() {
+    const selectedBoxes = Array.from(
+      document.querySelectorAll(".goods-submit-checkbox:checked"),
+    );
+
+    let selectedGoodsCount = 0;
+    let selectedPV = 0;
+
+    selectedBoxes.forEach((box) => {
+      const qtyInputId = box.dataset.qtyInputId;
+      const qtyInput = qtyInputId ? document.getElementById(qtyInputId) : null;
+
+      const maxQty = Number(box.dataset.goodCount || 0);
+      const eachPV = Number(box.dataset.goodValue || 0);
+
+      let qty = qtyInput ? Number(qtyInput.value || 0) : 1;
+
+      if (!Number.isFinite(qty) || qty < 1) qty = 1;
+      if (maxQty > 0 && qty > maxQty) qty = maxQty;
+
+      selectedGoodsCount += qty;
+      selectedPV += qty * eachPV;
+    });
+
+    if (selectedGoodsCount <= 0) {
+      alert("Please select at least one Good to submit.");
+      return;
+    }
+
+    setGoodsText("goods-submit-confirm-count", String(selectedGoodsCount));
+    setGoodsText("goods-submit-confirm-pv", `${selectedPV} PV`);
+
+    const modal = document.getElementById("goods-submit-confirm-modal");
+
+    if (modal) {
+      modal.classList.remove("hidden");
+    }
+  }
   const modal = document.getElementById("goods-claim-confirm-modal");
 
   if (modal) {
@@ -906,12 +1073,6 @@ async function submitSelectedGoodsForRedemption() {
     return;
   }
 
-  const confirmSubmit = confirm(
-    `Submit ${selectedGoodsCount} Goods with ${selectedValue} PV into the active redemption cycle?\n\nAfter submission, these Goods cannot be returned to inventory.`,
-  );
-
-  if (!confirmSubmit) return;
-
   try {
     if (button) {
       button.disabled = true;
@@ -940,14 +1101,7 @@ async function submitSelectedGoodsForRedemption() {
       return;
     }
 
-    alert(
-      `Goods submitted successfully!\n\n` +
-        `Submitted Goods: ${selectedGoodsCount}\n` +
-        `Submitted PV: ${Number(data.burned_product_value || 0).toFixed(0)}\n` +
-        `Estimated EMP now: ${Number(
-          data.player?.estimated_emp_now || 0,
-        ).toFixed(2)} EMP`,
-    );
+    showGoodsSubmitSuccessModal(data, selectedGoodsCount);
 
     await loadGoodsInventory(username);
     await loadGoodsRedemptionPosition(username);
@@ -994,6 +1148,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("goods-submit-selected-btn");
   const claimModalCloseBtn = document.getElementById("goods-claim-modal-close");
   const claimModalOkBtn = document.getElementById("goods-claim-modal-ok");
+  const submitSuccessCloseBtn = document.getElementById(
+    "goods-submit-success-close",
+  );
+  const submitSuccessOkBtn = document.getElementById("goods-submit-success-ok");
   const claimConfirmCloseBtn = document.getElementById(
     "goods-claim-confirm-close",
   );
@@ -1001,7 +1159,13 @@ document.addEventListener("DOMContentLoaded", () => {
     "goods-claim-confirm-cancel",
   );
   const claimConfirmOkBtn = document.getElementById("goods-claim-confirm-ok");
-
+  const submitConfirmCloseBtn = document.getElementById(
+    "goods-submit-confirm-close",
+  );
+  const submitConfirmCancelBtn = document.getElementById(
+    "goods-submit-confirm-cancel",
+  );
+  const submitConfirmOkBtn = document.getElementById("goods-submit-confirm-ok");
   if (refreshBtn) {
     refreshBtn.addEventListener("click", loadGoodsPreview);
   }
@@ -1010,7 +1174,7 @@ document.addEventListener("DOMContentLoaded", () => {
     claimBtn.addEventListener("click", openGoodsClaimConfirmModal);
   }
   if (submitBtn) {
-    submitBtn.addEventListener("click", submitSelectedGoodsForRedemption);
+    submitBtn.addEventListener("click", openGoodsSubmitConfirmModal);
   }
   if (claimModalCloseBtn) {
     claimModalCloseBtn.addEventListener("click", closeGoodsClaimModal);
@@ -1036,7 +1200,36 @@ document.addEventListener("DOMContentLoaded", () => {
       claimAllGoods();
     });
   }
+  if (submitConfirmCloseBtn) {
+    submitConfirmCloseBtn.addEventListener(
+      "click",
+      closeGoodsSubmitConfirmModal,
+    );
+  }
 
+  if (submitConfirmCancelBtn) {
+    submitConfirmCancelBtn.addEventListener(
+      "click",
+      closeGoodsSubmitConfirmModal,
+    );
+  }
+
+  if (submitConfirmOkBtn) {
+    submitConfirmOkBtn.addEventListener("click", () => {
+      closeGoodsSubmitConfirmModal();
+      submitSelectedGoodsForRedemption();
+    });
+  }
+  if (submitSuccessCloseBtn) {
+    submitSuccessCloseBtn.addEventListener(
+      "click",
+      closeGoodsSubmitSuccessModal,
+    );
+  }
+
+  if (submitSuccessOkBtn) {
+    submitSuccessOkBtn.addEventListener("click", closeGoodsSubmitSuccessModal);
+  }
   loadGoodsPreview();
   loadGoodsRedemptionPosition(getGoodsLoggedInUser());
   loadGoodsRedemptionLeaderboard();
