@@ -489,6 +489,13 @@
         </button>
         <button
           class="admin-tab-btn"
+          data-admin-tab="goods"
+          onclick="switchAdminTab('goods')"
+        >
+          📦 Goods Economy
+        </button>
+        <button
+          class="admin-tab-btn"
           data-admin-tab="system"
           onclick="switchAdminTab('system')"
         >
@@ -1099,46 +1106,50 @@ forkyishere,529"
           </div>
         </div>
         <div class="section">
-  <h2>🔥 Foundry Craft Log</h2>
+          <h2>🔥 Foundry Craft Log</h2>
 
-  <div class="metrics" style="margin-top: 14px">
-    <div class="card">
-      <div class="label">Total Crafts</div>
-      <div class="value" id="foundry-total-crafts">--</div>
-      <div class="small">All Foundry crafts recorded</div>
-    </div>
+          <div class="metrics" style="margin-top: 14px">
+            <div class="card">
+              <div class="label">Total Crafts</div>
+              <div class="value" id="foundry-total-crafts">--</div>
+              <div class="small">All Foundry crafts recorded</div>
+            </div>
 
-    <div class="card">
-      <div class="label">Fragments Used</div>
-      <div class="value" id="foundry-total-fragments">--</div>
-      <div class="small">Total Imperial Fragments spent</div>
-    </div>
+            <div class="card">
+              <div class="label">Fragments Used</div>
+              <div class="value" id="foundry-total-fragments">--</div>
+              <div class="small">Total Imperial Fragments spent</div>
+            </div>
 
-    <div class="card">
-      <div class="label">SMP Used</div>
-      <div class="value" id="foundry-total-smp">--</div>
-      <div class="small">Total SMP spent</div>
-    </div>
+            <div class="card">
+              <div class="label">SMP Used</div>
+              <div class="value" id="foundry-total-smp">--</div>
+              <div class="small">Total SMP spent</div>
+            </div>
 
-    <div class="card">
-      <div class="label">EMP Burned</div>
-      <div class="value" id="foundry-total-emp">--</div>
-      <div class="small">Total EMP spent in Foundry</div>
-    </div>
-  </div>
+            <div class="card">
+              <div class="label">EMP Burned</div>
+              <div class="value" id="foundry-total-emp">--</div>
+              <div class="small">Total EMP spent in Foundry</div>
+            </div>
+          </div>
 
-  <button onclick="loadFoundryLog()" class="primary" style="margin-top:14px;">
-    Load Foundry Log
-  </button>
+          <button
+            onclick="loadFoundryLog()"
+            class="primary"
+            style="margin-top: 14px"
+          >
+            Load Foundry Log
+          </button>
 
-  <div
-    id="admin-foundry-log"
-    class="scroll-box"
-    style="margin-top: 12px"
-  >
-    Click the button to load recent Foundry craft history.
-  </div>
-</div>
+          <div
+            id="admin-foundry-log"
+            class="scroll-box"
+            style="margin-top: 12px"
+          >
+            Click the button to load recent Foundry craft history.
+          </div>
+        </div>
         <div class="section">
           <h2>🏆 Empire Culture Rewards</h2>
 
@@ -1374,7 +1385,94 @@ forkyishere,529"
           </div>
         </div>
       </div>
+      <div class="admin-tab-panel" data-admin-panel="goods">
+        <div class="section">
+          <h2>📦 Goods Economy</h2>
+          <p class="sub">Create and monitor Goods Redemption Cycles.</p>
 
+          <div class="metrics">
+            <div class="card">
+              <div class="label">Cycle Status</div>
+              <div class="value" id="goods-cycle-status">--</div>
+              <div class="small" id="goods-cycle-name">
+                No active cycle loaded
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="label">EMP Pool</div>
+              <div class="value" id="goods-cycle-emp-pool">0</div>
+              <div class="small">Total EMP allocated to this cycle</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Total Product Value</div>
+              <div class="value" id="goods-cycle-total-pv">0</div>
+              <div class="small">Submitted Goods value</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Live Rate</div>
+              <div class="value" id="goods-cycle-live-rate">0</div>
+              <div class="small">EMP per Product Value</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>➕ Create Goods Redemption Cycle</h2>
+
+          <div class="row">
+            <input
+              id="goods-cycle-name-input"
+              type="text"
+              placeholder="Cycle name e.g. Goods Cycle 1"
+            />
+
+            <input
+              id="goods-cycle-emp-pool-input"
+              type="number"
+              min="1"
+              step="1"
+              placeholder="EMP Pool e.g. 5000"
+            />
+
+            <input id="goods-cycle-ends-at-input" type="datetime-local" />
+
+            <button
+              class="primary"
+              type="button"
+              onclick="createGoodsRedemptionCycleAdmin()"
+            >
+              Create Cycle
+            </button>
+          </div>
+
+          <div id="goods-cycle-create-status" class="status"></div>
+        </div>
+        <div class="section">
+          <h2>✅ Finalize Expired Goods Cycle</h2>
+          <p class="sub">
+            Distribute EMP rewards after the cycle end time has passed.
+          </p>
+
+          <button
+            class="primary"
+            type="button"
+            onclick="finalizeExpiredGoodsCycleAdmin()"
+          >
+            Finalize Expired Cycle Now
+          </button>
+
+          <div id="goods-cycle-finalize-status" class="status"></div>
+        </div>
+        <div class="section">
+          <h2>🏆 Goods Redemption Leaderboard</h2>
+          <div id="goods-redemption-admin-list" class="scroll-box">
+            Loading Goods leaderboard...
+          </div>
+        </div>
+      </div>
       <div class="admin-tab-panel" data-admin-panel="system">
         <div class="section">
           <h2>🛠 System Controls</h2>
@@ -1981,49 +2079,48 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
         }
       }
       async function loadFoundryLog() {
-  const box = document.getElementById("admin-foundry-log");
+        const box = document.getElementById("admin-foundry-log");
 
-  if (!box) return;
+        if (!box) return;
 
-  box.innerHTML = "Loading Foundry craft log...";
+        box.innerHTML = "Loading Foundry craft log...";
 
-  try {
-    const res = await fetch(`${API_BASE}/admin/foundry-log?limit=100`, {
-      headers: {
-        "x-admin-key": ADMIN_KEY,
-      },
-    });
+        try {
+          const res = await fetch(`${API_BASE}/admin/foundry-log?limit=100`, {
+            headers: {
+              "x-admin-key": ADMIN_KEY,
+            },
+          });
 
-    const data = await res.json();
+          const data = await res.json();
 
-    if (!res.ok || !data.success) {
-      throw new Error(data.error || "Failed to load Foundry log.");
-    }
+          if (!res.ok || !data.success) {
+            throw new Error(data.error || "Failed to load Foundry log.");
+          }
 
-    const totals = data.totals || {};
-    const logs = data.logs || [];
+          const totals = data.totals || {};
+          const logs = data.logs || [];
 
-    document.getElementById("foundry-total-crafts").textContent = Number(
-      totals.total_crafts || 0,
-    ).toLocaleString();
+          document.getElementById("foundry-total-crafts").textContent = Number(
+            totals.total_crafts || 0,
+          ).toLocaleString();
 
-    document.getElementById("foundry-total-fragments").textContent = Number(
-      totals.total_fragments_spent || 0,
-    ).toLocaleString();
+          document.getElementById("foundry-total-fragments").textContent =
+            Number(totals.total_fragments_spent || 0).toLocaleString();
 
-    document.getElementById("foundry-total-smp").textContent = Number(
-      totals.total_smp_spent || 0,
-    ).toLocaleString();
+          document.getElementById("foundry-total-smp").textContent = Number(
+            totals.total_smp_spent || 0,
+          ).toLocaleString();
 
-    document.getElementById("foundry-total-emp").textContent =
-      `${Number(totals.total_emp_spent || 0).toLocaleString()} EMP`;
+          document.getElementById("foundry-total-emp").textContent =
+            `${Number(totals.total_emp_spent || 0).toLocaleString()} EMP`;
 
-    if (!logs.length) {
-      box.innerHTML = "No Foundry craft history yet.";
-      return;
-    }
+          if (!logs.length) {
+            box.innerHTML = "No Foundry craft history yet.";
+            return;
+          }
 
-    box.innerHTML = `
+          box.innerHTML = `
       <table style="width:100%; border-collapse:collapse;">
         <thead>
           <tr style="background:#f8fafc;">
@@ -2063,11 +2160,11 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
         </tbody>
       </table>
     `;
-  } catch (err) {
-    console.error("Load Foundry log failed:", err);
-    box.innerHTML = "Failed to load Foundry craft log.";
-  }
-}
+        } catch (err) {
+          console.error("Load Foundry log failed:", err);
+          box.innerHTML = "Failed to load Foundry craft log.";
+        }
+      }
       //loadEmpireCultureRewardAdmin();
 
       async function approveReferral(referralId) {
@@ -4749,143 +4846,349 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
         if (gate) gate.style.display = "flex";
         if (shell) shell.style.display = "none";
       }
-
-     // =============================
-// CLEAN ADMIN LOGIN GATE + TABS
-// =============================
-
-function switchAdminTab(tabName) {
-  document.querySelectorAll(".admin-tab-btn").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.adminTab === tabName);
-  });
-
-  document.querySelectorAll(".admin-tab-panel").forEach((panel) => {
-    panel.classList.toggle(
-      "active",
-      panel.dataset.adminPanel === tabName,
-    );
-  });
-}
-
-function showAdminGate() {
-  const gate = document.getElementById("admin-login-gate");
-  const shell = document.getElementById("admin-dashboard-shell");
-
-  if (gate) gate.style.display = "flex";
-  if (shell) shell.style.display = "none";
-}
-
-function showAdminDashboardOnly() {
-  const gate = document.getElementById("admin-login-gate");
-  const shell = document.getElementById("admin-dashboard-shell");
-
-  if (gate) gate.style.display = "none";
-  if (shell) shell.style.display = "block";
-
-  switchAdminTab("overview");
-}
-
-async function verifyAdminKey(key) {
-  const cleanKey = String(key || "").trim();
-
-  if (!cleanKey) {
-    return false;
-  }
-
-  try {
-    const res = await fetch(`${API_BASE}/admin/overview`, {
-      headers: {
-        "x-admin-key": cleanKey,
-      },
-    });
-
-    const data = await res.json().catch(() => ({}));
-
-    return res.ok && data.success === true;
-  } catch (err) {
-    console.error("Admin key verification failed:", err);
-    return false;
-  }
-}
-
-async function unlockAdminWithKey(key) {
-  const loginStatus = document.getElementById("admin-login-status");
-
-  const cleanKey = String(key || "").trim();
-
-  if (!cleanKey) {
-    if (loginStatus) loginStatus.textContent = "Please enter ADMIN_KEY.";
-    return;
-  }
-
-  if (loginStatus) loginStatus.textContent = "Checking ADMIN_KEY...";
-
-  const isValid = await verifyAdminKey(cleanKey);
-
-  if (!isValid) {
-    ADMIN_KEY = "";
-    localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
-
-    if (loginStatus) {
-      loginStatus.textContent = "❌ Invalid ADMIN_KEY. Dashboard locked.";
-    }
-
-    showAdminGate();
-    return;
-  }
-
-  ADMIN_KEY = cleanKey;
-  localStorage.setItem("MYDEMPIRE_ADMIN_KEY", ADMIN_KEY);
-
-  if (loginStatus) loginStatus.textContent = "✅ Admin unlocked.";
-
-  showAdminDashboardOnly();
-  await loadAdminInitialData();
-}
-
-document.addEventListener("DOMContentLoaded", async () => {
-  const savedKey = localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || "";
-  const unlockBtn = document.getElementById("unlock-admin-btn");
-  const keyInput = document.getElementById("admin-key-input");
-  const loginStatus = document.getElementById("admin-login-status");
-  const logoutBtn = document.getElementById("logout-admin-btn");
-
-  showAdminGate();
-
-  if (savedKey) {
-    await unlockAdminWithKey(savedKey);
-  }
-
-  if (unlockBtn) {
-    unlockBtn.addEventListener("click", async () => {
-      const key = keyInput ? keyInput.value.trim() : "";
-      await unlockAdminWithKey(key);
-    });
-  }
-
-  if (keyInput) {
-    keyInput.addEventListener("keydown", async (event) => {
-      if (event.key === "Enter") {
-        await unlockAdminWithKey(keyInput.value.trim());
+      function getAdminKey() {
+        return (
+          localStorage.getItem("mde_admin_key") ||
+          localStorage.getItem("adminKey") ||
+          document.getElementById("admin-key-input")?.value ||
+          ""
+        );
       }
-    });
-  }
+      // =============================
+      // CLEAN ADMIN LOGIN GATE + TABS
+      // =============================
 
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      ADMIN_KEY = "";
-      localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
+      function switchAdminTab(tabName) {
+        document.querySelectorAll(".admin-tab-btn").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.adminTab === tabName);
+        });
 
-      if (keyInput) keyInput.value = "";
-      if (loginStatus) loginStatus.textContent = "Dashboard locked.";
+        document.querySelectorAll(".admin-tab-panel").forEach((panel) => {
+          panel.classList.toggle(
+            "active",
+            panel.dataset.adminPanel === tabName,
+          );
+        });
+        if (tabName === "goods") {
+          loadGoodsRedemptionAdmin();
+        }
+      }
 
-      showAdminGate();
-    });
-  }
-});
-        
+      async function loadGoodsRedemptionAdmin() {
+        const statusEl = document.getElementById("goods-cycle-status");
+        const nameEl = document.getElementById("goods-cycle-name");
+        const poolEl = document.getElementById("goods-cycle-emp-pool");
+        const pvEl = document.getElementById("goods-cycle-total-pv");
+        const rateEl = document.getElementById("goods-cycle-live-rate");
+        const listEl = document.getElementById("goods-redemption-admin-list");
 
-     
+        try {
+          if (statusEl) statusEl.textContent = "Loading...";
+          if (listEl) listEl.innerHTML = "Loading Goods leaderboard...";
+
+          const [cycleRes, leaderboardRes] = await Promise.all([
+            fetch(`${API_BASE}/goods-redemption/active`),
+            fetch(`${API_BASE}/goods-redemption/leaderboard`),
+          ]);
+
+          const cycleData = await cycleRes.json();
+          const leaderboardData = await leaderboardRes.json();
+
+          const cycle = cycleData.cycle || cycleData.activeCycle || null;
+
+          if (!cycle) {
+            if (statusEl) statusEl.textContent = "No Open Cycle";
+            if (nameEl)
+              nameEl.textContent = "Create a cycle to start Goods redemption.";
+            if (poolEl) poolEl.textContent = "0";
+            if (pvEl) pvEl.textContent = "0";
+            if (rateEl) rateEl.textContent = "0";
+          } else {
+            const empPool = Number(cycle.emp_pool ?? cycle.empPool ?? 0);
+            const totalPV = Number(
+              cycle.total_product_value ?? cycle.totalProductValue ?? 0,
+            );
+            const liveRate = totalPV > 0 ? empPool / totalPV : 0;
+
+            if (statusEl) statusEl.textContent = cycle.status || "OPEN";
+            if (nameEl)
+              nameEl.textContent =
+                cycle.cycle_name || cycle.cycleName || "Goods Redemption Cycle";
+            if (poolEl) poolEl.textContent = empPool.toFixed(0);
+            if (pvEl) pvEl.textContent = totalPV.toFixed(0);
+            if (rateEl) rateEl.textContent = liveRate.toFixed(4);
+          }
+
+          const rows =
+            leaderboardData.leaderboard || leaderboardData.rows || [];
+
+          if (!Array.isArray(rows) || rows.length === 0) {
+            if (listEl) {
+              listEl.innerHTML = `<div class="assets-empty">No Goods submitted yet.</div>`;
+            }
+            return;
+          }
+
+          if (listEl) {
+            listEl.innerHTML = rows
+              .map((row, index) => {
+                const username = row.username || "--";
+                const goodsCount = Number(
+                  row.goods_count ?? row.goodsCount ?? 0,
+                );
+                const totalPV = Number(
+                  row.total_product_value ??
+                    row.totalProductValue ??
+                    row.total_pv ??
+                    0,
+                );
+                const estimatedEmp = Number(
+                  row.estimated_emp ?? row.estimatedEmp ?? 0,
+                );
+
+                return `
+            <div class="assets-item">
+              <div>
+                <strong>#${index + 1} @${username}</strong>
+                <div class="small">${goodsCount} Goods submitted</div>
+              </div>
+              <div style="text-align:right;">
+                <strong>${totalPV.toFixed(0)} PV</strong>
+                <div class="small">Est. ${estimatedEmp.toFixed(2)} EMP</div>
+              </div>
+            </div>
+          `;
+              })
+              .join("");
+          }
+        } catch (err) {
+          console.error("Goods admin load failed:", err);
+          if (statusEl) statusEl.textContent = "Error";
+          if (listEl)
+            listEl.innerHTML = `<div class="assets-empty">Failed to load Goods admin data.</div>`;
+        }
+      }
+      async function createGoodsRedemptionCycleAdmin() {
+        const nameInput = document.getElementById("goods-cycle-name-input");
+        const poolInput = document.getElementById("goods-cycle-emp-pool-input");
+        const endsAtInput = document.getElementById(
+          "goods-cycle-ends-at-input",
+        );
+        const statusEl = document.getElementById("goods-cycle-create-status");
+
+        const cycleName = String(nameInput?.value || "").trim();
+        const empPool = Number(poolInput?.value || 0);
+        const endsAt = String(endsAtInput?.value || "").trim();
+
+        if (!cycleName) {
+          if (statusEl) statusEl.textContent = "Please enter cycle name.";
+          return;
+        }
+
+        if (!Number.isFinite(empPool) || empPool <= 0) {
+          if (statusEl) statusEl.textContent = "Please enter valid EMP pool.";
+          return;
+        }
+
+        if (!endsAt) {
+          if (statusEl)
+            statusEl.textContent = "Please select cycle end date/time.";
+          return;
+        }
+
+        try {
+          if (statusEl) statusEl.textContent = "Creating Goods cycle...";
+
+          const res = await fetch(
+            `${API_BASE}/admin/goods-redemption/create-cycle`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-admin-key": getAdminKey(),
+              },
+              body: JSON.stringify({
+                cycle_name: cycleName,
+                emp_pool: empPool,
+                ends_at: endsAt,
+              }),
+            },
+          );
+
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            throw new Error(data.error || "Failed to create Goods cycle.");
+          }
+
+          if (statusEl) statusEl.textContent = "✅ Goods cycle created.";
+
+          if (nameInput) nameInput.value = "";
+          if (poolInput) poolInput.value = "";
+          if (endsAtInput) endsAtInput.value = "";
+
+          await loadGoodsRedemptionAdmin();
+        } catch (err) {
+          console.error("Create Goods cycle failed:", err);
+          if (statusEl)
+            statusEl.textContent =
+              err.message || "Failed to create Goods cycle.";
+        }
+      }
+      async function finalizeExpiredGoodsCycleAdmin() {
+        const statusEl = document.getElementById("goods-cycle-finalize-status");
+
+        try {
+          if (statusEl)
+            statusEl.textContent = "Finalizing expired Goods cycle...";
+
+          const res = await fetch(
+            `${API_BASE}/admin/goods-redemption/finalize-expired`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-admin-key": getAdminKey(),
+              },
+            },
+          );
+
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            throw new Error(data.error || "Failed to finalize Goods cycle.");
+          }
+
+          if (statusEl) {
+            statusEl.textContent = `✅ Finalized. Paid ${data.paid_players || 0} players, total ${Number(data.total_emp_paid || 0).toFixed(4)} EMP.`;
+          }
+
+          await loadGoodsRedemptionAdmin();
+        } catch (err) {
+          console.error("Finalize Goods cycle failed:", err);
+          if (statusEl) {
+            statusEl.textContent =
+              err.message || "Failed to finalize Goods cycle.";
+          }
+        }
+      }
+      function showAdminGate() {
+        const gate = document.getElementById("admin-login-gate");
+        const shell = document.getElementById("admin-dashboard-shell");
+
+        if (gate) gate.style.display = "flex";
+        if (shell) shell.style.display = "none";
+      }
+
+      function showAdminDashboardOnly() {
+        const gate = document.getElementById("admin-login-gate");
+        const shell = document.getElementById("admin-dashboard-shell");
+
+        if (gate) gate.style.display = "none";
+        if (shell) shell.style.display = "block";
+
+        switchAdminTab("overview");
+      }
+
+      async function verifyAdminKey(key) {
+        const cleanKey = String(key || "").trim();
+
+        if (!cleanKey) {
+          return false;
+        }
+
+        try {
+          const res = await fetch(`${API_BASE}/admin/overview`, {
+            headers: {
+              "x-admin-key": cleanKey,
+            },
+          });
+
+          const data = await res.json().catch(() => ({}));
+
+          return res.ok && data.success === true;
+        } catch (err) {
+          console.error("Admin key verification failed:", err);
+          return false;
+        }
+      }
+
+      async function unlockAdminWithKey(key) {
+        const loginStatus = document.getElementById("admin-login-status");
+
+        const cleanKey = String(key || "").trim();
+
+        if (!cleanKey) {
+          if (loginStatus) loginStatus.textContent = "Please enter ADMIN_KEY.";
+          return;
+        }
+
+        if (loginStatus) loginStatus.textContent = "Checking ADMIN_KEY...";
+
+        const isValid = await verifyAdminKey(cleanKey);
+
+        if (!isValid) {
+          ADMIN_KEY = "";
+          localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
+
+          if (loginStatus) {
+            loginStatus.textContent = "❌ Invalid ADMIN_KEY. Dashboard locked.";
+          }
+
+          showAdminGate();
+          return;
+        }
+
+        ADMIN_KEY = cleanKey;
+        localStorage.setItem("MYDEMPIRE_ADMIN_KEY", ADMIN_KEY);
+
+        if (loginStatus) loginStatus.textContent = "✅ Admin unlocked.";
+
+        showAdminDashboardOnly();
+        await loadAdminInitialData();
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        const savedKey = localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || "";
+        const unlockBtn = document.getElementById("unlock-admin-btn");
+        const keyInput = document.getElementById("admin-key-input");
+        const loginStatus = document.getElementById("admin-login-status");
+        const logoutBtn = document.getElementById("logout-admin-btn");
+
+        showAdminGate();
+
+        if (savedKey) {
+          await unlockAdminWithKey(savedKey);
+        }
+
+        if (unlockBtn) {
+          unlockBtn.addEventListener("click", async () => {
+            const key = keyInput ? keyInput.value.trim() : "";
+            await unlockAdminWithKey(key);
+          });
+        }
+
+        if (keyInput) {
+          keyInput.addEventListener("keydown", async (event) => {
+            if (event.key === "Enter") {
+              await unlockAdminWithKey(keyInput.value.trim());
+            }
+          });
+        }
+
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", () => {
+            ADMIN_KEY = "";
+            localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
+
+            if (keyInput) keyInput.value = "";
+            if (loginStatus) loginStatus.textContent = "Dashboard locked.";
+
+            showAdminGate();
+          });
+        }
+      });
+
       async function loadFactoryRenameEmpSink() {
         const box = document.getElementById("factory-rename-sink-log");
 
