@@ -44,8 +44,9 @@
 
   <div class="appbar-dropdown-menu">
     <a href="index.html" class="appbar-link">
-    <a href="economy.html" class="appbar-dropdown-item">Economy</a>
-    <a href="codex.html" class="appbar-dropdown-item">Codex</a>
+   <a href="economy.html">Economy</a>
+<a href="codex.html">Codex</a>
+<a href="transparency.html">Transparency</a>
   </div>
 </div>
 
