@@ -464,6 +464,54 @@ function renderGoodsPreview(data) {
     readyFactoryCount > 0 ? "Claim All Goods" : "Claim Cooldown",
   );
 }
+let goodsRedemptionCountdownTimer = null;
+
+function parseGoodsCycleTime(raw) {
+  if (!raw) return NaN;
+
+  const text = String(raw).trim();
+
+  if (text.endsWith("Z") || /[+-]\d{2}:\d{2}$/.test(text)) {
+    return new Date(text).getTime();
+  }
+
+  return new Date(`${text.replace(" ", "T")}Z`).getTime();
+}
+
+function formatGoodsCountdown(ms) {
+  if (!Number.isFinite(ms) || ms <= 0) {
+    return "Cycle ended";
+  }
+
+  const totalSeconds = Math.floor(ms / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (days > 0) {
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }
+
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+function startGoodsRedemptionCountdown(endsAtRaw) {
+  const countdownEl = document.getElementById("goods-redemption-countdown");
+  if (!countdownEl) return;
+
+  clearInterval(goodsRedemptionCountdownTimer);
+
+  const endsAt = parseGoodsCycleTime(endsAtRaw);
+
+  function tick() {
+    const diff = endsAt - Date.now();
+    countdownEl.textContent = formatGoodsCountdown(diff);
+  }
+
+  tick();
+  goodsRedemptionCountdownTimer = setInterval(tick, 1000);
+}
 async function loadGoodsRedemptionPosition(username) {
   try {
     const response = await fetch(
@@ -471,6 +519,16 @@ async function loadGoodsRedemptionPosition(username) {
     );
 
     const data = await response.json();
+    const activeCycle =
+      data.cycle ||
+      data.activeCycle ||
+      data.active_cycle ||
+      data.redemption_cycle ||
+      null;
+
+    if (activeCycle) {
+      startGoodsRedemptionCountdown(activeCycle.ends_at || activeCycle.endsAt);
+    }
 
     if (!data.success || !data.hasActiveCycle) {
       setGoodsText("goods-redemption-status", "No active cycle");

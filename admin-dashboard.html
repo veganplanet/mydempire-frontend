@@ -662,6 +662,49 @@ forkyishere,529"
               Refresh
             </button>
           </div>
+          <div
+            style="
+              margin: 12px 0 16px;
+              padding: 14px;
+              border: 1px solid #bfdbfe;
+              border-radius: 14px;
+              background: #eff6ff;
+            "
+          >
+            <div style="font-weight: 900; margin-bottom: 8px">
+              🔁 Reinvest Bonus Control
+            </div>
+
+            <div class="row">
+              <input
+                id="reinvest-bonus-percent-input"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="Bonus % e.g. 25"
+              />
+
+              <button id="load-reinvest-bonus-config-btn" type="button">
+                Load Current
+              </button>
+
+              <button
+                id="save-reinvest-bonus-config-btn"
+                type="button"
+                class="primary"
+              >
+                Save Bonus
+              </button>
+            </div>
+
+            <div class="small">
+              Example: 25 means 1 HIVE = 125 EMP. Any number is allowed.
+            </div>
+
+            <div id="reinvest-bonus-config-status" class="status">
+              Bonus config not loaded.
+            </div>
+          </div>
           <div class="metrics">
             <div class="card">
               <div class="label">Total Transactions</div>
@@ -1689,6 +1732,110 @@ forkyishere,529"
         ADMIN_KEY = "";
         localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
         setStatus("Admin logged out.");
+      }
+      async function loadReinvestBonusConfig() {
+        const statusEl = document.getElementById(
+          "reinvest-bonus-config-status",
+        );
+        const inputEl = document.getElementById("reinvest-bonus-percent-input");
+
+        if (!ADMIN_KEY) {
+          if (statusEl) statusEl.textContent = "Connect Admin first.";
+          return;
+        }
+
+        try {
+          if (statusEl)
+            statusEl.textContent = "Loading reinvest bonus config...";
+
+          const response = await fetch(
+            `${API_BASE}/admin/reinvest-bonus-config`,
+            {
+              headers: {
+                "x-admin-key":
+                  localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (!data.success) {
+            throw new Error(
+              data.error || "Failed to load reinvest bonus config.",
+            );
+          }
+
+          if (inputEl) {
+            inputEl.value = data.bonus_percent;
+          }
+
+          if (statusEl) {
+            statusEl.textContent = `Current bonus: ${data.bonus_percent}% • 1 HIVE = ${data.emp_per_hive} EMP`;
+          }
+        } catch (err) {
+          console.error("Load reinvest bonus config error:", err);
+          if (statusEl)
+            statusEl.textContent = "Failed to load reinvest bonus config.";
+        }
+      }
+
+      async function saveReinvestBonusConfig() {
+        const statusEl = document.getElementById(
+          "reinvest-bonus-config-status",
+        );
+        const inputEl = document.getElementById("reinvest-bonus-percent-input");
+
+        if (!ADMIN_KEY) {
+          alert("Connect Admin first.");
+          return;
+        }
+
+        const bonusPercent = Number(inputEl?.value || 0);
+
+        if (!Number.isFinite(bonusPercent) || bonusPercent < 0) {
+          alert("Bonus percent must be zero or higher.");
+          return;
+        }
+
+        try {
+          if (statusEl) statusEl.textContent = "Saving reinvest bonus...";
+
+          const response = await fetch(
+            `${API_BASE}/admin/reinvest-bonus-config`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-admin-key":
+                  localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+              },
+              body: JSON.stringify({
+                bonus_percent: bonusPercent,
+              }),
+            },
+          );
+
+          const data = await response.json();
+
+          if (!data.success) {
+            throw new Error(data.error || "Failed to save reinvest bonus.");
+          }
+
+          if (inputEl) {
+            inputEl.value = data.bonus_percent;
+          }
+
+          if (statusEl) {
+            statusEl.textContent = `Saved: ${data.bonus_percent}% • 1 HIVE = ${data.emp_per_hive} EMP`;
+          }
+
+          alert(data.message || "Reinvest bonus saved.");
+        } catch (err) {
+          console.error("Save reinvest bonus config error:", err);
+          if (statusEl) statusEl.textContent = "Save failed.";
+          alert(err.message || "Failed to save reinvest bonus.");
+        }
       }
       async function loadReinvestSummary() {
         try {
@@ -4112,7 +4259,13 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
 
         return res.json();
       }
+      document
+        .getElementById("load-reinvest-bonus-config-btn")
+        ?.addEventListener("click", loadReinvestBonusConfig);
 
+      document
+        .getElementById("save-reinvest-bonus-config-btn")
+        ?.addEventListener("click", saveReinvestBonusConfig);
       document
         .getElementById("create-season-btn")
         ?.addEventListener("click", async () => {

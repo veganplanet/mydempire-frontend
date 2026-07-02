@@ -697,7 +697,7 @@ font-weight:900;
   </button>
 
   <span
-  onclick="alert('Convert Wallet HIVE into EMP instantly with 5% bonus.\n\n1 HIVE = 105 EMP.\n\nNo withdrawal queue required.')"
+  onclick="showReinvestInfo()"
   style="
     display:inline-flex;
     align-items:center;
@@ -3544,7 +3544,31 @@ if (claimableHiveEl) {
           }
         }
       }
-      async function reinvestWalletHive() {
+      async function showReinvestInfo() {
+  try {
+    let bonusPercent = 5;
+    let empPerHive = 105;
+
+    const response = await fetch(`${API_BASE}/reinvest-bonus-config`);
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      bonusPercent = Number(data.bonus_percent || 0);
+      empPerHive = Number(data.emp_per_hive || 100);
+    }
+
+    alert(
+      `Convert Wallet HIVE into EMP instantly with ${bonusPercent}% bonus.\n\n1 HIVE = ${empPerHive} EMP.\n\nNo withdrawal queue required.`
+    );
+  } catch (err) {
+    console.warn("Failed to load reinvest info:", err);
+
+    alert(
+      "Convert Wallet HIVE into EMP instantly.\n\nBonus config could not be loaded right now.\n\nNo withdrawal queue required."
+    );
+  }
+}
+async function reinvestWalletHive() {
   try {
     const username =
       localStorage.getItem("hiveUsername") ||
@@ -3555,27 +3579,44 @@ if (claimableHiveEl) {
       return;
     }
 
+    let bonusPercent = 5;
+    let empPerHive = 105;
+
+    try {
+      const configRes = await fetch(`${API_BASE}/reinvest-bonus-config`);
+      const configData = await configRes.json();
+
+      if (configRes.ok && configData.success) {
+        bonusPercent = Number(configData.bonus_percent || 0);
+        empPerHive = Number(configData.emp_per_hive || 100);
+      }
+    } catch (configErr) {
+      console.warn("Failed to load reinvest bonus config:", configErr);
+    }
+
     const input = prompt(
-      "Enter Wallet HIVE amount to reinvest into EMP.\n\n1 HIVE = 105 EMP (+5% Bonus)"
+      `Enter Wallet HIVE amount to reinvest into EMP.\n\n1 HIVE = ${empPerHive} EMP (+${bonusPercent}% Bonus)`
     );
 
     if (!input) return;
 
     const amount = Number(input);
 
-   if (!Number.isFinite(amount) || amount <= 0) {
-  alert("Invalid amount.");
-  return;
-}
+    if (!Number.isFinite(amount) || amount <= 0) {
+      alert("Invalid amount.");
+      return;
+    }
 
-if (amount < 0.1) {
-  alert("Minimum reinvest amount is 0.1 HIVE.");
-  return;
-}
+    if (amount < 0.1) {
+      alert("Minimum reinvest amount is 0.1 HIVE.");
+      return;
+    }
 
-const confirmed = confirm(
-  `Reinvest ${amount.toFixed(3)} HIVE into EMP?\n\nYou will receive approximately ${(amount * 105).toFixed(3)} EMP.`
-);
+    const estimatedEmp = Number((amount * empPerHive).toFixed(3));
+
+    const confirmed = confirm(
+      `Reinvest ${amount.toFixed(3)} HIVE into EMP?\n\nYou will receive approximately ${estimatedEmp.toFixed(3)} EMP.`
+    );
 
     if (!confirmed) return;
 
@@ -3595,52 +3636,27 @@ const confirmed = confirm(
     );
 
     const data = await response.json();
-    console.log("DASHBOARD DATA", data);
-    const referralStrip = document.getElementById("referral-strip");
-const copyReferralBtn = document.getElementById("copy-referral-link-btn");
-
-const totalFactories = Number(data.totalFactories || 0);
-console.log("Referral check:", totalFactories);
-
-if (referralStrip && totalFactories > 0) {
-  referralStrip.style.display = "flex";
-}
-
-if (copyReferralBtn) {
-  copyReferralBtn.onclick = async () => {
-    const username = getLoggedInUser();
-
-    if (!username) {
-      alert("Please login first.");
-      return;
-    }
-
-    const referralLink = `https://mydempire.com/shop.html?ref=${username}`;
-
-    await navigator.clipboard.writeText(referralLink);
-
-    alert("Referral link copied!");
-  };
-}
 
     if (!response.ok || !data.success) {
       throw new Error(data.error || "Reinvest failed.");
     }
 
     alert(
-      `Reinvestment successful!\n\n${data.hive_used} HIVE → ${data.emp_received} EMP`
+      `Reinvestment successful!\n\n${data.hive_used} HIVE → ${data.emp_received} EMP\nBonus: ${data.bonus_percent}%`
     );
 
     if (typeof loadDashboardSummary === "function") {
       loadDashboardSummary();
     }
 
+    if (typeof loadRewardSummary === "function") {
+      loadRewardSummary();
+    }
   } catch (err) {
     console.error("Reinvest wallet HIVE error:", err);
     alert(err.message || "Failed to reinvest Wallet HIVE.");
   }
 }
-
       async function loadUnopenedPacks(username) {
         try {
           const res = await fetch(
