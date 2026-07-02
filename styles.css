@@ -18061,3 +18061,25 @@ padding:2px 8px !important;
     width: 100%;
   }
 }
+/* ===== HOME DROPDOWN FIX ===== */
+.home-dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 170px;
+}
+
+.home-dropdown-menu a {
+  display: block;
+  padding: 10px 14px;
+  color: #111827;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 800;
+  border-radius: 10px;
+  text-shadow: none !important;
+}
+
+.home-dropdown-menu a:hover {
+  background: #f3f4f6;
+}
