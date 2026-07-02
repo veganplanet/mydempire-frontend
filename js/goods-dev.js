@@ -531,6 +531,13 @@ async function loadGoodsRedemptionPosition(username) {
     }
 
     if (!data.success || !data.hasActiveCycle) {
+      clearInterval(goodsRedemptionCountdownTimer);
+
+      const countdownEl = document.getElementById("goods-redemption-countdown");
+      if (countdownEl) {
+        countdownEl.textContent = "No Active Cycle";
+      }
+
       setGoodsText("goods-redemption-status", "No active cycle");
       setGoodsText("goods-redemption-pool", "--");
       setGoodsText("goods-redemption-total-pv", "--");

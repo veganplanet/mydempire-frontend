@@ -1506,7 +1506,14 @@ forkyishere,529"
           >
             Finalize Expired Cycle Now
           </button>
-
+          <button
+            class="danger"
+            type="button"
+            onclick="endCurrentGoodsCycleAdmin()"
+            style="margin-left: 10px"
+          >
+            End Running Cycle Now
+          </button>
           <div id="goods-cycle-finalize-status" class="status"></div>
         </div>
         <div class="section">
@@ -5158,7 +5165,7 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
-                "x-admin-key": getAdminKey(),
+                "x-admin-key": ADMIN_KEY,
               },
               body: JSON.stringify({
                 cycle_name: cycleName,
@@ -5201,7 +5208,7 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
-                "x-admin-key": getAdminKey(),
+                "x-admin-key": ADMIN_KEY,
               },
             },
           );
@@ -5222,6 +5229,52 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           if (statusEl) {
             statusEl.textContent =
               err.message || "Failed to finalize Goods cycle.";
+          }
+        }
+      }
+      async function endCurrentGoodsCycleAdmin() {
+        const statusEl = document.getElementById("goods-cycle-finalize-status");
+
+        const confirmed = confirm(
+          "Are you sure? This will end the current Goods Redemption Cycle now and distribute rewards immediately.",
+        );
+
+        if (!confirmed) return;
+
+        try {
+          if (statusEl) {
+            statusEl.textContent =
+              "Ending current Goods cycle and distributing rewards...";
+          }
+
+          const res = await fetch(
+            `${API_BASE}/admin/goods-redemption/end-current`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            throw new Error(data.error || "Failed to end current Goods cycle.");
+          }
+
+          if (statusEl) {
+            statusEl.textContent = `✅ Cycle ended. Paid ${data.paid_players || 0} players, total ${Number(data.total_emp_paid || 0).toFixed(4)} EMP.`;
+          }
+
+          await loadGoodsRedemptionAdmin();
+        } catch (err) {
+          console.error("End current Goods cycle failed:", err);
+
+          if (statusEl) {
+            statusEl.textContent =
+              err.message || "Failed to end current Goods cycle.";
           }
         }
       }
