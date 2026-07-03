@@ -440,7 +440,8 @@ function renderGoodsPreview(data) {
   );
   setGoodsText(
     "goods-preview-note",
-    `Inventory: ${inventoryCount} available Goods • Total Product Value: ${totalProductValue}\nFactory Goods are generated from your active factories once per claim cycle.`,
+    `Inventory: ${Number(data.inventoryCount ?? data.availableGoodsCount ?? data.available_goods_count ?? 0)} available Goods • Total Product Value: ${Number(data.totalProductValue ?? data.total_product_value ?? data.inventoryProductValue ?? data.inventory_product_value ?? 0)}
+Factory Goods are generated from your active factories once per claim cycle.`,
   );
 
   renderGoodsFactoryList(
@@ -454,13 +455,67 @@ function renderGoodsPreview(data) {
     data.skippedFactories,
     "No skipped factories. Full Goods production capacity active.",
   );
-
+  startGoodsNextClaimTimer(
+    data.remainingGoodsClaimSeconds ?? data.remaining_goods_claim_seconds ?? 0,
+    Boolean(data.playerClaimReady),
+  );
   setGoodsClaimButtonState(
     readyFactoryCount > 0,
     readyFactoryCount > 0 ? "Claim All Goods" : "Claim Cooldown",
   );
 }
 let goodsRedemptionCountdownTimer = null;
+let goodsNextClaimTimer = null;
+
+function formatGoodsClaimCountdown(ms) {
+  if (!Number.isFinite(ms) || ms <= 0) {
+    return "Ready to claim now";
+  }
+
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+function startGoodsNextClaimTimer(remainingSeconds, isReady) {
+  const btn = document.getElementById("goods-claim-btn");
+  if (!btn) return;
+
+  clearInterval(goodsNextClaimTimer);
+
+  if (isReady) {
+    btn.disabled = false;
+    btn.textContent = "Claim All Goods";
+    return;
+  }
+
+  let secondsLeft = Number(remainingSeconds || 0);
+
+  if (!Number.isFinite(secondsLeft) || secondsLeft <= 0) {
+    btn.disabled = true;
+    btn.textContent = "Claim Cooldown";
+    return;
+  }
+
+  function tick() {
+    if (secondsLeft <= 0) {
+      btn.disabled = false;
+      btn.textContent = "Claim All Goods";
+      clearInterval(goodsNextClaimTimer);
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = `Claim in ${formatGoodsClaimCountdown(secondsLeft * 1000)}`;
+    secondsLeft -= 1;
+  }
+
+  tick();
+  goodsNextClaimTimer = setInterval(tick, 1000);
+}
 
 function parseGoodsCycleTime(raw) {
   if (!raw) return NaN;

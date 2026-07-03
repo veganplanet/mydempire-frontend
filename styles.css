@@ -18354,3 +18354,18 @@ padding:2px 8px !important;
   line-height: 1.5 !important;
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06) !important;
 }
+.goods-next-claim-timer {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 900;
+  color: #475569;
+}
+
+.goods-next-claim-timer.ready {
+  color: #047857;
+}
+
+.goods-next-claim-timer.cooldown {
+  color: #b45309;
+}
