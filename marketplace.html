@@ -876,11 +876,11 @@ ${list.map((listing) => {
     </div>
 
     <div class="compact-cell compact-details">
-      <strong>Price:</strong> ${Number(listing.unit_price_hive || 0).toFixed(3)} HIVE / EMP
+      <strong>Price:</strong> ${Number(listing.unit_price_hive || 0).toFixed(4)} HIVE / EMP
     </div>
 
     <div class="compact-cell compact-price">
-      ${(Number(listing.unit_price_hive || 0) * Number(listing.quantity || 0)).toFixed(3)} HIVE
+      ${Number(listing.total_price_hive || 0).toFixed(3)} HIVE
     </div>
 
     <div class="compact-cell compact-action">

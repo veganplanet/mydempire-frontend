@@ -31,13 +31,6 @@
 
         <div class="summary-grid goods-summary-grid">
           <div class="summary-card goods-summary-card">
-            <div class="summary-label">Active User</div>
-            <div class="summary-value">
-              @<span id="goods-active-user">--</span>
-            </div>
-          </div>
-
-          <div class="summary-card goods-summary-card">
             <div class="summary-label">EP/day</div>
             <div class="summary-value" id="goods-ep-day">--</div>
           </div>
@@ -67,9 +60,6 @@
             </button>
             <button class="goods-subnav-btn" data-goods-tab="inventory">
               Inventory
-            </button>
-            <button class="goods-subnav-btn" data-goods-tab="production">
-              Production Details
             </button>
           </div>
 
@@ -254,35 +244,6 @@
             >
               Submit to Redemption
             </button>
-          </div>
-        </section>
-      </section>
-
-      <section class="goods-tab-panel" data-goods-panel="production">
-        <section class="section">
-          <div class="section-header">
-            <h2>🏭 Producing This Claim</h2>
-            <small>
-              These factories are selected by your current Goods capacity and
-              rotation.
-            </small>
-          </div>
-
-          <div id="goods-selected-list" class="goods-factory-list">
-            Loading...
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="section-header">
-            <h2>⏸ Waiting for Next Production</h2>
-            <small>
-              These factories stay in rotation and may produce in future claims.
-            </small>
-          </div>
-
-          <div id="goods-skipped-list" class="goods-factory-list">
-            Loading...
           </div>
         </section>
       </section>
