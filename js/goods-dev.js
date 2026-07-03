@@ -655,10 +655,29 @@ async function loadGoodsRedemptionLeaderboard() {
 
     if (!data.success || !data.hasActiveCycle) {
       list.innerHTML = `
-        <div class="goods-empty-state">
-          No active Goods redemption cycle right now.
-        </div>
-      `;
+    <div class="goods-empty-state">
+      <div style="font-weight:900;margin-bottom:10px;">
+        No active Goods redemption cycle right now.
+      </div>
+
+      <button
+        type="button"
+        onclick="loadGoodsRedemptionHistory()"
+        style="
+          margin-top:8px;
+          padding:10px 14px;
+          border-radius:12px;
+          border:1px solid #2563eb;
+          background:#2563eb;
+          color:#ffffff;
+          font-weight:900;
+          cursor:pointer;
+        "
+      >
+        🏆 View Previous Cycles
+      </button>
+    </div>
+  `;
       return;
     }
 
@@ -717,6 +736,161 @@ async function loadGoodsRedemptionLeaderboard() {
         </div>
       `;
     }
+  }
+}
+async function loadGoodsRedemptionHistory(listElement) {
+  const safeText = (value) =>
+    String(value ?? "").replace(
+      /[&<>"']/g,
+      (ch) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;",
+        })[ch],
+    );
+
+  const formatNumber = (value, digits = 2) => {
+    const num = Number(value || 0);
+    if (!Number.isFinite(num)) return "0";
+    return num.toFixed(digits);
+  };
+
+  const formatDate = (raw) => {
+    if (!raw) return "--";
+    const date = new Date(raw);
+    if (isNaN(date.getTime())) return "--";
+    return date.toLocaleString();
+  };
+
+  const list =
+    listElement || document.getElementById("goods-redemption-leaderboard-list");
+
+  if (!list) return;
+
+  try {
+    const response = await fetch(`${GOODS_API_BASE}/goods-redemption/history`);
+
+    const data = await response.json();
+
+    if (
+      !data.success ||
+      !Array.isArray(data.cycles) ||
+      data.cycles.length === 0
+    ) {
+      list.innerHTML = `
+        <div class="goods-empty-state">
+          No active Goods redemption cycle right now.<br>
+          No previous cycle history yet.
+        </div>
+      `;
+      return;
+    }
+
+    const cycleCards = data.cycles
+      .map((item) => {
+        const cycle = item.cycle || {};
+        const leaderboard = Array.isArray(item.leaderboard)
+          ? item.leaderboard
+          : [];
+
+        const rows = leaderboard.length
+          ? leaderboard
+              .slice(0, 50)
+              .map(
+                (entry) => `
+            <tr>
+              <td>#${Number(entry.rank || 0)}</td>
+              <td>@${safeText(entry.username)}</td>
+              <td>${Number(entry.burned_goods_count || 0)}</td>
+              <td>${formatNumber(entry.product_value, 2)}</td>
+              <td>${formatNumber(entry.final_emp_reward, 2)} EMP</td>
+            </tr>
+          `,
+              )
+              .join("")
+          : `
+            <tr>
+              <td colspan="5">No entries recorded for this cycle.</td>
+            </tr>
+          `;
+
+        return `
+        <div
+          class="goods-history-cycle"
+          style="
+            margin:16px 0;
+            padding:16px;
+            border:1px solid #dbeafe;
+            border-radius:16px;
+            background:#ffffff;
+          "
+        >
+          <div style="font-weight:900;font-size:18px;color:#111827;">
+            🏭 ${safeText(cycle.cycle_name || `Cycle #${cycle.id}`)}
+          </div>
+
+          <div style="margin-top:6px;font-size:13px;color:#64748b;font-weight:700;">
+            Status: ${safeText(cycle.status || "COMPLETED")} •
+            Ended: ${formatDate(cycle.ends_at)}
+          </div>
+
+          <div style="margin-top:8px;font-size:13px;color:#334155;font-weight:800;">
+            EMP Pool: ${formatNumber(cycle.emp_pool, 2)} EMP •
+            Total Product Value: ${formatNumber(cycle.total_product_value, 2)} •
+            Final Rate: ${formatNumber(cycle.final_emp_per_product_value, 4)} EMP / Product Value
+          </div>
+
+          <div style="overflow-x:auto;margin-top:12px;">
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <thead>
+                <tr style="background:#eff6ff;">
+                  <th style="padding:8px;text-align:left;">Rank</th>
+                  <th style="padding:8px;text-align:left;">Player</th>
+                  <th style="padding:8px;text-align:left;">Goods Burned</th>
+                  <th style="padding:8px;text-align:left;">Product Value</th>
+                  <th style="padding:8px;text-align:left;">EMP Reward</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+      })
+      .join("");
+
+    list.innerHTML = `
+      <div class="goods-history-wrap">
+        <div
+          style="
+            padding:14px 16px;
+            border-radius:16px;
+            background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);
+            border:1px solid #86efac;
+            color:#14532d;
+            font-weight:900;
+            margin-bottom:14px;
+          "
+        >
+          🏆 Previous Goods Redemption Cycles — Last 5
+        </div>
+
+        ${cycleCards}
+      </div>
+    `;
+  } catch (err) {
+    console.error("Failed to load Goods redemption history:", err);
+
+    list.innerHTML = `
+      <div class="goods-empty-state">
+        Could not load Goods redemption history right now.
+      </div>
+    `;
   }
 }
 async function loadGoodsInventory() {
