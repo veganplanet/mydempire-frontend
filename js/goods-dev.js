@@ -439,12 +439,8 @@ function renderGoodsPreview(data) {
     } • Skipped: ${(data.skippedFactories || []).length}`,
   );
   setGoodsText(
-    "goods-rotation-status",
-    `Rotation: starts at position ${
-      Number(data.rotationCursor || 0) + 1
-    } • Next claim starts at position ${
-      Number(data.nextRotationCursor || 0) + 1
-    }`,
+    "goods-preview-note",
+    `Inventory: ${inventoryCount} available Goods • Total Product Value: ${totalProductValue}\nFactory Goods are generated from your active factories once per claim cycle.`,
   );
 
   renderGoodsFactoryList(

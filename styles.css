@@ -18229,3 +18229,128 @@ padding:2px 8px !important;
 .goods-card:has(.goods-card-image-area):hover .goods-card-name {
   color: #047857;
 }
+/* ============================= */
+/* GOODS COMPACT TOP UI */
+/* ============================= */
+
+.goods-summary-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  margin-bottom: 16px !important;
+  max-width: none !important;
+}
+
+.goods-summary-card {
+  min-height: 96px !important;
+  padding: 18px 22px !important;
+  border-radius: 18px !important;
+}
+
+.goods-summary-card .summary-label,
+.goods-summary-card span {
+  font-size: 13px !important;
+  letter-spacing: 0.08em !important;
+}
+
+.goods-summary-card .summary-value,
+.goods-summary-card strong {
+  font-size: 28px !important;
+  line-height: 1.15 !important;
+}
+
+.goods-action-row {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(140px, 1fr)) !important;
+  gap: 12px !important;
+  align-items: center !important;
+  margin-top: 10px !important;
+}
+
+.goods-action-row .goods-subnav {
+  display: contents !important;
+}
+
+.goods-action-row button,
+.goods-action-row .goods-subnav-btn {
+  min-height: 48px !important;
+  height: 48px !important;
+  padding: 8px 14px !important;
+  border-radius: 999px !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
+
+@media (max-width: 900px) {
+  .goods-summary-grid,
+  .goods-action-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .goods-action-row .goods-subnav {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+}
+/* ============================= */
+/* GOODS TOP SUMMARY COLOR CARDS */
+/* ============================= */
+
+.goods-summary-grid .goods-summary-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 110px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(148, 163, 184, 0.24) !important;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08) !important;
+}
+
+.goods-summary-grid .goods-summary-card:nth-child(1) {
+  background:
+    radial-gradient(circle at top right, rgba(59, 130, 246, 0.18), transparent 36%),
+    linear-gradient(135deg, #eff6ff 0%, #ffffff 100%) !important;
+  border-top: 5px solid #3b82f6 !important;
+}
+
+.goods-summary-grid .goods-summary-card:nth-child(2) {
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.20), transparent 36%),
+    linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%) !important;
+  border-top: 5px solid #22c55e !important;
+}
+
+.goods-summary-grid .goods-summary-card:nth-child(3) {
+  background:
+    radial-gradient(circle at top right, rgba(245, 158, 11, 0.22), transparent 36%),
+    linear-gradient(135deg, #fff7ed 0%, #ffffff 100%) !important;
+  border-top: 5px solid #f59e0b !important;
+}
+
+.goods-summary-grid .goods-summary-card span {
+  color: #64748b !important;
+  font-weight: 900 !important;
+}
+
+.goods-summary-grid .goods-summary-card strong {
+  color: #0f172a !important;
+  font-weight: 950 !important;
+}
+/* ============================= */
+/* GOODS PLAYER INFO STRIP */
+/* ============================= */
+
+.goods-preview-note,
+#goods-preview-note {
+  margin-top: 12px !important;
+  padding: 14px 18px !important;
+  border-radius: 16px !important;
+  background:
+    linear-gradient(135deg, #ecfdf5 0%, #eff6ff 55%, #fff7ed 100%) !important;
+  border: 1px solid #86efac !important;
+  color: #14532d !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  line-height: 1.5 !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06) !important;
+}
