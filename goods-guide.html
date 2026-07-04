@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MydEmpire — Goods Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="assets/favicon.png" />
+
+    <style>
+      .goods-guide-page {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 24px 16px 70px;
+      }
+
+      .goods-guide-hero {
+        border-radius: 28px;
+        padding: 34px 28px;
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(34, 197, 94, 0.18),
+            transparent 34%
+          ),
+          radial-gradient(
+            circle at top right,
+            rgba(59, 130, 246, 0.16),
+            transparent 34%
+          ),
+          linear-gradient(135deg, #ffffff 0%, #f0fdf4 45%, #eff6ff 100%);
+        border: 1px solid #bbf7d0;
+        box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+        margin-bottom: 22px;
+      }
+
+      .goods-guide-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: #dcfce7;
+        color: #166534;
+        font-size: 12px;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+
+      .goods-guide-hero h1 {
+        margin: 0 0 12px;
+        font-size: clamp(32px, 5vw, 54px);
+        line-height: 1.02;
+        color: #0f172a;
+        letter-spacing: -0.04em;
+      }
+
+      .goods-guide-hero p {
+        max-width: 860px;
+        margin: 0;
+        color: #475569;
+        font-size: 17px;
+        line-height: 1.75;
+        font-weight: 650;
+      }
+
+      .goods-guide-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .goods-guide-pill {
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: #ffffff;
+        border: 1px solid #dbeafe;
+        color: #1e3a8a;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .goods-guide-layout {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+
+      .goods-guide-nav {
+        position: sticky;
+        top: 100px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 14px;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+      }
+
+      .goods-guide-nav-title {
+        font-size: 13px;
+        font-weight: 950;
+        color: #0f172a;
+        margin-bottom: 10px;
+      }
+
+      .goods-guide-nav a {
+        display: block;
+        padding: 9px 10px;
+        border-radius: 12px;
+        text-decoration: none;
+        color: #475569;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .goods-guide-nav a:hover {
+        background: #f0fdf4;
+        color: #166534;
+      }
+
+      .goods-guide-content {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .guide-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 22px;
+        padding: 24px;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.055);
+      }
+
+      .guide-card h2 {
+        margin: 0 0 12px;
+        font-size: 26px;
+        color: #0f172a;
+        line-height: 1.18;
+      }
+
+      .guide-card h3 {
+        margin: 20px 0 10px;
+        font-size: 19px;
+        color: #111827;
+      }
+
+      .guide-card p {
+        margin: 10px 0;
+        color: #475569;
+        font-size: 16px;
+        line-height: 1.75;
+        font-weight: 600;
+      }
+
+      .guide-highlight {
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        border: 1px solid #facc15;
+        color: #78350f;
+        font-weight: 850;
+        line-height: 1.6;
+        margin: 14px 0;
+      }
+
+      .guide-flow {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .guide-flow-step {
+        min-height: 90px;
+        border-radius: 16px;
+        padding: 14px 12px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .guide-flow-step strong {
+        color: #0f172a;
+        font-size: 14px;
+      }
+
+      .guide-flow-step span {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .guide-grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .guide-mini-card {
+        border-radius: 18px;
+        padding: 16px;
+        border: 1px solid #e5e7eb;
+        background: #f8fafc;
+      }
+
+      .guide-mini-card strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 16px;
+        color: #111827;
+      }
+
+      .guide-mini-card span {
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.55;
+        font-weight: 650;
+      }
+
+      .guide-table-wrap {
+        overflow-x: auto;
+        margin: 14px 0;
+        border-radius: 16px;
+        border: 1px solid #e5e7eb;
+      }
+
+      .guide-table {
+        width: 100%;
+        min-width: 560px;
+        border-collapse: collapse;
+        background: #ffffff;
+      }
+
+      .guide-table th {
+        background: #eff6ff;
+        color: #1e3a8a;
+        font-size: 13px;
+        font-weight: 950;
+        text-align: left;
+        padding: 12px 14px;
+        border-bottom: 1px solid #dbeafe;
+      }
+
+      .guide-table td {
+        padding: 12px 14px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .guide-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .guide-table tr:nth-child(even) td {
+        background: #f8fafc;
+      }
+
+      .guide-soft-box {
+        padding: 16px;
+        border-radius: 18px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #14532d;
+        font-weight: 800;
+        line-height: 1.65;
+      }
+
+      .guide-warning-box {
+        padding: 16px;
+        border-radius: 18px;
+        background: #fff7ed;
+        border: 1px solid #fdba74;
+        color: #9a3412;
+        font-weight: 800;
+        line-height: 1.65;
+      }
+
+      .guide-formula {
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: #0f172a;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 900;
+        line-height: 1.65;
+        margin: 14px 0;
+        overflow-x: auto;
+      }
+
+      .guide-list {
+        margin: 12px 0 0;
+        padding-left: 20px;
+        color: #475569;
+        font-size: 15px;
+        line-height: 1.8;
+        font-weight: 700;
+      }
+
+      .guide-list li {
+        margin-bottom: 6px;
+      }
+
+      .guide-footer-card {
+        text-align: center;
+        background:
+          radial-gradient(
+            circle at top,
+            rgba(250, 204, 21, 0.22),
+            transparent 35%
+          ),
+          linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+      }
+
+      .guide-footer-card h2 {
+        font-size: 30px;
+      }
+
+      .guide-back-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 14px;
+        padding: 11px 16px;
+        border-radius: 14px;
+        background: #16a34a;
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 950;
+        box-shadow: 0 10px 20px rgba(22, 163, 74, 0.18);
+      }
+
+      @media (max-width: 920px) {
+        .goods-guide-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .goods-guide-nav {
+          position: static;
+        }
+
+        .goods-guide-nav-links {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 6px;
+        }
+
+        .guide-flow {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .guide-grid-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .goods-guide-hero {
+          padding: 26px 20px;
+        }
+
+        .guide-card {
+          padding: 20px 16px;
+        }
+
+        .goods-guide-nav-links {
+          grid-template-columns: 1fr;
+        }
+
+        .guide-flow {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="player-dashboard-page factory-goods-page">
+    <div id="mde-navbar"></div>
+
+    <main class="goods-guide-page">
+      <section class="goods-guide-hero">
+        <div class="goods-guide-kicker">📦 Factory Goods Guide</div>
+        <h1>How Goods Work in MydEmpire</h1>
+        <p>
+          Goods are the product layer of MydEmpire. Your active factories can
+          produce collectible products, give them Product Value, and submit them
+          into dynamic redemption cycles for EMP pool rewards.
+        </p>
+
+        <div class="goods-guide-pills">
+          <span class="goods-guide-pill">🏭 Active Factories</span>
+          <span class="goods-guide-pill">📦 Product Value</span>
+          <span class="goods-guide-pill">⭐ Quality Rolls</span>
+          <span class="goods-guide-pill">🏆 Redemption Cycles</span>
+          <span class="goods-guide-pill">💰 EMP Pool</span>
+        </div>
+      </section>
+
+      <div class="goods-guide-layout">
+        <aside class="goods-guide-nav">
+          <div class="goods-guide-nav-title">Guide Sections</div>
+          <div class="goods-guide-nav-links">
+            <a href="#what">1. What are Goods?</a>
+            <a href="#produce">2. How produced?</a>
+            <a href="#capacity">3. Capacity</a>
+            <a href="#quantity">4. Quantity</a>
+            <a href="#types">5. Types</a>
+            <a href="#pv">6. PV & Quality</a>
+            <a href="#utility">7. Utility</a>
+            <a href="#cycle">8. Cycles</a>
+            <a href="#events">9. Events</a>
+            <a href="#strategy">10. Strategy</a>
+          </div>
+        </aside>
+
+        <div class="goods-guide-content">
+          <section id="what" class="guide-card">
+            <h2>1. What are Goods?</h2>
+            <p>
+              <strong>Goods</strong> are finished products produced by active
+              factories inside MydEmpire.
+            </p>
+            <p>
+              Factories do not only create EP/day. They can also create product
+              items such as food baskets, textile items, pharma products,
+              cleaning products, and supermarket goods.
+            </p>
+
+            <div class="guide-flow">
+              <div class="guide-flow-step">
+                <strong>Factories</strong>
+                <span>Active production base</span>
+              </div>
+              <div class="guide-flow-step">
+                <strong>Goods</strong>
+                <span>Products received</span>
+              </div>
+              <div class="guide-flow-step">
+                <strong>PV</strong>
+                <span>Product Value</span>
+              </div>
+              <div class="guide-flow-step">
+                <strong>Submit</strong>
+                <span>Enter cycle</span>
+              </div>
+              <div class="guide-flow-step">
+                <strong>EMP</strong>
+                <span>Pool share</span>
+              </div>
+            </div>
+
+            <div class="guide-highlight">
+              Goods make your factories feel more alive because your empire now
+              produces real collectible products, not only numbers.
+            </div>
+          </section>
+
+          <section id="produce" class="guide-card">
+            <h2>2. How are Goods produced?</h2>
+            <p>
+              Goods are produced by your <strong>active factories</strong>. A
+              factory must be built, active, ready for Goods claim, and inside
+              your current Goods production capacity.
+            </p>
+
+            <div class="guide-grid-2">
+              <div class="guide-mini-card">
+                <strong>Factory status matters</strong>
+                <span>
+                  Inactive factories, factories under construction, or factories
+                  still in cooldown cannot produce Goods.
+                </span>
+              </div>
+
+              <div class="guide-mini-card">
+                <strong>EP/day matters</strong>
+                <span>
+                  Higher EP/day unlocks more factory access and higher Goods
+                  processing limits.
+                </span>
+              </div>
+
+              <div class="guide-mini-card">
+                <strong>Factory level matters</strong>
+                <span>
+                  Stronger factories can produce more Goods and have better
+                  chances for higher product levels and quality.
+                </span>
+              </div>
+
+              <div class="guide-mini-card">
+                <strong>Cooldown matters</strong>
+                <span>
+                  Goods are claimed in claim cycles. After claiming, the next
+                  claim becomes available after cooldown.
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <section id="capacity" class="guide-card">
+            <h2>3. Goods Production Capacity</h2>
+            <p>
+              Goods production uses two important limits: factory access and
+              maximum Goods processing.
+            </p>
+
+            <h3>A. Factory Access Limit</h3>
+            <p>
+              This decides how many active factories can participate in Goods
+              production.
+            </p>
+
+            <div class="guide-table-wrap">
+              <table class="guide-table">
+                <thead>
+                  <tr>
+                    <th>EP/day</th>
+                    <th>Factory Access</th>
+                    <th>Meaning</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Below 100</td>
+                    <td>0%</td>
+                    <td>Goods locked</td>
+                  </tr>
+                  <tr>
+                    <td>100–499</td>
+                    <td>30% active factories</td>
+                    <td>Starter Production</td>
+                  </tr>
+                  <tr>
+                    <td>500–999</td>
+                    <td>75% active factories</td>
+                    <td>Expanded Production</td>
+                  </tr>
+                  <tr>
+                    <td>1000+</td>
+                    <td>100% active factories</td>
+                    <td>Full Production</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="guide-soft-box">
+              When factory access is limited, MydEmpire uses factory rotation.
+              This means different eligible factories get their chance over time
+              instead of the same factories always producing.
+            </div>
+
+            <h3>B. Max Goods Processing Limit</h3>
+            <p>
+              This decides the maximum number of Goods that can be received from
+              one Goods claim.
+            </p>
+
+            <div class="guide-table-wrap">
+              <table class="guide-table">
+                <thead>
+                  <tr>
+                    <th>EP/day</th>
+                    <th>Max Goods</th>
+                    <th>Processing Label</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>100–499</td>
+                    <td>15 Goods</td>
+                    <td>Starter Processing</td>
+                  </tr>
+                  <tr>
+                    <td>500–999</td>
+                    <td>35 Goods</td>
+                    <td>Expanded Processing</td>
+                  </tr>
+                  <tr>
+                    <td>1000–1999</td>
+                    <td>60 Goods</td>
+                    <td>Advanced Processing</td>
+                  </tr>
+                  <tr>
+                    <td>2000–4999</td>
+                    <td>85 Goods</td>
+                    <td>Industrial Processing</td>
+                  </tr>
+                  <tr>
+                    <td>5000+</td>
+                    <td>110 Goods</td>
+                    <td>Imperial Processing</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="guide-warning-box">
+              These limits are balancing settings. MydEmpire may adjust the
+              limits or add new EP/day slabs in the future if economy growth,
+              player activity, or Goods balance requires it.
+            </div>
+          </section>
+
+          <section id="quantity" class="guide-card">
+            <h2>4. Goods Quantity by Factory Level</h2>
+            <p>
+              Higher-level factories can produce more Goods when they are
+              selected for production.
+            </p>
+
+            <div class="guide-table-wrap">
+              <table class="guide-table">
+                <thead>
+                  <tr>
+                    <th>Factory Level</th>
+                    <th>Goods Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>B1</td>
+                    <td>1 Good</td>
+                  </tr>
+                  <tr>
+                    <td>B2</td>
+                    <td>2 Goods</td>
+                  </tr>
+                  <tr>
+                    <td>B3</td>
+                    <td>3 Goods</td>
+                  </tr>
+                  <tr>
+                    <td>B4</td>
+                    <td>4 Goods</td>
+                  </tr>
+                  <tr>
+                    <td>B5</td>
+                    <td>5 Goods</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="guide-highlight">
+              Final Goods received are still controlled by the player’s max
+              Goods processing limit. A strong factory helps, but the EP/day
+              processing cap still matters.
+            </div>
+          </section>
+
+          <section id="types" class="guide-card">
+            <h2>5. Types of Goods</h2>
+            <p>
+              Goods are connected to the industry of the factory that produced
+              them.
+            </p>
+
+            <div class="guide-table-wrap">
+              <table class="guide-table">
+                <thead>
+                  <tr>
+                    <th>Industry</th>
+                    <th>Example Goods</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>🍞 Food</td>
+                    <td>
+                      Bakery Basket, Fresh Fruit Crate, Dry Fruit Pack, Empire
+                      Meal Box, Chocolate Gift Box
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>🧵 Textile</td>
+                    <td>
+                      Soft Towel Pack, Fabric Roll, Outfit Sets, Wedding Dress
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>💊 Pharma</td>
+                    <td>
+                      Herbal Remedy, Cough Syrup, Multivitamins, First Aid Box,
+                      Wellness Kit
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>🧪 Chemical</td>
+                    <td>
+                      Compost Booster, Plant-Based Cleaner, Dishwash Gel, Bio
+                      Enzyme Cleaner, Eco Laundry Pods
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>🛒 Supermarket</td>
+                    <td>
+                      Grocery Basket, Clean Care Pack, Cozy Home Box, Cosmetic
+                      Set, Festival Gift Hamper
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="pv" class="guide-card">
+            <h2>6. Product Value and Quality</h2>
+            <p>
+              Every Good has a <strong>Product Level</strong> and
+              <strong>Quality</strong>. Together they decide the final Product
+              Value, also called <strong>PV</strong>.
+            </p>
+
+            <h3>Product Level</h3>
+            <div class="guide-table-wrap">
+              <table class="guide-table">
+                <thead>
+                  <tr>
+                    <th>Product Level</th>
+                    <th>Base PV</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Essential</td>
+                    <td>10 PV</td>
+                  </tr>
+                  <tr>
+                    <td>Standard</td>
+                    <td>20 PV</td>
+                  </tr>
+                  <tr>
+                    <td>Value</td>
+                    <td>30 PV</td>
+                  </tr>
+                  <tr>
+                    <td>Premium</td>
+                    <td>40 PV</td>
+                  </tr>
+                  <tr>
+                    <td>Luxury</td>
+                    <td>50 PV</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>Quality Multiplier</h3>
+            <div class="guide-table-wrap">
+              <table class="guide-table">
+                <thead>
+                  <tr>
+                    <th>Quality</th>
+                    <th>Multiplier</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Standard</td>
+                    <td>×1</td>
+                  </tr>
+                  <tr>
+                    <td>Fine</td>
+                    <td>×2</td>
+                  </tr>
+                  <tr>
+                    <td>Superior</td>
+                    <td>×3</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="guide-formula">
+              Base Product Value × Quality Multiplier = Final PV
+            </div>
+
+            <div class="guide-soft-box">
+              Example: Premium Good = 40 base PV. Superior Quality = ×3. Final
+              PV = 120 PV.
+            </div>
+
+            <p>
+              Higher-level factories have better chances to produce stronger
+              product levels and better quality Goods.
+            </p>
+          </section>
+
+          <section id="utility" class="guide-card">
+            <h2>7. Utility of Goods</h2>
+            <p>
+              Goods are mainly used in <strong>Goods Redemption Cycles</strong>.
+              During an active cycle, players can submit selected Goods from
+              inventory.
+            </p>
+
+            <div class="guide-grid-2">
+              <div class="guide-mini-card">
+                <strong>Submitted Goods</strong>
+                <span>
+                  Submitted Goods leave available inventory and enter the active
+                  redemption cycle.
+                </span>
+              </div>
+
+              <div class="guide-mini-card">
+                <strong>Submitted PV</strong>
+                <span>
+                  The Product Value of submitted Goods is added to your cycle
+                  total.
+                </span>
+              </div>
+
+              <div class="guide-mini-card">
+                <strong>Leaderboard</strong>
+                <span>
+                  Your position changes based on how much Product Value you
+                  submit.
+                </span>
+              </div>
+
+              <div class="guide-mini-card">
+                <strong>Estimated EMP</strong>
+                <span>
+                  Your estimated EMP updates as the pool and total submitted PV
+                  change.
+                </span>
+              </div>
+            </div>
+
+            <div class="guide-warning-box">
+              Submitted Goods cannot be returned to inventory.
+            </div>
+          </section>
+
+          <section id="cycle" class="guide-card">
+            <h2>8. Fortnightly Redemption Cycle</h2>
+            <p>
+              Goods Redemption is planned as a regular cycle, around every
+              <strong>14 days</strong>.
+            </p>
+
+            <p>Each cycle has:</p>
+            <ul class="guide-list">
+              <li>EMP Pool</li>
+              <li>Total Submitted PV</li>
+              <li>Live EMP per PV rate</li>
+              <li>Leaderboard</li>
+              <li>Estimated player rewards</li>
+            </ul>
+
+            <div class="guide-formula">
+              EMP per PV = Cycle EMP Pool ÷ Total Submitted Product Value
+            </div>
+
+            <div class="guide-soft-box">
+              Example: If the cycle EMP pool is 1,000 EMP and total submitted PV
+              is 10,000 PV, then the live rate is 0.10 EMP per PV. If a player
+              submitted 1,000 PV, the estimated reward is 100 EMP.
+            </div>
+
+            <p>
+              This rate can change until the cycle ends because more players may
+              submit more Goods.
+            </p>
+
+            <h3>Redemption Leaderboard</h3>
+            <p>
+              During an active cycle, players are ranked by submitted Product
+              Value. When a cycle ends, players can use
+              <strong>View Previous Cycles</strong> to see the last 5 completed
+              cycles.
+            </p>
+          </section>
+
+          <section id="events" class="guide-card">
+            <h2>9. Bi–Tri Monthly Special Goods Events</h2>
+            <p>
+              Apart from normal fortnightly cycles, MydEmpire may run larger
+              Goods events every <strong>2–3 months</strong>.
+            </p>
+
+            <div class="guide-table-wrap">
+              <table class="guide-table">
+                <thead>
+                  <tr>
+                    <th>Event Type</th>
+                    <th>Meaning</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Industry Rush</td>
+                    <td>One industry gets special focus.</td>
+                  </tr>
+                  <tr>
+                    <td>Mega Redemption</td>
+                    <td>A larger EMP pool creates stronger competition.</td>
+                  </tr>
+                  <tr>
+                    <td>Festival Cycle</td>
+                    <td>Special themed Goods become highlighted.</td>
+                  </tr>
+                  <tr>
+                    <td>Premium Goods Event</td>
+                    <td>Higher PV Goods become more important.</td>
+                  </tr>
+                  <tr>
+                    <td>Leaderboard Event</td>
+                    <td>
+                      Top players compete for extra recognition or bonus
+                      rewards.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="guide-highlight">
+              Special events create excitement without replacing normal Goods
+              redemption cycles.
+            </div>
+          </section>
+
+          <section id="strategy" class="guide-card">
+            <h2>10. Strategy Tips</h2>
+
+            <div class="guide-grid-2">
+              <div class="guide-mini-card">
+                <strong>Small Empire</strong>
+                <span>
+                  Reach 100 EP/day first to unlock Goods production.
+                </span>
+              </div>
+
+              <div class="guide-mini-card">
+                <strong>Growing Empire</strong>
+                <span>
+                  Moving from 100–499 EP/day to 500–999 EP/day increases factory
+                  access from 30% to 75%.
+                </span>
+              </div>
+
+              <div class="guide-mini-card">
+                <strong>Strong Empire</strong>
+                <span>
+                  At 1000+ EP/day, all active factories can participate in Goods
+                  production.
+                </span>
+              </div>
+
+              <div class="guide-mini-card">
+                <strong>Industrial Empire</strong>
+                <span>
+                  At 2000+ EP/day, processing capacity becomes much stronger
+                  with up to 85 Goods.
+                </span>
+              </div>
+
+              <div class="guide-mini-card">
+                <strong>Imperial Empire</strong>
+                <span>
+                  At 5000+ EP/day, the current highest processing slab allows up
+                  to 110 Goods.
+                </span>
+              </div>
+
+              <div class="guide-mini-card">
+                <strong>Cycle Timing</strong>
+                <span>
+                  Watch the EMP pool, total submitted PV, live rate, and time
+                  left before submitting everything.
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <section class="guide-card">
+            <h2>Important Rules</h2>
+            <ul class="guide-list">
+              <li>Goods unlock at 100 EP/day.</li>
+              <li>Goods production depends on active factories.</li>
+              <li>Factory access depends on EP/day.</li>
+              <li>Max Goods per claim depends on EP/day.</li>
+              <li>Higher factory levels can produce more Goods.</li>
+              <li>
+                Higher factory levels have better product level and quality
+                chances.
+              </li>
+              <li>
+                Goods must be submitted into redemption cycles to compete.
+              </li>
+              <li>Submitted Goods cannot be returned.</li>
+              <li>
+                Final EMP depends on the cycle pool and total submitted PV.
+              </li>
+              <li>
+                Goods limits may be adjusted later for balancing if required.
+              </li>
+            </ul>
+          </section>
+
+          <section class="guide-card guide-footer-card">
+            <h2>Simple Summary</h2>
+            <p>
+              Build factories, increase EP/day, unlock more Goods capacity,
+              claim Goods, collect better products, submit Goods into redemption
+              cycles, and compete by Product Value for the EMP pool.
+            </p>
+
+            <a class="guide-back-link" href="goods-dev.html">
+              ← Back to Factory Goods
+            </a>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/nav-auth.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/notifications.js"></script>
+  </body>
+</html>
