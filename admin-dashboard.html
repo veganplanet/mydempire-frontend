@@ -5140,6 +5140,13 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
         const empPool = Number(poolInput?.value || 0);
         const endsAt = String(endsAtInput?.value || "").trim();
 
+        const selectedEndAt = endsAt ? new Date(endsAt) : null;
+
+        const durationDays =
+          selectedEndAt && !isNaN(selectedEndAt.getTime())
+            ? (selectedEndAt.getTime() - Date.now()) / (24 * 60 * 60 * 1000)
+            : 0;
+
         if (!cycleName) {
           if (statusEl) statusEl.textContent = "Please enter cycle name.";
           return;
@@ -5150,9 +5157,11 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           return;
         }
 
-        if (!endsAt) {
-          if (statusEl)
-            statusEl.textContent = "Please select cycle end date/time.";
+        if (!endsAt || !Number.isFinite(durationDays) || durationDays <= 0) {
+          if (statusEl) {
+            statusEl.textContent =
+              "Please select a future cycle end date/time.";
+          }
           return;
         }
 
@@ -5170,7 +5179,7 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
               body: JSON.stringify({
                 cycle_name: cycleName,
                 emp_pool: empPool,
-                ends_at: endsAt,
+                duration_days: durationDays,
               }),
             },
           );
