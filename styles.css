@@ -18369,3 +18369,62 @@ padding:2px 8px !important;
 .goods-next-claim-timer.cooldown {
   color: #b45309;
 }
+/* ============================= */
+/* GOODS LEADERBOARD COMPACT FINAL */
+/* ============================= */
+
+.goods-redemption-leaderboard-card {
+  padding: 18px 22px !important;
+}
+
+.goods-redemption-leaderboard-card .goods-redemption-leaderboard-head {
+  margin-bottom: 14px !important;
+}
+
+.goods-redemption-leaderboard-card .goods-redemption-leaderboard-head h2 {
+  font-size: 24px !important;
+  margin: 4px 0 8px !important;
+}
+
+.goods-redemption-leaderboard-card .goods-redemption-leaderboard-head p {
+  font-size: 15px !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+#goods-redemption-leaderboard-list {
+  display: grid !important;
+  gap: 10px !important;
+}
+
+#goods-redemption-leaderboard-list > div {
+  min-height: 74px !important;
+  padding: 12px 16px !important;
+  border-radius: 16px !important;
+  display: grid !important;
+  grid-template-columns: 70px 1.5fr 1fr 0.8fr 1fr !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+#goods-redemption-leaderboard-list > div * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+#goods-redemption-leaderboard-list strong {
+  font-size: 17px !important;
+  line-height: 1.2 !important;
+}
+
+#goods-redemption-leaderboard-list span,
+#goods-redemption-leaderboard-list small,
+#goods-redemption-leaderboard-list div {
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  #goods-redemption-leaderboard-list > div {
+    grid-template-columns: 1fr !important;
+  }
+}

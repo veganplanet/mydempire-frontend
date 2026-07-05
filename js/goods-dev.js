@@ -692,7 +692,17 @@ async function loadGoodsRedemptionLeaderboard() {
       return;
     }
 
-    list.innerHTML = leaderboard
+    const leaderboardHeader = `
+  <div class="goods-redemption-leaderboard-header-row">
+    <div>Rank</div>
+    <div>Player</div>
+    <div>Product Value</div>
+    <div>Share</div>
+    <div>Estimated EMP</div>
+  </div>
+`;
+
+    const rowsHtml = leaderboard
       .map((row) => {
         const rank = Number(row.rank || 0);
         const username = String(row.username || "unknown");
@@ -702,28 +712,31 @@ async function loadGoodsRedemptionLeaderboard() {
         const estimatedEmp = Number(row.estimated_emp_now || 0);
 
         return `
-          <div class="goods-redemption-leaderboard-row">
-            <div class="goods-redemption-rank">#${rank}</div>
-            <div class="goods-redemption-player">
-              <strong>@${username}</strong>
-              <span>${goodsCount} Goods submitted</span>
-            </div>
-            <div class="goods-redemption-leaderboard-stat">
-              <span>Product Value</span>
-              <strong>${productValue.toFixed(0)} PV</strong>
-            </div>
-            <div class="goods-redemption-leaderboard-stat">
-              <span>Share</span>
-              <strong>${sharePercent.toFixed(2)}%</strong>
-            </div>
-            <div class="goods-redemption-leaderboard-stat reward">
-              <span>Estimated EMP</span>
-              <strong>${estimatedEmp.toFixed(2)} EMP</strong>
-            </div>
-          </div>
-        `;
+      <div class="goods-redemption-leaderboard-row">
+        <div class="goods-redemption-rank">#${rank}</div>
+
+        <div class="goods-redemption-player">
+          <strong>@${username}</strong>
+          <span>${goodsCount} Goods submitted</span>
+        </div>
+
+        <div class="goods-redemption-leaderboard-stat">
+          <strong>${productValue.toFixed(0)} PV</strong>
+        </div>
+
+        <div class="goods-redemption-leaderboard-stat">
+          <strong>${sharePercent.toFixed(2)}%</strong>
+        </div>
+
+        <div class="goods-redemption-leaderboard-stat reward">
+          <strong>${estimatedEmp.toFixed(2)} EMP</strong>
+        </div>
+      </div>
+    `;
       })
       .join("");
+
+    list.innerHTML = leaderboardHeader + rowsHtml;
   } catch (err) {
     console.error("Failed to load Goods redemption leaderboard:", err);
 
@@ -766,7 +779,7 @@ async function loadGoodsRedemptionHistory(listElement) {
   };
 
   const list =
-    listElement || document.getElementById("goods-redemption-leaderboard-list");
+    listElement || document.getElementById("goods-redemption-history-list");
 
   if (!list) return;
 
@@ -1448,6 +1461,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const refreshBtn = document.getElementById("goods-refresh-btn");
   const claimBtn = document.getElementById("goods-claim-btn");
   const submitBtn = document.getElementById("goods-submit-selected-btn");
+  const loadHistoryBtn = document.getElementById("goods-load-history-btn");
   const claimModalCloseBtn = document.getElementById("goods-claim-modal-close");
   const claimModalOkBtn = document.getElementById("goods-claim-modal-ok");
   const submitSuccessCloseBtn = document.getElementById(
@@ -1531,6 +1545,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (submitSuccessOkBtn) {
     submitSuccessOkBtn.addEventListener("click", closeGoodsSubmitSuccessModal);
+  }
+  if (loadHistoryBtn) {
+    loadHistoryBtn.addEventListener("click", () => {
+      loadGoodsRedemptionHistory();
+    });
   }
   loadGoodsPreview();
   loadGoodsRedemptionPosition(getGoodsLoggedInUser());
