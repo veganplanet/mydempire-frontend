@@ -179,7 +179,7 @@ ${
 /* Light/Dark mode saved in browser */
 /* ===================================================== */
 
-(function () {
+/* (function () {
   const THEME_KEY = "mde_theme";
 
   function applyMdeTheme(theme) {
