@@ -18428,3 +18428,219 @@ padding:2px 8px !important;
     grid-template-columns: 1fr !important;
   }
 }
+/* ===================================================== */
+/* 🌙 MYDEMPIRE DARK THEME OPTION */
+/* Add at very bottom of styles.css */
+/* Activated later by adding class: mde-dark-theme to body/html */
+/* ===================================================== */
+
+html.mde-dark-theme,
+body.mde-dark-theme {
+  --bg-main: #0f172a;
+  --bg-card: #111827;
+  --bg-soft: #1e293b;
+
+  --border-soft: rgba(148, 163, 184, 0.28);
+  --border-strong: rgba(148, 163, 184, 0.42);
+
+  --text-main: #f8fafc;
+  --text-muted: #cbd5e1;
+  --text-soft: #94a3b8;
+
+  --accent-gold: #facc15;
+  --accent-gold-soft: rgba(250, 204, 21, 0.14);
+  --accent-pill: rgba(148, 163, 184, 0.35);
+
+  --bg: #0f172a;
+  --ink: #f8fafc;
+  --muted: rgba(226, 232, 240, 0.75);
+  --card: #111827;
+  --border: rgba(148, 163, 184, 0.28);
+  --border2: rgba(148, 163, 184, 0.42);
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  --shadow2: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Page background */
+html.mde-dark-theme body,
+body.mde-dark-theme {
+  color: #f8fafc !important;
+  background:
+    radial-gradient(circle at 12% 14%, rgba(59, 130, 246, 0.18), transparent 24%),
+    radial-gradient(circle at 86% 12%, rgba(139, 92, 246, 0.16), transparent 22%),
+    radial-gradient(circle at 78% 72%, rgba(34, 197, 94, 0.10), transparent 24%),
+    linear-gradient(135deg, #020617 0%, #0f172a 45%, #111827 100%) !important;
+  background-attachment: fixed !important;
+}
+
+/* Main cards and sections */
+.mde-dark-theme .card,
+.mde-dark-theme .section,
+.mde-dark-theme .summary-card,
+.mde-dark-theme .shop-card,
+.mde-dark-theme .codex-card-block,
+.mde-dark-theme .codex-mini-card,
+.mde-dark-theme .rat-situation-card,
+.mde-dark-theme .listing-list,
+.mde-dark-theme .market-tab-panel,
+.mde-dark-theme .overview-block,
+.mde-dark-theme .empire-path-card,
+.mde-dark-theme .inside-pack-mini,
+.mde-dark-theme .dashboard-feature-card {
+  background: rgba(15, 23, 42, 0.92) !important;
+  color: #f8fafc !important;
+  border-color: rgba(148, 163, 184, 0.28) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Navbar */
+.mde-dark-theme .site-header {
+  background: #020617 !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.28) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+.mde-dark-theme .site-nav a {
+  color: #e5e7eb !important;
+}
+
+.mde-dark-theme .site-nav a:hover,
+.mde-dark-theme .site-nav a.active {
+  color: #facc15 !important;
+}
+
+/* Text */
+.mde-dark-theme h1,
+.mde-dark-theme h2,
+.mde-dark-theme h3,
+.mde-dark-theme h4,
+.mde-dark-theme .page-title,
+.mde-dark-theme .section-title,
+.mde-dark-theme .hTitle,
+.mde-dark-theme .summary-value,
+.mde-dark-theme strong {
+  color: #f8fafc !important;
+}
+
+.mde-dark-theme p,
+.mde-dark-theme li,
+.mde-dark-theme small,
+.mde-dark-theme .page-subtitle,
+.mde-dark-theme .section-subtitle,
+.mde-dark-theme .hText,
+.mde-dark-theme .summary-sub,
+.mde-dark-theme .market-header-sub,
+.mde-dark-theme .subtitle,
+.mde-dark-theme .text-muted {
+  color: #cbd5e1 !important;
+}
+
+/* Pills, tags, hints */
+.mde-dark-theme .pill,
+.mde-dark-theme .tag,
+.mde-dark-theme .faq-pill,
+.mde-dark-theme .hint,
+.mde-dark-theme .status,
+.mde-dark-theme .status-text {
+  background: rgba(30, 41, 59, 0.95) !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(148, 163, 184, 0.3) !important;
+}
+
+/* Inputs */
+.mde-dark-theme input,
+.mde-dark-theme select,
+.mde-dark-theme textarea {
+  background: #020617 !important;
+  color: #f8fafc !important;
+  border-color: rgba(148, 163, 184, 0.38) !important;
+}
+
+.mde-dark-theme input::placeholder,
+.mde-dark-theme textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Buttons */
+.mde-dark-theme button,
+.mde-dark-theme .btn,
+.mde-dark-theme .secondary-btn,
+.mde-dark-theme .subnav-btn {
+  background: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: rgba(148, 163, 184, 0.35) !important;
+}
+
+.mde-dark-theme .primary-button,
+.mde-dark-theme .primary-btn,
+.mde-dark-theme .btnPrimary {
+  background: linear-gradient(180deg, #22c55e, #15803d) !important;
+  color: #ffffff !important;
+  border-color: rgba(34, 197, 94, 0.45) !important;
+}
+
+.mde-dark-theme .subnav-btn-active,
+.mde-dark-theme .tab-btn.active,
+.mde-dark-theme .admin-tab-btn.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #60a5fa !important;
+}
+
+/* Tables */
+.mde-dark-theme table,
+.mde-dark-theme .mde-table,
+.mde-dark-theme .shop-table,
+.mde-dark-theme .codex-table {
+  background: #111827 !important;
+  color: #f8fafc !important;
+}
+
+.mde-dark-theme th {
+  background: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: rgba(148, 163, 184, 0.28) !important;
+}
+
+.mde-dark-theme td {
+  background: rgba(15, 23, 42, 0.92) !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(148, 163, 184, 0.22) !important;
+}
+
+/* Modals and popups */
+.mde-dark-theme .pack-reveal-modal-box,
+.mde-dark-theme .fulfillment-guide-box,
+.mde-dark-theme .fulfillment-claim-box,
+.mde-dark-theme .fulfillment-start-box {
+  background: linear-gradient(180deg, #111827 0%, #020617 100%) !important;
+  color: #f8fafc !important;
+  border-color: rgba(148, 163, 184, 0.3) !important;
+}
+
+/* Keep warning/success cards readable */
+.mde-dark-theme .highlight-gold {
+  background: rgba(250, 204, 21, 0.14) !important;
+  color: #fde68a !important;
+}
+
+/* Theme toggle button style - button added in next step */
+.mde-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.mde-theme-toggle:hover {
+  background: rgba(250, 204, 21, 0.18);
+  color: #facc15;
+}
