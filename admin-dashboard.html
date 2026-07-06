@@ -1544,15 +1544,15 @@ forkyishere,529"
             >
               <strong style="color: #1e3a8a">Industrial Support</strong>
 
-              <input
-                id="industrial-support-multiplier"
-                type="number"
-                step="0.01"
-                min="0"
-                max="10"
-                value="2"
-                style="width: 90px"
-              />
+             <input
+  id="industrial-support-multiplier"
+  type="number"
+  step="0.01"
+  min="0"
+  max="10"
+  placeholder="..."
+  style="width: 90px"
+/>
 
               <button id="save-industrial-support-config-btn" class="primary">
                 Save
@@ -4352,7 +4352,11 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
         } catch (err) {
           console.error("loadAdminOverview failed:", err);
         }
-
+try {
+  await loadIndustrialSupportConfig();
+} catch (err) {
+  console.error("loadIndustrialSupportConfig failed:", err);
+}
         try {
           await loadOperationsEmpEconomy();
         } catch (err) {
