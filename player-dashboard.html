@@ -591,13 +591,13 @@ font-weight:900;
               <div class="summary-label">
                 <svg class="ui-icon">
                   <use href="assets/icons.svg#icon-ep"></use></svg
-                >Production
+                >Effective EP/day
               </div>
               <div class="summary-value" id="summary-production-rate">
                 0 EP/day
               </div>
               <div class="summary-sub" id="summary-production-sub">
-                Empire production including relic boosts
+                Official daily EP snapshot including active boosts. Updates once daily after reset.
                 <div class="summary-sub" id="summary-claimable-ep">
                   Accumulated EP: 0.00
                 </div>
@@ -2075,7 +2075,7 @@ if (
   id="sort-current"
   onclick="setLeaderboardSort('current')"
 >
-  EP/day
+  Effective EP/day
 </div>
   <div class="leaderboard-metric">Daily Share</div>
 </div>
@@ -2168,7 +2168,7 @@ data-tooltip="${
 
   <div class="leaderboard-metric">
     <strong>${Number(row.current_ep_per_day || 0).toFixed(2)}</strong>
-    <span>EP/day</span>
+    <span>Effective EP/day</span>
   </div>
 
   <div class="leaderboard-metric">

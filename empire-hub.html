@@ -3144,11 +3144,14 @@ const rescueManager = data.rescueManager || eligibility.rescueManager || {};
         </h2>
 
         <p style="margin:0 0 18px;color:#475569;font-size:16px;line-height:1.7;font-weight:800;">
-          Industrial Management Office unlocks at <strong>500 EP/day</strong>.
+          Industrial Management Office unlocks at <strong>500 Effective EP/day</strong>.
         </p>
 
         <div style="padding:16px;border-radius:16px;background:#ffffff;border:1px solid #e5e7eb;font-weight:900;color:#334155;">
-          Current EP/day: ${currentEP.toFixed(2)} / 500
+          Effective EP/day: ${currentEP.toFixed(2)} / 500
+<div style="margin-top:6px;font-size:12px;line-height:1.45;color:#64748b;font-weight:500;">
+  Snapshot includes active boosts. Updates daily after reset.
+</div>
         </div>
       </div>
     `;
@@ -3366,8 +3369,11 @@ const rescueManager = data.rescueManager || eligibility.rescueManager || {};
         "
       >
         <div style="background:#ffffff;border:1px solid #bfdbfe;border-radius:16px;padding:14px;">
-          <div style="font-size:12px;font-weight:900;color:#2563eb;">EP/day</div>
-          <div style="font-size:22px;font-weight:1000;color:#111827;">${currentEP.toFixed(2)}</div>
+          <div style="font-size:12px;font-weight:900;color:#2563eb;">Effective EP/day</div>
+<div style="font-size:22px;font-weight:1000;color:#111827;">${currentEP.toFixed(2)}</div>
+<div style="margin-top:6px;font-size:12px;line-height:1.45;color:#64748b;font-weight:500;">
+  Snapshot includes active boosts. Updates daily after reset.
+</div>
         </div>
 
         <div style="background:#ffffff;border:1px solid #fed7aa;border-radius:16px;padding:14px;">
