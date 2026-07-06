@@ -18644,3 +18644,45 @@ body.mde-dark-theme {
   background: rgba(250, 204, 21, 0.18);
   color: #facc15;
 }
+/* Goods leaderboard empty message */
+.goods-redemption-leaderboard-list:has(.goods-empty-state) {
+  display: block !important;
+}
+
+.goods-redemption-leaderboard-list .goods-empty-state {
+  display: block !important;
+  width: 100% !important;
+  padding: 16px 18px !important;
+  border-radius: 16px !important;
+  background: #f8fafc !important;
+  border: 1px dashed #cbd5e1 !important;
+  color: #475569 !important;
+  font-size: 16px !important;
+  font-weight: 850 !important;
+  line-height: 1.5 !important;
+  text-align: left !important;
+  white-space: normal !important;
+}
+/* Goods leaderboard no-active message */
+.goods-redemption-leaderboard-list .goods-empty-state-wide {
+  display: flex !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+  padding: 16px 18px !important;
+  border-radius: 16px !important;
+  background: #f8fafc !important;
+  border: 1px dashed #cbd5e1 !important;
+  box-sizing: border-box !important;
+}
+
+.goods-redemption-leaderboard-list .goods-empty-state-wide span {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  color: #475569 !important;
+  font-size: 16px !important;
+  font-weight: 850 !important;
+  line-height: 1.5 !important;
+  white-space: nowrap !important;
+}

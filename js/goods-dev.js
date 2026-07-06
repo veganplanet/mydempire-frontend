@@ -655,29 +655,28 @@ async function loadGoodsRedemptionLeaderboard() {
 
     if (!data.success || !data.hasActiveCycle) {
       list.innerHTML = `
-    <div class="goods-empty-state">
-      <div style="font-weight:900;margin-bottom:10px;">
-        No active Goods redemption cycle right now.
-      </div>
-
-      <button
-        type="button"
-        onclick="loadGoodsRedemptionHistory()"
-        style="
-          margin-top:8px;
-          padding:10px 14px;
-          border-radius:12px;
-          border:1px solid #2563eb;
-          background:#2563eb;
-          color:#ffffff;
-          font-weight:900;
-          cursor:pointer;
-        "
-      >
-        🏆 View Previous Cycles
-      </button>
-    </div>
-  `;
+  <div
+    class="goods-leaderboard-empty-wide"
+    style="
+      display:block !important;
+      width:100% !important;
+      max-width:100% !important;
+      padding:16px 18px !important;
+      border-radius:16px !important;
+      background:#f8fafc !important;
+      border:1px dashed #cbd5e1 !important;
+      color:#475569 !important;
+      font-size:16px !important;
+      font-weight:800 !important;
+      line-height:1.5 !important;
+      white-space:nowrap !important;
+      text-align:left !important;
+      box-sizing:border-box !important;
+    "
+  >
+    No active Goods redemption cycle right now.
+  </div>
+`;
       return;
     }
 
@@ -744,13 +743,14 @@ async function loadGoodsRedemptionLeaderboard() {
 
     if (list) {
       list.innerHTML = `
-        <div class="goods-empty-state">
-          Could not load leaderboard right now.
-        </div>
-      `;
+    <div class="goods-leaderboard-empty-wide">
+      Could not load leaderboard right now.
+    </div>
+  `;
     }
   }
 }
+
 async function loadGoodsRedemptionHistory(listElement) {
   const safeText = (value) =>
     String(value ?? "").replace(
@@ -862,7 +862,7 @@ async function loadGoodsRedemptionHistory(listElement) {
                 <tr style="background:#eff6ff;">
                   <th style="padding:8px;text-align:left;">Rank</th>
                   <th style="padding:8px;text-align:left;">Player</th>
-                  <th style="padding:8px;text-align:left;">Goods Burned</th>
+                  <th style="padding:8px;text-align:left;">Goods Submitted</th>
                   <th style="padding:8px;text-align:left;">Product Value</th>
                   <th style="padding:8px;text-align:left;">EMP Reward</th>
                 </tr>
