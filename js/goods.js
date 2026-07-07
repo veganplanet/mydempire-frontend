@@ -528,7 +528,17 @@ function parseGoodsCycleTime(raw) {
 
   return new Date(`${text.replace(" ", "T")}Z`).getTime();
 }
-
+function getGoodsLoggedInActor() {
+  return String(
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    ""
+  )
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+}
 function formatGoodsCountdown(ms) {
   if (!Number.isFinite(ms) || ms <= 0) {
     return "Cycle ended";
@@ -921,9 +931,14 @@ async function loadGoodsInventory() {
   }
 
   try {
-    const response = await fetch(
-      `${GOODS_API_BASE}/goods/${username}/inventory`,
-    );
+   const response = await fetch(
+  `${GOODS_API_BASE}/goods/${encodeURIComponent(username)}/inventory`,
+  {
+    headers: {
+      "x-mde-actor": getGoodsLoggedInActor(),
+    },
+  }
+);
     const data = await response.json();
 
     if (!data.success) {
@@ -962,7 +977,14 @@ async function loadGoodsPreview() {
   setGoodsText("goods-status", "Loading Goods preview...");
 
   try {
-    const response = await fetch(`${GOODS_API_BASE}/goods/${username}/preview`);
+    const response = await fetch(
+  `${GOODS_API_BASE}/goods/${encodeURIComponent(username)}/preview`,
+  {
+    headers: {
+      "x-mde-actor": getGoodsLoggedInActor(),
+    },
+  }
+);
     const data = await response.json();
 
     if (!data.success) {
