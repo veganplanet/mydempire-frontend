@@ -123,7 +123,18 @@ ${
       mobileNavMenu.classList.toggle("mobile-open");
     });
   }
+const homeDropdown = document.querySelector("#mobileNavMenu .home-nav-dropdown");
+const homeLink = document.querySelector("#mobileNavMenu .appbar-home-link");
 
+if (homeDropdown && homeLink) {
+  homeLink.addEventListener("click", function (e) {
+    if (window.innerWidth <= 1100) {
+      e.preventDefault();
+      e.stopPropagation();
+      homeDropdown.classList.toggle("home-mobile-open");
+    }
+  });
+}
   const accountBtn = document.getElementById("appbarAccountBtn");
   const dropdown = document.getElementById("appbarDropdown");
 
