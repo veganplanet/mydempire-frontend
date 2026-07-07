@@ -1523,6 +1523,81 @@ forkyishere,529"
           </div>
         </div>
       </div>
+      <div class="section">
+        <h2>📦 Playerwise Goods Inventory</h2>
+        <p class="sub">
+          View Goods held by players, submitted Product Value, and estimated EMP
+          from the current Goods cycle.
+        </p>
+
+        <div class="top-row">
+          <button
+            type="button"
+            class="primary"
+            onclick="loadAdminGoodsPlayerInventory()"
+          >
+            Refresh Goods Inventory
+          </button>
+        </div>
+
+        <div
+          id="admin-goods-player-summary"
+          class="metrics"
+          style="margin-bottom: 14px"
+        >
+          <div class="card">
+            <div class="label">EMP Pool</div>
+            <div class="value" id="admin-goods-emp-pool">--</div>
+            <div class="small">Current active Goods cycle</div>
+          </div>
+
+          <div class="card">
+            <div class="label">Submitted PV</div>
+            <div class="value" id="admin-goods-submitted-pv">--</div>
+            <div class="small">Total Product Value submitted</div>
+          </div>
+
+          <div class="card">
+            <div class="label">Live EMP / PV</div>
+            <div class="value" id="admin-goods-live-rate">--</div>
+            <div class="small">Current estimated rate</div>
+          </div>
+
+          <div class="card">
+            <div class="label">Players</div>
+            <div class="value" id="admin-goods-player-count">--</div>
+            <div class="small">Players holding/submitting Goods</div>
+          </div>
+        </div>
+
+        <div class="all-players-wrap">
+          <div class="all-players-box">
+            <table class="all-players-table">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>Goods Held</th>
+                  <th>Held PV</th>
+                  <th>3★ Goods</th>
+                  <th>Submitted Goods</th>
+                  <th>Submitted PV</th>
+                  <th>Est. EMP</th>
+                  <th>Last Claim</th>
+                </tr>
+              </thead>
+              <tbody id="admin-goods-player-inventory-body">
+                <tr>
+                  <td colspan="8">Click Refresh Goods Inventory.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="admin-goods-player-inventory-status" class="status">
+          Goods player inventory not loaded yet.
+        </div>
+      </div>
       <div class="admin-tab-panel" data-admin-panel="system">
         <div class="section">
           <h2>🛠 System Controls</h2>
@@ -1544,15 +1619,15 @@ forkyishere,529"
             >
               <strong style="color: #1e3a8a">Industrial Support</strong>
 
-             <input
-  id="industrial-support-multiplier"
-  type="number"
-  step="0.01"
-  min="0"
-  max="10"
-  placeholder="..."
-  style="width: 90px"
-/>
+              <input
+                id="industrial-support-multiplier"
+                type="number"
+                step="0.01"
+                min="0"
+                max="10"
+                placeholder="..."
+                style="width: 90px"
+              />
 
               <button id="save-industrial-support-config-btn" class="primary">
                 Save
@@ -1842,6 +1917,145 @@ forkyishere,529"
           console.error("Save reinvest bonus config error:", err);
           if (statusEl) statusEl.textContent = "Save failed.";
           alert(err.message || "Failed to save reinvest bonus.");
+        }
+      }
+      async function loadAdminGoodsPlayerInventory() {
+        const statusEl = document.getElementById(
+          "admin-goods-player-inventory-status",
+        );
+        const tbody = document.getElementById(
+          "admin-goods-player-inventory-body",
+        );
+
+        const empPoolEl = document.getElementById("admin-goods-emp-pool");
+        const submittedPvEl = document.getElementById(
+          "admin-goods-submitted-pv",
+        );
+        const liveRateEl = document.getElementById("admin-goods-live-rate");
+        const playerCountEl = document.getElementById(
+          "admin-goods-player-count",
+        );
+
+        if (!tbody) return;
+
+        function safeText(value) {
+          return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+        }
+
+        function formatNumber(value, decimals = 0) {
+          const num = Number(value || 0);
+          if (!Number.isFinite(num)) return "0";
+
+          return num.toLocaleString(undefined, {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals,
+          });
+        }
+
+        function formatDate(value) {
+          if (!value) return "-";
+
+          const date = new Date(value);
+          if (isNaN(date.getTime())) return "-";
+
+          return date.toLocaleString();
+        }
+
+        try {
+          if (statusEl) {
+            statusEl.textContent = "Loading playerwise Goods inventory...";
+          }
+
+          tbody.innerHTML = `
+      <tr>
+        <td colspan="8">Loading Goods inventory...</td>
+      </tr>
+    `;
+
+          const response = await fetch(
+            `${API_BASE}/admin/goods-player-inventory`,
+            {
+              headers: {
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (!data.success) {
+            throw new Error(data.error || "Failed to load Goods inventory.");
+          }
+
+          const players = Array.isArray(data.players) ? data.players : [];
+
+          if (empPoolEl) empPoolEl.textContent = formatNumber(data.emp_pool, 0);
+          if (submittedPvEl) {
+            submittedPvEl.textContent = formatNumber(
+              data.total_submitted_product_value,
+              0,
+            );
+          }
+          if (liveRateEl) {
+            liveRateEl.textContent = formatNumber(
+              data.live_emp_per_product_value,
+              4,
+            );
+          }
+          if (playerCountEl) playerCountEl.textContent = players.length;
+
+          if (!players.length) {
+            tbody.innerHTML = `
+        <tr>
+          <td colspan="8">No Goods inventory found yet.</td>
+        </tr>
+      `;
+
+            if (statusEl) {
+              statusEl.textContent = "No Goods inventory found yet.";
+            }
+
+            return;
+          }
+
+          tbody.innerHTML = players
+            .map((player) => {
+              return `
+          <tr>
+            <td class="all-players-name">@${safeText(player.username)}</td>
+            <td class="all-players-num">${formatNumber(player.goods_held, 0)}</td>
+            <td class="all-players-num">${formatNumber(player.held_product_value, 0)}</td>
+            <td class="all-players-num">${formatNumber(player.three_star_goods, 0)}</td>
+            <td class="all-players-num">${formatNumber(player.submitted_goods, 0)}</td>
+            <td class="all-players-num">${formatNumber(player.submitted_product_value, 0)}</td>
+            <td class="all-players-num">${formatNumber(player.estimated_emp, 2)}</td>
+            <td>${formatDate(player.last_goods_claim)}</td>
+          </tr>
+        `;
+            })
+            .join("");
+
+          if (statusEl) {
+            statusEl.textContent = `Loaded ${players.length} player Goods inventory rows.`;
+          }
+        } catch (err) {
+          console.error("Admin Goods player inventory load failed:", err);
+
+          tbody.innerHTML = `
+      <tr>
+        <td colspan="8">Failed to load Goods inventory.</td>
+      </tr>
+    `;
+
+          if (statusEl) {
+            statusEl.textContent =
+              err.message || "Failed to load playerwise Goods inventory.";
+          }
         }
       }
       async function loadReinvestSummary() {
@@ -4352,11 +4566,11 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
         } catch (err) {
           console.error("loadAdminOverview failed:", err);
         }
-try {
-  await loadIndustrialSupportConfig();
-} catch (err) {
-  console.error("loadIndustrialSupportConfig failed:", err);
-}
+        try {
+          await loadIndustrialSupportConfig();
+        } catch (err) {
+          console.error("loadIndustrialSupportConfig failed:", err);
+        }
         try {
           await loadOperationsEmpEconomy();
         } catch (err) {
