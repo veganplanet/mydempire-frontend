@@ -18710,3 +18710,169 @@ body.mde-dark-theme {
   overflow-wrap:normal !important;
   box-sizing:border-box !important;
 }
+/* ================================================= */
+/* FINAL MOBILE NAVBAR DRAWER FIX — CLEAN VERSION */
+/* ================================================= */
+
+@media (max-width: 768px) {
+
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  body {
+    padding-top: 74px !important;
+  }
+
+  .wrap,
+  .page,
+  .page-main,
+  .empire-hub-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    overflow-x: hidden !important;
+  }
+
+  .appbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 74px !important;
+    min-height: 74px !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    z-index: 999999 !important;
+    background: #8E44AD !important;
+  }
+
+  .appbar-inner {
+    position: relative !important;
+    height: 74px !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+
+  .appbar-left {
+    position: static !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    gap: 8px !important;
+  }
+
+  .appbar-logo img {
+    height: 42px !important;
+    max-width: 76px !important;
+    object-fit: contain !important;
+  }
+
+  .appbar-right {
+    position: static !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  .notification-bell-btn {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    padding: 0 !important;
+  }
+
+  .appbar-account-wrap {
+    display: block !important;
+    max-width: 88px !important;
+  }
+
+  .appbar-account-btn {
+    height: 38px !important;
+    max-width: 88px !important;
+    padding: 0 8px !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+    font-size: 12px !important;
+  }
+
+  .mobile-menu-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: static !important;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    border-radius: 12px !important;
+    margin: 0 !important;
+  }
+
+  .appbar-nav {
+    display: none !important;
+    position: fixed !important;
+    top: 74px !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: calc(100vh - 90px) !important;
+    overflow-y: auto !important;
+
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 12px !important;
+
+    border-radius: 0 0 20px 20px !important;
+    background: linear-gradient(
+      180deg,
+      rgba(142, 68, 173, 0.98),
+      rgba(59, 71, 88, 0.98)
+    ) !important;
+
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.32) !important;
+    z-index: 1000000 !important;
+  }
+
+  .appbar-nav.mobile-open {
+    display: flex !important;
+  }
+
+  .appbar-link {
+    width: 100% !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 0 12px !important;
+    border-radius: 14px !important;
+
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+  }
+
+  .soon-pill {
+    margin-left: 6px !important;
+  }
+}
