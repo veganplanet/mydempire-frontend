@@ -18,7 +18,7 @@
   Empire Hub
 </a>
 <a href="factory-products.html" class="appbar-link">
-  Goods <span class="nav-new-pill">SOON</span>
+  Goods 
 </a>
   `
     : "";

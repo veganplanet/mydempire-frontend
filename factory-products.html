@@ -2,418 +2,506 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>MydEmpire — Goods</title>
+    <title>MydEmpire — Factory Goods</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="assets/favicon.png" />
-
-    <style>
-      .goods-page {
-        width: 100%;
-        max-width: 1500px;
-        margin: 0 auto;
-        padding: 120px 28px 60px;
-      }
-
-      .goods-hero {
-        position: relative;
-        overflow: hidden;
-        border-radius: 28px;
-        padding: 42px 34px;
-        background:
-          radial-gradient(
-            circle at top left,
-            rgba(34, 197, 94, 0.18),
-            transparent 32%
-          ),
-          radial-gradient(
-            circle at top right,
-            rgba(59, 130, 246, 0.16),
-            transparent 34%
-          ),
-          linear-gradient(135deg, #ffffff 0%, #f0fdf4 45%, #eff6ff 100%);
-        border: 1px solid #bbf7d0;
-        box-shadow: 0 20px 48px rgba(15, 23, 42, 0.12);
-      }
-
-      .goods-kicker {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 7px 13px;
-        border-radius: 999px;
-        background: #dcfce7;
-        border: 1px solid #86efac;
-        color: #166534;
-        font-size: 12px;
-        font-weight: 950;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .goods-title {
-        margin: 18px 0 10px;
-        font-size: 48px;
-        line-height: 1.05;
-        color: #0f172a;
-        letter-spacing: -0.04em;
-      }
-
-      .goods-title span {
-        color: #16a34a;
-      }
-
-      .goods-subtitle {
-        max-width: 820px;
-        margin: 0;
-        color: #475569;
-        font-size: 17px;
-        line-height: 1.8;
-        font-weight: 700;
-      }
-
-      .goods-status-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 24px;
-      }
-
-      .goods-pill {
-        padding: 10px 14px;
-        border-radius: 999px;
-        background: #ffffff;
-        border: 1px solid #dbeafe;
-        color: #1e3a8a;
-        font-size: 13px;
-        font-weight: 900;
-        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.08);
-      }
-
-      .goods-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-        gap: 18px;
-        margin-top: 22px;
-      }
-
-      .goods-card {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 22px;
-        padding: 22px;
-        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
-      }
-
-      .goods-card-icon {
-        width: 52px;
-        height: 52px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 16px;
-        background: linear-gradient(135deg, #dcfce7 0%, #dbeafe 100%);
-        font-size: 26px;
-        margin-bottom: 14px;
-      }
-
-      .goods-card h3 {
-        margin: 0 0 8px;
-        font-size: 20px;
-        color: #111827;
-      }
-
-      .goods-card p {
-        margin: 0;
-        color: #64748b;
-        font-size: 14px;
-        line-height: 1.7;
-        font-weight: 700;
-      }
-
-      .goods-section {
-        margin-top: 24px;
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 24px;
-        padding: 26px;
-        box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
-      }
-
-      .goods-section-head {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        margin-bottom: 18px;
-      }
-
-      .goods-section h2 {
-        margin: 0;
-        font-size: 28px;
-        color: #0f172a;
-      }
-
-      .goods-section small {
-        color: #64748b;
-        font-weight: 800;
-      }
-
-      .goods-levels {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 12px;
-      }
-
-      .goods-level {
-        border-radius: 18px;
-        padding: 16px;
-        border: 1px solid #e5e7eb;
-        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-      }
-
-      .goods-level strong {
-        display: block;
-        font-size: 16px;
-        color: #111827;
-        margin-bottom: 5px;
-      }
-
-      .goods-level span {
-        color: #64748b;
-        font-size: 13px;
-        font-weight: 800;
-      }
-
-      .goods-preview-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 14px;
-      }
-
-      .goods-preview {
-        border-radius: 18px;
-        padding: 16px 12px;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        text-align: center;
-        font-weight: 950;
-        color: #334155;
-      }
-
-      .goods-preview .emoji {
-        display: block;
-        font-size: 30px;
-        margin-bottom: 8px;
-      }
-
-      .goods-action-box {
-        margin-top: 24px;
-        padding: 22px;
-        border-radius: 22px;
-        background: linear-gradient(
-          135deg,
-          #14532d 0%,
-          #166534 45%,
-          #1e40af 100%
-        );
-        color: #ffffff;
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        flex-wrap: wrap;
-        align-items: center;
-        box-shadow: 0 18px 38px rgba(22, 101, 52, 0.22);
-      }
-
-      .goods-action-box strong {
-        color: #ffffff;
-        font-size: 20px;
-      }
-
-      .goods-action-box p {
-        margin: 6px 0 0;
-        color: rgba(255, 255, 255, 0.86);
-        font-weight: 700;
-        line-height: 1.6;
-      }
-
-      .goods-action-link {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px 16px;
-        border-radius: 14px;
-        background: #ffffff;
-        color: #166534;
-        font-weight: 950;
-        text-decoration: none;
-        white-space: nowrap;
-      }
-
-      @media (max-width: 720px) {
-        .goods-page {
-          padding-top: 105px;
-        }
-
-        .goods-title {
-          font-size: 36px;
-        }
-
-        .goods-hero {
-          padding: 30px 22px;
-        }
-      }
-    </style>
   </head>
 
-  <body class="page-root">
+  <body
+    class="player-dashboard-page factory-goods-page"
+    data-requires-login="true"
+  >
     <div id="mde-navbar"></div>
 
-    <main class="goods-page">
-      <section class="goods-hero">
-        <div class="goods-kicker">📦 Coming Soon • New Game Layer</div>
+    <div class="page goods-page-shell">
+      <section class="section goods-hero-section">
+        <div class="section-header">
+          <h2>📦 Factory Goods</h2>
+          <small>
+            Collectible product layer for active factories. Hidden testing page
+            for now.
+          </small>
+        </div>
+        <div
+          style="display: flex; justify-content: flex-end; margin: 10px 0 14px"
+        >
+          <a
+            href="goods-guide.html"
+            style="
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              gap: 8px;
+              padding: 10px 14px;
+              border-radius: 14px;
+              background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+              color: #ffffff;
+              font-weight: 950;
+              text-decoration: none;
+              box-shadow: 0 10px 20px rgba(22, 163, 74, 0.18);
+            "
+          >
+            📘 How Goods Work?
+          </a>
+        </div>
+        <div class="goods-alert">
+          This page is for safe testing only. Public teaser page is not touched.
+        </div>
 
-        <h1 class="goods-title">Goods are coming to <span>MydEmpire</span></h1>
+        <div class="summary-grid goods-summary-grid">
+          <div class="summary-card goods-summary-card">
+            <div class="summary-label">Effective EP/day</div>
+            <div class="summary-value" id="goods-ep-day">--</div>
+            <div
+              class="summary-note"
+              style="
+                margin-top: 6px;
+                font-size: 12px;
+                line-height: 1.45;
+                color: #64748b;
+                font-weight: 500;
+                letter-spacing: 0;
+              "
+            >
+              Snapshot includes active boosts. Updates daily after reset.
+            </div>
+          </div>
 
-        <p class="goods-subtitle">
-          Your active factories will soon produce collectible goods every 24
-          hours. These goods will carry product levels, quality grades, product
-          value, redemption utility, and future event power inside the MydEmpire
-          economy.
-        </p>
+          <div class="summary-card goods-summary-card">
+            <div class="summary-label">Goods Capacity</div>
+            <div class="summary-value" id="goods-capacity">--</div>
+          </div>
 
-        <div class="goods-status-row">
-          <div class="goods-pill">🏭 Factory-made products</div>
-          <div class="goods-pill">✨ Standard • Fine • Superior</div>
-          <div class="goods-pill">🎁 Fortnightly redemption</div>
-          <div class="goods-pill">🏆 Future product events</div>
+          <div class="summary-card goods-summary-card">
+            <div class="summary-label">Ready Factories</div>
+            <div class="summary-value" id="goods-ready-count">--</div>
+          </div>
+        </div>
+
+        <div class="goods-action-row">
+          <div class="goods-subnav">
+            <button class="goods-subnav-btn active" data-goods-tab="overview">
+              Overview
+            </button>
+            <button class="goods-subnav-btn" data-goods-tab="redemption">
+              Redemption
+            </button>
+            <button class="goods-subnav-btn" data-goods-tab="inventory">
+              Inventory
+            </button>
+          </div>
+
+          <button
+            id="goods-claim-btn"
+            class="primary-button"
+            type="button"
+            disabled
+          >
+            Claim All Goods
+          </button>
+        </div>
+
+        <div id="goods-status" class="status-text">
+          Loading Goods preview...
+        </div>
+
+        <div
+          id="goods-rotation-status"
+          class="status-text goods-rotation-status"
+        >
+          Factory Goods are generated from your active factories once per claim
+          cycle.
         </div>
       </section>
 
-      <section class="goods-grid">
-        <div class="goods-card">
-          <div class="goods-card-icon">🏭</div>
-          <h3>Factories Produce Goods</h3>
-          <p>
-            Active factories will generate goods based on their blueprint level.
-            Higher-level factories will produce more goods and better chances.
-          </p>
-        </div>
+      <section class="goods-tab-panel active" data-goods-panel="overview">
+        <section class="section goods-rule-section">
+          <div class="section-header">
+            <h2>🌿 Production Capacity Rule</h2>
+            <small>Expansion unlocks more Goods production.</small>
+          </div>
 
-        <div class="goods-card">
-          <div class="goods-card-icon">📦</div>
-          <h3>Collect Product Cards</h3>
-          <p>
-            Food, Textile, Pharma, Chemical, and Supermarket industries will
-            each have their own product collection.
-          </p>
-        </div>
+          <div class="goods-rules-grid">
+            <div class="goods-rule-card">
+              <strong>&lt;100 EP/day</strong>
+              <p>Goods locked. Build and activate more factories first.</p>
+            </div>
 
-        <div class="goods-card">
-          <div class="goods-card-icon">💎</div>
-          <h3>Quality Matters</h3>
-          <p>
-            Every product can appear as Standard, Fine, or Superior quality.
-            Better quality means higher product value.
-          </p>
-        </div>
+            <div class="goods-rule-card">
+              <strong>100–499 EP/day</strong>
+              <p>30% of active factories can produce Goods.</p>
+            </div>
 
-        <div class="goods-card">
-          <div class="goods-card-icon">🏆</div>
-          <h3>Events & Redemption</h3>
-          <p>
-            Goods will be used in redemption cycles and future exhibitions where
-            complete collections may become powerful.
-          </p>
-        </div>
+            <div class="goods-rule-card">
+              <strong>500–999 EP/day</strong>
+              <p>75% of active factories can produce Goods.</p>
+            </div>
+
+            <div class="goods-rule-card">
+              <strong>1000+ EP/day</strong>
+              <p>100% of active factories can produce Goods.</p>
+            </div>
+          </div>
+        </section>
       </section>
 
-      <section class="goods-section">
-        <div class="goods-section-head">
+      <section class="goods-tab-panel" data-goods-panel="redemption">
+        <div class="goods-redemption-countdown-card">
           <div>
-            <h2>Product Level System</h2>
-            <small>Real-life utility based product levels</small>
+            <div class="goods-redemption-countdown-kicker">
+              ACTIVE GOODS CYCLE
+            </div>
+            <h3>⏳ Redemption Cycle Ends In</h3>
+          </div>
+
+          <div
+            id="goods-redemption-countdown"
+            class="goods-redemption-countdown-timer"
+          >
+            Loading...
           </div>
         </div>
+        <section class="goods-redemption-card">
+          <div class="goods-redemption-head">
+            <div>
+              <div class="goods-section-kicker">DYNAMIC POOL</div>
+              <h2>🏭 Goods Redemption Cycle</h2>
+              <p>
+                Submit factory Goods into the active cycle to compete for the
+                EMP pool. Live rate changes whenever players submit more Product
+                Value.
+              </p>
+            </div>
 
-        <div class="goods-levels">
-          <div class="goods-level">
-            <strong>Essential</strong>
-            <span>Common daily-use goods</span>
+            <div id="goods-redemption-status" class="goods-redemption-status">
+              Loading...
+            </div>
           </div>
 
-          <div class="goods-level">
-            <strong>Standard</strong>
-            <span>Regular market products</span>
+          <div class="goods-redemption-grid">
+            <div class="goods-redemption-stat">
+              <span>EMP Pool</span>
+              <strong id="goods-redemption-pool">--</strong>
+            </div>
+
+            <div class="goods-redemption-stat">
+              <span>Total Submitted PV</span>
+              <strong id="goods-redemption-total-pv">--</strong>
+            </div>
+
+            <div class="goods-redemption-stat">
+              <span>Live Rate</span>
+              <strong id="goods-redemption-live-rate">--</strong>
+            </div>
+
+            <div class="goods-redemption-stat">
+              <span>Your Submitted PV</span>
+              <strong id="goods-redemption-player-pv">--</strong>
+            </div>
+
+            <div class="goods-redemption-stat">
+              <span>Your Share</span>
+              <strong id="goods-redemption-share">--</strong>
+            </div>
+
+            <div class="goods-redemption-stat reward">
+              <span>Estimated EMP</span>
+              <strong id="goods-redemption-estimated-emp">--</strong>
+            </div>
           </div>
 
-          <div class="goods-level">
-            <strong>Value</strong>
-            <span>Better utility and stronger value</span>
+          <div class="goods-redemption-note" id="goods-redemption-note">
+            Final EMP may change until the cycle ends.
+          </div>
+        </section>
+
+        <section class="goods-redemption-leaderboard-card">
+          <div class="goods-redemption-leaderboard-head">
+            <div>
+              <div class="goods-section-kicker">LIVE RANKING</div>
+              <h2>🏆 Redemption Leaderboard</h2>
+              <p>
+                Players are ranked by Product Value submitted into the current
+                Goods redemption cycle.
+              </p>
+            </div>
           </div>
 
-          <div class="goods-level">
-            <strong>Premium</strong>
-            <span>Higher-value desirable products</span>
+          <div
+            id="goods-redemption-leaderboard-list"
+            class="goods-redemption-leaderboard-list"
+          >
+            Loading leaderboard...
           </div>
+          <section class="goods-redemption-history-card">
+            <div class="goods-redemption-leaderboard-head">
+              <div>
+                <div class="goods-section-kicker">PAST CYCLES</div>
+                <h2>📜 Redemption History</h2>
+                <p>Previous Goods redemption cycles and final EMP rewards.</p>
+              </div>
+            </div>
 
-          <div class="goods-level">
-            <strong>Luxury</strong>
-            <span>Rare and special collectible goods</span>
-          </div>
-        </div>
+            <button
+              id="goods-load-history-btn"
+              class="secondary-btn"
+              type="button"
+            >
+              📜 Load Redemption History
+            </button>
+
+            <div
+              id="goods-redemption-history-list"
+              class="goods-redemption-history-list"
+            >
+              History not loaded yet.
+            </div>
+          </section>
+        </section>
       </section>
 
-      <section class="goods-section">
-        <div class="goods-section-head">
+      <section class="goods-tab-panel" data-goods-panel="inventory">
+        <section class="section">
+          <div class="section-header">
+            <h2>🎒 Goods Inventory</h2>
+            <small>
+              Collected Goods from your active factories. Product Value will be
+              used for future redemption events.
+            </small>
+          </div>
+
+          <div id="goods-inventory-list" class="goods-inventory-grid">
+            <div class="goods-empty-card">
+              Goods inventory is not connected yet.
+            </div>
+          </div>
+
+          <div class="goods-submit-sticky-bar">
+            <div class="goods-submit-summary">
+              <div>
+                Selected Goods:
+                <strong id="goods-selected-count">0</strong>
+              </div>
+
+              <div>
+                Selected Product Value:
+                <strong id="goods-selected-pv">0 PV</strong>
+              </div>
+            </div>
+
+            <button
+              id="goods-submit-selected-btn"
+              class="primary-button goods-submit-sticky-btn"
+              type="button"
+              disabled
+            >
+              Submit to Redemption
+            </button>
+          </div>
+        </section>
+      </section>
+    </div>
+    <div id="goods-claim-modal" class="goods-modal-overlay hidden">
+      <div class="goods-claim-modal-box">
+        <div class="goods-claim-modal-head">
           <div>
-            <h2>Industries Preparing Goods</h2>
-            <small>25 base products planned across 5 industries</small>
+            <div class="goods-section-kicker">GOODS CLAIMED</div>
+            <h2>🎉 Factory Goods Received</h2>
+            <p>Your active factories produced these Goods.</p>
           </div>
+
+          <button
+            id="goods-claim-modal-close"
+            class="goods-modal-close"
+            type="button"
+          >
+            ×
+          </button>
         </div>
 
-        <div class="goods-preview-grid">
-          <div class="goods-preview">
-            <span class="emoji">🍽️</span>
-            Food
+        <div class="goods-claim-modal-stats">
+          <div>
+            <span>Factories</span>
+            <strong id="goods-claim-modal-factories">0</strong>
           </div>
 
-          <div class="goods-preview">
-            <span class="emoji">🧵</span>
-            Textile
+          <div>
+            <span>Goods</span>
+            <strong id="goods-claim-modal-count">0</strong>
           </div>
 
-          <div class="goods-preview">
-            <span class="emoji">💊</span>
-            Pharma
-          </div>
-
-          <div class="goods-preview">
-            <span class="emoji">🌿</span>
-            Chemical
-          </div>
-
-          <div class="goods-preview">
-            <span class="emoji">🛒</span>
-            Supermarket
+          <div>
+            <span>Total PV</span>
+            <strong id="goods-claim-modal-pv">0</strong>
           </div>
         </div>
-      </section>
+        <div class="goods-claim-stat">
+          <span>Processing Cap</span>
+          <strong id="goods-claim-modal-cap">-</strong>
+        </div>
+        <div id="goods-claim-modal-list" class="goods-claim-modal-list">
+          Loading...
+        </div>
 
-      <div class="goods-action-box">
-        <div>
-          <strong>Prepare your factories.</strong>
-          <p>
-            Active factories will matter more when the Goods layer opens. Build,
-            maintain, and grow your industrial network.
-          </p>
+        <div class="goods-claim-modal-actions">
+          <button
+            id="goods-claim-modal-ok"
+            class="primary-button"
+            type="button"
+          >
+            Nice!
+          </button>
         </div>
       </div>
-    </main>
+    </div>
+    <div id="goods-claim-confirm-modal" class="goods-modal-overlay hidden">
+      <div class="goods-confirm-modal-box">
+        <div class="goods-claim-modal-head">
+          <div>
+            <div class="goods-section-kicker">CONFIRM CLAIM</div>
+            <h2>📦 Claim Factory Goods?</h2>
+            <p>
+              Your ready factories will produce Goods now. This will start the
+              24-hour Goods claim cooldown.
+            </p>
+          </div>
 
+          <button
+            id="goods-claim-confirm-close"
+            class="goods-modal-close"
+            type="button"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="goods-confirm-note">
+          Make sure you are ready to claim. After claiming, the next Goods claim
+          will be available after the cooldown ends.
+        </div>
+
+        <div class="goods-confirm-actions">
+          <button
+            id="goods-claim-confirm-cancel"
+            class="secondary-btn"
+            type="button"
+          >
+            Cancel
+          </button>
+
+          <button
+            id="goods-claim-confirm-ok"
+            class="primary-button"
+            type="button"
+          >
+            Claim Goods
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="goods-submit-confirm-modal" class="goods-modal-overlay hidden">
+      <div class="goods-confirm-modal-box">
+        <div class="goods-claim-modal-head">
+          <div>
+            <div class="goods-section-kicker">CONFIRM REDEMPTION</div>
+            <h2>🏭 Submit Goods to Redemption?</h2>
+            <p>
+              Selected Goods will enter the active EMP pool cycle. Final EMP may
+              change until the cycle ends.
+            </p>
+          </div>
+
+          <button
+            id="goods-submit-confirm-close"
+            class="goods-modal-close"
+            type="button"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="goods-confirm-note">
+          <strong id="goods-submit-confirm-count">0</strong> Goods selected with
+          <strong id="goods-submit-confirm-pv">0 PV</strong>.
+          <br />
+          After submission, these Goods cannot be returned to inventory.
+        </div>
+
+        <div class="goods-confirm-actions">
+          <button
+            id="goods-submit-confirm-cancel"
+            class="secondary-btn"
+            type="button"
+          >
+            Cancel
+          </button>
+
+          <button
+            id="goods-submit-confirm-ok"
+            class="primary-button"
+            type="button"
+          >
+            Submit Goods
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="goods-submit-success-modal" class="goods-modal-overlay hidden">
+      <div class="goods-confirm-modal-box">
+        <div class="goods-claim-modal-head">
+          <div>
+            <div class="goods-section-kicker">REDEMPTION SUBMITTED</div>
+            <h2>✅ Goods Submitted Successfully</h2>
+            <p>Your Goods entered the active EMP pool cycle.</p>
+          </div>
+
+          <button
+            id="goods-submit-success-close"
+            class="goods-modal-close"
+            type="button"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="goods-claim-modal-stats">
+          <div>
+            <span>Submitted Goods</span>
+            <strong id="goods-submit-success-count">0</strong>
+          </div>
+
+          <div>
+            <span>Submitted PV</span>
+            <strong id="goods-submit-success-pv">0</strong>
+          </div>
+
+          <div>
+            <span>Estimated EMP</span>
+            <strong id="goods-submit-success-emp">0</strong>
+          </div>
+        </div>
+
+        <div class="goods-confirm-note">
+          Final EMP may change until the cycle ends as more players submit
+          Product Value.
+        </div>
+
+        <div class="goods-confirm-actions">
+          <button
+            id="goods-submit-success-ok"
+            class="primary-button"
+            type="button"
+          >
+            Nice!
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="js/nav-auth.js"></script>
     <script src="js/navbar.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/goods-dev.js"></script>
   </body>
 </html>
