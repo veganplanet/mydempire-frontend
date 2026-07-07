@@ -16,9 +16,8 @@
 <a href="marketplace.html" class="appbar-link">Marketplace</a>
 <a href="${empireHubLink}" class="appbar-link">
   Empire Hub
-</a>
 <a href="factory-products.html" class="appbar-link">
-  Goods 
+  Goods <span class="live-pill">LIVE</span>
 </a>
   `
     : "";
