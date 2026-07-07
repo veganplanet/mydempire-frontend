@@ -15216,33 +15216,8 @@ border:1px solid rgba(255,255,255,0.16);
   transform:none !important;
 }
 }
-@media (max-width:1100px){
 
-  .appbar #mobileNavMenu,
-  .appbar #mobileNavMenu.show{
-    width:165px !important;
-    min-width:165px !important;
-    max-width:165px !important;
-  }
 
-  .appbar #mobileNavMenu .appbar-link{
-    width:auto !important;
-    max-width:100% !important;
-    min-width:0 !important;
-  }
-}
-@media (max-width:1100px){
-
-  .appbar nav#mobileNavMenu.appbar-nav,
-  .appbar nav#mobileNavMenu.appbar-nav.show{
-    background-color:rgba(147,51,234,0.42) !important;
-    background-image:none !important;
-    background:rgba(147,51,234,0.42) !important;
-
-    border:1px solid rgba(255,255,255,0.20) !important;
-    backdrop-filter:blur(18px) saturate(160%) !important;
-  }
-}
 
 .rat-situation-card {
   padding: 28px;
