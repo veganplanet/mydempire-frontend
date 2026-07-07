@@ -18886,3 +18886,138 @@ body.mde-dark-theme {
     margin-left: 6px !important;
   }
 }
+/* ================================================= */
+/* TRUE FINAL MOBILE NAV FIX — MUST STAY LAST */
+/* ================================================= */
+
+@media (max-width:1100px){
+
+  html,
+  body{
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:hidden !important;
+  }
+
+  body{
+    padding-top:76px !important;
+  }
+
+  .appbar{
+    position:fixed !important;
+    top:0 !important;
+    left:0 !important;
+    right:0 !important;
+    width:100% !important;
+    height:72px !important;
+    min-height:72px !important;
+    overflow:visible !important;
+    z-index:999999 !important;
+    background:#8E44AD !important;
+  }
+
+  .appbar-inner{
+    height:72px !important;
+    width:100% !important;
+    max-width:none !important;
+    padding:0 14px !important;
+
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+  }
+
+  .appbar-left{
+    width:auto !important;
+    flex:1 1 auto !important;
+    min-width:0 !important;
+
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:10px !important;
+  }
+
+  .appbar-logo img{
+    height:50px !important;
+    max-width:90px !important;
+    object-fit:contain !important;
+  }
+
+  .mobile-menu-btn{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+
+    width:44px !important;
+    height:44px !important;
+    min-width:44px !important;
+
+    margin:0 !important;
+    padding:0 !important;
+    border-radius:12px !important;
+  }
+
+  .appbar #mobileNavMenu,
+  nav#mobileNavMenu.appbar-nav{
+    display:none !important;
+
+    position:fixed !important;
+    top:72px !important;
+    left:12px !important;
+    right:12px !important;
+
+    width:auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+
+    padding:12px !important;
+    gap:8px !important;
+
+    border-radius:0 0 20px 20px !important;
+    background:linear-gradient(
+      180deg,
+      rgba(142,68,173,0.98),
+      rgba(59,71,88,0.98)
+    ) !important;
+
+    border:1px solid rgba(255,255,255,0.18) !important;
+    box-shadow:0 18px 40px rgba(15,23,42,0.35) !important;
+    backdrop-filter:blur(14px) !important;
+
+    z-index:1000000 !important;
+  }
+
+  .appbar #mobileNavMenu.show,
+  .appbar #mobileNavMenu.mobile-open,
+  nav#mobileNavMenu.appbar-nav.show,
+  nav#mobileNavMenu.appbar-nav.mobile-open{
+    display:flex !important;
+    flex-direction:column !important;
+  }
+
+  .appbar #mobileNavMenu .appbar-link,
+  nav#mobileNavMenu.appbar-nav a.appbar-link{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+
+    min-height:42px !important;
+    height:auto !important;
+
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+
+    padding:8px 12px !important;
+    margin:0 !important;
+
+    font-size:15px !important;
+    line-height:1.2 !important;
+    font-weight:900 !important;
+    text-align:center !important;
+    white-space:nowrap !important;
+  }
+}
