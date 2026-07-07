@@ -127,7 +127,25 @@ function renderGoodsFactoryList(containerId, factories, emptyText) {
     })
     .join("");
 }
+function getGoodsViewedUsername() {
+  const params = new URLSearchParams(window.location.search);
 
+  const viewedUser =
+    params.get("user") ||
+    params.get("view") ||
+    "";
+
+  const loggedInUser =
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    "";
+
+  return String(viewedUser || loggedInUser)
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+}
 function renderGoodsInventory(items, summary) {
   const box = document.getElementById("goods-inventory-list");
 
@@ -919,8 +937,23 @@ async function loadGoodsRedemptionHistory(listElement) {
     `;
   }
 }
+function getGoodsViewedUsername() {
+  const params = new URLSearchParams(window.location.search);
+
+  const viewedUser =
+    params.get("user") ||
+    params.get("view") ||
+    "";
+
+  const loggedInUser = getGoodsLoggedInUser();
+
+  return String(viewedUser || loggedInUser)
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+}
 async function loadGoodsInventory() {
-  const username = getGoodsLoggedInUser();
+ const username = getGoodsViewedUsername();
 
   if (!username) {
     renderGoodsInventory([], {
@@ -962,7 +995,7 @@ async function loadGoodsInventory() {
 }
 
 async function loadGoodsPreview() {
-  const username = getGoodsLoggedInUser();
+  const username = getGoodsViewedUsername();
 
   setGoodsText("goods-active-user", username || "--");
 
