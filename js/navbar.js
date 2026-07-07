@@ -37,9 +37,18 @@
           </button>
 
           <nav id="mobileNavMenu" class="appbar-nav">
-           <a href="index.html" class="appbar-link appbar-home-link">
-  Home
-</a>
+          <div class="home-nav-dropdown">
+  <a href="index.html" class="appbar-link appbar-home-link">
+    Home ▾
+  </a>
+
+  <div class="home-nav-dropdown-menu">
+    <a href="index.html">Home</a>
+    <a href="economy.html">Economy</a>
+    <a href="codex.html">Codex</a>
+    <a href="transparency.html">Transparency</a>
+  </div>
+</div>
 ${authLinks}
 
 ${
