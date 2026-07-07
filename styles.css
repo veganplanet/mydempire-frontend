@@ -19298,3 +19298,35 @@ body.mde-dark-theme {
     margin-bottom:12px !important;
   }
 }
+.live-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-left:6px;
+  padding:2px 7px;
+  border-radius:999px;
+  background:#16a34a;
+  color:#ffffff;
+  font-size:10px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:0.04em;
+  vertical-align:middle;
+  animation: livePulse 1.4s infinite ease-in-out;
+  box-shadow:0 0 0 0 rgba(22,163,74,0.45);
+}
+
+@keyframes livePulse{
+  0%{
+    transform:scale(1);
+    box-shadow:0 0 0 0 rgba(22,163,74,0.45);
+  }
+  70%{
+    transform:scale(1.08);
+    box-shadow:0 0 0 8px rgba(22,163,74,0);
+  }
+  100%{
+    transform:scale(1);
+    box-shadow:0 0 0 0 rgba(22,163,74,0);
+  }
+}
