@@ -1610,6 +1610,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   loadGoodsPreview();
-  loadGoodsRedemptionPosition(getGoodsLoggedInUser());
+  loadGoodsRedemptionPosition(getGoodsViewedUsername());
   loadGoodsRedemptionLeaderboard();
 });
