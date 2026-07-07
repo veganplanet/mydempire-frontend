@@ -19282,3 +19282,19 @@ body.mde-dark-theme {
     text-decoration:none !important;
   }
 }
+/* ================================================= */
+/* MOBILE HOME DROPDOWN ORDER CLEANUP */
+/* ================================================= */
+
+@media (max-width:1100px){
+
+  #mobileNavMenu .home-nav-dropdown .appbar-home-link{
+    order:1 !important;
+  }
+
+  #mobileNavMenu .home-nav-dropdown-menu{
+    order:2 !important;
+    margin-top:8px !important;
+    margin-bottom:12px !important;
+  }
+}
