@@ -684,12 +684,16 @@ async function loadGoodsRedemptionLeaderboard() {
 
     if (leaderboard.length === 0) {
       list.innerHTML = `
-        <div class="goods-empty-state">
-          No Goods have been submitted into this cycle yet.
-        </div>
-      `;
+    <div class="goods-empty-state">
+      No Goods have been submitted into this cycle yet.
+    </div>
+  `;
       return;
     }
+    const oldEmptyBox = document.getElementById("goods-leaderboard-empty-full");
+    if (oldEmptyBox) oldEmptyBox.remove();
+
+    list.style.display = "";
 
     const leaderboardHeader = `
   <div class="goods-redemption-leaderboard-header-row">
@@ -794,11 +798,10 @@ async function loadGoodsRedemptionHistory(listElement) {
       data.cycles.length === 0
     ) {
       list.innerHTML = `
-        <div class="goods-empty-state">
-          No active Goods redemption cycle right now.<br>
-          No previous cycle history yet.
-        </div>
-      `;
+  <div class="goods-empty-state">
+    No previous cycle history yet.
+  </div>
+`;
       return;
     }
 
