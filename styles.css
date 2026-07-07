@@ -14329,21 +14329,31 @@ overflow-y: scroll;
     justify-content:space-between !important;
   }
 
-  .appbar-nav{
-    display:none !important;
-    position:absolute !important;
-    top:68px !important;
-    right:0 !important;
-left:auto !important;
-    width:230px !important;
-    max-width:230px !important;
-    margin:0 !important;
-    padding:8px !important;
-    border-radius:14px !important;
-    background:#3b4758 !important;
-    box-shadow:0 12px 30px rgba(0,0,0,0.28) !important;
-    z-index:99999 !important;
-  }
+ .appbar-nav{
+  display:none !important;
+  position:fixed !important;
+
+  top:94px !important;
+  left:20px !important;
+  right:20px !important;
+
+  width:auto !important;
+  max-width:none !important;
+  min-width:0 !important;
+
+  margin:0 !important;
+  padding:10px !important;
+
+  border-radius:0 0 18px 18px !important;
+  background:linear-gradient(
+    180deg,
+    rgba(142,68,173,0.98),
+    rgba(59,71,88,0.98)
+  ) !important;
+
+  box-shadow:0 16px 36px rgba(0,0,0,0.30) !important;
+  z-index:999999 !important;
+}
 
   .appbar-nav.mobile-open{
     display:flex !important;
