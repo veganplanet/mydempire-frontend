@@ -42,12 +42,11 @@
     Home ▾
   </a>
 
-  <div class="home-nav-dropdown-menu">
-    <a href="index.html">Home</a>
-    <a href="economy.html">Economy</a>
-    <a href="codex.html">Codex</a>
-    <a href="transparency.html">Transparency</a>
-  </div>
+<div class="home-nav-dropdown-menu">
+  <a href="economy.html">Economy</a>
+  <a href="codex.html">Codex</a>
+  <a href="transparency.html">Transparency</a>
+</div>
 </div>
 ${authLinks}
 
