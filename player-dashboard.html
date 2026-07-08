@@ -4970,21 +4970,30 @@ function renderLandsTab() {
               }
 
               alert(
-                `Maintenance paid successfully! Added ${data.days_added} day(s). EMP spent: ${data.emp_spent}`
-              );
+  `Maintenance paid successfully! Added ${data.days_added} day(s). EMP spent: ${data.emp_spent}`
+);
 
-              await loadDashboardSummary();
-              await loadRewardSummary();
-              await loadEmpireOverview();
+// Refresh dashboard separately.
+// If refresh fails, do NOT show payment failed because payment already succeeded.
+try {
+  await loadDashboardSummary();
+  await loadRewardSummary();
+  await loadEmpireOverview();
 
-              const oldBanner = document.getElementById("season-2-banner");
-              if (oldBanner) {
-                oldBanner.style.display = "none";
-              }
+  const oldBanner = document.getElementById("season-2-banner");
+  if (oldBanner) {
+    oldBanner.style.display = "none";
+  }
+} catch (refreshErr) {
+  console.warn("Maintenance paid, but dashboard refresh failed:", refreshErr);
+}
             } catch (err) {
-              console.error("Maintenance payment error:", err);
-              alert("Maintenance payment failed.");
-            }
+  console.error("Maintenance payment / refresh error:", err);
+
+  // Do not show false failure popup after successful maintenance.
+  // Backend errors are already handled above with data.error.
+  alert("Maintenance request completed, but dashboard refresh had a temporary issue. Please refresh the page.");
+}
           });
         }
 

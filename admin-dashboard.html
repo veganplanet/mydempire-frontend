@@ -1516,88 +1516,85 @@ forkyishere,529"
           </button>
           <div id="goods-cycle-finalize-status" class="status"></div>
         </div>
+       
+
         <div class="section">
-          <h2>🏆 Goods Redemption Leaderboard</h2>
-          <div id="goods-redemption-admin-list" class="scroll-box">
-            Loading Goods leaderboard...
-          </div>
-        </div>
-      </div>
-      <div class="section">
-        <h2>📦 Playerwise Goods Inventory</h2>
-        <p class="sub">
-          View Goods held by players, submitted Product Value, and estimated EMP
-          from the current Goods cycle.
-        </p>
+          <h2>📦 Playerwise Goods Inventory</h2>
+          <p class="sub">
+            View Goods held by players, submitted Product Value, and estimated
+            EMP from the current Goods cycle.
+          </p>
 
-        <div class="top-row">
-          <button
-            type="button"
-            class="primary"
-            onclick="loadAdminGoodsPlayerInventory()"
+          <div class="top-row">
+            <button
+              type="button"
+              class="primary"
+              onclick="loadAdminGoodsPlayerInventory()"
+            >
+              Refresh Goods Inventory
+            </button>
+          </div>
+
+          <div
+            id="admin-goods-player-summary"
+            class="metrics"
+            style="margin-bottom: 14px"
           >
-            Refresh Goods Inventory
-          </button>
-        </div>
+            <div class="card">
+              <div class="label">EMP Pool</div>
+              <div class="value" id="admin-goods-emp-pool">--</div>
+              <div class="small">Current active Goods cycle</div>
+            </div>
 
-        <div
-          id="admin-goods-player-summary"
-          class="metrics"
-          style="margin-bottom: 14px"
-        >
-          <div class="card">
-            <div class="label">EMP Pool</div>
-            <div class="value" id="admin-goods-emp-pool">--</div>
-            <div class="small">Current active Goods cycle</div>
+            <div class="card">
+              <div class="label">Submitted PV</div>
+              <div class="value" id="admin-goods-submitted-pv">--</div>
+              <div class="small">Total Product Value submitted</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Live EMP / PV</div>
+              <div class="value" id="admin-goods-live-rate">--</div>
+              <div class="small">Current estimated rate</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Players</div>
+              <div class="value" id="admin-goods-player-count">--</div>
+              <div class="small">Players holding/submitting Goods</div>
+            </div>
           </div>
 
-          <div class="card">
-            <div class="label">Submitted PV</div>
-            <div class="value" id="admin-goods-submitted-pv">--</div>
-            <div class="small">Total Product Value submitted</div>
+          <div class="all-players-wrap">
+            <div class="all-players-box">
+              <table class="all-players-table">
+                <thead>
+                  <tr>
+                    <th>Player</th>
+                    <th>Goods Held</th>
+                    <th>Held PV</th>
+                    <th>3★ Goods</th>
+                    <th>Submitted Goods</th>
+                    <th>Submitted PV</th>
+                    <th>Est. EMP</th>
+                    <th>Last Claim</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-goods-player-inventory-body">
+                  <tr>
+                    <td colspan="8">Click Refresh Goods Inventory.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div class="card">
-            <div class="label">Live EMP / PV</div>
-            <div class="value" id="admin-goods-live-rate">--</div>
-            <div class="small">Current estimated rate</div>
+          <div id="admin-goods-player-inventory-status" class="status">
+            Goods player inventory not loaded yet.
           </div>
-
-          <div class="card">
-            <div class="label">Players</div>
-            <div class="value" id="admin-goods-player-count">--</div>
-            <div class="small">Players holding/submitting Goods</div>
-          </div>
-        </div>
-
-        <div class="all-players-wrap">
-          <div class="all-players-box">
-            <table class="all-players-table">
-              <thead>
-                <tr>
-                  <th>Player</th>
-                  <th>Goods Held</th>
-                  <th>Held PV</th>
-                  <th>3★ Goods</th>
-                  <th>Submitted Goods</th>
-                  <th>Submitted PV</th>
-                  <th>Est. EMP</th>
-                  <th>Last Claim</th>
-                </tr>
-              </thead>
-              <tbody id="admin-goods-player-inventory-body">
-                <tr>
-                  <td colspan="8">Click Refresh Goods Inventory.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div id="admin-goods-player-inventory-status" class="status">
-          Goods player inventory not loaded yet.
         </div>
       </div>
+
       <div class="admin-tab-panel" data-admin-panel="system">
         <div class="section">
           <h2>🛠 System Controls</h2>
