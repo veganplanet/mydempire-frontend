@@ -4517,7 +4517,7 @@ function renderLandsTab() {
     return Math.min(5, originalBlueprintLevel + upgradeSteps);
   };
 
-   const getFactoryEpForLandDisplay = (factory, landTierKey) => {
+     const getFactoryEpForLandDisplay = (factory, landTierKey) => {
     const status = getEffectiveFactoryStatusForDisplay(factory);
 
     if (status !== "ACTIVE") return 0;
