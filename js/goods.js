@@ -1040,27 +1040,115 @@ async function loadGoodsPreview() {
   }
 }
 
+function getGoodsQualityGradeLabel(rawQuality) {
+  const q = String(rawQuality || "")
+    .trim()
+    .toUpperCase();
+
+  if (q === "STANDARD") return "BASIC";
+  if (q === "FINE") return "FINE";
+  if (q === "SUPERIOR") return "SUPERIOR";
+
+  return q || "UNKNOWN";
+}
+
+function getGoodsProductClassLabel(rawLevel) {
+  const level = String(rawLevel || "")
+    .trim()
+    .toUpperCase();
+
+  if (level === "STANDARD") return "R1 STANDARD";
+  if (level === "VALUE") return "R2 VALUE";
+  if (level === "ESSENTIAL") return "R3 ESSENTIAL";
+  if (level === "PREMIUM") return "R4 PREMIUM";
+  if (level === "LUXURY") return "R5 LUXURY";
+
+  return level || "UNKNOWN";
+}
+
+function formatGoodsMix(mix, labelFn, order) {
+  const source = mix || {};
+  const parts = [];
+
+  for (const key of order) {
+    const count = Number(source[key] || 0);
+
+    if (count > 0) {
+      parts.push(`${labelFn(key)}: ${count}`);
+    }
+  }
+
+  return parts.length ? parts.join(" • ") : "None";
+}
+
+function getBestGoodsQuality(byQuality) {
+  const q = byQuality || {};
+
+  if (Number(q.SUPERIOR || 0) > 0) return "SUPERIOR";
+  if (Number(q.FINE || 0) > 0) return "FINE";
+  if (Number(q.STANDARD || 0) > 0) return "STANDARD";
+
+  return "UNKNOWN";
+}
+
+function getBestGoodsProductClass(byLevel) {
+  const level = byLevel || {};
+
+  if (Number(level.LUXURY || 0) > 0) return "LUXURY";
+  if (Number(level.PREMIUM || 0) > 0) return "PREMIUM";
+  if (Number(level.ESSENTIAL || 0) > 0) return "ESSENTIAL";
+  if (Number(level.VALUE || 0) > 0) return "VALUE";
+  if (Number(level.STANDARD || 0) > 0) return "STANDARD";
+
+  return "UNKNOWN";
+}
+
 function buildGoodsClaimSummary(data) {
   const byLevel = data.byLevel || {};
   const byQuality = data.byQuality || {};
 
-  const levelText = Object.keys(byLevel)
-    .map((key) => `${key}: ${byLevel[key]}`)
-    .join(", ");
+  const qualityText = formatGoodsMix(
+    byQuality,
+    getGoodsQualityGradeLabel,
+    ["STANDARD", "FINE", "SUPERIOR"]
+  );
 
-  const qualityText = Object.keys(byQuality)
-    .map((key) => `${key}: ${byQuality[key]}`)
-    .join(", ");
+  const levelText = formatGoodsMix(
+    byLevel,
+    getGoodsProductClassLabel,
+    ["STANDARD", "VALUE", "ESSENTIAL", "PREMIUM", "LUXURY"]
+  );
+
+  const bestQualityRaw =
+    data.bestQuality ||
+    data.best_quality ||
+    getBestGoodsQuality(byQuality);
+
+  const bestLevelRaw =
+    data.bestLevel ||
+    data.bestProductTier ||
+    data.best_product_tier ||
+    getBestGoodsProductClass(byLevel);
+
+  const goodsReceived =
+    data.goods_received ??
+    data.goodsReceived ??
+    (Array.isArray(data.goods) ? data.goods.length : 0);
+
+  const totalProductValue =
+    data.total_product_value ??
+    data.totalProductValue ??
+    data.totalPV ??
+    0;
 
   return [
-    "Goods claimed successfully!",
-    "",
-    `Factories processed: ${data.factoriesProcessed || 0}`,
-    `Goods received: ${data.goodsReceived || 0}`,
-    `Total Product Value: ${data.totalValue || 0}`,
-    "",
-    `By Level: ${levelText || "None"}`,
-    `By Quality: ${qualityText || "None"}`,
+    `📦 Goods Received: ${goodsReceived}`,
+    `💠 Total Product Value: ${totalProductValue} PV`,
+    `⭐ Best Quality Grade: ${getGoodsQualityGradeLabel(bestQualityRaw)}`,
+    `🏆 Best Product Class: ${getGoodsProductClassLabel(bestLevelRaw)}`,
+    ``,
+    `📊 Quality Grade: ${qualityText}`,
+    `📦 Product Class: ${levelText}`,
   ].join("\n");
 }
 function closeGoodsSubmitSuccessModal() {
