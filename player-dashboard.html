@@ -4430,21 +4430,15 @@ function getFactoryEpForLandDisplay(factory, landTierKey) {
 
   if (status !== "ACTIVE") return 0;
 
-  const landBase =
-    landTierKey === "L3" ? 20 :
-    landTierKey === "L2" ? 15 :
-    10;
+  const ep = Number(
+    factory.factoryEP ??
+      factory.factory_ep ??
+      factory.factoryEp ??
+      factory.ep_per_day ??
+      0
+  );
 
-  const effectiveLevel = getFactoryEffectiveLevelForDisplay(factory);
-
-  const multiplier =
-    effectiveLevel === 5 ? 2.5 :
-    effectiveLevel === 4 ? 1.9 :
-    effectiveLevel === 3 ? 1.5 :
-    effectiveLevel === 2 ? 1.2 :
-    1.0;
-
-  return landBase * multiplier;
+  return Number.isFinite(ep) && ep > 0 ? Number(ep.toFixed(4)) : 0;
 }
 function renderLandsTab() {
   const landsContainer = document.getElementById("lands-container");
@@ -4523,25 +4517,20 @@ function renderLandsTab() {
     return Math.min(5, originalBlueprintLevel + upgradeSteps);
   };
 
-  const getFactoryEpForLandDisplay = (factory, landTierKey) => {
+   const getFactoryEpForLandDisplay = (factory, landTierKey) => {
     const status = getEffectiveFactoryStatusForDisplay(factory);
+
     if (status !== "ACTIVE") return 0;
 
-    const landBase =
-      landTierKey === "L3" ? 20 :
-      landTierKey === "L2" ? 15 :
-      10;
+    const ep = Number(
+      factory?.factoryEP ??
+        factory?.factory_ep ??
+        factory?.factoryEp ??
+        factory?.ep_per_day ??
+        0
+    );
 
-    const effectiveLevel = getEffectiveFactoryLevelForDisplay(factory);
-
-    const multiplier =
-      effectiveLevel === 5 ? 2.5 :
-      effectiveLevel === 4 ? 1.9 :
-      effectiveLevel === 3 ? 1.5 :
-      effectiveLevel === 2 ? 1.2 :
-      1.0;
-
-    return Number((landBase * multiplier).toFixed(4));
+    return Number.isFinite(ep) && ep > 0 ? Number(ep.toFixed(4)) : 0;
   };
 
   const safeDaysAgo = (dateStr) => {
