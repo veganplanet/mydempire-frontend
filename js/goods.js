@@ -1057,11 +1057,11 @@ function getGoodsProductClassLabel(rawLevel) {
     .trim()
     .toUpperCase();
 
-  if (level === "STANDARD") return "R1 STANDARD";
-  if (level === "VALUE") return "R2 VALUE";
-  if (level === "ESSENTIAL") return "R3 ESSENTIAL";
-  if (level === "PREMIUM") return "R4 PREMIUM";
-  if (level === "LUXURY") return "R5 LUXURY";
+  if (level === "ESSENTIAL") return "R1 Essential";
+  if (level === "VALUE") return "R2 Value";
+  if (level === "STANDARD") return "R3 Core";
+  if (level === "PREMIUM") return "R4 Elite";
+  if (level === "LUXURY") return "R5 Premium";
 
   return level || "UNKNOWN";
 }
@@ -1113,11 +1113,11 @@ function buildGoodsClaimSummary(data) {
     ["STANDARD", "FINE", "SUPERIOR"]
   );
 
-  const levelText = formatGoodsMix(
-    byLevel,
-    getGoodsProductClassLabel,
-    ["STANDARD", "VALUE", "ESSENTIAL", "PREMIUM", "LUXURY"]
-  );
+const levelText = formatGoodsMix(
+  byLevel,
+  getGoodsProductClassLabel,
+  ["ESSENTIAL", "VALUE", "STANDARD", "PREMIUM", "LUXURY"]
+);
 
   const bestQualityRaw =
     data.bestQuality ||
