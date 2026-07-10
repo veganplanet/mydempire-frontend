@@ -35,7 +35,13 @@
   >
     🏭 Factory Fulfillment <span style="color:red;font-weight:900;"></span>
   </button>
-
+<button
+  type="button"
+  class="subnav-btn"
+  onclick="switchHubTab('activity')"
+>
+  🎡 Activity Wheel <span style="color:#dc2626;font-weight:900;">SOON</span>
+</button>
   <button
     type="button"
     class="subnav-btn"
@@ -69,7 +75,84 @@
   </button>
 </div>
       
+<section id="activity-panel" class="hub-panel" style="display:none;">
+  <div
+    class="card"
+    style="
+      border-top:5px solid #8b5cf6;
+      background:
+        radial-gradient(circle at top left, rgba(139,92,246,0.12), transparent 28%),
+        linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+    "
+  >
+    <div class="section-header">
+      <h2>🎡 Imperial Activity Wheel</h2>
+      <small>Earn Activity Points by playing MydEmpire, then spin for rewards.</small>
+    </div>
 
+    <div
+      style="
+        margin-top:16px;
+        padding:18px;
+        border-radius:18px;
+        background:linear-gradient(135deg,#f5f3ff 0%,#eef2ff 100%);
+        border:1px solid #c4b5fd;
+        color:#312e81;
+        font-weight:800;
+        line-height:1.7;
+      "
+    >
+      <div style="font-size:22px;font-weight:950;color:#111827;margin-bottom:8px;">
+        Coming Soon: Play More, Spin More
+      </div>
+
+      <div style="font-size:15px;color:#475569;">
+        Complete activities like opening packs, building factories, crates, operations,
+        fulfillment, goods, management, foundry crafting, and warehouse cleanup to earn
+        Activity Points.
+      </div>
+
+      <div
+        style="
+          margin-top:16px;
+          display:grid;
+          grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+          gap:12px;
+        "
+      >
+        <div style="background:#ffffff;border:1px solid #ddd6fe;border-radius:14px;padding:14px;">
+          <div style="font-size:13px;color:#64748b;">Spin Cost</div>
+          <div style="font-size:24px;font-weight:950;color:#7c3aed;">50 AP</div>
+        </div>
+
+        <div style="background:#ffffff;border:1px solid #ddd6fe;border-radius:14px;padding:14px;">
+          <div style="font-size:13px;color:#64748b;">Rewards</div>
+          <div style="font-size:18px;font-weight:950;color:#111827;">EMP • SMP • Fragments • Packs</div>
+        </div>
+
+        <div style="background:#ffffff;border:1px solid #ddd6fe;border-radius:14px;padding:14px;">
+          <div style="font-size:13px;color:#64748b;">Status</div>
+          <div style="font-size:18px;font-weight:950;color:#dc2626;">Preparing</div>
+        </div>
+      </div>
+
+      <div
+        style="
+          margin-top:16px;
+          padding:12px 14px;
+          border-radius:14px;
+          background:#ffffff;
+          border:1px dashed #a78bfa;
+          color:#6d28d9;
+          font-size:14px;
+          font-weight:900;
+        "
+      >
+        🎯 Final rule planned: 50 Activity Points = 1 reward spin.
+      </div>
+    </div>
+  </div>
+</section>
         <section id="operations-panel" class="hub-panel">
           
           <div class="section-header">
@@ -2120,13 +2203,14 @@ function switchHubTab(tab) {
   });
 
   const panels = {
-    operations: document.getElementById("operations-panel"),
-    fulfillment: document.getElementById("fulfillment-panel"),
-    management: document.getElementById("management-panel"),
-    rats: document.getElementById("rats-panel"),
-    foundry: document.getElementById("foundry-panel"),
-    culture: document.getElementById("culture-panel"),
-  };
+  operations: document.getElementById("operations-panel"),
+  fulfillment: document.getElementById("fulfillment-panel"),
+  activity: document.getElementById("activity-panel"),
+  management: document.getElementById("management-panel"),
+  rats: document.getElementById("rats-panel"),
+  foundry: document.getElementById("foundry-panel"),
+  culture: document.getElementById("culture-panel"),
+};
 
   document.querySelectorAll(".subnav-btn").forEach((btn) => {
     btn.classList.remove("subnav-btn-active");
