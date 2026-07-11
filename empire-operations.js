@@ -674,7 +674,7 @@ margin-right:auto;
 </span>
         </div>
 
-        ${renderOperationOdds(operation)}
+        ${renderOperationOdds(operation, key)}
 
         <div class="summary-sub" style="margin-top:10px;">
           Select Budget
@@ -817,6 +817,19 @@ margin-right:auto;
   }
   startEmpireOperationsCountdownTicker();
 }
+const empireOperationOpenOdds = new Set();
+
+function handleOperationOddsToggle(detailsElement) {
+  const operationKey = detailsElement?.dataset?.operationOdds;
+
+  if (!operationKey || operationKey === "undefined") return;
+
+  if (detailsElement.open) {
+    empireOperationOpenOdds.add(operationKey);
+  } else {
+    empireOperationOpenOdds.delete(operationKey);
+  }
+}
 function formatOperationChance(value) {
   const number = Number(value || 0);
 
@@ -849,10 +862,11 @@ function renderOperationOdds(operation, operationKey) {
     return "#fff7ed";
   };
 
- return `
-  <details
-    data-operation-odds="${operationKey}"
-    style="
+<details
+  data-operation-odds="${operationKey}"
+  ${empireOperationOpenOdds.has(operationKey) ? "open" : ""}
+  ontoggle="handleOperationOddsToggle(this)"
+  style="
         margin-top:12px;
         border:1px solid #dbeafe;
         border-radius:12px;
