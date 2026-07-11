@@ -827,7 +827,7 @@ function formatOperationChance(value) {
   return `${number.toFixed(2).replace(/0+$/, "").replace(/\.$/, "")}%`;
 }
 
-function renderOperationOdds(operation) {
+function renderOperationOdds(operation, operationKey) {
   const summary = operation?.oddsSummary || {};
   const outcomes = Array.isArray(operation?.outcomes)
     ? operation.outcomes
@@ -849,9 +849,10 @@ function renderOperationOdds(operation) {
     return "#fff7ed";
   };
 
-  return `
-    <details
-      style="
+ return `
+  <details
+    data-operation-odds="${operationKey}"
+    style="
         margin-top:12px;
         border:1px solid #dbeafe;
         border-radius:12px;
