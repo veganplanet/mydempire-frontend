@@ -670,9 +670,11 @@ margin-right:auto;
     };
   font-weight:800;
 ">
-  ${operation.risk}
+   ${operation.risk}
 </span>
         </div>
+
+        ${renderOperationOdds(operation)}
 
         <div class="summary-sub" style="margin-top:10px;">
           Select Budget
@@ -814,6 +816,179 @@ margin-right:auto;
     );
   }
   startEmpireOperationsCountdownTicker();
+}
+function formatOperationChance(value) {
+  const number = Number(value || 0);
+
+  if (Number.isInteger(number)) {
+    return `${number}%`;
+  }
+
+  return `${number.toFixed(2).replace(/0+$/, "").replace(/\.$/, "")}%`;
+}
+
+function renderOperationOdds(operation) {
+  const summary = operation?.oddsSummary || {};
+  const outcomes = Array.isArray(operation?.outcomes)
+    ? operation.outcomes
+    : [];
+
+  if (!outcomes.length) return "";
+
+  const getOutcomeColor = (type) => {
+    if (type === "JACKPOT") return "#7c3aed";
+    if (type === "PROFIT") return "#15803d";
+    if (type === "BREAK_EVEN") return "#0369a1";
+    return "#c2410c";
+  };
+
+  const getOutcomeBackground = (type) => {
+    if (type === "JACKPOT") return "#f5f3ff";
+    if (type === "PROFIT") return "#f0fdf4";
+    if (type === "BREAK_EVEN") return "#f0f9ff";
+    return "#fff7ed";
+  };
+
+  return `
+    <details
+      style="
+        margin-top:12px;
+        border:1px solid #dbeafe;
+        border-radius:12px;
+        background:#ffffff;
+        overflow:hidden;
+      "
+    >
+      <summary
+        style="
+          padding:11px 12px;
+          cursor:pointer;
+          font-size:13px;
+          font-weight:900;
+          color:#1e3a8a;
+          background:#eff6ff;
+          user-select:none;
+        "
+      >
+        📊 View Risk & Reward Odds
+      </summary>
+
+      <div style="padding:12px;">
+        <div
+          style="
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:7px;
+            margin-bottom:12px;
+          "
+        >
+          <div
+            style="
+              padding:8px;
+              border-radius:9px;
+              background:#f5f3ff;
+              color:#7c3aed;
+              font-size:11px;
+              font-weight:900;
+            "
+          >
+            🎁 Jackpot: ${formatOperationChance(summary.jackpot)}
+          </div>
+
+          <div
+            style="
+              padding:8px;
+              border-radius:9px;
+              background:#f0fdf4;
+              color:#15803d;
+              font-size:11px;
+              font-weight:900;
+            "
+          >
+            📈 Profit: ${formatOperationChance(summary.profit)}
+          </div>
+
+          <div
+            style="
+              padding:8px;
+              border-radius:9px;
+              background:#f0f9ff;
+              color:#0369a1;
+              font-size:11px;
+              font-weight:900;
+            "
+          >
+            ⚖️ Break-even: ${formatOperationChance(summary.breakEven)}
+          </div>
+
+          <div
+            style="
+              padding:8px;
+              border-radius:9px;
+              background:#fff7ed;
+              color:#c2410c;
+              font-size:11px;
+              font-weight:900;
+            "
+          >
+            📉 EMP Loss: ${formatOperationChance(summary.loss)}
+          </div>
+        </div>
+
+        <div
+          style="
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+          "
+        >
+          ${outcomes
+            .map(
+              (outcome) => `
+                <div
+                  style="
+                    display:grid;
+                    grid-template-columns:minmax(0,1.4fr) 58px minmax(90px,1fr);
+                    gap:7px;
+                    align-items:center;
+                    padding:8px;
+                    border-radius:9px;
+                    background:${getOutcomeBackground(outcome.type)};
+                    color:${getOutcomeColor(outcome.type)};
+                    font-size:11px;
+                    font-weight:800;
+                  "
+                >
+                  <span>${outcome.label}</span>
+
+                  <span style="text-align:center;">
+                    ${formatOperationChance(outcome.chance)}
+                  </span>
+
+                  <span style="text-align:right;">
+                    ${outcome.reward}
+                  </span>
+                </div>
+              `,
+            )
+            .join("")}
+        </div>
+
+        <div
+          style="
+            margin-top:10px;
+            font-size:10px;
+            line-height:1.45;
+            color:#64748b;
+            font-weight:700;
+          "
+        >
+          Each operation is calculated independently. Previous results do not
+          increase or decrease the chance of the next result.
+        </div>
+      </div>
+    </details>
+  `;
 }
 async function startEmpireOperation(operationType) {
   const params = new URLSearchParams(window.location.search);
