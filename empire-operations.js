@@ -862,10 +862,11 @@ function renderOperationOdds(operation, operationKey) {
     return "#fff7ed";
   };
 
-<details
-  data-operation-odds="${operationKey}"
-  ${empireOperationOpenOdds.has(operationKey) ? "open" : ""}
-  ontoggle="handleOperationOddsToggle(this)"
+  return `
+    <details
+      data-operation-odds="${operationKey}"
+      ${empireOperationOpenOdds.has(operationKey) ? "open" : ""}
+      ontoggle="handleOperationOddsToggle(this)"
   style="
         margin-top:12px;
         border:1px solid #dbeafe;
