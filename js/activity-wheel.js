@@ -314,16 +314,13 @@
   }
 
   function getApiBase() {
-    if (window.API_BASE) return window.API_BASE;
+    const host = window.location.hostname;
 
-    if (
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1"
-    ) {
+    if (host === "localhost" || host === "127.0.0.1") {
       return "http://localhost:10000";
     }
 
-    return "https://mydempire.onrender.com";
+    return "https://mydempire-backend-1.onrender.com";
   }
 
   function renderActivitySources() {
