@@ -4332,7 +4332,15 @@ async function confirmStartFactoryFulfillment() {
 }
 
     closeFulfillmentStartModal();
-    await loadFactoryFulfillmentBoard();
+    showEmpirePopup(
+  "Fulfillment Started",
+  "Factory fulfillment has started successfully.",
+  "success"
+);
+
+setTimeout(() => {
+  loadFactoryFulfillmentBoard();
+}, 1500);
 
   } catch (err) {
     console.error("Factory fulfillment start confirm failed:", err);
