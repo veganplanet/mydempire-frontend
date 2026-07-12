@@ -322,6 +322,35 @@
 
     return "https://mydempire-backend-1.onrender.com";
   }
+  function formatActivityWheelLocalTime(value) {
+    if (!value) return "--";
+
+    let raw = String(value).trim();
+
+    // Convert database timestamp to safe ISO format.
+    raw = raw.replace(" ", "T");
+
+    // If backend timestamp has no timezone, treat it as UTC.
+    if (!raw.endsWith("Z") && !/[+-]\d{2}:?\d{0,2}$/.test(raw)) {
+      raw += "Z";
+    }
+
+    // Convert "+00" to "+00:00" for browser safety.
+    raw = raw.replace(/([+-]\d{2})$/, "$1:00");
+
+    const date = new Date(raw);
+
+    if (Number.isNaN(date.getTime())) return "--";
+
+    // Show in player's own browser/device local time.
+    return date.toLocaleString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
 
   function renderActivitySources() {
     const list = document.getElementById("activity-source-list");
@@ -385,9 +414,20 @@
         const points = Number(item.points || 0);
         const note = item.note || "";
         const createdAt = item.created_at
-          ? new Date(item.created_at).toLocaleString()
+          ? new Date(
+              String(item.created_at)
+                .trim()
+                .replace(" ", "T")
+                .replace(/([+-]\d{2})$/, "$1:00"),
+            ).toLocaleString(undefined, {
+              year: "numeric",
+              month: "short",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+            })
           : "";
-
+        console.log("Spin time check:", item.created_at, "=>", createdAt);
         return `
           <div class="activity-history-row">
             <div>
@@ -416,19 +456,20 @@
         const type = String(item.reward_type || "REWARD").replaceAll("_", " ");
         const amount = Number(item.reward_amount || 0);
         const label = item.reward_label || `${amount} ${type}`;
+
         const createdAt = item.created_at
-          ? new Date(item.created_at).toLocaleString()
+          ? formatActivityWheelLocalTime(item.created_at)
           : "";
 
         return `
-          <div class="activity-history-row">
-            <div>
-              <strong>${label}</strong>
-              <small>${createdAt}</small>
-            </div>
-            <span>Won</span>
+        <div class="activity-history-row">
+          <div>
+            <strong>${label}</strong>
+            <small>${createdAt}</small>
           </div>
-        `;
+          <span>Won</span>
+        </div>
+      `;
       })
       .join("");
   }
@@ -554,7 +595,7 @@
     const note = document.createElement("div");
     note.className = "activity-wheel-celebration-note";
     note.textContent =
-      "Your empire activity paid off — keep playing, keep spinning!";
+      "Your empire activity paid off — click anywhere to close.";
 
     card.appendChild(emoji);
     card.appendChild(title);
@@ -581,11 +622,11 @@
       overlay.appendChild(piece);
     }
 
-    document.body.appendChild(overlay);
-
-    setTimeout(() => {
+    overlay.addEventListener("click", () => {
       overlay.remove();
-    }, 3600);
+    });
+
+    document.body.appendChild(overlay);
   }
 
   async function spinActivityWheelFromPage() {

@@ -365,13 +365,14 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  pointer-events: none;
+  pointer-events: auto;
+cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(17, 24, 39, 0.18);
   overflow: hidden;
-  animation: activityCelebrationFade 3.4s ease forwards;
+  
 }
 
 .activity-wheel-celebration-card {
@@ -524,6 +525,6 @@
 
     <script src="js/navbar.js"></script>
     <script src="js/notifications.js"></script>
-    <script src="js/activity-wheel.js"></script>
+    <script src="js/activity-wheel.js?v=20260712-timefix6"></script>
   </body>
 </html>

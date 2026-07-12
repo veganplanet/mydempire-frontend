@@ -3682,6 +3682,28 @@ function isFactoryFulfillmentVisitorMode() {
 
   return viewedUser.toLowerCase() !== loggedInUser.toLowerCase();
 }
+function formatFulfillmentLocalTime(value) {
+  if (!value) return "--";
+
+  const raw = String(value);
+
+  const safeValue =
+    raw.endsWith("Z") || raw.includes("+")
+      ? raw
+      : `${raw}Z`;
+
+  const date = new Date(safeValue);
+
+  if (Number.isNaN(date.getTime())) return "--";
+
+  return date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 function renderFulfillmentHistory(history) {
   if (!Array.isArray(history) || history.length === 0) {
     return `
@@ -3703,10 +3725,10 @@ function renderFulfillmentHistory(history) {
               .replaceAll("_", " ");
 
             const dateText = item.claimed_at
-              ? new Date(item.claimed_at).toLocaleString()
-              : item.started_at
-                ? new Date(item.started_at).toLocaleString()
-                : "--";
+  ? formatFulfillmentLocalTime(item.claimed_at)
+  : item.started_at
+    ? formatFulfillmentLocalTime(item.started_at)
+    : "--";
 
             const status = String(item.status || "").toUpperCase();
             const isAborted = status === "ABORTED";
@@ -4331,16 +4353,20 @@ async function confirmStartFactoryFulfillment() {
   return;
 }
 
-    closeFulfillmentStartModal();
-    showEmpirePopup(
+    if (confirmBtn) {
+  confirmBtn.textContent = "✅ Fulfillment Started";
+}
+
+showEmpirePopup(
   "Fulfillment Started",
   "Factory fulfillment has started successfully.",
   "success"
 );
 
 setTimeout(() => {
+  closeFulfillmentStartModal();
   loadFactoryFulfillmentBoard();
-}, 1500);
+}, 900);
 
   } catch (err) {
     console.error("Factory fulfillment start confirm failed:", err);
@@ -4348,10 +4374,10 @@ setTimeout(() => {
   } finally {
     const confirmBtn = document.querySelector(".fulfillment-start-confirm-btn");
 
-    if (confirmBtn) {
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = "Accept Fulfillment";
-    }
+    if (confirmBtn && confirmBtn.textContent !== "✅ Fulfillment Started") {
+  confirmBtn.disabled = false;
+  confirmBtn.textContent = "Accept Fulfillment";
+}
   }
 }
 async function startFactoryFulfillment(fulfillmentType) {
