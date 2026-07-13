@@ -3811,80 +3811,140 @@ async function reinvestWalletHive() {
         }
       }
 
-      async function openPackFromPacksPage(count = 1) {
-        const stageEl = document.getElementById("pack-reveal-stage");
-        const modal = document.getElementById("pack-reveal-modal");
-        if (modal) modal.classList.remove("hidden");
-        if (!stageEl) return;
+   async function openPackFromPacksPage(count = 1) {
+  const stageEl = document.getElementById("pack-reveal-stage");
+  const modal = document.getElementById("pack-reveal-modal");
 
-        if (window.openingPack) return;
-        window.openingPack = true;
+  if (modal) modal.classList.remove("hidden");
+  if (!stageEl) return;
 
-        const safeCount = Math.max(1, Math.min(5, Number(count || 1)));
+  if (window.openingPack) return;
+  window.openingPack = true;
 
-        try {
-         stageEl.innerHTML = `
-  <div class="pack-opening-info">
+  const safeCount = Math.max(1, Math.min(5, Number(count || 1)));
 
-    <div class="pack-opening-title">
-      Opening ${safeCount} pack${safeCount === 1 ? "" : "s"}...
-    </div>
+  let tipInterval = null;
 
-    <div class="pack-opening-dots">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
+  const empireTips = [
+    `Your Land tier determines its factory capacity:
+     <strong>L1 provides 1 slot, L2 provides 2 slots, and L3 provides 3 slots.</strong>`,
 
-    <div class="pack-opening-tip">
-      <div class="pack-opening-tip-label">
-        💡 EMPIRE TIP
+    `Every Genesis Pack reveals
+     <strong>one Land, one Blueprint, and EMP.</strong>`,
+
+    `Higher-level Blueprints create
+     <strong>stronger factories with greater EP production.</strong>`,
+
+    `Factories must remain active and maintained
+     <strong>to contribute toward your EP/day.</strong>`,
+
+    `MydEmpire contains five industries:
+     <strong>Food, Textile, Pharma, Chemical, and Supermarket.</strong>`,
+
+    `EMP is an important empire resource used for
+     <strong>construction, upgrades, and strategic activities.</strong>`,
+
+    `An Imperial Relic provides
+     <strong>a permanent 3% EP boost, with a maximum of two Relics counted.</strong>`,
+
+    `Your EP/day represents the current industrial strength
+     <strong>of your entire active empire.</strong>`,
+  ];
+
+  try {
+    stageEl.innerHTML = `
+      <div class="pack-opening-info">
+
+        <div class="pack-opening-title">
+          Opening ${safeCount} pack${safeCount === 1 ? "" : "s"}...
+        </div>
+
+        <div class="pack-opening-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="pack-opening-tip">
+          <div class="pack-opening-tip-label">
+            💡 EMPIRE TIP
+          </div>
+
+          <div
+            id="pack-opening-tip-text"
+            class="pack-opening-tip-text"
+          >
+            ${empireTips[0]}
+          </div>
+        </div>
+
       </div>
+    `;
 
-      <div class="pack-opening-tip-text">
-        Your Land tier determines its factory capacity:
-        <strong>L1 provides 1 slot, L2 provides 2 slots, and L3 provides 3 slots.</strong>
-      </div>
-    </div>
+    const tipTextEl = document.getElementById(
+      "pack-opening-tip-text",
+    );
 
-  </div>
-`;
+    let tipIndex = 1;
 
-          const res = await fetch(apiUrl("/open-pack"), {
-            method: "POST",
-            headers: getActorHeaders(),
-            body: JSON.stringify({
-              username: PLAYER_USERNAME,
-              count: safeCount,
-            }),
-          });
-
-          const data = await res.json();
-          console.log("Packs page open result:", data);
-
-          if (!res.ok || !data.success) {
-            stageEl.innerHTML = `<div class="empty">${data.error || "Open pack failed."}</div>`;
-            return;
-          }
-
-          await loadDashboardSummary();
-          // await loadEmpireOverview();
-          // await loadBlueprints();
-          await loadPacks();
-await loadSeasonLiveBanner();
-          if (typeof loadPackOpenHistory === "function") {
-            await loadPackOpenHistory();
-          }
-
-          renderPacksPageReveal(data);
-        } catch (err) {
-          console.error("Packs page open error:", err);
-          console.error(err.stack);
-          stageEl.innerHTML = `<div class="empty">${err.message || "Error while opening pack."}</div>`;
-        } finally {
-          window.openingPack = false;
+    if (tipTextEl) {
+      tipInterval = setInterval(() => {
+        if (!document.body.contains(tipTextEl)) {
+          clearInterval(tipInterval);
+          return;
         }
-      }
+
+        tipTextEl.innerHTML = empireTips[tipIndex];
+
+        tipIndex = (tipIndex + 1) % empireTips.length;
+      }, 2500);
+    }
+
+    const res = await fetch(apiUrl("/open-pack"), {
+      method: "POST",
+      headers: getActorHeaders(),
+      body: JSON.stringify({
+        username: PLAYER_USERNAME,
+        count: safeCount,
+      }),
+    });
+
+    const data = await res.json();
+    console.log("Packs page open result:", data);
+
+    if (!res.ok || !data.success) {
+      stageEl.innerHTML = `
+        <div class="empty">
+          ${data.error || "Open pack failed."}
+        </div>
+      `;
+      return;
+    }
+
+    await loadDashboardSummary();
+    await loadPacks();
+    await loadSeasonLiveBanner();
+
+    if (typeof loadPackOpenHistory === "function") {
+      await loadPackOpenHistory();
+    }
+
+    clearInterval(tipInterval);
+    renderPacksPageReveal(data);
+  } catch (err) {
+    console.error("Packs page open error:", err);
+    console.error(err.stack);
+
+    stageEl.innerHTML = `
+      <div class="empty">
+        ${err.message || "Error while opening pack."}
+      </div>
+    `;
+  } finally {
+    clearInterval(tipInterval);
+    window.openingPack = false;
+  }
+}
 
       function renderPacksPageReveal(data) {
         const stageEl = document.getElementById("pack-reveal-stage");
