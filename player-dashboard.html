@@ -3823,7 +3823,32 @@ async function reinvestWalletHive() {
         const safeCount = Math.max(1, Math.min(5, Number(count || 1)));
 
         try {
-          stageEl.innerHTML = `<div class="empty">Opening ${safeCount} pack${safeCount === 1 ? "" : "s"}...</div>`;
+         stageEl.innerHTML = `
+  <div class="pack-opening-info">
+
+    <div class="pack-opening-title">
+      Opening ${safeCount} pack${safeCount === 1 ? "" : "s"}...
+    </div>
+
+    <div class="pack-opening-dots">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <div class="pack-opening-tip">
+      <div class="pack-opening-tip-label">
+        💡 EMPIRE TIP
+      </div>
+
+      <div class="pack-opening-tip-text">
+        Your Land tier determines its factory capacity:
+        <strong>L1 provides 1 slot, L2 provides 2 slots, and L3 provides 3 slots.</strong>
+      </div>
+    </div>
+
+  </div>
+`;
 
           const res = await fetch(apiUrl("/open-pack"), {
             method: "POST",
