@@ -19330,7 +19330,7 @@ body.mde-dark-theme {
     box-shadow:0 0 0 0 rgba(22,163,74,0);
   }
 }
-<<<<<<< HEAD
+
 /* 🎡 Activity Wheel strip on dashboard */
 .dashboard-activity-wheel-strip {
   align-items: center;
@@ -19449,7 +19449,6 @@ body.mde-dark-theme {
     text-align: center;
   }
 }
-=======
 /* ========================================= */
 /* PACK OPENING — EMPIRE TIP LOADING SCREEN */
 /* ========================================= */
@@ -19567,4 +19566,4 @@ body.mde-dark-theme {
     font-size: 14px;
   }
 }
->>>>>>> 8540c6490cfc65834aa0addf9b1c2b1a21c5f9ea
+
