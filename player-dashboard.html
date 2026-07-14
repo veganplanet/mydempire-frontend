@@ -234,7 +234,48 @@ font-weight:900;
     </button>
   </div>
 </div>
+<!-- 🎡 Activity Wheel Dashboard Strip -->
+<div
+  id="dashboard-activity-wheel-strip"
+  class="dashboard-activity-wheel-strip"
+  style="display:none;"
+>
+  <div class="dashboard-activity-wheel-left">
+    <div class="dashboard-activity-wheel-icon">🎡</div>
 
+    <div>
+      <div class="dashboard-activity-wheel-title">
+        Activity Wheel
+      </div>
+      <div
+        id="dashboard-activity-wheel-sub"
+        class="dashboard-activity-wheel-sub"
+      >
+        Earn AP by playing and spin for rewards.
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-activity-wheel-stats">
+    <div class="dashboard-activity-wheel-pill">
+      <span>Current AP</span>
+      <strong id="dashboard-activity-current-ap">--</strong>
+    </div>
+
+    <div class="dashboard-activity-wheel-pill">
+      <span>Available Spins</span>
+      <strong id="dashboard-activity-available-spins">--</strong>
+    </div>
+  </div>
+
+  <a
+    id="dashboard-activity-wheel-link"
+    class="dashboard-activity-wheel-btn"
+    href="activity-wheel.html"
+  >
+    Open Wheel →
+  </a>
+</div>
 <!-- SEASON 2 ANNOUNCEMENT -->
 <div id="season-2-banner" class="season-2-banner" style="display:none;">
   <div class="season-2-left">
@@ -1563,6 +1604,105 @@ let seasonHistoryIndex = 0;
       function apiUrl(path) {
         return API_BASE + path;
       }
+      async function loadDashboardActivityWheelStrip() {
+  const strip = document.getElementById("dashboard-activity-wheel-strip");
+  if (!strip) return;
+
+  const apEl = document.getElementById("dashboard-activity-current-ap");
+  const spinsEl = document.getElementById("dashboard-activity-available-spins");
+  const subEl = document.getElementById("dashboard-activity-wheel-sub");
+  const linkEl = document.getElementById("dashboard-activity-wheel-link");
+
+  try {
+    const cleanUsername = String(PLAYER_USERNAME || getLoggedInUser() || "")
+      .replace("@", "")
+      .trim()
+      .toLowerCase();
+
+    if (!cleanUsername) return;
+
+    const res = await fetch(
+      apiUrl(`/player/${encodeURIComponent(cleanUsername)}/activity-wheel`)
+    );
+
+    if (!res.ok) {
+      throw new Error("HTTP " + res.status);
+    }
+
+    const data = await res.json();
+    
+    const balance = data.balance || data;
+
+  const currentAp = Number(
+  data.currentAP ??
+    data.current_ap ??
+    data.currentAp ??
+    data.ap ??
+    data.activity_points ??
+    data.balance?.current_ap ??
+    data.balance?.currentAp ??
+    data.balance?.ap ??
+    data.balance?.activity_points ??
+    data.activity_balance?.current_ap ??
+    data.activity_balance?.currentAp ??
+    data.activityBalance?.current_ap ??
+    data.activityBalance?.currentAp ??
+    0
+);
+
+const availableSpins = Number(
+  data.availableSpins ??
+    data.available_spins ??
+    data.spins_available ??
+    data.spinsAvailable ??
+    data.balance?.available_spins ??
+    data.balance?.availableSpins ??
+    Math.floor(currentAp / 50)
+);
+
+    const remainder = currentAp % 50;
+    const needForNext = remainder === 0 ? 50 : 50 - remainder;
+
+   const apText = `${currentAp} AP`;
+const spinsText =
+  availableSpins === 1 ? "1 Spin" : `${availableSpins} Spins`;
+
+document
+  .querySelectorAll("#dashboard-activity-current-ap, #activity-current-ap")
+  .forEach((el) => {
+    el.textContent = apText;
+  });
+
+document
+  .querySelectorAll(
+    "#dashboard-activity-available-spins, #activity-available-spins"
+  )
+  .forEach((el) => {
+    el.textContent = spinsText;
+  });
+
+if (subEl) {
+  subEl.textContent =
+    availableSpins > 0
+      ? `${needForNext} AP needed for one more extra spin.`
+      : `${needForNext} AP needed to unlock next spin.`;
+}
+
+    if (linkEl) {
+      linkEl.href = `activity-wheel.html?user=${encodeURIComponent(cleanUsername)}`;
+    }
+
+    strip.style.display = "flex";
+  } catch (err) {
+    console.warn("Dashboard Activity Wheel strip failed:", err.message);
+
+    if (subEl) {
+      subEl.textContent = "Activity Wheel status unavailable.";
+    }
+
+    strip.style.display = "flex";
+  }
+}
       // ===== BUY EMP FRONTEND =====
 
       function getLoggedInUser() {
@@ -2846,7 +2986,7 @@ if (!Array.isArray(overviewData.lands)) {
     window.dashboardData = data;
 
     updateCrateCardDisplay();
-
+loadDashboardActivityWheelStrip();
     console.log("Dashboard summary:", data);
 const referralStrip = document.getElementById("referral-strip");
 const copyReferralBtn = document.getElementById("copy-referral-link-btn");

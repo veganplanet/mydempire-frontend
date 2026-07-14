@@ -33,97 +33,25 @@
             gap: 14px;
           "
         >
-          <div
-            style="
-              background: linear-gradient(135deg, #f5f3ff 0%, #eef2ff 100%);
-              border: 1px solid #c4b5fd;
-              border-radius: 18px;
-              padding: 18px;
-            "
-          >
-            <div style="font-size: 13px; color: #64748b; font-weight: 800">
-              Current Activity Points
-            </div>
-            <div
-              id="activity-current-ap"
-              style="
-                font-size: 36px;
-                font-weight: 950;
-                color: #7c3aed;
-                margin-top: 6px;
-              "
-            >
-              0 AP
-            </div>
-            <div
-              style="
-                font-size: 13px;
-                color: #475569;
-                font-weight: 700;
-                margin-top: 6px;
-              "
-            >
-              Spin unlocks at 50 AP
-            </div>
-          </div>
+          <div class="activity-compact-stats">
+  <div class="activity-compact-stat activity-compact-primary">
+    <span>Current AP</span>
+    <strong id="activity-current-ap">0 AP</strong>
+    <small>Spin unlocks at 50 AP</small>
+  </div>
 
-          <div
-            style="
-              background: #ffffff;
-              border: 1px solid #e5e7eb;
-              border-radius: 18px;
-              padding: 18px;
-            "
-          >
-            <div style="font-size: 13px; color: #64748b; font-weight: 800">
-              Available Spins
-            </div>
-            <div
-              id="activity-available-spins"
-              style="
-                font-size: 36px;
-                font-weight: 950;
-                color: #111827;
-                margin-top: 6px;
-              "
-            >
-              0
-            </div>
-            <div
-              style="
-                font-size: 13px;
-                color: #475569;
-                font-weight: 700;
-                margin-top: 6px;
-              "
-            >
-              50 AP = 1 reward spin
-            </div>
-          </div>
+  <div class="activity-compact-stat">
+    <span>Available Spins</span>
+    <strong id="activity-available-spins">0</strong>
+    <small>50 AP = 1 reward spin</small>
+  </div>
+</div>
+          
 
-          <div
-            style="
-              background: #fffbeb;
-              border: 1px solid #fde68a;
-              border-radius: 18px;
-              padding: 18px;
-            "
-          >
-            <div style="font-size: 13px; color: #92400e; font-weight: 800">
-              Status
-            </div>
-           <div
-  id="activity-status-text"
-  style="font-size:28px;font-weight:950;color:#d97706;margin-top:6px;"
->
-  Loading
-</div>
-<div style="font-size:13px;color:#92400e;font-weight:700;margin-top:6px;">
-  Read-only backend connection active.
-</div>
           </div>
         </div>
 <div
+  class="activity-wheel-main-card"
   style="
     margin-top:18px;
     padding:18px;
@@ -214,77 +142,88 @@
           </div>
         </div>
 
-        <div
-          style="
-            margin-top: 18px;
-            padding: 18px;
-            border-radius: 20px;
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-          "
-        >
-          <h3 style="margin: 0 0 12px; font-size: 22px; color: #111827">
-            ⚡ Activity Sources
-          </h3>
-
-          <div id="activity-source-list"></div>
-        </div>
-<div
+      <div
+  class="activity-bottom-grid"
   style="
-    margin-top:18px;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:14px;
+    max-width: 1480px !important;
+    margin: 22px auto 0 !important;
+    display: grid !important;
+    grid-template-columns: 1.05fr 1fr 0.9fr !important;
+    gap: 18px !important;
+    align-items: start !important;
   "
 >
-  <div
+  <section
+    class="activity-bottom-card"
+    id="activity-source-card"
     style="
-      padding:18px;
-      border-radius:20px;
-      background:#ffffff;
-      border:1px solid #e5e7eb;
+      height: auto !important;
+      overflow: visible !important;
     "
   >
-    <h3 style="margin:0 0 12px;font-size:22px;color:#111827;">
-      📜 Recent AP Activity
-    </h3>
-    <div id="activity-history-list">
+    <h2>⚡ Activity Sources</h2>
+    <div
+      id="activity-source-list"
+      style="
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+      "
+    ></div>
+  </section>
+
+  <section
+    class="activity-bottom-card"
+    id="activity-history-card"
+    style="
+      height: 660px !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+    "
+  >
+    <h2>📜 Recent AP Activity</h2>
+    <div
+      id="activity-history-list"
+      style="
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+        padding-right: 6px !important;
+      "
+    >
       <div class="activity-empty">Loading AP activity...</div>
     </div>
-  </div>
+  </section>
 
-  <div
+  <section
+    class="activity-bottom-card"
+    id="activity-spin-card"
     style="
-      padding:18px;
-      border-radius:20px;
-      background:#ffffff;
-      border:1px solid #e5e7eb;
+      height: 660px !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
     "
   >
-    <h3 style="margin:0 0 12px;font-size:22px;color:#111827;">
-      🎡 Recent Spins
-    </h3>
-    <div id="activity-spin-history-list">
+    <h2>🎡 Recent Spins</h2>
+    <div
+      id="activity-spin-history-list"
+      style="
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+        padding-right: 6px !important;
+      "
+    >
       <div class="activity-empty">Loading spin history...</div>
     </div>
-  </div>
+  </section>
 </div>
-        <div
-          style="
-            margin-top: 18px;
-            padding: 16px;
-            border-radius: 16px;
-            background: #f1f5f9;
-            border: 1px dashed #94a3b8;
-            color: #475569;
-            font-weight: 800;
-            line-height: 1.6;
-          "
-        >
-          This page is only a safe preview. Real AP balance, earning history,
-          and spin button will be connected after backend tables and routes are
-          ready.
-        </div>
       </section>
     </div>
 
@@ -324,14 +263,14 @@
       }
 .activity-history-row {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 14px;
+  padding: 10px 14px;
   border-radius: 14px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #dbeafe;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
   margin-bottom: 8px;
-  font-weight: 800;
 }
 
 .activity-history-row div div {
@@ -342,15 +281,17 @@
 
 .activity-history-row small {
   display: block;
-  color: #94a3b8;
   font-size: 12px;
-  margin-top: 4px;
+  line-height: 1.15;
+  color: #64748b;
+  font-weight: 800;
 }
 
 .activity-history-row span {
+  font-size: 14px;
+  font-weight: 950;
   color: #7c3aed;
   white-space: nowrap;
-  font-weight: 950;
 }
 
 .activity-empty {
@@ -497,17 +438,18 @@ cursor: pointer;
   width: 112px;
   height: 112px;
   transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(circle at top, #ffffff 0%, #f5f3ff 100%);
-  border: 5px solid #7c3aed;
-  box-shadow: 0 10px 24px rgba(124, 58, 237, 0.26);
+  border-radius: 999px;
+  background: #ffffff;
+  border: 6px solid #7c3aed;
+  box-shadow: 0 10px 24px rgba(124, 58, 237, 0.25);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-weight: 950;
+  flex-direction: column;
   color: #4c1d95;
-  z-index: 3;
+  font-weight: 950;
+  font-size: 26px;
+  z-index: 5;
 }
 
 .activity-wheel-center div {
@@ -521,7 +463,462 @@ cursor: pointer;
   color: #7c3aed;
   font-weight: 950;
 }
-    </style>
+.activity-history-row strong {
+  display: block;
+  font-size: 15px;
+  line-height: 1.15;
+  font-weight: 950;
+  color: #020617;
+  margin-bottom: 3px;
+}
+
+.activity-history-row small {
+  display: block;
+  font-size: 12px;
+  line-height: 1.15;
+  color: #64748b;
+  font-weight: 800;
+}
+
+.activity-history-row span {
+  font-size: 14px;
+  font-weight: 950;
+  color: #7c3aed;
+  white-space: nowrap;
+}
+.activity-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+  margin-top: 22px;
+  align-items: start;
+}
+
+.activity-bottom-card {
+  background: #ffffff;
+  border-radius: 22px;
+  border: 1px solid #dbeafe;
+  padding: 18px 22px;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+  min-height: 0;
+}
+
+.activity-bottom-card h2 {
+  margin: 0 0 14px;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+/* Scroll area for Activity Sources, Recent AP and Recent Spins */
+.activity-bottom-card #activity-source-list,
+.activity-bottom-card #activity-history-list,
+.activity-bottom-card #activity-spin-history-list {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* Compact rows inside bottom cards */
+.activity-bottom-card .activity-history-row,
+.activity-bottom-card .activity-source-row {
+  padding: 9px 12px;
+  margin-bottom: 8px;
+  border-radius: 13px;
+}
+
+.activity-bottom-card .activity-history-row strong,
+.activity-bottom-card .activity-source-row strong {
+  font-size: 14px;
+  line-height: 1.15;
+}
+
+.activity-bottom-card .activity-history-row small,
+.activity-bottom-card .activity-source-row small {
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+/* Thin scrollbar */
+.activity-bottom-card #activity-source-list::-webkit-scrollbar,
+.activity-bottom-card #activity-history-list::-webkit-scrollbar,
+.activity-bottom-card #activity-spin-history-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.activity-bottom-card #activity-source-list::-webkit-scrollbar-thumb,
+.activity-bottom-card #activity-history-list::-webkit-scrollbar-thumb,
+.activity-bottom-card #activity-spin-history-list::-webkit-scrollbar-thumb {
+  background: #c4b5fd;
+  border-radius: 999px;
+}
+
+@media (max-width: 1100px) {
+  .activity-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-bottom-card #activity-source-list,
+  .activity-bottom-card #activity-history-list,
+  .activity-bottom-card #activity-spin-history-list {
+    max-height: 320px;
+  }
+}
+  /* Final bottom layout polish */
+.activity-bottom-grid {
+  max-width: 1480px;
+  margin: 22px auto 0;
+  grid-template-columns: 1fr 1fr 0.9fr;
+  align-items: start;
+}
+
+/* Activity Sources should show full list, no inner scroll */
+.activity-bottom-card #activity-source-list {
+  max-height: none !important;
+  overflow-y: visible !important;
+  padding-right: 0 !important;
+}
+
+/* Recent AP and Recent Spins same height with scroll */
+.activity-bottom-card #activity-history-list,
+.activity-bottom-card #activity-spin-history-list {
+  height: 520px;
+  max-height: 520px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* Make Recent Spins rows use less empty width */
+#activity-spin-history-list .activity-history-row {
+  justify-content: flex-start;
+}
+
+/* Slightly tighter bottom cards */
+.activity-bottom-card {
+  padding: 18px 20px;
+}
+
+@media (max-width: 1100px) {
+  .activity-bottom-grid {
+    max-width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .activity-bottom-card #activity-history-list,
+  .activity-bottom-card #activity-spin-history-list {
+    height: 340px;
+    max-height: 340px;
+  }
+}
+/* Bottom 3-column final layout */
+.activity-bottom-grid {
+  max-width: 1480px;
+  margin: 22px auto 0;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr 0.9fr;
+  gap: 18px;
+  align-items: start !important;
+}
+
+/* All three cards */
+.activity-bottom-card {
+  background: #ffffff;
+  border-radius: 22px;
+  border: 1px solid #dbeafe;
+  padding: 18px 20px;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+/* Activity Sources natural height, no scroll */
+#activity-source-list {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding-right: 0 !important;
+}
+
+/* Recent AP + Recent Spins same height with scroll */
+#activity-history-list,
+#activity-spin-history-list {
+  height: 620px !important;
+  max-height: 620px !important;
+  overflow-y: auto !important;
+  padding-right: 6px;
+}
+
+/* Compact rows */
+.activity-bottom-card .activity-history-row,
+.activity-bottom-card .activity-source-row {
+  padding: 9px 12px;
+  margin-bottom: 8px;
+  border-radius: 13px;
+}
+
+/* Cleaner title size */
+.activity-bottom-card h2 {
+  margin: 0 0 14px;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+/* Mobile */
+@media (max-width: 1100px) {
+  .activity-bottom-grid {
+    max-width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  #activity-history-list,
+  #activity-spin-history-list {
+    height: 360px !important;
+    max-height: 360px !important;
+  }
+}
+/* Final clean bottom layout */
+.activity-bottom-grid {
+  max-width: 1480px;
+  margin: 22px auto 0;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr 0.9fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.activity-bottom-card {
+  background: #ffffff;
+  border-radius: 22px;
+  border: 1px solid #dbeafe;
+  padding: 18px 20px;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+.activity-bottom-card h2 {
+  margin: 0 0 14px;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+/* Activity Sources natural height */
+#activity-source-card {
+  height: auto;
+}
+
+#activity-source-list {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding-right: 0 !important;
+}
+
+/* Recent AP and Recent Spins same fixed card height */
+#activity-history-card,
+#activity-spin-card {
+  height: 720px;
+  overflow: hidden;
+}
+
+/* Their lists use full available height and scroll */
+#activity-history-list,
+#activity-spin-history-list {
+  height: calc(720px - 72px) !important;
+  max-height: calc(720px - 72px) !important;
+  overflow-y: auto !important;
+  padding-right: 6px;
+}
+
+/* Compact rows */
+.activity-bottom-card .activity-history-row,
+.activity-bottom-card .activity-source-row {
+  padding: 9px 12px;
+  margin-bottom: 8px;
+  border-radius: 13px;
+}
+
+/* Mobile */
+@media (max-width: 1100px) {
+  .activity-bottom-grid {
+    max-width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  #activity-history-card,
+  #activity-spin-card {
+    height: 420px;
+  }
+
+  #activity-history-list,
+  #activity-spin-history-list {
+    height: calc(420px - 72px) !important;
+    max-height: calc(420px - 72px) !important;
+  }
+}
+/* FINAL FIX: Source natural, AP + Spins tall with internal scroll */
+
+/* Keep bottom grid clean */
+.activity-bottom-grid {
+  max-width: 1480px !important;
+  margin: 22px auto 0 !important;
+  display: grid !important;
+  grid-template-columns: 1.05fr 1fr 0.9fr !important;
+  gap: 18px !important;
+  align-items: start !important;
+}
+
+/* 1st card: Activity Sources natural height */
+.activity-bottom-grid > .activity-bottom-card:nth-child(1) {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* 1st list: no scroll */
+.activity-bottom-grid > .activity-bottom-card:nth-child(1) #activity-source-list {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* 2nd and 3rd cards: same tall height */
+.activity-bottom-grid > .activity-bottom-card:nth-child(2),
+.activity-bottom-grid > .activity-bottom-card:nth-child(3) {
+  height: 660px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* 2nd and 3rd lists: fill available card area and scroll */
+.activity-bottom-grid > .activity-bottom-card:nth-child(2) #activity-history-list,
+.activity-bottom-grid > .activity-bottom-card:nth-child(3) #activity-spin-history-list {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  padding-right: 6px !important;
+}
+
+/* Mobile */
+@media (max-width: 1100px) {
+  .activity-bottom-grid {
+    grid-template-columns: 1fr !important;
+    max-width: 100% !important;
+  }
+
+  .activity-bottom-grid > .activity-bottom-card:nth-child(2),
+  .activity-bottom-grid > .activity-bottom-card:nth-child(3) {
+    height: 420px !important;
+  }
+}
+.activity-wheel-main-card {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(250, 204, 21, 0.22), transparent 28%),
+    radial-gradient(circle at 82% 20%, rgba(34, 197, 94, 0.18), transparent 30%),
+    radial-gradient(circle at 18% 78%, rgba(59, 130, 246, 0.16), transparent 30%),
+    radial-gradient(circle at 82% 80%, rgba(236, 72, 153, 0.14), transparent 28%),
+    linear-gradient(135deg, #f8f7ff 0%, #ffffff 48%, #f0fdf4 100%) !important;
+  overflow: hidden;
+}
+/* Compact top AP summary cards */
+#activity-current-ap,
+#activity-available-spins {
+  font-size: 34px !important;
+  line-height: 1.1 !important;
+  margin: 10px 0 8px !important;
+}
+
+/* Make the top two cards smaller */
+.activity-summary-grid > div,
+.activity-stats-grid > div {
+  padding: 16px 20px !important;
+  min-height: auto !important;
+}
+
+/* If old status card still exists, hide it */
+#activity-status-text {
+  display: none !important;
+}
+/* Final premium compact AP summary strip */
+.activity-compact-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 14px 0 12px;
+}
+
+.activity-compact-stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 22px;
+  border-radius: 20px;
+  border: 1px solid rgba(124, 58, 237, 0.28);
+  box-shadow:
+    0 10px 24px rgba(124, 58, 237, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.activity-compact-primary {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.18), transparent 34%),
+    radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.18), transparent 32%),
+    linear-gradient(135deg, #ede9fe 0%, #ffffff 52%, #fff7ed 100%);
+  border-color: #a78bfa;
+}
+
+.activity-compact-stat:nth-child(2) {
+  background:
+    radial-gradient(circle at 12% 20%, rgba(34, 197, 94, 0.16), transparent 34%),
+    radial-gradient(circle at 88% 75%, rgba(250, 204, 21, 0.22), transparent 34%),
+    linear-gradient(135deg, #ecfeff 0%, #ffffff 48%, #fef3c7 100%);
+  border-color: #facc15;
+}
+
+.activity-compact-stat span {
+  font-size: 15px;
+  font-weight: 950;
+  color: #334155;
+  white-space: nowrap;
+}
+
+.activity-compact-stat strong {
+  font-size: 30px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.activity-compact-primary strong {
+  color: #7c3aed;
+  text-shadow: 0 3px 12px rgba(124, 58, 237, 0.18);
+}
+
+.activity-compact-stat:nth-child(2) strong {
+  color: #d97706;
+  text-shadow: 0 3px 12px rgba(217, 119, 6, 0.18);
+}
+
+.activity-compact-stat small {
+  font-size: 13px;
+  font-weight: 850;
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.68);
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .activity-compact-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-compact-stat {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+  </style>
 
     <script src="js/navbar.js"></script>
     <script src="js/notifications.js"></script>

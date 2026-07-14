@@ -365,33 +365,129 @@
       `,
     ).join("");
   }
+  function fixActivityBottomLayout() {
+    const sourceCard = document.getElementById("activity-source-card");
+    const historyCard = document.getElementById("activity-history-card");
+    const spinCard = document.getElementById("activity-spin-card");
 
-  function renderRewardPool(rewards) {
-    const rewardPool = document.getElementById("activity-reward-pool");
-    if (!rewardPool) return;
+    const sourceList = document.getElementById("activity-source-list");
+    const historyList = document.getElementById("activity-history-list");
+    const spinList = document.getElementById("activity-spin-history-list");
 
-    if (!Array.isArray(rewards) || rewards.length === 0) {
-      rewardPool.innerHTML = `<div class="activity-empty">Reward table not loaded.</div>`;
+    if (
+      !sourceCard ||
+      !historyCard ||
+      !spinCard ||
+      !sourceList ||
+      !historyList ||
+      !spinList
+    ) {
       return;
     }
 
-    rewardPool.innerHTML = rewards
+    // 1st card stays natural, no scroll.
+    sourceCard.style.setProperty("height", "auto", "important");
+    sourceCard.style.setProperty("overflow", "visible", "important");
+    sourceList.style.setProperty("height", "auto", "important");
+    sourceList.style.setProperty("max-height", "none", "important");
+    sourceList.style.setProperty("overflow", "visible", "important");
+
+    // Match AP + Spins list height to Activity Sources list height.
+    const sourceListHeight = Math.ceil(
+      sourceList.getBoundingClientRect().height,
+    );
+
+    [historyCard, spinCard].forEach((card) => {
+      card.style.setProperty("height", "auto", "important");
+      card.style.setProperty("overflow", "visible", "important");
+      card.style.setProperty("display", "block", "important");
+    });
+
+    [historyList, spinList].forEach((list) => {
+      list.style.setProperty("height", `${sourceListHeight}px`, "important");
+      list.style.setProperty(
+        "max-height",
+        `${sourceListHeight}px`,
+        "important",
+      );
+      list.style.setProperty("overflow-y", "auto", "important");
+      list.style.setProperty("padding-right", "6px", "important");
+    });
+  }
+  function renderRewardPool(rewards) {
+    const box = document.getElementById("activity-reward-pool");
+    if (!box) return;
+
+    if (!Array.isArray(rewards) || rewards.length === 0) {
+      box.innerHTML = `<div class="activity-empty">Reward table unavailable.</div>`;
+      return;
+    }
+
+    const rewardColorMap = {
+      "30 EMP": { bg: "#f3e8a6", border: "#e7d86a" },
+      "50 EMP": { bg: "#f6df7b", border: "#e6c84f" },
+      "75 EMP": { bg: "#b9e8c8", border: "#8fd3a8" },
+      "80 EMP": { bg: "#bcd3f2", border: "#8fb2e6" },
+      "100 EMP": { bg: "#d6cef2", border: "#b8a8e8" },
+      "1 SMP": { bg: "#f2c7c7", border: "#e3a8a8" },
+      "2 SMP": { bg: "#bfe5ea", border: "#97d1d8" },
+      "150 EMP": { bg: "#f2d1a3", border: "#e5b97e" },
+      "1 Fragment": { bg: "#d9c9ee", border: "#bfa7df" },
+      "1 IMPERIAL FRAGMENT": { bg: "#d9c9ee", border: "#bfa7df" },
+
+      "250 EMP": { bg: "#efe587", border: "#dfd05d" },
+
+      "1 Genesis Pack": { bg: "#ccebd6", border: "#a4d7b5" },
+      "1 GENESIS PACK": { bg: "#ccebd6", border: "#a4d7b5" },
+    };
+
+    box.innerHTML = rewards
       .map((reward) => {
-        const type = String(reward.reward_type || "").toUpperCase();
-        const amount = Number(reward.reward_amount || 0);
-        const chance = Number(reward.chance || 0);
+        const label =
+          reward.reward_label ||
+          `${Number(reward.reward_amount || 0)} ${String(
+            reward.reward_type || "REWARD",
+          ).replaceAll("_", " ")}`;
 
-        let label = `${amount} ${type}`;
-
-        if (type === "IMPERIAL_FRAGMENT") label = `${amount} Fragment`;
-        if (type === "GENESIS_PACK") label = `${amount} Genesis Pack`;
+        const colors = rewardColorMap[label] || {
+          bg: "#f8fafc",
+          border: "#dbeafe",
+        };
 
         return `
-          <div class="activity-reward-card">
-            ${label}<br>
-            <strong>${chance}%</strong>
+        <div
+          class="activity-reward-card"
+          style="
+            background: ${colors.bg};
+            border: 1px solid ${colors.border};
+            border-radius: 18px;
+            padding: 14px 12px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+          "
+        >
+          <div
+            style="
+              font-size: 18px;
+              font-weight: 950;
+              color: #0f172a;
+              line-height: 1.15;
+            "
+          >
+            ${label}
           </div>
-        `;
+          <div
+            style="
+              margin-top: 10px;
+              font-size: 15px;
+              font-weight: 900;
+              color: #7c3aed;
+            "
+          >
+            ${reward.chance}%
+          </div>
+        </div>
+      `;
       })
       .join("");
   }
@@ -467,7 +563,7 @@
             <strong>${label}</strong>
             <small>${createdAt}</small>
           </div>
-          <span>Won</span>
+          
         </div>
       `;
       })
@@ -692,6 +788,14 @@
         }
 
         await loadActivityWheelState();
+        const resultBoxAfterRefresh = document.getElementById(
+          "activity-spin-result",
+        );
+        if (resultBoxAfterRefresh && rewardLabel) {
+          resultBoxAfterRefresh.textContent = `🎉 You won ${rewardLabel}!`;
+          resultBoxAfterRefresh.style.color = "#6d28d9";
+          resultBoxAfterRefresh.style.borderColor = "#a78bfa";
+        }
         return;
       }
 
@@ -782,6 +886,8 @@
       renderActivityHistory(data.recentActivity);
       renderSpinHistory(data.recentSpins);
 
+      setTimeout(fixActivityBottomLayout, 80);
+
       if (statusEl) statusEl.textContent = "Connected";
     } catch (err) {
       console.error("Activity Wheel load failed:", err);
@@ -793,6 +899,8 @@
   document.addEventListener("DOMContentLoaded", function () {
     drawActivityWheel();
     renderActivitySources();
+    setTimeout(fixActivityBottomLayout, 120);
+
     loadActivityWheelState();
 
     const spinBtn = document.getElementById("activity-spin-btn");
