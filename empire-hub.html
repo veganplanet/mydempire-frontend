@@ -40,7 +40,8 @@
   class="subnav-btn"
   onclick="switchHubTab('activity')"
 >
-  🎡 Activity Wheel <span style="color:#dc2626;font-weight:900;">SOON</span>
+  🎡 Activity Wheel
+  <span style="color:#16a34a;font-weight:900;">NEW</span>
 </button>
   <button
     type="button"
@@ -75,81 +76,145 @@
   </button>
 </div>
       
+<!-- ========================================= -->
+<!-- 🎡 IMPERIAL ACTIVITY WHEEL — REAL HUB TAB -->
+<!-- ========================================= -->
+
+<!-- ========================================= -->
+<!-- 🎡 IMPERIAL ACTIVITY WHEEL — HUB TAB -->
+<!-- ========================================= -->
+
 <section id="activity-panel" class="hub-panel" style="display:none;">
   <div
     class="card"
     style="
       border-top:5px solid #8b5cf6;
       background:
-        radial-gradient(circle at top left, rgba(139,92,246,0.12), transparent 28%),
+        radial-gradient(circle at top left, rgba(139,92,246,0.10), transparent 28%),
         linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
     "
   >
     <div class="section-header">
       <h2>🎡 Imperial Activity Wheel</h2>
-      <small>Earn Activity Points by playing MydEmpire, then spin for rewards.</small>
+      <small>
+        Earn Activity Points by playing MydEmpire. Collect 50 AP to spin
+        for rewards.
+      </small>
     </div>
 
-    <div
-      style="
-        margin-top:16px;
-        padding:18px;
-        border-radius:18px;
-        background:linear-gradient(135deg,#f5f3ff 0%,#eef2ff 100%);
-        border:1px solid #c4b5fd;
-        color:#312e81;
-        font-weight:800;
-        line-height:1.7;
-      "
-    >
-      <div style="font-size:22px;font-weight:950;color:#111827;margin-bottom:8px;">
-        Coming Soon: Play More, Spin More
+    <!-- COMPACT AP SUMMARY -->
+    <div class="activity-compact-stats">
+      <div class="activity-compact-stat activity-compact-primary">
+        <span>Current AP</span>
+
+        <strong id="activity-current-ap">
+          0 AP
+        </strong>
+
+        <small>
+          Spin unlocks at 50 AP
+        </small>
       </div>
 
-      <div style="font-size:15px;color:#475569;">
-        Complete activities like opening packs, building factories, crates, operations,
-        fulfillment, goods, management, foundry crafting, and warehouse cleanup to earn
-        Activity Points.
+      <div class="activity-compact-stat">
+        <span>Available Spins</span>
+
+        <strong id="activity-available-spins">
+          0
+        </strong>
+
+        <small>
+          50 AP = 1 reward spin
+        </small>
+      </div>
+    </div>
+
+    <!-- MAIN WHEEL -->
+    <div class="activity-wheel-main-card">
+      <h3>
+        🎡 Spin the Imperial Activity Wheel
+      </h3>
+
+      <div class="activity-wheel-stage">
+        <div class="activity-wheel-pointer">▼</div>
+
+        <canvas
+          id="activity-wheel-canvas"
+          width="520"
+          height="520"
+        ></canvas>
+
+        <div class="activity-wheel-center">
+          <div>SPIN</div>
+          <small>50 AP</small>
+        </div>
       </div>
 
-      <div
-        style="
-          margin-top:16px;
-          display:grid;
-          grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-          gap:12px;
-        "
+      <div id="activity-spin-result">
+        Collect 50 AP to unlock one reward spin.
+      </div>
+
+      <button
+        id="activity-spin-btn"
+        type="button"
+        disabled
       >
-        <div style="background:#ffffff;border:1px solid #ddd6fe;border-radius:14px;padding:14px;">
-          <div style="font-size:13px;color:#64748b;">Spin Cost</div>
-          <div style="font-size:24px;font-weight:950;color:#7c3aed;">50 AP</div>
-        </div>
+        🎡 Spin Wheel
+      </button>
+    </div>
 
-        <div style="background:#ffffff;border:1px solid #ddd6fe;border-radius:14px;padding:14px;">
-          <div style="font-size:13px;color:#64748b;">Rewards</div>
-          <div style="font-size:18px;font-weight:950;color:#111827;">EMP • SMP • Fragments • Packs</div>
-        </div>
+    <!-- REWARD POOL -->
+    <div class="activity-reward-pool-card">
+      <h3>🎁 Reward Pool</h3>
 
-        <div style="background:#ffffff;border:1px solid #ddd6fe;border-radius:14px;padding:14px;">
-          <div style="font-size:13px;color:#64748b;">Status</div>
-          <div style="font-size:18px;font-weight:950;color:#dc2626;">Preparing</div>
+      <div id="activity-reward-pool">
+        <div class="activity-empty">
+          Loading reward table...
         </div>
       </div>
+    </div>
 
-      <div
-        style="
-          margin-top:16px;
-          padding:12px 14px;
-          border-radius:14px;
-          background:#ffffff;
-          border:1px dashed #a78bfa;
-          color:#6d28d9;
-          font-size:14px;
-          font-weight:900;
-        "
+    <!-- BOTTOM THREE-COLUMN AREA -->
+    <div class="activity-bottom-grid">
+
+      <!-- ACTIVITY SOURCES -->
+      <section
+        id="activity-source-card"
+        class="activity-bottom-card"
       >
-        🎯 Final rule planned: 50 Activity Points = 1 reward spin.
-      </div>
+        <h2>⚡ Activity Sources</h2>
+
+        <div id="activity-source-list"></div>
+      </section>
+
+      <!-- AP HISTORY -->
+      <section
+        id="activity-history-card"
+        class="activity-bottom-card"
+      >
+        <h2>📜 Recent AP Activity</h2>
+
+        <div id="activity-history-list">
+          <div class="activity-empty">
+            Loading AP activity...
+          </div>
+        </div>
+      </section>
+
+      <!-- SPIN HISTORY -->
+      <section
+        id="activity-spin-card"
+        class="activity-bottom-card"
+      >
+        <h2>🎡 Recent Spins</h2>
+
+        <div id="activity-spin-history-list">
+          <div class="activity-empty">
+            Loading spin history...
+          </div>
+        </div>
+      </section>
+
     </div>
   </div>
 </section>
@@ -2229,6 +2294,9 @@ function switchHubTab(tab) {
   }
 
   panels[tab].style.display = "block";
+  const url = new URL(window.location.href);
+url.searchParams.set("tab", tab);
+window.history.replaceState({}, "", url);
 
   const tabButton = document.querySelector(
     `.subnav-btn[onclick*="switchHubTab('${tab}')"]`,
@@ -2246,13 +2314,26 @@ function switchHubTab(tab) {
     loadEmpireOperations();
   }
 
-  if (tab === "fulfillment" && typeof loadFactoryFulfillmentBoard === "function") {
-    loadFactoryFulfillmentBoard();
-  }
+ if (
+  tab === "fulfillment" &&
+  typeof loadFactoryFulfillmentBoard === "function"
+) {
+  loadFactoryFulfillmentBoard();
+}
 
-  if (tab === "management" && typeof loadManagementOffice === "function") {
-    loadManagementOffice();
-  }
+if (
+  tab === "activity" &&
+  typeof loadActivityWheelState === "function"
+) {
+  loadActivityWheelState();
+}
+
+if (
+  tab === "management" &&
+  typeof loadManagementOffice === "function"
+) {
+  loadManagementOffice();
+}
 
   if (tab === "rats" && typeof loadRatSituation === "function") {
     loadRatSituation();
@@ -4799,6 +4880,11 @@ if (initialTab === "foundry") {
 if (initialTab === "fulfillment") {
   switchHubTab("fulfillment");
 }
+
+if (initialTab === "activity") {
+  switchHubTab("activity");
+}
+
 if (initialTab === "management") {
   switchHubTab("management");
 }
@@ -4817,8 +4903,10 @@ if (initialTab === "management") {
     });
 </script>
     <script src="js/navbar.js"></script>
-    <script src="js/notifications.js"></script>
-    <style>
+<script src="js/notifications.js"></script>
+<script src="js/activity-wheel.js?v=20260712-timefix6"></script>
+
+<style>
   .fulfillment-title-row {
     display: flex;
     align-items: center;
@@ -5469,6 +5557,601 @@ if (initialTab === "management") {
 
   .fulfillment-product-qty {
     width: 100%;
+  }
+}
+/* ====================================== */
+/* 🎡 IMPERIAL ACTIVITY WHEEL — NEW LAYOUT */
+/* ====================================== */
+
+.activity-compact-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 18px 0;
+}
+
+.activity-compact-stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 22px;
+  border-radius: 20px;
+  border: 1px solid rgba(124, 58, 237, 0.28);
+  box-shadow:
+    0 10px 24px rgba(124, 58, 237, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.activity-compact-primary {
+  background:
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(124, 58, 237, 0.18),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(245, 158, 11, 0.18),
+      transparent 32%
+    ),
+    linear-gradient(135deg, #ede9fe 0%, #ffffff 52%, #fff7ed 100%);
+  border-color: #a78bfa;
+}
+
+.activity-compact-stat:nth-child(2) {
+  background:
+    radial-gradient(
+      circle at 12% 20%,
+      rgba(34, 197, 94, 0.16),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 88% 75%,
+      rgba(250, 204, 21, 0.22),
+      transparent 34%
+    ),
+    linear-gradient(135deg, #ecfeff 0%, #ffffff 48%, #fef3c7 100%);
+  border-color: #facc15;
+}
+
+.activity-compact-stat span {
+  font-size: 15px;
+  font-weight: 950;
+  color: #334155;
+  white-space: nowrap;
+}
+
+.activity-compact-stat strong {
+  font-size: 30px;
+  line-height: 1.1;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.activity-compact-primary strong {
+  color: #7c3aed;
+  text-shadow: 0 3px 12px rgba(124, 58, 237, 0.18);
+}
+
+.activity-compact-stat:nth-child(2) strong {
+  color: #d97706;
+  text-shadow: 0 3px 12px rgba(217, 119, 6, 0.18);
+}
+
+.activity-compact-stat small {
+  font-size: 13px;
+  font-weight: 850;
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.68);
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  white-space: nowrap;
+}
+
+/* Main wheel card */
+
+.activity-wheel-main-card {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 22px;
+  text-align: center;
+  border: 1px solid #c4b5fd;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 18% 22%,
+      rgba(250, 204, 21, 0.22),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 82% 20%,
+      rgba(34, 197, 94, 0.18),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 18% 78%,
+      rgba(59, 130, 246, 0.16),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 82% 80%,
+      rgba(236, 72, 153, 0.14),
+      transparent 28%
+    ),
+    linear-gradient(135deg, #f8f7ff 0%, #ffffff 48%, #f0fdf4 100%);
+}
+
+.activity-wheel-main-card > h3 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  color: #111827;
+}
+
+.activity-wheel-stage {
+  position: relative;
+  width: min(520px, 100%);
+  margin: 16px auto 18px;
+  aspect-ratio: 1 / 1;
+}
+
+#activity-wheel-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+  filter: drop-shadow(0 18px 28px rgba(15, 23, 42, 0.18));
+}
+
+.activity-wheel-pointer {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  font-size: 42px;
+  color: #dc2626;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+
+.activity-wheel-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 112px;
+  height: 112px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: #ffffff;
+  border: 6px solid #7c3aed;
+  box-shadow: 0 10px 24px rgba(124, 58, 237, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #4c1d95;
+  font-weight: 950;
+  z-index: 5;
+}
+
+.activity-wheel-center div {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.activity-wheel-center small {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #7c3aed;
+  font-weight: 950;
+}
+
+#activity-spin-result {
+  margin: 10px auto 14px;
+  max-width: 520px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px dashed #a78bfa;
+  color: #6d28d9;
+  font-weight: 900;
+  min-height: 46px;
+}
+
+#activity-spin-btn {
+  padding: 14px 24px;
+  border-radius: 16px;
+  border: 1px solid #7c3aed;
+  background: #7c3aed;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 950;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.22);
+}
+
+#activity-spin-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Reward Pool */
+
+.activity-reward-pool-card {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+}
+
+.activity-reward-pool-card h3 {
+  margin: 0 0 12px;
+  font-size: 22px;
+  color: #111827;
+}
+
+#activity-reward-pool {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.activity-reward-card {
+  background: #ffffff;
+  border: 1px solid #ddd6fe;
+  border-radius: 14px;
+  padding: 14px;
+  text-align: center;
+  font-weight: 950;
+  color: #111827;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.05);
+}
+
+.activity-reward-card strong {
+  display: inline-block;
+  margin-top: 5px;
+  color: #7c3aed;
+}
+
+/* Bottom 3-column section */
+
+.activity-bottom-grid {
+  max-width: 1480px;
+  margin: 22px auto 0;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr 0.9fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.activity-bottom-card {
+  background: #ffffff;
+  border-radius: 22px;
+  border: 1px solid #dbeafe;
+  padding: 18px 20px;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+  min-width: 0;
+}
+
+.activity-bottom-card h2 {
+  margin: 0 0 14px;
+  font-size: 22px;
+  line-height: 1.15;
+  color: #111827;
+}
+
+#activity-source-card {
+  height: auto;
+}
+
+#activity-source-list {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+}
+
+#activity-history-card,
+#activity-spin-card {
+  height: 660px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#activity-history-list,
+#activity-spin-history-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.activity-source-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: 13px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 8px;
+  font-weight: 800;
+}
+
+.activity-source-row span:last-child {
+  color: #7c3aed;
+  white-space: nowrap;
+}
+
+.activity-history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid #dbeafe;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  margin-bottom: 8px;
+}
+
+.activity-history-row strong {
+  display: block;
+  font-size: 15px;
+  line-height: 1.15;
+  font-weight: 950;
+  color: #020617;
+  margin-bottom: 3px;
+}
+
+.activity-history-row div div,
+.activity-history-row small {
+  display: block;
+  font-size: 12px;
+  line-height: 1.2;
+  color: #64748b;
+  font-weight: 800;
+}
+
+.activity-history-row span {
+  font-size: 14px;
+  font-weight: 950;
+  color: #7c3aed;
+  white-space: nowrap;
+}
+
+.activity-empty {
+  padding: 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
+  font-weight: 800;
+}
+
+/* Scrollbars */
+
+#activity-history-list::-webkit-scrollbar,
+#activity-spin-history-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#activity-history-list::-webkit-scrollbar-thumb,
+#activity-spin-history-list::-webkit-scrollbar-thumb {
+  background: #c4b5fd;
+  border-radius: 999px;
+}
+
+/* Reward celebration */
+
+.activity-wheel-celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(17, 24, 39, 0.18);
+  overflow: hidden;
+}
+
+.activity-wheel-celebration-card {
+  position: relative;
+  z-index: 2;
+  width: min(460px, calc(100% - 36px));
+  padding: 28px 22px;
+  border-radius: 28px;
+  background: linear-gradient(
+    135deg,
+    #fff7ed 0%,
+    #ffffff 45%,
+    #f5f3ff 100%
+  );
+  border: 3px solid #f59e0b;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+  text-align: center;
+  transform: scale(0.82);
+  animation: activityCelebrationPop 0.55s
+    cubic-bezier(0.2, 1.2, 0.2, 1) forwards;
+}
+
+.activity-wheel-celebration-emoji {
+  font-size: 54px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.activity-wheel-celebration-title {
+  font-size: 28px;
+  font-weight: 950;
+  color: #7c2d12;
+  margin-bottom: 8px;
+}
+
+.activity-wheel-celebration-reward {
+  font-size: 34px;
+  font-weight: 950;
+  color: #4c1d95;
+  margin-bottom: 8px;
+}
+
+.activity-wheel-celebration-note {
+  font-size: 15px;
+  font-weight: 800;
+  color: #475569;
+}
+
+.activity-wheel-confetti {
+  position: absolute;
+  top: -24px;
+  width: 10px;
+  height: 18px;
+  border-radius: 4px;
+  opacity: 0.95;
+  animation-name: activityConfettiFall;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes activityCelebrationPop {
+  0% {
+    transform: scale(0.82);
+    opacity: 0;
+  }
+
+  70% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes activityConfettiFall {
+  0% {
+    transform: translateY(-30px) rotate(0deg);
+  }
+
+  100% {
+    transform: translateY(110vh) rotate(720deg);
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 1100px) {
+  .activity-bottom-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+
+  #activity-history-card,
+  #activity-spin-card {
+    height: 420px;
+  }
+}
+
+@media (max-width: 760px) {
+  .activity-compact-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-compact-stat {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .activity-source-row {
+    flex-direction: column;
+  }
+
+  .activity-wheel-center {
+    width: 88px;
+    height: 88px;
+    border-width: 5px;
+  }
+
+  .activity-wheel-center div {
+    font-size: 18px;
+  }
+
+  .activity-wheel-pointer {
+    font-size: 34px;
+  }
+}
+/* ====================================== */
+/* 🎡 ACTIVITY CONTENT MATCHED WIDTH */
+/* ====================================== */
+
+#activity-panel .activity-wheel-main-card,
+#activity-panel .activity-reward-pool-card,
+#activity-panel .activity-bottom-grid {
+  width: calc(100% - 80px) !important;
+  max-width: 1280px !important;
+  box-sizing: border-box !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+#activity-panel .activity-wheel-main-card,
+#activity-panel .activity-reward-pool-card {
+  margin-top: 18px !important;
+}
+
+@media (max-width: 900px) {
+  #activity-panel .activity-wheel-main-card,
+  #activity-panel .activity-reward-pool-card,
+  #activity-panel .activity-bottom-grid {
+    width: 100% !important;
+  }
+}
+
+#activity-panel .activity-wheel-main-card,
+#activity-panel .activity-reward-pool-card {
+  margin-top: 18px !important;
+}
+
+/* Reward Pool: 6 cards first row, 5 centred second row */
+#activity-panel #activity-reward-pool {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  gap: 14px !important;
+  width: 100% !important;
+}
+
+#activity-panel .activity-reward-card {
+  flex: 0 0 calc((100% - 70px) / 6) !important;
+  width: auto !important;
+  min-width: 0 !important;
+  min-height: 118px !important;
+  box-sizing: border-box !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Tablet */
+@media (max-width: 1000px) {
+  #activity-panel #activity-reward-pool {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 520px) {
+  #activity-panel #activity-reward-pool {
+    grid-template-columns: 1fr !important;
   }
 }
 </style>

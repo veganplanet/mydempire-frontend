@@ -4,6 +4,28 @@
     <meta charset="UTF-8" />
     <title>MydEmpire — Imperial Activity Wheel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+  (function () {
+    const oldParams = new URLSearchParams(window.location.search);
+
+    const targetUrl = new URL(
+      "empire-hub.html",
+      window.location.href
+    );
+
+    targetUrl.searchParams.set("tab", "activity");
+
+    const viewedUser =
+      oldParams.get("user") ||
+      oldParams.get("view");
+
+    if (viewedUser) {
+      targetUrl.searchParams.set("user", viewedUser);
+    }
+
+    window.location.replace(targetUrl.toString());
+  })();
+</script>
 
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="assets/favicon.png" />

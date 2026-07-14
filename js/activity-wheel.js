@@ -895,7 +895,7 @@
         statusEl.textContent = "Failed to load Activity Wheel data.";
     }
   }
-
+  window.loadActivityWheelState = loadActivityWheelState;
   document.addEventListener("DOMContentLoaded", function () {
     drawActivityWheel();
     renderActivitySources();

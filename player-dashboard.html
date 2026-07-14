@@ -271,7 +271,7 @@ font-weight:900;
   <a
     id="dashboard-activity-wheel-link"
     class="dashboard-activity-wheel-btn"
-    href="activity-wheel.html"
+    href="empire-hub.html?tab=activity"
   >
     Open Wheel →
   </a>
@@ -1689,8 +1689,9 @@ if (subEl) {
 }
 
     if (linkEl) {
-      linkEl.href = `activity-wheel.html?user=${encodeURIComponent(cleanUsername)}`;
-    }
+  linkEl.href =
+    `empire-hub.html?tab=activity&user=${encodeURIComponent(cleanUsername)}`;
+}
 
     strip.style.display = "flex";
   } catch (err) {
