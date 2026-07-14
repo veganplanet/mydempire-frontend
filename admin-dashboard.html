@@ -6876,7 +6876,8 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
             reasonInput.value = "";
           }
 
-          await loadActivityAdminPlayer();
+         await loadActivityAdminPlayer();
+await loadActivityAdminPlayerTable();
         } catch (err) {
           console.error("Activity Wheel admin action failed:", err);
 
@@ -6931,6 +6932,255 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
 
       // Keep action buttons locked until a player is loaded.
       setActivityAdminButtonsDisabled(true);
+      // =====================================
+// 🎡 PLAYERWISE ACTIVITY POINTS TABLE
+// =====================================
+
+async function loadActivityAdminPlayerTable() {
+  const tbody = document.getElementById(
+    "activity-admin-player-table-body",
+  );
+
+  const statusEl = document.getElementById(
+    "activity-admin-player-table-status",
+  );
+
+  const refreshBtn = document.getElementById(
+    "activity-admin-load-all-btn",
+  );
+
+  if (!tbody) return;
+
+  if (!ADMIN_KEY) {
+    alert("Unlock the Admin Dashboard first.");
+    return;
+  }
+
+  try {
+    if (refreshBtn) {
+      refreshBtn.disabled = true;
+      refreshBtn.textContent = "Loading...";
+    }
+
+    if (statusEl) {
+      statusEl.textContent =
+        "Loading playerwise Activity Points...";
+    }
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8">
+          Loading Activity Point balances...
+        </td>
+      </tr>
+    `;
+
+    const response = await fetch(
+      `${API_BASE}/admin/activity-wheel/players`,
+      {
+        headers: {
+          "x-admin-key":
+            localStorage.getItem("MYDEMPIRE_ADMIN_KEY") ||
+            ADMIN_KEY,
+        },
+      },
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.error ||
+          "Failed to load playerwise Activity Points.",
+      );
+    }
+
+    const summary = data.summary || {};
+    const players = Array.isArray(data.players)
+      ? data.players
+      : [];
+
+    document.getElementById(
+      "activity-admin-global-players",
+    ).textContent = Number(
+      summary.player_count || 0,
+    ).toLocaleString();
+
+    document.getElementById(
+      "activity-admin-global-current-ap",
+    ).textContent = Number(
+      summary.total_current_ap || 0,
+    ).toLocaleString();
+
+    document.getElementById(
+      "activity-admin-global-earned",
+    ).textContent = Number(
+      summary.total_ap_earned || 0,
+    ).toLocaleString();
+
+    document.getElementById(
+      "activity-admin-global-spent",
+    ).textContent = Number(
+      summary.total_ap_spent || 0,
+    ).toLocaleString();
+
+    document.getElementById(
+      "activity-admin-global-spins",
+    ).textContent = Number(
+      summary.total_spins || 0,
+    ).toLocaleString();
+
+    if (!players.length) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="8">
+            No Activity Point balances found.
+          </td>
+        </tr>
+      `;
+
+      if (statusEl) {
+        statusEl.textContent =
+          "No player AP records found.";
+      }
+
+      return;
+    }
+
+    tbody.innerHTML = players
+      .map((player) => {
+        const username = escapeActivityAdminText(
+          player.username || "",
+        );
+
+        return `
+          <tr>
+            <td>
+              ${Number(player.rank || 0).toLocaleString()}
+            </td>
+
+            <td>
+              <button
+                type="button"
+                class="activity-admin-player-table-link"
+                data-username="${username}"
+                style="
+                  padding: 0;
+                  border: none;
+                  background: transparent;
+                  color: #2563eb;
+                  font-weight: 900;
+                  cursor: pointer;
+                "
+              >
+                @${username}
+              </button>
+            </td>
+
+            <td>
+              <strong>
+                ${Number(
+                  player.current_ap || 0,
+                ).toLocaleString()}
+              </strong>
+            </td>
+
+            <td>
+              ${Number(
+                player.available_spins || 0,
+              ).toLocaleString()}
+            </td>
+
+            <td>
+              ${Number(
+                player.total_ap_earned || 0,
+              ).toLocaleString()}
+            </td>
+
+            <td>
+              ${Number(
+                player.total_ap_spent || 0,
+              ).toLocaleString()}
+            </td>
+
+            <td>
+              ${Number(
+                player.total_spins || 0,
+              ).toLocaleString()}
+            </td>
+
+            <td>
+              ${escapeActivityAdminText(
+                formatActivityAdminDate(
+                  player.updated_at,
+                ),
+              )}
+            </td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    // Clicking a username loads that player into AP controls.
+    tbody
+      .querySelectorAll(
+        ".activity-admin-player-table-link",
+      )
+      .forEach((button) => {
+        button.addEventListener("click", async () => {
+          const username = cleanActivityAdminUsername(
+            button.dataset.username,
+          );
+
+          const usernameInput = document.getElementById(
+            "activity-admin-username",
+          );
+
+          if (usernameInput) {
+            usernameInput.value = username;
+          }
+
+          await loadActivityAdminPlayer();
+        });
+      });
+
+    if (statusEl) {
+      statusEl.textContent =
+        `Loaded ${players.length.toLocaleString()} player AP records.`;
+    }
+  } catch (err) {
+    console.error(
+      "Playerwise Activity Points load failed:",
+      err,
+    );
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8">
+          Failed to load playerwise Activity Points.
+        </td>
+      </tr>
+    `;
+
+    if (statusEl) {
+      statusEl.textContent =
+        err.message ||
+        "Failed to load playerwise Activity Points.";
+    }
+  } finally {
+    if (refreshBtn) {
+      refreshBtn.disabled = false;
+      refreshBtn.textContent = "Refresh AP Table";
+    }
+  }
+}
+
+document
+  .getElementById("activity-admin-load-all-btn")
+  ?.addEventListener(
+    "click",
+    loadActivityAdminPlayerTable,
+  );
     </script>
     <div
       id="assets-modal"
