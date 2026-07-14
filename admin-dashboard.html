@@ -496,6 +496,13 @@
         </button>
         <button
           class="admin-tab-btn"
+          data-admin-tab="activity-wheel"
+          onclick="switchAdminTab('activity-wheel')"
+        >
+          🎡 Activity Wheel
+        </button>
+        <button
+          class="admin-tab-btn"
           data-admin-tab="system"
           onclick="switchAdminTab('system')"
         >
@@ -1516,7 +1523,6 @@ forkyishere,529"
           </button>
           <div id="goods-cycle-finalize-status" class="status"></div>
         </div>
-       
 
         <div class="section">
           <h2>📦 Playerwise Goods Inventory</h2>
@@ -1594,7 +1600,172 @@ forkyishere,529"
           </div>
         </div>
       </div>
+      <!-- ================================= -->
+      <!-- 🎡 ACTIVITY WHEEL ADMIN CONTROL -->
+      <!-- ================================= -->
 
+      <div class="admin-tab-panel" data-admin-panel="activity-wheel">
+        <!-- PLAYER SEARCH -->
+        <div class="section">
+          <h2>🎡 Activity Wheel Control</h2>
+
+          <div class="small" style="margin-bottom: 14px">
+            Search a player to view or adjust their Activity Points. All manual
+            changes require an admin reason.
+          </div>
+
+          <div class="row">
+            <input
+              id="activity-admin-username"
+              type="text"
+              placeholder="Enter Hive username"
+              autocomplete="off"
+            />
+
+            <button
+              id="activity-admin-load-player-btn"
+              type="button"
+              class="primary"
+            >
+              Load Player
+            </button>
+          </div>
+
+          <div id="activity-admin-load-status" class="status">
+            No player loaded.
+          </div>
+        </div>
+
+        <!-- PLAYER AP SUMMARY -->
+        <div class="section">
+          <h2>
+            Player Activity Summary:
+            <span id="activity-admin-player-name">@--</span>
+          </h2>
+
+          <div class="metrics">
+            <div class="card">
+              <div class="label">Current AP</div>
+
+              <div id="activity-admin-current-ap" class="value">--</div>
+
+              <div class="small">AP currently available to spend</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Available Spins</div>
+
+              <div id="activity-admin-available-spins" class="value">--</div>
+
+              <div class="small">One spin requires 50 AP</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Total AP Earned</div>
+
+              <div id="activity-admin-total-earned" class="value">--</div>
+
+              <div class="small">Lifetime AP earned</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Total AP Spent</div>
+
+              <div id="activity-admin-total-spent" class="value">--</div>
+
+              <div class="small">
+                AP spent through spins or admin deductions
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="label">Total Spins</div>
+
+              <div id="activity-admin-total-spins" class="value">--</div>
+
+              <div class="small">Completed Activity Wheel spins</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AP ACTIONS -->
+        <div class="section">
+          <h2>⚙️ Player AP Actions</h2>
+
+          <div class="row">
+            <input
+              id="activity-admin-ap-amount"
+              type="number"
+              min="0"
+              step="1"
+              placeholder="AP amount"
+            />
+
+            <input
+              id="activity-admin-ap-reason"
+              type="text"
+              maxlength="200"
+              placeholder="Mandatory admin reason"
+              style="min-width: 420px"
+            />
+          </div>
+
+          <div class="row">
+            <button id="activity-admin-add-btn" type="button" class="primary">
+              ➕ Add AP
+            </button>
+
+            <button id="activity-admin-deduct-btn" type="button">
+              ➖ Deduct AP
+            </button>
+
+            <button id="activity-admin-set-btn" type="button">
+              🎯 Set Exact AP
+            </button>
+
+            <button id="activity-admin-reset-btn" type="button" class="danger">
+              🗑 Reset Current AP
+            </button>
+          </div>
+
+          <div id="activity-admin-action-status" class="status">
+            Load a player before using AP controls.
+          </div>
+        </div>
+
+        <!-- AP AND SPIN HISTORY -->
+        <div class="section">
+          <h2>📜 Player Activity Records</h2>
+
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+              gap: 16px;
+            "
+          >
+            <div>
+              <div style="font-weight: 800; margin-bottom: 8px">
+                Recent AP Activity
+              </div>
+
+              <div id="activity-admin-ap-history" class="scroll-box">
+                Load a player to view AP history.
+              </div>
+            </div>
+
+            <div>
+              <div style="font-weight: 800; margin-bottom: 8px">
+                Recent Wheel Spins
+              </div>
+
+              <div id="activity-admin-spin-history" class="scroll-box">
+                Load a player to view spin history.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="admin-tab-panel" data-admin-panel="system">
         <div class="section">
           <h2>🛠 System Controls</h2>
@@ -6175,6 +6346,496 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           }
         }
       }
+      // =====================================
+      // 🎡 ACTIVITY WHEEL ADMIN CONTROLS
+      // =====================================
+
+      let activityAdminLoadedUsername = "";
+
+      function cleanActivityAdminUsername(value) {
+        return String(value || "")
+          .trim()
+          .replace("@", "")
+          .toLowerCase();
+      }
+
+      function escapeActivityAdminText(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function formatActivityAdminDate(value) {
+        if (!value) return "--";
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+          return "--";
+        }
+
+        return date.toLocaleString();
+      }
+
+      function setActivityAdminButtonsDisabled(disabled) {
+        [
+          "activity-admin-add-btn",
+          "activity-admin-deduct-btn",
+          "activity-admin-set-btn",
+          "activity-admin-reset-btn",
+        ].forEach((id) => {
+          const button = document.getElementById(id);
+
+          if (button) {
+            button.disabled = disabled;
+            button.style.opacity = disabled ? "0.55" : "1";
+            button.style.cursor = disabled ? "not-allowed" : "pointer";
+          }
+        });
+      }
+
+      function renderActivityAdminHistory(data) {
+        const apHistoryBox = document.getElementById(
+          "activity-admin-ap-history",
+        );
+
+        const spinHistoryBox = document.getElementById(
+          "activity-admin-spin-history",
+        );
+
+        const recentActivity = Array.isArray(data.recentActivity)
+          ? data.recentActivity
+          : [];
+
+        const recentSpins = Array.isArray(data.recentSpins)
+          ? data.recentSpins
+          : [];
+
+        if (apHistoryBox) {
+          if (!recentActivity.length) {
+            apHistoryBox.innerHTML = `
+        <div class="small">
+          No AP activity recorded for this player.
+        </div>
+      `;
+          } else {
+            apHistoryBox.innerHTML = recentActivity
+              .map((entry) => {
+                const points = Number(entry.points || 0);
+
+                const pointsLabel =
+                  points > 0 ? `+${points} AP` : `${points} AP`;
+
+                return `
+            <div
+              style="
+                padding: 10px;
+                margin-bottom: 8px;
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 10px;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  gap: 10px;
+                  font-weight: 800;
+                "
+              >
+                <span>
+                  ${escapeActivityAdminText(entry.activity_type || "ACTIVITY")}
+                </span>
+
+                <span>
+                  ${escapeActivityAdminText(pointsLabel)}
+                </span>
+              </div>
+
+              <div class="small">
+                ${escapeActivityAdminText(entry.note || "No note")}
+              </div>
+
+              <div class="small">
+                ${escapeActivityAdminText(
+                  formatActivityAdminDate(entry.created_at),
+                )}
+              </div>
+            </div>
+          `;
+              })
+              .join("");
+          }
+        }
+
+        if (spinHistoryBox) {
+          if (!recentSpins.length) {
+            spinHistoryBox.innerHTML = `
+        <div class="small">
+          No Activity Wheel spins recorded for this player.
+        </div>
+      `;
+          } else {
+            spinHistoryBox.innerHTML = recentSpins
+              .map((spin) => {
+                const rewardLabel =
+                  spin.reward_label ||
+                  `${spin.reward_amount || 0} ${spin.reward_type || "Reward"}`;
+
+                return `
+            <div
+              style="
+                padding: 10px;
+                margin-bottom: 8px;
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 10px;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  gap: 10px;
+                  font-weight: 800;
+                "
+              >
+                <span>
+                  🎁 ${escapeActivityAdminText(rewardLabel)}
+                </span>
+
+                <span>−50 AP</span>
+              </div>
+
+              <div class="small">
+                ${escapeActivityAdminText(
+                  formatActivityAdminDate(spin.created_at),
+                )}
+              </div>
+            </div>
+          `;
+              })
+              .join("");
+          }
+        }
+      }
+
+      async function loadActivityAdminPlayer() {
+        const usernameInput = document.getElementById(
+          "activity-admin-username",
+        );
+
+        const statusEl = document.getElementById("activity-admin-load-status");
+
+        const username = cleanActivityAdminUsername(usernameInput?.value);
+
+        if (!username) {
+          alert("Enter a Hive username first.");
+          return;
+        }
+
+        try {
+          if (statusEl) {
+            statusEl.textContent = `Loading @${username}...`;
+          }
+
+          const response = await fetch(
+            `${API_BASE}/player/${encodeURIComponent(username)}/activity-wheel`,
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(
+              data.error || "Failed to load Activity Wheel player.",
+            );
+          }
+
+          activityAdminLoadedUsername = username;
+
+          document.getElementById("activity-admin-player-name").textContent =
+            `@${username}`;
+
+          document.getElementById("activity-admin-current-ap").textContent =
+            Number(data.currentAP || 0).toLocaleString();
+
+          document.getElementById(
+            "activity-admin-available-spins",
+          ).textContent = Number(data.availableSpins || 0).toLocaleString();
+
+          document.getElementById("activity-admin-total-earned").textContent =
+            Number(data.totalAPEarned || 0).toLocaleString();
+
+          document.getElementById("activity-admin-total-spent").textContent =
+            Number(data.totalAPSpent || 0).toLocaleString();
+
+          document.getElementById("activity-admin-total-spins").textContent =
+            Number(data.totalSpins || 0).toLocaleString();
+
+          renderActivityAdminHistory(data);
+
+          setActivityAdminButtonsDisabled(false);
+
+          if (statusEl) {
+            statusEl.textContent = `Loaded Activity Wheel details for @${username}.`;
+          }
+
+          const actionStatusEl = document.getElementById(
+            "activity-admin-action-status",
+          );
+
+          if (actionStatusEl) {
+            actionStatusEl.textContent =
+              "Player loaded. AP controls are ready.";
+          }
+        } catch (err) {
+          console.error("Activity Wheel admin player load failed:", err);
+
+          activityAdminLoadedUsername = "";
+
+          setActivityAdminButtonsDisabled(true);
+
+          if (statusEl) {
+            statusEl.textContent = err.message || "Failed to load player.";
+          }
+        }
+      }
+
+      async function submitActivityAdminAction(action) {
+        if (!ADMIN_KEY) {
+          alert("Unlock the Admin Dashboard first.");
+          return;
+        }
+
+        if (!activityAdminLoadedUsername) {
+          alert("Load a player first.");
+          return;
+        }
+
+        const amountInput = document.getElementById("activity-admin-ap-amount");
+
+        const reasonInput = document.getElementById("activity-admin-ap-reason");
+
+        const actionStatusEl = document.getElementById(
+          "activity-admin-action-status",
+        );
+
+        const reason = String(reasonInput?.value || "").trim();
+
+        if (reason.length < 3) {
+          alert("Enter an admin reason before continuing.");
+          reasonInput?.focus();
+          return;
+        }
+
+        const currentAP = Number(
+          String(
+            document.getElementById("activity-admin-current-ap")?.textContent ||
+              "0",
+          ).replace(/[^\d.-]/g, ""),
+        );
+
+        let amount = 0;
+        let newAP = currentAP;
+        let confirmationMessage = "";
+
+        if (action !== "RESET") {
+          amount = Number(amountInput?.value);
+
+          if (!Number.isInteger(amount)) {
+            alert("AP amount must be a whole number.");
+            amountInput?.focus();
+            return;
+          }
+        }
+
+        if (action === "ADD") {
+          if (amount <= 0) {
+            alert("Enter an AP amount above zero.");
+            return;
+          }
+
+          newAP = currentAP + amount;
+
+          confirmationMessage =
+            `Add ${amount.toLocaleString()} AP to ` +
+            `@${activityAdminLoadedUsername}?\n\n` +
+            `Current AP: ${currentAP.toLocaleString()}\n` +
+            `New AP: ${newAP.toLocaleString()}\n\n` +
+            `Reason: ${reason}`;
+        }
+
+        if (action === "DEDUCT") {
+          if (amount <= 0) {
+            alert("Enter an AP amount above zero.");
+            return;
+          }
+
+          if (amount > currentAP) {
+            alert(
+              `@${activityAdminLoadedUsername} only has ` +
+                `${currentAP.toLocaleString()} AP.`,
+            );
+            return;
+          }
+
+          newAP = currentAP - amount;
+
+          confirmationMessage =
+            `Deduct ${amount.toLocaleString()} AP from ` +
+            `@${activityAdminLoadedUsername}?\n\n` +
+            `Current AP: ${currentAP.toLocaleString()}\n` +
+            `New AP: ${newAP.toLocaleString()}\n\n` +
+            `Reason: ${reason}`;
+        }
+
+        if (action === "SET") {
+          if (amount < 0) {
+            alert("Exact AP balance cannot be below zero.");
+            return;
+          }
+
+          newAP = amount;
+
+          confirmationMessage =
+            `Set @${activityAdminLoadedUsername}'s AP ` +
+            `balance to exactly ${amount.toLocaleString()}?\n\n` +
+            `Current AP: ${currentAP.toLocaleString()}\n` +
+            `New AP: ${newAP.toLocaleString()}\n\n` +
+            `This replaces the current balance.\n\n` +
+            `Reason: ${reason}`;
+        }
+
+        if (action === "RESET") {
+          newAP = 0;
+
+          confirmationMessage =
+            `Reset @${activityAdminLoadedUsername}'s ` +
+            `current AP to 0?\n\n` +
+            `Current AP: ${currentAP.toLocaleString()}\n` +
+            `New AP: 0\n\n` +
+            `AP history, spins and previous rewards will remain.\n\n` +
+            `Reason: ${reason}`;
+        }
+
+        const confirmed = window.confirm(confirmationMessage);
+
+        if (!confirmed) {
+          return;
+        }
+
+        try {
+          setActivityAdminButtonsDisabled(true);
+
+          if (actionStatusEl) {
+            actionStatusEl.textContent = `Processing ${action.toLowerCase()} action...`;
+          }
+
+          const response = await fetch(
+            `${API_BASE}/admin/activity-wheel/player/` +
+              `${encodeURIComponent(activityAdminLoadedUsername)}/ap`,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json",
+                "x-admin-key":
+                  localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+              },
+
+              body: JSON.stringify({
+                action,
+                amount,
+                reason,
+              }),
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Activity Point adjustment failed.");
+          }
+
+          alert(
+            `Success!\n\n` +
+              `@${activityAdminLoadedUsername}\n` +
+              `Previous AP: ${Number(data.beforeAP || 0).toLocaleString()}\n` +
+              `New AP: ${Number(data.afterAP || 0).toLocaleString()}`,
+          );
+
+          if (actionStatusEl) {
+            actionStatusEl.textContent =
+              data.message || "Activity Points updated successfully.";
+          }
+
+          if (amountInput) {
+            amountInput.value = "";
+          }
+
+          if (reasonInput) {
+            reasonInput.value = "";
+          }
+
+          await loadActivityAdminPlayer();
+        } catch (err) {
+          console.error("Activity Wheel admin action failed:", err);
+
+          alert(err.message || "Failed to update Activity Points.");
+
+          if (actionStatusEl) {
+            actionStatusEl.textContent = err.message || "AP adjustment failed.";
+          }
+        } finally {
+          setActivityAdminButtonsDisabled(false);
+        }
+      }
+
+      // Load-player button
+      document
+        .getElementById("activity-admin-load-player-btn")
+        ?.addEventListener("click", loadActivityAdminPlayer);
+
+      // Press Enter inside username field
+      document
+        .getElementById("activity-admin-username")
+        ?.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            loadActivityAdminPlayer();
+          }
+        });
+
+      // AP action buttons
+      document
+        .getElementById("activity-admin-add-btn")
+        ?.addEventListener("click", () => {
+          submitActivityAdminAction("ADD");
+        });
+
+      document
+        .getElementById("activity-admin-deduct-btn")
+        ?.addEventListener("click", () => {
+          submitActivityAdminAction("DEDUCT");
+        });
+
+      document
+        .getElementById("activity-admin-set-btn")
+        ?.addEventListener("click", () => {
+          submitActivityAdminAction("SET");
+        });
+
+      document
+        .getElementById("activity-admin-reset-btn")
+        ?.addEventListener("click", () => {
+          submitActivityAdminAction("RESET");
+        });
+
+      // Keep action buttons locked until a player is loaded.
+      setActivityAdminButtonsDisabled(true);
     </script>
     <div
       id="assets-modal"
