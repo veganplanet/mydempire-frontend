@@ -734,6 +734,25 @@
 
     const spinBtn = document.getElementById("activity-spin-btn");
     const resultBox = document.getElementById("activity-spin-result");
+    const currentApEl = document.getElementById("activity-current-ap");
+
+    const currentAP = Number(
+      String(currentApEl?.textContent || "0").replace(/[^\d.]/g, ""),
+    );
+
+    if (currentAP < 50) {
+      if (spinBtn) {
+        spinBtn.disabled = true;
+        spinBtn.style.opacity = "0.55";
+        spinBtn.style.cursor = "not-allowed";
+      }
+
+      if (resultBox) {
+        resultBox.textContent = "Collect 50 AP to unlock one reward spin.";
+      }
+
+      return;
+    }
 
     if (!username) {
       if (resultBox) {
@@ -820,17 +839,17 @@
         showActivityWheelRareCelebration(rewardLabel);
       }
 
-      // Reset button immediately after wheel stops.
+      // Keep button locked until latest AP state is loaded.
       isWheelSpinning = false;
 
       if (spinBtn) {
         spinBtn.textContent = "🎡 Spin Wheel";
-        spinBtn.disabled = false;
-        spinBtn.style.opacity = "1";
-        spinBtn.style.cursor = "pointer";
+        spinBtn.disabled = true;
+        spinBtn.style.opacity = "0.55";
+        spinBtn.style.cursor = "not-allowed";
       }
 
-      // Now refresh AP/spin count.
+      // Latest AP state will enable it only when 50+ AP is available.
       await loadActivityWheelState();
 
       // Discord runs silently after wheel result. It should not block button reset.
