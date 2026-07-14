@@ -1605,6 +1605,101 @@ forkyishere,529"
       <!-- ================================= -->
 
       <div class="admin-tab-panel" data-admin-panel="activity-wheel">
+        <!-- PLAYERWISE AP TABLE -->
+<div class="section">
+  <div
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    "
+  >
+    <div>
+      <h2 style="margin-bottom: 4px">📊 Playerwise Activity Points</h2>
+
+      <div class="small">
+        Players are ranked by their current available AP.
+      </div>
+    </div>
+
+    <button
+      id="activity-admin-load-all-btn"
+      type="button"
+      class="primary"
+    >
+      Refresh AP Table
+    </button>
+  </div>
+
+  <div
+    id="activity-admin-global-summary"
+    class="metrics"
+    style="margin-top: 14px; margin-bottom: 14px"
+  >
+    <div class="card">
+      <div class="label">Players</div>
+      <div id="activity-admin-global-players" class="value">--</div>
+      <div class="small">Players with an AP balance record</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Current AP</div>
+      <div id="activity-admin-global-current-ap" class="value">--</div>
+      <div class="small">Total AP currently held</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Total AP Earned</div>
+      <div id="activity-admin-global-earned" class="value">--</div>
+      <div class="small">All-time AP earned</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Total AP Spent</div>
+      <div id="activity-admin-global-spent" class="value">--</div>
+      <div class="small">All-time AP spent or deducted</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Total Spins</div>
+      <div id="activity-admin-global-spins" class="value">--</div>
+      <div class="small">Completed Activity Wheel spins</div>
+    </div>
+  </div>
+
+  <div class="all-players-wrap">
+    <div class="all-players-box">
+      <table class="all-players-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Current AP</th>
+            <th>Spins Available</th>
+            <th>Total Earned</th>
+            <th>Total Spent</th>
+            <th>Total Spins</th>
+            <th>Last Updated</th>
+          </tr>
+        </thead>
+
+        <tbody id="activity-admin-player-table-body">
+          <tr>
+            <td colspan="8">
+              Click Refresh AP Table to load player balances.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="activity-admin-player-table-status" class="status">
+    Playerwise AP table not loaded yet.
+  </div>
+</div>
         <!-- PLAYER SEARCH -->
         <div class="section">
           <h2>🎡 Activity Wheel Control</h2>
