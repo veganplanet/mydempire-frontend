@@ -19330,6 +19330,7 @@ body.mde-dark-theme {
     box-shadow:0 0 0 0 rgba(22,163,74,0);
   }
 }
+<<<<<<< HEAD
 /* 🎡 Activity Wheel strip on dashboard */
 .dashboard-activity-wheel-strip {
   align-items: center;
@@ -19448,3 +19449,122 @@ body.mde-dark-theme {
     text-align: center;
   }
 }
+=======
+/* ========================================= */
+/* PACK OPENING — EMPIRE TIP LOADING SCREEN */
+/* ========================================= */
+
+.pack-opening-info {
+  width: 100%;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.pack-opening-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #334155;
+  margin-bottom: 16px;
+}
+
+.pack-opening-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 30px;
+}
+
+.pack-opening-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2563eb;
+  animation: packOpeningDot 1.2s infinite ease-in-out;
+}
+
+.pack-opening-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.pack-opening-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes packOpeningDot {
+  0%,
+  80%,
+  100% {
+    transform: scale(0.7);
+    opacity: 0.4;
+  }
+
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.pack-opening-tip {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px 22px;
+  border-radius: 18px;
+  background:
+    linear-gradient(
+      135deg,
+      #fffbeb 0%,
+      #fef3c7 55%,
+      #fff7d6 100%
+    );
+  border: 1px solid #facc15;
+  box-shadow: 0 12px 28px rgba(245, 158, 11, 0.14);
+}
+
+.pack-opening-tip-label {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: #f59e0b;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.pack-opening-tip-text {
+  color: #78350f;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.65;
+}
+
+.pack-opening-tip-text strong {
+  color: #92400e;
+}
+
+@media (max-width: 640px) {
+  .pack-opening-info {
+    min-height: 360px;
+    padding: 24px 14px;
+  }
+
+  .pack-opening-title {
+    font-size: 19px;
+  }
+
+  .pack-opening-tip {
+    padding: 17px 16px;
+  }
+
+  .pack-opening-tip-text {
+    font-size: 14px;
+  }
+}
+>>>>>>> 8540c6490cfc65834aa0addf9b1c2b1a21c5f9ea
