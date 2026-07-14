@@ -5878,11 +5878,21 @@ if (initialTab === "management") {
   border: 1px solid #e2e8f0;
   margin-bottom: 8px;
   font-weight: 800;
+  align-items: center;
+}
+
+.activity-source-row span:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .activity-source-row span:last-child {
   color: #7c3aed;
-  white-space: nowrap;
+  flex: 0 1 52%;
+  min-width: 0;
+  white-space: normal;
+  text-align: right;
+  line-height: 1.35;
 }
 
 .activity-history-row {
