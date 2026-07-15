@@ -324,28 +324,96 @@
             </div>
           </div>
 
-          <div class="goods-submit-sticky-bar">
-            <div class="goods-submit-summary">
-              <div>
-                Selected Goods:
-                <strong id="goods-selected-count">0</strong>
-              </div>
+         <!-- BULK GOODS REDEMPTION CONTROL BAR -->
+<div class="goods-submit-sticky-bar goods-bulk-redemption-bar">
 
-              <div>
-                Selected Product Value:
-                <strong id="goods-selected-pv">0 PV</strong>
-              </div>
-            </div>
+  <div class="goods-bulk-top-row">
 
-            <button
-              id="goods-submit-selected-btn"
-              class="primary-button goods-submit-sticky-btn"
-              type="button"
-              disabled
-            >
-              Submit to Redemption
-            </button>
-          </div>
+    <div class="goods-bulk-heading">
+      <strong>⚡ Bulk Redemption</strong>
+      <span>
+        Bulk actions apply only to Goods currently visible through your filters.
+      </span>
+    </div>
+
+    <label class="goods-protect-toggle">
+      <input
+        id="goods-protect-valuable-toggle"
+        type="checkbox"
+        checked
+      />
+
+      <span class="goods-protect-switch"></span>
+
+      <span class="goods-protect-text">
+        <strong>Protect Valuable Goods</strong>
+        <small>Skip 3★, R4 and R5 during bulk selection</small>
+      </span>
+    </label>
+
+  </div>
+
+  <div class="goods-bulk-actions">
+
+    <button
+      id="goods-select-all-visible-btn"
+      class="goods-bulk-action-btn goods-bulk-select-all"
+      type="button"
+    >
+      Select All Visible
+    </button>
+
+    <button
+      id="goods-select-one-each-btn"
+      class="goods-bulk-action-btn"
+      type="button"
+    >
+      Select 1 Each
+    </button>
+
+    <button
+      id="goods-clear-selection-btn"
+      class="goods-bulk-action-btn goods-bulk-clear"
+      type="button"
+    >
+      Clear Selection
+    </button>
+
+  </div>
+
+  <div class="goods-bulk-bottom-row">
+
+    <div class="goods-submit-summary goods-bulk-summary">
+
+      <div class="goods-bulk-summary-stat">
+        <span>Selected Goods</span>
+        <strong id="goods-selected-count">0</strong>
+      </div>
+
+      <div class="goods-bulk-summary-stat">
+        <span>Selected Product Value</span>
+        <strong id="goods-selected-pv">0 PV</strong>
+      </div>
+
+      <div class="goods-bulk-summary-stat">
+        <span>Estimated Reward</span>
+        <strong id="goods-selected-estimated-emp">-- EMP</strong>
+      </div>
+
+    </div>
+
+    <button
+      id="goods-submit-selected-btn"
+      class="primary-button goods-submit-sticky-btn"
+      type="button"
+      disabled
+    >
+      Review &amp; Submit
+    </button>
+
+  </div>
+
+</div>
         </section>
       </section>
     </div>
