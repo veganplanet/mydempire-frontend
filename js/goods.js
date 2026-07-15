@@ -349,10 +349,20 @@ function renderGoodsInventory(items, summary) {
     `Inventory: ${totalGoods} available Goods • Total Product Value: ${totalValue}`,
   );
 }
+function getVisibleSelectedGoodsBoxes() {
+  return Array.from(
+    document.querySelectorAll(
+      "#goods-inventory-list .goods-product-card",
+    ),
+  )
+    .filter((card) => card.style.display !== "none")
+    .map((card) =>
+      card.querySelector(".goods-submit-checkbox:checked"),
+    )
+    .filter(Boolean);
+}
 function updateGoodsSelectedSummary() {
-  const selectedBoxes = Array.from(
-    document.querySelectorAll(".goods-submit-checkbox:checked"),
-  );
+ const selectedBoxes = getVisibleSelectedGoodsBoxes();
 
   let selectedGoodsCount = 0;
   let selectedPV = 0;
@@ -623,11 +633,28 @@ function applyGoodsInventoryFilters() {
       matchesIndustry &&
       matchesRarity;
 
-    card.style.display = shouldShow ? "" : "none";
+   card.style.display = shouldShow ? "" : "none";
 
-    if (shouldShow) {
-      visibleGoods += goodsCount;
-    }
+if (shouldShow) {
+  visibleGoods += goodsCount;
+} else {
+  // Hidden Goods must not remain selected.
+  const checkbox = card.querySelector(
+    ".goods-submit-checkbox",
+  );
+
+  if (checkbox) {
+    checkbox.checked = false;
+  }
+
+  const qtyInput = card.querySelector(
+    ".goods-submit-qty-input",
+  );
+
+  if (qtyInput) {
+    qtyInput.value = 1;
+  }
+}
   });
 
   let emptyState = document.getElementById(
@@ -665,7 +692,7 @@ function applyGoodsInventoryFilters() {
     }
   }
 }
-
+updateGoodsSelectedSummary();
 function setupGoodsInventoryFilters() {
   const qualitySelect = document.getElementById(
     "goods-filter-quality",
@@ -699,6 +726,7 @@ function setupGoodsInventoryFilters() {
       if (raritySelect) raritySelect.value = "ALL";
 
       applyGoodsInventoryFilters();
+      
     });
   }
 }
@@ -1495,9 +1523,7 @@ function closeGoodsSubmitConfirmModal() {
 }
 
 function openGoodsSubmitConfirmModal() {
-  const selectedBoxes = Array.from(
-    document.querySelectorAll(".goods-submit-checkbox:checked"),
-  );
+  const selectedBoxes = getVisibleSelectedGoodsBoxes();
 
   let selectedGoodsCount = 0;
   let selectedPV = 0;
@@ -1787,9 +1813,7 @@ async function submitSelectedGoodsForRedemption() {
   const username = getGoodsLoggedInUser();
   const button = document.getElementById("goods-submit-selected-btn");
 
-  const selectedBoxes = Array.from(
-    document.querySelectorAll(".goods-submit-checkbox:checked"),
-  );
+const selectedBoxes = getVisibleSelectedGoodsBoxes();
 
   if (!username) {
     alert("Please login first.");
