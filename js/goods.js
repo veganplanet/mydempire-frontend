@@ -411,6 +411,165 @@ function setupGoodsInventorySelection() {
   });
 }
 // =====================================================
+// ⚡ GOODS BULK REDEMPTION SELECTION
+// =====================================================
+
+function isProtectedGoodsCard(card) {
+  const protectToggle = document.getElementById(
+    "goods-protect-valuable-toggle",
+  );
+
+  const protectionEnabled = protectToggle
+    ? protectToggle.checked
+    : true;
+
+  if (!protectionEnabled) {
+    return false;
+  }
+
+  const quality = String(
+    card.dataset.goodsQuality || "",
+  ).toUpperCase();
+
+  const level = String(
+    card.dataset.goodsLevel || "",
+  ).toUpperCase();
+
+  return (
+    quality === "SUPERIOR" ||
+    level === "PREMIUM" ||
+    level === "LUXURY"
+  );
+}
+
+function getVisibleGoodsInventoryCards() {
+  return Array.from(
+    document.querySelectorAll(
+      "#goods-inventory-list .goods-product-card",
+    ),
+  ).filter((card) => card.style.display !== "none");
+}
+
+function bulkSelectVisibleGoods(selectionMode) {
+  const visibleCards = getVisibleGoodsInventoryCards();
+
+  let selectedGroups = 0;
+  let protectedGroups = 0;
+
+  visibleCards.forEach((card) => {
+    if (isProtectedGoodsCard(card)) {
+      protectedGroups += 1;
+      return;
+    }
+
+    const checkbox = card.querySelector(
+      ".goods-submit-checkbox",
+    );
+
+    if (!checkbox) return;
+
+    const qtyInputId = checkbox.dataset.qtyInputId;
+    const qtyInput = qtyInputId
+      ? document.getElementById(qtyInputId)
+      : null;
+
+    const maximumQuantity = Number(
+      checkbox.dataset.goodCount ||
+      qtyInput?.max ||
+      1,
+    );
+
+    checkbox.checked = true;
+
+    if (qtyInput) {
+      qtyInput.value =
+        selectionMode === "ALL"
+          ? Math.max(1, maximumQuantity)
+          : 1;
+    }
+
+    selectedGroups += 1;
+  });
+
+  updateGoodsSelectedSummary();
+
+  const toolsPanel = document.querySelector(
+    ".goods-bulk-tools-panel",
+  );
+
+  if (toolsPanel) {
+    toolsPanel.removeAttribute("open");
+  }
+
+  if (visibleCards.length === 0) {
+    alert("No Goods are visible under the current filters.");
+    return;
+  }
+
+  if (selectedGroups === 0 && protectedGroups > 0) {
+    alert(
+      "All visible Goods are protected. Turn off Protect Valuable Goods to include them.",
+    );
+  }
+}
+
+function clearGoodsBulkSelection() {
+  document
+    .querySelectorAll(".goods-submit-checkbox")
+    .forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+
+  document
+    .querySelectorAll(".goods-submit-qty-input")
+    .forEach((qtyInput) => {
+      qtyInput.value = 1;
+    });
+
+  updateGoodsSelectedSummary();
+
+  const toolsPanel = document.querySelector(
+    ".goods-bulk-tools-panel",
+  );
+
+  if (toolsPanel) {
+    toolsPanel.removeAttribute("open");
+  }
+}
+
+function setupGoodsBulkRedemption() {
+  const selectAllButton = document.getElementById(
+    "goods-select-all-visible-btn",
+  );
+
+  const selectOneButton = document.getElementById(
+    "goods-select-one-each-btn",
+  );
+
+  const clearButton = document.getElementById(
+    "goods-clear-selection-btn",
+  );
+
+  if (selectAllButton) {
+    selectAllButton.addEventListener("click", () => {
+      bulkSelectVisibleGoods("ALL");
+    });
+  }
+
+  if (selectOneButton) {
+    selectOneButton.addEventListener("click", () => {
+      bulkSelectVisibleGoods("ONE");
+    });
+  }
+
+  if (clearButton) {
+    clearButton.addEventListener(
+      "click",
+      clearGoodsBulkSelection,
+    );
+  }
+}
+// =====================================================
 // 🎒 GOODS INVENTORY COMBINATION FILTERS
 // Star Quality + Industry + Rarity
 // =====================================================
@@ -1720,7 +1879,7 @@ async function submitSelectedGoodsForRedemption() {
   } finally {
     if (button) {
       button.disabled = false;
-      button.textContent = "Submit to Redemption";
+      button.textContent = "Review & Submit";
     }
   }
 }
@@ -1751,6 +1910,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupGoodsSubnav();
   setupGoodsInventorySelection();
     setupGoodsInventoryFilters();
+    setupGoodsBulkRedemption();
   const refreshBtn = document.getElementById("goods-refresh-btn");
   const claimBtn = document.getElementById("goods-claim-btn");
   const submitBtn = document.getElementById("goods-submit-selected-btn");
