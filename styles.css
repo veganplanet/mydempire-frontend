@@ -19941,3 +19941,130 @@ body.mde-dark-theme {
     min-width: 0;
   }
 }
+/* ================================================= */
+/* COLLAPSIBLE GOODS BULK OPTIONS */
+/* ================================================= */
+
+.goods-submit-sticky-bar.goods-bulk-redemption-bar {
+  gap: 10px;
+  padding: 12px 16px;
+}
+
+.goods-bulk-tools-panel {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 9px;
+}
+
+.goods-bulk-tools-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.goods-bulk-tools-summary::-webkit-details-marker {
+  display: none;
+}
+
+.goods-bulk-tools-summary::marker {
+  display: none;
+}
+
+.goods-bulk-tools-summary .goods-bulk-heading {
+  gap: 1px;
+}
+
+.goods-bulk-tools-summary .goods-bulk-heading > strong {
+  font-size: 15px;
+}
+
+.goods-bulk-tools-summary .goods-bulk-heading > span {
+  font-size: 11px;
+}
+
+.goods-bulk-expand-label {
+  flex: 0 0 auto;
+
+  padding: 7px 11px;
+  border: 1px solid #a5b4fc;
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #3730a3;
+
+  font-size: 11px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.goods-bulk-expand-label::after {
+  content: "Show Bulk Options ▼";
+}
+
+.goods-bulk-tools-panel[open]
+  .goods-bulk-expand-label::after {
+  content: "Hide Bulk Options ▲";
+}
+
+.goods-bulk-tools-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+
+  margin-top: 12px;
+  padding-top: 12px;
+
+  border-top: 1px dashed #dbeafe;
+}
+
+.goods-bulk-tools-content .goods-bulk-actions {
+  flex: 1;
+  justify-content: flex-end;
+}
+
+/* Make the always-visible summary more compact */
+
+.goods-bulk-summary-stat {
+  min-height: 50px;
+  padding: 7px 11px;
+}
+
+.goods-bulk-redemption-bar .goods-submit-sticky-btn {
+  min-height: 50px;
+}
+
+/* MOBILE */
+
+@media (max-width: 780px) {
+  .goods-bulk-tools-summary {
+    align-items: flex-start;
+  }
+
+  .goods-bulk-tools-summary .goods-bulk-heading > span {
+    display: none;
+  }
+
+  .goods-bulk-expand-label::after {
+    content: "Options ▼";
+  }
+
+  .goods-bulk-tools-panel[open]
+    .goods-bulk-expand-label::after {
+    content: "Close ▲";
+  }
+
+  .goods-bulk-tools-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .goods-bulk-tools-content .goods-bulk-actions {
+    width: 100%;
+  }
+}
