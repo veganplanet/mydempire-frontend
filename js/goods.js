@@ -266,7 +266,19 @@ function renderGoodsInventory(items, summary) {
       const goodsIdsText = group.goods_ids.join(",");
 
       return `
-        <div class="goods-product-card goods-collectible-card ${qualityClass} ${levelClass}">
+        <div
+  class="goods-product-card goods-collectible-card ${qualityClass} ${levelClass}"
+  data-goods-industry="${escapeGoodsHtml(
+    String(group.industry || "").toUpperCase(),
+  )}"
+  data-goods-quality="${escapeGoodsHtml(
+    String(group.quality || "").toUpperCase(),
+  )}"
+  data-goods-level="${escapeGoodsHtml(
+    String(group.product_level || "").toUpperCase(),
+  )}"
+  data-goods-count="${group.quantity}"
+>
           <div class="goods-collectible-frame">
             <div class="goods-card-topline">
               <span class="goods-card-name">${escapeGoodsHtml(group.product_name)}</span>
@@ -397,6 +409,139 @@ function setupGoodsInventorySelection() {
       updateGoodsSelectedSummary();
     }
   });
+}
+// =====================================================
+// 🎒 GOODS INVENTORY COMBINATION FILTERS
+// Star Quality + Industry + Rarity
+// =====================================================
+
+function applyGoodsInventoryFilters() {
+  const inventoryBox = document.getElementById("goods-inventory-list");
+  const resultCount = document.getElementById(
+    "goods-filter-result-count",
+  );
+
+  if (!inventoryBox) return;
+
+  const qualityFilter = String(
+    document.getElementById("goods-filter-quality")?.value || "ALL",
+  ).toUpperCase();
+
+  const industryFilter = String(
+    document.getElementById("goods-filter-industry")?.value || "ALL",
+  ).toUpperCase();
+
+  const rarityFilter = String(
+    document.getElementById("goods-filter-rarity")?.value || "ALL",
+  ).toUpperCase();
+
+  const cards = Array.from(
+    inventoryBox.querySelectorAll(".goods-product-card"),
+  );
+
+  let totalGoods = 0;
+  let visibleGoods = 0;
+
+  cards.forEach((card) => {
+    const goodsCount = Number(card.dataset.goodsCount || 0);
+
+    totalGoods += goodsCount;
+
+    const matchesQuality =
+      qualityFilter === "ALL" ||
+      card.dataset.goodsQuality === qualityFilter;
+
+    const matchesIndustry =
+      industryFilter === "ALL" ||
+      card.dataset.goodsIndustry === industryFilter;
+
+    const matchesRarity =
+      rarityFilter === "ALL" ||
+      card.dataset.goodsLevel === rarityFilter;
+
+    const shouldShow =
+      matchesQuality &&
+      matchesIndustry &&
+      matchesRarity;
+
+    card.style.display = shouldShow ? "" : "none";
+
+    if (shouldShow) {
+      visibleGoods += goodsCount;
+    }
+  });
+
+  let emptyState = document.getElementById(
+    "goods-filter-empty-state",
+  );
+
+  if (cards.length > 0 && !emptyState) {
+    emptyState = document.createElement("div");
+    emptyState.id = "goods-filter-empty-state";
+    emptyState.className = "goods-empty-card";
+    emptyState.textContent =
+      "No Goods match this filter combination.";
+
+    inventoryBox.appendChild(emptyState);
+  }
+
+  if (emptyState) {
+    emptyState.style.display =
+      cards.length > 0 && visibleGoods === 0 ? "" : "none";
+  }
+
+  const allFiltersActive =
+    qualityFilter === "ALL" &&
+    industryFilter === "ALL" &&
+    rarityFilter === "ALL";
+
+  if (resultCount) {
+    if (cards.length === 0) {
+      resultCount.textContent = "Showing 0 Goods";
+    } else if (allFiltersActive) {
+      resultCount.textContent = `Showing all ${totalGoods} Goods`;
+    } else {
+      resultCount.textContent =
+        `Showing ${visibleGoods} of ${totalGoods} Goods`;
+    }
+  }
+}
+
+function setupGoodsInventoryFilters() {
+  const qualitySelect = document.getElementById(
+    "goods-filter-quality",
+  );
+
+  const industrySelect = document.getElementById(
+    "goods-filter-industry",
+  );
+
+  const raritySelect = document.getElementById(
+    "goods-filter-rarity",
+  );
+
+  const clearButton = document.getElementById(
+    "goods-clear-filters-btn",
+  );
+
+  [qualitySelect, industrySelect, raritySelect].forEach((select) => {
+    if (select) {
+      select.addEventListener(
+        "change",
+        applyGoodsInventoryFilters,
+      );
+    }
+  });
+
+  if (clearButton) {
+    clearButton.addEventListener("click", () => {
+      if (qualitySelect) qualitySelect.value = "ALL";
+      if (industrySelect) industrySelect.value = "ALL";
+      if (raritySelect) raritySelect.value = "ALL";
+
+      applyGoodsInventoryFilters();
+    });
+  }
 }
 function renderGoodsLockedState(data) {
   const ep = Number(data?.epPerDay || 0);
@@ -979,6 +1124,7 @@ async function loadGoodsInventory() {
     }
 
     renderGoodsInventory(data.items || [], data.summary || {});
+    applyGoodsInventoryFilters();
   } catch (err) {
     console.error("Goods inventory load error:", err);
 
@@ -1604,6 +1750,7 @@ function setupGoodsSubnav() {
 document.addEventListener("DOMContentLoaded", () => {
   setupGoodsSubnav();
   setupGoodsInventorySelection();
+    setupGoodsInventoryFilters();
   const refreshBtn = document.getElementById("goods-refresh-btn");
   const claimBtn = document.getElementById("goods-claim-btn");
   const submitBtn = document.getElementById("goods-submit-selected-btn");
