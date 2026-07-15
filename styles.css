@@ -19653,3 +19653,291 @@ body.mde-dark-theme {
     grid-column: auto;
   }
 }
+/* ================================================= */
+/* GOODS BULK REDEMPTION CONTROL BAR */
+/* ================================================= */
+
+.goods-submit-sticky-bar.goods-bulk-redemption-bar {
+  position: sticky;
+  bottom: 12px;
+  z-index: 30;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  margin-top: 22px;
+  padding: 17px 18px;
+
+  border: 1px solid #c7d2fe;
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.97) 0%,
+      rgba(248, 250, 252, 0.97) 55%,
+      rgba(238, 242, 255, 0.97) 100%
+    );
+
+  box-shadow:
+    0 16px 35px rgba(15, 23, 42, 0.14),
+    0 3px 10px rgba(79, 70, 229, 0.08);
+
+  backdrop-filter: blur(10px);
+}
+
+.goods-bulk-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+
+  padding-bottom: 13px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.goods-bulk-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.goods-bulk-heading > strong {
+  font-size: 16px;
+  font-weight: 950;
+  color: #1e293b;
+}
+
+.goods-bulk-heading > span {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* PROTECTION SWITCH */
+
+.goods-protect-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 9px 12px;
+  border: 1px solid #86efac;
+  border-radius: 14px;
+
+  background: #f0fdf4;
+  cursor: pointer;
+}
+
+.goods-protect-toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.goods-protect-switch {
+  position: relative;
+
+  width: 42px;
+  height: 23px;
+  flex: 0 0 auto;
+
+  border-radius: 999px;
+  background: #cbd5e1;
+
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.goods-protect-switch::after {
+  content: "";
+
+  position: absolute;
+  top: 3px;
+  left: 3px;
+
+  width: 17px;
+  height: 17px;
+
+  border-radius: 50%;
+  background: #ffffff;
+
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.22);
+
+  transition: transform 0.2s ease;
+}
+
+.goods-protect-toggle input:checked + .goods-protect-switch {
+  background: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+}
+
+.goods-protect-toggle input:checked + .goods-protect-switch::after {
+  transform: translateX(19px);
+}
+
+.goods-protect-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.goods-protect-text strong {
+  color: #166534;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.goods-protect-text small {
+  color: #4b7c5a;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* BULK BUTTONS */
+
+.goods-bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.goods-bulk-action-btn {
+  min-height: 40px;
+  padding: 9px 14px;
+
+  border: 1px solid #a5b4fc;
+  border-radius: 11px;
+
+  background: #ffffff;
+  color: #3730a3;
+
+  font-size: 12px;
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.16s ease,
+    background 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.goods-bulk-action-btn:hover {
+  transform: translateY(-1px);
+  background: #eef2ff;
+  box-shadow: 0 5px 12px rgba(79, 70, 229, 0.12);
+}
+
+.goods-bulk-action-btn.goods-bulk-select-all {
+  border-color: #60a5fa;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.goods-bulk-action-btn.goods-bulk-clear {
+  border-color: #fca5a5;
+  background: #fff7f7;
+  color: #b91c1c;
+}
+
+/* SUMMARY AND SUBMIT */
+
+.goods-bulk-bottom-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.goods-submit-summary.goods-bulk-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(145px, 1fr));
+  gap: 10px;
+  flex: 1;
+}
+
+.goods-bulk-summary-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  min-height: 58px;
+  padding: 9px 12px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 13px;
+
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.goods-bulk-summary-stat span {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.goods-bulk-summary-stat strong {
+  margin-top: 3px;
+
+  color: #172554;
+  font-size: 16px;
+  font-weight: 950;
+}
+
+.goods-bulk-redemption-bar .goods-submit-sticky-btn {
+  min-width: 210px;
+  min-height: 58px;
+
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.goods-bulk-redemption-bar .goods-submit-sticky-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* MOBILE */
+
+@media (max-width: 780px) {
+  .goods-submit-sticky-bar.goods-bulk-redemption-bar {
+    bottom: 6px;
+    padding: 14px;
+  }
+
+  .goods-bulk-top-row,
+  .goods-bulk-bottom-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .goods-protect-toggle {
+    width: 100%;
+  }
+
+  .goods-bulk-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .goods-bulk-action-btn {
+    width: 100%;
+  }
+
+  .goods-submit-summary.goods-bulk-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .goods-bulk-redemption-bar .goods-submit-sticky-btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
