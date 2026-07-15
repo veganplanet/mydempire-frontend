@@ -19566,4 +19566,90 @@ body.mde-dark-theme {
     font-size: 14px;
   }
 }
+/* ================================================= */
+/* GOODS INVENTORY FILTERS */
+/* ================================================= */
 
+.goods-inventory-filter-bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr)) auto;
+  gap: 12px;
+  align-items: end;
+  margin: 4px 0 20px;
+  padding: 16px;
+  border: 1px solid #dbeafe;
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.06);
+}
+
+.goods-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.goods-filter-field label {
+  font-size: 12px;
+  font-weight: 900;
+  color: #334155;
+}
+
+.goods-filter-field select {
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.goods-filter-field select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.goods-clear-filters-btn {
+  min-height: 44px;
+  padding: 9px 15px;
+  border: 1px solid #94a3b8;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.goods-clear-filters-btn:hover {
+  background: #f1f5f9;
+}
+
+.goods-filter-result-count {
+  grid-column: 1 / -1;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .goods-inventory-filter-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .goods-clear-filters-btn {
+    width: 100%;
+  }
+
+  .goods-filter-result-count {
+    grid-column: auto;
+  }
+}
