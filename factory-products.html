@@ -327,14 +327,22 @@
          <!-- BULK GOODS REDEMPTION CONTROL BAR -->
 <div class="goods-submit-sticky-bar goods-bulk-redemption-bar">
 
-  <div class="goods-bulk-top-row">
+ <details class="goods-bulk-tools-panel">
+
+  <summary class="goods-bulk-tools-summary">
 
     <div class="goods-bulk-heading">
       <strong>⚡ Bulk Redemption</strong>
       <span>
-        Bulk actions apply only to Goods currently visible through your filters.
+        Select multiple visible Goods quickly.
       </span>
     </div>
+
+    <span class="goods-bulk-expand-label"></span>
+
+  </summary>
+
+  <div class="goods-bulk-tools-content">
 
     <label class="goods-protect-toggle">
       <input
@@ -351,35 +359,37 @@
       </span>
     </label>
 
+    <div class="goods-bulk-actions">
+
+      <button
+        id="goods-select-all-visible-btn"
+        class="goods-bulk-action-btn goods-bulk-select-all"
+        type="button"
+      >
+        Select All Visible
+      </button>
+
+      <button
+        id="goods-select-one-each-btn"
+        class="goods-bulk-action-btn"
+        type="button"
+      >
+        Select 1 Each
+      </button>
+
+      <button
+        id="goods-clear-selection-btn"
+        class="goods-bulk-action-btn goods-bulk-clear"
+        type="button"
+      >
+        Clear Selection
+      </button>
+
+    </div>
+
   </div>
 
-  <div class="goods-bulk-actions">
-
-    <button
-      id="goods-select-all-visible-btn"
-      class="goods-bulk-action-btn goods-bulk-select-all"
-      type="button"
-    >
-      Select All Visible
-    </button>
-
-    <button
-      id="goods-select-one-each-btn"
-      class="goods-bulk-action-btn"
-      type="button"
-    >
-      Select 1 Each
-    </button>
-
-    <button
-      id="goods-clear-selection-btn"
-      class="goods-bulk-action-btn goods-bulk-clear"
-      type="button"
-    >
-      Clear Selection
-    </button>
-
-  </div>
+</details>
 
   <div class="goods-bulk-bottom-row">
 
