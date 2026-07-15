@@ -262,7 +262,62 @@
               used for future redemption events.
             </small>
           </div>
+<!-- GOODS INVENTORY FILTERS -->
+<div class="goods-inventory-filter-bar">
 
+  <div class="goods-filter-field">
+    <label for="goods-filter-quality">⭐ Star Quality</label>
+
+    <select id="goods-filter-quality">
+      <option value="ALL">All Stars</option>
+      <option value="STANDARD">1★ Standard</option>
+      <option value="FINE">2★ Fine</option>
+      <option value="SUPERIOR">3★ Superior</option>
+    </select>
+  </div>
+
+  <div class="goods-filter-field">
+    <label for="goods-filter-industry">🏭 Industry</label>
+
+    <select id="goods-filter-industry">
+      <option value="ALL">All Industries</option>
+      <option value="FOOD">Food</option>
+      <option value="TEXTILE">Textile</option>
+      <option value="PHARMA">Pharma</option>
+      <option value="CHEMICAL">Chemical</option>
+      <option value="SUPERMARKET">Supermarket</option>
+    </select>
+  </div>
+
+  <div class="goods-filter-field">
+    <label for="goods-filter-rarity">💎 Rarity</label>
+
+    <select id="goods-filter-rarity">
+      <option value="ALL">All Rarities</option>
+      <option value="ESSENTIAL">R1 — Essential</option>
+      <option value="STANDARD">R2 — Standard</option>
+      <option value="VALUE">R3 — Value</option>
+      <option value="PREMIUM">R4 — Premium</option>
+      <option value="LUXURY">R5 — Luxury</option>
+    </select>
+  </div>
+
+  <button
+    id="goods-clear-filters-btn"
+    class="goods-clear-filters-btn"
+    type="button"
+  >
+    Clear Filters
+  </button>
+
+  <div
+    id="goods-filter-result-count"
+    class="goods-filter-result-count"
+  >
+    Showing all Goods
+  </div>
+
+</div>
           <div id="goods-inventory-list" class="goods-inventory-grid">
             <div class="goods-empty-card">
               Goods inventory is not connected yet.
