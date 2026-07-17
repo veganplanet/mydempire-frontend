@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="goods-ticket.css" />
     <link rel="icon" href="assets/favicon.png" />
   </head>
 
@@ -19,9 +20,7 @@
       <section class="section goods-hero-section">
         <div class="section-header">
           <h2>📦 Factory Goods</h2>
-          <small>
-            Collectible product layer for active factories. 
-          </small>
+          <small> Collectible product layer for active factories. </small>
         </div>
         <div
           style="display: flex; justify-content: flex-end; margin: 10px 0 14px"
@@ -76,22 +75,42 @@
           </div>
         </div>
 
-        <div class="goods-action-row">
-          <div class="goods-subnav">
-            <button class="goods-subnav-btn active" data-goods-tab="overview">
-              Overview
-            </button>
-            <button class="goods-subnav-btn" data-goods-tab="redemption">
-              Redemption
-            </button>
-            <button class="goods-subnav-btn" data-goods-tab="inventory">
-              Inventory
-            </button>
-          </div>
+        <div class="goods-action-row-five">
+          <button
+            class="goods-subnav-btn active"
+            data-goods-tab="overview"
+            type="button"
+          >
+            Overview
+          </button>
+
+          <button
+            class="goods-subnav-btn"
+            data-goods-tab="redemption"
+            type="button"
+          >
+            Redemption
+          </button>
+
+          <button
+            class="goods-subnav-btn"
+            data-goods-tab="inventory"
+            type="button"
+          >
+            Inventory
+          </button>
+
+          <button
+            class="goods-subnav-btn"
+            data-goods-tab="ticket"
+            type="button"
+          >
+            🎟️ Ticket Mint
+          </button>
 
           <button
             id="goods-claim-btn"
-            class="primary-button"
+            class="primary-button goods-top-claim-btn"
             type="button"
             disabled
           >
@@ -262,168 +281,342 @@
               used for future redemption events.
             </small>
           </div>
-<!-- GOODS INVENTORY FILTERS -->
-<div class="goods-inventory-filter-bar">
+          <!-- GOODS INVENTORY FILTERS -->
+          <div class="goods-inventory-filter-bar">
+            <div class="goods-filter-field">
+              <label for="goods-filter-quality">⭐ Star Quality</label>
 
-  <div class="goods-filter-field">
-    <label for="goods-filter-quality">⭐ Star Quality</label>
+              <select id="goods-filter-quality">
+                <option value="ALL">All Stars</option>
+                <option value="STANDARD">1★ Standard</option>
+                <option value="FINE">2★ Fine</option>
+                <option value="SUPERIOR">3★ Superior</option>
+              </select>
+            </div>
 
-    <select id="goods-filter-quality">
-      <option value="ALL">All Stars</option>
-      <option value="STANDARD">1★ Standard</option>
-      <option value="FINE">2★ Fine</option>
-      <option value="SUPERIOR">3★ Superior</option>
-    </select>
-  </div>
+            <div class="goods-filter-field">
+              <label for="goods-filter-industry">🏭 Industry</label>
 
-  <div class="goods-filter-field">
-    <label for="goods-filter-industry">🏭 Industry</label>
+              <select id="goods-filter-industry">
+                <option value="ALL">All Industries</option>
+                <option value="FOOD">Food</option>
+                <option value="TEXTILE">Textile</option>
+                <option value="PHARMA">Pharma</option>
+                <option value="CHEMICAL">Chemical</option>
+                <option value="SUPERMARKET">Supermarket</option>
+              </select>
+            </div>
 
-    <select id="goods-filter-industry">
-      <option value="ALL">All Industries</option>
-      <option value="FOOD">Food</option>
-      <option value="TEXTILE">Textile</option>
-      <option value="PHARMA">Pharma</option>
-      <option value="CHEMICAL">Chemical</option>
-      <option value="SUPERMARKET">Supermarket</option>
-    </select>
-  </div>
+            <div class="goods-filter-field">
+              <label for="goods-filter-rarity">💎 Rarity</label>
 
-  <div class="goods-filter-field">
-    <label for="goods-filter-rarity">💎 Rarity</label>
+              <select id="goods-filter-rarity">
+                <option value="ALL">All Rarities</option>
+                <option value="ESSENTIAL">R1 — Essential</option>
+                <option value="STANDARD">R2 — Standard</option>
+                <option value="VALUE">R3 — Value</option>
+                <option value="PREMIUM">R4 — Premium</option>
+                <option value="LUXURY">R5 — Luxury</option>
+              </select>
+            </div>
 
-    <select id="goods-filter-rarity">
-      <option value="ALL">All Rarities</option>
-      <option value="ESSENTIAL">R1 — Essential</option>
-      <option value="STANDARD">R2 — Standard</option>
-      <option value="VALUE">R3 — Value</option>
-      <option value="PREMIUM">R4 — Premium</option>
-      <option value="LUXURY">R5 — Luxury</option>
-    </select>
-  </div>
+            <button
+              id="goods-clear-filters-btn"
+              class="goods-clear-filters-btn"
+              type="button"
+            >
+              Clear Filters
+            </button>
 
-  <button
-    id="goods-clear-filters-btn"
-    class="goods-clear-filters-btn"
-    type="button"
-  >
-    Clear Filters
-  </button>
-
-  <div
-    id="goods-filter-result-count"
-    class="goods-filter-result-count"
-  >
-    Showing all Goods
-  </div>
-
-</div>
+            <div
+              id="goods-filter-result-count"
+              class="goods-filter-result-count"
+            >
+              Showing all Goods
+            </div>
+          </div>
           <div id="goods-inventory-list" class="goods-inventory-grid">
             <div class="goods-empty-card">
               Goods inventory is not connected yet.
             </div>
           </div>
 
-         <!-- BULK GOODS REDEMPTION CONTROL BAR -->
-<div class="goods-submit-sticky-bar goods-bulk-redemption-bar">
+          <!-- BULK GOODS REDEMPTION CONTROL BAR -->
+          <div class="goods-submit-sticky-bar goods-bulk-redemption-bar">
+            <details class="goods-bulk-tools-panel">
+              <summary class="goods-bulk-tools-summary">
+                <div class="goods-bulk-heading">
+                  <strong>⚡ Bulk Redemption</strong>
+                  <span> Select multiple visible Goods quickly. </span>
+                </div>
 
- <details class="goods-bulk-tools-panel">
+                <span class="goods-bulk-expand-label"></span>
+              </summary>
 
-  <summary class="goods-bulk-tools-summary">
+              <div class="goods-bulk-tools-content">
+                <label class="goods-protect-toggle">
+                  <input
+                    id="goods-protect-valuable-toggle"
+                    type="checkbox"
+                    checked
+                  />
 
-    <div class="goods-bulk-heading">
-      <strong>⚡ Bulk Redemption</strong>
-      <span>
-        Select multiple visible Goods quickly.
-      </span>
-    </div>
+                  <span class="goods-protect-switch"></span>
 
-    <span class="goods-bulk-expand-label"></span>
+                  <span class="goods-protect-text">
+                    <strong>Protect Valuable Goods</strong>
+                    <small>Skip 3★, R4 and R5 during bulk selection</small>
+                  </span>
+                </label>
 
-  </summary>
+                <div class="goods-bulk-actions">
+                  <button
+                    id="goods-select-all-visible-btn"
+                    class="goods-bulk-action-btn goods-bulk-select-all"
+                    type="button"
+                  >
+                    Select All Visible
+                  </button>
 
-  <div class="goods-bulk-tools-content">
+                  <button
+                    id="goods-select-one-each-btn"
+                    class="goods-bulk-action-btn"
+                    type="button"
+                  >
+                    Select 1 Each
+                  </button>
 
-    <label class="goods-protect-toggle">
-      <input
-        id="goods-protect-valuable-toggle"
-        type="checkbox"
-        checked
-      />
+                  <button
+                    id="goods-clear-selection-btn"
+                    class="goods-bulk-action-btn goods-bulk-clear"
+                    type="button"
+                  >
+                    Clear Selection
+                  </button>
+                </div>
+              </div>
+            </details>
 
-      <span class="goods-protect-switch"></span>
+            <div class="goods-bulk-bottom-row">
+              <div class="goods-submit-summary goods-bulk-summary">
+                <div class="goods-bulk-summary-stat">
+                  <span>Selected Goods</span>
+                  <strong id="goods-selected-count">0</strong>
+                </div>
 
-      <span class="goods-protect-text">
-        <strong>Protect Valuable Goods</strong>
-        <small>Skip 3★, R4 and R5 during bulk selection</small>
-      </span>
-    </label>
+                <div class="goods-bulk-summary-stat">
+                  <span>Selected Product Value</span>
+                  <strong id="goods-selected-pv">0 PV</strong>
+                </div>
 
-    <div class="goods-bulk-actions">
+                <div class="goods-bulk-summary-stat">
+                  <span>Estimated Reward</span>
+                  <strong id="goods-selected-estimated-emp">-- EMP</strong>
+                </div>
+              </div>
 
-      <button
-        id="goods-select-all-visible-btn"
-        class="goods-bulk-action-btn goods-bulk-select-all"
-        type="button"
-      >
-        Select All Visible
-      </button>
+              <button
+                id="goods-submit-selected-btn"
+                class="primary-button goods-submit-sticky-btn"
+                type="button"
+                disabled
+              >
+                Review &amp; Submit
+              </button>
+            </div>
+          </div>
+        </section>
+      </section>
+      <section class="goods-tab-panel" data-goods-panel="ticket">
+        <div class="ticket-info-action">
+          <button id="ticket-info-btn" class="ticket-info-btn" type="button">
+            ℹ️ What is an Imperial Ticket?
+          </button>
+        </div>
+        <section class="section ticket-mint-section">
+          <div class="ticket-mint-header">
+            <div>
+              <div class="ticket-mint-kicker">PREMIUM GOODS CRAFTING</div>
+              <h2>🎟️ Imperial Ticket Mint</h2>
+              <p>
+                Burn the required Goods and 50 EMP to mint one permanent,
+                tradable Imperial Ticket.
+              </p>
+            </div>
 
-      <button
-        id="goods-select-one-each-btn"
-        class="goods-bulk-action-btn"
-        type="button"
-      >
-        Select 1 Each
-      </button>
+            <div class="ticket-owned-pill">
+              Owned:
+              <strong id="ticket-owned-count">0</strong>
+            </div>
+          </div>
 
-      <button
-        id="goods-clear-selection-btn"
-        class="goods-bulk-action-btn goods-bulk-clear"
-        type="button"
-      >
-        Clear Selection
-      </button>
+          <div class="ticket-mint-layout">
+            <img
+              src="assets/goods/imperial_ticket.png"
+              alt="Imperial Ticket — Permanent Crafting Asset"
+              class="ticket-main-image"
+            />
 
-    </div>
+            <div class="ticket-recipe-card">
+              <div class="ticket-recipe-head">
+                <div>
+                  <h3>Construction Requirements</h3>
+                  <p>
+                    Complete the same three Goods slots for all five industries.
+                  </p>
+                </div>
 
-  </div>
+                <button
+                  id="ticket-auto-select-btn"
+                  class="secondary-btn"
+                  type="button"
+                  disabled
+                >
+                  ✨ Auto-Select Goods
+                </button>
+              </div>
 
-</details>
+              <div class="ticket-recipe-table-wrap">
+                <table class="ticket-recipe-table">
+                  <thead>
+                    <tr>
+                      <th>Industry</th>
+                      <th>R2 2★+</th>
+                      <th>R2 3★</th>
+                      <th>R3 2★+</th>
+                    </tr>
+                  </thead>
 
-  <div class="goods-bulk-bottom-row">
+                  <tbody>
+                    <tr data-ticket-industry="FOOD">
+                      <td>🍞 Food</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                    </tr>
 
-    <div class="goods-submit-summary goods-bulk-summary">
+                    <tr data-ticket-industry="TEXTILE">
+                      <td>🧵 Textile</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                    </tr>
 
-      <div class="goods-bulk-summary-stat">
-        <span>Selected Goods</span>
-        <strong id="goods-selected-count">0</strong>
-      </div>
+                    <tr data-ticket-industry="PHARMA">
+                      <td>💊 Pharma</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                    </tr>
 
-      <div class="goods-bulk-summary-stat">
-        <span>Selected Product Value</span>
-        <strong id="goods-selected-pv">0 PV</strong>
-      </div>
+                    <tr data-ticket-industry="CHEMICAL">
+                      <td>🧪 Chemical</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                    </tr>
 
-      <div class="goods-bulk-summary-stat">
-        <span>Estimated Reward</span>
-        <strong id="goods-selected-estimated-emp">-- EMP</strong>
-      </div>
+                    <tr data-ticket-industry="SUPERMARKET">
+                      <td>🛒 Supermarket</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                      <td class="ticket-slot-pending">0 / 1</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-    </div>
+              <div class="ticket-extra-requirements">
+                <div class="ticket-requirement-row">
+                  <span>⭐ R3 3★ Goods</span>
+                  <strong id="ticket-r3-three-star-count">0 / 2</strong>
+                </div>
 
-    <button
-      id="goods-submit-selected-btn"
-      class="primary-button goods-submit-sticky-btn"
-      type="button"
-      disabled
-    >
-      Review &amp; Submit
-    </button>
+                <div class="ticket-requirement-row">
+                  <span>⚡ EMP Minting Fee</span>
+                  <strong id="ticket-emp-requirement">0 / 50 EMP</strong>
+                </div>
 
-  </div>
+                <div class="ticket-requirement-row">
+                  <span>📦 Total Selected Goods</span>
+                  <strong id="ticket-selected-goods-count">0 / 15</strong>
+                </div>
+                <div class="ticket-requirement-row">
+                  <span>💠 Total Product Value to Burn</span>
+                  <strong id="ticket-selected-pv">0 PV</strong>
+                </div>
+              </div>
 
-</div>
+              <div id="ticket-mint-status" class="ticket-mint-status">
+                Load your available Goods to begin constructing a Ticket.
+              </div>
+
+              <button
+                id="ticket-mint-btn"
+                class="primary-button ticket-mint-btn"
+                type="button"
+                disabled
+              >
+                🎟️ Mint Imperial Ticket
+              </button>
+            </div>
+          </div>
+          <!-- =========================================
+     🎟️ IMPERIAL TICKET INFORMATION POPUP
+========================================= -->
+
+          <div
+            id="ticket-info-modal"
+            class="ticket-info-modal hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ticket-info-title"
+          >
+            <div class="ticket-info-card">
+              <button
+                id="ticket-info-close-btn"
+                class="ticket-info-close"
+                type="button"
+                aria-label="Close Imperial Ticket information"
+              >
+                ×
+              </button>
+
+              <div class="ticket-info-icon">🎟️</div>
+
+              <h3 id="ticket-info-title">What is an Imperial Ticket?</h3>
+
+              <p class="ticket-info-description">
+                The Imperial Ticket is a
+                <strong>permanent premium crafting asset</strong>
+                created by burning selected Factory Goods and EMP.
+              </p>
+
+              <div class="ticket-info-future">
+                <strong>Future uses may include:</strong>
+
+                <ul>
+                  <li>Unlocking premium crafting recipes</li>
+                  <li>Creating rare or guaranteed game assets</li>
+                  <li>Accessing selected Imperial events</li>
+                  <li>Future Marketplace trading</li>
+                </ul>
+              </div>
+
+              <p class="ticket-info-note">
+                The Ticket does not expire. Its utility may expand as MydEmpire
+                grows.
+              </p>
+
+              <button
+                id="ticket-info-confirm-btn"
+                class="ticket-info-confirm"
+                type="button"
+              >
+                Got It
+              </button>
+            </div>
+          </div>
         </section>
       </section>
     </div>
@@ -627,5 +820,6 @@
     <script src="js/navbar.js"></script>
     <script src="js/notifications.js"></script>
     <script src="js/goods.js"></script>
+    <script src="js/goods-ticket.js"></script>
   </body>
 </html>

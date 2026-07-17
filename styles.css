@@ -20068,3 +20068,41 @@ body.mde-dark-theme {
     width: 100%;
   }
 }
+/* =========================================
+   MYDEMPIRE — CENTRAL PAGE WIDTH CONTROL
+   Change only this value to resize all pages.
+========================================= */
+
+:root {
+  --mde-page-max-width: 1500px;
+  --mde-page-side-space: 24px;
+}
+
+/* Pages using the newer .page structure */
+.page {
+  width: calc(100% - (var(--mde-page-side-space) * 2));
+  max-width: var(--mde-page-max-width) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Pages such as Shop using .page-main */
+.page-main {
+  width: calc(100% - (var(--mde-page-side-space) * 2));
+  max-width: var(--mde-page-max-width) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Prevent an inner wrapper from making the page narrow again */
+.page-main > .page-inner,
+.page > .page-inner {
+  width: 100%;
+  max-width: none !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --mde-page-side-space: 12px;
+  }
+}
