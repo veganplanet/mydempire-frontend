@@ -643,7 +643,7 @@ function renderTicketRecipe() {
     const username = getTicketViewedUser();
     const actor = getTicketLoggedInUser();
 
-    const autoSelectBtn = document.getElementById("ticket-auto-select-btn");
+    
 
     const statusEl = document.getElementById("ticket-mint-status");
 
@@ -659,10 +659,7 @@ function renderTicketRecipe() {
     try {
       ticketLoading = true;
 
-      if (autoSelectBtn) {
-        autoSelectBtn.disabled = true;
-        autoSelectBtn.textContent = "Loading Goods...";
-      }
+    
 
       if (statusEl) {
         statusEl.textContent = "Checking available Goods and EMP balance...";
@@ -723,10 +720,7 @@ function renderTicketRecipe() {
 
       renderTicketRecipe();
 
-      if (autoSelectBtn) {
-        autoSelectBtn.disabled = false;
-        autoSelectBtn.textContent = "✨ Auto-Select Goods";
-      }
+     
     } catch (err) {
       console.error("Imperial Ticket data load failed:", err);
 
@@ -739,10 +733,7 @@ function renderTicketRecipe() {
         statusEl.style.borderColor = "#fca5a5";
       }
 
-      if (autoSelectBtn) {
-        autoSelectBtn.disabled = true;
-        autoSelectBtn.textContent = "✨ Auto-Select Goods";
-      }
+     
     } finally {
       ticketLoading = false;
     }
@@ -875,18 +866,10 @@ function renderTicketRecipe() {
   }
   function setupTicketMintFrontend() {
     const ticketTab = document.querySelector('[data-goods-tab="ticket"]');
-
-    const autoSelectBtn = document.getElementById("ticket-auto-select-btn");
     const mintBtn = document.getElementById("ticket-mint-btn");
     if (ticketTab) {
       ticketTab.addEventListener("click", () => {
         loadTicketRecipeData();
-      });
-    }
-
-    if (autoSelectBtn) {
-      autoSelectBtn.addEventListener("click", () => {
-        renderTicketRecipe();
       });
     }
     if (mintBtn) {
