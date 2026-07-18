@@ -457,108 +457,169 @@
               class="ticket-main-image"
             />
 
-            <div class="ticket-recipe-card">
-              <div class="ticket-recipe-head">
-                <div>
-                  <h3>Construction Requirements</h3>
-                  <p>
-                    Complete the same three Goods slots for all five industries.
-                  </p>
-                </div>
+            <div class="ticket-recipe-head">
+  <div>
+    <h3>Construction Requirements</h3>
 
-                <button
-                  id="ticket-auto-select-btn"
-                  class="secondary-btn"
-                  type="button"
-                  disabled
-                >
-                  ✨ Auto-Select Goods
-                </button>
-              </div>
+    <p>
+      Collect five R1 3★ Goods, flexible R2 and R3 Goods,
+      and one R4 Good.
+    </p>
+  </div>
 
-              <div class="ticket-recipe-table-wrap">
-                <table class="ticket-recipe-table">
-                  <thead>
-                    <tr>
-                      <th>Industry</th>
-                      <th>R2 2★+</th>
-                      <th>R2 3★</th>
-                      <th>R3 2★+</th>
-                    </tr>
-                  </thead>
+  <button
+    id="ticket-auto-select-btn"
+    class="secondary-btn"
+    type="button"
+    disabled
+  >
+    ✨ Auto-Select Goods
+  </button>
+</div>
 
-                  <tbody>
-                    <tr data-ticket-industry="FOOD">
-                      <td>🍞 Food</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                    </tr>
+<div class="ticket-recipe-table-wrap">
+  <table class="ticket-recipe-table">
+    <thead>
+      <tr>
+        <th>Requirement</th>
+        <th>Rule</th>
+        <th>Status</th>
+      </tr>
+    </thead>
 
-                    <tr data-ticket-industry="TEXTILE">
-                      <td>🧵 Textile</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                    </tr>
+    <tbody>
+      <tr data-ticket-r1-industry="FOOD">
+        <td>🍞 R1 Food 3★</td>
+        <td>One required</td>
+        <td
+          data-ticket-progress
+          class="ticket-slot-pending"
+        >
+          ❌ 0 / 1
+        </td>
+      </tr>
 
-                    <tr data-ticket-industry="PHARMA">
-                      <td>💊 Pharma</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                    </tr>
+      <tr data-ticket-r1-industry="TEXTILE">
+        <td>🧵 R1 Textile 3★</td>
+        <td>One required</td>
+        <td
+          data-ticket-progress
+          class="ticket-slot-pending"
+        >
+          ❌ 0 / 1
+        </td>
+      </tr>
 
-                    <tr data-ticket-industry="CHEMICAL">
-                      <td>🧪 Chemical</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                    </tr>
+      <tr data-ticket-r1-industry="PHARMA">
+        <td>Rx R1 Pharma 3★</td>
+        <td>One required</td>
+        <td
+          data-ticket-progress
+          class="ticket-slot-pending"
+        >
+          ❌ 0 / 1
+        </td>
+      </tr>
 
-                    <tr data-ticket-industry="SUPERMARKET">
-                      <td>🛒 Supermarket</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                      <td class="ticket-slot-pending">0 / 1</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+      <tr data-ticket-r1-industry="CHEMICAL">
+        <td>🧪 R1 Chemical 3★</td>
+        <td>One required</td>
+        <td
+          data-ticket-progress
+          class="ticket-slot-pending"
+        >
+          ❌ 0 / 1
+        </td>
+      </tr>
 
-              <div class="ticket-extra-requirements">
-                <div class="ticket-requirement-row">
-                  <span>⭐ R3 3★ Goods</span>
-                  <strong id="ticket-r3-three-star-count">0 / 2</strong>
-                </div>
+      <tr data-ticket-r1-industry="SUPERMARKET">
+        <td>🛒 R1 Supermarket 3★</td>
+        <td>One required</td>
+        <td
+          data-ticket-progress
+          class="ticket-slot-pending"
+        >
+          ❌ 0 / 1
+        </td>
+      </tr>
 
-                <div class="ticket-requirement-row">
-                  <span>⚡ EMP Minting Fee</span>
-                  <strong id="ticket-emp-requirement">0 / 50 EMP</strong>
-                </div>
+      <tr>
+        <td>⚙️ R2 Goods 2★+</td>
+        <td>3 different industries</td>
+        <td
+          id="ticket-r2-count"
+          class="ticket-slot-pending"
+        >
+          ❌ 0 / 3
+        </td>
+      </tr>
 
-                <div class="ticket-requirement-row">
-                  <span>📦 Total Selected Goods</span>
-                  <strong id="ticket-selected-goods-count">0 / 15</strong>
-                </div>
-                <div class="ticket-requirement-row">
-                  <span>💠 Total Product Value to Burn</span>
-                  <strong id="ticket-selected-pv">0 PV</strong>
-                </div>
-              </div>
+      <tr>
+        <td>💠 R3 Goods 2★+</td>
+        <td>3 different industries</td>
+        <td
+          id="ticket-r3-count"
+          class="ticket-slot-pending"
+        >
+          ❌ 0 / 3
+        </td>
+      </tr>
 
-              <div id="ticket-mint-status" class="ticket-mint-status">
-                Load your available Goods to begin constructing a Ticket.
-              </div>
+      <tr>
+        <td>👑 R4 Good 1★+</td>
+        <td>Any industry</td>
+        <td
+          id="ticket-r4-count"
+          class="ticket-slot-pending"
+        >
+          ❌ 0 / 1
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-              <button
-                id="ticket-mint-btn"
-                class="primary-button ticket-mint-btn"
-                type="button"
-                disabled
-              >
-                🎟️ Mint Imperial Ticket
-              </button>
+<div class="ticket-extra-requirements">
+  <div class="ticket-requirement-row">
+    <span>⚡ EMP Minting Fee</span>
+
+    <strong id="ticket-emp-requirement">
+      0 / 50 EMP
+    </strong>
+  </div>
+
+  <div class="ticket-requirement-row">
+    <span>📦 Total Selected Goods</span>
+
+    <strong id="ticket-selected-goods-count">
+      0 / 12
+    </strong>
+  </div>
+
+  <div class="ticket-requirement-row">
+    <span>💠 Total Product Value to Burn</span>
+
+    <strong id="ticket-selected-pv">
+      0 PV
+    </strong>
+  </div>
+</div>
+
+<div
+  id="ticket-mint-status"
+  class="ticket-mint-status"
+>
+  Load your available Goods to begin constructing a Ticket.
+</div>
+
+<button
+  id="ticket-mint-btn"
+  class="primary-button ticket-mint-btn"
+  type="button"
+  disabled
+>
+  🎟️ Mint Imperial Ticket
+</button>
             </div>
           </div>
           <!-- =========================================
