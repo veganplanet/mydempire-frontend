@@ -691,23 +691,31 @@
                 Number(trade.reinvest_bonus_emp || 0);
 
               return `
-          <article class="dao-trade-row">
-            <div class="dao-trade-main">
-              <div class="dao-trade-type ${typeClass}">
-                ${typeIcon} ${type}
-              </div>
+          <article class="dao-trade-row dao-trade-row-single">
+  <div class="dao-trade-type ${typeClass}">
+    ${typeIcon} ${type}
+  </div>
 
-              <div>
-                <strong>${trade.username || "Unknown player"}</strong>
-                <small>${formatDaoTradeTime(trade.created_at)}</small>
-              </div>
-            </div>
+  <strong class="dao-trade-username">
+    ${trade.username || "Unknown player"}
+  </strong>
 
-            <div class="dao-trade-values">
-              <strong>${formatDaoNumber(trade.hive_amount)} HIVE</strong>
-              <span>${formatDaoNumber(totalEmp)} EMP</span>
-            </div>
-          </article>
+  <span class="dao-trade-time">
+    ${formatDaoTradeTime(trade.created_at)}
+  </span>
+
+  <strong class="dao-trade-hive">
+    ${formatDaoNumber(trade.hive_amount)} HIVE
+  </strong>
+
+  <strong class="dao-trade-emp">
+    ${formatDaoNumber(totalEmp)} EMP
+  </strong>
+
+  <span class="dao-trade-rate">
+    Rate: ${formatDaoNumber(trade.market_emp_rate)} EMP/HIVE
+  </span>
+</article>
         `;
             })
             .join("");
@@ -2364,6 +2372,70 @@
 
         .dao-statistics-grid {
           grid-template-columns: 1fr;
+        }
+      }
+      /* ===================================== */
+      /* DAO EXCHANGE HISTORY — SINGLE LINE */
+      /* ===================================== */
+
+      .dao-trade-row-single {
+        display: grid;
+        grid-template-columns:
+          minmax(130px, 0.8fr)
+          minmax(130px, 0.9fr)
+          minmax(210px, 1.4fr)
+          minmax(110px, 0.7fr)
+          minmax(120px, 0.8fr)
+          minmax(190px, 1.2fr);
+
+        align-items: center;
+        gap: 18px;
+      }
+
+      .dao-trade-row-single > * {
+        min-width: 0;
+      }
+
+      .dao-trade-username,
+      .dao-trade-time,
+      .dao-trade-hive,
+      .dao-trade-emp,
+      .dao-trade-rate {
+        white-space: nowrap;
+      }
+
+      .dao-trade-time {
+        color: #7184a8;
+        font-size: 14px;
+      }
+
+      .dao-trade-hive {
+        color: #111827;
+        text-align: right;
+      }
+
+      .dao-trade-emp {
+        color: #2563eb;
+        text-align: right;
+      }
+
+      .dao-trade-rate {
+        color: #334155;
+        font-size: 14px;
+        text-align: right;
+      }
+
+      @media (max-width: 900px) {
+        .dao-trade-row-single {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px 14px;
+        }
+
+        .dao-trade-hive,
+        .dao-trade-emp,
+        .dao-trade-rate {
+          text-align: left;
         }
       }
     </style>
