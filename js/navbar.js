@@ -51,11 +51,30 @@ ${authLinks}
 
 ${
   user
-    ? `<a href="share-market.html" class="appbar-link share-market-nav-link">
-        Share Market <span class="nav-new-pill">SOON</span>
-      </a>`
+    ? `
+      <div class="exchange-nav-dropdown">
+        <a
+          href="exchange.html"
+          class="appbar-link exchange-nav-link"
+        >
+          Imperial Exchange ▼
+        </a>
+
+        <div class="exchange-nav-dropdown-menu">
+          <a href="exchange.html">
+            ⚡ EMP Exchange
+          </a>
+
+          <a href="share-market.html">
+            📈 Share Market
+            <span class="nav-new-pill">SOON</span>
+          </a>
+        </div>
+      </div>
+    `
     : ``
-}          </nav>
+}         
+ </nav>
         </div>
 
         <div class="appbar-right">
@@ -121,18 +140,20 @@ ${
       mobileNavMenu.classList.toggle("mobile-open");
     });
   }
-const homeDropdown = document.querySelector("#mobileNavMenu .home-nav-dropdown");
-const homeLink = document.querySelector("#mobileNavMenu .appbar-home-link");
+  const homeDropdown = document.querySelector(
+    "#mobileNavMenu .home-nav-dropdown",
+  );
+  const homeLink = document.querySelector("#mobileNavMenu .appbar-home-link");
 
-if (homeDropdown && homeLink) {
-  homeLink.addEventListener("click", function (e) {
-    if (window.innerWidth <= 1100) {
-      e.preventDefault();
-      e.stopPropagation();
-      homeDropdown.classList.toggle("home-mobile-open");
-    }
-  });
-}
+  if (homeDropdown && homeLink) {
+    homeLink.addEventListener("click", function (e) {
+      if (window.innerWidth <= 1100) {
+        e.preventDefault();
+        e.stopPropagation();
+        homeDropdown.classList.toggle("home-mobile-open");
+      }
+    });
+  }
   const accountBtn = document.getElementById("appbarAccountBtn");
   const dropdown = document.getElementById("appbarDropdown");
 

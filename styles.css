@@ -20106,3 +20106,108 @@ body.mde-dark-theme {
     --mde-page-side-space: 12px;
   }
 }
+/* ========================================
+   IMPERIAL EXCHANGE NAV DROPDOWN
+======================================== */
+
+.exchange-nav-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.exchange-nav-link {
+  cursor: pointer;
+}
+
+.exchange-nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  margin-top: 0;
+
+  min-width: 210px;
+  padding: 8px;
+
+  background: #ffffff;
+  border: 1px solid #d9e1f2;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(25, 42, 78, 0.18);
+
+  display: none;
+}
+
+.exchange-nav-dropdown:hover .exchange-nav-dropdown-menu,
+.exchange-nav-dropdown:focus-within .exchange-nav-dropdown-menu {
+  display: block;
+}
+
+.exchange-nav-dropdown-menu a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 10px 12px;
+  border-radius: 8px;
+
+  color: #24324b;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.exchange-nav-dropdown-menu a:hover {
+  background: #eef3ff;
+  color: #2546a8;
+}
+
+@media (max-width: 900px) {
+  .exchange-nav-dropdown {
+    width: 100%;
+    display: block;
+  }
+
+  .exchange-nav-dropdown-menu {
+    position: static;
+    display: block;
+
+    min-width: 0;
+    margin-top: 4px;
+    padding: 4px 0 4px 16px;
+
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .exchange-nav-dropdown-menu a {
+    padding: 8px 10px;
+  }
+}
+.wallet-exchange-action {
+  width: 100%;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.wallet-exchange-action #open-imperial-exchange-btn {
+  min-width: 220px;
+  padding: 12px 20px;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  border: 1px solid #86efac;
+  color: #166534;
+}
+
+.wallet-exchange-note {
+  width: 100%;
+  max-width: 340px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #64748b;
+}

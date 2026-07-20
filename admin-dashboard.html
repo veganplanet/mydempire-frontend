@@ -503,6 +503,13 @@
         </button>
         <button
           class="admin-tab-btn"
+          data-admin-tab="dao-settlement"
+          onclick="switchAdminTab('dao-settlement')"
+        >
+          🏛 DAO Settlement
+        </button>
+        <button
+          class="admin-tab-btn"
           data-admin-tab="system"
           onclick="switchAdminTab('system')"
         >
@@ -1606,100 +1613,100 @@ forkyishere,529"
 
       <div class="admin-tab-panel" data-admin-panel="activity-wheel">
         <!-- PLAYERWISE AP TABLE -->
-<div class="section">
-  <div
-    style="
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    "
-  >
-    <div>
-      <h2 style="margin-bottom: 4px">📊 Playerwise Activity Points</h2>
+        <div class="section">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              gap: 12px;
+              flex-wrap: wrap;
+            "
+          >
+            <div>
+              <h2 style="margin-bottom: 4px">📊 Playerwise Activity Points</h2>
 
-      <div class="small">
-        Players are ranked by their current available AP.
-      </div>
-    </div>
+              <div class="small">
+                Players are ranked by their current available AP.
+              </div>
+            </div>
 
-    <button
-      id="activity-admin-load-all-btn"
-      type="button"
-      class="primary"
-    >
-      Refresh AP Table
-    </button>
-  </div>
+            <button
+              id="activity-admin-load-all-btn"
+              type="button"
+              class="primary"
+            >
+              Refresh AP Table
+            </button>
+          </div>
 
-  <div
-    id="activity-admin-global-summary"
-    class="metrics"
-    style="margin-top: 14px; margin-bottom: 14px"
-  >
-    <div class="card">
-      <div class="label">Players</div>
-      <div id="activity-admin-global-players" class="value">--</div>
-      <div class="small">Players with an AP balance record</div>
-    </div>
+          <div
+            id="activity-admin-global-summary"
+            class="metrics"
+            style="margin-top: 14px; margin-bottom: 14px"
+          >
+            <div class="card">
+              <div class="label">Players</div>
+              <div id="activity-admin-global-players" class="value">--</div>
+              <div class="small">Players with an AP balance record</div>
+            </div>
 
-    <div class="card">
-      <div class="label">Current AP</div>
-      <div id="activity-admin-global-current-ap" class="value">--</div>
-      <div class="small">Total AP currently held</div>
-    </div>
+            <div class="card">
+              <div class="label">Current AP</div>
+              <div id="activity-admin-global-current-ap" class="value">--</div>
+              <div class="small">Total AP currently held</div>
+            </div>
 
-    <div class="card">
-      <div class="label">Total AP Earned</div>
-      <div id="activity-admin-global-earned" class="value">--</div>
-      <div class="small">All-time AP earned</div>
-    </div>
+            <div class="card">
+              <div class="label">Total AP Earned</div>
+              <div id="activity-admin-global-earned" class="value">--</div>
+              <div class="small">All-time AP earned</div>
+            </div>
 
-    <div class="card">
-      <div class="label">Total AP Spent</div>
-      <div id="activity-admin-global-spent" class="value">--</div>
-      <div class="small">All-time AP spent or deducted</div>
-    </div>
+            <div class="card">
+              <div class="label">Total AP Spent</div>
+              <div id="activity-admin-global-spent" class="value">--</div>
+              <div class="small">All-time AP spent or deducted</div>
+            </div>
 
-    <div class="card">
-      <div class="label">Total Spins</div>
-      <div id="activity-admin-global-spins" class="value">--</div>
-      <div class="small">Completed Activity Wheel spins</div>
-    </div>
-  </div>
+            <div class="card">
+              <div class="label">Total Spins</div>
+              <div id="activity-admin-global-spins" class="value">--</div>
+              <div class="small">Completed Activity Wheel spins</div>
+            </div>
+          </div>
 
-  <div class="all-players-wrap">
-    <div class="all-players-box">
-      <table class="all-players-table">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Player</th>
-            <th>Current AP</th>
-            <th>Spins Available</th>
-            <th>Total Earned</th>
-            <th>Total Spent</th>
-            <th>Total Spins</th>
-            <th>Last Updated</th>
-          </tr>
-        </thead>
+          <div class="all-players-wrap">
+            <div class="all-players-box">
+              <table class="all-players-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Current AP</th>
+                    <th>Spins Available</th>
+                    <th>Total Earned</th>
+                    <th>Total Spent</th>
+                    <th>Total Spins</th>
+                    <th>Last Updated</th>
+                  </tr>
+                </thead>
 
-        <tbody id="activity-admin-player-table-body">
-          <tr>
-            <td colspan="8">
-              Click Refresh AP Table to load player balances.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+                <tbody id="activity-admin-player-table-body">
+                  <tr>
+                    <td colspan="8">
+                      Click Refresh AP Table to load player balances.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-  <div id="activity-admin-player-table-status" class="status">
-    Playerwise AP table not loaded yet.
-  </div>
-</div>
+          <div id="activity-admin-player-table-status" class="status">
+            Playerwise AP table not loaded yet.
+          </div>
+        </div>
         <!-- PLAYER SEARCH -->
         <div class="section">
           <h2>🎡 Activity Wheel Control</h2>
@@ -1856,6 +1863,132 @@ forkyishere,529"
 
               <div id="activity-admin-spin-history" class="scroll-box">
                 Load a player to view spin history.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="admin-tab-panel" data-admin-panel="dao-settlement">
+        <div class="section">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              gap: 12px;
+              flex-wrap: wrap;
+            "
+          >
+            <div>
+              <h2 style="margin-bottom: 6px">🏛 DAO Reinvest Settlement</h2>
+              <div class="small">
+                Track Wallet HIVE that must be manually transferred to
+                @mydempire-dao.
+              </div>
+            </div>
+
+            <button id="load-dao-settlements-btn" type="button" class="primary">
+              Refresh Settlements
+            </button>
+          </div>
+
+          <div class="metrics" style="margin-top: 16px">
+            <div class="card">
+              <div class="label">Pending HIVE</div>
+              <div class="value" id="dao-settlement-pending-hive">--</div>
+              <div class="small">Awaiting manual transfer</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Pending Records</div>
+              <div class="value" id="dao-settlement-pending-count">--</div>
+              <div class="small">Unsettled reinvestments</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Settled HIVE</div>
+              <div class="value" id="dao-settlement-settled-hive">--</div>
+              <div class="small">Already transferred</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Settled Records</div>
+              <div class="value" id="dao-settlement-settled-count">--</div>
+              <div class="small">Completed settlements</div>
+            </div>
+          </div>
+
+          <div
+            id="dao-settlement-status"
+            class="status"
+            style="margin-top: 14px"
+          >
+            Settlement data not loaded yet.
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Pending Settlement Records</h2>
+
+          <div class="all-players-wrap">
+            <div class="all-players-box">
+              <table class="all-players-table">
+                <thead>
+                  <tr>
+                    <th>Select</th>
+                    <th>Player</th>
+                    <th>HIVE</th>
+                    <th>Reference</th>
+                    <th>Created</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+
+                <tbody id="dao-settlement-table-body">
+                  <tr>
+                    <td colspan="6">Settlement records not loaded.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div
+                style="
+                  margin-top: 18px;
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 12px;
+                  align-items: end;
+                "
+              >
+                <div>
+                  <label class="small"><strong>Selected Total</strong></label>
+                  <div
+                    id="dao-selected-total"
+                    style="font-size: 22px; font-weight: 700; margin-top: 4px"
+                  >
+                    0.000 HIVE
+                  </div>
+                </div>
+
+                <div style="flex: 1; min-width: 300px">
+                  <label class="small">
+                    <strong>Hive Transfer TXID</strong>
+                  </label>
+
+                  <input
+                    id="dao-transfer-txid"
+                    type="text"
+                    placeholder="Paste Hive transaction ID..."
+                    style="width: 100%"
+                  />
+                </div>
+
+                <button
+                  id="dao-confirm-settlement-btn"
+                  type="button"
+                  class="primary"
+                >
+                  ✅ Confirm as Settled
+                </button>
               </div>
             </div>
           </div>
@@ -2047,6 +2180,12 @@ forkyishere,529"
           console.error("loadReinvestSummary failed:", err);
         }
       }
+      document
+        .getElementById("load-dao-settlements-btn")
+        ?.addEventListener("click", loadDaoSettlements);
+      document
+        .getElementById("dao-confirm-settlement-btn")
+        ?.addEventListener("click", confirmDaoSettlements);
       async function autoLoadAdminAfterRefresh() {
         if (!ADMIN_KEY) return;
 
@@ -5480,7 +5619,265 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           );
         });
       }
+      async function loadDaoSettlements() {
+        const statusEl = document.getElementById("dao-settlement-status");
+        const pendingHiveEl = document.getElementById(
+          "dao-settlement-pending-hive",
+        );
+        const pendingCountEl = document.getElementById(
+          "dao-settlement-pending-count",
+        );
+        const settledHiveEl = document.getElementById(
+          "dao-settlement-settled-hive",
+        );
+        const settledCountEl = document.getElementById(
+          "dao-settlement-settled-count",
+        );
+        const tableBody = document.getElementById("dao-settlement-table-body");
 
+        if (!ADMIN_KEY) {
+          if (statusEl) {
+            statusEl.textContent = "Connect Admin first.";
+          }
+          return;
+        }
+
+        try {
+          if (statusEl) {
+            statusEl.textContent = "Loading DAO settlement records...";
+          }
+
+          const response = await fetch(
+            `${API_BASE}/admin/dao-reinvest-settlements`,
+            {
+              headers: {
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Unable to load settlement records.");
+          }
+
+          const summary = data.summary || {};
+          const settlements = Array.isArray(data.settlements)
+            ? data.settlements
+            : [];
+
+          if (pendingHiveEl) {
+            pendingHiveEl.textContent = `${Number(summary.pending_hive || 0).toFixed(3)} HIVE`;
+          }
+
+          if (pendingCountEl) {
+            pendingCountEl.textContent = Number(
+              summary.pending_count || 0,
+            ).toLocaleString();
+          }
+
+          if (settledHiveEl) {
+            settledHiveEl.textContent = `${Number(summary.settled_hive || 0).toFixed(3)} HIVE`;
+          }
+
+          if (settledCountEl) {
+            settledCountEl.textContent = Number(
+              summary.settled_count || 0,
+            ).toLocaleString();
+          }
+
+          const pendingRecords = settlements.filter(
+            (record) => String(record.status || "").toUpperCase() === "PENDING",
+          );
+
+          if (!tableBody) return;
+
+          if (!pendingRecords.length) {
+            tableBody.innerHTML = `
+        <tr>
+          <td colspan="6">✅ No pending DAO settlements.</td>
+        </tr>
+      `;
+          } else {
+            tableBody.innerHTML = pendingRecords
+              .map((record) => {
+                const createdDate = record.created_at
+                  ? new Date(record.created_at).toLocaleString()
+                  : "—";
+
+                return `
+            <tr>
+              <td>
+                <input
+                  type="checkbox"
+                  class="dao-settlement-checkbox"
+                  value="${record.id}"
+                  data-hive="${Number(record.hive_amount || 0)}"
+                />
+              </td>
+
+              <td>${record.username || "—"}</td>
+
+              <td>
+                <strong>
+                  ${Number(record.hive_amount || 0).toFixed(3)} HIVE
+                </strong>
+              </td>
+
+              <td>${record.transaction_reference || "—"}</td>
+
+              <td>${createdDate}</td>
+
+              <td>
+                <span class="badge warning">PENDING</span>
+              </td>
+            </tr>
+          `;
+              })
+              .join("");
+            document
+              .querySelectorAll(".dao-settlement-checkbox")
+              .forEach((checkbox) => {
+                checkbox.addEventListener("change", () => {
+                  let total = 0;
+
+                  document
+                    .querySelectorAll(".dao-settlement-checkbox:checked")
+                    .forEach((item) => {
+                      total += Number(item.dataset.hive || 0);
+                    });
+
+                  document.getElementById("dao-selected-total").textContent =
+                    `${total.toFixed(3)} HIVE`;
+                });
+              });
+          }
+
+          if (statusEl) {
+            statusEl.textContent =
+              pendingRecords.length > 0
+                ? `⚠ ${pendingRecords.length} settlement record(s) require manual transfer.`
+                : "✅ DAO settlement queue is clear.";
+          }
+        } catch (error) {
+          console.error("loadDaoSettlements failed:", error);
+
+          if (statusEl) {
+            statusEl.textContent = `❌ ${error.message || "Unable to load DAO settlements."}`;
+          }
+
+          if (tableBody) {
+            tableBody.innerHTML = `
+        <tr>
+          <td colspan="6">Unable to load settlement records.</td>
+        </tr>
+      `;
+          }
+        }
+      }
+      async function confirmDaoSettlements() {
+        const button = document.getElementById("dao-confirm-settlement-btn");
+
+        const txidInput = document.getElementById("dao-transfer-txid");
+
+        const statusEl = document.getElementById("dao-settlement-status");
+
+        const selectedCheckboxes = Array.from(
+          document.querySelectorAll(".dao-settlement-checkbox:checked"),
+        );
+
+        const settlementIds = selectedCheckboxes.map((checkbox) =>
+          Number(checkbox.value),
+        );
+
+        const totalHive = selectedCheckboxes.reduce(
+          (total, checkbox) => total + Number(checkbox.dataset.hive || 0),
+          0,
+        );
+
+        const transferTxid = String(txidInput?.value || "").trim();
+
+        if (!settlementIds.length) {
+          alert("Please select at least one settlement record.");
+          return;
+        }
+
+        if (!transferTxid) {
+          alert("Please enter the Hive transfer TXID.");
+          txidInput?.focus();
+          return;
+        }
+
+        const confirmed = confirm(
+          `Confirm that ${totalHive.toFixed(
+            3,
+          )} HIVE was manually transferred to @mydempire-dao?\n\n` +
+            `Selected records: ${settlementIds.length}\n` +
+            `Hive TXID: ${transferTxid}`,
+        );
+
+        if (!confirmed) return;
+
+        try {
+          button.disabled = true;
+          button.textContent = "Confirming...";
+
+          if (statusEl) {
+            statusEl.textContent = "Confirming DAO settlement...";
+          }
+
+          const response = await fetch(
+            `${API_BASE}/admin/dao-reinvest-settlements/settle`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-admin-key": ADMIN_KEY,
+              },
+              body: JSON.stringify({
+                settlementIds,
+                transferTxid,
+              }),
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Unable to confirm settlement.");
+          }
+
+          alert(
+            `✅ Settlement confirmed.\n\n` +
+              `${Number(data.total_hive || totalHive).toFixed(3)} HIVE\n` +
+              `${data.settlement_count || settlementIds.length} record(s)`,
+          );
+
+          if (txidInput) {
+            txidInput.value = "";
+          }
+
+          const selectedTotal = document.getElementById("dao-selected-total");
+
+          if (selectedTotal) {
+            selectedTotal.textContent = "0.000 HIVE";
+          }
+
+          await loadDaoSettlements();
+        } catch (error) {
+          console.error("confirmDaoSettlements failed:", error);
+
+          if (statusEl) {
+            statusEl.textContent = `❌ ${error.message || "Unable to confirm settlement."}`;
+          }
+
+          alert(error.message || "Unable to confirm settlement.");
+        } finally {
+          button.disabled = false;
+          button.textContent = "✅ Confirm as Settled";
+        }
+      }
       function showAdminGate() {
         const gate = document.getElementById("admin-login-gate");
         const shell = document.getElementById("admin-dashboard-shell");
@@ -5512,6 +5909,10 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
         });
         if (tabName === "goods") {
           loadGoodsRedemptionAdmin();
+        }
+
+        if (tabName === "dao-settlement") {
+          loadDaoSettlements();
         }
       }
 
@@ -6876,8 +7277,8 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
             reasonInput.value = "";
           }
 
-         await loadActivityAdminPlayer();
-await loadActivityAdminPlayerTable();
+          await loadActivityAdminPlayer();
+          await loadActivityAdminPlayerTable();
         } catch (err) {
           console.error("Activity Wheel admin action failed:", err);
 
@@ -6933,41 +7334,40 @@ await loadActivityAdminPlayerTable();
       // Keep action buttons locked until a player is loaded.
       setActivityAdminButtonsDisabled(true);
       // =====================================
-// 🎡 PLAYERWISE ACTIVITY POINTS TABLE
-// =====================================
+      // 🎡 PLAYERWISE ACTIVITY POINTS TABLE
+      // =====================================
 
-async function loadActivityAdminPlayerTable() {
-  const tbody = document.getElementById(
-    "activity-admin-player-table-body",
-  );
+      async function loadActivityAdminPlayerTable() {
+        const tbody = document.getElementById(
+          "activity-admin-player-table-body",
+        );
 
-  const statusEl = document.getElementById(
-    "activity-admin-player-table-status",
-  );
+        const statusEl = document.getElementById(
+          "activity-admin-player-table-status",
+        );
 
-  const refreshBtn = document.getElementById(
-    "activity-admin-load-all-btn",
-  );
+        const refreshBtn = document.getElementById(
+          "activity-admin-load-all-btn",
+        );
 
-  if (!tbody) return;
+        if (!tbody) return;
 
-  if (!ADMIN_KEY) {
-    alert("Unlock the Admin Dashboard first.");
-    return;
-  }
+        if (!ADMIN_KEY) {
+          alert("Unlock the Admin Dashboard first.");
+          return;
+        }
 
-  try {
-    if (refreshBtn) {
-      refreshBtn.disabled = true;
-      refreshBtn.textContent = "Loading...";
-    }
+        try {
+          if (refreshBtn) {
+            refreshBtn.disabled = true;
+            refreshBtn.textContent = "Loading...";
+          }
 
-    if (statusEl) {
-      statusEl.textContent =
-        "Loading playerwise Activity Points...";
-    }
+          if (statusEl) {
+            statusEl.textContent = "Loading playerwise Activity Points...";
+          }
 
-    tbody.innerHTML = `
+          tbody.innerHTML = `
       <tr>
         <td colspan="8">
           Loading Activity Point balances...
@@ -6975,63 +7375,47 @@ async function loadActivityAdminPlayerTable() {
       </tr>
     `;
 
-    const response = await fetch(
-      `${API_BASE}/admin/activity-wheel/players`,
-      {
-        headers: {
-          "x-admin-key":
-            localStorage.getItem("MYDEMPIRE_ADMIN_KEY") ||
-            ADMIN_KEY,
-        },
-      },
-    );
+          const response = await fetch(
+            `${API_BASE}/admin/activity-wheel/players`,
+            {
+              headers: {
+                "x-admin-key":
+                  localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+              },
+            },
+          );
 
-    const data = await response.json();
+          const data = await response.json();
 
-    if (!response.ok || !data.success) {
-      throw new Error(
-        data.error ||
-          "Failed to load playerwise Activity Points.",
-      );
-    }
+          if (!response.ok || !data.success) {
+            throw new Error(
+              data.error || "Failed to load playerwise Activity Points.",
+            );
+          }
 
-    const summary = data.summary || {};
-    const players = Array.isArray(data.players)
-      ? data.players
-      : [];
+          const summary = data.summary || {};
+          const players = Array.isArray(data.players) ? data.players : [];
 
-    document.getElementById(
-      "activity-admin-global-players",
-    ).textContent = Number(
-      summary.player_count || 0,
-    ).toLocaleString();
+          document.getElementById("activity-admin-global-players").textContent =
+            Number(summary.player_count || 0).toLocaleString();
 
-    document.getElementById(
-      "activity-admin-global-current-ap",
-    ).textContent = Number(
-      summary.total_current_ap || 0,
-    ).toLocaleString();
+          document.getElementById(
+            "activity-admin-global-current-ap",
+          ).textContent = Number(
+            summary.total_current_ap || 0,
+          ).toLocaleString();
 
-    document.getElementById(
-      "activity-admin-global-earned",
-    ).textContent = Number(
-      summary.total_ap_earned || 0,
-    ).toLocaleString();
+          document.getElementById("activity-admin-global-earned").textContent =
+            Number(summary.total_ap_earned || 0).toLocaleString();
 
-    document.getElementById(
-      "activity-admin-global-spent",
-    ).textContent = Number(
-      summary.total_ap_spent || 0,
-    ).toLocaleString();
+          document.getElementById("activity-admin-global-spent").textContent =
+            Number(summary.total_ap_spent || 0).toLocaleString();
 
-    document.getElementById(
-      "activity-admin-global-spins",
-    ).textContent = Number(
-      summary.total_spins || 0,
-    ).toLocaleString();
+          document.getElementById("activity-admin-global-spins").textContent =
+            Number(summary.total_spins || 0).toLocaleString();
 
-    if (!players.length) {
-      tbody.innerHTML = `
+          if (!players.length) {
+            tbody.innerHTML = `
         <tr>
           <td colspan="8">
             No Activity Point balances found.
@@ -7039,21 +7423,18 @@ async function loadActivityAdminPlayerTable() {
         </tr>
       `;
 
-      if (statusEl) {
-        statusEl.textContent =
-          "No player AP records found.";
-      }
+            if (statusEl) {
+              statusEl.textContent = "No player AP records found.";
+            }
 
-      return;
-    }
+            return;
+          }
 
-    tbody.innerHTML = players
-      .map((player) => {
-        const username = escapeActivityAdminText(
-          player.username || "",
-        );
+          tbody.innerHTML = players
+            .map((player) => {
+              const username = escapeActivityAdminText(player.username || "");
 
-        return `
+              return `
           <tr>
             <td>
               ${Number(player.rank || 0).toLocaleString()}
@@ -7079,82 +7460,64 @@ async function loadActivityAdminPlayerTable() {
 
             <td>
               <strong>
-                ${Number(
-                  player.current_ap || 0,
-                ).toLocaleString()}
+                ${Number(player.current_ap || 0).toLocaleString()}
               </strong>
             </td>
 
             <td>
-              ${Number(
-                player.available_spins || 0,
-              ).toLocaleString()}
+              ${Number(player.available_spins || 0).toLocaleString()}
             </td>
 
             <td>
-              ${Number(
-                player.total_ap_earned || 0,
-              ).toLocaleString()}
+              ${Number(player.total_ap_earned || 0).toLocaleString()}
             </td>
 
             <td>
-              ${Number(
-                player.total_ap_spent || 0,
-              ).toLocaleString()}
+              ${Number(player.total_ap_spent || 0).toLocaleString()}
             </td>
 
             <td>
-              ${Number(
-                player.total_spins || 0,
-              ).toLocaleString()}
+              ${Number(player.total_spins || 0).toLocaleString()}
             </td>
 
             <td>
               ${escapeActivityAdminText(
-                formatActivityAdminDate(
-                  player.updated_at,
-                ),
+                formatActivityAdminDate(player.updated_at),
               )}
             </td>
           </tr>
         `;
-      })
-      .join("");
+            })
+            .join("");
 
-    // Clicking a username loads that player into AP controls.
-    tbody
-      .querySelectorAll(
-        ".activity-admin-player-table-link",
-      )
-      .forEach((button) => {
-        button.addEventListener("click", async () => {
-          const username = cleanActivityAdminUsername(
-            button.dataset.username,
-          );
+          // Clicking a username loads that player into AP controls.
+          tbody
+            .querySelectorAll(".activity-admin-player-table-link")
+            .forEach((button) => {
+              button.addEventListener("click", async () => {
+                const username = cleanActivityAdminUsername(
+                  button.dataset.username,
+                );
 
-          const usernameInput = document.getElementById(
-            "activity-admin-username",
-          );
+                const usernameInput = document.getElementById(
+                  "activity-admin-username",
+                );
 
-          if (usernameInput) {
-            usernameInput.value = username;
+                if (usernameInput) {
+                  usernameInput.value = username;
+                }
+
+                await loadActivityAdminPlayer();
+              });
+            });
+
+          if (statusEl) {
+            statusEl.textContent = `Loaded ${players.length.toLocaleString()} player AP records.`;
           }
+        } catch (err) {
+          console.error("Playerwise Activity Points load failed:", err);
 
-          await loadActivityAdminPlayer();
-        });
-      });
-
-    if (statusEl) {
-      statusEl.textContent =
-        `Loaded ${players.length.toLocaleString()} player AP records.`;
-    }
-  } catch (err) {
-    console.error(
-      "Playerwise Activity Points load failed:",
-      err,
-    );
-
-    tbody.innerHTML = `
+          tbody.innerHTML = `
       <tr>
         <td colspan="8">
           Failed to load playerwise Activity Points.
@@ -7162,25 +7525,21 @@ async function loadActivityAdminPlayerTable() {
       </tr>
     `;
 
-    if (statusEl) {
-      statusEl.textContent =
-        err.message ||
-        "Failed to load playerwise Activity Points.";
-    }
-  } finally {
-    if (refreshBtn) {
-      refreshBtn.disabled = false;
-      refreshBtn.textContent = "Refresh AP Table";
-    }
-  }
-}
+          if (statusEl) {
+            statusEl.textContent =
+              err.message || "Failed to load playerwise Activity Points.";
+          }
+        } finally {
+          if (refreshBtn) {
+            refreshBtn.disabled = false;
+            refreshBtn.textContent = "Refresh AP Table";
+          }
+        }
+      }
 
-document
-  .getElementById("activity-admin-load-all-btn")
-  ?.addEventListener(
-    "click",
-    loadActivityAdminPlayerTable,
-  );
+      document
+        .getElementById("activity-admin-load-all-btn")
+        ?.addEventListener("click", loadActivityAdminPlayerTable);
     </script>
     <div
       id="assets-modal"

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
 
-    <title>MydEmpire — Empire DAO</title>
+    <title>MydEmpire — Imperial Exchange</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -18,13 +18,13 @@
       <section class="section dao-hero">
         <div class="dao-hero-content">
           <div>
-            <span class="dao-eyebrow">Empire Central Bank</span>
+            <span class="dao-eyebrow">Empire Central Market</span>
 
-            <h1>🏛 Empire DAO</h1>
+            <h1>🏛 Imperial Exchange</h1>
 
             <p>
-              The central liquidity market of MydEmpire. Every reinvestment,
-              purchase and sale influences the live EMP market price.
+              The live EMP liquidity market of MydEmpire. Buy EMP, sell EMP, and
+              reinvest Wallet HIVE at the current market rate.
             </p>
           </div>
 
@@ -819,14 +819,14 @@
               const type = String(trade.trade_type || "").toUpperCase();
 
               const typeClass =
-                type === "BUY"
+                type === "BUY_EMP"
                   ? "dao-trade-buy"
-                  : type === "SELL"
+                  : type === "SELL_EMP"
                     ? "dao-trade-sell"
                     : "dao-trade-reinvest";
 
               const typeIcon =
-                type === "BUY" ? "🟢" : type === "SELL" ? "🔴" : "♻️";
+                type === "BUY_EMP" ? "🟢" : type === "SELL_EMP" ? "🔴" : "♻️";
 
               const totalEmp =
                 Number(trade.emp_amount || 0) +

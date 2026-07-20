@@ -378,66 +378,63 @@ and expansion-era opportunities as the empire evolves.
   
 
   <!-- EMP -->
- <section class="shop-sub-block emp-purchase-section">
-  <h2 class="shop-sub-title">⚡ EMP Purchase</h2>
+<!-- EMP MARKET NOTICE -->
+<section class="shop-sub-block emp-purchase-section">
+  <h2 class="shop-sub-title">⚡ Buy or Sell EMP</h2>
 
   <p class="shop-section-sub">
-    EMP is the utility power behind construction, upgrades, maintenance, and blueprint minting.
+    EMP is now traded through the live Imperial Exchange instead of the fixed-rate
+    Shop purchase system.
   </p>
 
   <div class="emp-purchase-card">
     <div class="emp-purchase-left">
-      <div class="emp-purchase-label">Instant utility purchase</div>
-      <div class="emp-purchase-title">Power up your empire</div>
+      <div class="emp-purchase-label">Live DAO Market</div>
+
+      <div class="emp-purchase-title">
+        Trade EMP at the current market rate
+      </div>
 
       <div class="emp-purchase-text">
-        Buy EMP for building, upgrading, maintenance, and extra blueprint minting.
+        Buy EMP using HIVE or sell EMP back to the DAO liquidity pool. The exchange
+        rate changes automatically according to live market activity and pool
+        liquidity.
       </div>
 
       <div class="emp-purchase-impact">
-  <span>
-    Every EMP purchase strengthens the treasury, supporting long-term reward stability and keeping the empire economy alive and balanced.
-  </span>
-</div>
+        <span>
+          EMP purchases and sales now take place through the Imperial Exchange,
+          creating one transparent and unified EMP market.
+        </span>
+      </div>
 
       <div class="shop-emp-balance-box">
         <div class="shop-emp-balance-label">Your EMP Balance</div>
         <div class="shop-emp-balance-value" id="shop-emp-balance">0</div>
       </div>
-
-      <div class="emp-purchase-rate">
-        <span>Fixed rate:</span>
-        <strong>1 HIVE = 100 EMP</strong>
-      </div>
     </div>
 
     <div class="emp-purchase-right">
-      <label for="emp-buy-select" class="emp-purchase-field-label">Choose amount</label>
+      <div class="emp-purchase-label">
+        Imperial Exchange
+      </div>
 
-      <select id="emp-buy-select" class="emp-purchase-select">
-        <option value="1">1 HIVE → 100 EMP</option>
-        <option value="2">2 HIVE → 200 EMP</option>
-        <option value="3">3 HIVE → 300 EMP</option>
-        <option value="4">4 HIVE → 400 EMP</option>
-        <option value="5">5 HIVE → 500 EMP</option>
-        <option value="6">6 HIVE → 600 EMP</option>
-        <option value="7">7 HIVE → 700 EMP</option>
-        <option value="8">8 HIVE → 800 EMP</option>
-        <option value="9">9 HIVE → 900 EMP</option>
-        <option value="10">10 HIVE → 1000 EMP</option>
-      </select>
+      <div class="emp-purchase-title">
+        Open the EMP Market
+      </div>
 
       <div class="emp-purchase-helper">
-        Whole HIVE only. Minimum 1 HIVE, maximum 10 HIVE per transaction.
+        View the current EMP/HIVE rate, DAO liquidity, recent trades, and exact
+        BUY or SELL quotes before confirming a transaction.
       </div>
 
-     <button id="buy-emp-btn" class="emp-purchase-btn" type="button">
-  Buy EMP
-</button>
-
-      <div id="emp-buy-status" class="emp-purchase-status">
-        <span class="status-idle">Ready to purchase EMP ⚡</span>
-      </div>
+      <button
+        class="emp-purchase-btn"
+        type="button"
+        onclick="window.location.href='exchange.html'"
+      >
+        Go to Imperial Exchange
+      </button>
     </div>
   </div>
 </section>

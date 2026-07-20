@@ -722,45 +722,26 @@ font-weight:900;
                 <button id="withdraw-hive-btn" class="primary-button">
                   Withdraw HIVE
                 </button>
-                <div style="margin-top:8px; display:flex; align-items:center; gap:6px;">
+                <div id="withdraw-hive-status" class="status-text">
 
-  <button
-    id="reinvest-hive-btn"
-    class="primary-button"
-    type="button"
-    style="
-      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-      border: 1px solid #86efac;
-      color:#166534;
-    "
-  >
-    Reinvest EMP
-  </button>
-
-  <span
-  onclick="showReinvestInfo()"
-  style="
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:18px;
-    height:18px;
-    border-radius:50%;
-    background:#dbeafe;
-    color:#2563eb;
-    font-size:12px;
-    font-weight:700;
-    cursor:pointer;
-    flex-shrink:0;
-  "
->
-  i
-</span>
+  Withdrawal not requested yet.
 
 </div>
-                <div id="withdraw-hive-status" class="status-text">
-                  Withdrawal not requested yet.
-                </div>
+<div class="wallet-exchange-action">
+  <button
+    id="open-imperial-exchange-btn"
+    class="primary-button"
+    type="button"
+  >
+    🏛 Open Imperial Exchange
+  </button>
+
+  <div class="wallet-exchange-note">
+    Reinvest Wallet HIVE through the Imperial Exchange to receive EMP from the
+    DAO pool plus the active reinvest bonus.
+  </div>
+</div>
+                
               </div>
             </div>
 
@@ -3685,148 +3666,6 @@ if (claimableHiveEl) {
           }
         }
       }
-      async function showReinvestInfo() {
-  try {
-    let bonusPercent = 5;
-    let empPerHive = 105;
-
-    const response = await fetch(`${API_BASE}/reinvest-bonus-config`);
-    const data = await response.json();
-
-    if (response.ok && data.success) {
-      bonusPercent = Number(data.bonus_percent || 0);
-      empPerHive = Number(data.emp_per_hive || 100);
-    }
-
-    alert(
-      `Convert Wallet HIVE into EMP instantly with ${bonusPercent}% bonus.\n\n1 HIVE = ${empPerHive} EMP.\n\nNo withdrawal queue required.`
-    );
-  } catch (err) {
-    console.warn("Failed to load reinvest info:", err);
-
-    alert(
-      "Convert Wallet HIVE into EMP instantly.\n\nBonus config could not be loaded right now.\n\nNo withdrawal queue required."
-    );
-  }
-}
-async function reinvestWalletHive() {
-  try {
-    const username =
-      localStorage.getItem("hiveUsername") ||
-      localStorage.getItem("username");
-
-    if (!username) {
-      alert("Username not found.");
-      return;
-    }
-
-    const input = prompt(
-      "Enter Wallet HIVE amount to reinvest into EMP.\n\nMinimum: 0.100 HIVE"
-    );
-
-    if (!input) return;
-
-    const amount = Number(input);
-
-    if (!Number.isFinite(amount) || amount <= 0) {
-      alert("Invalid amount.");
-      return;
-    }
-
-    if (amount < 0.1) {
-      alert("Minimum reinvest amount is 0.100 HIVE.");
-      return;
-    }
-
-    // Step 1: Request an exact DAO pool quote
-    const quoteResponse = await fetch(
-      `${API_BASE}/dao/emp-pool/quote`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-player-actor": username,
-          "x-mde-actor": username,
-        },
-        body: JSON.stringify({
-          type: "REINVEST",
-          hiveAmount: amount,
-          username,
-        }),
-      }
-    );
-
-    const quoteData = await quoteResponse.json();
-
-    if (!quoteResponse.ok || !quoteData.success) {
-      throw new Error(
-        quoteData.error || "Unable to create DAO reinvest quote."
-      );
-    }
-
-    const quote = quoteData.quote;
-
-    const confirmed = confirm(
-      `Confirm DAO Reinvestment\n\n` +
-      `HIVE used: ${Number(quote.hive_input).toFixed(3)} HIVE\n` +
-      `Trading fee: ${Number(quote.fee_hive).toFixed(3)} HIVE\n` +
-      `EMP from pool: ${Number(quote.emp_from_pool).toFixed(3)} EMP\n` +
-      `Reinvest bonus: ${Number(quote.reinvest_bonus_percent).toFixed(2)}%\n` +
-      `Bonus EMP: ${Number(quote.bonus_emp).toFixed(3)} EMP\n\n` +
-      `Total received: ${Number(quote.total_emp_received).toFixed(3)} EMP\n\n` +
-      `Market rate: ${Number(quote.current_price).toFixed(3)} → ${Number(quote.new_price).toFixed(3)} EMP/HIVE`
-    );
-
-    if (!confirmed) return;
-
-    // Step 2: Execute the exact quote
-    const executeResponse = await fetch(
-      `${API_BASE}/dao/emp-pool/execute`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-player-actor": username,
-          "x-mde-actor": username,
-        },
-        body: JSON.stringify({
-          quote_id: quoteData.quote_id,
-          username,
-        }),
-      }
-    );
-
-    const executeData = await executeResponse.json();
-
-    if (!executeResponse.ok || !executeData.success) {
-      throw new Error(
-        executeData.error || "DAO reinvestment failed."
-      );
-    }
-
-    const trade = executeData.trade;
-
-    alert(
-      `Reinvestment successful!\n\n` +
-      `${Number(trade.hive_used).toFixed(3)} HIVE → ` +
-      `${Number(trade.total_emp_received).toFixed(3)} EMP\n\n` +
-      `EMP from pool: ${Number(trade.emp_from_pool).toFixed(3)}\n` +
-      `Bonus EMP: ${Number(trade.bonus_emp).toFixed(3)}\n` +
-      `Reference: ${executeData.transaction_reference}`
-    );
-
-    if (typeof loadDashboardSummary === "function") {
-      await loadDashboardSummary();
-    }
-
-    if (typeof loadRewardSummary === "function") {
-      await loadRewardSummary();
-    }
-  } catch (err) {
-    console.error("DAO reinvest wallet HIVE error:", err);
-    alert(err.message || "Failed to reinvest Wallet HIVE.");
-  }
-}     
 
 async function loadUnopenedPacks(username) {
         try {
@@ -7322,9 +7161,14 @@ document.querySelectorAll(".blueprint-filter-btn").forEach((btn) => {
   if (withdrawBtn) {
     withdrawBtn.addEventListener("click", requestWithdrawHive);
   }
-  const reinvestBtn = document.getElementById("reinvest-hive-btn");
-if (reinvestBtn) {
-  reinvestBtn.addEventListener("click", reinvestWalletHive);
+  const imperialExchangeBtn = document.getElementById(
+  "open-imperial-exchange-btn",
+);
+
+if (imperialExchangeBtn) {
+  imperialExchangeBtn.addEventListener("click", () => {
+    window.location.href = "exchange.html";
+  });
 }
 
   loadSeasonLiveBanner();
