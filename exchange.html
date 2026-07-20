@@ -118,14 +118,23 @@
             </button>
           </article>
 
-          <article class="dao-action-card dao-action-soon">
+          <article class="dao-action-card dao-action-live">
             <div class="dao-action-icon">🔴</div>
 
             <h3>Sell EMP</h3>
 
-            <p>Sell EMP back to the DAO pool and receive Wallet HIVE.</p>
+            <p>
+              Sell EMP back to the DAO liquidity pool and receive Wallet HIVE at
+              the current market rate.
+            </p>
 
-            <button type="button" disabled>Coming Soon</button>
+            <button
+              id="dao-sell-emp-btn"
+              type="button"
+              onclick="openDaoSellEmp()"
+            >
+              Sell EMP for HIVE
+            </button>
           </article>
         </div>
       </section>
@@ -226,6 +235,139 @@
         </div>
       </section>
     </main>
+    <!-- ========================================
+     DAO SELL EMP MODAL
+======================================== -->
+
+    <div id="dao-sell-modal" class="dao-modal" aria-hidden="true">
+      <div class="dao-modal-backdrop" onclick="closeDaoSellEmp()"></div>
+
+      <div class="dao-modal-panel" role="dialog" aria-modal="true">
+        <button
+          type="button"
+          class="dao-modal-close"
+          onclick="closeDaoSellEmp()"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+        <!-- SELL ENTRY -->
+        <div id="dao-sell-entry">
+          <span class="dao-modal-eyebrow">Imperial Exchange</span>
+
+          <h2>🔴 Sell EMP</h2>
+
+          <p class="dao-modal-intro">
+            Sell EMP back to the DAO liquidity pool and receive Wallet HIVE at
+            the current live market rate.
+          </p>
+
+          <div class="dao-wallet-balance-card">
+            <span>Available EMP Balance</span>
+            <strong id="dao-sell-emp-balance">Loading...</strong>
+          </div>
+
+          <label for="dao-sell-amount">EMP Amount to Sell</label>
+
+          <input
+            id="dao-sell-amount"
+            type="number"
+            min="0.001"
+            step="0.001"
+            placeholder="Enter EMP amount"
+          />
+
+          <div id="dao-sell-error" class="dao-modal-error"></div>
+
+          <button
+            id="dao-sell-get-quote-btn"
+            type="button"
+            onclick="requestDaoSellQuote()"
+          >
+            Get Exact Quote
+          </button>
+        </div>
+
+        <!-- SELL QUOTE -->
+        <div id="dao-sell-quote" hidden>
+          <span class="dao-modal-eyebrow">SELL Quote</span>
+
+          <h2>Review EMP Sale</h2>
+
+          <div class="dao-quote-grid">
+            <div>
+              <span>EMP Being Sold</span>
+              <strong id="dao-sell-quote-emp">—</strong>
+            </div>
+
+            <div>
+              <span>Trading Fee</span>
+              <strong id="dao-sell-quote-fee">—</strong>
+            </div>
+
+            <div>
+              <span>EMP Entering Pool</span>
+              <strong id="dao-sell-quote-swap">—</strong>
+            </div>
+
+            <div>
+              <span>You Receive</span>
+              <strong id="dao-sell-quote-hive">—</strong>
+            </div>
+
+            <div>
+              <span>Current Rate</span>
+              <strong id="dao-sell-current-price">—</strong>
+            </div>
+
+            <div>
+              <span>New Rate</span>
+              <strong id="dao-sell-new-price">—</strong>
+            </div>
+          </div>
+
+          <div id="dao-sell-execute-error" class="dao-modal-error"></div>
+
+          <div class="dao-modal-actions">
+            <button type="button" onclick="resetDaoSellModal()">
+              Change Amount
+            </button>
+
+            <button
+              id="dao-confirm-sell-btn"
+              type="button"
+              onclick="executeDaoSellEmp()"
+            >
+              Confirm EMP Sale
+            </button>
+          </div>
+        </div>
+
+        <!-- SELL SUCCESS -->
+        <div id="dao-sell-success" hidden>
+          <span class="dao-modal-eyebrow">Sale Complete</span>
+
+          <h2>✅ EMP Sold Successfully</h2>
+
+          <p class="dao-modal-intro">
+            Your EMP was transferred into the DAO liquidity pool.
+          </p>
+
+          <div class="dao-success-amount">
+            <strong id="dao-sell-success-hive">0</strong>
+            <span>Wallet HIVE Received</span>
+          </div>
+
+          <div
+            id="dao-sell-success-reference"
+            class="dao-success-reference"
+          ></div>
+
+          <button type="button" onclick="closeDaoSellEmp()">Close</button>
+        </div>
+      </div>
+    </div>
     <!-- ========================================
      DAO REINVEST MODAL
 ======================================== -->
@@ -787,6 +929,10 @@
       let activeDaoQuote = null;
       let activeDaoBuyQuoteId = null;
       let activeDaoBuyQuote = null;
+
+      let activeDaoSellQuoteId = null;
+      let activeDaoSellQuote = null;
+      let exchangeEmpBalance = 0;
       function setDaoReinvestPercent(percent) {
         const amountInput = document.getElementById("dao-reinvest-amount");
 
@@ -841,7 +987,123 @@
 
         document.body.classList.toggle("dao-modal-open", isOpen);
       }
+      function setDaoSellModalOpen(isOpen) {
+        const modal = document.getElementById("dao-sell-modal");
 
+        if (!modal) return;
+
+        modal.classList.toggle("is-open", isOpen);
+        modal.setAttribute("aria-hidden", String(!isOpen));
+
+        document.body.classList.toggle("dao-modal-open", isOpen);
+      }
+
+      async function loadExchangeEmpBalance() {
+        const username = getExchangeUsername();
+
+        const balanceElement = document.getElementById("dao-sell-emp-balance");
+
+        if (!username) {
+          exchangeEmpBalance = 0;
+
+          if (balanceElement) {
+            balanceElement.textContent = "0.000 EMP";
+          }
+
+          return;
+        }
+
+        try {
+          if (balanceElement) {
+            balanceElement.textContent = "Loading...";
+          }
+
+          const response = await fetch(
+            `${API_BASE}/player/${encodeURIComponent(username)}/emp-balance`,
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Unable to load EMP balance.");
+          }
+
+          exchangeEmpBalance = Number(data.emp_balance ?? data.balance ?? 0);
+
+          if (balanceElement) {
+            balanceElement.textContent = `${formatDaoNumber(exchangeEmpBalance)} EMP`;
+          }
+        } catch (error) {
+          console.error("EMP balance loading error:", error);
+
+          exchangeEmpBalance = 0;
+
+          if (balanceElement) {
+            balanceElement.textContent = "Unable to load";
+          }
+        }
+      }
+
+      function openDaoSellEmp() {
+        const username = getExchangeUsername();
+
+        if (!username) {
+          alert("Please connect your Hive account first.");
+          return;
+        }
+
+        resetDaoSellModal();
+        setDaoSellModalOpen(true);
+        loadExchangeEmpBalance();
+
+        setTimeout(() => {
+          document.getElementById("dao-sell-amount")?.focus();
+        }, 100);
+      }
+
+      function closeDaoSellEmp() {
+        setDaoSellModalOpen(false);
+        resetDaoSellModal();
+      }
+
+      function resetDaoSellModal() {
+        activeDaoSellQuoteId = null;
+        activeDaoSellQuote = null;
+
+        const entryScreen = document.getElementById("dao-sell-entry");
+        const quoteScreen = document.getElementById("dao-sell-quote");
+        const successScreen = document.getElementById("dao-sell-success");
+
+        if (entryScreen) entryScreen.hidden = false;
+        if (quoteScreen) quoteScreen.hidden = true;
+        if (successScreen) successScreen.hidden = true;
+
+        const amountInput = document.getElementById("dao-sell-amount");
+
+        if (amountInput) {
+          amountInput.value = "";
+        }
+
+        const quoteError = document.getElementById("dao-sell-error");
+        const executeError = document.getElementById("dao-sell-execute-error");
+
+        if (quoteError) quoteError.textContent = "";
+        if (executeError) executeError.textContent = "";
+
+        const quoteButton = document.getElementById("dao-sell-get-quote-btn");
+
+        const confirmButton = document.getElementById("dao-confirm-sell-btn");
+
+        if (quoteButton) {
+          quoteButton.disabled = false;
+          quoteButton.textContent = "Get Exact Quote";
+        }
+
+        if (confirmButton) {
+          confirmButton.disabled = false;
+          confirmButton.textContent = "Confirm EMP Sale";
+        }
+      }
       function openDaoBuyEmp() {
         const username = getExchangeUsername();
 
@@ -967,6 +1229,115 @@
         if (confirmButton) {
           confirmButton.disabled = false;
           confirmButton.textContent = "Confirm Reinvestment";
+        }
+      }
+      async function requestDaoSellQuote() {
+        const username = getExchangeUsername();
+
+        const errorElement = document.getElementById("dao-sell-error");
+        const button = document.getElementById("dao-sell-get-quote-btn");
+
+        if (errorElement) {
+          errorElement.textContent = "";
+        }
+
+        const empAmount = Number(
+          document.getElementById("dao-sell-amount")?.value,
+        );
+
+        if (!username) {
+          if (errorElement) {
+            errorElement.textContent =
+              "Please connect your Hive account first.";
+          }
+
+          return;
+        }
+
+        if (!Number.isFinite(empAmount) || empAmount <= 0) {
+          if (errorElement) {
+            errorElement.textContent = "Enter a valid EMP amount.";
+          }
+
+          return;
+        }
+
+        if (empAmount > exchangeEmpBalance) {
+          if (errorElement) {
+            errorElement.textContent = `Insufficient EMP balance. Available: ${formatDaoNumber(
+              exchangeEmpBalance,
+            )} EMP.`;
+          }
+
+          return;
+        }
+
+        try {
+          if (button) {
+            button.disabled = true;
+            button.textContent = "Creating quote...";
+          }
+
+          const response = await fetch(`${API_BASE}/dao/emp-pool/quote`, {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+              "x-player-actor": username,
+              "x-mde-actor": username,
+            },
+
+            body: JSON.stringify({
+              type: "SELL_EMP",
+              empAmount,
+              username,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Unable to create SELL EMP quote.");
+          }
+
+          activeDaoSellQuoteId = data.quote_id;
+          activeDaoSellQuote = data.quote;
+
+          const quote = data.quote;
+
+          document.getElementById("dao-sell-quote-emp").textContent =
+            `${formatDaoNumber(quote.emp_input)} EMP`;
+
+          document.getElementById("dao-sell-quote-fee").textContent =
+            `${formatDaoNumber(quote.fee_emp)} EMP`;
+
+          document.getElementById("dao-sell-quote-swap").textContent =
+            `${formatDaoNumber(quote.emp_for_swap)} EMP`;
+
+          document.getElementById("dao-sell-quote-hive").textContent =
+            `${formatDaoNumber(quote.hive_received)} HIVE`;
+
+          document.getElementById("dao-sell-current-price").textContent =
+            `${formatDaoNumber(quote.current_price)} EMP/HIVE`;
+
+          document.getElementById("dao-sell-new-price").textContent =
+            `${formatDaoNumber(quote.new_price)} EMP/HIVE`;
+
+          document.getElementById("dao-sell-entry").hidden = true;
+
+          document.getElementById("dao-sell-quote").hidden = false;
+        } catch (error) {
+          console.error("DAO SELL EMP quote error:", error);
+
+          if (errorElement) {
+            errorElement.textContent =
+              error.message || "Unable to create SELL EMP quote.";
+          }
+        } finally {
+          if (button) {
+            button.disabled = false;
+            button.textContent = "Get Exact Quote";
+          }
         }
       }
       async function requestDaoBuyQuote() {
@@ -1209,6 +1580,87 @@
           button.textContent = "Pay with Hive Keychain";
         }
       }
+      async function executeDaoSellEmp() {
+        const username = getExchangeUsername();
+
+        const errorElement = document.getElementById("dao-sell-execute-error");
+
+        const button = document.getElementById("dao-confirm-sell-btn");
+
+        if (errorElement) {
+          errorElement.textContent = "";
+        }
+
+        if (!username) {
+          errorElement.textContent = "Please connect your Hive account first.";
+          return;
+        }
+
+        if (!activeDaoSellQuoteId) {
+          errorElement.textContent =
+            "SELL quote has expired. Please request a new quote.";
+          return;
+        }
+
+        try {
+          button.disabled = true;
+          button.textContent = "Processing...";
+
+          const response = await fetch(
+            `${API_BASE}/dao/emp-pool/execute-sell`,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json",
+                "x-player-actor": username,
+                "x-mde-actor": username,
+              },
+
+              body: JSON.stringify({
+                quote_id: activeDaoSellQuoteId,
+                username,
+              }),
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Unable to complete EMP sale.");
+          }
+
+          document.getElementById("dao-sell-success-hive").textContent =
+            formatDaoNumber(
+              data.trade?.hive_received ??
+                activeDaoSellQuote?.hive_received ??
+                0,
+            );
+
+          document.getElementById("dao-sell-success-reference").textContent =
+            data.transaction_reference
+              ? `Reference: ${data.transaction_reference}`
+              : "Sale completed successfully.";
+
+          document.getElementById("dao-sell-quote").hidden = true;
+
+          document.getElementById("dao-sell-success").hidden = false;
+
+          await loadDaoPool();
+          await loadDaoStatistics();
+          await loadDaoTrades();
+          await loadExchangeEmpBalance();
+        } catch (error) {
+          console.error("DAO SELL execution error:", error);
+
+          errorElement.textContent =
+            error.message || "Unable to complete EMP sale.";
+        } finally {
+          button.disabled = false;
+          button.textContent = "Confirm EMP Sale";
+        }
+      }
+
       async function requestDaoReinvestQuote() {
         const username = getExchangeUsername();
 
