@@ -57,7 +57,7 @@ ${
           href="exchange.html"
           class="appbar-link exchange-nav-link"
         >
-          Imperial Exchange ▼
+          Imperial Exchange <span class="live-pill">LIVE</span> ▼
         </a>
 
         <div class="exchange-nav-dropdown-menu">
