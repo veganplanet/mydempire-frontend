@@ -727,7 +727,7 @@
           return "—";
         }
 
-        return number.toLocaleString(undefined, {
+        return number.toLocaleString("en-US", {
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
         });
@@ -936,27 +936,23 @@
       function setDaoReinvestPercent(percent) {
         const amountInput = document.getElementById("dao-reinvest-amount");
 
-        if (!amountInput || exchangeWalletHiveBalance <= 0) {
+        if (!amountInput) return;
+
+        const walletBalance = Number(exchangeWalletHiveBalance || 0);
+
+        if (!Number.isFinite(walletBalance) || walletBalance <= 0) {
+          amountInput.value = "";
           return;
         }
 
-        document
-          .querySelectorAll(".dao-quick-amounts button")
-          .forEach((button) => {
-            button.classList.remove("active");
-          });
+        const calculatedAmount = walletBalance * (Number(percent) / 100);
 
-        const activeButton = document.querySelector(
-          `.dao-quick-amounts button[data-percent="${percent}"]`,
-        );
+        // Always round DOWN to 3 decimals so MAX never exceeds the real balance.
+        const safeAmount = Math.floor(calculatedAmount * 1000) / 1000;
 
-        if (activeButton) {
-          activeButton.classList.add("active");
-        }
+        amountInput.value = safeAmount.toFixed(3);
 
-        const amount = exchangeWalletHiveBalance * (Number(percent) / 100);
-
-        amountInput.value = amount.toFixed(3);
+        document.getElementById("dao-reinvest-error").textContent = "";
       }
       function getExchangeUsername() {
         return (
