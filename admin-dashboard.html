@@ -565,29 +565,20 @@
       </div>
 
       <div class="admin-tab-panel" data-admin-panel="economy">
-        <div class="section">
-          <h2>EMP Purchase History</h2>
-          <div class="row">
-            <button id="load-emp-sales-btn">Load EMP History</button>
-          </div>
-          <div class="status" id="emp-sales-status">
-            No EMP purchase history loaded yet.
-          </div>
-          <div id="emp-sales-box" class="emp-sales-scroll-box">
-            <div class="kv">
-              <span>Status</span
-              ><span>No EMP purchase history loaded yet.</span>
-            </div>
-          </div>
-        </div>
-
+        <!-- ===================================== -->
+        <!-- ⚡ EMP ECONOMY CONTROL CENTER -->
+        <!-- ===================================== -->
         <div class="section">
           <h2>⚡ EMP Economy Control Center</h2>
+
           <div class="row">
             <button id="load-emp-economy-btn" class="primary">
-              Load EMP Balances</button
-            ><button id="refresh-emp-economy-btn">Refresh</button>
+              Load EMP Balances
+            </button>
+
+            <button id="refresh-emp-economy-btn">Refresh</button>
           </div>
+
           <div
             id="emp-economy-summary"
             class="metrics"
@@ -599,11 +590,13 @@
               <div class="small">Click Load EMP Balances</div>
             </div>
           </div>
+
           <div
             id="emp-economy-distribution"
             class="status"
             style="margin-top: 14px"
           ></div>
+
           <div class="all-players-wrap" style="margin-top: 14px">
             <div class="all-players-box">
               <table class="all-players-table">
@@ -614,6 +607,7 @@
                     <th>EMP Balance</th>
                   </tr>
                 </thead>
+
                 <tbody id="emp-economy-table-body">
                   <tr>
                     <td colspan="3">EMP balances not loaded.</td>
@@ -624,8 +618,12 @@
           </div>
         </div>
 
+        <!-- ===================================== -->
+        <!-- ⚡ EMP DISTRIBUTION TOOL -->
+        <!-- ===================================== -->
         <div class="section">
           <h2>⚡ EMP Distribution Tool</h2>
+
           <div class="row">
             <input
               id="emp-distribution-note"
@@ -633,6 +631,7 @@
               style="min-width: 520px"
             />
           </div>
+
           <div class="row">
             <textarea
               id="emp-distribution-list"
@@ -650,18 +649,25 @@ forkyishere,529"
               "
             ></textarea>
           </div>
+
           <div class="row">
             <button id="preview-emp-distribution-btn" class="primary">
-              Preview</button
-            ><button id="send-emp-distribution-btn" class="danger">
+              Preview
+            </button>
+
+            <button id="send-emp-distribution-btn" class="danger">
               Distribute EMP
             </button>
           </div>
+
           <div id="emp-distribution-preview" class="status">
             No distribution prepared.
           </div>
         </div>
 
+        <!-- ===================================== -->
+        <!-- 🔁 REINVEST ACTIVITY -->
+        <!-- ===================================== -->
         <div class="section">
           <div
             style="
@@ -672,10 +678,12 @@ forkyishere,529"
             "
           >
             <h2>🔁 Reinvest Activity</h2>
+
             <button type="button" onclick="loadReinvestSummary()">
               Refresh
             </button>
           </div>
+
           <div
             style="
               margin: 12px 0 16px;
@@ -712,28 +720,40 @@ forkyishere,529"
             </div>
 
             <div class="small">
-              Example: 25 means 1 HIVE = 125 EMP. Any number is allowed.
+              Example: 25 means the player receives a 25% EMP reinvest bonus.
             </div>
 
             <div id="reinvest-bonus-config-status" class="status">
               Bonus config not loaded.
             </div>
           </div>
+
           <div class="metrics">
             <div class="card">
               <div class="label">Total Transactions</div>
+
               <div class="value" id="metric-reinvest-transactions">--</div>
-              <div class="small">Wallet HIVE converted into EMP</div>
+
+              <div class="small">
+                Wallet HIVE converted through reinvestment
+              </div>
             </div>
+
             <div class="card">
-              <div class="label">EMP Minted</div>
+              <div class="label">Bonus EMP Minted</div>
+
               <div class="value" id="metric-reinvest-emp">--</div>
-              <div class="small">EMP created through reinvest bonus</div>
+
+              <div class="small">
+                Only bonus EMP created through reinvestment
+              </div>
             </div>
           </div>
+
           <div class="small" style="margin-top: 14px; font-weight: 700">
             Recent Reinvestments
           </div>
+
           <div
             id="reinvest-recent-list"
             class="scroll-box"
@@ -743,72 +763,111 @@ forkyishere,529"
           </div>
         </div>
 
+        <!-- ===================================== -->
+        <!-- 📊 EMP ECONOMY 24H / ALL-TIME -->
+        <!-- ===================================== -->
         <div class="section">
-          <h2>EMP Economy (24h)</h2>
+          <h2>EMP Economy Activity</h2>
+
           <div class="metrics">
             <div class="card">
               <div class="label">EMP Generated</div>
+
               <div class="value" id="metric-emp-generated">--</div>
+
               <div class="small">Last 24 hours</div>
             </div>
+
             <div class="card">
               <div class="label">EMP Burned</div>
+
               <div class="value" id="metric-emp-burned">--</div>
+
               <div class="small">Last 24 hours</div>
             </div>
+
             <div class="card">
               <div class="label">Net EMP Change</div>
+
               <div class="value" id="metric-emp-net">--</div>
+
               <div class="small">Generated minus burned</div>
             </div>
+
             <div class="card">
               <div class="label">Total EMP Generated</div>
+
               <div class="value" id="metric-emp-grand-generated">--</div>
+
               <div class="small">Since ledger started</div>
             </div>
+
             <div class="card">
               <div class="label">Total EMP Burned</div>
+
               <div class="value" id="metric-emp-grand-burned">--</div>
+
               <div class="small">Since ledger started</div>
             </div>
+
             <div class="card">
               <div class="label">Total Net EMP</div>
+
               <div class="value" id="metric-emp-grand-net">--</div>
+
               <div class="small">Generated minus burned</div>
             </div>
           </div>
         </div>
 
+        <!-- ===================================== -->
+        <!-- 🔥 MAINTENANCE EMP BURN -->
+        <!-- ===================================== -->
         <div class="section">
           <h2>🔥 Maintenance EMP Burn</h2>
+
           <button id="load-maintenance-burn-btn" class="primary">
             Load Maintenance Burn Report
           </button>
+
           <div class="metrics" style="margin-top: 14px">
             <div class="card">
               <div class="label">Today Burn</div>
+
               <div class="value" id="maintenance-burn-today">--</div>
+
               <div class="small">EMP burned today</div>
             </div>
+
             <div class="card">
               <div class="label">Last 7 Days</div>
+
               <div class="value" id="maintenance-burn-7">--</div>
+
               <div class="small">Maintenance EMP burn</div>
             </div>
+
             <div class="card">
               <div class="label">Last 30 Days</div>
+
               <div class="value" id="maintenance-burn-30">--</div>
+
               <div class="small">Maintenance EMP burn</div>
             </div>
           </div>
+
           <h3>Player-wise Maintenance Burn</h3>
+
           <div id="maintenance-burn-players" class="scroll-box">
             Click load to view player-wise maintenance burn.
           </div>
+
           <h3>Daily Maintenance Burn Log</h3>
+
           <div id="maintenance-burn-daily" class="scroll-box">
             Click load to view daily maintenance burn history.
           </div>
+
           <div class="status" id="maintenance-burn-status">
             No report loaded yet.
           </div>
@@ -4480,9 +4539,7 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
       document
         .getElementById("load-whitelist-btn")
         ?.addEventListener("click", loadWhitelistUsers);
-      document
-        .getElementById("load-emp-sales-btn")
-        ?.addEventListener("click", loadEmpSales);
+
       document
         .getElementById("load-all-players-btn")
         ?.addEventListener("click", loadAllPlayers);
@@ -4552,56 +4609,7 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
             statusEl.textContent = "Error loading listings.";
           }
         });
-      async function loadEmpSales() {
-        if (!ADMIN_KEY) {
-          document.getElementById("emp-sales-status").textContent =
-            "Connect admin first.";
-          return;
-        }
 
-        const status = document.getElementById("emp-sales-status");
-        const box = document.getElementById("emp-sales-box");
-
-        try {
-          status.textContent = "Loading EMP purchase history...";
-
-          const res = await fetch(`${API_BASE}/admin/emp-sales`, {
-            headers: { "x-admin-key": ADMIN_KEY },
-          });
-
-          const data = await res.json();
-
-          if (!data.success) {
-            status.textContent = "Failed to load EMP history.";
-            return;
-          }
-
-          const sales = data.sales || [];
-
-          status.textContent = `Loaded ${sales.length} purchases`;
-
-          box.innerHTML = sales
-            .map((s) => {
-              const date = new Date(s.created_at).toLocaleString();
-
-              return `
-    <div class="emp-sales-row">
-      <div class="emp-sales-left">
-        @${s.username} • ${Number(s.hive_amount).toFixed(3)} HIVE → ${Number(s.emp_amount).toLocaleString()} EMP
-      </div>
-
-      <div class="emp-sales-right">
-        ${date}
-      </div>
-    </div>
-  `;
-            })
-            .join("");
-        } catch (err) {
-          console.error(err);
-          status.textContent = "Error loading EMP history.";
-        }
-      }
       async function loadAllPlayers() {
         if (!ADMIN_KEY) {
           document.getElementById("all-players-status").textContent =
