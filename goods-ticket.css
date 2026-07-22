@@ -667,3 +667,460 @@
     grid-column: auto;
   }
 }
+/* =========================================================
+   GOODS — IMPERIAL TRADE FAIR TEASER
+   ========================================================= */
+
+.goods-trade-fair-teaser {
+  position: relative;
+  overflow: hidden;
+  margin: 22px 0;
+  padding: 4px;
+  border-radius: 26px;
+  background:
+    linear-gradient(
+      135deg,
+      #8a5a12 0%,
+      #f2c75c 28%,
+      #fff1b8 50%,
+      #d49a22 72%,
+      #714408 100%
+    );
+  box-shadow:
+    0 18px 42px rgba(120, 74, 10, 0.2),
+    0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.goods-trade-fair-teaser::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 15% 15%,
+      rgba(255, 255, 255, 0.7),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 85% 70%,
+      rgba(255, 214, 102, 0.28),
+      transparent 35%
+    );
+}
+
+.goods-trade-fair-content {
+  position: relative;
+  z-index: 2;
+  padding: 38px 28px 30px;
+  text-align: center;
+  border-radius: 22px;
+  border: 1px solid rgba(138, 90, 18, 0.3);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 253, 241, 0.98),
+      rgba(255, 246, 207, 0.96)
+    );
+}
+
+.goods-trade-fair-ribbon {
+  position: absolute;
+  z-index: 5;
+  top: 18px;
+  right: -42px;
+  width: 190px;
+  padding: 9px 12px;
+  transform: rotate(38deg);
+  text-align: center;
+  background: linear-gradient(135deg, #b91c1c, #ef4444);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.9px;
+  box-shadow: 0 6px 14px rgba(127, 29, 29, 0.25);
+}
+
+.goods-trade-fair-glow {
+  position: absolute;
+  z-index: 1;
+  top: -80px;
+  left: 50%;
+  width: 320px;
+  height: 180px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: rgba(250, 204, 21, 0.3);
+  filter: blur(45px);
+  pointer-events: none;
+}
+
+.goods-trade-fair-kicker {
+  margin-bottom: 6px;
+  color: #8a5a12;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 1.4px;
+}
+
+.goods-trade-fair-content h2 {
+  margin: 0;
+  color: #3f2a08;
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: 1.1;
+  font-weight: 1000;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.8);
+}
+
+.goods-trade-fair-coming {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  padding: 7px 18px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #92400e, #d97706);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 1000;
+  letter-spacing: 1.3px;
+  box-shadow: 0 8px 18px rgba(146, 64, 14, 0.2);
+  animation: tradeFairPulse 2s ease-in-out infinite;
+}
+
+.goods-trade-fair-intro {
+  margin: 20px auto 5px;
+  color: #3f2a08;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.goods-trade-fair-description {
+  max-width: 680px;
+  margin: 0 auto;
+  color: #5f4a25;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.goods-trade-fair-mystery {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin: 24px 0 18px;
+}
+
+.goods-trade-fair-mystery-icon,
+.goods-trade-fair-emblem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 20px;
+}
+
+.goods-trade-fair-mystery-icon {
+  border: 2px dashed rgba(146, 64, 14, 0.48);
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 30px;
+  box-shadow: inset 0 0 20px rgba(217, 119, 6, 0.08);
+}
+
+.goods-trade-fair-emblem {
+  color: #b7791f;
+  font-size: 38px;
+  text-shadow: 0 3px 10px rgba(183, 121, 31, 0.25);
+}
+
+.goods-trade-fair-classified {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 620px;
+  margin: 0 auto 24px;
+  padding: 13px 18px;
+  border: 1px solid rgba(146, 64, 14, 0.22);
+  border-radius: 16px;
+  background: rgba(255, 251, 235, 0.84);
+  color: #5f3d0a;
+}
+
+.goods-trade-fair-classified span {
+  color: #b91c1c;
+  font-size: 11px;
+  font-weight: 1000;
+  letter-spacing: 1.2px;
+}
+
+.goods-trade-fair-classified strong {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.goods-trade-fair-countdown-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 18px;
+  border-radius: 20px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(74, 44, 8, 0.96),
+      rgba(120, 74, 10, 0.96)
+    );
+  box-shadow: 0 14px 28px rgba(84, 50, 8, 0.18);
+}
+
+.goods-trade-fair-countdown-label {
+  margin-bottom: 13px;
+  color: #fde68a;
+  font-size: 12px;
+  font-weight: 1000;
+  letter-spacing: 1.3px;
+}
+
+.goods-trade-fair-countdown {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(70px, 1fr));
+  gap: 10px;
+}
+
+.goods-trade-fair-time-box {
+  padding: 12px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.goods-trade-fair-time-box strong {
+  display: block;
+  color: #ffffff;
+  font-size: clamp(22px, 5vw, 34px);
+  line-height: 1;
+  font-weight: 1000;
+}
+
+.goods-trade-fair-time-box span {
+  display: block;
+  margin-top: 6px;
+  color: #fde68a;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.goods-trade-fair-footer {
+  margin-top: 18px;
+  color: #5f3d0a;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+@keyframes tradeFairPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 8px 18px rgba(146, 64, 14, 0.2);
+  }
+
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 10px 24px rgba(217, 119, 6, 0.36);
+  }
+}
+
+@media (max-width: 640px) {
+  .goods-trade-fair-content {
+    padding: 42px 14px 22px;
+  }
+
+  .goods-trade-fair-ribbon {
+    top: 15px;
+    right: -53px;
+  }
+
+  .goods-trade-fair-mystery {
+    gap: 12px;
+  }
+
+  .goods-trade-fair-mystery-icon,
+  .goods-trade-fair-emblem {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+  }
+
+  .goods-trade-fair-countdown {
+    grid-template-columns: repeat(2, minmax(90px, 1fr));
+  }
+}
+/* =========================================================
+   GOODS TRADE FAIR TEASER — COMPACT VERSION
+   ========================================================= */
+
+.goods-trade-fair-teaser {
+  max-width: 1180px;
+  margin: 14px auto 16px;
+  border-radius: 18px;
+}
+
+.goods-trade-fair-content {
+  padding: 20px 22px 18px;
+  border-radius: 15px;
+}
+
+.goods-trade-fair-kicker {
+  margin-bottom: 3px;
+  font-size: 10px;
+}
+
+.goods-trade-fair-content h2 {
+  font-size: clamp(23px, 4vw, 32px);
+}
+
+.goods-trade-fair-coming {
+  margin-top: 7px;
+  padding: 5px 14px;
+  font-size: 11px;
+}
+
+.goods-trade-fair-intro {
+  margin: 12px auto 3px;
+  font-size: 15px;
+}
+
+.goods-trade-fair-description {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.goods-trade-fair-mystery {
+  gap: 14px;
+  margin: 13px 0 11px;
+}
+
+.goods-trade-fair-mystery-icon,
+.goods-trade-fair-emblem {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+}
+
+.goods-trade-fair-mystery-icon {
+  font-size: 21px;
+}
+
+.goods-trade-fair-emblem {
+  font-size: 27px;
+}
+
+.goods-trade-fair-classified {
+  gap: 3px;
+  max-width: 650px;
+  margin-bottom: 13px;
+  padding: 8px 14px;
+}
+
+.goods-trade-fair-classified span {
+  font-size: 9px;
+}
+
+.goods-trade-fair-classified strong {
+  font-size: 12px;
+}
+
+.goods-trade-fair-countdown-wrap {
+  max-width: 590px;
+  padding: 11px 14px;
+  border-radius: 14px;
+}
+
+.goods-trade-fair-countdown-label {
+  margin-bottom: 8px;
+  font-size: 10px;
+}
+
+.goods-trade-fair-countdown {
+  gap: 7px;
+}
+
+.goods-trade-fair-time-box {
+  padding: 8px 5px;
+  border-radius: 10px;
+}
+
+.goods-trade-fair-time-box strong {
+  font-size: clamp(19px, 4vw, 25px);
+}
+
+.goods-trade-fair-time-box span {
+  margin-top: 4px;
+  font-size: 8px;
+}
+
+.goods-trade-fair-footer {
+  margin-top: 11px;
+  font-size: 11px;
+}
+
+.goods-trade-fair-ribbon {
+  top: 13px;
+  right: -48px;
+  padding: 6px 10px;
+  font-size: 9px;
+}
+
+@media (max-width: 640px) {
+  .goods-trade-fair-teaser {
+    margin: 10px auto 13px;
+  }
+
+  .goods-trade-fair-content {
+    padding: 27px 12px 15px;
+  }
+
+  .goods-trade-fair-intro {
+    font-size: 14px;
+  }
+
+  .goods-trade-fair-description {
+    font-size: 12px;
+  }
+
+  .goods-trade-fair-countdown {
+    grid-template-columns: repeat(4, minmax(54px, 1fr));
+  }
+
+  .goods-trade-fair-time-box strong {
+    font-size: 19px;
+  }
+}
+.goods-trade-fair-content {
+  padding-top: 14px;
+  padding-bottom: 12px;
+}
+
+.goods-trade-fair-intro {
+  margin-top: 8px;
+}
+
+.goods-trade-fair-mystery {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.goods-trade-fair-classified {
+  margin-bottom: 9px;
+}
+
+.goods-trade-fair-countdown-wrap {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.goods-trade-fair-footer {
+  margin-top: 7px;
+}

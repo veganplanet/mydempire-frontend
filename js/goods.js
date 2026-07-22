@@ -130,10 +130,7 @@ function renderGoodsFactoryList(containerId, factories, emptyText) {
 function getGoodsViewedUsername() {
   const params = new URLSearchParams(window.location.search);
 
-  const viewedUser =
-    params.get("user") ||
-    params.get("view") ||
-    "";
+  const viewedUser = params.get("user") || params.get("view") || "";
 
   const loggedInUser =
     localStorage.getItem("hiveUsername") ||
@@ -351,18 +348,14 @@ function renderGoodsInventory(items, summary) {
 }
 function getVisibleSelectedGoodsBoxes() {
   return Array.from(
-    document.querySelectorAll(
-      "#goods-inventory-list .goods-product-card",
-    ),
+    document.querySelectorAll("#goods-inventory-list .goods-product-card"),
   )
     .filter((card) => card.style.display !== "none")
-    .map((card) =>
-      card.querySelector(".goods-submit-checkbox:checked"),
-    )
+    .map((card) => card.querySelector(".goods-submit-checkbox:checked"))
     .filter(Boolean);
 }
 function updateGoodsSelectedSummary() {
- const selectedBoxes = getVisibleSelectedGoodsBoxes();
+  const selectedBoxes = getVisibleSelectedGoodsBoxes();
 
   let selectedGoodsCount = 0;
   let selectedPV = 0;
@@ -429,34 +422,22 @@ function isProtectedGoodsCard(card) {
     "goods-protect-valuable-toggle",
   );
 
-  const protectionEnabled = protectToggle
-    ? protectToggle.checked
-    : true;
+  const protectionEnabled = protectToggle ? protectToggle.checked : true;
 
   if (!protectionEnabled) {
     return false;
   }
 
-  const quality = String(
-    card.dataset.goodsQuality || "",
-  ).toUpperCase();
+  const quality = String(card.dataset.goodsQuality || "").toUpperCase();
 
-  const level = String(
-    card.dataset.goodsLevel || "",
-  ).toUpperCase();
+  const level = String(card.dataset.goodsLevel || "").toUpperCase();
 
-  return (
-    quality === "SUPERIOR" ||
-    level === "PREMIUM" ||
-    level === "LUXURY"
-  );
+  return quality === "SUPERIOR" || level === "PREMIUM" || level === "LUXURY";
 }
 
 function getVisibleGoodsInventoryCards() {
   return Array.from(
-    document.querySelectorAll(
-      "#goods-inventory-list .goods-product-card",
-    ),
+    document.querySelectorAll("#goods-inventory-list .goods-product-card"),
   ).filter((card) => card.style.display !== "none");
 }
 
@@ -472,30 +453,22 @@ function bulkSelectVisibleGoods(selectionMode) {
       return;
     }
 
-    const checkbox = card.querySelector(
-      ".goods-submit-checkbox",
-    );
+    const checkbox = card.querySelector(".goods-submit-checkbox");
 
     if (!checkbox) return;
 
     const qtyInputId = checkbox.dataset.qtyInputId;
-    const qtyInput = qtyInputId
-      ? document.getElementById(qtyInputId)
-      : null;
+    const qtyInput = qtyInputId ? document.getElementById(qtyInputId) : null;
 
     const maximumQuantity = Number(
-      checkbox.dataset.goodCount ||
-      qtyInput?.max ||
-      1,
+      checkbox.dataset.goodCount || qtyInput?.max || 1,
     );
 
     checkbox.checked = true;
 
     if (qtyInput) {
       qtyInput.value =
-        selectionMode === "ALL"
-          ? Math.max(1, maximumQuantity)
-          : 1;
+        selectionMode === "ALL" ? Math.max(1, maximumQuantity) : 1;
     }
 
     selectedGroups += 1;
@@ -503,9 +476,7 @@ function bulkSelectVisibleGoods(selectionMode) {
 
   updateGoodsSelectedSummary();
 
-  const toolsPanel = document.querySelector(
-    ".goods-bulk-tools-panel",
-  );
+  const toolsPanel = document.querySelector(".goods-bulk-tools-panel");
 
   if (toolsPanel) {
     toolsPanel.removeAttribute("open");
@@ -524,23 +495,17 @@ function bulkSelectVisibleGoods(selectionMode) {
 }
 
 function clearGoodsBulkSelection() {
-  document
-    .querySelectorAll(".goods-submit-checkbox")
-    .forEach((checkbox) => {
-      checkbox.checked = false;
-    });
+  document.querySelectorAll(".goods-submit-checkbox").forEach((checkbox) => {
+    checkbox.checked = false;
+  });
 
-  document
-    .querySelectorAll(".goods-submit-qty-input")
-    .forEach((qtyInput) => {
-      qtyInput.value = 1;
-    });
+  document.querySelectorAll(".goods-submit-qty-input").forEach((qtyInput) => {
+    qtyInput.value = 1;
+  });
 
   updateGoodsSelectedSummary();
 
-  const toolsPanel = document.querySelector(
-    ".goods-bulk-tools-panel",
-  );
+  const toolsPanel = document.querySelector(".goods-bulk-tools-panel");
 
   if (toolsPanel) {
     toolsPanel.removeAttribute("open");
@@ -552,13 +517,9 @@ function setupGoodsBulkRedemption() {
     "goods-select-all-visible-btn",
   );
 
-  const selectOneButton = document.getElementById(
-    "goods-select-one-each-btn",
-  );
+  const selectOneButton = document.getElementById("goods-select-one-each-btn");
 
-  const clearButton = document.getElementById(
-    "goods-clear-selection-btn",
-  );
+  const clearButton = document.getElementById("goods-clear-selection-btn");
 
   if (selectAllButton) {
     selectAllButton.addEventListener("click", () => {
@@ -573,10 +534,7 @@ function setupGoodsBulkRedemption() {
   }
 
   if (clearButton) {
-    clearButton.addEventListener(
-      "click",
-      clearGoodsBulkSelection,
-    );
+    clearButton.addEventListener("click", clearGoodsBulkSelection);
   }
 }
 // =====================================================
@@ -586,9 +544,7 @@ function setupGoodsBulkRedemption() {
 
 function applyGoodsInventoryFilters() {
   const inventoryBox = document.getElementById("goods-inventory-list");
-  const resultCount = document.getElementById(
-    "goods-filter-result-count",
-  );
+  const resultCount = document.getElementById("goods-filter-result-count");
 
   if (!inventoryBox) return;
 
@@ -617,56 +573,43 @@ function applyGoodsInventoryFilters() {
     totalGoods += goodsCount;
 
     const matchesQuality =
-      qualityFilter === "ALL" ||
-      card.dataset.goodsQuality === qualityFilter;
+      qualityFilter === "ALL" || card.dataset.goodsQuality === qualityFilter;
 
     const matchesIndustry =
-      industryFilter === "ALL" ||
-      card.dataset.goodsIndustry === industryFilter;
+      industryFilter === "ALL" || card.dataset.goodsIndustry === industryFilter;
 
     const matchesRarity =
-      rarityFilter === "ALL" ||
-      card.dataset.goodsLevel === rarityFilter;
+      rarityFilter === "ALL" || card.dataset.goodsLevel === rarityFilter;
 
-    const shouldShow =
-      matchesQuality &&
-      matchesIndustry &&
-      matchesRarity;
+    const shouldShow = matchesQuality && matchesIndustry && matchesRarity;
 
-   card.style.display = shouldShow ? "" : "none";
+    card.style.display = shouldShow ? "" : "none";
 
-if (shouldShow) {
-  visibleGoods += goodsCount;
-} else {
-  // Hidden Goods must not remain selected.
-  const checkbox = card.querySelector(
-    ".goods-submit-checkbox",
-  );
+    if (shouldShow) {
+      visibleGoods += goodsCount;
+    } else {
+      // Hidden Goods must not remain selected.
+      const checkbox = card.querySelector(".goods-submit-checkbox");
 
-  if (checkbox) {
-    checkbox.checked = false;
-  }
+      if (checkbox) {
+        checkbox.checked = false;
+      }
 
-  const qtyInput = card.querySelector(
-    ".goods-submit-qty-input",
-  );
+      const qtyInput = card.querySelector(".goods-submit-qty-input");
 
-  if (qtyInput) {
-    qtyInput.value = 1;
-  }
-}
+      if (qtyInput) {
+        qtyInput.value = 1;
+      }
+    }
   });
 
-  let emptyState = document.getElementById(
-    "goods-filter-empty-state",
-  );
+  let emptyState = document.getElementById("goods-filter-empty-state");
 
   if (cards.length > 0 && !emptyState) {
     emptyState = document.createElement("div");
     emptyState.id = "goods-filter-empty-state";
     emptyState.className = "goods-empty-card";
-    emptyState.textContent =
-      "No Goods match this filter combination.";
+    emptyState.textContent = "No Goods match this filter combination.";
 
     inventoryBox.appendChild(emptyState);
   }
@@ -687,35 +630,23 @@ if (shouldShow) {
     } else if (allFiltersActive) {
       resultCount.textContent = `Showing all ${totalGoods} Goods`;
     } else {
-      resultCount.textContent =
-        `Showing ${visibleGoods} of ${totalGoods} Goods`;
+      resultCount.textContent = `Showing ${visibleGoods} of ${totalGoods} Goods`;
     }
   }
 }
 updateGoodsSelectedSummary();
 function setupGoodsInventoryFilters() {
-  const qualitySelect = document.getElementById(
-    "goods-filter-quality",
-  );
+  const qualitySelect = document.getElementById("goods-filter-quality");
 
-  const industrySelect = document.getElementById(
-    "goods-filter-industry",
-  );
+  const industrySelect = document.getElementById("goods-filter-industry");
 
-  const raritySelect = document.getElementById(
-    "goods-filter-rarity",
-  );
+  const raritySelect = document.getElementById("goods-filter-rarity");
 
-  const clearButton = document.getElementById(
-    "goods-clear-filters-btn",
-  );
+  const clearButton = document.getElementById("goods-clear-filters-btn");
 
   [qualitySelect, industrySelect, raritySelect].forEach((select) => {
     if (select) {
-      select.addEventListener(
-        "change",
-        applyGoodsInventoryFilters,
-      );
+      select.addEventListener("change", applyGoodsInventoryFilters);
     }
   });
 
@@ -726,7 +657,6 @@ function setupGoodsInventoryFilters() {
       if (raritySelect) raritySelect.value = "ALL";
 
       applyGoodsInventoryFilters();
-      
     });
   }
 }
@@ -881,9 +811,9 @@ function parseGoodsCycleTime(raw) {
 function getGoodsLoggedInActor() {
   return String(
     localStorage.getItem("hiveUsername") ||
-    localStorage.getItem("mde_username") ||
-    localStorage.getItem("username") ||
-    ""
+      localStorage.getItem("mde_username") ||
+      localStorage.getItem("username") ||
+      "",
   )
     .replace("@", "")
     .trim()
@@ -1272,10 +1202,7 @@ async function loadGoodsRedemptionHistory(listElement) {
 function getGoodsViewedUsername() {
   const params = new URLSearchParams(window.location.search);
 
-  const viewedUser =
-    params.get("user") ||
-    params.get("view") ||
-    "";
+  const viewedUser = params.get("user") || params.get("view") || "";
 
   const loggedInUser = getGoodsLoggedInUser();
 
@@ -1285,7 +1212,7 @@ function getGoodsViewedUsername() {
     .toLowerCase();
 }
 async function loadGoodsInventory() {
- const username = getGoodsViewedUsername();
+  const username = getGoodsViewedUsername();
 
   if (!username) {
     renderGoodsInventory([], {
@@ -1296,14 +1223,14 @@ async function loadGoodsInventory() {
   }
 
   try {
-   const response = await fetch(
-  `${GOODS_API_BASE}/goods/${encodeURIComponent(username)}/inventory`,
-  {
-    headers: {
-      "x-mde-actor": getGoodsLoggedInActor(),
-    },
-  }
-);
+    const response = await fetch(
+      `${GOODS_API_BASE}/goods/${encodeURIComponent(username)}/inventory`,
+      {
+        headers: {
+          "x-mde-actor": getGoodsLoggedInActor(),
+        },
+      },
+    );
     const data = await response.json();
 
     if (!data.success) {
@@ -1344,13 +1271,13 @@ async function loadGoodsPreview() {
 
   try {
     const response = await fetch(
-  `${GOODS_API_BASE}/goods/${encodeURIComponent(username)}/preview`,
-  {
-    headers: {
-      "x-mde-actor": getGoodsLoggedInActor(),
-    },
-  }
-);
+      `${GOODS_API_BASE}/goods/${encodeURIComponent(username)}/preview`,
+      {
+        headers: {
+          "x-mde-actor": getGoodsLoggedInActor(),
+        },
+      },
+    );
     const data = await response.json();
 
     if (!data.success) {
@@ -1440,22 +1367,22 @@ function buildGoodsClaimSummary(data) {
   const byLevel = data.byLevel || {};
   const byQuality = data.byQuality || {};
 
-  const qualityText = formatGoodsMix(
-    byQuality,
-    getGoodsQualityGradeLabel,
-    ["STANDARD", "FINE", "SUPERIOR"]
-  );
+  const qualityText = formatGoodsMix(byQuality, getGoodsQualityGradeLabel, [
+    "STANDARD",
+    "FINE",
+    "SUPERIOR",
+  ]);
 
-const levelText = formatGoodsMix(
-  byLevel,
-  getGoodsProductClassLabel,
-  ["ESSENTIAL", "VALUE", "STANDARD", "PREMIUM", "LUXURY"]
-);
+  const levelText = formatGoodsMix(byLevel, getGoodsProductClassLabel, [
+    "ESSENTIAL",
+    "VALUE",
+    "STANDARD",
+    "PREMIUM",
+    "LUXURY",
+  ]);
 
   const bestQualityRaw =
-    data.bestQuality ||
-    data.best_quality ||
-    getBestGoodsQuality(byQuality);
+    data.bestQuality || data.best_quality || getBestGoodsQuality(byQuality);
 
   const bestLevelRaw =
     data.bestLevel ||
@@ -1469,10 +1396,7 @@ const levelText = formatGoodsMix(
     (Array.isArray(data.goods) ? data.goods.length : 0);
 
   const totalProductValue =
-    data.total_product_value ??
-    data.totalProductValue ??
-    data.totalPV ??
-    0;
+    data.total_product_value ?? data.totalProductValue ?? data.totalPV ?? 0;
 
   return [
     `📦 Goods Received: ${goodsReceived}`,
@@ -1813,7 +1737,7 @@ async function submitSelectedGoodsForRedemption() {
   const username = getGoodsLoggedInUser();
   const button = document.getElementById("goods-submit-selected-btn");
 
-const selectedBoxes = getVisibleSelectedGoodsBoxes();
+  const selectedBoxes = getVisibleSelectedGoodsBoxes();
 
   if (!username) {
     alert("Please login first.");
@@ -1933,8 +1857,8 @@ function setupGoodsSubnav() {
 document.addEventListener("DOMContentLoaded", () => {
   setupGoodsSubnav();
   setupGoodsInventorySelection();
-    setupGoodsInventoryFilters();
-    setupGoodsBulkRedemption();
+  setupGoodsInventoryFilters();
+  setupGoodsBulkRedemption();
   const refreshBtn = document.getElementById("goods-refresh-btn");
   const claimBtn = document.getElementById("goods-claim-btn");
   const submitBtn = document.getElementById("goods-submit-selected-btn");
@@ -2032,3 +1956,87 @@ document.addEventListener("DOMContentLoaded", () => {
   loadGoodsRedemptionPosition(getGoodsViewedUsername());
   loadGoodsRedemptionLeaderboard();
 });
+// ========================================
+// IMPERIAL TRADE FAIR LAUNCH COUNTDOWN
+// ========================================
+
+let goodsTradeFairCountdownInterval = null;
+
+function startGoodsTradeFairCountdown() {
+  const countdownBox = document.getElementById("goods-trade-fair-countdown");
+
+  if (!countdownBox) return;
+
+  const launchTimeRaw = countdownBox.dataset.launchTime;
+  const launchTime = new Date(launchTimeRaw).getTime();
+
+  if (!Number.isFinite(launchTime)) {
+    console.error("Invalid Imperial Trade Fair launch time:", launchTimeRaw);
+    return;
+  }
+
+  const daysElement = document.getElementById("goods-trade-fair-days");
+
+  const hoursElement = document.getElementById("goods-trade-fair-hours");
+
+  const minutesElement = document.getElementById("goods-trade-fair-minutes");
+
+  const secondsElement = document.getElementById("goods-trade-fair-seconds");
+
+  function updateCountdown() {
+    const remainingMilliseconds = launchTime - Date.now();
+
+    if (remainingMilliseconds <= 0) {
+      clearInterval(goodsTradeFairCountdownInterval);
+
+      if (daysElement) daysElement.textContent = "00";
+      if (hoursElement) hoursElement.textContent = "00";
+      if (minutesElement) minutesElement.textContent = "00";
+      if (secondsElement) secondsElement.textContent = "00";
+
+      const label = document.querySelector(".goods-trade-fair-countdown-label");
+
+      if (label) {
+        label.textContent = "🏛️ IMPERIAL TRADE FAIR IS LIVE";
+      }
+
+      countdownBox.classList.add("goods-trade-fair-countdown-live");
+
+      return;
+    }
+
+    const totalSeconds = Math.floor(remainingMilliseconds / 1000);
+
+    const days = Math.floor(totalSeconds / 86400);
+
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+    const seconds = totalSeconds % 60;
+
+    if (daysElement) {
+      daysElement.textContent = String(days).padStart(2, "0");
+    }
+
+    if (hoursElement) {
+      hoursElement.textContent = String(hours).padStart(2, "0");
+    }
+
+    if (minutesElement) {
+      minutesElement.textContent = String(minutes).padStart(2, "0");
+    }
+
+    if (secondsElement) {
+      secondsElement.textContent = String(seconds).padStart(2, "0");
+    }
+  }
+
+  clearInterval(goodsTradeFairCountdownInterval);
+
+  updateCountdown();
+
+  goodsTradeFairCountdownInterval = setInterval(updateCountdown, 1000);
+}
+
+document.addEventListener("DOMContentLoaded", startGoodsTradeFairCountdown);
