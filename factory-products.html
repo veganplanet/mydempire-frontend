@@ -818,6 +818,107 @@
         </div>
       </div>
     </div>
+    <!-- ===================================== -->
+    <!-- 📦 GOODS P2P TRANSFER MODAL -->
+    <!-- ===================================== -->
+
+    <div id="goods-transfer-modal" class="goods-modal-overlay hidden">
+      <div class="goods-confirm-modal-box">
+        <div class="goods-claim-modal-head">
+          <div>
+            <div class="goods-section-kicker">PLAYER TO PLAYER TRANSFER</div>
+
+            <h2>📦 Transfer Goods</h2>
+
+            <p>Send Goods directly to another MydEmpire player.</p>
+          </div>
+
+          <button
+            id="goods-transfer-close"
+            class="goods-modal-close"
+            type="button"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="goods-confirm-note">
+          <strong id="goods-transfer-product-name"> Selected Good </strong>
+
+          <br />
+
+          Available:
+          <strong id="goods-transfer-available-qty">0</strong>
+
+          <br />
+
+          Transfer Fee:
+          <strong id="goods-transfer-fee">0 EMP</strong>
+        </div>
+
+        <div style="display: grid; gap: 14px; margin-top: 18px">
+          <label style="display: grid; gap: 6px">
+            <strong>Receiver Hive Username</strong>
+
+            <input
+              id="goods-transfer-receiver"
+              type="text"
+              placeholder="Hive username"
+              autocomplete="off"
+              style="
+                width: 100%;
+                padding: 12px 14px;
+                border: 1px solid #cbd5e1;
+                border-radius: 12px;
+                font-size: 15px;
+              "
+            />
+          </label>
+
+          <label style="display: grid; gap: 6px">
+            <strong>Quantity</strong>
+
+            <input
+              id="goods-transfer-quantity"
+              type="number"
+              min="1"
+              value="1"
+              style="
+                width: 100%;
+                padding: 12px 14px;
+                border: 1px solid #cbd5e1;
+                border-radius: 12px;
+                font-size: 15px;
+              "
+            />
+          </label>
+
+          <div
+            id="goods-transfer-status"
+            class="status-text"
+            style="min-height: 22px"
+          ></div>
+        </div>
+
+        <div class="goods-confirm-actions">
+          <button
+            id="goods-transfer-cancel"
+            class="secondary-btn"
+            type="button"
+          >
+            Cancel
+          </button>
+
+          <button
+            id="goods-transfer-confirm"
+            class="primary-button"
+            type="button"
+          >
+            Transfer Goods
+          </button>
+        </div>
+      </div>
+    </div>
     <div id="goods-submit-confirm-modal" class="goods-modal-overlay hidden">
       <div class="goods-confirm-modal-box">
         <div class="goods-claim-modal-head">

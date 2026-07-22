@@ -277,6 +277,28 @@ function renderGoodsInventory(items, summary) {
   data-goods-count="${group.quantity}"
 >
           <div class="goods-collectible-frame">
+          <div class="goods-card-actions">
+  <button
+    type="button"
+    class="goods-card-menu-btn"
+    aria-label="Goods actions"
+  >
+    ⋯
+  </button>
+
+  <div class="goods-card-menu">
+    <button
+      type="button"
+      class="goods-transfer-btn"
+      data-goods-ids="${escapeGoodsHtml(goodsIdsText)}"
+      data-product-name="${escapeGoodsHtml(group.product_name)}"
+      data-product-level="${escapeGoodsHtml(group.product_level)}"
+      data-max-quantity="${group.quantity}"
+    >
+      Transfer
+    </button>
+  </div>
+</div>
             <div class="goods-card-topline">
               <span class="goods-card-name">${escapeGoodsHtml(group.product_name)}</span>
               <span class="goods-card-qty">x${group.quantity}</span>
@@ -322,16 +344,19 @@ function renderGoodsInventory(items, summary) {
             </label>
 
             <div class="goods-submit-qty-box">
-              <span>Qty</span>
-              <input
-                id="goods-submit-qty-${index}"
-                class="goods-submit-qty-input"
-                type="number"
-                min="1"
-                max="${group.quantity}"
-                value="1"
-              />
-            </div>
+  <span>Qty</span>
+
+  <input
+    id="goods-submit-qty-${index}"
+    class="goods-submit-qty-input"
+    type="number"
+    min="1"
+    max="${group.quantity}"
+    value="1"
+  />
+</div>
+
+
           </div>
         </div>
       `;
@@ -1956,6 +1981,329 @@ document.addEventListener("DOMContentLoaded", () => {
   loadGoodsRedemptionPosition(getGoodsViewedUsername());
   loadGoodsRedemptionLeaderboard();
 });
+// ========================================
+// 📦 GOODS P2P TRANSFER UI
+// ========================================
+
+let activeGoodsTransfer = null;
+
+function getGoodsTransferFee(productLevel) {
+  const fees = {
+    ESSENTIAL: 1,
+    STANDARD: 2,
+    VALUE: 3,
+    PREMIUM: 4,
+    LUXURY: 5,
+  };
+
+  return fees[String(productLevel || "").toUpperCase()] || 0;
+}
+
+function closeGoodsTransferMenus() {
+  document.querySelectorAll(".goods-card-actions.open").forEach((menu) => {
+    menu.classList.remove("open");
+  });
+}
+
+function openGoodsTransferModal(button) {
+  const modal = document.getElementById("goods-transfer-modal");
+  const receiverInput = document.getElementById("goods-transfer-receiver");
+  const quantityInput = document.getElementById("goods-transfer-quantity");
+  const status = document.getElementById("goods-transfer-status");
+
+  if (!modal || !button) return;
+
+  const goodsIds = String(button.dataset.goodsIds || "")
+    .split(",")
+    .map((id) => Number(id))
+    .filter((id) => Number.isInteger(id) && id > 0);
+
+  const productName = String(button.dataset.productName || "Selected Good");
+
+  const productLevel = String(button.dataset.productLevel || "").toUpperCase();
+
+  const maxQuantity = Math.min(
+    Number(button.dataset.maxQuantity || goodsIds.length),
+    goodsIds.length,
+  );
+
+  const fee = getGoodsTransferFee(productLevel);
+
+  activeGoodsTransfer = {
+    goodsIds,
+    productName,
+    productLevel,
+    maxQuantity,
+    fee,
+  };
+
+  setGoodsText("goods-transfer-product-name", productName);
+  setGoodsText("goods-transfer-available-qty", String(maxQuantity));
+  setGoodsText("goods-transfer-fee", `${fee} EMP`);
+
+  if (receiverInput) {
+    receiverInput.value = "";
+  }
+
+  if (quantityInput) {
+    quantityInput.value = "1";
+    quantityInput.min = "1";
+    quantityInput.max = String(maxQuantity);
+  }
+
+  if (status) {
+    status.textContent = "";
+  }
+
+  modal.classList.remove("hidden");
+  closeGoodsTransferMenus();
+
+  setTimeout(() => {
+    receiverInput?.focus();
+  }, 50);
+}
+
+function closeGoodsTransferModal() {
+  const modal = document.getElementById("goods-transfer-modal");
+  const confirmButton = document.getElementById("goods-transfer-confirm");
+  const status = document.getElementById("goods-transfer-status");
+
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+
+  if (confirmButton) {
+    confirmButton.disabled = false;
+    confirmButton.textContent = "Transfer Goods";
+  }
+
+  if (status) {
+    status.textContent = "";
+  }
+
+  activeGoodsTransfer = null;
+}
+
+async function confirmGoodsTransfer() {
+  const loggedInUsername = getGoodsLoggedInUser();
+
+  const receiverInput = document.getElementById("goods-transfer-receiver");
+
+  const quantityInput = document.getElementById("goods-transfer-quantity");
+
+  const confirmButton = document.getElementById("goods-transfer-confirm");
+
+  const status = document.getElementById("goods-transfer-status");
+
+  const receiver = String(receiverInput?.value || "")
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+
+  let quantity = Number(quantityInput?.value || 0);
+
+  if (!loggedInUsername) {
+    if (status) {
+      status.textContent = "Please connect your Hive account.";
+    }
+    return;
+  }
+
+  if (!activeGoodsTransfer) {
+    if (status) {
+      status.textContent = "Selected Goods are no longer available.";
+    }
+    return;
+  }
+
+  if (!receiver) {
+    if (status) {
+      status.textContent = "Enter the receiver's Hive username.";
+    }
+    receiverInput?.focus();
+    return;
+  }
+
+  if (receiver === loggedInUsername) {
+    if (status) {
+      status.textContent = "You cannot transfer Goods to your own account.";
+    }
+    return;
+  }
+
+  if (!Number.isInteger(quantity) || quantity < 1) {
+    quantity = 1;
+  }
+
+  if (quantity > activeGoodsTransfer.maxQuantity) {
+    quantity = activeGoodsTransfer.maxQuantity;
+  }
+
+  if (quantityInput) {
+    quantityInput.value = String(quantity);
+  }
+
+  const selectedGoodsIds = activeGoodsTransfer.goodsIds.slice(0, quantity);
+
+  if (selectedGoodsIds.length !== quantity) {
+    if (status) {
+      status.textContent = "Unable to select the requested quantity.";
+    }
+    return;
+  }
+
+  try {
+    if (confirmButton) {
+      confirmButton.disabled = true;
+      confirmButton.textContent = "Transferring...";
+    }
+
+    if (status) {
+      status.textContent = "Processing Goods transfer...";
+    }
+
+    const response = await fetch(
+      `${GOODS_API_BASE}/goods/${encodeURIComponent(loggedInUsername)}/transfer`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": loggedInUsername,
+        },
+
+        body: JSON.stringify({
+          to_username: receiver,
+          goods_ids: selectedGoodsIds,
+        }),
+      },
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Goods transfer failed.");
+    }
+
+    if (status) {
+      status.textContent =
+        `✅ ${quantity} × ${activeGoodsTransfer.productName} ` +
+        `transferred to @${receiver}. Fee: ` +
+        `${Number(data.emp_fee || activeGoodsTransfer.fee)} EMP`;
+    }
+
+    if (confirmButton) {
+      confirmButton.textContent = "Transfer Complete";
+    }
+
+    setTimeout(async () => {
+      closeGoodsTransferModal();
+
+      await loadGoodsPreview();
+    }, 1500);
+  } catch (error) {
+    console.error("Goods transfer failed:", error);
+
+    if (status) {
+      status.textContent = error.message || "Goods transfer failed.";
+    }
+
+    if (confirmButton) {
+      confirmButton.disabled = false;
+      confirmButton.textContent = "Transfer Goods";
+    }
+  }
+}
+
+function setupGoodsTransferUI() {
+  const inventoryBox = document.getElementById("goods-inventory-list");
+
+  const modal = document.getElementById("goods-transfer-modal");
+
+  if (inventoryBox) {
+    inventoryBox.addEventListener("click", (event) => {
+      const menuButton = event.target.closest(".goods-card-menu-btn");
+
+      if (menuButton) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const menuWrap = menuButton.closest(".goods-card-actions");
+
+        const shouldOpen = !menuWrap?.classList.contains("open");
+
+        closeGoodsTransferMenus();
+
+        if (shouldOpen && menuWrap) {
+          menuWrap.classList.add("open");
+        }
+
+        return;
+      }
+
+      const transferButton = event.target.closest(".goods-transfer-btn");
+
+      if (transferButton) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        openGoodsTransferModal(transferButton);
+      }
+    });
+  }
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".goods-card-actions")) {
+      closeGoodsTransferMenus();
+    }
+  });
+
+  document
+    .getElementById("goods-transfer-close")
+    ?.addEventListener("click", closeGoodsTransferModal);
+
+  document
+    .getElementById("goods-transfer-cancel")
+    ?.addEventListener("click", closeGoodsTransferModal);
+
+  document
+    .getElementById("goods-transfer-confirm")
+    ?.addEventListener("click", confirmGoodsTransfer);
+
+  document
+    .getElementById("goods-transfer-quantity")
+    ?.addEventListener("input", (event) => {
+      if (!activeGoodsTransfer) return;
+
+      let quantity = Number(event.target.value || 1);
+
+      if (!Number.isInteger(quantity) || quantity < 1) {
+        quantity = 1;
+      }
+
+      if (quantity > activeGoodsTransfer.maxQuantity) {
+        quantity = activeGoodsTransfer.maxQuantity;
+      }
+
+      event.target.value = String(quantity);
+    });
+
+  document
+    .getElementById("goods-transfer-receiver")
+    ?.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        confirmGoodsTransfer();
+      }
+    });
+
+  modal?.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeGoodsTransferModal();
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", setupGoodsTransferUI);
 // ========================================
 // IMPERIAL TRADE FAIR LAUNCH COUNTDOWN
 // ========================================
