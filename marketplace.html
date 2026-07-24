@@ -2756,6 +2756,65 @@ async function loadAllMarketplaceHistory() {
   await loadMarketplaceHistory("PACK", renderPackHistory, "pack-history-list");
 }
   loadAllMarketplaceHistory();
+  // ==========================================
+// BLUEPRINT MARKET SAFE INITIALIZATION
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+  const blueprintTabBtn = document.querySelector(
+    '[data-market-tab="blueprints"]'
+  );
+
+  const refreshBlueprintBtn = document.getElementById(
+    "refresh-blueprint-market-btn"
+  );
+
+  const createBlueprintBtn = document.getElementById(
+    "create-blueprint-listing-btn"
+  );
+
+  async function refreshBlueprintMarketSafe() {
+    if (typeof loadBlueprintInventory === "function") {
+      await loadBlueprintInventory();
+    }
+
+    if (typeof loadBlueprintListings === "function") {
+      await loadBlueprintListings();
+    }
+
+    if (typeof renderBlueprintFeed === "function") {
+      renderBlueprintFeed();
+    }
+  }
+
+  if (blueprintTabBtn) {
+    blueprintTabBtn.addEventListener("click", () => {
+      refreshBlueprintMarketSafe();
+    });
+  }
+
+  if (refreshBlueprintBtn) {
+    refreshBlueprintBtn.addEventListener("click", () => {
+      refreshBlueprintMarketSafe();
+    });
+  }
+
+  if (createBlueprintBtn) {
+    createBlueprintBtn.addEventListener("click", () => {
+      if (typeof createBlueprintListing === "function") {
+        createBlueprintListing();
+      }
+    });
+  }
+
+  // Load immediately when Marketplace opens directly on Blueprint tab
+  const blueprintPanel = document.querySelector(
+    '[data-market-tab-panel="blueprints"]'
+  );
+
+  if (blueprintPanel?.classList.contains("active")) {
+    refreshBlueprintMarketSafe();
+  }
+});
 </script>
  <script src="js/navbar.js"></script>
  <script src="js/notifications.js"></script>
