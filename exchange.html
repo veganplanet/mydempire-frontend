@@ -128,13 +128,23 @@
               the current market rate.
             </p>
 
-            <button
-              id="dao-sell-emp-btn"
-              type="button"
-              onclick="openDaoSellEmp()"
-            >
-              Sell EMP for HIVE
-            </button>
+            <div class="dao-sell-action-buttons">
+              <button
+                id="dao-sell-emp-btn"
+                type="button"
+                onclick="openDaoSellEmp()"
+              >
+                Sell EMP for HIVE
+              </button>
+
+              <button
+                id="dao-transfer-emp-btn"
+                type="button"
+                onclick="openEmpTransfer()"
+              >
+                Transfer EMP
+              </button>
+            </div>
           </article>
         </div>
       </section>
@@ -1862,6 +1872,161 @@
         loadDaoTrades();
         loadDaoStatistics();
       });
+      // ========================================
+      // 💸 EMP TRANSFER
+      // ========================================
+
+      function openEmpTransfer() {
+        const username = getExchangeUsername();
+
+        if (!username) {
+          alert("Please connect your Hive account first.");
+          return;
+        }
+
+        const modal = document.getElementById("emp-transfer-modal");
+        const receiverInput = document.getElementById("emp-transfer-username");
+        const amountInput = document.getElementById("emp-transfer-amount");
+        const status = document.getElementById("emp-transfer-status");
+        const button = document.getElementById("emp-transfer-confirm-btn");
+
+        if (!modal) return;
+
+        receiverInput.value = "";
+        amountInput.value = "";
+        status.textContent = "";
+
+        button.disabled = false;
+        button.textContent = "Transfer EMP";
+
+        modal.classList.remove("hidden");
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+
+        document.body.classList.add("dao-modal-open");
+
+        setTimeout(() => {
+          receiverInput.focus();
+        }, 100);
+      }
+
+      function closeEmpTransfer() {
+        const modal = document.getElementById("emp-transfer-modal");
+
+        if (!modal) return;
+
+        modal.classList.remove("is-open");
+        modal.classList.add("hidden");
+        modal.setAttribute("aria-hidden", "true");
+
+        document.body.classList.remove("dao-modal-open");
+      }
+
+      async function submitEmpTransfer() {
+        const fromUsername = getExchangeUsername();
+
+        const receiverInput = document.getElementById("emp-transfer-username");
+
+        const amountInput = document.getElementById("emp-transfer-amount");
+
+        const status = document.getElementById("emp-transfer-status");
+
+        const button = document.getElementById("emp-transfer-confirm-btn");
+
+        const toUsername = String(receiverInput?.value || "")
+          .trim()
+          .replace(/^@/, "")
+          .toLowerCase();
+
+        const amount = Number(amountInput?.value);
+
+        status.textContent = "";
+
+        if (!fromUsername) {
+          status.textContent = "Please connect your Hive account first.";
+          return;
+        }
+
+        if (!toUsername) {
+          status.textContent = "Enter the receiver's Hive username.";
+          receiverInput?.focus();
+          return;
+        }
+
+        if (toUsername === fromUsername) {
+          status.textContent = "You cannot transfer EMP to your own account.";
+          return;
+        }
+
+        if (!Number.isFinite(amount) || amount <= 0) {
+          status.textContent = "Enter a valid EMP amount.";
+          amountInput?.focus();
+          return;
+        }
+
+        if (Math.round(amount * 1000) !== amount * 1000) {
+          status.textContent =
+            "EMP amount can have a maximum of 3 decimal places.";
+          return;
+        }
+
+        const confirmed = window.confirm(
+          `Transfer ${amount.toFixed(3)} EMP to @${toUsername}?\n\n` +
+            `Transfer fee: 1 EMP\n` +
+            `Total deduction: ${(amount + 1).toFixed(3)} EMP`,
+        );
+
+        if (!confirmed) return;
+
+        try {
+          button.disabled = true;
+          button.textContent = "Transferring...";
+
+          status.textContent =
+            "Verifying Hive account and processing transfer...";
+
+          const response = await fetch(
+            `${API_BASE}/emp/${encodeURIComponent(fromUsername)}/transfer`,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json",
+                "x-player-actor": fromUsername,
+                "x-mde-actor": fromUsername,
+              },
+
+              body: JSON.stringify({
+                to_username: toUsername,
+                amount,
+              }),
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "EMP transfer failed.");
+          }
+
+          status.innerHTML =
+            `✅ <strong>${Number(data.amount).toFixed(3)} EMP</strong> ` +
+            `transferred successfully to <strong>@${data.to_username}</strong>.<br>` +
+            `Transfer fee: ${Number(data.fee || 1).toFixed(3)} EMP.<br>` +
+            `Remaining balance: ${Number(data.balance).toFixed(3)} EMP.`;
+
+          button.textContent = "Transfer Complete";
+
+          await loadDaoPool();
+        } catch (error) {
+          console.error("EMP transfer error:", error);
+
+          status.textContent = error.message || "EMP transfer failed.";
+
+          button.disabled = false;
+          button.textContent = "Transfer EMP";
+        }
+      }
     </script>
 
     <script src="js/navbar.js"></script>
@@ -2886,6 +3051,259 @@
           text-align: left;
         }
       }
+      /* ========================================
+   💸 EMP TRANSFER MODAL
+======================================== */
+
+      .dao-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 20px;
+
+        background: rgba(15, 23, 42, 0.62);
+        backdrop-filter: blur(4px);
+      }
+
+      .dao-modal.hidden {
+        display: none;
+      }
+
+      .dao-modal-card {
+        position: relative;
+
+        width: min(100%, 460px);
+
+        padding: 28px;
+
+        border: 1px solid #b8d4ff;
+        border-radius: 22px;
+
+        background: #ffffff;
+
+        box-shadow:
+          0 22px 60px rgba(15, 23, 42, 0.22),
+          0 4px 16px rgba(15, 23, 42, 0.12);
+      }
+
+      .dao-modal-close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+
+        width: 36px;
+        height: 36px;
+
+        border: none;
+        border-radius: 50%;
+
+        background: #eef4ff;
+        color: #1f3f75;
+
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1;
+
+        cursor: pointer;
+      }
+
+      .dao-modal-close:hover {
+        background: #dfeaff;
+      }
+
+      .dao-modal-card h2 {
+        margin: 0 42px 8px 0;
+
+        color: #10213d;
+        font-size: 28px;
+        line-height: 1.2;
+      }
+
+      .dao-modal-subtitle {
+        margin: 0 0 22px;
+
+        color: #5d6f8c;
+        line-height: 1.6;
+      }
+
+      .dao-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        margin-bottom: 18px;
+      }
+
+      .dao-form-group label {
+        color: #1d3155;
+
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .dao-form-group input {
+        width: 100%;
+
+        padding: 13px 14px;
+
+        border: 1px solid #c9d8ee;
+        border-radius: 12px;
+
+        background: #f9fbff;
+        color: #10213d;
+
+        font-size: 16px;
+
+        box-sizing: border-box;
+      }
+
+      .dao-form-group input:focus {
+        outline: none;
+
+        border-color: #4f8cff;
+
+        background: #ffffff;
+
+        box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.14);
+      }
+
+      .dao-transfer-fee-box {
+        margin: 4px 0 20px;
+        padding: 14px 16px;
+
+        border: 1px solid #f0cf7a;
+        border-radius: 12px;
+
+        background: #fff8df;
+        color: #6b4d00;
+
+        line-height: 1.5;
+      }
+
+      .dao-transfer-fee-box small {
+        color: #8a6a18;
+      }
+
+      .dao-primary-btn {
+        width: 100%;
+
+        padding: 14px 18px;
+
+        border: none;
+        border-radius: 12px;
+
+        background: #1748c7;
+        color: #ffffff;
+
+        font-size: 16px;
+        font-weight: 700;
+
+        cursor: pointer;
+      }
+
+      .dao-primary-btn:hover {
+        background: #123aa3;
+      }
+
+      .dao-primary-btn:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+
+      .dao-transfer-status {
+        min-height: 24px;
+
+        margin-top: 16px;
+
+        color: #223a63;
+
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      body.dao-modal-open {
+        overflow: hidden;
+      }
+
+      @media (max-width: 520px) {
+        .dao-modal {
+          padding: 12px;
+        }
+
+        .dao-modal-card {
+          padding: 22px 18px;
+          border-radius: 18px;
+        }
+
+        .dao-modal-card h2 {
+          font-size: 24px;
+        }
+      }
     </style>
+    <!-- ========================================= -->
+    <!-- 💸 EMP TRANSFER MODAL -->
+    <!-- ========================================= -->
+
+    <div id="emp-transfer-modal" class="dao-modal hidden">
+      <div class="dao-modal-card">
+        <button
+          type="button"
+          class="dao-modal-close"
+          onclick="closeEmpTransfer()"
+        >
+          ✕
+        </button>
+
+        <h2>💸 Transfer EMP</h2>
+
+        <p class="dao-modal-subtitle">
+          Send EMP instantly to another valid Hive account.
+        </p>
+
+        <div class="dao-form-group">
+          <label for="emp-transfer-username"> Receiver Hive Username </label>
+
+          <input
+            id="emp-transfer-username"
+            type="text"
+            placeholder="Hive username"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="dao-form-group">
+          <label for="emp-transfer-amount"> EMP Amount </label>
+
+          <input
+            id="emp-transfer-amount"
+            type="number"
+            min="0.001"
+            step="0.001"
+            placeholder="0.000"
+          />
+        </div>
+
+        <div class="dao-transfer-fee-box">
+          <strong>Transfer fee:</strong> 1 EMP per transaction
+          <br />
+        </div>
+
+        <button
+          id="emp-transfer-confirm-btn"
+          type="button"
+          class="dao-primary-btn"
+          onclick="submitEmpTransfer()"
+        >
+          Transfer EMP
+        </button>
+
+        <div id="emp-transfer-status" class="dao-transfer-status"></div>
+      </div>
+    </div>
   </body>
 </html>

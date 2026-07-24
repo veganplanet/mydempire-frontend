@@ -20211,3 +20211,20 @@ body.mde-dark-theme {
   line-height: 1.55;
   color: #64748b;
 }
+.dao-sell-action-buttons {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 18px;
+}
+
+.dao-sell-action-buttons button {
+  flex: 1;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .dao-sell-action-buttons {
+    flex-direction: column;
+  }
+}
