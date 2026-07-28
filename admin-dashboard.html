@@ -503,6 +503,13 @@
         </button>
         <button
           class="admin-tab-btn"
+          data-admin-tab="trade-fair"
+          onclick="switchAdminTab('trade-fair')"
+        >
+          🏛 Trade Fair
+        </button>
+        <button
+          class="admin-tab-btn"
           data-admin-tab="dao-settlement"
           onclick="switchAdminTab('dao-settlement')"
         >
@@ -1923,6 +1930,325 @@ forkyishere,529"
               <div id="activity-admin-spin-history" class="scroll-box">
                 Load a player to view spin history.
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ===================================== -->
+      <!-- 🏛 IMPERIAL TRADE FAIR ADMIN -->
+      <!-- ===================================== -->
+
+      <div class="admin-tab-panel" data-admin-panel="trade-fair">
+        <!-- EVENT STATUS -->
+        <div class="section">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              gap: 12px;
+              flex-wrap: wrap;
+            "
+          >
+            <div>
+              <h2 style="margin-bottom: 6px">🏛 Imperial Trade Fair</h2>
+
+              <div class="small">
+                Control the limited Goods event and monitor live activity.
+              </div>
+            </div>
+
+            <button id="trade-fair-refresh-btn" type="button">
+              Refresh Status
+            </button>
+          </div>
+
+          <div
+            id="trade-fair-admin-status"
+            class="status"
+            style="margin-top: 14px"
+          >
+            Trade Fair status not loaded.
+          </div>
+
+          <div class="metrics" style="margin-top: 16px">
+            <div class="card">
+              <div class="label">Database Status</div>
+
+              <div
+                id="trade-fair-database-status"
+                class="value"
+                style="font-size: 20px"
+              >
+                --
+              </div>
+
+              <div class="small">DRAFT, ACTIVE or ENDED</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Timing Status</div>
+
+              <div
+                id="trade-fair-timing-status"
+                class="value"
+                style="font-size: 20px"
+              >
+                --
+              </div>
+
+              <div class="small">Upcoming, Live or Ended</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Starts At</div>
+
+              <div
+                id="trade-fair-starts-at"
+                class="value"
+                style="font-size: 16px"
+              >
+                --
+              </div>
+
+              <div class="small">Event opening time</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Ends At</div>
+
+              <div
+                id="trade-fair-ends-at"
+                class="value"
+                style="font-size: 16px"
+              >
+                --
+              </div>
+
+              <div class="small">Event closing time</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EVENT CONTROLS -->
+        <div class="section">
+          <h2>🎛 Event Controls</h2>
+
+          <div class="small" style="margin-bottom: 14px">
+            Create the next Trade Fair as a draft, then activate it when ready.
+            All entered times are treated as UTC.
+          </div>
+
+          <div class="row" style="align-items: flex-end">
+            <div style="flex: 1; min-width: 220px">
+              <label for="trade-fair-event-name">
+                <strong>Event Name</strong>
+              </label>
+
+              <input
+                id="trade-fair-event-name"
+                type="text"
+                value="Imperial Trade Fair"
+                placeholder="Imperial Trade Fair"
+              />
+            </div>
+
+            <div style="flex: 1; min-width: 220px">
+              <label for="trade-fair-create-starts-at">
+                <strong>Start Date & Time (UTC)</strong>
+              </label>
+
+              <input id="trade-fair-create-starts-at" type="datetime-local" />
+            </div>
+
+            <div style="flex: 1; min-width: 220px">
+              <label for="trade-fair-create-ends-at">
+                <strong>End Date & Time (UTC)</strong>
+              </label>
+
+              <input id="trade-fair-create-ends-at" type="datetime-local" />
+            </div>
+          </div>
+          <div style="margin-top: 18px">
+            <strong>Featured Industries</strong>
+
+            <div
+              style="
+                display: flex;
+                flex-wrap: wrap;
+                gap: 14px;
+                margin-top: 10px;
+              "
+            >
+              <label>
+                <input
+                  type="checkbox"
+                  class="trade-fair-industry-checkbox"
+                  value="FOOD"
+                  checked
+                />
+                Food
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  class="trade-fair-industry-checkbox"
+                  value="PHARMA"
+                  checked
+                />
+                Pharma
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  class="trade-fair-industry-checkbox"
+                  value="TEXTILE"
+                />
+                Textile
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  class="trade-fair-industry-checkbox"
+                  value="CHEMICAL"
+                />
+                Chemical
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  class="trade-fair-industry-checkbox"
+                  value="SUPERMARKET"
+                />
+                Supermarket
+              </label>
+            </div>
+
+            <div class="small" style="margin-top: 7px">
+              Featured industries receive 100% lucky weight. Other industries
+              receive 25%.
+            </div>
+          </div>
+          <div class="row" style="margin-top: 14px">
+            <button id="trade-fair-create-btn" type="button" class="primary">
+              ➕ Create New Draft
+            </button>
+
+            <button
+              id="trade-fair-activate-btn"
+              type="button"
+              class="primary"
+              disabled
+            >
+              🟢 Activate Trade Fair
+            </button>
+
+            <button
+              id="trade-fair-end-btn"
+              type="button"
+              class="danger"
+              disabled
+            >
+              🔴 End Trade Fair
+            </button>
+          </div>
+
+          <div id="trade-fair-control-status" class="status">
+            Load event status before using controls.
+          </div>
+        </div>
+
+        <!-- EVENT SUMMARY -->
+        <div class="section">
+          <h2>📊 Event Summary</h2>
+
+          <div class="metrics">
+            <div class="card">
+              <div class="label">Completions</div>
+
+              <div id="trade-fair-total-completions" class="value">0</div>
+
+              <div class="small">All completed contracts</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Unique Players</div>
+
+              <div id="trade-fair-unique-players" class="value">0</div>
+
+              <div class="small">Players who participated</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Goods Burned</div>
+
+              <div id="trade-fair-goods-burned" class="value">0</div>
+
+              <div class="small">Food and Pharma Goods</div>
+            </div>
+
+            <div class="card">
+              <div class="label">EMP Rewarded</div>
+
+              <div id="trade-fair-emp-rewarded" class="value">0</div>
+
+              <div class="small">Includes quality bonus</div>
+            </div>
+
+            <div class="card">
+              <div class="label">AP Rewarded</div>
+
+              <div id="trade-fair-ap-rewarded" class="value">0</div>
+
+              <div class="small">Includes quality bonus</div>
+            </div>
+
+            <div class="card">
+              <div class="label">SMP Rewarded</div>
+
+              <div id="trade-fair-smp-rewarded" class="value">0</div>
+
+              <div class="small">Fixed contract rewards</div>
+            </div>
+
+            <div class="card">
+              <div class="label">Fragments Rewarded</div>
+
+              <div id="trade-fair-fragments-rewarded" class="value">0</div>
+
+              <div class="small">Royal and Imperial contracts</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTRACT TIER REPORT -->
+        <div class="section">
+          <h2>📜 Contract Tier Report</h2>
+
+          <div class="all-players-wrap">
+            <div class="all-players-box">
+              <table class="all-players-table">
+                <thead>
+                  <tr>
+                    <th>Contract</th>
+                    <th>Completions</th>
+                    <th>Players</th>
+                    <th>Goods Burned</th>
+                    <th>EMP Rewarded</th>
+                    <th>AP Rewarded</th>
+                  </tr>
+                </thead>
+
+                <tbody id="trade-fair-tier-table-body">
+                  <tr>
+                    <td colspan="6">Trade Fair report not loaded.</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -5626,7 +5952,621 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
             panel.dataset.adminPanel === tabName,
           );
         });
+        if (tabName === "trade-fair") {
+          loadTradeFairAdminStatus();
+        }
       }
+      // =====================================================
+      // 🏛 IMPERIAL TRADE FAIR — ADMIN STATUS
+      // =====================================================
+
+      // =====================================================
+      // 🏛 IMPERIAL TRADE FAIR — ADMIN LIFECYCLE
+      // Backend controls the lifecycle:
+      // CREATE → ACTIVATE → END → CREATE
+      // All displayed and entered times use UTC only.
+      // =====================================================
+
+      function formatTradeFairAdminDate(value) {
+        if (!value) return "--";
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+          return "--";
+        }
+
+        return date.toLocaleString("en-GB", {
+          year: "numeric",
+          month: "short",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+          timeZoneName: "short",
+        });
+      }
+      function parseTradeFairUtcInput(value) {
+        const raw = String(value || "").trim();
+
+        if (!raw) {
+          return null;
+        }
+
+        const utcValue =
+          raw.length === 16
+            ? `${raw}:00Z`
+            : raw.endsWith("Z")
+              ? raw
+              : `${raw}Z`;
+
+        const date = new Date(utcValue);
+
+        if (Number.isNaN(date.getTime())) {
+          return null;
+        }
+
+        return date;
+      }
+
+      function setTradeFairAdminText(id, value) {
+        const element = document.getElementById(id);
+
+        if (element) {
+          element.textContent = value;
+        }
+      }
+
+      function setTradeFairAdminButtons({
+        canCreate = false,
+        canActivate = false,
+        canEnd = false,
+      } = {}) {
+        const createBtn = document.getElementById("trade-fair-create-btn");
+
+        const activateBtn = document.getElementById("trade-fair-activate-btn");
+
+        const endBtn = document.getElementById("trade-fair-end-btn");
+
+        if (createBtn) {
+          createBtn.disabled = !canCreate;
+        }
+
+        if (activateBtn) {
+          activateBtn.disabled = !canActivate;
+        }
+
+        if (endBtn) {
+          endBtn.disabled = !canEnd;
+        }
+      }
+
+      function getTradeFairAdminActions(data) {
+        const backendActions = Array.isArray(data.lifecycle?.available_actions)
+          ? data.lifecycle.available_actions.map((action) =>
+              String(action || "")
+                .trim()
+                .toUpperCase(),
+            )
+          : [];
+
+        if (backendActions.length) {
+          return backendActions;
+        }
+
+        const fallbackActions = [];
+
+        if (data.controls?.can_create) {
+          fallbackActions.push("CREATE");
+        }
+
+        if (data.controls?.can_activate) {
+          fallbackActions.push("ACTIVATE");
+        }
+
+        if (data.controls?.can_end) {
+          fallbackActions.push("END");
+        }
+
+        return fallbackActions;
+      }
+
+      function renderTradeFairAdminControls(data) {
+        const actions = getTradeFairAdminActions(data);
+
+        const canCreate = actions.includes("CREATE");
+        const canActivate = actions.includes("ACTIVATE");
+        const canEnd = actions.includes("END");
+
+        setTradeFairAdminButtons({
+          canCreate,
+          canActivate,
+          canEnd,
+        });
+
+        const controlStatus = document.getElementById(
+          "trade-fair-control-status",
+        );
+
+        if (!controlStatus) {
+          return;
+        }
+
+        if (canCreate) {
+          controlStatus.textContent =
+            "The previous event is complete. You may create a new Trade Fair draft.";
+          return;
+        }
+
+        if (canActivate) {
+          controlStatus.textContent =
+            "The latest Trade Fair is in DRAFT. Review the UTC schedule, then activate it.";
+          return;
+        }
+
+        if (canEnd) {
+          controlStatus.textContent =
+            "The Trade Fair is ACTIVE. You may end it manually if required.";
+          return;
+        }
+
+        controlStatus.textContent =
+          "No Trade Fair lifecycle action is currently available.";
+      }
+
+      function renderTradeFairAdminTierTable(tiers) {
+        const tierTableBody = document.getElementById(
+          "trade-fair-tier-table-body",
+        );
+
+        if (!tierTableBody) {
+          return;
+        }
+
+        if (!Array.isArray(tiers) || tiers.length === 0) {
+          tierTableBody.innerHTML = `
+            <tr>
+              <td colspan="6">
+                No Trade Fair contract completions yet.
+              </td>
+            </tr>
+          `;
+
+          return;
+        }
+
+        tierTableBody.innerHTML = tiers
+          .map((tier) => {
+            return `
+              <tr>
+                <td>
+                  <strong>
+                    ${String(tier.contract_tier || "--").toUpperCase()}
+                  </strong>
+                </td>
+
+                <td class="all-players-num">
+                  ${Number(tier.completions || 0).toLocaleString()}
+                </td>
+
+                <td class="all-players-num">
+                  ${Number(tier.unique_players || 0).toLocaleString()}
+                </td>
+
+                <td class="all-players-num">
+                  ${Number(tier.goods_burned || 0).toLocaleString()}
+                </td>
+
+                <td class="all-players-num">
+                  ${Number(tier.emp_rewarded || 0).toLocaleString(undefined, {
+                    maximumFractionDigits: 2,
+                  })}
+                </td>
+
+                <td class="all-players-num">
+                  ${Number(tier.ap_rewarded || 0).toLocaleString(undefined, {
+                    maximumFractionDigits: 2,
+                  })}
+                </td>
+              </tr>
+            `;
+          })
+          .join("");
+      }
+
+      async function loadTradeFairAdminStatus() {
+        const statusEl = document.getElementById("trade-fair-admin-status");
+
+        if (!ADMIN_KEY) {
+          if (statusEl) {
+            statusEl.textContent = "Connect Admin first.";
+          }
+
+          setTradeFairAdminButtons();
+
+          return;
+        }
+
+        setTradeFairAdminButtons();
+
+        if (statusEl) {
+          statusEl.textContent = "Loading Imperial Trade Fair status...";
+        }
+
+        try {
+          const response = await fetch(
+            `${API_BASE}/admin/imperial-trade-fair/status`,
+            {
+              headers: {
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(
+              data.error || "Failed to load Imperial Trade Fair status.",
+            );
+          }
+
+          const event = data.event || null;
+          const summary = data.summary || {};
+          const tiers = Array.isArray(data.tiers) ? data.tiers : [];
+
+          if (!data.event_exists || !event) {
+            setTradeFairAdminText("trade-fair-database-status", "NO EVENT");
+
+            setTradeFairAdminText("trade-fair-timing-status", "NO EVENT");
+
+            setTradeFairAdminText("trade-fair-starts-at", "--");
+
+            setTradeFairAdminText("trade-fair-ends-at", "--");
+          } else {
+            setTradeFairAdminText(
+              "trade-fair-database-status",
+              String(event.database_status || "--").toUpperCase(),
+            );
+
+            setTradeFairAdminText(
+              "trade-fair-timing-status",
+              String(event.timing_status || "--")
+                .replaceAll("_", " ")
+                .toUpperCase(),
+            );
+
+            setTradeFairAdminText(
+              "trade-fair-starts-at",
+              formatTradeFairAdminDate(event.starts_at),
+            );
+
+            setTradeFairAdminText(
+              "trade-fair-ends-at",
+              formatTradeFairAdminDate(event.ends_at),
+            );
+          }
+
+          setTradeFairAdminText(
+            "trade-fair-total-completions",
+            Number(summary.total_completions || 0).toLocaleString(),
+          );
+
+          setTradeFairAdminText(
+            "trade-fair-unique-players",
+            Number(summary.unique_players || 0).toLocaleString(),
+          );
+
+          setTradeFairAdminText(
+            "trade-fair-goods-burned",
+            Number(summary.total_goods_burned || 0).toLocaleString(),
+          );
+
+          setTradeFairAdminText(
+            "trade-fair-emp-rewarded",
+            Number(summary.total_emp_rewarded || 0).toLocaleString(undefined, {
+              maximumFractionDigits: 2,
+            }),
+          );
+
+          setTradeFairAdminText(
+            "trade-fair-ap-rewarded",
+            Number(summary.total_ap_rewarded || 0).toLocaleString(undefined, {
+              maximumFractionDigits: 2,
+            }),
+          );
+
+          renderTradeFairAdminTierTable(tiers);
+          renderTradeFairAdminControls(data);
+
+          if (statusEl) {
+            statusEl.textContent = data.event_exists
+              ? `✅ ${
+                  event?.event_name || "Imperial Trade Fair"
+                } status loaded successfully.`
+              : "✅ No Trade Fair event currently exists.";
+          }
+        } catch (err) {
+          console.error("Trade Fair admin status error:", err);
+
+          setTradeFairAdminButtons();
+
+          if (statusEl) {
+            statusEl.textContent = `❌ ${
+              err.message || "Failed to load Trade Fair status."
+            }`;
+          }
+
+          renderTradeFairAdminTierTable([]);
+        }
+      }
+
+      async function createTradeFairAdminEvent() {
+        const statusEl = document.getElementById("trade-fair-control-status");
+
+        const eventNameInput = document.getElementById("trade-fair-event-name");
+
+        const startsAtInput = document.getElementById(
+          "trade-fair-create-starts-at",
+        );
+
+        const endsAtInput = document.getElementById(
+          "trade-fair-create-ends-at",
+        );
+
+        if (!ADMIN_KEY) {
+          if (statusEl) {
+            statusEl.textContent = "Connect Admin first.";
+          }
+
+          return;
+        }
+
+        const eventName = String(eventNameInput?.value || "").trim();
+        const startsAtValue = String(startsAtInput?.value || "").trim();
+        const endsAtValue = String(endsAtInput?.value || "").trim();
+
+        const featuredIndustries = Array.from(
+          document.querySelectorAll(".trade-fair-industry-checkbox:checked"),
+        ).map((checkbox) => String(checkbox.value).toUpperCase());
+
+        if (featuredIndustries.length === 0) {
+          if (statusEl) {
+            statusEl.textContent = "❌ Select at least one featured industry.";
+          }
+
+          return;
+        }
+
+        /*
+    datetime-local values are entered in the admin's
+    own browser/local time.
+
+    JavaScript converts them to UTC automatically
+    when toISOString() is used before sending.
+  */
+        const startsAt = startsAtValue ? new Date(startsAtValue) : null;
+
+        const endsAt = endsAtValue ? new Date(endsAtValue) : null;
+
+        const invalidStartsAt = !startsAt || Number.isNaN(startsAt.getTime());
+
+        const invalidEndsAt = !endsAt || Number.isNaN(endsAt.getTime());
+
+        if (!eventName || invalidStartsAt || invalidEndsAt) {
+          if (statusEl) {
+            statusEl.textContent =
+              "❌ Enter the event name and valid local start and end times.";
+          }
+
+          return;
+        }
+
+        if (endsAt <= startsAt) {
+          if (statusEl) {
+            statusEl.textContent =
+              "❌ End time must be later than the start time.";
+          }
+
+          return;
+        }
+
+        const confirmed = window.confirm(
+          `Create "${eventName}" as a new DRAFT Trade Fair?\n\n` +
+            `Start: ${startsAt.toLocaleString()}\n` +
+            `End: ${endsAt.toLocaleString()}`,
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        setTradeFairAdminButtons();
+
+        if (statusEl) {
+          statusEl.textContent = "Creating new Trade Fair draft...";
+        }
+
+        try {
+          const response = await fetch(
+            `${API_BASE}/admin/imperial-trade-fair/create`,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json",
+                "x-admin-key": ADMIN_KEY,
+              },
+
+              body: JSON.stringify({
+                event_name: eventName,
+                starts_at: startsAt.toISOString(),
+                ends_at: endsAt.toISOString(),
+                featured_industries: featuredIndustries,
+              }),
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Failed to create Trade Fair draft.");
+          }
+
+          if (statusEl) {
+            statusEl.textContent =
+              data.message || "New Trade Fair draft created successfully.";
+          }
+
+          await loadTradeFairAdminStatus();
+        } catch (err) {
+          console.error("Trade Fair creation error:", err);
+
+          if (statusEl) {
+            statusEl.textContent = `❌ ${
+              err.message || "Failed to create Trade Fair draft."
+            }`;
+          }
+
+          await loadTradeFairAdminStatus();
+        }
+      }
+      async function activateTradeFairAdminEvent() {
+        const statusEl = document.getElementById("trade-fair-control-status");
+
+        if (!ADMIN_KEY) {
+          if (statusEl) {
+            statusEl.textContent = "Connect Admin first.";
+          }
+
+          return;
+        }
+
+        const confirmed = window.confirm(
+          "Activate the current Imperial Trade Fair draft?",
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        setTradeFairAdminButtons();
+
+        if (statusEl) {
+          statusEl.textContent = "Activating Imperial Trade Fair...";
+        }
+
+        try {
+          const response = await fetch(
+            `${API_BASE}/admin/imperial-trade-fair/activate`,
+            {
+              method: "POST",
+
+              headers: {
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Failed to activate Trade Fair.");
+          }
+
+          if (statusEl) {
+            statusEl.textContent =
+              data.message || "Imperial Trade Fair activated successfully.";
+          }
+
+          await loadTradeFairAdminStatus();
+        } catch (err) {
+          console.error("Trade Fair activation error:", err);
+
+          if (statusEl) {
+            statusEl.textContent = `❌ ${
+              err.message || "Failed to activate Trade Fair."
+            }`;
+          }
+
+          await loadTradeFairAdminStatus();
+        }
+      }
+
+      async function endTradeFairAdminEvent() {
+        const statusEl = document.getElementById("trade-fair-control-status");
+
+        if (!ADMIN_KEY) {
+          if (statusEl) {
+            statusEl.textContent = "Connect Admin first.";
+          }
+
+          return;
+        }
+
+        const confirmed = window.confirm(
+          "End the active Imperial Trade Fair immediately?\n\n" +
+            "Players will no longer be able to complete contracts.",
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        setTradeFairAdminButtons();
+
+        if (statusEl) {
+          statusEl.textContent = "Ending Imperial Trade Fair...";
+        }
+
+        try {
+          const response = await fetch(
+            `${API_BASE}/admin/imperial-trade-fair/end`,
+            {
+              method: "POST",
+
+              headers: {
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Failed to end Trade Fair.");
+          }
+
+          if (statusEl) {
+            statusEl.textContent =
+              data.message || "Imperial Trade Fair ended successfully.";
+          }
+
+          await loadTradeFairAdminStatus();
+        } catch (err) {
+          console.error("Trade Fair ending error:", err);
+
+          if (statusEl) {
+            statusEl.textContent = `❌ ${
+              err.message || "Failed to end Trade Fair."
+            }`;
+          }
+
+          await loadTradeFairAdminStatus();
+        }
+      }
+
+      document
+        .getElementById("trade-fair-create-btn")
+        ?.addEventListener("click", createTradeFairAdminEvent);
+
+      document
+        .getElementById("trade-fair-activate-btn")
+        ?.addEventListener("click", activateTradeFairAdminEvent);
+
+      document
+        .getElementById("trade-fair-end-btn")
+        ?.addEventListener("click", endTradeFairAdminEvent);
       async function loadDaoSettlements() {
         const statusEl = document.getElementById("dao-settlement-status");
         const pendingHiveEl = document.getElementById(
@@ -5665,6 +6605,8 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           );
 
           const data = await response.json();
+          console.log("Trade Fair admin response:", data);
+          console.log("Trade Fair controls:", data.controls);
 
           if (!response.ok || !data.success) {
             throw new Error(data.error || "Unable to load settlement records.");
@@ -6258,7 +7200,18 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
         const unlockBtn = document.getElementById("unlock-admin-btn");
         const keyInput = document.getElementById("admin-key-input");
         const loginStatus = document.getElementById("admin-login-status");
+
         const logoutBtn = document.getElementById("logout-admin-btn");
+        const tradeFairRefreshBtn = document.getElementById(
+          "trade-fair-refresh-btn",
+        );
+
+        if (tradeFairRefreshBtn) {
+          tradeFairRefreshBtn.addEventListener(
+            "click",
+            loadTradeFairAdminStatus,
+          );
+        }
 
         showAdminGate();
 

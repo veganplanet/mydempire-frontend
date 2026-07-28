@@ -1191,3 +1191,207 @@
 .goods-card-menu button:hover {
   background: #f1f5f9;
 }
+/* ===================================================== */
+/* Imperial Trade Fair teaser without countdown */
+/* ===================================================== */
+
+.goods-trade-fair-teaser {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 28px 30px;
+  box-sizing: border-box;
+  border: 5px solid #b78935;
+  border-radius: 24px;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(255, 215, 90, 0.22),
+      transparent 34%
+    ),
+    linear-gradient(135deg, #fffdf2 0%, #fff6cf 100%);
+  text-align: center;
+  box-shadow: 0 12px 28px rgba(91, 59, 16, 0.14);
+}
+
+.goods-trade-fair-ribbon {
+  position: absolute;
+  top: 17px;
+  right: -43px;
+  width: 190px;
+  padding: 8px 0;
+  transform: rotate(45deg);
+  background: #ef2f2f;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.goods-trade-fair-kicker {
+  margin-bottom: 8px;
+  color: #8a5a16;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+}
+
+.goods-trade-fair-title {
+  margin: 0;
+  color: #3c2305;
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.1;
+}
+
+.goods-trade-fair-status-pill {
+  display: inline-flex;
+  margin-top: 12px;
+  padding: 9px 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #a84e08, #ed7200);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 1.3px;
+}
+
+.goods-trade-fair-heading {
+  margin: 17px 0 6px;
+  color: #4b2d08;
+  font-size: 20px;
+}
+
+.goods-trade-fair-description {
+  max-width: 850px;
+  margin: 0 auto;
+  color: #694b28;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.goods-trade-fair-mystery-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.goods-trade-fair-mystery-box {
+  display: flex;
+  width: 54px;
+  height: 54px;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #d49a75;
+  border-radius: 15px;
+  color: #ef3654;
+  background: rgba(255, 255, 255, 0.56);
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.goods-trade-fair-mystery-icon {
+  font-size: 34px;
+}
+
+.goods-trade-fair-classified {
+  display: grid;
+  gap: 7px;
+  max-width: 810px;
+  margin: 14px auto 0;
+  padding: 13px 20px;
+  border: 1px solid #e8cda5;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.goods-trade-fair-classified strong {
+  color: #c92828;
+  font-size: 12px;
+  letter-spacing: 1.4px;
+}
+
+.goods-trade-fair-classified span {
+  color: #252525;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.goods-trade-fair-action-box {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  max-width: 740px;
+  margin: 15px auto 0;
+  padding: 17px 20px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #663a0c, #91590f);
+  color: #ffffff;
+}
+
+.goods-trade-fair-action-box strong {
+  color: #ffe69a;
+  font-size: 17px;
+}
+
+.goods-trade-fair-action-box span {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 13px;
+}
+
+.goods-trade-fair-enter-btn {
+  display: inline-flex;
+  min-height: 44px;
+  margin-top: 6px;
+  padding: 0 25px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffe19a;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #623807;
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration: none;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.goods-trade-fair-enter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(25, 14, 2, 0.22);
+}
+
+.goods-trade-fair-bottom-note {
+  margin-top: 12px;
+  color: #674315;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+@media (max-width: 700px) {
+  .goods-trade-fair-teaser {
+    padding: 28px 16px 22px;
+    border-width: 4px;
+  }
+
+  .goods-trade-fair-ribbon {
+    top: 13px;
+    right: -55px;
+  }
+
+  .goods-trade-fair-description {
+    font-size: 14px;
+  }
+
+  .goods-trade-fair-action-box {
+    padding: 16px 14px;
+  }
+
+  .goods-trade-fair-enter-btn {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
