@@ -2168,84 +2168,121 @@ forkyishere,529"
 
           <div class="metrics">
             <div class="card">
-              <div class="label">Completions</div>
-
-              <div id="trade-fair-total-completions" class="value">0</div>
-
-              <div class="small">All completed contracts</div>
-            </div>
-
-            <div class="card">
-              <div class="label">Unique Players</div>
-
+              <div class="label">Players</div>
               <div id="trade-fair-unique-players" class="value">0</div>
-
-              <div class="small">Players who participated</div>
+              <div class="small">Event participants</div>
             </div>
 
             <div class="card">
-              <div class="label">Goods Burned</div>
-
-              <div id="trade-fair-goods-burned" class="value">0</div>
-
-              <div class="small">Food and Pharma Goods</div>
+              <div class="label">Contracts</div>
+              <div id="trade-fair-total-completions" class="value">0</div>
+              <div class="small">Total fulfilled</div>
             </div>
 
             <div class="card">
-              <div class="label">EMP Rewarded</div>
-
+              <div class="label">EMP Earned</div>
               <div id="trade-fair-emp-rewarded" class="value">0</div>
-
-              <div class="small">Includes quality bonus</div>
+              <div class="small">Total player rewards</div>
             </div>
 
             <div class="card">
-              <div class="label">AP Rewarded</div>
-
+              <div class="label">AP Earned</div>
               <div id="trade-fair-ap-rewarded" class="value">0</div>
-
-              <div class="small">Includes quality bonus</div>
-            </div>
-
-            <div class="card">
-              <div class="label">SMP Rewarded</div>
-
-              <div id="trade-fair-smp-rewarded" class="value">0</div>
-
-              <div class="small">Fixed contract rewards</div>
-            </div>
-
-            <div class="card">
-              <div class="label">Fragments Rewarded</div>
-
-              <div id="trade-fair-fragments-rewarded" class="value">0</div>
-
-              <div class="small">Royal and Imperial contracts</div>
+              <div class="small">Total player rewards</div>
             </div>
           </div>
         </div>
 
-        <!-- CONTRACT TIER REPORT -->
+        <!-- PLAYER CONTRACT REPORT -->
         <div class="section">
-          <h2>📜 Contract Tier Report</h2>
+          <h2>👥 Player Contract Report</h2>
 
           <div class="all-players-wrap">
             <div class="all-players-box">
               <table class="all-players-table">
                 <thead>
                   <tr>
-                    <th>Contract</th>
-                    <th>Completions</th>
-                    <th>Players</th>
-                    <th>Goods Burned</th>
-                    <th>EMP Rewarded</th>
-                    <th>AP Rewarded</th>
+                    <th>Player</th>
+                    <th>Ticket</th>
+                    <th>Local</th>
+                    <th>Merchant</th>
+                    <th>Regional</th>
+                    <th>Royal</th>
+                    <th>Imperial</th>
+                    <th>EMP</th>
+                    <th>AP</th>
                   </tr>
                 </thead>
 
-                <tbody id="trade-fair-tier-table-body">
+                <tbody id="trade-fair-player-report-body">
                   <tr>
-                    <td colspan="6">Trade Fair report not loaded.</td>
+                    <td colspan="9">Trade Fair player report not loaded.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- ===================================================== -->
+        <!-- 🎲 PLAYER-WISE LUCKY DRAW REPORT -->
+        <!-- ===================================================== -->
+
+        <div class="section">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              gap: 12px;
+              flex-wrap: wrap;
+              margin-bottom: 14px;
+            "
+          >
+            <div>
+              <h2 style="margin-bottom: 6px">
+                🎲 Player-wise Lucky Draw Report
+              </h2>
+
+              <div class="small">
+                Live participation details for the current Imperial Trade Fair.
+              </div>
+            </div>
+
+            <button
+              id="trade-fair-player-report-refresh-btn"
+              type="button"
+              class="primary"
+            >
+              Refresh Player Report
+            </button>
+          </div>
+
+          <div
+            id="trade-fair-player-report-status"
+            class="status"
+            style="margin-bottom: 12px"
+          >
+            Player report not loaded yet.
+          </div>
+
+          <div class="all-players-wrap">
+            <div class="all-players-box">
+              <table class="all-players-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Goods Burned</th>
+                    <th>Featured PV</th>
+                    <th>Other PV</th>
+                    <th>Lucky Weight</th>
+                    <th>Chance</th>
+                  </tr>
+                </thead>
+
+                <tbody id="trade-fair-player-report-body">
+                  <tr>
+                    <td colspan="7">No Lucky Draw participation loaded yet.</td>
                   </tr>
                 </tbody>
               </table>
@@ -6177,23 +6214,45 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
       async function loadTradeFairAdminStatus() {
         const statusEl = document.getElementById("trade-fair-admin-status");
 
+        const activateBtn = document.getElementById("trade-fair-activate-btn");
+
+        const endBtn = document.getElementById("trade-fair-end-btn");
+
+        const playerReportBody = document.getElementById(
+          "trade-fair-player-report-body",
+        );
+
         if (!ADMIN_KEY) {
           if (statusEl) {
             statusEl.textContent = "Connect Admin first.";
           }
 
-          setTradeFairAdminButtons();
-
           return;
         }
 
-        setTradeFairAdminButtons();
-
-        if (statusEl) {
-          statusEl.textContent = "Loading Imperial Trade Fair status...";
-        }
-
         try {
+          if (statusEl) {
+            statusEl.textContent = "Loading Imperial Trade Fair status...";
+          }
+
+          if (activateBtn) {
+            activateBtn.disabled = true;
+          }
+
+          if (endBtn) {
+            endBtn.disabled = true;
+          }
+
+          if (playerReportBody) {
+            playerReportBody.innerHTML = `
+        <tr>
+          <td colspan="9">
+            Loading player contract report...
+          </td>
+        </tr>
+      `;
+          }
+
           const response = await fetch(
             `${API_BASE}/admin/imperial-trade-fair/status`,
             {
@@ -6211,85 +6270,156 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
             );
           }
 
-          const event = data.event || null;
+          const event = data.event || {};
+          const controls = data.controls || {};
           const summary = data.summary || {};
-          const tiers = Array.isArray(data.tiers) ? data.tiers : [];
 
-          if (!data.event_exists || !event) {
-            setTradeFairAdminText("trade-fair-database-status", "NO EVENT");
-
-            setTradeFairAdminText("trade-fair-timing-status", "NO EVENT");
-
-            setTradeFairAdminText("trade-fair-starts-at", "--");
-
-            setTradeFairAdminText("trade-fair-ends-at", "--");
-          } else {
-            setTradeFairAdminText(
-              "trade-fair-database-status",
-              String(event.database_status || "--").toUpperCase(),
-            );
-
-            setTradeFairAdminText(
-              "trade-fair-timing-status",
-              String(event.timing_status || "--")
-                .replaceAll("_", " ")
-                .toUpperCase(),
-            );
-
-            setTradeFairAdminText(
-              "trade-fair-starts-at",
-              formatTradeFairAdminDate(event.starts_at),
-            );
-
-            setTradeFairAdminText(
-              "trade-fair-ends-at",
-              formatTradeFairAdminDate(event.ends_at),
-            );
-          }
+          const playerReport = Array.isArray(data.player_report)
+            ? data.player_report
+            : [];
 
           setTradeFairAdminText(
-            "trade-fair-total-completions",
-            Number(summary.total_completions || 0).toLocaleString(),
+            "trade-fair-database-status",
+            String(event.database_status || "--").toUpperCase(),
+          );
+
+          setTradeFairAdminText(
+            "trade-fair-timing-status",
+            String(event.timing_status || "--")
+              .replaceAll("_", " ")
+              .toUpperCase(),
+          );
+
+          setTradeFairAdminText(
+            "trade-fair-starts-at",
+            formatTradeFairAdminDate(event.starts_at),
+          );
+
+          setTradeFairAdminText(
+            "trade-fair-ends-at",
+            formatTradeFairAdminDate(event.ends_at),
           );
 
           setTradeFairAdminText(
             "trade-fair-unique-players",
-            Number(summary.unique_players || 0).toLocaleString(),
+            Number(summary.unique_players || 0).toLocaleString("en-GB"),
           );
 
           setTradeFairAdminText(
-            "trade-fair-goods-burned",
-            Number(summary.total_goods_burned || 0).toLocaleString(),
+            "trade-fair-total-completions",
+            Number(summary.total_completions || 0).toLocaleString("en-GB"),
           );
 
           setTradeFairAdminText(
             "trade-fair-emp-rewarded",
-            Number(summary.total_emp_rewarded || 0).toLocaleString(undefined, {
+            Number(summary.total_emp_rewarded || 0).toLocaleString("en-GB", {
               maximumFractionDigits: 2,
             }),
           );
 
           setTradeFairAdminText(
             "trade-fair-ap-rewarded",
-            Number(summary.total_ap_rewarded || 0).toLocaleString(undefined, {
+            Number(summary.total_ap_rewarded || 0).toLocaleString("en-GB", {
               maximumFractionDigits: 2,
             }),
           );
 
-          renderTradeFairAdminTierTable(tiers);
-          renderTradeFairAdminControls(data);
+          if (activateBtn) {
+            activateBtn.disabled = !controls.can_activate;
+          }
+
+          if (endBtn) {
+            endBtn.disabled = !controls.can_end;
+          }
+
+          if (playerReportBody) {
+            if (!playerReport.length) {
+              playerReportBody.innerHTML = `
+          <tr>
+            <td colspan="9">
+              No Trade Fair contracts fulfilled yet.
+            </td>
+          </tr>
+        `;
+            } else {
+              playerReportBody.innerHTML = playerReport
+                .map((player) => {
+                  const ticketText = player.ticket_owned ? "✅ Yes" : "— No";
+
+                  return `
+              <tr>
+                <td>
+                  <strong>
+                    @${String(player.username || "--")}
+                  </strong>
+                </td>
+
+                <td>
+                  ${ticketText}
+                </td>
+
+                <td class="all-players-num">
+                  ${Number(player.local_count || 0).toLocaleString("en-GB")}
+                </td>
+
+                <td class="all-players-num">
+                  ${Number(player.merchant_count || 0).toLocaleString("en-GB")}
+                </td>
+
+                <td class="all-players-num">
+                  ${Number(player.regional_count || 0).toLocaleString("en-GB")}
+                </td>
+
+                <td class="all-players-num">
+                  ${Number(player.royal_count || 0).toLocaleString("en-GB")}
+                </td>
+
+                <td class="all-players-num">
+                  ${Number(player.imperial_count || 0).toLocaleString("en-GB")}
+                </td>
+
+                <td class="all-players-num">
+                  ${Number(player.emp_earned || 0).toLocaleString("en-GB", {
+                    maximumFractionDigits: 2,
+                  })}
+                </td>
+
+                <td class="all-players-num">
+                  ${Number(player.ap_earned || 0).toLocaleString("en-GB", {
+                    maximumFractionDigits: 2,
+                  })}
+                </td>
+              </tr>
+            `;
+                })
+                .join("");
+            }
+          }
 
           if (statusEl) {
-            statusEl.textContent = data.event_exists
-              ? `✅ ${
-                  event?.event_name || "Imperial Trade Fair"
-                } status loaded successfully.`
-              : "✅ No Trade Fair event currently exists.";
+            statusEl.textContent = `✅ ${
+              event.event_name || "Imperial Trade Fair"
+            } status loaded successfully.`;
+          }
+
+          const controlStatus = document.getElementById(
+            "trade-fair-control-status",
+          );
+
+          if (controlStatus) {
+            if (controls.can_activate) {
+              controlStatus.textContent =
+                "The event is currently in DRAFT and may be activated.";
+            } else if (controls.can_end) {
+              controlStatus.textContent =
+                "The event is ACTIVE and may be ended manually.";
+            } else {
+              controlStatus.textContent =
+                "No lifecycle action is currently available.";
+            }
           }
         } catch (err) {
           console.error("Trade Fair admin status error:", err);
-
-          setTradeFairAdminButtons();
 
           if (statusEl) {
             statusEl.textContent = `❌ ${
@@ -6297,10 +6427,17 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
             }`;
           }
 
-          renderTradeFairAdminTierTable([]);
+          if (playerReportBody) {
+            playerReportBody.innerHTML = `
+        <tr>
+          <td colspan="9">
+            Failed to load player contract report.
+          </td>
+        </tr>
+      `;
+          }
         }
       }
-
       async function createTradeFairAdminEvent() {
         const statusEl = document.getElementById("trade-fair-control-status");
 
