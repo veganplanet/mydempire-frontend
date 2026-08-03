@@ -2921,7 +2921,25 @@ async function buyLandHiveListing(listingId) {
       `Marketplace fee: ${feeAmount} HIVE`
     );
 
-    if (!confirmed) return;
+    if (!confirmed) {
+  await fetch(
+    apiUrl("/marketplace/land/release-reservation"),
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-mde-actor": ACTIVE_USER,
+      },
+      body: JSON.stringify({
+        username: ACTIVE_USER,
+        session_id: session.id,
+      }),
+    }
+  );
+
+  await loadLandListings();
+  return;
+}
 
     const sellerTransfer = await hiveTransfer(
       ACTIVE_USER,
