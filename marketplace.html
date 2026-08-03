@@ -31,7 +31,7 @@
   Premium Assets
 </button>
   <button class="tab-btn" data-market-tab="land">
-  Land <span class="soon-pill">SOON</span>
+  Land
 </button>
   <button class="tab-btn" data-market-tab="industry">
   Industrial Empires <span class="soon-pill">SOON</span>
@@ -560,19 +560,189 @@
 </section>
 <!-- LAND -->
 <section class="market-tab-panel" data-market-tab-panel="land">
-  <div class="card coming-soon-card">
+  <div class="stack">
 
-    <div class="coming-soon-kicker">🌍 LAND ECONOMY</div>
+    <!-- LAND MARKET CONTROLS -->
+    <div class="card">
+      <div class="market-header">
+        <div class="market-header-left">
+          <h2>Land Market Controls</h2>
 
-    <h2>Land Marketplace</h2>
+          <div class="market-header-sub">
+            List empty Genesis land that has no factory built on it.
+          </div>
+        </div>
 
-    <p>
-      Trade Genesis lands directly with other players and expand your empire
-      through strategic territory acquisition.
-    </p>
+      <div class="field" style="width:100%;">
+  <label>Listing Currency</label>
 
-    <div class="coming-soon-note">
-      Frontier • Estate • Industrial Zone
+  <div
+    style="
+      display:flex;
+      align-items:center;
+      gap:28px;
+      margin-top:10px;
+    "
+  >
+    <label
+      style="
+        display:flex;
+        align-items:center;
+        gap:8px;
+        cursor:pointer;
+        font-weight:800;
+      "
+    >
+      <input
+        type="radio"
+        name="land-currency"
+        value="EMP"
+        checked
+      />
+      EMP
+    </label>
+
+    <label
+      style="
+        display:flex;
+        align-items:center;
+        gap:8px;
+        cursor:pointer;
+        font-weight:800;
+      "
+    >
+      <input
+        type="radio"
+        name="land-currency"
+        value="HIVE"
+      />
+      HIVE
+    </label>
+  </div>
+</div>
+      </div>
+
+      <div
+        class="land-mobile-toolbar"
+        style="
+          display:flex;
+          flex-direction:column;
+          gap:14px;
+          width:100%;
+        "
+      >
+        <div class="field" style="width:100%;">
+          <label for="land-view-select">View</label>
+
+          <select
+            id="land-view-select"
+            style="width:100%; min-height:48px;"
+          >
+            <option value="market">Market Listings</option>
+            <option value="mine">My Listings</option>
+          </select>
+        </div>
+
+        <div class="field" style="width:100%;">
+  <label for="land-search">Choose Empty Land</label>
+
+  <select
+  id="land-tier-filter"
+  style="
+    width:100%;
+    min-height:48px;
+    margin-bottom:10px;
+  "
+>
+  <option value="">Select Land Tier</option>
+  <option value="L1">L1 — Frontier</option>
+  <option value="L2">L2 — Estate</option>
+  <option value="L3">L3 — Industrial Zone</option>
+</select>
+
+  <select
+    id="land-select"
+    style="width:100%; min-height:48px;"
+  >
+    <option value="">Loading available lands...</option>
+  </select>
+
+  <div class="hint" id="land-market-status">
+    Only land without factories can be listed.
+  </div>
+</div>
+
+        <div class="field" style="width:100%;">
+          <label for="land-price">Listing Price</label>
+
+<input
+  id="land-price"
+            type="number"
+            min="0.001"
+            step="0.001"
+            placeholder="e.g. 5.000"
+            style="width:100%; min-height:48px;"
+          />
+        </div>
+
+        <button
+          class="primary-btn"
+          id="create-land-listing-btn"
+          type="button"
+          style="width:100%; min-height:50px;"
+        >
+          Create Land Listing
+        </button>
+
+        <button
+          class="secondary-btn"
+          id="refresh-land-market-btn"
+          type="button"
+          style="width:100%; min-height:50px;"
+        >
+          Refresh
+        </button>
+      </div>
+
+      <div id="land-create-status" class="status"></div>
+    </div>
+
+    <!-- LAND MARKET FEED -->
+    <div class="card">
+      <div class="market-header">
+        <div class="market-header-left">
+          <h2 id="land-feed-title">Land Market Listings</h2>
+
+          <div class="market-header-sub" id="land-feed-subtitle">
+            Browse empty Genesis lands listed by players.
+          </div>
+        </div>
+
+        <div class="pill" id="land-market-count-pill">
+          0 Lands
+        </div>
+      </div>
+
+      <div id="land-market-list" class="listing-list">
+        <div class="empty">Loading Land marketplace...</div>
+      </div>
+    </div>
+
+    <!-- LAND TRADE HISTORY -->
+    <div class="card">
+      <div class="market-header">
+        <div class="market-header-left">
+          <h2>Recent Land Trade History</h2>
+
+          <div class="market-header-sub">
+            Last 10 completed Land trades
+          </div>
+        </div>
+      </div>
+
+      <div id="land-history-list" class="listing-list">
+        <div class="empty">No Land trade history yet.</div>
+      </div>
     </div>
 
   </div>
@@ -754,6 +924,7 @@ const VIEWED_USER = getMarketplaceViewedUser() || ACTIVE_USER;
       if (tabName === "blueprints") {
         loadBlueprintInventory();
         loadBlueprintListings();
+        
     } else if (tabName === "packs") {
   loadPacks();
   loadPackListings();
@@ -762,9 +933,18 @@ const VIEWED_USER = getMarketplaceViewedUser() || ACTIVE_USER;
   loadPremiumMaterialListings();
   loadPremiumMaterialHistory();
 
+
   if (typeof loadActiveUserEmpBalance === "function") {
     loadActiveUserEmpBalance();
-  }
+ } else if (tabName === "land") {
+  initializeLandMarketplace();
+  loadLandInventory();
+
+  setTimeout(() => {
+    loadLandListings();
+    loadLandHistory();
+  }, 50);
+}
 }
     }
 
@@ -2152,6 +2332,27 @@ document
 document
   .getElementById("refresh-premium-material-market-btn")
   ?.addEventListener("click", loadPremiumMaterialListings);
+  // LAND MARKETPLACE EVENTS
+document
+  .querySelector('[data-market-tab="land"]')
+  ?.addEventListener("click", () => {
+    loadLandListings();
+        loadLandHistory();
+
+  });
+
+document
+  .getElementById("land-view-select")
+  ?.addEventListener("change", () => {
+    loadLandListings();
+  });
+
+document
+  .getElementById("refresh-land-market-btn")
+  ?.addEventListener("click", () => {
+    loadLandListings();
+    loadLandHistory();
+  });
 
     document.getElementById("create-blueprint-listing-btn").addEventListener("click", createBlueprintListing);
     document.getElementById("refresh-blueprint-market-btn").addEventListener("click", async () => {
@@ -2163,9 +2364,728 @@ document
   currentBlueprintView = e.target.value;
   renderBlueprintFeed();
 });
+function initializeLandMarketplace() {
+  const radios = document.querySelectorAll('input[name="land-currency"]');
+  const label = document.querySelector('label[for="land-price"]');
+
+  if (!radios.length || !label) return;
+
+  function updateLabel() {
+    const selected = document.querySelector(
+      'input[name="land-currency"]:checked'
+    );
+
+    label.textContent =
+      selected?.value === "EMP"
+        ? "Listing Price (EMP)"
+        : "Listing Price (HIVE)";
+  }
+
+  radios.forEach((radio) => {
+    radio.addEventListener("change", updateLabel);
+  });
+
+  updateLabel();
+  setupLandSearch();
+}
+async function loadLandInventory() {
+  const tierFilter = document.getElementById("land-tier-filter");
+  const select = document.getElementById("land-select");
+
+  if (tierFilter) {
+    tierFilter.value = "";
+  }
+
+  if (select) {
+    select.innerHTML = `
+      <option value="">
+        Select L1, L2 or L3 first
+      </option>
+    `;
+  }
+
+  setStatus(
+    "land-market-status",
+    "Choose a Land tier to load available empty lands."
+  );
+}
 
 
-    /* init */
+async function loadLandListings() {
+  const box = document.getElementById("land-market-list");
+  const countPill = document.getElementById("land-market-count-pill");
+
+  if (!box) return;
+
+  const view =
+    document.getElementById("land-view-select")?.value || "market";
+
+  try {
+    let url = apiUrl("/marketplace/land/listings");
+
+    if (view === "mine") {
+      url += `?view=mine&username=${encodeURIComponent(ACTIVE_USER)}`;
+    }
+
+    const response = await fetch(url, {
+      cache: "no-store",
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Failed to load Land listings.");
+    }
+
+    const listings = Array.isArray(data.listings)
+      ? data.listings
+      : [];
+
+    if (countPill) {
+      countPill.textContent =
+        `${listings.length} LAND${listings.length === 1 ? "" : "S"}`;
+    }
+
+    if (!listings.length) {
+      box.innerHTML = `
+        <div class="empty">
+          No active Land listings found.
+        </div>
+      `;
+      return;
+    }
+
+    box.innerHTML = `
+      <div class="compact-list">
+        ${listings.map((listing) => {
+          const seller = String(
+            listing.seller ||
+            listing.seller_username ||
+            ""
+          ).toLowerCase();
+
+          const mine =
+            seller === String(ACTIVE_USER || "").toLowerCase();
+
+          const currency = String(
+            listing.currency ||
+            listing.listing_currency ||
+            "HIVE"
+          ).toUpperCase();
+
+          const price = Number(
+            listing.price ??
+            (
+              currency === "EMP"
+                ? listing.price_emp
+                : listing.total_price_hive
+            ) ??
+            0
+          );
+
+          const landId =
+            listing.land_id ||
+            listing.asset_id ||
+            "--";
+
+          return `
+            <div class="compact-row">
+
+              <div class="compact-cell">
+                <div class="compact-asset-title">
+                  Land #${landId}
+                </div>
+
+                <div class="compact-asset-sub">
+                  ${listing.land_tier || "L1"} •
+                  ${listing.era || "GENESIS"}
+                </div>
+              </div>
+
+              <div class="compact-cell">
+                <div class="compact-seller">
+                  @${seller || "--"}
+                </div>
+
+                <div class="compact-asset-sub">
+                  Listing #${listing.id || "--"}
+                </div>
+              </div>
+
+              <div class="compact-cell compact-details">
+                Empty Land
+              </div>
+
+              <div class="compact-cell compact-price">
+                ${price.toLocaleString()} ${currency}
+              </div>
+
+              <div class="compact-cell compact-action">
+                ${
+                  mine
+                    ? `
+                      <button
+                        class="compact-cancel-btn"
+                        type="button"
+                        onclick="cancelLandListing(${listing.id})"
+                      >
+                        Cancel
+                      </button>
+                    `
+                    : `
+                      <button
+  class="compact-buy-btn"
+  type="button"
+  onclick="
+    ${
+      currency === "EMP"
+        ? `buyLandListing(${listing.id}, 'EMP', ${price})`
+        : `buyLandHiveListing(${listing.id})`
+    }
+  "
+>
+  Buy
+</button>
+                    `
+                }
+              </div>
+
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
+
+    console.log("✅ Land listings rendered:", listings.length);
+  } catch (err) {
+    console.error("loadLandListings error:", err);
+
+    box.innerHTML = `
+      <div class="empty">
+        ${err.message || "Failed to load Land marketplace."}
+      </div>
+    `;
+
+    if (countPill) {
+      countPill.textContent = "0 LANDS";
+    }
+  }
+}
+async function createLandListing() {
+  try {
+    if (!ACTIVE_USER) {
+      alert("No active user found.");
+      return;
+    }
+
+    const landId = Number(
+      document.getElementById("land-select")?.value || 0
+    );
+
+    const selectedCurrency = document.querySelector(
+      'input[name="land-currency"]:checked'
+    );
+
+    const currency = String(
+      selectedCurrency?.value || ""
+    ).toUpperCase();
+
+    const price = Number(
+      document.getElementById("land-price")?.value || 0
+    );
+
+    if (!landId) {
+      setStatus(
+        "land-create-status",
+        "Please select an empty Land.",
+        true
+      );
+      return;
+    }
+
+    if (!["EMP", "HIVE"].includes(currency)) {
+      setStatus(
+        "land-create-status",
+        "Please select EMP or HIVE.",
+        true
+      );
+      return;
+    }
+
+    if (!Number.isFinite(price) || price <= 0) {
+      setStatus(
+        "land-create-status",
+        "Please enter a valid listing price.",
+        true
+      );
+      return;
+    }
+
+    setStatus(
+      "land-create-status",
+      "Creating Land listing..."
+    );
+
+    const response = await fetch(
+      apiUrl("/marketplace/land/list"),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": ACTIVE_USER,
+        },
+        body: JSON.stringify({
+          username: ACTIVE_USER,
+          land_id: landId,
+          currency,
+          price,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.error || "Failed to create Land listing."
+      );
+    }
+
+    setStatus(
+      "land-create-status",
+      `✅ Land #${landId} listed for ${price.toLocaleString()} ${currency}.`
+    );
+
+    document.getElementById("land-select").value = "";
+    document.getElementById("land-price").value = "";
+
+    await loadLandInventory();
+    await loadLandListings();
+  } catch (err) {
+    console.error("createLandListing error:", err);
+
+    setStatus(
+      "land-create-status",
+      err.message || "Failed to create Land listing.",
+      true
+    );
+  }
+}
+function setupLandSearch() {
+  const tierFilter = document.getElementById("land-tier-filter");
+  const select = document.getElementById("land-select");
+
+  if (!tierFilter || !select) return;
+
+  tierFilter.onchange = async () => {
+    const tier = String(tierFilter.value || "").toUpperCase();
+
+    if (!tier) {
+      select.innerHTML = `
+        <option value="">
+          Select L1, L2 or L3 first
+        </option>
+      `;
+
+      setStatus(
+        "land-market-status",
+        "Choose a Land tier to load available empty lands."
+      );
+
+      return;
+    }
+
+    try {
+      select.innerHTML = `
+        <option value="">
+          Loading ${tier} lands...
+        </option>
+      `;
+
+      const response = await fetch(
+        apiUrl(
+          `/marketplace/land/inventory/${encodeURIComponent(ACTIVE_USER)}?tier=${encodeURIComponent(tier)}`
+        )
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Failed to load lands.");
+      }
+
+      const lands = data.lands || [];
+
+      if (!lands.length) {
+        select.innerHTML = `
+          <option value="">
+            No empty ${tier} land available
+          </option>
+        `;
+
+        setStatus(
+          "land-market-status",
+          `No empty ${tier} land is available for listing.`
+        );
+
+        return;
+      }
+
+      select.innerHTML = `
+        <option value="">
+          Choose ${tier} land
+        </option>
+      `;
+
+      lands.forEach((land) => {
+        const option = document.createElement("option");
+
+        option.value = land.id;
+        option.textContent = `${tier} • Land #${land.id}`;
+
+        select.appendChild(option);
+      });
+
+      setStatus(
+        "land-market-status",
+        `Loaded ${lands.length} available ${tier} land(s).`
+      );
+    } catch (err) {
+      console.error("Load Land tier error:", err);
+
+      select.innerHTML = `
+        <option value="">
+          Failed to load ${tier} lands
+        </option>
+      `;
+
+      setStatus(
+        "land-market-status",
+        err.message || "Failed to load lands.",
+        true
+      );
+    }
+  };
+}  
+async function cancelLandListing(listingId) {
+  try {
+    const confirmed = confirm(`Cancel Land listing #${listingId}?`);
+
+    if (!confirmed) return;
+
+    const response = await fetch(
+      apiUrl("/marketplace/land/cancel"),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": ACTIVE_USER,
+        },
+        body: JSON.stringify({
+          username: ACTIVE_USER,
+          listing_id: listingId,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.error || "Failed to cancel Land listing."
+      );
+    }
+
+    alert("✅ Land listing cancelled successfully.");
+
+    await loadLandInventory();
+    await loadLandListings();
+  } catch (err) {
+    console.error("cancelLandListing error:", err);
+
+    alert(
+      err.message || "Failed to cancel Land listing."
+    );
+  }
+}
+async function buyLandListing(listingId, currency, price) {
+  try {
+    if (!ACTIVE_USER) {
+      alert("No active user found.");
+      return;
+    }
+
+    if (String(currency).toUpperCase() !== "EMP") {
+      alert("HIVE purchase will be connected next.");
+      return;
+    }
+
+    const confirmed = confirm(
+      `Buy this Land for ${Number(price).toLocaleString()} EMP?`
+    );
+
+    if (!confirmed) return;
+
+    const response = await fetch(
+      apiUrl("/marketplace/land/buy"),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": ACTIVE_USER,
+        },
+        body: JSON.stringify({
+          username: ACTIVE_USER,
+          listing_id: listingId,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.error || "Failed to buy Land."
+      );
+    }
+
+    alert(
+      `✅ Land #${data.trade.land_id} purchased successfully for ${Number(
+        data.trade.price
+      ).toLocaleString()} EMP.`
+    );
+
+    await loadLandListings();
+    await loadLandInventory();
+    await loadActiveUserEmpBalance();
+  } catch (err) {
+    console.error("buyLandListing error:", err);
+
+    alert(
+      err.message || "Failed to buy Land."
+    );
+  }
+}
+let landHiveBuyInProgress = false;
+
+async function buyLandHiveListing(listingId) {
+  if (landHiveBuyInProgress) {
+    alert("Land purchase already in progress. Please wait.");
+    return;
+  }
+
+  landHiveBuyInProgress = true;
+
+  try {
+    if (!ACTIVE_USER) {
+      throw new Error("No active user found.");
+    }
+
+    const initRes = await fetch(
+      apiUrl("/marketplace/land/buy-init"),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": ACTIVE_USER,
+        },
+        body: JSON.stringify({
+          username: ACTIVE_USER,
+          listing_id: listingId,
+        }),
+      }
+    );
+
+    const initData = await initRes.json();
+
+    if (!initRes.ok || !initData.success) {
+      throw new Error(
+        initData.error || "Failed to initialize Land purchase."
+      );
+    }
+
+    const session = initData.session;
+
+    const sellerAmount = Number(
+      session.seller_payment?.amount || 0
+    ).toFixed(3);
+
+    const feeAmount = Number(
+      session.fee_payment?.amount || 0
+    ).toFixed(3);
+
+    const confirmed = confirm(
+      `Buy Land #${session.land_id}?\n\n` +
+      `Total Price: ${Number(session.total_price_hive).toFixed(3)} HIVE\n` +
+      `Seller receives: ${sellerAmount} HIVE\n` +
+      `Marketplace fee: ${feeAmount} HIVE`
+    );
+
+    if (!confirmed) return;
+
+    const sellerTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      session.seller_payment.to,
+      sellerAmount,
+      session.seller_payment.memo
+    );
+
+    const feeTransfer = await hiveTransfer(
+      ACTIVE_USER,
+      session.fee_payment.to,
+      feeAmount,
+      session.fee_payment.memo
+    );
+
+    const paymentTxId =
+      feeTransfer?.tx_id ||
+      feeTransfer?.id ||
+      sellerTransfer?.tx_id ||
+      sellerTransfer?.id ||
+      "";
+
+    if (!paymentTxId) {
+      throw new Error("Transaction ID was not returned by Hive Keychain.");
+    }
+
+    const finalizeRes = await fetch(
+      apiUrl("/marketplace/land/buy-finalize"),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": ACTIVE_USER,
+        },
+        body: JSON.stringify({
+          username: ACTIVE_USER,
+          session_id: session.id,
+          payment_tx_id: paymentTxId,
+        }),
+      }
+    );
+
+    const finalizeData = await finalizeRes.json();
+
+    if (!finalizeRes.ok || !finalizeData.success) {
+      throw new Error(
+        finalizeData.error || "Failed to finalize Land purchase."
+      );
+    }
+
+    alert(
+      `✅ Land #${finalizeData.trade.land_id} purchased successfully.`
+    );
+
+    await loadLandListings();
+    await loadLandInventory();
+  } catch (err) {
+    console.error("buyLandHiveListing error:", err);
+
+    alert(
+      err.message || "HIVE Land purchase failed."
+    );
+
+    try {
+      await loadLandListings();
+    } catch (_) {}
+  } finally {
+    landHiveBuyInProgress = false;
+  }
+}
+async function loadLandHistory() {
+  const box = document.getElementById("land-history-list");
+
+  if (!box) return;
+
+  try {
+    box.innerHTML = `<div class="empty">Loading Land trade history...</div>`;
+
+    const response = await fetch(
+      apiUrl("/marketplace/land/history"),
+      {
+        cache: "no-store",
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.error || "Failed to load Land trade history."
+      );
+    }
+
+    const history = Array.isArray(data.history)
+      ? data.history
+      : [];
+
+    if (!history.length) {
+      box.innerHTML = `
+        <div class="empty">
+          No Land trade history yet.
+        </div>
+      `;
+      return;
+    }
+
+    box.innerHTML = `
+      <div class="trade-tape">
+        ${history
+          .map((trade, index) => {
+            const currency = String(
+              trade.currency || ""
+            ).toUpperCase();
+
+            const totalPrice = Number(
+              trade.total_price || 0
+            );
+
+            const time = formatHistoryTime(
+              trade.created_at
+            );
+
+            return `
+              <div class="trade-row ${
+                index % 2 === 0
+                  ? "trade-row-even"
+                  : "trade-row-odd"
+              }">
+
+                <div class="trade-col trade-asset">
+                  ${trade.land_tier || "LAND"} • Land #${trade.land_id}
+                </div>
+
+                <div class="trade-col trade-users">
+                  @${trade.seller_username || "--"}
+                  →
+                  @${trade.buyer_username || "--"}
+                </div>
+
+                <div class="trade-col trade-total">
+                  ${totalPrice.toLocaleString()} ${currency}
+                </div>
+
+                <div class="trade-col trade-time">
+                  ${time}
+                </div>
+
+              </div>
+            `;
+          })
+          .join("")}
+      </div>
+    `;
+  } catch (err) {
+    console.error("loadLandHistory error:", err);
+
+    box.innerHTML = `
+      <div class="empty">
+        Failed to load Land trade history.
+      </div>
+    `;
+  }
+}
+/* init */
     loadEmpListings();
     setTimeout(() => {
   if (typeof loadActiveUserEmpBalance === "function") {
@@ -2560,7 +3480,9 @@ document.querySelectorAll(".tab-btn").forEach((btn) => {
 document.querySelectorAll(".market-tab-panel").forEach((panel) => {
   panel.classList.remove("active");
 });
-
+document
+  .getElementById("create-land-listing-btn")
+  ?.addEventListener("click", createLandListing);
 document.querySelector('[data-market-tab="packs"]')?.classList.add("active");
 document.querySelector('[data-market-tab-panel="packs"]')?.classList.add("active");
 
@@ -2813,6 +3735,121 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (blueprintPanel?.classList.contains("active")) {
     refreshBlueprintMarketSafe();
+  }
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const priceLabel = document.querySelector('label[for="land-price"]');
+  const currencyRadios = document.querySelectorAll(
+    'input[name="land-currency"]'
+  );
+
+  function updateLandPriceLabel() {
+    const selectedCurrency = document.querySelector(
+      'input[name="land-currency"]:checked'
+    );
+
+    if (!priceLabel || !selectedCurrency) return;
+
+    priceLabel.textContent = `Listing Price (${selectedCurrency.value})`;
+  }
+
+  currencyRadios.forEach((radio) => {
+    radio.addEventListener("change", updateLandPriceLabel);
+  });
+
+  updateLandPriceLabel();
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const tierFilter = document.getElementById("land-tier-filter");
+  const landSelect = document.getElementById("land-select");
+
+  if (!tierFilter || !landSelect) return;
+
+  tierFilter.addEventListener("change", async () => {
+    const tier = tierFilter.value;
+
+    if (!tier) {
+      landSelect.innerHTML = `
+        <option value="">Select L1, L2 or L3 first</option>
+      `;
+      return;
+    }
+
+    try {
+      landSelect.innerHTML = `
+        <option value="">Loading ${tier} lands...</option>
+      `;
+
+      const response = await fetch(
+        apiUrl(
+          `/marketplace/land/inventory/${encodeURIComponent(
+            ACTIVE_USER
+          )}?tier=${encodeURIComponent(tier)}`
+        )
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Failed to load lands.");
+      }
+
+      const lands = data.lands || [];
+
+      if (!lands.length) {
+        landSelect.innerHTML = `
+          <option value="">No empty ${tier} lands available</option>
+        `;
+
+        setStatus(
+          "land-market-status",
+          `No empty ${tier} lands available.`
+        );
+
+        return;
+      }
+
+      landSelect.innerHTML = `
+        <option value="">Choose ${tier} land</option>
+      `;
+
+      lands.forEach((land) => {
+        const option = document.createElement("option");
+
+        option.value = land.id;
+        option.textContent = `${tier} • Land #${land.id}`;
+
+        landSelect.appendChild(option);
+      });
+
+      setStatus(
+        "land-market-status",
+        `Loaded ${lands.length} available ${tier} lands.`
+      );
+    } catch (error) {
+      console.error("Land tier loading error:", error);
+
+      landSelect.innerHTML = `
+        <option value="">Failed to load lands</option>
+      `;
+
+      setStatus(
+        "land-market-status",
+        error.message || "Failed to load lands.",
+        true
+      );
+    }
+  });
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const createLandBtn = document.getElementById(
+    "create-land-listing-btn"
+  );
+
+  if (createLandBtn) {
+    createLandBtn.addEventListener("click", () => {
+      createLandListing();
+    });
   }
 });
 </script>
