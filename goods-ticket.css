@@ -1395,3 +1395,30 @@
     box-sizing: border-box;
   }
 }
+/* ========================================= */
+/* IMPERIAL TICKET TABLE — MOBILE SCROLL FIX */
+/* ========================================= */
+
+@media (max-width: 768px) {
+
+  .ticket-recipe-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .ticket-recipe-table-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+  }
+
+  .ticket-recipe-table {
+    width: 620px !important;
+    min-width: 620px !important;
+  }
+
+}
