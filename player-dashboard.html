@@ -5552,6 +5552,98 @@ if (
             try {
               const card = document.createElement("div");
               card.className = "factory-card blueprint-card";
+         
+const isSpecialBlueprint =
+  b.is_special_blueprint === true ||
+  String(b.blueprint_category || "").toUpperCase() === "SPECIAL_INDUSTRY";
+
+if (isSpecialBlueprint) {
+  const blueprintId =
+    b.blueprint_id ||
+    b.nft_id ||
+    b.id ||
+    "";
+
+  const displayName =
+    b.display_name ||
+    "Imperial Mint Blueprint";
+
+  const eraText =
+    String(b.era || "GENESIS").toUpperCase();
+
+  const editionText =
+    String(b.edition || "REWARD").toUpperCase();
+
+  const mintBorder = "#d4a017";
+  const mintBg = "#fff8d6";
+
+  card.innerHTML = `
+    <div
+      class="bp-mini-card imperial-mint-blueprint-card"
+      style="--bp-border:${mintBorder}; --bp-bg:${mintBg};"
+    >
+
+      <div class="bp-card-actions">
+        <button
+          type="button"
+          class="bp-card-menu-btn"
+          onclick="event.stopPropagation(); toggleBlueprintCardMenu(this)"
+        >
+          ⋯
+        </button>
+
+        <div class="bp-card-menu">
+          <button
+            type="button"
+            onclick="event.stopPropagation(); transferNFT(${blueprintId}, 'BLUEPRINT');"
+          >
+            Transfer
+          </button>
+
+          <button
+            type="button"
+            onclick="event.stopPropagation(); tradeBlueprint(${blueprintId});"
+          >
+            Trade on Marketplace
+          </button>
+        </div>
+      </div>
+
+      <div class="imperial-mint-special-badge">
+        SPECIAL
+      </div>
+
+      <div class="bp-mini-building imperial-mint-building">
+        <img
+          src="assets/imperial-mint.png"
+          alt="${displayName}"
+        >
+      </div>
+
+      <div class="bp-mini-strip imperial-mint-strip">
+
+        <div class="bp-mini-row">
+          <span class="bp-mini-label">Industry</span>
+          <span class="bp-mini-value">
+            IMPERIAL MINT • ${eraText}
+          </span>
+        </div>
+
+        <div class="bp-mini-row">
+          <span class="bp-mini-label">Edition</span>
+          <span class="bp-mini-value">
+  ${editionText}
+</span>
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  grid.appendChild(card);
+  return;
+}
 
               // --- Industry (may be missing in current API) ---
               const rawIndustry = (

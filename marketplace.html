@@ -1841,28 +1841,104 @@ if (typeof loadPremiumMaterialHistory === "function") {
       5: "#ffca28",
     };
 
-    function parseBlueprintCardData(b) {
-      const rawTier = String(b.raw_tier || b.tier || b.level || "").toUpperCase();
-      let industry = String(b.industry || "").toUpperCase();
+function parseBlueprintCardData(b) {
+  const rawTier = String(
+    b.raw_tier ||
+    b.tier ||
+    b.blueprint?.tier ||
+    b.level ||
+    ""
+  )
+    .trim()
+    .toUpperCase();
 
-      if (!industry && rawTier.includes("_")) {
-        industry = rawTier.split("_")[0];
-      }
+  const isSpecialBlueprint =
+    b.is_special_blueprint === true ||
+    String(b.blueprint_category || "").toUpperCase() === "SPECIAL_INDUSTRY" ||
+    rawTier === "IMPERIAL_MINT";
 
-      const levelNumber = parseInt(rawTier.replace(/[^0-9]/g, ""), 10) || 1;
-      const levelLabel = "B" + levelNumber;
-      const borderColor = BP_LEVEL_COLORS[levelNumber] || "#d1d5db";
+  if (isSpecialBlueprint) {
+    return {
+      blueprintId:
+        b.blueprint_id ||
+        b.nft_id ||
+        b.id ||
+        b.asset_id ||
+        b.blueprint?.nft_id,
 
-      return {
-        blueprintId: b.blueprint_id || b.nft_id || b.id,
-        rawTier: rawTier || "B1",
-        industry: industry || "UNKNOWN",
-        levelLabel,
-        borderColor,
-        eraText: String(b.era || "GENESIS").toUpperCase()
-      };
-    }
+      rawTier: "IMPERIAL_MINT",
 
+      industry: "IMPERIAL MINT",
+
+      levelLabel: "SPECIAL",
+
+      borderColor: "#d4a017",
+
+      eraText: String(
+        b.era ||
+        b.blueprint?.era ||
+        "GENESIS"
+      ).toUpperCase(),
+
+      editionText: String(
+        b.edition ||
+        b.blueprint?.edition ||
+        "REWARD"
+      ).toUpperCase(),
+
+      isSpecialBlueprint: true,
+
+      displayName: "Imperial Mint Blueprint",
+    };
+  }
+
+  let industry = String(b.industry || "").toUpperCase();
+
+  if (!industry && rawTier.includes("_")) {
+    industry = rawTier.split("_")[0];
+  }
+
+  const levelNumber =
+    parseInt(rawTier.replace(/[^0-9]/g, ""), 10) || 1;
+
+  const levelLabel = "B" + levelNumber;
+
+  const borderColor =
+    BP_LEVEL_COLORS[levelNumber] || "#d1d5db";
+
+  return {
+    blueprintId:
+      b.blueprint_id ||
+      b.nft_id ||
+      b.id ||
+      b.asset_id ||
+      b.blueprint?.nft_id,
+
+    rawTier: rawTier || "B1",
+
+    industry: industry || "UNKNOWN",
+
+    levelLabel,
+
+    borderColor,
+
+    eraText: String(
+      b.era ||
+      b.blueprint?.era ||
+      "GENESIS"
+    ).toUpperCase(),
+
+    editionText: String(
+      b.edition ||
+      b.blueprint?.edition ||
+      ""
+    ).toUpperCase(),
+
+    isSpecialBlueprint: false,
+
+    displayName: `${industry || "UNKNOWN"} ${levelLabel}`,
+  };
+}
     function updateBlueprintFeedHeader() {
       const title = document.getElementById("blueprint-feed-title");
       const subtitle = document.getElementById("blueprint-feed-subtitle");
@@ -1879,55 +1955,182 @@ if (typeof loadPremiumMaterialHistory === "function") {
       }
     }
 
-    function renderBlueprintSelect() {
-      const select = document.getElementById("blueprint-select");
-      if (!select) return;
+function renderBlueprintSelect() {
+  const select = document.getElementById("blueprint-select");
+  if (!select) return;
 
-      if (!playerBlueprintInventory.length) {
-        select.innerHTML = `<option value="">No blueprints available</option>`;
-        return;
-      }
+  if (!playerBlueprintInventory.length) {
+    select.innerHTML = `<option value="">No blueprints available</option>`;
+    return;
+  }
 
-      select.innerHTML =
-        `<option value="">Select blueprint</option>` +
-        playerBlueprintInventory.map((bp) => {
-          const item = parseBlueprintCardData(bp);
-          return `<option value="${item.blueprintId}">#${item.blueprintId} • ${item.industry} ${item.rawTier}</option>`;
-        }).join("");
+  const sortedBlueprints = [...playerBlueprintInventory].sort((a, b) => {
+    const aItem = parseBlueprintCardData(a);
+    const bItem = parseBlueprintCardData(b);
+
+    const aSpecial = aItem.isSpecialBlueprint ? 0 : 1;
+    const bSpecial = bItem.isSpecialBlueprint ? 0 : 1;
+
+    if (aSpecial !== bSpecial) {
+      return aSpecial - bSpecial;
     }
 
-    function renderBlueprintInventoryFeed() {
-      const feed = document.getElementById("blueprint-feed");
-      const countPill = document.getElementById("blueprint-market-count-pill");
+    return Number(aItem.blueprintId || 0) - Number(bItem.blueprintId || 0);
+  });
 
-      updateBlueprintFeedHeader();
-      countPill.textContent = `${playerBlueprintInventory.length} Blueprint${playerBlueprintInventory.length === 1 ? "" : "s"}`;
+  select.innerHTML =
+    `<option value="">Select blueprint</option>` +
+    sortedBlueprints
+      .map((bp) => {
+        const item = parseBlueprintCardData(bp);
 
-      if (!playerBlueprintInventory.length) {
-        feed.innerHTML = `<div class="empty">No blueprints found for this account.</div>`;
-        return;
-      }
+        if (item.isSpecialBlueprint) {
+          return `
+            <option value="${item.blueprintId}">
+              Imperial Mint Blueprint • REWARD
+            </option>
+          `;
+        }
 
-      feed.innerHTML = `
-        <div class="bp-grid">
-          ${playerBlueprintInventory.map((b) => {
-            const item = parseBlueprintCardData(b);
+        return `
+          <option value="${item.blueprintId}">
+            #${item.blueprintId} • ${item.industry} ${item.levelLabel}
+          </option>
+        `;
+      })
+      .join("");
+}
+function renderBlueprintInventoryFeed() {
+  const feed = document.getElementById("blueprint-feed");
+
+  const countPill =
+    document.getElementById("blueprint-market-count-pill");
+
+  updateBlueprintFeedHeader();
+
+  countPill.textContent =
+    `${playerBlueprintInventory.length} Blueprint${
+      playerBlueprintInventory.length === 1 ? "" : "s"
+    }`;
+
+  if (!playerBlueprintInventory.length) {
+    feed.innerHTML =
+      `<div class="empty">No blueprints found for this account.</div>`;
+
+    return;
+  }
+
+  const sortedBlueprints = [
+    ...playerBlueprintInventory,
+  ].sort((a, b) => {
+    const aSpecial =
+      parseBlueprintCardData(a).isSpecialBlueprint ? 0 : 1;
+
+    const bSpecial =
+      parseBlueprintCardData(b).isSpecialBlueprint ? 0 : 1;
+
+    return aSpecial - bSpecial;
+  });
+
+  feed.innerHTML = `
+    <div class="bp-grid">
+
+      ${sortedBlueprints
+        .map((b) => {
+          const item = parseBlueprintCardData(b);
+
+          if (item.isSpecialBlueprint) {
             return `
-              <div class="bp-card">
-                <div class="bp-badge" style="background:${item.borderColor};">${item.levelLabel}</div>
-                <div class="bp-title">${item.industry}</div>
+              <div
+                class="bp-card"
+                style="
+                  border:3px solid #d4a017;
+                  background:linear-gradient(
+                    180deg,
+                    #fffbea 0%,
+                    #f8f1cd 100%
+                  );
+                "
+              >
+
+                <div
+                  class="bp-badge"
+                  style="
+                    background:#047857;
+                    width:auto;
+                    padding:6px 12px;
+                    border-radius:999px;
+                  "
+                >
+                  SPECIAL
+                </div>
+
+                <div
+                  class="bp-title"
+                  style="color:#065f46;"
+                >
+                  Imperial Mint
+                </div>
+
+                <div
+                  style="
+                    display:flex;
+                    justify-content:center;
+                    align-items:center;
+                    min-height:120px;
+                    padding:10px;
+                  "
+                >
+                  <img
+                    src="assets/imperial-mint.png"
+                    alt="Imperial Mint"
+                    style="
+                      width:100%;
+                      max-width:180px;
+                      height:auto;
+                      object-fit:contain;
+                    "
+                  >
+                </div>
+
                 <div class="bp-meta">
-                  Blueprint #${item.blueprintId}<br>
-                  Tier: ${item.rawTier}<br>
+                  Special Industry Blueprint<br>
+                  Edition: ${item.editionText}<br>
                   Era: ${item.eraText}
                 </div>
+
               </div>
             `;
-          }).join("")}
-        </div>
-      `;
-    }
+          }
 
+          return `
+            <div class="bp-card">
+
+              <div
+                class="bp-badge"
+                style="background:${item.borderColor};"
+              >
+                ${item.levelLabel}
+              </div>
+
+              <div class="bp-title">
+                ${item.industry}
+              </div>
+
+              <div class="bp-meta">
+                Blueprint #${item.blueprintId}<br>
+                Tier: ${item.rawTier}<br>
+                Era: ${item.eraText}
+              </div>
+
+            </div>
+          `;
+        })
+        .join("")}
+
+    </div>
+  `;
+}
     function getFilteredBlueprintListings() {
       if (currentBlueprintView === "mine") {
         return allBlueprintListings.filter((x) => ACTIVE_USER && x.seller_username === ACTIVE_USER);
@@ -2059,54 +2262,106 @@ if (typeof loadPremiumMaterialHistory === "function") {
       }
     }
 
-    async function createBlueprintListing() {
-      try {
-        if (!ACTIVE_USER) {
-          alert("No active user found.");
-          return;
-        }
+async function createBlueprintListing() {
+  const createBtn = document.getElementById(
+    "create-blueprint-listing-btn",
+  );
 
-        const nft_id = Number(document.getElementById("blueprint-select").value || 0);
-        const price_hive = Number(document.getElementById("blueprint-price-hive").value || 0);
+  if (createBtn?.disabled) {
+    return;
+  }
 
-        if (!nft_id) {
-          setStatus("blueprint-create-status", "Please choose a blueprint.", true);
-          return;
-        }
-
-        if (!price_hive || price_hive <= 0) {
-          setStatus("blueprint-create-status", "Please enter a valid HIVE price.", true);
-          return;
-        }
-
-        setStatus("blueprint-create-status", "Creating blueprint listing...");
-
-        const res = await fetch(apiUrl("/marketplace/blueprint/list"), {
-          method: "POST",
-          headers: {
-  "Content-Type": "application/json",
-  "x-mde-actor": ACTIVE_USER,
-},
-          body: JSON.stringify({ username: ACTIVE_USER, nft_id, price_hive })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok || !data.success) {
-          throw new Error(data.error || "Failed to create blueprint listing.");
-        }
-
-        setStatus("blueprint-create-status", `✅ Blueprint listing created successfully. Listing ID: ${data.listing.id}`);
-        document.getElementById("blueprint-select").value = "";
-        document.getElementById("blueprint-price-hive").value = "";
-        await loadBlueprintInventory();
-        await loadBlueprintListings();
-      } catch (err) {
-        console.error("createBlueprintListing error:", err);
-        setStatus("blueprint-create-status", err.message || "Failed to create blueprint listing.", true);
-      }
+  try {
+    if (!ACTIVE_USER) {
+      alert("No active user found.");
+      return;
     }
 
+    const nft_id = Number(
+      document.getElementById("blueprint-select").value || 0,
+    );
+
+    const price_hive = Number(
+      document.getElementById("blueprint-price-hive").value || 0,
+    );
+
+    if (!nft_id) {
+      setStatus(
+        "blueprint-create-status",
+        "Please choose a blueprint.",
+        true,
+      );
+      return;
+    }
+
+    if (!price_hive || price_hive <= 0) {
+      setStatus(
+        "blueprint-create-status",
+        "Please enter a valid HIVE price.",
+        true,
+      );
+      return;
+    }
+
+    if (createBtn) {
+      createBtn.disabled = true;
+      createBtn.textContent = "Listing...";
+    }
+
+    setStatus(
+      "blueprint-create-status",
+      "Creating blueprint listing...",
+    );
+
+    const res = await fetch(
+      apiUrl("/marketplace/blueprint/list"),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": ACTIVE_USER,
+        },
+        body: JSON.stringify({
+          username: ACTIVE_USER,
+          nft_id,
+          price_hive,
+        }),
+      },
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(
+        data.error || "Failed to create blueprint listing.",
+      );
+    }
+
+    setStatus(
+      "blueprint-create-status",
+      `✅ Blueprint listing created successfully. Listing ID: ${data.listing.id}`,
+    );
+
+    document.getElementById("blueprint-select").value = "";
+    document.getElementById("blueprint-price-hive").value = "";
+
+    await loadBlueprintInventory();
+    await loadBlueprintListings();
+  } catch (err) {
+    console.error("createBlueprintListing error:", err);
+
+    setStatus(
+      "blueprint-create-status",
+      err.message || "Failed to create blueprint listing.",
+      true,
+    );
+  } finally {
+    if (createBtn) {
+      createBtn.disabled = false;
+      createBtn.textContent = "Create Blueprint Listing";
+    }
+  }
+}
     async function cancelBlueprintListing(listingId) {
       try {
         if (!ACTIVE_USER) {
