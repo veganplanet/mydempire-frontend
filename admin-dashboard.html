@@ -3627,7 +3627,39 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
 
   <button id="give-blueprint-btn">Give Blueprint</button>
 </div>
+<div class="row" style="margin-top:12px;">
+  <button id="give-imperial-mint-blueprint-btn">
+    🏛 Give Imperial Mint Blueprint
+  </button>
+</div>
 
+<div class="row" style="margin-top:12px;">
+  <input
+    id="admin-fragment-amount"
+    type="number"
+    min="1"
+    step="1"
+    value="1"
+    style="min-width:90px; width:90px;"
+  />
+
+  <button id="give-fragment-btn">
+    💠 Give Fragment
+  </button>
+
+  <input
+    id="admin-smp-amount"
+    type="number"
+    min="1"
+    step="1"
+    value="1"
+    style="min-width:90px; width:90px;"
+  />
+
+  <button id="give-smp-btn">
+    🔧 Give SMP
+  </button>
+</div>
 <div class="status" id="player-action-status">
   No admin action used yet.
 </div>
@@ -4000,6 +4032,171 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
                 console.error(err);
                 document.getElementById("player-action-status").textContent =
                   "Error giving blueprint.";
+              }
+            });
+          // =====================================
+          // 🏛 GIVE IMPERIAL MINT BLUEPRINT
+          // =====================================
+
+          document
+            .getElementById("give-imperial-mint-blueprint-btn")
+            ?.addEventListener("click", async () => {
+              const ok = confirm(
+                `Give 1 Imperial Mint Blueprint to @${inspectedUsername}?`,
+              );
+
+              if (!ok) return;
+
+              try {
+                const res = await fetch(
+                  `${API_BASE}/admin/special-industries/imperial-mint/award-blueprint`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      "x-admin-key": ADMIN_KEY,
+                    },
+                    body: JSON.stringify({
+                      username: inspectedUsername,
+                    }),
+                  },
+                );
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                  document.getElementById("player-action-status").textContent =
+                    data.error || "Failed to give Imperial Mint Blueprint.";
+
+                  return;
+                }
+
+                document.getElementById("player-action-status").textContent =
+                  `Imperial Mint Blueprint granted to @${inspectedUsername}.`;
+
+                await inspectPlayer();
+              } catch (err) {
+                console.error(err);
+
+                document.getElementById("player-action-status").textContent =
+                  "Failed to give Imperial Mint Blueprint.";
+              }
+            });
+
+          // =====================================
+          // 💠 GIVE IMPERIAL FRAGMENT
+          // =====================================
+
+          document
+            .getElementById("give-fragment-btn")
+            ?.addEventListener("click", async () => {
+              const amount = Number(
+                document.getElementById("admin-fragment-amount")?.value,
+              );
+
+              if (!Number.isInteger(amount) || amount <= 0) {
+                alert("Enter a valid Fragment amount.");
+
+                return;
+              }
+
+              const ok = confirm(
+                `Give ${amount} Fragment(s) to @${inspectedUsername}?`,
+              );
+
+              if (!ok) return;
+
+              try {
+                const res = await fetch(
+                  `${API_BASE}/admin/give-imperial-fragment`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      "x-admin-key": ADMIN_KEY,
+                    },
+                    body: JSON.stringify({
+                      username: inspectedUsername,
+                      amount,
+                    }),
+                  },
+                );
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                  document.getElementById("player-action-status").textContent =
+                    data.error || "Failed to give Fragment.";
+
+                  return;
+                }
+
+                document.getElementById("player-action-status").textContent =
+                  `${amount} Fragment(s) granted to @${inspectedUsername}.`;
+
+                await inspectPlayer();
+              } catch (err) {
+                console.error(err);
+
+                document.getElementById("player-action-status").textContent =
+                  "Failed to give Fragment.";
+              }
+            });
+
+          // =====================================
+          // 🔧 GIVE SMP
+          // =====================================
+
+          document
+            .getElementById("give-smp-btn")
+            ?.addEventListener("click", async () => {
+              const amount = Number(
+                document.getElementById("admin-smp-amount")?.value,
+              );
+
+              if (!Number.isInteger(amount) || amount <= 0) {
+                alert("Enter a valid SMP amount.");
+
+                return;
+              }
+
+              const ok = confirm(
+                `Give ${amount} SMP to @${inspectedUsername}?`,
+              );
+
+              if (!ok) return;
+
+              try {
+                const res = await fetch(`${API_BASE}/admin/give-smp`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "x-admin-key": ADMIN_KEY,
+                  },
+                  body: JSON.stringify({
+                    username: inspectedUsername,
+                    amount,
+                  }),
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                  document.getElementById("player-action-status").textContent =
+                    data.error || "Failed to give SMP.";
+
+                  return;
+                }
+
+                document.getElementById("player-action-status").textContent =
+                  `${amount} SMP granted to @${inspectedUsername}.`;
+
+                await inspectPlayer();
+              } catch (err) {
+                console.error(err);
+
+                document.getElementById("player-action-status").textContent =
+                  "Failed to give SMP.";
               }
             });
           // CREATE STARTER EMPIRE

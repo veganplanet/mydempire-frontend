@@ -4448,63 +4448,246 @@ console.log("Empire overview:", data);
         return null;
       }
 
-      function renderTerritorySlots(factories, slotsTotal, landId) {
-        let html = `<div class="land-territory"><div class="land-territory-slots">`;
+      function renderTerritorySlots(
+  factories,
+  specialIndustries,
+  slotsTotal,
+  landId,
+) {
+  const normalFactories =
+    Array.isArray(factories)
+      ? factories
+      : [];
 
-        for (let i = 0; i < slotsTotal; i++) {
-          const factory = factories[i];
+  const specialItems =
+    Array.isArray(specialIndustries)
+      ? specialIndustries
+      : [];
 
-          if (factory) {
-            const statusClass = factoryStatusClass(factory);
-            const buildingImg = getFactoryBuildingImage(factory);
+  let html =
+    `<div class="land-territory"><div class="land-territory-slots">`;
 
-            // ✅ Read blueprint/build tier, not factory level
-            const blueprintTierRaw =
-              factory.blueprint_tier ??
-              factory.bp_tier ??
-              factory.blueprintTier ??
-              factory.blueprint ??
-              factory.tier ??
-              factory.raw_tier ??
-              factory.blueprint_level ??
-              factory.blueprintLevel ??
-              "";
+  // =====================================
+  // Build combined occupancy list
+  // =====================================
 
-            const blueprintTierText = String(blueprintTierRaw).toUpperCase();
-            const badgeMatch = blueprintTierText.match(/B[1-5]/);
-            const factoryBadge = badgeMatch ? badgeMatch[0] : "B1";
+  const occupiedSlots = [
+    ...specialItems.map((item) => ({
+      kind: "SPECIAL",
+      data: item,
+    })),
 
-            html += `
-        <div class="land-slot-pad filled ${statusClass}">
+    ...normalFactories.map((item) => ({
+      kind: "FACTORY",
+      data: item,
+    })),
+  ];
+
+  for (let i = 0; i < slotsTotal; i++) {
+    const occupied =
+      occupiedSlots[i];
+
+    // =====================================
+    // SPECIAL INDUSTRY
+    // =====================================
+
+    if (
+      occupied &&
+      occupied.kind === "SPECIAL"
+    ) {
+      const special =
+        occupied.data;
+
+      const industryType =
+        String(
+          special.industry_type || "",
+        )
+          .trim()
+          .toUpperCase();
+
+      if (
+        industryType ===
+        "IMPERIAL_MINT"
+      ) {
+        const status =
+          String(
+            special.status || "INACTIVE",
+          )
+            .trim()
+            .toUpperCase();
+
+        const statusClass =
+          status === "ACTIVE"
+            ? "active"
+            : "inactive";
+
+        html += `
+          <div
+            class="
+              land-slot-pad
+              filled
+              imperial-mint-land-slot
+              ${statusClass}
+            "
+            title="L1 • Imperial Mint"
+          >
+            <div
+              class="
+                land-slot-factory
+                imperial-mint-land-building
+              "
+            >
+              <img
+                src="assets/imperial-mint.png"
+                alt="Imperial Mint"
+                class="
+                  land-slot-factory-img
+                  imperial-mint-land-img
+                "
+              />
+            </div>
+
+            <div
+              class="
+                land-slot-badge
+                imperial-mint-land-badge
+              "
+            >
+              MINT
+            </div>
+
+            <div
+              class="
+                land-slot-status
+                ${statusClass}
+              "
+            >
+              ${
+                statusClass === "active"
+                  ? "✓"
+                  : "!"
+              }
+            </div>
+          </div>
+        `;
+
+        continue;
+      }
+    }
+
+    // =====================================
+    // NORMAL FACTORY
+    // =====================================
+
+    if (
+      occupied &&
+      occupied.kind === "FACTORY"
+    ) {
+      const factory =
+        occupied.data;
+
+      const statusClass =
+        factoryStatusClass(factory);
+
+      const buildingImg =
+        getFactoryBuildingImage(
+          factory,
+        );
+
+      const blueprintTierRaw =
+        factory.blueprint_tier ??
+        factory.bp_tier ??
+        factory.blueprintTier ??
+        factory.blueprint ??
+        factory.tier ??
+        factory.raw_tier ??
+        factory.blueprint_level ??
+        factory.blueprintLevel ??
+        "";
+
+      const blueprintTierText =
+        String(
+          blueprintTierRaw,
+        ).toUpperCase();
+
+      const badgeMatch =
+        blueprintTierText.match(
+          /B[1-5]/,
+        );
+
+      const factoryBadge =
+        badgeMatch
+          ? badgeMatch[0]
+          : "B1";
+
+      html += `
+        <div
+          class="
+            land-slot-pad
+            filled
+            ${statusClass}
+          "
+        >
           <div class="land-slot-factory">
             ${
               buildingImg
-                ? `<img src="${buildingImg}" alt="Factory" class="land-slot-factory-img">`
-                : `🏭`
+                ? `
+                  <img
+                    src="${buildingImg}"
+                    alt="Factory"
+                    class="land-slot-factory-img"
+                  />
+                `
+                : "🏭"
             }
           </div>
 
-          <div class="land-slot-badge ${factoryBadge.toLowerCase()}">${factoryBadge}</div>
+          <div
+            class="
+              land-slot-badge
+              ${factoryBadge.toLowerCase()}
+            "
+          >
+            ${factoryBadge}
+          </div>
 
-          <div class="land-slot-status ${statusClass}">
-            ${statusClass === "active" ? "✓" : statusClass === "building" ? "⏳" : "!"}
+          <div
+            class="
+              land-slot-status
+              ${statusClass}
+            "
+          >
+            ${
+              statusClass === "active"
+                ? "✓"
+                : statusClass === "building"
+                  ? "⏳"
+                  : "!"
+            }
           </div>
         </div>
       `;
-          } else {
-            html += `
-        <div
-          class="land-slot-pad empty"
-          data-build-land-id="${landId}"
-          title="Build factory on this land"
-        ></div>
-      `;
-          }
-        }
 
-        html += `</div></div>`;
-        return html;
-      }
+      continue;
+    }
+
+    // =====================================
+    // EMPTY SLOT
+    // =====================================
+
+    html += `
+      <div
+        class="land-slot-pad empty"
+        data-build-land-id="${landId}"
+        title="Build factory on this land"
+      ></div>
+    `;
+  }
+
+  html += `</div></div>`;
+
+  return html;
+}
       function getFactoryEffectiveLevelForDisplay(factory) {
   const blueprintTier = String(
     factory.blueprint_tier ||
@@ -4534,6 +4717,142 @@ function getFactoryEpForLandDisplay(factory, landTierKey) {
   );
 
   return Number.isFinite(ep) && ep > 0 ? Number(ep.toFixed(4)) : 0;
+}
+async function claimImperialMintFromDashboard(
+  specialIndustryId,
+) {
+  const ok = confirm(
+    "Claim all stored EMP from this Imperial Mint?",
+  );
+
+  if (!ok) return;
+
+  try {
+    const res = await fetch(
+      apiUrl(
+        `/player/${encodeURIComponent(
+          PLAYER_USERNAME,
+        )}/imperial-mint/claim`,
+      ),
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": PLAYER_USERNAME,
+        },
+
+        body: JSON.stringify({
+          special_industry_id:
+            specialIndustryId,
+        }),
+      },
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(
+        data.error ||
+          "Imperial Mint claim failed.",
+      );
+    }
+
+    alert(
+      `✅ ${Number(
+        data.emp_claimed || 0,
+      ).toFixed(4)} EMP claimed successfully.`,
+    );
+
+    await loadEmpireOverview();
+
+    if (
+      typeof loadDashboardSummary ===
+      "function"
+    ) {
+      await loadDashboardSummary();
+    }
+  } catch (err) {
+    console.error(
+      "Imperial Mint claim error:",
+      err,
+    );
+
+    alert(
+      err.message ||
+        "Failed to claim Imperial Mint EMP.",
+    );
+  }
+}
+
+
+async function maintainImperialMintFromDashboard(
+  specialIndustryId,
+) {
+  const ok = confirm(
+    "Activate Imperial Mint for 7 days?\n\nCost: 10 EMP",
+  );
+
+  if (!ok) return;
+
+  try {
+    const res = await fetch(
+      apiUrl(
+        `/player/${encodeURIComponent(
+          PLAYER_USERNAME,
+        )}/imperial-mint/maintenance`,
+      ),
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": PLAYER_USERNAME,
+        },
+
+        body: JSON.stringify({
+          special_industry_id:
+            specialIndustryId,
+        }),
+      },
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(
+        data.error ||
+          "Imperial Mint maintenance failed.",
+      );
+    }
+
+    alert(
+      `✅ Imperial Mint activated for ${Number(
+        data.maintenance_days || 7,
+      )} days.\n\n${Number(
+        data.emp_spent || 10,
+      )} EMP spent.`,
+    );
+
+    await loadEmpireOverview();
+
+    if (
+      typeof loadDashboardSummary ===
+      "function"
+    ) {
+      await loadDashboardSummary();
+    }
+  } catch (err) {
+    console.error(
+      "Imperial Mint maintenance error:",
+      err,
+    );
+
+    alert(
+      err.message ||
+        "Failed to activate Imperial Mint.",
+    );
+  }
 }
 function renderLandsTab() {
   const landsContainer = document.getElementById("lands-container");
@@ -4638,30 +4957,80 @@ function renderLandsTab() {
     return diff < 0 ? 0 : diff;
   };
 
-  empireLands.sort((a, b) => {
-    const tierSlots = (tier) => {
-      const key = getLandTierKeyForDisplay(tier);
-      return key === "L3" ? 3 : key === "L2" ? 2 : 1;
-    };
+empireLands.sort((a, b) => {
+  // =====================================
+  // Imperial Mint land always comes first
+  // =====================================
+  const hasImperialMint = (land) =>
+    Array.isArray(land.special_industries) &&
+    land.special_industries.some(
+      (item) =>
+        String(item.industry_type || "")
+          .trim()
+          .toUpperCase() === "IMPERIAL_MINT",
+    );
 
-    const aSlots = tierSlots(a.land_tier);
-    const bSlots = tierSlots(b.land_tier);
+  const aHasMint = hasImperialMint(a);
+  const bHasMint = hasImperialMint(b);
 
-    const aUsed = (a.factories || []).length;
-    const bUsed = (b.factories || []).length;
+  if (aHasMint && !bHasMint) return -1;
+  if (!aHasMint && bHasMint) return 1;
 
-    const aRatio = aUsed / aSlots;
-    const bRatio = bUsed / bSlots;
+  // =====================================
+  // KEEP ORIGINAL LAND SORTING
+  // =====================================
+  const tierSlots = (tier) => {
+    const key = getLandTierKeyForDisplay(tier);
 
-    if (bRatio !== aRatio) return bRatio - aRatio;
-    if (bUsed !== aUsed) return bUsed - aUsed;
+    return key === "L3"
+      ? 3
+      : key === "L2"
+        ? 2
+        : 1;
+  };
 
-    return bSlots - aSlots;
-  });
+  const aSlots = tierSlots(a.land_tier);
+  const bSlots = tierSlots(b.land_tier);
 
+  const aUsed =
+    (a.factories || []).length;
+
+  const bUsed =
+    (b.factories || []).length;
+
+  const aRatio = aUsed / aSlots;
+  const bRatio = bUsed / bSlots;
+
+  if (bRatio !== aRatio) {
+    return bRatio - aRatio;
+  }
+
+  if (bUsed !== aUsed) {
+    return bUsed - aUsed;
+  }
+
+  return bSlots - aSlots;
+});
+const imperialMintLandCount =
+  empireLands.filter(
+    (land) =>
+      Array.isArray(land.special_industries) &&
+      land.special_industries.some(
+        (item) =>
+          String(item.industry_type || "")
+            .trim()
+            .toUpperCase() === "IMPERIAL_MINT",
+      ),
+  ).length;
   for (let idx = 0; idx < empireLands.length; idx++) {
     const land = empireLands[idx];
     const factories = land.factories || [];
+    const specialIndustries =
+  Array.isArray(
+    land.special_industries,
+  )
+    ? land.special_industries
+    : [];
     const rawTier = land.land_tier;
     const landTierKey = getLandTierKeyForDisplay(rawTier);
 
@@ -4684,7 +5053,9 @@ function renderLandsTab() {
           ? 2
           : 1;
 
-    const slotsUsed = factories.length;
+    const slotsUsed =
+  factories.length +
+  specialIndustries.length;
 
     let activeCount = 0;
     let upgradingCount = 0;
@@ -4737,6 +5108,30 @@ function renderLandsTab() {
 
     const landCard = document.createElement("div");
     landCard.className = `land-card-row land-tier-${landTierKey.toLowerCase()}`;
+    if (specialIndustries.length > 0) {
+  const hasImperialMint = specialIndustries.some(
+    (item) =>
+      String(item.industry_type || "")
+        .trim()
+        .toUpperCase() === "IMPERIAL_MINT",
+  );
+
+  if (hasImperialMint) {
+  landCard.classList.add(
+    "imperial-mint-land-card",
+  );
+
+  if (imperialMintLandCount === 1) {
+    landCard.classList.add(
+      "imperial-mint-land-single",
+    );
+  } else {
+    landCard.classList.add(
+      "imperial-mint-land-multiple",
+    );
+  }
+}
+}
     landCard.dataset.landTier = landTierKey;
 
     landCard.dataset.industry = factories
@@ -4745,12 +5140,135 @@ function renderLandsTab() {
       .join(",");
 
     landCard.style.setProperty("--tier-border", borderColor);
+    const imperialMint =
+  specialIndustries.find(
+    (item) =>
+      String(item.industry_type || "")
+        .trim()
+        .toUpperCase() === "IMPERIAL_MINT",
+  ) || null;
 
-    const territoryHtml = renderTerritorySlots(
-      factories,
-      slotsTotal,
-      land.land_id
+let landSummaryHtml = "";
+
+if (imperialMint) {
+  const mintStatus = String(
+    imperialMint.status || "INACTIVE",
+  ).toUpperCase();
+
+  const storedEmp = Number(
+    imperialMint.stored_emp || 0,
+  );
+
+  const activeDays =
+    Number(
+      imperialMint.total_active_seconds || 0,
+    ) / 86400;
+
+  const relicBonus = Number(
+    imperialMint.relic_bonus_percent || 0,
+  );
+
+  let maintenanceDays = 0;
+
+  if (imperialMint.maintenance_ends_at) {
+    maintenanceDays = Math.max(
+      (
+        new Date(
+          imperialMint.maintenance_ends_at,
+        ).getTime() - Date.now()
+      ) /
+        (24 * 60 * 60 * 1000),
+      0,
     );
+  }
+
+landSummaryHtml = `
+  <div class="land-matrix-row imperial-mint-land-summary">
+
+    <div class="matrix-line">
+      🏛 <b>Imperial Mint</b> •
+      Status: <b>${mintStatus}</b>
+    </div>
+
+    <div class="matrix-line">
+      Stored EMP:
+      <b>${storedEmp.toFixed(2)}</b>
+      • Active Days:
+      <b>${activeDays.toFixed(2)}</b>
+    </div>
+
+    <div class="matrix-line">
+      Maintenance:
+      <b>${maintenanceDays.toFixed(2)} days</b>
+      • Relic Bonus:
+      <b>${relicBonus > 0 ? `+${relicBonus}%` : "None"}</b>
+    </div>
+
+    <div
+      class="imperial-mint-land-actions"
+      style="
+        display:flex;
+        gap:10px;
+        flex-wrap:wrap;
+        margin-top:12px;
+      "
+    >
+      <button
+        type="button"
+        class="primary-button"
+        onclick="claimImperialMintFromDashboard(${Number(
+          imperialMint.id,
+        )})"
+        ${storedEmp <= 0 ? "disabled" : ""}
+      >
+        ⚡ Claim ${storedEmp.toFixed(2)} EMP
+      </button>
+
+      <button
+        type="button"
+        class="secondary-button"
+        onclick="maintainImperialMintFromDashboard(${Number(
+          imperialMint.id,
+        )})"
+        ${mintStatus === "ACTIVE" ? "disabled" : ""}
+      >
+        ${
+          mintStatus === "ACTIVE"
+            ? `Maintenance Active • ${maintenanceDays.toFixed(2)} days`
+            : "Pay 10 EMP • Activate 7 Days"
+        }
+      </button>
+    </div>
+
+  </div>
+`;
+} else {
+  landSummaryHtml = `
+    <div class="land-matrix-row">
+      <div class="matrix-line">
+        Active: <b>${activeCount}</b> •
+        Inactive: <b>${inactiveCount}</b> •
+        Building: <b>${buildingCount}</b> •
+        Upgrading: <b>${upgradingCount}</b>
+      </div>
+
+      <div class="matrix-line">
+        EP/day: <b>${landRatePerDayText}</b> •
+        Accumulated EP: <b>${landUnclaimedEPText}</b>
+      </div>
+
+      <div class="matrix-line">${daysInfoText}</div>
+    </div>
+  `;
+}
+
+   const territoryHtml =
+  renderTerritorySlots(
+    factories,
+    specialIndustries,
+    slotsTotal,
+    land.land_id,
+  );
 
     landCard.innerHTML = `
       <div class="land-left">
@@ -4765,15 +5283,7 @@ function renderLandsTab() {
         ${territoryHtml}
       </div>
 
-      <div class="land-matrix-row">
-        <div class="matrix-line">
-          Active: <b>${activeCount}</b> • Inactive: <b>${inactiveCount}</b> • Building: <b>${buildingCount}</b> • Upgrading: <b>${upgradingCount}</b>
-        </div>
-        <div class="matrix-line">
-          EP/day: <b>${landRatePerDayText}</b> • Accumulated EP: <b>${landUnclaimedEPText}</b>
-        </div>
-        <div class="matrix-line">${daysInfoText}</div>
-      </div>
+     ${landSummaryHtml}
 
       <div class="land-factories-col" id="land-factories-${idx}"></div>
     `;
@@ -4781,7 +5291,10 @@ function renderLandsTab() {
     const factoriesList = document.createElement("div");
     factoriesList.className = "factories-list";
 
-    if (!factories.length) {
+    if (
+  !factories.length &&
+  !specialIndustries.length
+) {
       const emptyRow = document.createElement("div");
       emptyRow.className = "factory-row";
       emptyRow.innerHTML = `
@@ -5094,7 +5607,8 @@ try {
   updateLandFilterCounts();
   wireEmptySlotBuildActions();
 }
-      function wireEmptySlotBuildActions() {
+     
+function wireEmptySlotBuildActions() {
         const slots = document.querySelectorAll(".land-slot-pad.empty");
 
         slots.forEach((slot) => {

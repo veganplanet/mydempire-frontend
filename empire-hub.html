@@ -1082,7 +1082,151 @@
   <strong class="foundry-coming-soon">Coming Soon</strong>
 </div>
 </div>
+<!-- ========================================= -->
+<!-- 🏛 IMPERIAL MINTWORKS                    -->
+<!-- ========================================= -->
 
+<section class="imperial-mintworks">
+
+  <div class="imperial-mintworks-head">
+    <div>
+      <div class="imperial-mintworks-kicker">
+        SPECIAL EMP INDUSTRY
+      </div>
+
+      <h2>🏛 Imperial Mintworks</h2>
+
+      <p>
+        Construct and manage Imperial Mints. Each Mint occupies one empty
+        L1 Frontier and produces EMP independently.
+      </p>
+    </div>
+
+    <img
+      src="assets/imperial-mint.png"
+      alt="Imperial Mint"
+      class="imperial-mintworks-building"
+    />
+  </div>
+
+  <!-- CONSTRUCTION -->
+  <div class="imperial-mintworks-block">
+
+    <div class="imperial-mintworks-block-head">
+      <div>
+        <h3>Construct Imperial Mint</h3>
+        <p>
+          Construction is instant. All required assets are permanently consumed.
+        </p>
+      </div>
+    </div>
+
+    <div class="imperial-mint-requirement-grid">
+
+      <div class="imperial-mint-requirement">
+        <span>📜 Blueprint</span>
+        <strong id="imperial-mint-blueprint-balance">--</strong>
+        <small>1 Imperial Mint Blueprint</small>
+      </div>
+
+      <div class="imperial-mint-requirement">
+        <span>🎟 Ticket</span>
+        <strong id="imperial-mint-ticket-balance">--</strong>
+        <small>1 Imperial Ticket</small>
+      </div>
+
+      <div class="imperial-mint-requirement">
+        <span>🔧 SMP</span>
+        <strong id="imperial-mint-smp-balance">--</strong>
+        <small>2 SMP required</small>
+      </div>
+
+      <div class="imperial-mint-requirement">
+        <span>🧩 Fragment</span>
+        <strong id="imperial-mint-fragment-balance">--</strong>
+        <small>1 Fragment required</small>
+      </div>
+
+      <div class="imperial-mint-requirement">
+        <span>⚡ EMP</span>
+        <strong id="imperial-mint-emp-balance">--</strong>
+        <small>100 EMP required</small>
+      </div>
+
+      <div class="imperial-mint-requirement">
+        <span>🌍 Empty L1</span>
+        <strong id="imperial-mint-l1-count">--</strong>
+        <small>1 empty L1 required</small>
+      </div>
+
+    </div>
+
+    <div class="imperial-mint-construction-controls">
+
+      <label>
+        Imperial Mint Blueprint
+
+        <select id="imperial-mint-blueprint-select">
+          <option value="">Loading...</option>
+        </select>
+      </label>
+
+      <label>
+        Eligible Empty L1
+
+        <select id="imperial-mint-land-select">
+          <option value="">Loading...</option>
+        </select>
+      </label>
+
+      <button
+        id="imperial-mint-construct-btn"
+        type="button"
+        disabled
+      >
+        Construct Imperial Mint
+      </button>
+
+    </div>
+
+    <div
+      id="imperial-mint-construct-status"
+      class="imperial-mintworks-status"
+    >
+      Loading construction eligibility...
+    </div>
+
+  </div>
+
+  <!-- OWNED MINTS -->
+  <div class="imperial-mintworks-block">
+
+    <div class="imperial-mintworks-block-head">
+      <div>
+        <h3>Your Imperial Mints</h3>
+        <p>
+          Production, stored EMP, progression and maintenance are tracked
+          separately for every Mint.
+        </p>
+      </div>
+
+      <div
+        id="imperial-mint-owned-count"
+        class="imperial-mintworks-count"
+      >
+        0 Mints
+      </div>
+    </div>
+
+    <div id="imperial-mint-list">
+      <div class="imperial-mintworks-empty">
+        Loading Imperial Mints...
+      </div>
+    </div>
+
+  </div>
+
+</section>
 </section>
 
 </main>
@@ -2351,6 +2495,7 @@ if (
     if (typeof loadEmpireCultureWinners === "function") {
       loadEmpireCultureWinners();
     }
+    
   }
 }
 
@@ -4803,14 +4948,548 @@ console.log("🔥 FOUNDRY VALUES APPLIED:", {
   smpText: smpEl.textContent,
   empText: empEl.textContent,
 });
-  } catch (err) {
+    } catch (err) {
     console.error("Foundry balance load error:", err);
 
     fragmentEl.textContent = "0";
     smpEl.textContent = "0";
     empEl.textContent = "0";
   }
+
+  if (
+    typeof loadImperialMintworks === "function"
+  ) {
+    await loadImperialMintworks();
+  }
 }
+
+async function loadImperialMintworks() {
+  const username = getLoggedInUser();
+
+  const blueprintBalanceEl =
+    document.getElementById(
+      "imperial-mint-blueprint-balance",
+    );
+
+  const ticketBalanceEl =
+    document.getElementById(
+      "imperial-mint-ticket-balance",
+    );
+
+  const smpBalanceEl =
+    document.getElementById(
+      "imperial-mint-smp-balance",
+    );
+
+  const fragmentBalanceEl =
+    document.getElementById(
+      "imperial-mint-fragment-balance",
+    );
+
+  const empBalanceEl =
+    document.getElementById(
+      "imperial-mint-emp-balance",
+    );
+
+  const l1CountEl =
+    document.getElementById(
+      "imperial-mint-l1-count",
+    );
+
+  const blueprintSelect =
+    document.getElementById(
+      "imperial-mint-blueprint-select",
+    );
+
+  const landSelect =
+    document.getElementById(
+      "imperial-mint-land-select",
+    );
+
+  const constructBtn =
+    document.getElementById(
+      "imperial-mint-construct-btn",
+    );
+
+  const statusEl =
+    document.getElementById(
+      "imperial-mint-construct-status",
+    );
+
+  const ownedCountEl =
+    document.getElementById(
+      "imperial-mint-owned-count",
+    );
+
+  const mintListEl =
+    document.getElementById(
+      "imperial-mint-list",
+    );
+
+  if (!username) {
+    if (statusEl) {
+      statusEl.textContent =
+        "Connect wallet to access Imperial Mintworks.";
+    }
+
+    return;
+  }
+
+  try {
+    if (statusEl) {
+      statusEl.textContent =
+        "Loading Imperial Mintworks...";
+    }
+
+    const [
+      blueprintRes,
+      ticketRes,
+      overviewRes,
+      mintRes,
+      balanceRes,
+    ] = await Promise.all([
+      fetch(
+        `${API_BASE}/player/${encodeURIComponent(
+          username,
+        )}/blueprints`,
+      ),
+
+      fetch(
+  `${API_BASE}/goods/${encodeURIComponent(
+    username,
+  )}/imperial-ticket/state`,
+  {
+    headers: {
+      "x-mde-actor": username,
+    },
+  },
+),
+
+      fetch(
+        `${API_BASE}/player/${encodeURIComponent(
+          username,
+        )}/empire-overview`,
+      ),
+
+      fetch(
+        `${API_BASE}/player/${encodeURIComponent(
+          username,
+        )}/imperial-mints`,
+      ),
+
+      fetch(
+        `${API_BASE}/player/${encodeURIComponent(
+          username,
+        )}/foundry-balances`,
+      ),
+    ]);
+
+    const blueprintData =
+      await blueprintRes.json();
+
+    const ticketData =
+      await ticketRes.json();
+
+    const overviewData =
+      await overviewRes.json();
+
+    const mintData =
+      await mintRes.json();
+
+    const balanceData =
+      await balanceRes.json();
+
+    if (
+      !blueprintRes.ok ||
+      !ticketRes.ok ||
+      !overviewRes.ok ||
+      !mintRes.ok ||
+      !balanceRes.ok
+    ) {
+      throw new Error(
+        "Failed to load Imperial Mintworks data.",
+      );
+    }
+
+    // =====================================
+    // IMPERIAL MINT BLUEPRINTS
+    // =====================================
+
+    const imperialBlueprints =
+      (blueprintData.blueprints || []).filter(
+        (bp) =>
+          String(bp.raw_tier || "")
+            .trim()
+            .toUpperCase() ===
+          "IMPERIAL_MINT",
+      );
+
+    if (blueprintBalanceEl) {
+      blueprintBalanceEl.textContent =
+        imperialBlueprints.length;
+    }
+
+    if (blueprintSelect) {
+      if (!imperialBlueprints.length) {
+        blueprintSelect.innerHTML =
+          `<option value="">No Imperial Mint Blueprint</option>`;
+      } else {
+        blueprintSelect.innerHTML =
+          `<option value="">Choose Blueprint</option>` +
+          imperialBlueprints
+            .map(
+              (bp) => `
+                <option value="${Number(
+                  bp.blueprint_id,
+                )}">
+                  Imperial Mint Blueprint
+                </option>
+              `,
+            )
+            .join("");
+      }
+    }
+
+    // =====================================
+    // TICKET + MATERIAL BALANCES
+    // =====================================
+
+    const ticketCount =
+      Number(ticketData.owned_count || 0);
+
+    const smpBalance =
+      Number(balanceData.smpBalance || 0);
+
+    const fragmentBalance =
+      Number(
+        balanceData.imperialFragments || 0,
+      );
+
+    const empBalance =
+      Number(balanceData.empBalance || 0);
+
+    if (ticketBalanceEl) {
+      ticketBalanceEl.textContent =
+        ticketCount.toLocaleString();
+    }
+
+    if (smpBalanceEl) {
+      smpBalanceEl.textContent =
+        smpBalance.toLocaleString();
+    }
+
+    if (fragmentBalanceEl) {
+      fragmentBalanceEl.textContent =
+        fragmentBalance.toLocaleString();
+    }
+
+    if (empBalanceEl) {
+      empBalanceEl.textContent =
+        empBalance.toLocaleString();
+    }
+
+    // =====================================
+    // ELIGIBLE EMPTY L1
+    // =====================================
+
+    const occupiedSpecialLandIds =
+      new Set(
+        (mintData.mints || []).map(
+          (mint) =>
+            Number(mint.land_id),
+        ),
+      );
+
+    const eligibleL1s =
+      (overviewData.lands || []).filter(
+        (land) => {
+          const landId =
+            Number(land.land_id);
+
+          const tier =
+            String(
+              land.land_tier || "",
+            )
+              .trim()
+              .toUpperCase();
+
+          const factories =
+            Array.isArray(land.factories)
+              ? land.factories
+              : [];
+
+          return (
+            tier === "L1" &&
+            factories.length === 0 &&
+            !occupiedSpecialLandIds.has(
+              landId,
+            )
+          );
+        },
+      );
+
+    if (l1CountEl) {
+      l1CountEl.textContent =
+        eligibleL1s.length;
+    }
+
+    if (landSelect) {
+      if (!eligibleL1s.length) {
+        landSelect.innerHTML =
+          `<option value="">No eligible empty L1</option>`;
+      } else {
+        landSelect.innerHTML =
+          `<option value="">Choose Empty L1</option>` +
+          eligibleL1s
+            .map(
+              (land) => `
+                <option value="${Number(
+                  land.land_id,
+                )}">
+                  L1 Frontier
+                </option>
+              `,
+            )
+            .join("");
+      }
+    }
+
+    // =====================================
+    // CONSTRUCTION ELIGIBILITY
+    // =====================================
+
+    const canConstruct =
+      imperialBlueprints.length > 0 &&
+      ticketCount >= 1 &&
+      smpBalance >= 2 &&
+      fragmentBalance >= 1 &&
+      empBalance >= 100 &&
+      eligibleL1s.length > 0;
+
+    if (constructBtn) {
+      constructBtn.disabled =
+        !canConstruct;
+    }
+
+    if (statusEl) {
+      statusEl.textContent =
+        canConstruct
+          ? "All construction requirements are available."
+          : "Complete the missing requirements before constructing another Imperial Mint.";
+    }
+
+    // =====================================
+    // OWNED MINTS
+    // =====================================
+
+    const mints =
+      mintData.mints || [];
+
+    if (ownedCountEl) {
+      ownedCountEl.textContent =
+        `${mints.length} Mint${
+          mints.length === 1
+            ? ""
+            : "s"
+        }`;
+    }
+
+    if (!mintListEl) return;
+
+    if (!mints.length) {
+      mintListEl.innerHTML = `
+        <div class="imperial-mintworks-empty">
+          No Imperial Mint has been constructed yet.
+        </div>
+      `;
+
+      return;
+    }
+
+    mintListEl.innerHTML =
+      mints
+        .map((mint) => {
+          const status =
+            String(
+              mint.status || "INACTIVE",
+            ).toUpperCase();
+
+          const active =
+            status === "ACTIVE";
+
+          const activeDays =
+            Number(
+              mint.total_active_days || 0,
+            );
+
+          const nextIncrease =
+            Number(
+              mint.days_until_next_increase || 0,
+            );
+
+          const storedEmp =
+            Number(
+              mint.stored_emp || 0,
+            );
+
+          const production =
+            Number(
+              mint.current_emp_per_day || 0,
+            );
+
+          const remainingSeconds =
+            Number(
+              mint.operational_seconds_remaining ||
+                0,
+            );
+
+          const remainingDays =
+            remainingSeconds > 0
+              ? (
+                  remainingSeconds /
+                  86400
+                ).toFixed(2)
+              : "0";
+
+          const relicBonus =
+            Number(
+              mint.relic_bonus_percent || 0,
+            );
+
+          return `
+            <div class="imperial-mint-owned-card">
+
+              <div class="imperial-mint-owned-art">
+                <img
+                  src="assets/imperial-mint.png"
+                  alt="Imperial Mint"
+                />
+              </div>
+
+              <div>
+
+                <div class="imperial-mint-owned-title">
+                  <strong>
+                    L1 • Imperial Mint
+                  </strong>
+
+                  <span
+                    class="${
+                      active
+                        ? "imperial-mint-status-active"
+                        : "imperial-mint-status-inactive"
+                    }"
+                  >
+                    ${status}
+                  </span>
+                </div>
+
+                <div class="imperial-mint-stat-grid">
+
+                  <div class="imperial-mint-stat">
+                    <span>Current Production</span>
+                    <strong>
+                      ${production.toFixed(2)}
+                      EMP/day
+                    </strong>
+                  </div>
+
+                  <div class="imperial-mint-stat">
+                    <span>Stored EMP</span>
+                    <strong>
+                      ${storedEmp.toFixed(4)}
+                      EMP
+                    </strong>
+                  </div>
+
+                  <div class="imperial-mint-stat">
+                    <span>Total Active Days</span>
+                    <strong>
+                      ${activeDays.toFixed(2)}
+                    </strong>
+                  </div>
+
+                  <div class="imperial-mint-stat">
+                    <span>Next Increase</span>
+                    <strong>
+                      ${
+                        nextIncrease > 0
+                          ? `${nextIncrease.toFixed(
+                              2,
+                            )} days`
+                          : "MAX"
+                      }
+                    </strong>
+                  </div>
+
+                  <div class="imperial-mint-stat">
+                    <span>Operational Time</span>
+                    <strong>
+                      ${remainingDays} days
+                    </strong>
+                  </div>
+
+                  <div class="imperial-mint-stat">
+                    <span>Relic Bonus</span>
+                    <strong>
+                      ${
+                        relicBonus > 0
+                          ? `+${relicBonus}% ACTIVE`
+                          : "No Bonus"
+                      }
+                    </strong>
+                  </div>
+
+                  <div class="imperial-mint-stat">
+                    <span>Base Production</span>
+                    <strong>
+                      ${Number(
+                        mint.base_emp_per_day ||
+                          0,
+                      ).toFixed(2)}
+                      EMP/day
+                    </strong>
+                  </div>
+
+                  <div class="imperial-mint-stat">
+                    <span>Land</span>
+                    <strong>
+                      L1
+                    </strong>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+          `;
+        })
+        .join("");
+  } catch (err) {
+    console.error(
+      "Imperial Mintworks load failed:",
+      err,
+    );
+
+    if (statusEl) {
+      statusEl.textContent =
+        err.message ||
+        "Failed to load Imperial Mintworks.";
+    }
+
+    if (mintListEl) {
+      mintListEl.innerHTML = `
+        <div class="imperial-mintworks-empty">
+          Failed to load Imperial Mints.
+        </div>
+      `;
+    }
+  }
+}
+
+window.loadImperialMintworks =
+  loadImperialMintworks;
 async function craftFoundryB4() {
   const btn = document.getElementById("craft-b4-btn");
   const status = document.getElementById("craft-b4-status");

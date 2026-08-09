@@ -20287,3 +20287,770 @@ body.mde-dark-theme {
     flex-direction: column;
   }
 }
+/* ======================================== */
+/* 🏛 IMPERIAL MINTWORKS — EMPIRE HUB      */
+/* ======================================== */
+
+.imperial-mintworks {
+  margin-top: 28px;
+  padding: 24px;
+  border: 2px solid #d4a017;
+  border-radius: 24px;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(16, 185, 129, 0.12),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #fffdf2 0%,
+      #fff8d8 55%,
+      #f0fdf4 100%
+    );
+
+  box-shadow:
+    0 18px 42px rgba(161, 98, 7, 0.10);
+}
+
+.imperial-mintworks-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.imperial-mintworks-kicker {
+  display: inline-flex;
+  padding: 6px 11px;
+  border-radius: 999px;
+
+  background: #047857;
+  color: #fff7cc;
+
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+}
+
+.imperial-mintworks-head h2 {
+  margin: 10px 0 5px;
+  color: #3f2d00;
+  font-size: 30px;
+  font-weight: 1000;
+}
+
+.imperial-mintworks-head p {
+  margin: 0;
+  max-width: 700px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.6;
+}
+
+.imperial-mintworks-building {
+  width: 170px;
+  max-height: 125px;
+  object-fit: contain;
+  filter: drop-shadow(
+    0 10px 15px rgba(15, 23, 42, 0.18)
+  );
+}
+
+.imperial-mintworks-block {
+  margin-top: 18px;
+  padding: 20px;
+
+  border: 1px solid rgba(180, 131, 9, 0.24);
+  border-radius: 19px;
+
+  background: rgba(255, 255, 255, 0.87);
+}
+
+.imperial-mintworks-block-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.imperial-mintworks-block-head h3 {
+  margin: 0;
+  color: #064e3b;
+  font-size: 21px;
+  font-weight: 1000;
+}
+
+.imperial-mintworks-block-head p {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.imperial-mintworks-count {
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #ecfdf5;
+  border: 1px solid #6ee7b7;
+  color: #047857;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.imperial-mint-requirement-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(6, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.imperial-mint-requirement {
+  padding: 13px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.imperial-mint-requirement span {
+  display: block;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.imperial-mint-requirement strong {
+  display: block;
+  margin-top: 4px;
+  color: #064e3b;
+  font-size: 20px;
+  font-weight: 1000;
+}
+
+.imperial-mint-requirement small {
+  display: block;
+  margin-top: 3px;
+  color: #94a3b8;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.imperial-mint-construction-controls {
+  display: grid;
+  grid-template-columns:
+    minmax(180px, 1fr)
+    minmax(180px, 1fr)
+    minmax(200px, auto);
+
+  gap: 12px;
+  align-items: end;
+  margin-top: 16px;
+}
+
+.imperial-mint-construction-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  color: #475569;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.imperial-mint-construction-controls select {
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 10px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 11px;
+
+  background: #ffffff;
+  color: #0f172a;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+#imperial-mint-construct-btn {
+  min-height: 44px;
+  padding: 10px 17px;
+
+  border: none;
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #047857,
+      #065f46
+    );
+
+  color: #ffffff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+#imperial-mint-construct-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.imperial-mintworks-status {
+  margin-top: 12px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.imperial-mintworks-empty {
+  padding: 18px;
+  border: 1px dashed #d1d5db;
+  border-radius: 14px;
+
+  background: #f8fafc;
+  color: #64748b;
+
+  text-align: center;
+  font-weight: 750;
+}
+
+/* OWNED MINT CARD */
+
+.imperial-mint-owned-card {
+  display: grid;
+  grid-template-columns:
+    150px
+    minmax(0, 1fr);
+
+  gap: 18px;
+
+  padding: 18px;
+
+  border: 2px solid #d4a017;
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fffdf4 0%,
+      #ffffff 70%,
+      #ecfdf5 100%
+    );
+}
+
+.imperial-mint-owned-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imperial-mint-owned-art img {
+  width: 145px;
+  max-height: 120px;
+  object-fit: contain;
+}
+
+.imperial-mint-owned-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+
+  margin-bottom: 12px;
+}
+
+.imperial-mint-owned-title strong {
+  color: #3f2d00;
+  font-size: 18px;
+  font-weight: 1000;
+}
+
+.imperial-mint-status-active,
+.imperial-mint-status-inactive {
+  padding: 5px 9px;
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.imperial-mint-status-active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.imperial-mint-status-inactive {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.imperial-mint-stat-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(110px, 1fr));
+
+  gap: 8px;
+}
+
+.imperial-mint-stat {
+  padding: 10px;
+  border-radius: 11px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.imperial-mint-stat span {
+  display: block;
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.imperial-mint-stat strong {
+  display: block;
+  margin-top: 3px;
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+@media (max-width: 900px) {
+  .imperial-mint-requirement-grid {
+    grid-template-columns:
+      repeat(3, minmax(120px, 1fr));
+  }
+
+  .imperial-mint-construction-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .imperial-mint-owned-card {
+    grid-template-columns: 1fr;
+  }
+
+  .imperial-mint-stat-grid {
+    grid-template-columns:
+      repeat(2, minmax(110px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .imperial-mintworks {
+    padding: 15px;
+  }
+
+  .imperial-mintworks-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .imperial-mintworks-building {
+    align-self: center;
+  }
+
+  .imperial-mint-requirement-grid {
+    grid-template-columns:
+      repeat(2, minmax(110px, 1fr));
+  }
+}
+/* ========================================= */
+/* 🏛 IMPERIAL MINT — SPECIAL LAND CARD      */
+/* ========================================= */
+
+.player-dashboard-page .imperial-mint-land-card {
+  position: relative;
+
+  border: 3px solid #d4a017 !important;
+
+  background:
+    radial-gradient(
+      circle at 85% 12%,
+      rgba(34, 197, 94, 0.10),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #fffdf2 0%,
+      #fff8d6 55%,
+      #f0fdf4 100%
+    );
+
+  box-shadow:
+    0 14px 34px rgba(180, 131, 9, 0.16),
+    0 0 0 1px rgba(212, 160, 23, 0.10);
+}
+
+
+/* GOLD ACCENT STRIP */
+
+.player-dashboard-page
+.imperial-mint-land-card::before {
+  content: "SPECIAL EMP INDUSTRY";
+
+  position: absolute;
+  top: -13px;
+  left: 22px;
+
+  padding: 5px 12px;
+
+  border-radius: 999px;
+
+  background: #047857;
+  color: #fff7cc;
+
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+
+  z-index: 5;
+
+  box-shadow:
+    0 5px 12px rgba(4, 120, 87, 0.22);
+}
+
+
+/* MINT SLOT */
+
+.player-dashboard-page
+.imperial-mint-land-card
+.imperial-mint-land-slot {
+  border-color: #d4a017 !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #fff8d6
+    ) !important;
+
+  box-shadow:
+    0 10px 24px rgba(180, 131, 9, 0.25) !important;
+}
+
+
+/* MINT BADGE */
+
+.player-dashboard-page
+.imperial-mint-land-card
+.imperial-mint-land-badge {
+  background:
+    linear-gradient(
+      135deg,
+      #7a4b00,
+      #d4a017
+    ) !important;
+
+  color: #ffffff !important;
+
+  border: 2px solid #ffffff;
+}
+
+
+/* SPECIAL SUMMARY */
+
+.player-dashboard-page
+.imperial-mint-land-summary {
+  border: 1px solid rgba(212, 160, 23, 0.32);
+
+  background:
+    linear-gradient(
+      135deg,
+      #fffdf2,
+      #ffffff 55%,
+      #ecfdf5
+    );
+
+  box-shadow:
+    0 6px 16px rgba(180, 131, 9, 0.08);
+}
+
+
+/* CLAIM BUTTON */
+
+.player-dashboard-page
+.imperial-mint-land-actions
+.primary-button {
+  border: 1px solid #2563eb;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eff6ff,
+      #dbeafe
+    );
+
+  color: #1d4ed8;
+  font-weight: 900;
+}
+
+
+/* MAINTENANCE BUTTON */
+
+.player-dashboard-page
+.imperial-mint-land-actions
+.secondary-button {
+  border: 1px solid #86efac;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f0fdf4,
+      #dcfce7
+    );
+
+  color: #166534;
+  font-weight: 900;
+}
+/* =========================================
+   IMPERIAL MINT LAND — SPECIAL GOLD THEME
+   ========================================= */
+
+.player-dashboard-page
+.imperial-mint-land-card {
+  --tier-border: #d69e00 !important;
+
+  border: 3px solid #d69e00 !important;
+
+  background:
+    radial-gradient(
+      circle at 50% 18%,
+      rgba(255, 224, 122, 0.22),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      #fffdf5 0%,
+      #fffaf0 52%,
+      #fff7df 100%
+    ) !important;
+
+  box-shadow:
+    0 14px 30px rgba(180, 130, 0, 0.16),
+    0 0 0 1px rgba(214, 158, 0, 0.08);
+}
+
+
+/* L1 BADGE — REMOVE GREEN */
+
+.player-dashboard-page
+.imperial-mint-land-card
+.land-badge-row {
+  background:
+    linear-gradient(
+      135deg,
+      #8a5a00,
+      #d69e00
+    ) !important;
+
+  color: #ffffff !important;
+
+  box-shadow:
+    0 5px 12px rgba(138, 90, 0, 0.24);
+}
+
+
+/* SPECIAL INDUSTRY LABEL */
+
+.player-dashboard-page
+.imperial-mint-land-card::before {
+  content: "♛ SPECIAL EMP INDUSTRY";
+
+  position: absolute;
+  top: 0;
+  left: 22px;
+
+  transform: translateY(-50%);
+
+  padding: 5px 14px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8a5a00,
+      #d69e00
+    );
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+
+  z-index: 10;
+
+  box-shadow:
+    0 6px 14px rgba(138, 90, 0, 0.25);
+}
+
+
+/* MINT SLOT — GOLD, NOT GREEN */
+
+.player-dashboard-page
+.imperial-mint-land-card
+.imperial-mint-land-slot {
+  border-color: #d69e00 !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #fff5cc
+    ) !important;
+
+  box-shadow:
+    0 9px 20px rgba(214, 158, 0, 0.22) !important;
+}
+
+
+/* MINT BADGE */
+
+.player-dashboard-page
+.imperial-mint-land-card
+.imperial-mint-land-badge {
+  background:
+    linear-gradient(
+      135deg,
+      #704500,
+      #d69e00
+    ) !important;
+
+  color: #ffffff !important;
+
+  border-color: #ffffff !important;
+}
+
+
+/* REMOVE GREEN ACTIVE CIRCLE */
+
+.player-dashboard-page
+.imperial-mint-land-card
+.land-slot-status.active {
+  background: #d69e00 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+
+/* MINT INFO PANEL */
+
+.player-dashboard-page
+.imperial-mint-land-card
+.imperial-mint-land-summary {
+  border: 1px solid #ead08a !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fffdf5,
+      #fff9e8
+    ) !important;
+
+  box-shadow:
+    0 6px 14px rgba(180, 130, 0, 0.08);
+}
+
+
+/* CLAIM BUTTON */
+
+.player-dashboard-page
+.imperial-mint-land-card
+.imperial-mint-land-actions
+.primary-button {
+  border-color: #d69e00 !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fff7d6,
+      #ffecad
+    ) !important;
+
+  color: #7a4b00 !important;
+}
+
+
+/* MAINTENANCE BUTTON */
+
+.player-dashboard-page
+.imperial-mint-land-card
+.imperial-mint-land-actions
+.secondary-button {
+  border-color: #d69e00 !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fffdf4,
+      #fff3c7
+    ) !important;
+
+  color: #7a4b00 !important;
+}
+/* =========================================
+   IMPERIAL MINT — FEATURED FULL-WIDTH LAND
+   ========================================= */
+
+
+   /* Fix Imperial Mint special label */
+.player-dashboard-page
+.imperial-mint-land-card::before {
+  top: 10px !important;
+  left: 18px !important;
+  transform: none !important;
+
+  background: linear-gradient(
+    135deg,
+    #8a5a00,
+    #d69e00
+  ) !important;
+
+  color: #ffffff !important;
+
+  z-index: 20 !important;
+}
+/* Remove green aura from Imperial Mint territory */
+.player-dashboard-page
+.imperial-mint-land-card
+.land-territory {
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(214, 158, 0, 0.10),
+      transparent 42%
+    ),
+    #ffffff !important;
+}
+
+.player-dashboard-page
+.imperial-mint-land-card
+.land-territory-slots {
+  background: transparent !important;
+}
+
+.player-dashboard-page
+.imperial-mint-land-card
+.imperial-mint-land-slot {
+  box-shadow:
+    0 8px 20px rgba(180, 130, 0, 0.18) !important;
+}
+/* One Imperial Mint = full width */
+.player-dashboard-page
+.imperial-mint-land-single {
+  grid-column: 1 / -1 !important;
+}
+
+
+/* Two or more Imperial Mints = normal half-width grid cards */
+.player-dashboard-page
+.imperial-mint-land-multiple {
+  grid-column: span 1 !important;
+}
