@@ -1097,6 +1097,9 @@ forkyishere,529"
               Start Season</button
             ><button id="end-season-btn" class="danger">End Season</button>
             <button id="reset-season-btn">Reset Season</button>
+            <button id="delete-season-btn" class="danger">
+  Delete Season
+</button>
           </div>
           <div class="status" id="season-control-status">
             No season action yet.
@@ -5495,6 +5498,58 @@ document
 
       if (status) {
         status.textContent = "❌ Failed to reset season.";
+      }
+    }
+  });
+      document
+  .getElementById("delete-season-btn")
+  ?.addEventListener("click", async () => {
+    const status = document.getElementById("season-control-status");
+    const seasonId = document.getElementById("season-id-input").value;
+
+    if (!seasonId) {
+      if (status) {
+        status.textContent = "❌ Enter Season ID first.";
+      }
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Delete Season ${seasonId} permanently?\n\nCompleted seasons are protected and cannot be deleted.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      if (status) {
+        status.textContent = "Deleting season...";
+      }
+
+      const response = await fetch(
+        `${API_BASE}/admin/delete-season/${seasonId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "x-admin-key": ADMIN_KEY,
+          },
+        },
+      );
+
+      const data = await response.json();
+
+      if (status) {
+        status.textContent =
+          response.ok && data.success
+            ? `✅ Season ${seasonId} deleted successfully.`
+            : `❌ ${data.error || "Failed to delete season"}`;
+      }
+    } catch (err) {
+      console.error("Delete season error:", err);
+
+      if (status) {
+        status.textContent = "❌ Failed to delete season.";
       }
     }
   });
