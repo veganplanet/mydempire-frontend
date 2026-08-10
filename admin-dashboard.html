@@ -5404,8 +5404,13 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           const body = {
             name: document.getElementById("season-name-input").value,
             industry: document.getElementById("season-industry-input").value,
-            start_date: document.getElementById("season-start-input").value,
-            end_date: document.getElementById("season-end-input").value,
+           start_date: new Date(
+  document.getElementById("season-start-input").value,
+).toISOString(),
+
+end_date: new Date(
+  document.getElementById("season-end-input").value,
+).toISOString(),
             ep_boost_percent: Number(
               document.getElementById("season-boost-input").value || 0,
             ),
