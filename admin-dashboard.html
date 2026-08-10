@@ -1084,7 +1084,8 @@ forkyishere,529"
               placeholder="EP Boost %"
             /><input
               id="season-growth-reward-input"
-              placeholder="Growth Champion reward"
+              value="1 Genesis Pack"
+              readonly
             />
           </div>
           <div class="row">
@@ -5434,7 +5435,17 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           );
 
           status.textContent = data.success
-            ? `✅ Season started. Players snapshotted: ${data.players_snapshotted}`
+            ? `✅ Season started.
+Industry-specific leaderboard is now active.
+Players snapshotted: ${data.players_snapshotted}
+
+🏆 Rewards:
+🥇 5 HIVE + 1,100 EMP + Imperial Mint Blueprint
+🥈 3 HIVE + 900 EMP + Imperial Mint Blueprint
+🥉 2 HIVE + 700 EMP + Imperial Mint Blueprint
+⚡ Rank 4–10: EMP rewards
+🎟️ Rank 4–10: 1 Imperial Mint Blueprint lottery
+🚀 Growth Champion: 1 Genesis Pack`
             : `❌ ${data.error || "Failed to start season"}`;
         });
 

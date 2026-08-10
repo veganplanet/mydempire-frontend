@@ -1360,43 +1360,75 @@ Empire Surge
   <div><strong>Ends:</strong> <span id="season-end-display">--</span></div>
 
   <div style="margin-top:12px;">
-    <div id="season-reward-preview" class="season-reward-preview">
+<div id="season-reward-preview" class="season-reward-preview">
   <div class="season-reward-title">
     🏆 Season Reward Distribution
   </div>
 
   <div class="season-reward-grid">
+
     <div class="season-reward-item">
-      🥇 Rank 1 → <span id="season-r1-preview">-</span>
+      🥇 Rank 1 →
+      <span id="season-r1-preview">5 HIVE + 1,100 EMP + Imperial Mint Blueprint</span>
     </div>
 
     <div class="season-reward-item">
-      🥈 Rank 2 → <span id="season-r2-preview">-</span>
+      🥈 Rank 2 →
+      <span id="season-r2-preview">3 HIVE + 900 EMP + Imperial Mint Blueprint</span>
     </div>
 
     <div class="season-reward-item">
-      🥉 Rank 3 → <span id="season-r3-preview">-</span>
+      🥉 Rank 3 →
+      <span id="season-r3-preview">2 HIVE + 700 EMP + Imperial Mint Blueprint</span>
     </div>
 
     <div class="season-reward-item wide">
-      ⚡ Rank 4–10 → Bonus EMP rewards
+      ⚡ Rank 4 → 500 EMP
+      <br>
+      Rank 5 → 450 EMP
+      <br>
+      Rank 6 → 400 EMP
+      <br>
+      Rank 7 → 350 EMP
+    </div>
+
+    <div class="season-reward-item wide">
+      ⚡ Rank 8 → 300 EMP
+      <br>
+      Rank 9 → 200 EMP
+      <br>
+      Rank 10 → 100 EMP
+    </div>
+
+    <div class="season-reward-item wide">
+      🎟️ Ranks 4–10 →
+      1 Imperial Mint Blueprint awarded by equal lottery
     </div>
 
     <div class="season-reward-item wide">
       🚀 Growth Champion → 1 Genesis Pack
     </div>
-  </div>
-  <div class="season-reward-info">
-  <div>
-    💰 <strong>Reward Pool:</strong><br>
-    Calculated from 0.2% of treasury value at the moment the season ends. Top 3 receive HIVE plus equivalent EMP rewards.
+
   </div>
 
-  <div style="margin-top:10px;">
-    🚀 <strong>Growth Champion:</strong><br>
-    Awarded to the empire with the strongest EP growth during the season among eligible participants.
+  <div class="season-reward-info">
+
+    <div>
+      💰 <strong>Fixed Season Rewards:</strong><br>
+      10 HIVE + 5,000 EMP + 4 Imperial Mint Blueprints.
+    </div>
+
+    <div style="margin-top:10px;">
+      🎟️ <strong>Imperial Mint Lottery:</strong><br>
+      One additional Imperial Mint Blueprint will be drawn equally among players finishing Rank 4–10.
+    </div>
+
+    <div style="margin-top:10px;">
+      🚀 <strong>Growth Champion:</strong><br>
+      Minimum starting industry EP/day: 100 • Minimum growth: 25% • Winner is the eligible player with the highest absolute EP/day gain.
+    </div>
+
   </div>
-</div>
 </div>
     <strong>Live Season Leaderboard:</strong>
     <div id="season-live-leaderboard" class="status-text">
@@ -2563,47 +2595,152 @@ function renderSeasonHistory() {
   const s = seasonHistoryList[seasonHistoryIndex];
   const top10 = Array.isArray(s.season_top10) ? s.season_top10 : [];
 
+  // New reward structure can be identified from the extra reward
+  // information saved inside Season 3+ Top 10 results.
+  const usesNewRewardStructure = top10.some((p) =>
+    Object.prototype.hasOwnProperty.call(p, "emp_reward") ||
+    Object.prototype.hasOwnProperty.call(p, "imperial_mint_blueprint") ||
+    Object.prototype.hasOwnProperty.call(p, "mint_lottery_eligible")
+  );
+
   const rowsHtml = top10.length
     ? top10
         .map((p, index) => {
-          const rank = index + 1;
+          const rank = Number(p.rank || index + 1);
+
           const medal =
-            rank === 1 ? "🥇" :
-            rank === 2 ? "🥈" :
-            rank === 3 ? "🥉" :
-            `#${rank}`;
+            rank === 1
+              ? "🥇"
+              : rank === 2
+                ? "🥈"
+                : rank === 3
+                  ? "🥉"
+                  : `#${rank}`;
+
+          let rewardHtml = "";
+
+          if (usesNewRewardStructure) {
+            const hiveReward = Number(p.hive_reward || 0);
+            const empReward = Number(p.emp_reward || 0);
+            const mintBlueprint = Number(
+              p.imperial_mint_blueprint || 0
+            );
+
+            const rewardParts = [];
+
+            if (hiveReward > 0) {
+              rewardParts.push(`${hiveReward.toFixed(0)} HIVE`);
+            }
+
+            if (empReward > 0) {
+              rewardParts.push(`${empReward.toLocaleString()} EMP`);
+            }
+
+            if (mintBlueprint > 0) {
+              rewardParts.push("🏛 Imperial Mint Blueprint");
+            }
+
+            if (p.mint_lottery_eligible) {
+              rewardParts.push("🎟️ Mint Blueprint Lottery");
+            }
+
+            rewardHtml = `
+              <div
+                style="
+                  margin-top:4px;
+                  color:#475569;
+                  font-size:13px;
+                  font-weight:800;
+                "
+              >
+                ${rewardParts.join(" + ")}
+              </div>
+            `;
+          }
 
           return `
-            <div class="season-rank-row ${rank <= 3 ? 'top-rank' : ''}">
+            <div class="season-rank-row ${rank <= 3 ? "top-rank" : ""}">
               <div class="season-rank-left">
                 <span class="season-rank-medal">${medal}</span>
-                <span class="season-rank-name">@${p.username}</span>
+
+                <div>
+                  <span class="season-rank-name">
+                    @${p.username}
+                  </span>
+
+                  ${rewardHtml}
+                </div>
               </div>
-              <div class="season-rank-ep">${Number(p.ep || 0).toFixed(0)} EP/day</div>
+
+              <div class="season-rank-ep">
+                ${Number(p.ep || 0).toFixed(0)} EP/day
+              </div>
             </div>
           `;
         })
         .join("")
     : `<div class="season-empty-history">No ranking saved.</div>`;
 
+  let rewardHeaderHtml = "";
+
+  if (usesNewRewardStructure) {
+    rewardHeaderHtml = `
+      <div class="season-reward-badge">
+        10 HIVE + 5,000 EMP
+      </div>
+
+      <div class="season-prize-breakdown">
+        🏛 3 Imperial Mint Blueprints for Top 3 ·
+        🎟️ 1 additional Mint Blueprint lottery among Rank 4–10
+      </div>
+    `;
+  } else {
+    // Preserve original Season 1 / Season 2 history.
+    rewardHeaderHtml = `
+      <div class="season-reward-badge">
+        ${Number(s.reward_pool_hive || 0).toFixed(3)} HIVE Pool
+      </div>
+
+      <div class="season-prize-breakdown">
+        🥇 ${(Number(s.reward_pool_hive || 0) * 0.5).toFixed(3)} HIVE ·
+        🥈 ${(Number(s.reward_pool_hive || 0) * 0.3).toFixed(3)} HIVE ·
+        🥉 ${(Number(s.reward_pool_hive || 0) * 0.2).toFixed(3)} HIVE
+      </div>
+    `;
+  }
+
+  const growthChampionHtml = usesNewRewardStructure
+    ? `
+        🚀 Growth Champion:
+        ${
+          s.growth_champion
+            ? `@${s.growth_champion} · 🎁 1 Genesis Pack`
+            : "None"
+        }
+      `
+    : `
+        🚀 Growth Champion: @${s.growth_champion || "None"}
+      `;
+
   box.innerHTML = `
     <div class="season-history-card">
+
       <div class="season-history-head">
         <div>
-          <div class="season-history-count">Season ${seasonHistoryIndex + 1} of ${seasonHistoryList.length}</div>
-          <div class="season-history-title">🏆 ${s.name || "-"}</div>
-          <div class="season-history-sub">${s.industry || "-"} Industry Season</div>
+          <div class="season-history-count">
+            Season ${seasonHistoryIndex + 1} of ${seasonHistoryList.length}
+          </div>
+
+          <div class="season-history-title">
+            🏆 ${s.name || "-"}
+          </div>
+
+          <div class="season-history-sub">
+            ${s.industry || "-"} Industry Season
+          </div>
         </div>
 
-        <div class="season-reward-badge">
-  ${Number(s.reward_pool_hive || 0).toFixed(3)} HIVE Pool
-</div>
-
-<div class="season-prize-breakdown">
-  🥇 ${(Number(s.reward_pool_hive || 0) * 0.5).toFixed(3)} HIVE ·
-  🥈 ${(Number(s.reward_pool_hive || 0) * 0.3).toFixed(3)} HIVE ·
-  🥉 ${(Number(s.reward_pool_hive || 0) * 0.2).toFixed(3)} HIVE
-</div>
+        ${rewardHeaderHtml}
       </div>
 
       <div class="season-rank-list">
@@ -2612,14 +2749,28 @@ function renderSeasonHistory() {
 
       <div class="season-history-footer">
         <span class="season-growth-badge">
-          🚀 Growth Champion: @${s.growth_champion || "None"}
+          ${growthChampionHtml}
         </span>
       </div>
 
       <div class="season-history-nav">
-        <button type="button" class="secondary-button" onclick="showPreviousSeasonHistory()">⬅ Previous</button>
-        <button type="button" class="secondary-button" onclick="showNextSeasonHistory()">Next ➡</button>
+        <button
+          type="button"
+          class="secondary-button"
+          onclick="showPreviousSeasonHistory()"
+        >
+          ⬅ Previous
+        </button>
+
+        <button
+          type="button"
+          class="secondary-button"
+          onclick="showNextSeasonHistory()"
+        >
+          Next ➡
+        </button>
       </div>
+
     </div>
   `;
 }
@@ -2709,13 +2860,19 @@ const banner = document.getElementById("season-live-banner");
         const estimatedPool = Number(season.projected_reward_pool_hive || 0);
 
 document.getElementById("season-r1-preview").textContent =
-  `${Number(season.projected_winner1_reward || 0).toFixed(3)} HIVE`;
+  `${Number(season.projected_winner1_reward || 0).toFixed(0)} HIVE + ${Number(
+    season.projected_winner1_emp || 0,
+  ).toLocaleString()} EMP + Imperial Mint Blueprint`;
 
 document.getElementById("season-r2-preview").textContent =
-  `${Number(season.projected_winner2_reward || 0).toFixed(3)} HIVE`;
+  `${Number(season.projected_winner2_reward || 0).toFixed(0)} HIVE + ${Number(
+    season.projected_winner2_emp || 0,
+  ).toLocaleString()} EMP + Imperial Mint Blueprint`;
 
 document.getElementById("season-r3-preview").textContent =
-  `${Number(season.projected_winner3_reward || 0).toFixed(3)} HIVE`;
+  `${Number(season.projected_winner3_reward || 0).toFixed(0)} HIVE + ${Number(
+    season.projected_winner3_emp || 0,
+  ).toLocaleString()} EMP + Imperial Mint Blueprint`;
 
     
 
