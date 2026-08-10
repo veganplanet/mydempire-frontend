@@ -8020,38 +8020,115 @@ console.log("CRATE FRONTEND DEBUG:", {
   }
 }
 async function loadSeasonLiveBanner() {
-  console.log("LOAD SEASON BANNER FUNCTION STARTED");
-  try {
-    const res = await fetch(`${API_BASE}/season/active`);
-    const data = await res.json();
+  const banner = document.getElementById("season-live-banner");
+  const titleEl = document.getElementById("season-live-title");
+  const metaEl = document.getElementById("season-live-meta");
+  const pillEl = banner?.querySelector(".season-live-pill");
 
-    if (!data?.success || !data?.season) {
+  if (!banner || !titleEl || !metaEl || !pillEl) {
+    return;
+  }
+
+  function formatSeasonDate(rawValue) {
+    if (!rawValue) return "--";
+
+    const raw = String(rawValue).trim();
+
+    // Preserve the same date/time values entered from Admin.
+    // Avoid timezone conversion.
+    const clean = raw.replace("T", " ").replace("Z", "");
+
+    const match = clean.match(
+      /^(\d{4})-(\d{2})-(\d{2})[ ](\d{2}):(\d{2})/,
+    );
+
+    if (!match) {
+      return clean;
+    }
+
+    const [, year, month, day, hour, minute] = match;
+
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    const hourNumber = Number(hour);
+    const displayHour = hourNumber % 12 || 12;
+    const ampm = hourNumber >= 12 ? "PM" : "AM";
+
+    return `${Number(day)} ${
+      monthNames[Number(month) - 1]
+    } ${year}, ${displayHour}:${minute} ${ampm}`;
+  }
+
+  try {
+    // First check if a season is already LIVE.
+    const activeResponse = await fetch(`${API_BASE}/season/active`);
+    const activeData = await activeResponse.json();
+
+    if (
+      activeResponse.ok &&
+      activeData.success &&
+      activeData.season
+    ) {
+      const season = activeData.season;
+
+      banner.style.display = "flex";
+
+      pillEl.textContent = "🔥 LIVE SEASON";
+
+      titleEl.textContent =
+        `${season.name} • ${season.industry} Industry`;
+
+      metaEl.textContent =
+        `Ends: ${formatSeasonDate(season.end_date)}`;
+
       return;
     }
 
-    const season = data.season;
+    // If no live season, check next UPCOMING season.
+    const upcomingResponse = await fetch(
+      `${API_BASE}/season/upcoming`,
+    );
 
-    const banner = document.getElementById("season-live-banner");
-    const title = document.getElementById("season-live-title");
-    const meta = document.getElementById("season-live-meta");
+    const upcomingData = await upcomingResponse.json();
 
+    if (
+      upcomingResponse.ok &&
+      upcomingData.success &&
+      upcomingData.season
+    ) {
+      const season = upcomingData.season;
 
+      banner.style.display = "flex";
 
-    const endDate = new Date(season.end_date);
+      pillEl.textContent = "🟡 UPCOMING SEASON";
 
-    title.textContent =
-      `${season.name} (${season.industry} INDUSTRY)`;
+      titleEl.textContent =
+        `${season.name} • ${season.industry} Industry`;
 
-   meta.innerHTML =
-  `⏳ Ends: 22 Jun 2026, 3:59 PM &nbsp;&nbsp; • &nbsp;&nbsp; 🏆 Rewards shown inside Season leaderboard`;
+      metaEl.textContent =
+        `Starts: ${formatSeasonDate(season.start_date)}`;
 
-    console.log("BANNER FOUND:", banner);
+      return;
+    }
 
-banner.style.display = "flex";
-banner.style.border = "5px solid red";
-
+    banner.style.display = "none";
   } catch (err) {
     console.error("Season banner load failed:", err);
+
+    banner.style.display = "none";
   }
 }
 function openSeasonLeaderboard() {
