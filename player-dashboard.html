@@ -8030,47 +8030,23 @@ async function loadSeasonLiveBanner() {
   }
 
   function formatSeasonDate(rawValue) {
-    if (!rawValue) return "--";
+  if (!rawValue) return "--";
 
-    const raw = String(rawValue).trim();
+  const date = new Date(rawValue);
 
-    // Preserve the same date/time values entered from Admin.
-    // Avoid timezone conversion.
-    const clean = raw.replace("T", " ").replace("Z", "");
-
-    const match = clean.match(
-      /^(\d{4})-(\d{2})-(\d{2})[ ](\d{2}):(\d{2})/,
-    );
-
-    if (!match) {
-      return clean;
-    }
-
-    const [, year, month, day, hour, minute] = match;
-
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    const hourNumber = Number(hour);
-    const displayHour = hourNumber % 12 || 12;
-    const ampm = hourNumber >= 12 ? "PM" : "AM";
-
-    return `${Number(day)} ${
-      monthNames[Number(month) - 1]
-    } ${year}, ${displayHour}:${minute} ${ampm}`;
+  if (Number.isNaN(date.getTime())) {
+    return "--";
   }
+
+  return date.toLocaleString(undefined, {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
 
   try {
     // First check if a season is already LIVE.
