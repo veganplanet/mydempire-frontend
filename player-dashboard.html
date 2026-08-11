@@ -5324,7 +5324,17 @@ if (imperialMint) {
   const relicBonus = Number(
     imperialMint.relic_bonus_percent || 0,
   );
+const currentEmpPerDay = Number(
+  imperialMint.current_emp_per_day || 0,
+);
 
+const baseEmpPerDay = Number(
+  imperialMint.base_emp_per_day || 0,
+);
+
+const daysUntilNextIncrease = Number(
+  imperialMint.days_until_next_increase || 0,
+);
   let maintenanceDays = 0;
 
   if (imperialMint.maintenance_ends_at) {
@@ -5348,11 +5358,36 @@ landSummaryHtml = `
     </div>
 
     <div class="matrix-line">
-      Stored EMP:
-      <b>${storedEmp.toFixed(2)}</b>
-      • Active Days:
-      <b>${activeDays.toFixed(2)}</b>
-    </div>
+  ⚡ Current Output:
+  <b>${currentEmpPerDay.toFixed(2)} EMP/day</b>
+  • Base Rate:
+  <b>${baseEmpPerDay.toFixed(2)} EMP/day</b>
+</div>
+
+<div class="matrix-line">
+  Stored EMP:
+  <b>${storedEmp.toFixed(2)}</b>
+  • Active Days:
+  <b>${activeDays.toFixed(2)}</b>
+</div>
+
+<div class="matrix-line">
+  📈 Growth:
+  <b>+10% every 30 active days</b>
+  • Maximum:
+  <b>50 EMP/day</b>
+</div>
+
+<div class="matrix-line">
+  Next Increase:
+  <b>${
+    baseEmpPerDay >= 50
+      ? "MAX LEVEL"
+      : `${daysUntilNextIncrease.toFixed(2)} active days`
+  }</b>
+  • Empire Limit:
+  <b>2 Imperial Mints</b>
+</div>
 
     <div class="matrix-line">
       Maintenance:

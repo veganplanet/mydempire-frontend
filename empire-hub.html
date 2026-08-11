@@ -1138,7 +1138,7 @@
       <div class="imperial-mint-requirement">
         <span>🔧 SMP</span>
         <strong id="imperial-mint-smp-balance">--</strong>
-        <small>2 SMP required</small>
+        <small>4 SMP required</small>
       </div>
 
       <div class="imperial-mint-requirement">
@@ -1178,7 +1178,20 @@
           <option value="">Loading...</option>
         </select>
       </label>
-
+<div
+  style="
+    margin:10px 0;
+    padding:10px 12px;
+    border-radius:10px;
+    background:#fff7ed;
+    border:1px solid #fdba74;
+    color:#9a3412;
+    font-weight:800;
+    font-size:13px;
+  "
+>
+  🏛 Empire Limit: Maximum 2 Imperial Mints may be constructed per player.
+</div>
       <button
         id="imperial-mint-construct-btn"
         type="button"
@@ -4931,6 +4944,44 @@ const data = await res.json();
     const fragmentValue = Number(data.imperialFragments || 0).toLocaleString();
 const smpValue = Number(data.smpBalance || 0).toLocaleString();
 const empValue = Number(data.empBalance || 0).toLocaleString();
+const craftB4Btn = document.getElementById("craft-b4-btn");
+const craftB4Status = document.getElementById("craft-b4-status");
+
+const rawFragments = Number(data.imperialFragments || 0);
+const rawSmp = Number(data.smpBalance || 0);
+const rawEmp = Number(data.empBalance || 0);
+
+const canCraftB4 =
+  rawFragments >= 5 &&
+  rawSmp >= 5 &&
+  rawEmp >= 100;
+
+if (craftB4Btn) {
+  craftB4Btn.disabled = !canCraftB4;
+}
+
+if (craftB4Status) {
+  if (canCraftB4) {
+    craftB4Status.textContent = "✅ Foundry B4 crafting is ready.";
+  } else {
+    const missing = [];
+
+    if (rawFragments < 5) {
+      missing.push(`${5 - rawFragments} Fragment${5 - rawFragments === 1 ? "" : "s"}`);
+    }
+
+    if (rawSmp < 5) {
+      missing.push(`${5 - rawSmp} SMP`);
+    }
+
+    if (rawEmp < 100) {
+      missing.push(`${100 - rawEmp} EMP`);
+    }
+
+    craftB4Status.textContent =
+      `❌ Missing: ${missing.join(" + ")}`;
+  }
+}
 
 fragmentEl.textContent = fragmentValue;
 smpEl.textContent = smpValue;
@@ -5257,11 +5308,18 @@ async function loadImperialMintworks() {
     // =====================================
     // CONSTRUCTION ELIGIBILITY
     // =====================================
-
+console.log("IMPERIAL MINT CHECK:", {
+  blueprints: imperialBlueprints.length,
+  tickets: ticketCount,
+  smp: smpBalance,
+  fragments: fragmentBalance,
+  emp: empBalance,
+  eligibleL1s: eligibleL1s.length,
+});
     const canConstruct =
       imperialBlueprints.length > 0 &&
       ticketCount >= 1 &&
-      smpBalance >= 2 &&
+      smpBalance >= 4 &&
       fragmentBalance >= 1 &&
       empBalance >= 100 &&
       eligibleL1s.length > 0;
@@ -5269,8 +5327,14 @@ async function loadImperialMintworks() {
     if (constructBtn) {
       constructBtn.disabled =
         !canConstruct;
+        console.log("MINT BUTTON STATE:", {
+  canConstruct,
+  disabled: constructBtn.disabled,
+});
     }
-
+if (constructBtn) {
+  constructBtn.onclick = constructImperialMint;
+}
     if (statusEl) {
       statusEl.textContent =
         canConstruct
@@ -5487,7 +5551,95 @@ async function loadImperialMintworks() {
     }
   }
 }
+async function constructImperialMint() {
+  const username =
+    localStorage.getItem("hiveUsername") ||
+    localStorage.getItem("mde_username") ||
+    localStorage.getItem("username") ||
+    "";
 
+  const cleanUsername = String(username)
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+
+  const landSelect = document.getElementById("imperial-mint-land-select");
+  const blueprintSelect = document.getElementById(
+    "imperial-mint-blueprint-select",
+  );
+  const statusEl = document.getElementById(
+    "imperial-mint-construct-status",
+  );
+  const constructBtn = document.getElementById(
+    "imperial-mint-construct-btn",
+  );
+
+  const landId = Number(landSelect?.value || 0);
+  const blueprintId = Number(blueprintSelect?.value || 0);
+
+  if (!cleanUsername) {
+    if (statusEl) statusEl.textContent = "Please connect wallet first.";
+    return;
+  }
+
+  if (!landId) {
+    if (statusEl) statusEl.textContent = "Please select an eligible L1 land.";
+    return;
+  }
+
+  if (!blueprintId) {
+    if (statusEl) {
+      statusEl.textContent = "Please select an Imperial Mint Blueprint.";
+    }
+    return;
+  }
+
+  try {
+    if (constructBtn) constructBtn.disabled = true;
+
+    if (statusEl) {
+      statusEl.textContent = "Constructing Imperial Mint...";
+    }
+
+    const response = await fetch(
+      `${API_BASE}/player/${encodeURIComponent(
+        cleanUsername,
+      )}/imperial-mint/construct`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": cleanUsername,
+        },
+        body: JSON.stringify({
+          land_id: landId,
+          blueprint_id: blueprintId,
+        }),
+      },
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Failed to construct Imperial Mint.");
+    }
+
+    if (statusEl) {
+      statusEl.textContent = "✅ Imperial Mint constructed successfully.";
+    }
+
+    await loadImperialMintworks();
+  } catch (err) {
+    console.error("Imperial Mint construction failed:", err);
+
+    if (statusEl) {
+      statusEl.textContent =
+        `❌ ${err.message || "Failed to construct Imperial Mint."}`;
+    }
+
+    await loadImperialMintworks();
+  }
+}
 window.loadImperialMintworks =
   loadImperialMintworks;
 async function craftFoundryB4() {
