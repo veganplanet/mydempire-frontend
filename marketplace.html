@@ -381,7 +381,7 @@
         <div class="market-header-left">
           <h2>Premium Materials Marketplace</h2>
           <div class="market-header-sub">
-            EMP-only trading for Imperial Fragments and Salvaged Machinery Parts.
+            EMP-only trading for Imperial Fragments, Salvaged Machinery Parts, and Imperial Construction Tickets.
           </div>
         </div>
         <div class="pill">EMP Only</div>
@@ -403,7 +403,13 @@
         >
           🔧 SMP
         </button>
-
+<button
+  type="button"
+  class="premium-material-tab"
+  data-material-tab="IMPERIAL_TICKET"
+>
+  🎫 Tickets
+</button>
         <button
           type="button"
           class="premium-material-tab disabled"
@@ -543,7 +549,7 @@
         <div class="market-header-left">
           <h2>Recent Material Trade History</h2>
           <div class="market-header-sub">
-            Last 10 completed Fragments / SMP trades
+           Last 10 completed Fragments / SMP / Ticket trades
           </div>
         </div>
       </div>
@@ -1315,6 +1321,16 @@ function getPremiumMaterialLabel(materialType = currentPremiumMaterial) {
     };
   }
 
+  if (type === "IMPERIAL_TICKET") {
+    return {
+      short: "Tickets",
+      full: "Imperial Construction Tickets",
+      title: "Imperial Ticket Market Listings",
+      subtitle: "Browse active Imperial Construction Ticket listings.",
+      example: "Example: 1 Ticket × 250 EMP = 250 EMP total."
+    };
+  }
+
   return {
     short: "Fragments",
     full: "Imperial Fragments",
@@ -1323,7 +1339,6 @@ function getPremiumMaterialLabel(materialType = currentPremiumMaterial) {
     example: "Example: 5 Fragments × 25 EMP = 125 EMP total."
   };
 }
-
 function updatePremiumMaterialPreview() {
   const qtyInput = document.getElementById("premium-material-quantity");
   const priceInput = document.getElementById("premium-material-price-emp");
@@ -1761,9 +1776,17 @@ async function createPremiumMaterialListing() {
     );
 
     document.getElementById("premium-material-quantity").value = "";
-    document.getElementById("premium-material-price-emp").value = "";
+document.getElementById("premium-material-price-emp").value = "";
 
-    updatePremiumMaterialPreview();
+updatePremiumMaterialPreview();
+
+if (typeof loadPremiumMaterialListings === "function") {
+  await loadPremiumMaterialListings();
+}
+
+if (typeof loadPremiumMaterialHistory === "function") {
+  await loadPremiumMaterialHistory();
+}
   } catch (err) {
     console.error("Create premium material listing error:", err);
     setStatus(
@@ -1778,7 +1801,12 @@ window.createPremiumMaterialListing = createPremiumMaterialListing;
 function setPremiumMaterial(materialType) {
   const cleanType = String(materialType || "IMPERIAL_FRAGMENT").toUpperCase();
 
-  currentPremiumMaterial = cleanType === "SMP" ? "SMP" : "IMPERIAL_FRAGMENT";
+ currentPremiumMaterial =
+  cleanType === "SMP"
+    ? "SMP"
+    : cleanType === "IMPERIAL_TICKET"
+      ? "IMPERIAL_TICKET"
+      : "IMPERIAL_FRAGMENT";
 
   const hiddenInput = document.getElementById("premium-selected-material");
   if (hiddenInput) {

@@ -1097,9 +1097,7 @@ forkyishere,529"
               Start Season</button
             ><button id="end-season-btn" class="danger">End Season</button>
             <button id="reset-season-btn">Reset Season</button>
-            <button id="delete-season-btn" class="danger">
-  Delete Season
-</button>
+            <button id="delete-season-btn" class="danger">Delete Season</button>
           </div>
           <div class="status" id="season-control-status">
             No season action yet.
@@ -1675,6 +1673,44 @@ forkyishere,529"
 
           <div id="admin-goods-player-inventory-status" class="status">
             Goods player inventory not loaded yet.
+          </div>
+          <div class="section" style="margin-top: 18px">
+            <h2>🎟 Imperial Ticket Report</h2>
+
+            <div class="top-row">
+              <button
+                type="button"
+                class="primary"
+                onclick="loadAdminImperialTicketReport()"
+              >
+                Refresh Ticket Report
+              </button>
+            </div>
+
+            <div class="all-players-wrap">
+              <div class="all-players-box">
+                <table class="all-players-table">
+                  <thead>
+                    <tr>
+                      <th>Player</th>
+                      <th>Tickets Minted</th>
+                      <th>Tickets Consumed</th>
+                      <th>Ticket Balance</th>
+                    </tr>
+                  </thead>
+
+                  <tbody id="admin-imperial-ticket-report-body">
+                    <tr>
+                      <td colspan="4">Click Refresh Ticket Report.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="admin-imperial-ticket-report-status" class="status">
+              Ticket report not loaded yet.
+            </div>
           </div>
         </div>
       </div>
@@ -5407,13 +5443,13 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           const body = {
             name: document.getElementById("season-name-input").value,
             industry: document.getElementById("season-industry-input").value,
-           start_date: new Date(
-  document.getElementById("season-start-input").value,
-).toISOString(),
+            start_date: new Date(
+              document.getElementById("season-start-input").value,
+            ).toISOString(),
 
-end_date: new Date(
-  document.getElementById("season-end-input").value,
-).toISOString(),
+            end_date: new Date(
+              document.getElementById("season-end-input").value,
+            ).toISOString(),
             ep_boost_percent: Number(
               document.getElementById("season-boost-input").value || 0,
             ),
@@ -5457,102 +5493,102 @@ Players snapshotted: ${data.players_snapshotted}
 🚀 Growth Champion: 1 Genesis Pack`
             : `❌ ${data.error || "Failed to start season"}`;
         });
-document
-  .getElementById("reset-season-btn")
-  ?.addEventListener("click", async () => {
-    const status = document.getElementById("season-control-status");
-    const seasonId = document.getElementById("season-id-input").value;
-
-    if (!seasonId) {
-      if (status) {
-        status.textContent = "❌ Enter Season ID first.";
-      }
-      return;
-    }
-
-    const confirmed = window.confirm(
-      `Reset Season ${seasonId} back to UPCOMING and remove its starting snapshots?`,
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    try {
-      if (status) {
-        status.textContent = "Resetting season...";
-      }
-
-      const data = await adminPostJson(
-        `${API_BASE}/admin/reset-season/${seasonId}`,
-        {},
-      );
-
-      if (status) {
-        status.textContent = data.success
-          ? `✅ Season ${seasonId} reset to UPCOMING. Early snapshots removed.`
-          : `❌ ${data.error || "Failed to reset season"}`;
-      }
-    } catch (err) {
-      console.error("Reset season error:", err);
-
-      if (status) {
-        status.textContent = "❌ Failed to reset season.";
-      }
-    }
-  });
       document
-  .getElementById("delete-season-btn")
-  ?.addEventListener("click", async () => {
-    const status = document.getElementById("season-control-status");
-    const seasonId = document.getElementById("season-id-input").value;
+        .getElementById("reset-season-btn")
+        ?.addEventListener("click", async () => {
+          const status = document.getElementById("season-control-status");
+          const seasonId = document.getElementById("season-id-input").value;
 
-    if (!seasonId) {
-      if (status) {
-        status.textContent = "❌ Enter Season ID first.";
-      }
-      return;
-    }
+          if (!seasonId) {
+            if (status) {
+              status.textContent = "❌ Enter Season ID first.";
+            }
+            return;
+          }
 
-    const confirmed = window.confirm(
-      `Delete Season ${seasonId} permanently?\n\nCompleted seasons are protected and cannot be deleted.`,
-    );
+          const confirmed = window.confirm(
+            `Reset Season ${seasonId} back to UPCOMING and remove its starting snapshots?`,
+          );
 
-    if (!confirmed) {
-      return;
-    }
+          if (!confirmed) {
+            return;
+          }
 
-    try {
-      if (status) {
-        status.textContent = "Deleting season...";
-      }
+          try {
+            if (status) {
+              status.textContent = "Resetting season...";
+            }
 
-      const response = await fetch(
-        `${API_BASE}/admin/delete-season/${seasonId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "x-admin-key": ADMIN_KEY,
-          },
-        },
-      );
+            const data = await adminPostJson(
+              `${API_BASE}/admin/reset-season/${seasonId}`,
+              {},
+            );
 
-      const data = await response.json();
+            if (status) {
+              status.textContent = data.success
+                ? `✅ Season ${seasonId} reset to UPCOMING. Early snapshots removed.`
+                : `❌ ${data.error || "Failed to reset season"}`;
+            }
+          } catch (err) {
+            console.error("Reset season error:", err);
 
-      if (status) {
-        status.textContent =
-          response.ok && data.success
-            ? `✅ Season ${seasonId} deleted successfully.`
-            : `❌ ${data.error || "Failed to delete season"}`;
-      }
-    } catch (err) {
-      console.error("Delete season error:", err);
+            if (status) {
+              status.textContent = "❌ Failed to reset season.";
+            }
+          }
+        });
+      document
+        .getElementById("delete-season-btn")
+        ?.addEventListener("click", async () => {
+          const status = document.getElementById("season-control-status");
+          const seasonId = document.getElementById("season-id-input").value;
 
-      if (status) {
-        status.textContent = "❌ Failed to delete season.";
-      }
-    }
-  });
+          if (!seasonId) {
+            if (status) {
+              status.textContent = "❌ Enter Season ID first.";
+            }
+            return;
+          }
+
+          const confirmed = window.confirm(
+            `Delete Season ${seasonId} permanently?\n\nCompleted seasons are protected and cannot be deleted.`,
+          );
+
+          if (!confirmed) {
+            return;
+          }
+
+          try {
+            if (status) {
+              status.textContent = "Deleting season...";
+            }
+
+            const response = await fetch(
+              `${API_BASE}/admin/delete-season/${seasonId}`,
+              {
+                method: "DELETE",
+                headers: {
+                  "x-admin-key": ADMIN_KEY,
+                },
+              },
+            );
+
+            const data = await response.json();
+
+            if (status) {
+              status.textContent =
+                response.ok && data.success
+                  ? `✅ Season ${seasonId} deleted successfully.`
+                  : `❌ ${data.error || "Failed to delete season"}`;
+            }
+          } catch (err) {
+            console.error("Delete season error:", err);
+
+            if (status) {
+              status.textContent = "❌ Failed to delete season.";
+            }
+          }
+        });
       document
         .getElementById("end-season-btn")
         ?.addEventListener("click", async () => {
@@ -8680,6 +8716,107 @@ document
 
       // Keep action buttons locked until a player is loaded.
       setActivityAdminButtonsDisabled(true);
+      async function loadAdminImperialTicketReport() {
+        const bodyEl = document.getElementById(
+          "admin-imperial-ticket-report-body",
+        );
+
+        const statusEl = document.getElementById(
+          "admin-imperial-ticket-report-status",
+        );
+
+        if (!bodyEl) return;
+
+        if (!ADMIN_KEY) {
+          if (statusEl) {
+            statusEl.textContent = "Connect Admin first.";
+          }
+
+          return;
+        }
+
+        try {
+          if (statusEl) {
+            statusEl.textContent = "Loading Imperial Ticket report...";
+          }
+
+          const response = await fetch(
+            `${API_BASE}/admin/imperial-ticket-report`,
+            {
+              headers: {
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Failed to load Ticket report.");
+          }
+
+          const players = Array.isArray(data.players) ? data.players : [];
+
+          if (!players.length) {
+            bodyEl.innerHTML = `
+        <tr>
+          <td colspan="4">
+            No Imperial Tickets have been minted yet.
+          </td>
+        </tr>
+      `;
+
+            if (statusEl) {
+              statusEl.textContent = "No Ticket records found.";
+            }
+
+            return;
+          }
+
+          bodyEl.innerHTML = players
+            .map(
+              (player) => `
+          <tr>
+            <td class="all-players-name">
+              @${player.username}
+            </td>
+
+            <td class="all-players-num">
+              ${Number(player.tickets_minted || 0)}
+            </td>
+
+            <td class="all-players-num">
+              ${Number(player.tickets_consumed || 0)}
+            </td>
+
+            <td class="all-players-num">
+              ${Number(player.ticket_balance || 0)}
+            </td>
+          </tr>
+        `,
+            )
+            .join("");
+
+          if (statusEl) {
+            statusEl.textContent = `Loaded ${players.length} player(s).`;
+          }
+        } catch (err) {
+          console.error("Imperial Ticket admin report error:", err);
+
+          bodyEl.innerHTML = `
+      <tr>
+        <td colspan="4">
+          Failed to load Ticket report.
+        </td>
+      </tr>
+    `;
+
+          if (statusEl) {
+            statusEl.textContent =
+              err.message || "Failed to load Ticket report.";
+          }
+        }
+      }
       // =====================================
       // 🎡 PLAYERWISE ACTIVITY POINTS TABLE
       // =====================================

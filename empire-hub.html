@@ -5015,7 +5015,24 @@ console.log("🔥 FOUNDRY VALUES APPLIED:", {
 }
 
 async function loadImperialMintworks() {
-  const username = getLoggedInUser();
+  const params = new URLSearchParams(window.location.search);
+
+  const loggedInUser = getLoggedInUser();
+
+  const username = String(
+    params.get("user") ||
+    params.get("view") ||
+    loggedInUser ||
+    "",
+  )
+    .replace("@", "")
+    .trim()
+    .toLowerCase();
+
+  const isVisitor =
+    Boolean(loggedInUser) &&
+    Boolean(username) &&
+    username !== loggedInUser;
 
   const blueprintBalanceEl =
     document.getElementById(
@@ -5111,8 +5128,8 @@ async function loadImperialMintworks() {
   )}/imperial-ticket/state`,
   {
     headers: {
-      "x-mde-actor": username,
-    },
+  "x-mde-actor": loggedInUser || "",
+},
   },
 ),
 
@@ -5551,6 +5568,7 @@ if (constructBtn) {
     }
   }
 }
+
 async function constructImperialMint() {
   const username =
     localStorage.getItem("hiveUsername") ||
