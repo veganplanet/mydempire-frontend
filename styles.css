@@ -21238,3 +21238,8 @@ body.mde-dark-theme {
     padding: 22px 18px !important;
   }
 }
+.section .herald-event-banner .herald-event-deadline,
+.section .herald-event-banner .herald-event-deadline strong {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
