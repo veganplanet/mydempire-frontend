@@ -839,13 +839,29 @@ font-weight:900;
 
       <!-- ===== TAB: LANDS (GRID) ===== -->
       <section class="section tab-panel" data-tab-panel="lands">
-        <div class="section-header">
-          <h2>Lands</h2>
-          <small
-            >Your Genesis lands with slots, production, and factory
-            status.</small
-          >
-        </div>
+        <div class="section-header lands-section-header">
+  <div>
+    <h2>Lands</h2>
+    <small>
+      Your Genesis lands with slots, production, and factory status.
+    </small>
+  </div>
+
+  <div class="lands-maintenance-action" id="bulk-maintenance-actions">
+    <button
+      type="button"
+      class="primary-button"
+      id="renew-all-maintenance-btn"
+      onclick="renewAllEligibleFactories()"
+    >
+      🔧 Renew All Eligible Factories
+    </button>
+
+    <small id="bulk-maintenance-status">
+      Renews factories with 2 days or less remaining
+    </small>
+  </div>
+</div>
 <div class="land-filter-bar">
 
   <button class="land-filter-btn active" data-land-filter="ALL">
@@ -4429,6 +4445,222 @@ async function loadUnopenedPacks(username) {
 
         return null;
       }
+      async function renewAllEligibleFactories() {
+  const button = document.getElementById(
+    "renew-all-maintenance-btn",
+  );
+
+  const statusEl = document.getElementById(
+    "bulk-maintenance-status",
+  );
+
+  if (!isOwnEmpireView()) {
+    showEmpirePopup(
+      "Read-only Empire",
+      "Maintenance can only be renewed inside your own empire.",
+      "info",
+    );
+    return;
+  }
+
+  const actor = getLoggedInUser();
+
+  if (!actor || !PLAYER_USERNAME) {
+    showEmpirePopup(
+      "Login Required",
+      "Please connect your Hive account first.",
+      "info",
+    );
+    return;
+  }
+
+  const normalButtonText = "🔧 Renew All Eligible Factories";
+
+  button.disabled = true;
+  button.textContent = "Checking factories…";
+
+  if (statusEl) {
+    statusEl.textContent = "Checking eligible factories and EMP cost…";
+  }
+
+  try {
+    // Safe preview: does not deduct EMP
+    const previewResponse = await fetch(
+      apiUrl("/factory/pay-maintenance-all"),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": actor,
+        },
+        body: JSON.stringify({
+          username: PLAYER_USERNAME,
+          preview: true,
+        }),
+      },
+    );
+
+    const previewData = await previewResponse
+      .json()
+      .catch(() => ({}));
+
+    if (!previewResponse.ok || !previewData.success) {
+      throw new Error(
+        previewData.error || "Could not check factory maintenance.",
+      );
+    }
+
+    const eligibleCount = Number(
+      previewData.eligible_count || 0,
+    );
+
+    const empRequired = Number(
+      previewData.emp_required || 0,
+    );
+
+    const currentEmp = Number(
+      previewData.current_emp || 0,
+    );
+
+    if (eligibleCount === 0) {
+      if (statusEl) {
+        statusEl.textContent =
+          "No factories currently require maintenance.";
+      }
+
+      showEmpirePopup(
+        "No Maintenance Required",
+        "All factories have more than 2 days of maintenance remaining.",
+        "info",
+      );
+
+      return;
+    }
+
+    if (statusEl) {
+      statusEl.textContent =
+        `${eligibleCount} eligible factories • ${empRequired} EMP`;
+    }
+
+    if (!previewData.enough_emp) {
+      showEmpirePopup(
+        "Not Enough EMP",
+        `Required: ${empRequired} EMP<br>` +
+          `Available: ${currentEmp.toFixed(3)} EMP`,
+        "info",
+      );
+
+      return;
+    }
+
+    const confirmed = confirm(
+      `Renew ${eligibleCount} eligible factories?\n\n` +
+        `Maintenance added: 7 days each\n` +
+        `Total EMP cost: ${empRequired} EMP\n` +
+        `Current balance: ${currentEmp.toFixed(3)} EMP`,
+    );
+
+    if (!confirmed) {
+      if (statusEl) {
+        statusEl.textContent =
+          `${eligibleCount} eligible factories • ${empRequired} EMP`;
+      }
+
+      return;
+    }
+
+    button.textContent = "Renewing factories…";
+
+    if (statusEl) {
+      statusEl.textContent =
+        "Processing all eligible factories together…";
+    }
+
+    const paymentResponse = await fetch(
+      apiUrl("/factory/pay-maintenance-all"),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": actor,
+        },
+        body: JSON.stringify({
+          username: PLAYER_USERNAME,
+          preview: false,
+        }),
+      },
+    );
+
+    const paymentData = await paymentResponse
+      .json()
+      .catch(() => ({}));
+
+    if (!paymentResponse.ok || !paymentData.success) {
+      throw new Error(
+        paymentData.error || "Bulk maintenance payment failed.",
+      );
+    }
+
+    const renewedCount = Number(
+      paymentData.renewed_count || 0,
+    );
+
+    const empSpent = Number(
+      paymentData.emp_spent || 0,
+    );
+
+    if (statusEl) {
+      statusEl.textContent =
+        `${renewedCount} factories renewed • ${empSpent} EMP spent`;
+    }
+
+    showEmpirePopup(
+      "Maintenance Renewed",
+      `${renewedCount} factories renewed successfully.<br>` +
+        `${empSpent} EMP spent.<br>` +
+        `${Number(
+          paymentData.activity_points_awarded || 0,
+        )} Activity Points awarded.`,
+      "success",
+    );
+
+    // Payment already succeeded. Refresh failures must not
+    // display a false payment-failed message.
+    await Promise.allSettled([
+      typeof loadDashboardSummary === "function"
+        ? loadDashboardSummary()
+        : Promise.resolve(),
+
+      typeof loadRewardSummary === "function"
+        ? loadRewardSummary()
+        : Promise.resolve(),
+
+      typeof loadEmpireOverview === "function"
+        ? loadEmpireOverview()
+        : Promise.resolve(),
+
+      typeof loadDashboardActivityWheelStrip === "function"
+        ? loadDashboardActivityWheelStrip()
+        : Promise.resolve(),
+    ]);
+  } catch (err) {
+    console.error("Bulk maintenance error:", err);
+
+    if (statusEl) {
+      statusEl.textContent =
+        err.message || "Bulk maintenance failed.";
+    }
+
+    showEmpirePopup(
+      "Maintenance Failed",
+      err.message || "Bulk maintenance failed.",
+      "info",
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = normalButtonText;
+  }
+}
       function hasValidMaintenance(factory) {
         if (!factory || !factory.maintenance_ends_at) return false;
 
