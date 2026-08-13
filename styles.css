@@ -21054,6 +21054,7 @@ body.mde-dark-theme {
 .imperial-mint-land-multiple {
   grid-column: span 1 !important;
 }
+
 /* ===== BULK FACTORY MAINTENANCE ===== */
 
 .lands-section-header {
@@ -21093,3 +21094,193 @@ body.mde-dark-theme {
 body.read-only-mode #bulk-maintenance-actions {
   display: none !important;
 }
+/* =========================================
+   HERALDS OF THE EMPIRE CHALLENGE
+========================================= */
+
+.herald-event-banner {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  gap: 20px !important;
+  margin: 16px 0 !important;
+  padding: 22px 24px !important;
+  border: 2px solid #d5aa45 !important;
+  border-radius: 16px !important;
+  color: #ffffff !important;
+  background: linear-gradient(
+    135deg,
+    #25123f 0%,
+    #4b215f 48%,
+    #71372f 100%
+  ) !important;
+  box-shadow: 0 10px 25px rgba(55, 24, 74, 0.3) !important;
+}
+
+.herald-event-banner > div {
+  flex: 1 !important;
+  min-width: 0 !important;
+  background: transparent !important;
+}
+
+.herald-event-kicker {
+  margin: 0 0 7px !important;
+  color: #ffd978 !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.14em !important;
+}
+
+.herald-event-banner h3 {
+  margin: 0 0 8px !important;
+  color: #ffffff !important;
+  font-size: 23px !important;
+  line-height: 1.25 !important;
+}
+
+.herald-event-meta {
+  margin: 0 !important;
+  color: #f8e8c6 !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+.herald-event-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  padding: 12px 18px !important;
+  border: 1px solid #ffe4a1 !important;
+  border-radius: 999px !important;
+  color: #35163e !important;
+  background: #ffd978 !important;
+  font-weight: 900 !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+}
+
+/* Popup */
+
+#herald-event-popup {
+  display: none !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+}
+
+#herald-event-popup:target {
+  display: flex !important;
+}
+
+#herald-event-popup .herald-event-backdrop {
+  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: rgba(12, 7, 23, 0.84) !important;
+  backdrop-filter: blur(3px);
+}
+
+#herald-event-popup .herald-event-box {
+  display: block !important;
+  position: relative !important;
+  z-index: 2 !important;
+  width: min(680px, 100%) !important;
+  max-height: 88vh !important;
+  margin: 0 auto !important;
+  padding: 26px !important;
+  box-sizing: border-box !important;
+  overflow-y: auto !important;
+  border: 2px solid #d5aa45 !important;
+  border-radius: 18px !important;
+  color: #281835 !important;
+  background: #fffaf0 !important;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5) !important;
+}
+
+#herald-event-popup .herald-event-close {
+  display: flex !important;
+  position: absolute !important;
+  top: 12px !important;
+  right: 14px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  color: #ffffff !important;
+  background: #51235f !important;
+  font-size: 25px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
+}
+
+#herald-event-popup .herald-event-kicker {
+  margin-right: 45px !important;
+  color: #8a5a00 !important;
+}
+
+#herald-event-popup h2 {
+  margin: 0 45px 12px 0 !important;
+  color: #281835 !important;
+  font-size: 26px !important;
+}
+
+#herald-event-popup h3 {
+  margin: 20px 0 10px !important;
+  color: #412052 !important;
+  font-size: 18px !important;
+}
+
+#herald-event-popup p,
+#herald-event-popup li {
+  color: #3f3347 !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+#herald-event-popup li {
+  margin-bottom: 8px !important;
+}
+
+#herald-event-popup .herald-event-reward {
+  display: block !important;
+  margin: 16px 0 !important;
+  padding: 15px !important;
+  border: 1px solid #dfc06b !important;
+  border-radius: 12px !important;
+  color: #3f2b12 !important;
+  background: #f4e7c2 !important;
+  line-height: 1.5 !important;
+}
+
+@media (max-width: 640px) {
+  .herald-event-banner {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+
+  #herald-event-popup {
+    padding: 12px !important;
+  }
+
+  #herald-event-popup .herald-event-box {
+    max-height: 92vh !important;
+    padding: 22px 18px !important;
+  }
+}
+.section .herald-event-banner .herald-event-deadline,
+.section .herald-event-banner .herald-event-deadline strong {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
