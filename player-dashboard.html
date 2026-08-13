@@ -9350,102 +9350,141 @@ function closeWithdrawalHistoryModal() {
 <script src="empire-operations.js"></script>
 <script src="js/navbar.js"></script>
 <script src="js/notifications.js"></script>
-    <div
-  id="herald-event-popup"
-  class="herald-event-modal"
-  role="dialog"
-  aria-modal="true"
->
-  <a
-    href="#"
-    class="herald-event-backdrop"
-    aria-label="Close challenge"
-  ></a>
+<style>
+  #herald-event-popup.herald-event-modal {
+    display: none !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+  }
 
-  <div class="herald-event-box">
-    <a href="#" class="herald-event-close" aria-label="Close">×</a>
+  #herald-event-popup.herald-event-modal:target {
+    display: flex !important;
+  }
 
-    <div class="herald-event-kicker">
-      📯 14-DAY AMBASSADOR CHALLENGE
-    </div>
+  #herald-event-popup .herald-event-backdrop {
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(12, 7, 23, 0.82) !important;
+    backdrop-filter: blur(3px);
+  }
 
-    <h2>Heralds of the Empire</h2>
+  #herald-event-popup .herald-event-box {
+    display: block !important;
+    position: relative !important;
+    z-index: 2 !important;
+    width: min(680px, 100%) !important;
+    max-height: 88vh !important;
+    margin: 0 auto !important;
+    padding: 26px !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
 
-    <p>
-      Share your genuine MydEmpire experience and invite new Hive players
-      to discover the game.
-    </p>
+    border: 2px solid #d5aa45 !important;
+    border-radius: 18px !important;
 
-    <div class="herald-event-reward">
-      <strong>EMP Reward Rules</strong><br /><br />
+    color: #281835 !important;
+    background: #fffaf0 !important;
 
-      If the challenge receives up to 5 valid posts,
-      each approved participant will receive <strong>500 EMP</strong>.<br /><br />
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5) !important;
+  }
 
-      If the challenge receives 6 or more valid posts,
-      the full <strong>5,000 EMP pool</strong> will be divided equally
-      among all approved participants.
-    </div>
+  #herald-event-popup .herald-event-close {
+    display: flex !important;
+    position: absolute !important;
+    top: 12px !important;
+    right: 14px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 36px !important;
+    height: 36px !important;
 
-    <h3>How to qualify</h3>
+    border-radius: 50% !important;
+    color: #ffffff !important;
+    background: #51235f !important;
 
-    <ol>
-      <li>Publish one original Hive post of at least 300 words.</li>
+    font-size: 25px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+  }
 
-      <li>
-        Include at least one screenshot from your MydEmpire gameplay.
-      </li>
+  #herald-event-popup .herald-event-kicker {
+    margin: 0 45px 8px 0 !important;
+    color: #8a5a00 !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.12em !important;
+  }
 
-      <li>
-        Share your genuine experience and explain why other Hive gamers
-        should try MydEmpire.
-      </li>
+  #herald-event-popup h2 {
+    margin: 0 45px 12px 0 !important;
+    color: #281835 !important;
+    font-size: 26px !important;
+  }
 
-      <li>
-        Include the official MydEmpire website and Discord links.
-      </li>
+  #herald-event-popup h3 {
+    margin: 20px 0 10px !important;
+    color: #412052 !important;
+    font-size: 18px !important;
+  }
 
-      <li>
-        Tag and personally invite 5 genuine Hive friends who are not
-        already MydEmpire players.
-      </li>
+  #herald-event-popup p,
+  #herald-event-popup li {
+    color: #3f3347 !important;
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+  }
 
-      <li>
-        Submit your post link in the designated MydEmpire Discord channel.
-      </li>
-    </ol>
+  #herald-event-popup li {
+    margin-bottom: 8px !important;
+  }
 
-    <h3>Fair-play rules</h3>
+  #herald-event-popup .herald-event-reward {
+    display: block !important;
+    margin: 16px 0 !important;
+    padding: 15px !important;
 
-    <ul>
-      <li>Only one rewarded post per player and Hive account.</li>
+    border: 1px solid #dfc06b !important;
+    border-radius: 12px !important;
 
-      <li>
-        Copied, duplicate, low-effort, mass-tagging or alternate-account
-        entries will not qualify.
-      </li>
+    color: #3f2b12 !important;
+    background: #f4e7c2 !important;
+    line-height: 1.5 !important;
+  }
 
-      <li>Every post will be reviewed manually.</li>
+  #herald-event-popup .herald-event-button {
+    display: inline-flex !important;
+    margin-top: 12px !important;
+    padding: 11px 18px !important;
 
-      <li>EMP rewards will be distributed after the challenge ends.</li>
+    border-radius: 999px !important;
+    color: #35163e !important;
+    background: #ffd978 !important;
 
-      <li>The challenge will remain open for 14 days.</li>
-    </ul>
+    font-weight: 900 !important;
+    text-decoration: none !important;
+  }
 
-    <div class="herald-event-reward">
-      <strong>🎟 Imperial Mint Blueprint Lucky Draw</strong><br /><br />
+  @media (max-width: 640px) {
+    #herald-event-popup.herald-event-modal {
+      padding: 12px !important;
+    }
 
-      If at least 6 valid posts are approved, all approved participants
-      will enter a public lucky draw.<br /><br />
-
-      One winner will receive a tradable
-      <strong>Imperial Mint Blueprint</strong>.
-    </div>
-
-    <a href="#" class="herald-event-button">
-      Close
-    </a>
-  </div>
-</div>
+    #herald-event-popup .herald-event-box {
+      max-height: 92vh !important;
+      padding: 22px 18px !important;
+    }
+  }
+</style>
   </body>
 </html>
