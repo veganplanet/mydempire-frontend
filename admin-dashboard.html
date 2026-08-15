@@ -880,6 +880,184 @@ forkyishere,529"
           </div>
         </div>
       </div>
+      <!-- ===================================== -->
+      <!-- 🏭 FACTORY TIER EMP REWARDS -->
+      <!-- ===================================== -->
+      <div class="section">
+        <h2>🏭 Factory Tier EMP Rewards</h2>
+
+        <div class="pill" id="factory-tier-reward-status-pill">
+          Loading status...
+        </div>
+
+        <div class="row" style="margin-top: 12px">
+          <div>
+            <div class="label">B3 EMP / Day</div>
+            <input
+              id="factory-tier-b3-rate"
+              type="number"
+              min="0"
+              step="0.1"
+              value="0.5"
+              style="min-width: 120px"
+            />
+          </div>
+
+          <div>
+            <div class="label">B4 EMP / Day</div>
+            <input
+              id="factory-tier-b4-rate"
+              type="number"
+              min="0"
+              step="0.1"
+              value="3"
+              style="min-width: 120px"
+            />
+          </div>
+
+          <div>
+            <div class="label">B5 EMP / Day</div>
+            <input
+              id="factory-tier-b5-rate"
+              type="number"
+              min="0"
+              step="0.1"
+              value="5"
+              style="min-width: 120px"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <button
+            id="factory-tier-save-settings-btn"
+            class="primary"
+            type="button"
+          >
+            Save Reward Rates
+          </button>
+
+          <button id="factory-tier-toggle-distribution-btn" type="button">
+            Pause Distribution
+          </button>
+
+          <button id="factory-tier-refresh-btn" type="button">Refresh</button>
+        </div>
+
+        <div id="factory-tier-admin-status" class="status">
+          Factory tier reward controls not loaded yet.
+        </div>
+
+        <!-- TODAY -->
+        <h3 style="margin-top: 22px">Today</h3>
+
+        <div class="metrics">
+          <div class="card">
+            <div class="label">B3 EMP</div>
+            <div class="value" id="factory-tier-today-b3">--</div>
+            <div class="small" id="factory-tier-today-b3-count">
+              -- factories
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="label">B4 EMP</div>
+            <div class="value" id="factory-tier-today-b4">--</div>
+            <div class="small" id="factory-tier-today-b4-count">
+              -- factories
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="label">B5 EMP</div>
+            <div class="value" id="factory-tier-today-b5">--</div>
+            <div class="small" id="factory-tier-today-b5-count">
+              -- factories
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="label">Total EMP Today</div>
+            <div class="value" id="factory-tier-today-total">--</div>
+            <div class="small" id="factory-tier-today-players">
+              -- rewarded players
+            </div>
+          </div>
+        </div>
+
+        <!-- PERIOD TOTALS -->
+        <h3 style="margin-top: 22px">Distribution Summary</h3>
+
+        <div class="metrics">
+          <div class="card">
+            <div class="label">Last 7 Days</div>
+            <div class="value" id="factory-tier-7d-total">--</div>
+            <div class="small">Total EMP awarded</div>
+          </div>
+
+          <div class="card">
+            <div class="label">Last 30 Days</div>
+            <div class="value" id="factory-tier-30d-total">--</div>
+            <div class="small">Total EMP awarded</div>
+          </div>
+
+          <div class="card">
+            <div class="label">Lifetime</div>
+            <div class="value" id="factory-tier-lifetime-total">--</div>
+            <div class="small">Total EMP awarded</div>
+          </div>
+        </div>
+
+        <!-- DAILY HISTORY -->
+        <h3 style="margin-top: 22px">Daily Reward History</h3>
+
+        <div class="all-players-wrap">
+          <div class="all-players-box">
+            <table class="all-players-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>B3 EMP</th>
+                  <th>B4 EMP</th>
+                  <th>B5 EMP</th>
+                  <th>Total EMP</th>
+                  <th>Players</th>
+                </tr>
+              </thead>
+
+              <tbody id="factory-tier-history-body">
+                <tr>
+                  <td colspan="6">Not loaded yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <h3 style="margin-top: 22px">Player-wise Reward History</h3>
+
+        <div class="all-players-wrap">
+          <div class="all-players-box">
+            <table class="all-players-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Player</th>
+                  <th>B3</th>
+                  <th>B4</th>
+                  <th>B5</th>
+                  <th>Total EMP</th>
+                </tr>
+              </thead>
+
+              <tbody id="factory-tier-player-history-body">
+                <tr>
+                  <td colspan="6">Not loaded yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
       <div class="admin-tab-panel" data-admin-panel="players">
         <div class="section">
@@ -7286,6 +7464,9 @@ Players snapshotted: ${data.players_snapshotted}
         if (tabName === "dao-settlement") {
           loadDaoSettlements();
         }
+        if (tabName === "economy") {
+          loadFactoryTierRewardAdmin();
+        }
       }
 
       async function loadGoodsRedemptionAdmin() {
@@ -9024,6 +9205,214 @@ Players snapshotted: ${data.players_snapshotted}
       document
         .getElementById("activity-admin-load-all-btn")
         ?.addEventListener("click", loadActivityAdminPlayerTable);
+      let factoryTierDistributionPaused = false;
+
+      async function loadFactoryTierRewardAdmin() {
+        const statusEl = document.getElementById("factory-tier-admin-status");
+
+        try {
+          if (!ADMIN_KEY) {
+            if (statusEl) statusEl.textContent = "Connect Admin first.";
+            return;
+          }
+
+          if (statusEl) {
+            statusEl.textContent = "Loading Factory Tier EMP rewards...";
+          }
+
+          const response = await fetch(
+            `${API_BASE}/admin/factory-tier-rewards`,
+            {
+              headers: {
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(
+              data.error || "Failed to load Factory Tier EMP rewards.",
+            );
+          }
+
+          // =========================
+          // CONFIG
+          // =========================
+
+          const b3Input = document.getElementById("factory-tier-b3-rate");
+          const b4Input = document.getElementById("factory-tier-b4-rate");
+          const b5Input = document.getElementById("factory-tier-b5-rate");
+
+          if (b3Input) b3Input.value = data.config.b3EmpPerDay;
+          if (b4Input) b4Input.value = data.config.b4EmpPerDay;
+          if (b5Input) b5Input.value = data.config.b5EmpPerDay;
+
+          factoryTierDistributionPaused =
+            data.config.distributionPaused === true;
+
+          const pill = document.getElementById(
+            "factory-tier-reward-status-pill",
+          );
+
+          const toggleBtn = document.getElementById(
+            "factory-tier-toggle-distribution-btn",
+          );
+
+          if (pill) {
+            pill.textContent = factoryTierDistributionPaused
+              ? "⏸ Distribution Paused"
+              : "✅ Distribution Active";
+          }
+
+          if (toggleBtn) {
+            toggleBtn.textContent = factoryTierDistributionPaused
+              ? "Resume Distribution"
+              : "Pause Distribution";
+
+            toggleBtn.classList.toggle(
+              "danger",
+              !factoryTierDistributionPaused,
+            );
+          }
+
+          // =========================
+          // TODAY
+          // =========================
+
+          document.getElementById("factory-tier-today-b3").textContent =
+            `${Number(data.today.b3Emp || 0).toFixed(2)} EMP`;
+
+          document.getElementById("factory-tier-today-b4").textContent =
+            `${Number(data.today.b4Emp || 0).toFixed(2)} EMP`;
+
+          document.getElementById("factory-tier-today-b5").textContent =
+            `${Number(data.today.b5Emp || 0).toFixed(2)} EMP`;
+
+          document.getElementById("factory-tier-today-total").textContent =
+            `${Number(data.today.totalEmp || 0).toFixed(2)} EMP`;
+
+          document.getElementById("factory-tier-today-b3-count").textContent =
+            `${Number(data.today.b3Factories || 0)} factories`;
+
+          document.getElementById("factory-tier-today-b4-count").textContent =
+            `${Number(data.today.b4Factories || 0)} factories`;
+
+          document.getElementById("factory-tier-today-b5-count").textContent =
+            `${Number(data.today.b5Factories || 0)} factories`;
+
+          document.getElementById("factory-tier-today-players").textContent =
+            `${Number(data.today.rewardedPlayers || 0)} rewarded players`;
+
+          // =========================
+          // PERIOD TOTALS
+          // =========================
+
+          document.getElementById("factory-tier-7d-total").textContent =
+            `${Number(data.sevenDays.totalEmp || 0).toFixed(2)} EMP`;
+
+          document.getElementById("factory-tier-30d-total").textContent =
+            `${Number(data.thirtyDays.totalEmp || 0).toFixed(2)} EMP`;
+
+          document.getElementById("factory-tier-lifetime-total").textContent =
+            `${Number(data.lifetime.totalEmp || 0).toFixed(2)} EMP`;
+
+          // =========================
+          // HISTORY
+          // =========================
+
+          const historyBody = document.getElementById(
+            "factory-tier-history-body",
+          );
+
+          if (historyBody) {
+            const rows = Array.isArray(data.history) ? data.history : [];
+
+            if (rows.length === 0) {
+              historyBody.innerHTML = `
+          <tr>
+            <td colspan="6">No Factory Tier EMP history yet.</td>
+          </tr>
+        `;
+            } else {
+              historyBody.innerHTML = rows
+                .map((row) => {
+                  return `
+              <tr>
+                <td>${row.cycle_date || "--"}</td>
+                <td>${Number(row.b3_emp_awarded || 0).toFixed(2)}</td>
+                <td>${Number(row.b4_emp_awarded || 0).toFixed(2)}</td>
+                <td>${Number(row.b5_emp_awarded || 0).toFixed(2)}</td>
+                <td><strong>${Number(row.total_emp_awarded || 0).toFixed(
+                  2,
+                )}</strong></td>
+                <td>${Number(row.rewarded_players || 0)}</td>
+              </tr>
+            `;
+                })
+                .join("");
+            }
+          }
+          // =========================
+          // PLAYER-WISE HISTORY
+          // =========================
+
+          const playerHistoryBody = document.getElementById(
+            "factory-tier-player-history-body",
+          );
+
+          if (playerHistoryBody) {
+            const playerRows = Array.isArray(data.playerHistory)
+              ? data.playerHistory
+              : [];
+
+            if (playerRows.length === 0) {
+              playerHistoryBody.innerHTML = `
+      <tr>
+        <td colspan="6">No player-wise reward history yet.</td>
+      </tr>
+    `;
+            } else {
+              playerHistoryBody.innerHTML = playerRows
+                .map((row) => {
+                  return `
+          <tr>
+            <td>${row.cycle_date || "--"}</td>
+            <td><strong>@${row.username || "--"}</strong></td>
+            <td>
+              ${Number(row.b3_factory_count || 0)}
+              <small>(${Number(row.b3_emp || 0).toFixed(2)} EMP)</small>
+            </td>
+            <td>
+              ${Number(row.b4_factory_count || 0)}
+              <small>(${Number(row.b4_emp || 0).toFixed(2)} EMP)</small>
+            </td>
+            <td>
+              ${Number(row.b5_factory_count || 0)}
+              <small>(${Number(row.b5_emp || 0).toFixed(2)} EMP)</small>
+            </td>
+            <td>
+              <strong>${Number(row.total_emp || 0).toFixed(2)} EMP</strong>
+            </td>
+          </tr>
+        `;
+                })
+                .join("");
+            }
+          }
+          if (statusEl) {
+            statusEl.textContent = "Factory Tier EMP reward data loaded.";
+          }
+        } catch (err) {
+          console.error("Factory Tier EMP admin load error:", err);
+
+          if (statusEl) {
+            statusEl.textContent =
+              err.message || "Failed to load Factory Tier EMP rewards.";
+          }
+        }
+      }
     </script>
     <div
       id="assets-modal"
