@@ -3394,7 +3394,17 @@ async function loadLandHistory() {
   }
 }, 500);;
     updateListingPreview();
-    setPremiumMaterial("IMPERIAL_FRAGMENT");
+    const marketplaceParams = new URLSearchParams(window.location.search);
+
+const requestedMaterial = String(
+  marketplaceParams.get("material") || "IMPERIAL_FRAGMENT"
+).toUpperCase();
+const requestedTab = String(
+  marketplaceParams.get("tab") || "emp"
+).toLowerCase();
+
+activateMarketTab(requestedTab);
+setPremiumMaterial(requestedMaterial);
 
     
   </script>

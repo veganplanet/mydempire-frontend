@@ -1893,6 +1893,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitSuccessCloseBtn = document.getElementById(
     "goods-submit-success-close",
   );
+  const confirmBtn = document.getElementById("ticket-redeem-confirm-btn");
+
+  if (confirmBtn) {
+    confirmBtn.addEventListener("click", redeemImperialTicketForEmp);
+  }
   const submitSuccessOkBtn = document.getElementById("goods-submit-success-ok");
   const claimConfirmCloseBtn = document.getElementById(
     "goods-claim-confirm-close",
@@ -2388,3 +2393,188 @@ function startGoodsTradeFairCountdown() {
 }
 
 document.addEventListener("DOMContentLoaded", startGoodsTradeFairCountdown);
+// =========================================
+// 🔥 IMPERIAL TICKET REDEMPTION POPUP
+// =========================================
+function getTicketApiBase() {
+  const host = window.location.hostname;
+
+  if (host === "localhost" || host === "127.0.0.1") {
+    return "http://localhost:10000";
+  }
+
+  return "https://mydempire-backend-1.onrender.com";
+}
+
+async function openTicketRedeemModal() {
+  const modal = document.getElementById("ticket-redeem-modal");
+  const valueEl = document.getElementById("ticket-redeem-value");
+  const statusEl = document.getElementById("ticket-redeem-status");
+
+  if (!modal) return;
+
+  modal.classList.remove("hidden");
+
+  if (statusEl) statusEl.textContent = "";
+  if (valueEl) valueEl.textContent = "Loading...";
+
+  try {
+    const response = await fetch(
+      `${getTicketApiBase()}/imperial-ticket/redemption-value`,
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Failed to load redemption value.");
+    }
+
+    if (valueEl) {
+      valueEl.textContent = `${Number(data.emp_value || 0).toLocaleString()} EMP`;
+    }
+  } catch (err) {
+    console.error("Ticket redemption value error:", err);
+
+    if (valueEl) valueEl.textContent = "Unavailable";
+
+    if (statusEl) {
+      statusEl.textContent = "Unable to load the current redemption value.";
+    }
+  }
+}
+
+function closeTicketRedeemModal() {
+  const modal = document.getElementById("ticket-redeem-modal");
+
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const openBtn = document.getElementById("ticket-redeem-open-btn");
+  const closeBtn = document.getElementById("ticket-redeem-close-btn");
+  const holdBtn = document.getElementById("ticket-redeem-hold-btn");
+  const sellBtn = document.getElementById("ticket-sell-btn");
+
+  if (sellBtn) {
+    sellBtn.addEventListener("click", openImperialTicketMarketplace);
+  }
+  if (openBtn) {
+    openBtn.addEventListener("click", openTicketRedeemModal);
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeTicketRedeemModal);
+  }
+
+  if (holdBtn) {
+    holdBtn.addEventListener("click", closeTicketRedeemModal);
+  }
+});
+// =========================================
+// 🔥 IMPERIAL TICKET — REDEEM FOR EMP
+// =========================================
+
+let ticketRedeemInProgress = false;
+
+async function redeemImperialTicketForEmp() {
+  if (ticketRedeemInProgress) return;
+
+  const username = getGoodsLoggedInActor();
+
+  const confirmBtn = document.getElementById("ticket-redeem-confirm-btn");
+
+  const statusEl = document.getElementById("ticket-redeem-status");
+
+  if (!username) {
+    if (statusEl) {
+      statusEl.textContent = "Please connect your Hive account first.";
+    }
+    return;
+  }
+
+  try {
+    ticketRedeemInProgress = true;
+
+    if (confirmBtn) {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = "Redeeming...";
+    }
+
+    if (statusEl) {
+      statusEl.textContent = "Burning 1 Imperial Ticket and crediting EMP...";
+    }
+
+    const response = await fetch(
+      `${getTicketApiBase()}/goods/${encodeURIComponent(
+        username,
+      )}/imperial-ticket/redeem`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": username,
+        },
+      },
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Imperial Ticket redemption failed.");
+    }
+
+    // Update visible Owned count immediately.
+    const ownedEl = document.getElementById("ticket-owned-count");
+
+    if (ownedEl) {
+      ownedEl.textContent = Number(
+        data.tickets_remaining || 0,
+      ).toLocaleString();
+    }
+
+    if (statusEl) {
+      statusEl.textContent = `✅ Ticket redeemed. ${Number(
+        data.emp_received || 0,
+      ).toLocaleString()} EMP credited.`;
+    }
+
+    alert(
+      `✅ Imperial Ticket Redeemed\n\n` +
+        `${Number(data.emp_received || 0).toLocaleString()} EMP credited.\n` +
+        `Tickets remaining: ${Number(
+          data.tickets_remaining || 0,
+        ).toLocaleString()}\n` +
+        `New EMP balance: ${Number(
+          data.emp_balance || 0,
+        ).toLocaleString()} EMP`,
+    );
+
+    setTimeout(() => {
+      closeTicketRedeemModal();
+    }, 800);
+  } catch (err) {
+    console.error("Imperial Ticket redemption error:", err);
+
+    if (statusEl) {
+      statusEl.textContent = err.message || "Ticket redemption failed.";
+    }
+  } finally {
+    ticketRedeemInProgress = false;
+
+    if (confirmBtn) {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = "🔥 Redeem Ticket";
+    }
+  }
+}
+// =========================================
+// 🏪 IMPERIAL TICKET — SELL ON MARKETPLACE
+// =========================================
+
+function openImperialTicketMarketplace() {
+  window.location.href =
+    "marketplace.html?tab=premium&material=IMPERIAL_TICKET";
+}

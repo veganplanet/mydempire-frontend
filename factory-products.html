@@ -478,9 +478,27 @@
               </p>
             </div>
 
-            <div class="ticket-owned-pill">
-              Owned:
-              <strong id="ticket-owned-count">0</strong>
+            <div class="ticket-header-actions">
+              <button
+                id="ticket-redeem-open-btn"
+                class="ticket-redeem-open-btn"
+                type="button"
+              >
+                🔥 Redeem for EMP
+              </button>
+
+              <button
+                id="ticket-sell-btn"
+                class="ticket-sell-btn"
+                type="button"
+              >
+                🏪 Sell
+              </button>
+
+              <div class="ticket-owned-pill">
+                Owned:
+                <strong id="ticket-owned-count">0</strong>
+              </div>
             </div>
           </div>
 
@@ -613,6 +631,100 @@
               >
                 🎟️ Mint Imperial Ticket
               </button>
+            </div>
+          </div>
+          <!-- =========================================
+     🔥 IMPERIAL TICKET EMP REDEMPTION POPUP
+========================================= -->
+
+          <div
+            id="ticket-redeem-modal"
+            class="ticket-redeem-modal hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ticket-redeem-title"
+          >
+            <div class="ticket-redeem-card">
+              <button
+                id="ticket-redeem-close-btn"
+                class="ticket-redeem-close"
+                type="button"
+                aria-label="Close Ticket redemption"
+              >
+                ×
+              </button>
+
+              <div class="ticket-redeem-icon">🎟️</div>
+
+              <h3 id="ticket-redeem-title">Redeem Imperial Ticket for EMP</h3>
+
+              <div class="ticket-redeem-warning">
+                <strong>⚠️ Emergency EMP Option</strong>
+
+                <p>
+                  Ticket redemption is intended for situations where you
+                  urgently need EMP for your empire.
+                </p>
+
+                <p>
+                  <strong
+                    >This action is permanent and cannot be reversed.</strong
+                  >
+                </p>
+              </div>
+
+              <div class="ticket-redeem-options">
+                <strong>Before redeeming, consider your other options:</strong>
+
+                <ul>
+                  <li>
+                    🏪 <strong>Sell on Marketplace</strong> — sell your Imperial
+                    Ticket to another player for HIVE.
+                  </li>
+
+                  <li>
+                    🏛 <strong>Imperial Mint</strong> — Imperial Tickets are
+                    required to construct the rare Imperial Mint.
+                  </li>
+
+                  <li>
+                    🔮 <strong>Future Utility</strong> — the Ticket may gain
+                    additional strategic uses as MydEmpire expands.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="ticket-redeem-value-box">
+                <span>Current Redemption Value</span>
+
+                <strong id="ticket-redeem-value"> Loading... </strong>
+
+                <small> 1 Imperial Ticket will be permanently burned. </small>
+              </div>
+
+              <div id="ticket-redeem-status" class="ticket-redeem-status"></div>
+
+              <div class="ticket-redeem-actions">
+                <button
+                  id="ticket-redeem-confirm-btn"
+                  class="ticket-redeem-confirm-btn"
+                  type="button"
+                >
+                  🔥 Redeem Ticket
+                </button>
+
+                <button
+                  id="ticket-redeem-hold-btn"
+                  class="ticket-redeem-hold-btn"
+                  type="button"
+                >
+                  🛡 Hold My Ticket
+                </button>
+              </div>
+
+              <div class="ticket-redeem-final-note">
+                🔒 Once redeemed, this Imperial Ticket cannot be recovered.
+              </div>
             </div>
           </div>
           <!-- =========================================
@@ -972,6 +1084,7 @@
         </div>
       </div>
     </div>
+
     <script src="js/nav-auth.js"></script>
     <script src="js/navbar.js"></script>
     <script src="js/notifications.js"></script>

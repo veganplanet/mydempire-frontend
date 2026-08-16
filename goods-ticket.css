@@ -1422,3 +1422,252 @@
   }
 
 }
+/* =========================================
+   🎟️ IMPERIAL TICKET HEADER ACTIONS
+========================================= */
+
+.ticket-header-actions{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.ticket-redeem-open-btn,
+.ticket-sell-btn,
+.ticket-owned-pill{
+  min-height:68px;
+  min-width:150px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:0 22px;
+
+  border-radius:999px;
+
+  font-size:18px;
+  font-weight:900;
+
+  box-sizing:border-box;
+}
+
+/* REDEEM */
+.ticket-redeem-open-btn{
+  border:2px solid #fca5a5;
+  background:linear-gradient(180deg,#fff1f2 0%,#ffe4e6 100%);
+  color:#b91c1c;
+  cursor:pointer;
+  box-shadow:0 8px 18px rgba(239,68,68,0.10);
+}
+
+.ticket-redeem-open-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 22px rgba(239,68,68,0.16);
+}
+
+/* SELL */
+.ticket-sell-btn{
+  border:2px solid #86efac;
+  background:linear-gradient(180deg,#f0fdf4 0%,#dcfce7 100%);
+  color:#166534;
+  cursor:pointer;
+  box-shadow:0 8px 18px rgba(34,197,94,0.10);
+}
+
+.ticket-sell-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 22px rgba(34,197,94,0.16);
+}
+
+/* OWNED */
+.ticket-owned-pill{
+  border:2px solid #d8b4fe;
+  background:linear-gradient(180deg,#faf5ff 0%,#f3e8ff 100%);
+  color:#6b21a8;
+  box-shadow:0 8px 18px rgba(168,85,247,0.10);
+}
+
+/* MOBILE */
+@media (max-width:700px){
+  .ticket-header-actions{
+    width:100%;
+  }
+
+  .ticket-redeem-open-btn,
+  .ticket-sell-btn,
+  .ticket-owned-pill{
+    flex:1 1 100%;
+    width:100%;
+  }
+}
+.ticket-redeem-modal.hidden{
+  display:none !important;
+}
+
+.ticket-redeem-modal{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:20px;
+
+  background:rgba(15,23,42,0.65);
+  backdrop-filter:blur(5px);
+}
+
+.ticket-redeem-card{
+  position:relative;
+
+  width:min(92vw,620px);
+  max-height:90vh;
+  overflow-y:auto;
+
+  padding:28px;
+
+  border-radius:24px;
+  background:#ffffff;
+  border:1px solid #e2e8f0;
+
+  box-shadow:0 24px 70px rgba(15,23,42,0.35);
+}
+
+.ticket-redeem-close{
+  position:absolute;
+  top:12px;
+  right:14px;
+
+  width:40px;
+  height:40px;
+
+  border:none;
+  border-radius:999px;
+
+  background:#f1f5f9;
+  color:#334155;
+
+  font-size:26px;
+  font-weight:900;
+
+  cursor:pointer;
+}
+
+.ticket-redeem-icon{
+  font-size:48px;
+  text-align:center;
+  margin-bottom:8px;
+}
+
+.ticket-redeem-card h3{
+  margin:0 0 18px;
+  text-align:center;
+
+  font-size:26px;
+  font-weight:900;
+  color:#0f172a;
+}
+
+.ticket-redeem-warning{
+  margin-bottom:16px;
+  padding:16px;
+
+  border:1px solid #fecaca;
+  border-radius:16px;
+
+  background:#fff1f2;
+  color:#991b1b;
+}
+
+.ticket-redeem-warning p{
+  margin:8px 0 0;
+}
+
+.ticket-redeem-options{
+  margin-bottom:16px;
+  padding:16px;
+
+  border-radius:16px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+}
+
+.ticket-redeem-options ul{
+  margin:10px 0 0 20px;
+}
+
+.ticket-redeem-value-box{
+  margin-bottom:18px;
+  padding:18px;
+
+  text-align:center;
+
+  border-radius:18px;
+  background:#faf5ff;
+  border:2px solid #d8b4fe;
+}
+
+.ticket-redeem-value-box span,
+.ticket-redeem-value-box small{
+  display:block;
+}
+
+.ticket-redeem-value-box strong{
+  display:block;
+  margin:6px 0;
+
+  font-size:30px;
+  color:#7e22ce;
+}
+
+.ticket-redeem-actions{
+  display:flex;
+  gap:12px;
+}
+
+.ticket-redeem-confirm-btn,
+.ticket-redeem-hold-btn{
+  flex:1;
+
+  min-height:52px;
+
+  border:none;
+  border-radius:14px;
+
+  font-size:16px;
+  font-weight:900;
+
+  cursor:pointer;
+}
+
+.ticket-redeem-confirm-btn{
+  background:#dc2626;
+  color:#ffffff;
+}
+
+.ticket-redeem-hold-btn{
+  background:#e2e8f0;
+  color:#334155;
+}
+
+.ticket-redeem-status{
+  min-height:22px;
+  margin-bottom:12px;
+
+  text-align:center;
+  font-weight:800;
+}
+
+.ticket-redeem-final-note{
+  margin-top:14px;
+
+  text-align:center;
+  color:#64748b;
+
+  font-size:13px;
+  font-weight:700;
+}
