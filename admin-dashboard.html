@@ -1854,7 +1854,66 @@ forkyishere,529"
           </div>
           <div class="section" style="margin-top: 18px">
             <h2>🎟 Imperial Ticket Report</h2>
+            <div
+              style="
+                margin: 14px 0 18px;
+                padding: 16px;
+                border: 1px solid #d8b4fe;
+                border-radius: 14px;
+                background: #faf5ff;
+              "
+            >
+              <div
+                style="
+                  font-size: 16px;
+                  font-weight: 900;
+                  color: #6b21a8;
+                  margin-bottom: 8px;
+                "
+              >
+                ⚡ Ticket Redemption Value
+              </div>
 
+              <div style="color: #64748b; font-size: 13px; margin-bottom: 12px">
+                EMP credited when a player permanently burns 1 Imperial Ticket.
+              </div>
+
+              <div
+                style="
+                  display: flex;
+                  gap: 10px;
+                  flex-wrap: wrap;
+                  align-items: center;
+                "
+              >
+                <input
+                  id="admin-ticket-redemption-value"
+                  type="number"
+                  min="1"
+                  step="1"
+                  placeholder="500"
+                  style="min-width: 180px"
+                />
+
+                <span style="font-weight: 900; color: #6b21a8"> EMP </span>
+
+                <button
+                  id="admin-ticket-redemption-save-btn"
+                  type="button"
+                  class="primary"
+                >
+                  Update Redemption Value
+                </button>
+              </div>
+
+              <div
+                id="admin-ticket-redemption-status"
+                class="status"
+                style="margin-top: 10px"
+              >
+                Current value not loaded yet.
+              </div>
+            </div>
             <div class="top-row">
               <button
                 type="button"
@@ -9560,6 +9619,150 @@ Players snapshotted: ${data.players_snapshotted}
       document
         .getElementById("factory-tier-refresh-btn")
         ?.addEventListener("click", loadFactoryTierRewardAdmin);
+      // =========================================
+      // 🎟 ADMIN — TICKET REDEMPTION VALUE
+      // =========================================
+
+      async function loadAdminTicketRedemptionValue() {
+        const input = document.getElementById("admin-ticket-redemption-value");
+
+        const status = document.getElementById(
+          "admin-ticket-redemption-status",
+        );
+
+        try {
+          if (status) {
+            status.textContent = "Loading current redemption value...";
+          }
+
+          const response = await fetch(
+            `${API_BASE}/admin/imperial-ticket-redemption-value`,
+            {
+              headers: {
+                "x-admin-key": getAdminKey(),
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Failed to load redemption value.");
+          }
+
+          if (input) {
+            input.value = Number(data.emp_value || 500);
+          }
+
+          if (status) {
+            status.textContent = `Current redemption value: ${Number(
+              data.emp_value || 500,
+            ).toLocaleString()} EMP`;
+          }
+        } catch (err) {
+          console.error("Admin Ticket redemption value load error:", err);
+
+          if (status) {
+            status.textContent =
+              err.message || "Failed to load redemption value.";
+          }
+        }
+      }
+
+      async function saveAdminTicketRedemptionValue() {
+        const input = document.getElementById("admin-ticket-redemption-value");
+
+        const button = document.getElementById(
+          "admin-ticket-redemption-save-btn",
+        );
+
+        const status = document.getElementById(
+          "admin-ticket-redemption-status",
+        );
+
+        const empValue = Number(input?.value || 0);
+
+        if (!Number.isInteger(empValue) || empValue <= 0) {
+          if (status) {
+            status.textContent =
+              "Enter a valid whole-number EMP value greater than 0.";
+          }
+          return;
+        }
+
+        const confirmed = confirm(
+          `Change Imperial Ticket redemption value to ${empValue} EMP?\n\n` +
+            `This will apply to future Ticket redemptions.`,
+        );
+
+        if (!confirmed) return;
+
+        try {
+          if (button) {
+            button.disabled = true;
+            button.textContent = "Updating...";
+          }
+
+          if (status) {
+            status.textContent = "Updating redemption value...";
+          }
+
+          const response = await fetch(
+            `${API_BASE}/admin/imperial-ticket-redemption-value`,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json",
+                "x-admin-key": getAdminKey(),
+              },
+
+              body: JSON.stringify({
+                emp_value: empValue,
+              }),
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Failed to update redemption value.");
+          }
+
+          if (input) {
+            input.value = Number(data.emp_value || empValue);
+          }
+
+          if (status) {
+            status.textContent = `✅ Redemption value updated to ${Number(
+              data.emp_value || empValue,
+            ).toLocaleString()} EMP`;
+          }
+        } catch (err) {
+          console.error("Admin Ticket redemption value update error:", err);
+
+          if (status) {
+            status.textContent =
+              err.message || "Failed to update redemption value.";
+          }
+        } finally {
+          if (button) {
+            button.disabled = false;
+            button.textContent = "Update Redemption Value";
+          }
+        }
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        const saveBtn = document.getElementById(
+          "admin-ticket-redemption-save-btn",
+        );
+
+        if (saveBtn) {
+          saveBtn.addEventListener("click", saveAdminTicketRedemptionValue);
+        }
+
+        loadAdminTicketRedemptionValue();
+      });
     </script>
     <div
       id="assets-modal"
