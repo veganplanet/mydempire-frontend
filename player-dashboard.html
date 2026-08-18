@@ -7606,140 +7606,177 @@ if (crateHistoryLink) {
           true,
         );
       }
-   function startCrateResetTimer() {
-  const cardEl = document.getElementById("crate-reset-timer");
-  const popupEl = document.getElementById("crate-popup-reset-timer");
+function startCrateResetTimer() {
+  const timerEl = document.getElementById("crate-reset-timer");
   const openBtn = document.getElementById("open-crate-btn");
 
-  if (!cardEl && !popupEl && !openBtn) return;
-
-  function hasOpenedToday() {
-    const lastOpenedRaw =
-      window.dashboardData?.lastCrateOpenedAt ||
-      window.dashboardData?.last_crate_opened_at ||
-      null;
-
-    if (!lastOpenedRaw) return false;
-
-    const last = new Date(lastOpenedRaw);
-    const now = new Date();
-
-    if (isNaN(last.getTime())) return false;
-
-    return (
-      last.getUTCFullYear() === now.getUTCFullYear() &&
-      last.getUTCMonth() === now.getUTCMonth() &&
-      last.getUTCDate() === now.getUTCDate()
-    );
-  }
+  if (!timerEl && !openBtn) return;
 
   function updateTimer() {
-    const cooldownUntilRaw =
+    const cratesOpenedToday = Number(
+      window.dashboardData?.cratesOpenedToday ??
+      window.dashboardData?.crates_opened_today ??
+      0
+    );
+
+    const nextAvailableRaw =
       window.dashboardData?.nextCrateAvailableAt ||
       window.dashboardData?.next_crate_available_at ||
-      localStorage.getItem("mde_crate_cooldown_until") ||
       null;
 
-    const cooldownUntil = cooldownUntilRaw ? new Date(cooldownUntilRaw) : null;
-
     let canOpenCrate = true;
-    let timerText = "Ready now";
 
-    if (cooldownUntil && !isNaN(cooldownUntil.getTime())) {
-      const now = new Date();
+    if (cratesOpenedToday >= 4) {
+      canOpenCrate = false;
 
-      if (now < cooldownUntil) {
+      if (timerEl) {
+        timerEl.textContent = "Daily limit reached";
+      }
+
+      if (openBtn) {
+        openBtn.disabled = true;
+        openBtn.textContent = "4 / 4 Opened";
+        openBtn.style.opacity = "0.6";
+        openBtn.style.cursor = "not-allowed";
+      }
+
+      return;
+    }
+
+    if (nextAvailableRaw) {
+      const nextAvailableAt = new Date(nextAvailableRaw).getTime();
+      const diff = nextAvailableAt - Date.now();
+
+      if (Number.isFinite(nextAvailableAt) && diff > 0) {
         canOpenCrate = false;
 
-        const diff = cooldownUntil - now;
-        const hours = Math.floor(diff / 3600000);
-        const minutes = Math.floor((diff % 3600000) / 60000);
-        const seconds = Math.floor((diff % 60000) / 1000);
+        const totalSeconds = Math.ceil(diff / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
 
-        timerText = `${hours}h ${minutes}m ${seconds}s`;
-      } else {
-        localStorage.removeItem("mde_crate_cooldown_until");
+        if (timerEl) {
+          timerEl.textContent =
+            `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        if (openBtn) {
+          openBtn.disabled = true;
+          openBtn.textContent = "Cooling Down";
+          openBtn.style.opacity = "0.6";
+          openBtn.style.cursor = "not-allowed";
+        }
+
+        return;
       }
     }
 
-    if (cardEl) cardEl.textContent = timerText;
-    if (popupEl) popupEl.textContent = timerText;
+    if (timerEl) {
+      timerEl.textContent = "Ready now";
+    }
 
     if (openBtn) {
-      openBtn.disabled = !canOpenCrate;
-
-      if (!canOpenCrate) {
-        openBtn.textContent = "Cooling Down";
-      } else {
-        openBtn.textContent = hasOpenedToday()
+      openBtn.disabled = false;
+      openBtn.textContent =
+        cratesOpenedToday >= 1
           ? "Open Extra Crate"
           : "Open Crate";
-      }
 
-      openBtn.style.opacity = canOpenCrate ? "1" : "0.6";
-      openBtn.style.cursor = canOpenCrate ? "pointer" : "not-allowed";
+      openBtn.style.opacity = "1";
+      openBtn.style.cursor = "pointer";
     }
   }
 
   updateTimer();
-  setInterval(updateTimer, 1000);
+
+  if (window.crateResetTimerInterval) {
+    clearInterval(window.crateResetTimerInterval);
+  }
+
+  window.crateResetTimerInterval =
+    setInterval(updateTimer, 1000);
 }
-      function openCrateModal() {
-        const modal = document.getElementById("crate-modal");
-        const costText = document.getElementById("crate-cost-text");
-        const message = document.getElementById("crate-modal-message");
+function openCrateModal() {
+  const modal = document.getElementById("crate-modal");
+  const costText = document.getElementById("crate-cost-text");
+  const message = document.getElementById("crate-modal-message");
 
-        if (!modal) return;
+  if (!modal) return;
 
-        const epDay = window.dashboardData?.totalBaseEP || 0;
-        console.log("LAST CRATE:", window.dashboardData?.lastCrateOpenedAt);
-        const globalShare = window.dashboardData?.globalSharePercent || 0;
-        console.log("CRATE CHECK:", {
-  epDay,
-  globalShare,
-  dashboardData: window.dashboardData
-});
+  const epDay = Number(window.dashboardData?.totalBaseEP || 0);
+  const globalShare = Number(
+    window.dashboardData?.globalSharePercent || 0
+  );
 
-    const lastCrateRaw = window.dashboardData?.lastCrateOpenedAt || null;
+  // Use today's actual crate count when available.
+  let openedToday = Number(
+    window.dashboardData?.cratesOpenedToday ??
+    window.dashboardData?.crates_opened_today ??
+    0
+  );
 
-const lastCrateDate = lastCrateRaw ? new Date(lastCrateRaw) : null;
-const nowDate = new Date();
+  // Safe fallback for older dashboard data:
+  // if count is missing, check last crate date.
+  if (openedToday <= 0) {
+    const lastCrateRaw =
+      window.dashboardData?.lastCrateOpenedAt ||
+      window.dashboardData?.last_crate_opened_at ||
+      null;
 
-const openedToday =
-  lastCrateDate &&
-  lastCrateDate.getUTCFullYear() === nowDate.getUTCFullYear() &&
-  lastCrateDate.getUTCMonth() === nowDate.getUTCMonth() &&
-  lastCrateDate.getUTCDate() === nowDate.getUTCDate()
-    ? 1
-    : 0;
+    if (lastCrateRaw) {
+      const lastCrateDate = new Date(lastCrateRaw);
+      const nowDate = new Date();
 
-const crateCost =
-  openedToday > 0
-    ? 15
-    : isCrateEligible(epDay, globalShare)
-      ? 0
-      : 25;
+      const sameUtcDay =
+        lastCrateDate.getUTCFullYear() === nowDate.getUTCFullYear() &&
+        lastCrateDate.getUTCMonth() === nowDate.getUTCMonth() &&
+        lastCrateDate.getUTCDate() === nowDate.getUTCDate();
 
-if (costText) {
-  costText.innerHTML =
-    crateCost === 0
-      ? "<strong>Cost:</strong> FREE 🎁"
-      : `<strong>Cost:</strong> ${crateCost} EMP`;
-}
-
-        if (crateCost === 0) {
-  message.textContent =
-    "You are eligible for a FREE crate. Open now?";
-} else if (crateCost === 15) {
-  message.textContent =
-    "This extra crate will cost 15 EMP.";
-} else {
-  message.textContent =
-    "You are not eligible for a free crate. This will cost 25 EMP.";
-}
-
-        modal.style.display = "flex";
+      if (sameUtcDay) {
+        openedToday = 1;
       }
+    }
+  }
+
+  // IMPORTANT:
+  // Backend rules:
+  // crate 1 = FREE if qualified, otherwise 25 EMP
+  // crates 2-4 = 15 EMP
+  const crateCost =
+    openedToday >= 1
+      ? 15
+      : isCrateEligible(epDay, globalShare)
+        ? 0
+        : 25;
+
+  if (costText) {
+    costText.innerHTML =
+      crateCost === 0
+        ? "<strong>Cost:</strong> FREE 🎁"
+        : `<strong>Cost:</strong> ${crateCost} EMP`;
+  }
+
+  if (message) {
+    if (crateCost === 0) {
+      message.textContent =
+        "You are eligible for a FREE crate. Open now?";
+    } else if (crateCost === 15) {
+      message.textContent =
+        "This extra crate will cost 15 EMP.";
+    } else {
+      message.textContent =
+        "This is your first crate today. Cost: 25 EMP.";
+    }
+  }
+
+  console.log("CRATE CONFIRMATION:", {
+    openedToday,
+    globalShare,
+    crateCost
+  });
+
+  modal.style.display = "flex";
+} 
       function closeCrateModal() {
         const modal = document.getElementById("crate-modal");
         if (modal) modal.style.display = "none";
@@ -8244,66 +8281,130 @@ if (imperialExchangeBtn) {
 
 function updateCrateCardDisplay() {
   const epDay = Number(window.dashboardData?.totalBaseEP || 0);
-  const globalShare = Number(window.dashboardData?.globalSharePercent || 0);
-console.log("CRATE FRONTEND DEBUG:", {
-  epDay,
-  globalShare,
-  dashboardData: window.dashboardData,
-});
-  const lastOpened =
+  const globalShare = Number(
+    window.dashboardData?.globalSharePercent || 0
+  );
+
+  const cratesOpenedToday = Number(
+    window.dashboardData?.cratesOpenedToday ??
+    window.dashboardData?.crates_opened_today ??
+    0
+  );
+
+  const lastOpenedRaw =
     window.dashboardData?.lastCrateOpenedAt ||
     window.dashboardData?.last_crate_opened_at ||
     null;
 
-  let openedToday = false;
-
-  if (lastOpened) {
-    const last = new Date(lastOpened);
-    const now = new Date();
-
-    openedToday =
-      last.getUTCFullYear() === now.getUTCFullYear() &&
-      last.getUTCMonth() === now.getUTCMonth() &&
-      last.getUTCDate() === now.getUTCDate();
-  }
-
-  const isFree =
-    !openedToday && isCrateEligible(epDay, globalShare);
-
   const crateCostEl = document.getElementById("crate-cost-display");
+  const timerEl = document.getElementById("crate-timer");
+  const openBtn = document.getElementById("open-crate-btn");
+
+  // ============================
+  // COST DISPLAY
+  // ============================
+
+  let crateCost = 25;
+
+  if (cratesOpenedToday >= 1) {
+    crateCost = 15;
+  } else if (isCrateEligible(epDay, globalShare)) {
+    crateCost = 0;
+  }
 
   if (crateCostEl) {
-    crateCostEl.textContent = isFree
-      ? "FREE 🎁"
-      : openedToday
-        ? "15 EMP"
-        : "25 EMP";
+    crateCostEl.textContent =
+      crateCost === 0 ? "FREE 🎁" : `${crateCost} EMP`;
   }
 
-  console.log("CRATE DISPLAY CHECK:", {
-    epDay,
-    globalShare,
-    openedToday,
-    isFree,
-    shownCost: crateCostEl?.textContent || null,
-  });
-
-  const openBtn = document.getElementById("open-crate-btn");
+  // ============================
+  // VISITOR MODE
+  // ============================
 
   if (openBtn && !isOwnEmpireView()) {
     openBtn.disabled = true;
     openBtn.textContent = "Read-only";
     openBtn.style.opacity = "0.6";
     openBtn.style.cursor = "not-allowed";
-    openBtn.title = "You can only open crates from your own empire.";
+
+    if (timerEl) {
+      timerEl.textContent = "Viewing another empire";
+    }
+
     return;
   }
 
-  if (openBtn && !openedToday) {
+  // ============================
+  // DAILY LIMIT
+  // ============================
+
+  if (cratesOpenedToday >= 4) {
+    if (openBtn) {
+      openBtn.disabled = true;
+      openBtn.textContent = "4 / 4 Opened";
+      openBtn.style.opacity = "0.6";
+      openBtn.style.cursor = "not-allowed";
+    }
+
+    if (timerEl) {
+      timerEl.textContent = "Daily crate limit reached";
+    }
+
+    return;
+  }
+
+  // ============================
+  // 3-HOUR COOLDOWN
+  // Same rule as backend
+  // ============================
+
+  if (lastOpenedRaw) {
+    const lastOpenedAt = new Date(lastOpenedRaw).getTime();
+
+    if (Number.isFinite(lastOpenedAt)) {
+      const nextAllowedAt =
+        lastOpenedAt + 3 * 60 * 60 * 1000;
+
+      const remainingMs = nextAllowedAt - Date.now();
+
+      if (remainingMs > 0) {
+        if (openBtn) {
+          openBtn.disabled = true;
+          openBtn.textContent = "Cooling Down";
+          openBtn.style.opacity = "0.6";
+          openBtn.style.cursor = "not-allowed";
+        }
+
+        if (timerEl) {
+          const totalSeconds = Math.ceil(remainingMs / 1000);
+          const hours = Math.floor(totalSeconds / 3600);
+          const minutes = Math.floor(
+            (totalSeconds % 3600) / 60
+          );
+          const seconds = totalSeconds % 60;
+
+          timerEl.textContent =
+            `Next crate in ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        return;
+      }
+    }
+  }
+
+  // ============================
+  // AVAILABLE NOW
+  // ============================
+
+  if (openBtn) {
     openBtn.disabled = false;
     openBtn.textContent = "Open Crate";
     openBtn.style.opacity = "1";
     openBtn.style.cursor = "pointer";
+  }
+
+  if (timerEl) {
+    timerEl.textContent = "Next crate in Ready now";
   }
 }
 async function loadSeasonLiveBanner() {
@@ -9222,34 +9323,7 @@ function showPreviousCultureSpotlight() {
           if (footerEl) footerEl.innerHTML = html;
         });
 
-      const openBtn = document.getElementById("open-crate-btn");
-
-if (openBtn) {
-  openBtn.addEventListener("click", () => {
-    if (openBtn.disabled) return;
-
-    const costText =
-      document.getElementById("crate-cost-display")?.textContent?.trim() ||
-      "25 EMP";
-
-    const modalMessage = document.getElementById("crate-modal-message");
-    const modalCostText = document.getElementById("crate-cost-text");
-
-    if (modalCostText) {
-      modalCostText.innerHTML = `<strong>Cost:</strong> ${costText}`;
-    }
-
-    if (modalMessage) {
-      modalMessage.textContent =
-        costText.toUpperCase().includes("FREE")
-          ? "You are eligible for a FREE crate. Open now?"
-          : `This crate will cost ${costText}. Open now?`;
-    }
-
-    const modal = document.getElementById("crate-modal");
-    if (modal) modal.style.display = "flex";
-  });
-}
+     
 async function openWithdrawalHistoryModal(event) {
   if (event) event.preventDefault();
 
