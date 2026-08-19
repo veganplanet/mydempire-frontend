@@ -5796,16 +5796,50 @@ landSummaryHtml = `
         const reachedLandUpgradeCap =
           currentBlueprintLevel >= landMaxUpgradeLevel;
 
-        const landAlreadyHasB5 = factories.some((otherFactory) => {
-          if (String(otherFactory.id) === String(f.id)) return false;
+        const restrictedTopLevel =
+  landTierKey === "L2" ? 4 :
+  landTierKey === "L3" ? 5 :
+  null;
 
-          return String(otherFactory.blueprint_tier || "")
-            .toUpperCase()
-            .includes("_B5");
-        });
+const landAlreadyHasRestrictedTopTier =
+  restrictedTopLevel &&
+  factories.some((otherFactory) => {
+    const otherFactoryId =
+      otherFactory.factory_id ?? otherFactory.id;
 
-        const blockedByExistingB5 =
-          nextUpgradeLabel === "B5" && landAlreadyHasB5;
+    const currentFactoryId =
+      f.factory_id ?? f.id;
+
+    if (String(otherFactoryId) === String(currentFactoryId)) {
+      return false;
+    }
+
+    const otherBlueprintTier =
+      otherFactory.blueprint_tier ??
+      otherFactory.bp_tier ??
+      otherFactory.blueprintTier ??
+      "";
+
+    const otherLevel = Number(
+      String(otherBlueprintTier).match(/B([1-5])/)?.[1] || 0
+    );
+
+    const otherStatus =
+      getEffectiveFactoryStatusForDisplay(otherFactory);
+
+    return (
+      otherLevel === restrictedTopLevel ||
+      (
+        otherStatus === "UPGRADING" &&
+        otherLevel === restrictedTopLevel - 1
+      )
+    );
+  });
+
+const blockedByExistingTopTier =
+  restrictedTopLevel &&
+  nextUpgradeLabel === `B${restrictedTopLevel}` &&
+  landAlreadyHasRestrictedTopTier;
 
         let maintenanceText = "";
 
@@ -5824,7 +5858,10 @@ landSummaryHtml = `
         const isReadyToUpgrade =
           status === "ACTIVE" && !isMaxTier && activeDays >= requiredDays;
 
-        const canUpgrade = isReadyToUpgrade;
+        const canUpgrade =
+  isReadyToUpgrade &&
+  !reachedLandUpgradeCap &&
+  !blockedByExistingTopTier;
 
         let upgradeMatrix = "";
 
@@ -5834,8 +5871,8 @@ landSummaryHtml = `
           upgradeMatrix = `Active days: ${activeDays}/${requiredDays} • Upgrade unavailable while ${status.toLowerCase()}`;
         } else if (reachedLandUpgradeCap) {
           upgradeMatrix = `Max level reached for this land`;
-        } else if (blockedByExistingB5) {
-          upgradeMatrix = `This land already has a B5 factory`;
+        } else if (blockedByExistingTopTier) {
+  upgradeMatrix = `Max tier reached for this land`;
         } else if (isReadyToUpgrade) {
           upgradeMatrix = `✅ Factory is ready to upgrade to ${nextUpgradeLabel}`;
         } else {
