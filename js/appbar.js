@@ -1,11 +1,6 @@
 (function () {
   function getActiveUser() {
-    return (
-      localStorage.getItem("mde_username") ||
-      localStorage.getItem("hiveUsername") ||
-      localStorage.getItem("username") ||
-      ""
-    ).replace("@", "").trim().toLowerCase();
+    return window.MDEAuth ? window.MDEAuth.getUsername() : "";
   }
 
   function applyAuthState() {
@@ -66,6 +61,7 @@
       logoutBtn.dataset.bound = "true";
 
       logoutBtn.addEventListener("click", function () {
+        if (window.MDEAuth) window.MDEAuth.clearSession();
         localStorage.removeItem("mde_username");
         localStorage.removeItem("hiveUsername");
         localStorage.removeItem("username");
