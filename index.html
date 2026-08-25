@@ -290,15 +290,7 @@
           });
 
         function getStoredUser() {
-          return (
-            localStorage.getItem("mde_username") ||
-            localStorage.getItem("hiveUsername") ||
-            localStorage.getItem("username") ||
-            ""
-          )
-            .replace("@", "")
-            .trim()
-            .toLowerCase();
+          return window.MDEAuth ? window.MDEAuth.getUsername() : "";
         }
 
         function showLoggedOutNav() {
@@ -311,7 +303,7 @@
           const accountWrap = document.getElementById("appbarAccountWrap");
           const dropdown = document.getElementById("appbarDropdown");
 
-          if (loginBtn) loginBtn.style.display = "none";
+          if (loginBtn) loginBtn.style.display = "inline-flex";
           if (accountWrap) accountWrap.style.display = "none";
           if (dropdown) dropdown.classList.remove("open");
         }
@@ -583,9 +575,9 @@
         </button>
       </div>
     </div>
-    <script src="js/player-auth.js"></script>
+    <script src="js/player-auth.js?v=20260825-auth2"></script>
     <script src="js/nav-auth.js"></script>
-    <script src="js/navbar.js"></script>
+    <script src="js/navbar.js?v=20260825-auth2"></script>
     <script src="js/notifications.js"></script>
     <script>
 const genesisLaunchDate = new Date("2026-05-31T17:00:00+04:00");
