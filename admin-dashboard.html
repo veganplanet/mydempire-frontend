@@ -2788,7 +2788,11 @@ forkyishere,529"
 
       const API_BASE = isLocal ? LOCAL_API : PROD_API;
 
-      let ADMIN_KEY = localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || "";
+      localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
+      localStorage.removeItem("mde_admin_key");
+      localStorage.removeItem("adminKey");
+
+      let ADMIN_KEY = sessionStorage.getItem("MYDEMPIRE_ADMIN_KEY") || "";
 
       function setStatus(message) {
         document.getElementById("admin-status").textContent = message;
@@ -2799,7 +2803,7 @@ forkyishere,529"
         if (!key) return;
 
         ADMIN_KEY = key.trim();
-        localStorage.setItem("MYDEMPIRE_ADMIN_KEY", ADMIN_KEY);
+        sessionStorage.setItem("MYDEMPIRE_ADMIN_KEY", ADMIN_KEY);
         setStatus("Admin connected. Loading overview...");
 
         await loadAdminOverview();
@@ -2852,7 +2856,7 @@ forkyishere,529"
       }
       function logoutAdmin() {
         ADMIN_KEY = "";
-        localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
+        sessionStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
         setStatus("Admin logged out.");
       }
       async function loadReinvestBonusConfig() {
@@ -2875,7 +2879,7 @@ forkyishere,529"
             {
               headers: {
                 "x-admin-key":
-                  localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+                  sessionStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
               },
             },
           );
@@ -2930,7 +2934,7 @@ forkyishere,529"
               headers: {
                 "Content-Type": "application/json",
                 "x-admin-key":
-                  localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+                  sessionStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
               },
               body: JSON.stringify({
                 bonus_percent: bonusPercent,
@@ -3103,7 +3107,7 @@ forkyishere,529"
           const response = await fetch(`${API_BASE}/admin/reinvest-summary`, {
             headers: {
               "x-admin-key":
-                localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+                sessionStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
             },
           });
 
@@ -3171,7 +3175,7 @@ forkyishere,529"
             {
               headers: {
                 "x-admin-key":
-                  localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+                  sessionStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
               },
             },
           );
@@ -5139,7 +5143,12 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
 
         try {
           const res = await fetch(
-            `${API_BASE}/admin/chain-events?key=${encodeURIComponent(ADMIN_KEY)}&limit=${limit}`,
+            `${API_BASE}/admin/chain-events?limit=${encodeURIComponent(limit)}`,
+            {
+              headers: {
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
           );
 
           const data = await res.json();
@@ -7496,8 +7505,8 @@ Players snapshotted: ${data.players_snapshotted}
       }
       function getAdminKey() {
         return (
-          localStorage.getItem("mde_admin_key") ||
-          localStorage.getItem("adminKey") ||
+          sessionStorage.getItem("mde_admin_key") ||
+          sessionStorage.getItem("adminKey") ||
           document.getElementById("admin-key-input")?.value ||
           ""
         );
@@ -7839,7 +7848,7 @@ Players snapshotted: ${data.players_snapshotted}
 
         if (!isValid) {
           ADMIN_KEY = "";
-          localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
+          sessionStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
 
           if (loginStatus) {
             loginStatus.textContent = "❌ Invalid ADMIN_KEY. Dashboard locked.";
@@ -7850,7 +7859,7 @@ Players snapshotted: ${data.players_snapshotted}
         }
 
         ADMIN_KEY = cleanKey;
-        localStorage.setItem("MYDEMPIRE_ADMIN_KEY", ADMIN_KEY);
+        sessionStorage.setItem("MYDEMPIRE_ADMIN_KEY", ADMIN_KEY);
 
         if (loginStatus) loginStatus.textContent = "✅ Admin unlocked.";
 
@@ -7859,7 +7868,7 @@ Players snapshotted: ${data.players_snapshotted}
       }
 
       document.addEventListener("DOMContentLoaded", async () => {
-        const savedKey = localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || "";
+        const savedKey = sessionStorage.getItem("MYDEMPIRE_ADMIN_KEY") || "";
         const unlockBtn = document.getElementById("unlock-admin-btn");
         const keyInput = document.getElementById("admin-key-input");
         const loginStatus = document.getElementById("admin-login-status");
@@ -7900,7 +7909,7 @@ Players snapshotted: ${data.players_snapshotted}
         if (logoutBtn) {
           logoutBtn.addEventListener("click", () => {
             ADMIN_KEY = "";
-            localStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
+            sessionStorage.removeItem("MYDEMPIRE_ADMIN_KEY");
 
             if (keyInput) keyInput.value = "";
             if (loginStatus) loginStatus.textContent = "Dashboard locked.";
@@ -7936,7 +7945,7 @@ Players snapshotted: ${data.players_snapshotted}
             {
               headers: {
                 "x-admin-key":
-                  localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+                  sessionStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
               },
             },
           );
@@ -8864,7 +8873,7 @@ Players snapshotted: ${data.players_snapshotted}
               headers: {
                 "Content-Type": "application/json",
                 "x-admin-key":
-                  localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+                  sessionStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
               },
 
               body: JSON.stringify({
@@ -9105,7 +9114,7 @@ Players snapshotted: ${data.players_snapshotted}
             {
               headers: {
                 "x-admin-key":
-                  localStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
+                  sessionStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY,
               },
             },
           );
