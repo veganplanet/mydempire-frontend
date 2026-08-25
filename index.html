@@ -434,24 +434,19 @@
                 return;
               }
 
-              window.hive_keychain.requestSignBuffer(
-                username,
-                "MydEmpire Login " + Date.now(),
-                "Posting",
-                function (res) {
-                  if (!res || !res.success) {
-                    alert("Login cancelled");
-                    return;
-                  }
-
+              window.MDEAuth.signIn(username)
+                .then(() => {
                   localStorage.setItem("mde_username", username);
                   localStorage.setItem("hiveUsername", username);
                   localStorage.setItem("username", username);
 
                   showLoggedInNav(username);
                   redirectToDashboard(username);
-                },
-              );
+                })
+                .catch((error) => {
+                  console.error("Secure Hive login error:", error);
+                  alert(error.message || "Secure login failed.");
+                });
             })
             .catch((err) => {
               console.error("Whitelist login error:", err);
@@ -460,6 +455,7 @@
         }
 
         function disconnectWallet() {
+          if (window.MDEAuth) window.MDEAuth.clearSession();
           localStorage.removeItem("mde_username");
           localStorage.removeItem("hiveUsername");
           localStorage.removeItem("username");
@@ -587,6 +583,7 @@
         </button>
       </div>
     </div>
+    <script src="js/player-auth.js"></script>
     <script src="js/nav-auth.js"></script>
     <script src="js/navbar.js"></script>
     <script src="js/notifications.js"></script>
