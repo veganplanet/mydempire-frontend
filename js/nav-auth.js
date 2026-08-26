@@ -1,11 +1,7 @@
 // nav-auth.js
 (function () {
   function getUser() {
-    return (
-      localStorage.getItem("mde_username") ||
-      localStorage.getItem("hiveUsername") ||
-      ""
-    ).trim();
+    return window.MDEAuth ? window.MDEAuth.getUsername() : "";
   }
 
   function updateNav() {
@@ -47,8 +43,10 @@
 
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
+      if (window.MDEAuth) window.MDEAuth.clearSession();
       localStorage.removeItem("mde_username");
       localStorage.removeItem("hiveUsername");
+      localStorage.removeItem("username");
       updateNav();
       window.location.href = "index.html";
     });

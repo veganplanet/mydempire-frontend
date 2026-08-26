@@ -1,8 +1,6 @@
 (function () {
-  const user =
-    localStorage.getItem("mde_username") ||
-    localStorage.getItem("hiveUsername") ||
-    "";
+  // A saved username is not authentication. Only a verified server session counts.
+  const user = window.MDEAuth ? window.MDEAuth.getUsername() : "";
   const params = new URLSearchParams(window.location.search);
   const viewedUser = params.get("user") || params.get("view") || user;
 
@@ -175,8 +173,10 @@ ${
 
   if (logoutBtn) {
     logoutBtn.addEventListener("click", function () {
+      if (window.MDEAuth) window.MDEAuth.clearSession();
       localStorage.removeItem("mde_username");
       localStorage.removeItem("hiveUsername");
+      localStorage.removeItem("username");
       window.location.href = "index.html";
     });
   }
