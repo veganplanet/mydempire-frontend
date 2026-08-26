@@ -1,4 +1,10 @@
-/* ============================= */
+min-width:92px;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+}
+
+//CODEX 2026 — GOODS GUIDE VISUAL SYSTEM* ============================= */
 /* GLOBAL PAGE BACKGROUND */
 /* ============================= */
 
@@ -10686,6 +10692,11 @@ cursor:pointer;
 .compact-actions .primary-btn,
 .compact-actions .danger-btn{
   height:38px;
+    min-width:92px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
 
   
 
@@ -11116,11 +11127,6 @@ cursor:pointer;
   .codex-page .codex-table td {
     padding: 10px;
   }
-}
-min-width:92px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
 }
 
 /* ===== RESPONSIVE ===== */
