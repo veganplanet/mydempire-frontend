@@ -1030,6 +1030,40 @@
     </div>
   </div>
 </div>
+<div class="card foundry-recipe-card foundry-overhaul-card">
+  <div class="foundry-recipe-title">⚙️ Blueprint Overhaul</div>
+
+  <p class="foundry-recipe-text">
+    Attempt to upgrade one owned Blueprint by one tier. SMP and EMP are
+    consumed on every attempt; on failure, the Blueprint remains unchanged.
+  </p>
+
+  <label for="blueprint-overhaul-select" class="foundry-recipe-text">
+    <strong>Select an available Blueprint</strong>
+  </label>
+
+  <select id="blueprint-overhaul-select" onchange="updateBlueprintOverhaulPreview()">
+    <option value="">Loading Blueprint inventory...</option>
+  </select>
+
+  <div id="blueprint-overhaul-preview" class="foundry-recipe-text">
+    Select a B1–B4 Blueprint to view its upgrade chance and cost.
+  </div>
+
+  <button
+    id="blueprint-overhaul-btn"
+    class="primary-button foundry-craft-btn"
+    type="button"
+    onclick="attemptBlueprintOverhaul()"
+    disabled
+  >
+    Attempt Blueprint Overhaul
+  </button>
+
+  <div id="blueprint-overhaul-status" class="status-text foundry-craft-status">
+    Blueprint Overhaul is ready.
+  </div>
+</div>
  <div class="foundry-recipe-grid">
  <div class="card foundry-recipe-card foundry-b4-card">
   <div class="foundry-recipe-title">🔴 Random B4 Blueprint</div>
@@ -5000,6 +5034,7 @@ console.log("🔥 FOUNDRY VALUES APPLIED:", {
   smpText: smpEl.textContent,
   empText: empEl.textContent,
 });
+    await loadBlueprintOverhaulOptions();
     } catch (err) {
     console.error("Foundry balance load error:", err);
 
@@ -5661,6 +5696,177 @@ async function constructImperialMint() {
 }
 window.loadImperialMintworks =
   loadImperialMintworks;
+const BLUEPRINT_OVERHAUL_UI_CONFIG = Object.freeze({
+  B1: Object.freeze({ nextTier: "B2", chancePercent: 50, smpCost: 3, empCost: 25 }),
+  B2: Object.freeze({ nextTier: "B3", chancePercent: 40, smpCost: 5, empCost: 50 }),
+  B3: Object.freeze({ nextTier: "B4", chancePercent: 25, smpCost: 8, empCost: 75 }),
+  B4: Object.freeze({ nextTier: "B5", chancePercent: 12, smpCost: 10, empCost: 150 }),
+});
+
+async function loadBlueprintOverhaulOptions() {
+  const select = document.getElementById("blueprint-overhaul-select");
+  const button = document.getElementById("blueprint-overhaul-btn");
+  const status = document.getElementById("blueprint-overhaul-status");
+
+  if (!select || !button || !status) return;
+
+  const username = getLoggedInUser();
+  if (!username) {
+    select.innerHTML = '<option value="">Connect wallet to continue</option>';
+    button.disabled = true;
+    return;
+  }
+
+  try {
+    select.disabled = true;
+    button.disabled = true;
+    select.innerHTML = '<option value="">Loading Blueprint inventory...</option>';
+
+    const res = await fetch(
+      `${API_BASE}/player/${encodeURIComponent(username)}/blueprints?ts=${Date.now()}`,
+    );
+    const data = await res.json();
+
+    if (!res.ok || data.success === false) {
+      throw new Error(data.error || "Failed to load Blueprint inventory.");
+    }
+
+    const eligible = (data.blueprints || []).filter((blueprint) => {
+      const level = String(blueprint.level || "").toUpperCase();
+      return (
+        blueprint.blueprint_category === "FACTORY" &&
+        Object.prototype.hasOwnProperty.call(BLUEPRINT_OVERHAUL_UI_CONFIG, level)
+      );
+    });
+
+    select.replaceChildren();
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = eligible.length
+      ? "Choose a B1–B4 Blueprint"
+      : "No available B1–B4 Blueprints";
+    select.appendChild(placeholder);
+
+    for (const blueprint of eligible) {
+      const option = document.createElement("option");
+      option.value = String(blueprint.blueprint_id);
+      option.dataset.industry = String(blueprint.industry || "").toUpperCase();
+      option.dataset.level = String(blueprint.level || "").toUpperCase();
+      option.textContent = `${blueprint.display_name} • NFT #${blueprint.blueprint_id}`;
+      select.appendChild(option);
+    }
+
+    select.disabled = eligible.length === 0;
+    status.textContent = eligible.length
+      ? "Select a Blueprint to begin."
+      : "No unlocked B1–B4 Blueprints are available.";
+    updateBlueprintOverhaulPreview();
+  } catch (err) {
+    console.error("Blueprint Overhaul inventory error:", err);
+    select.innerHTML = '<option value="">Inventory unavailable</option>';
+    select.disabled = true;
+    button.disabled = true;
+    status.textContent = `❌ ${err.message || "Failed to load Blueprint inventory."}`;
+  }
+}
+
+function updateBlueprintOverhaulPreview() {
+  const select = document.getElementById("blueprint-overhaul-select");
+  const preview = document.getElementById("blueprint-overhaul-preview");
+  const button = document.getElementById("blueprint-overhaul-btn");
+
+  if (!select || !preview || !button) return;
+
+  const option = select.options[select.selectedIndex];
+  const level = String(option?.dataset?.level || "").toUpperCase();
+  const industry = String(option?.dataset?.industry || "").toUpperCase();
+  const config = BLUEPRINT_OVERHAUL_UI_CONFIG[level];
+
+  if (!select.value || !config) {
+    preview.textContent =
+      "Select a B1–B4 Blueprint to view its upgrade chance and cost.";
+    button.disabled = true;
+    return;
+  }
+
+  preview.textContent =
+    `${industry} ${level} → ${industry} ${config.nextTier} • ` +
+    `${config.chancePercent}% success • Cost: ${config.smpCost} SMP + ${config.empCost} EMP`;
+  button.disabled = false;
+}
+
+async function attemptBlueprintOverhaul() {
+  const select = document.getElementById("blueprint-overhaul-select");
+  const button = document.getElementById("blueprint-overhaul-btn");
+  const status = document.getElementById("blueprint-overhaul-status");
+  const username = getLoggedInUser();
+
+  if (!select || !button || !status || !username) return;
+
+  const blueprintId = Number(select.value);
+  const option = select.options[select.selectedIndex];
+  const level = String(option?.dataset?.level || "").toUpperCase();
+  const industry = String(option?.dataset?.industry || "").toUpperCase();
+  const config = BLUEPRINT_OVERHAUL_UI_CONFIG[level];
+
+  if (!Number.isInteger(blueprintId) || !config) {
+    status.textContent = "Select a valid Blueprint first.";
+    return;
+  }
+
+  const confirmed = confirm(
+    `Attempt Blueprint Overhaul?\n\n` +
+      `${industry} ${level} → ${industry} ${config.nextTier}\n` +
+      `Success chance: ${config.chancePercent}%\n` +
+      `Cost: ${config.smpCost} SMP + ${config.empCost} EMP\n\n` +
+      `SMP and EMP will be consumed even if the attempt fails.`,
+  );
+
+  if (!confirmed) return;
+
+  try {
+    button.disabled = true;
+    select.disabled = true;
+    status.textContent = "⚙️ Overhaul in progress...";
+
+    const res = await fetch(
+      `${API_BASE}/player/${encodeURIComponent(username)}/foundry/blueprint-overhaul`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": username,
+        },
+        body: JSON.stringify({
+          blueprint_id: blueprintId,
+          expected_tier: `${industry}_${level}`,
+        }),
+      },
+    );
+    const data = await res.json();
+
+    if (!res.ok || data.success === false) {
+      throw new Error(data.error || "Blueprint Overhaul failed.");
+    }
+
+    const resultMessage = data.upgraded
+      ? `✅ ${data.message}`
+      : `⚠️ ${data.message} Resources were consumed.`;
+
+    foundryPreviewLoaded = false;
+    await loadFoundryPreview();
+    status.textContent = resultMessage;
+  } catch (err) {
+    console.error("Blueprint Overhaul error:", err);
+    status.textContent = `❌ ${err.message || "Blueprint Overhaul failed."}`;
+    select.disabled = false;
+    updateBlueprintOverhaulPreview();
+  }
+}
+
+window.loadBlueprintOverhaulOptions = loadBlueprintOverhaulOptions;
+window.updateBlueprintOverhaulPreview = updateBlueprintOverhaulPreview;
+window.attemptBlueprintOverhaul = attemptBlueprintOverhaul;
 async function craftFoundryB4() {
   const btn = document.getElementById("craft-b4-btn");
   const status = document.getElementById("craft-b4-status");
