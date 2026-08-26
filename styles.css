@@ -10686,7 +10686,438 @@ cursor:pointer;
 .compact-actions .primary-btn,
 .compact-actions .danger-btn{
   height:38px;
-  min-width:92px;
+
+  
+
+/* =========================================================
+   CODEX 2026 — GOODS GUIDE VISUAL SYSTEM
+   ========================================================= */
+.codex-page {
+  padding-top: 24px !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+.codex-page .codex-shell {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 0 72px !important;
+}
+
+.codex-page .codex-hero-v2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, .75fr);
+  gap: 28px;
+  align-items: center;
+  margin: 0 0 22px;
+  padding: 38px 40px;
+  border: 1px solid rgba(34, 197, 94, .16);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 86% 14%, rgba(139, 92, 246, .15), transparent 32%),
+    radial-gradient(circle at 8% 92%, rgba(56, 189, 248, .14), transparent 34%),
+    linear-gradient(135deg, #effcf5 0%, #f7fbff 50%, #eef2ff 100%);
+  box-shadow: 0 22px 50px rgba(30, 41, 59, .11);
+  overflow: hidden;
+}
+
+.codex-page .codex-hero-copy,
+.codex-page .codex-hero-panel {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.codex-page .codex-kicker {
+  margin-bottom: 14px;
+  padding: 7px 13px;
+  color: #166534;
+  background: rgba(255, 255, 255, .72);
+  border: 1px solid rgba(22, 101, 52, .12);
+  box-shadow: 0 5px 16px rgba(15, 23, 42, .05);
+}
+
+.codex-page .codex-kicker::before {
+  content: "📜 ";
+}
+
+.codex-page .codex-hero-copy h1 {
+  margin: 0 0 14px;
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.04;
+  letter-spacing: -.045em;
+  color: #111827;
+}
+
+.codex-page .codex-hero-copy p {
+  max-width: 720px;
+  font-size: 17px;
+  line-height: 1.75;
+  font-weight: 600;
+  color: #526078;
+}
+
+.codex-page .codex-hero-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.codex-page .codex-hero-stat {
+  padding: 15px 17px;
+  border: 1px solid rgba(100, 116, 139, .13);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, .76);
+  box-shadow: 0 8px 22px rgba(30, 41, 59, .06);
+}
+
+.codex-page .codex-stat-label {
+  margin-bottom: 5px;
+  color: #64748b;
+  font-size: 11px;
+  letter-spacing: .1em;
+}
+
+.codex-page .codex-hero-stat strong {
+  color: #172033;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.codex-page .codex-pill-nav {
+  position: sticky !important;
+  top: 78px !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: 80;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 0 22px !important;
+  padding: 10px 12px !important;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(148, 163, 184, .2);
+  border-radius: 18px;
+  background: rgba(247, 249, 255, .9);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, .09);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.codex-page .codex-pill-nav a {
+  padding: 9px 14px;
+  border: 1px solid rgba(100, 116, 139, .12);
+  border-radius: 999px;
+  color: #334155;
+  background: rgba(255, 255, 255, .88);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, .05);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.codex-page .codex-pill-nav a:hover,
+.codex-page .codex-pill-nav a.active {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+  box-shadow: 0 8px 18px rgba(99, 102, 241, .25);
+  transform: translateY(-1px);
+}
+
+.codex-page .codex-card-block {
+  position: relative;
+  min-width: 0;
+  margin-bottom: 20px;
+  padding: 28px 30px;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, .16);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 12px 32px rgba(30, 41, 59, .08);
+  backdrop-filter: none;
+}
+
+.codex-page .codex-card-block::before {
+  height: 4px;
+  background: linear-gradient(90deg, #8b5cf6, #3b82f6, #2dd4bf);
+}
+
+.codex-page .codex-card-block::after {
+  display: none;
+}
+
+.codex-page .codex-card-block:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 42px rgba(30, 41, 59, .12);
+}
+
+.codex-page .codex-card-block h2 {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0 0 16px;
+  color: #172033;
+  font-size: 28px;
+  letter-spacing: -.025em;
+}
+
+.codex-page .codex-card-block h2::after {
+  display: none;
+}
+
+.codex-page .codex-card-block h2::before {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f3e8ff, #e0e7ff);
+  box-shadow: inset 0 0 0 1px rgba(124, 58, 237, .09);
+  font-size: 20px;
+}
+
+.codex-page #loop > h2::before { content: "🧭"; }
+.codex-page #packs > h2::before { content: "📦"; }
+.codex-page #land > h2::before { content: "🗺️"; }
+.codex-page #blueprints > h2::before { content: "📐"; }
+.codex-page #factories > h2::before { content: "🏭"; }
+.codex-page #maintenance > h2::before { content: "🛠️"; }
+.codex-page #upgrades > h2::before { content: "⬆️"; }
+.codex-page #resources > h2::before { content: "💎"; }
+.codex-page #rewards > h2::before { content: "🏆"; }
+.codex-page #goods > h2::before { content: "📦"; }
+.codex-page #activity > h2::before { content: "🎡"; }
+.codex-page #mint > h2::before { content: "🏛️"; }
+.codex-page #trade > h2::before { content: "⚖️"; }
+.codex-page #events > h2::before { content: "🎪"; }
+.codex-page #start > h2::before { content: "🚀"; }
+
+.codex-page .codex-card-block h3 {
+  margin-top: 22px;
+  color: #27364f;
+  font-size: 18px;
+}
+
+.codex-page .codex-card-block p,
+.codex-page .codex-card-block li,
+.codex-page .codex-mini-card p,
+.codex-page .codex-mini-card li {
+  color: #526078;
+  font-size: 15px;
+  line-height: 1.72;
+}
+
+.codex-page .codex-grid-2,
+.codex-page .codex-grid-3 {
+  gap: 18px;
+}
+
+.codex-page .codex-mini-card {
+  padding: 20px;
+  border: 1px solid rgba(148, 163, 184, .16);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fbfcff 0%, #f6f8fc 100%);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.codex-page .codex-mini-card::before {
+  height: 3px;
+  background: linear-gradient(90deg, #a78bfa, #60a5fa);
+}
+
+.codex-page .codex-mini-card:hover {
+  transform: none;
+  box-shadow: 0 10px 24px rgba(30, 41, 59, .07);
+}
+
+.codex-page .codex-flow-box {
+  margin: 16px 0;
+  padding: 17px 19px;
+  border: 1px solid rgba(59, 130, 246, .16);
+  border-radius: 15px;
+  color: #1e3a5f;
+  background: linear-gradient(135deg, #eff6ff, #eef2ff);
+  box-shadow: none;
+}
+
+.codex-page .codex-note {
+  padding: 14px 16px;
+  border: 1px solid rgba(234, 179, 8, .34);
+  border-radius: 14px;
+  color: #713f12 !important;
+  background: linear-gradient(135deg, #fffceb, #fff7d6);
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
+.codex-page .codex-highlight-line {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: 13px;
+  color: #166534;
+  background: #ecfdf3;
+  border: 1px solid #bbf7d0;
+  font-weight: 900;
+}
+
+.codex-page .codex-highlight-block {
+  background:
+    radial-gradient(circle at 100% 0, rgba(139, 92, 246, .1), transparent 30%),
+    linear-gradient(135deg, #ffffff, #f7f7ff);
+}
+
+.codex-page .codex-table {
+  width: 100%;
+  margin-top: 12px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, .18);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.codex-page .codex-table th {
+  padding: 13px 14px;
+  color: #fff;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  font-size: 13px;
+  font-weight: 900;
+  text-align: left;
+}
+
+.codex-page .codex-table td {
+  padding: 12px 14px;
+  color: #475569;
+  border-top: 1px solid #edf0f5;
+  background: #fff;
+  line-height: 1.5;
+}
+
+.codex-page .codex-table tbody tr:nth-child(even) td {
+  background: #f8faff;
+}
+
+.codex-page .codex-table tbody tr:hover td {
+  background: #f0f4ff;
+}
+
+.codex-page #packs {
+  background:
+    radial-gradient(circle at 100% 0, rgba(250, 204, 21, .11), transparent 26%),
+    rgba(255, 255, 255, .95);
+}
+
+.codex-page #rewards {
+  background:
+    radial-gradient(circle at 100% 0, rgba(34, 197, 94, .1), transparent 28%),
+    rgba(255, 255, 255, .95);
+}
+
+.codex-page #mint {
+  background:
+    radial-gradient(circle at 100% 0, rgba(168, 85, 247, .11), transparent 30%),
+    linear-gradient(135deg, #fff, #faf7ff);
+}
+
+.codex-page #start {
+  background:
+    radial-gradient(circle at 100% 0, rgba(59, 130, 246, .11), transparent 28%),
+    rgba(255, 255, 255, .95);
+}
+
+@media (max-width: 900px) {
+  .codex-page {
+    padding: 18px 14px 0 !important;
+  }
+
+  .codex-page .codex-hero-v2 {
+    grid-template-columns: 1fr;
+    padding: 30px 26px;
+  }
+
+  .codex-page .codex-hero-panel {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .codex-page .codex-pill-nav {
+    position: static !important;
+    top: auto !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .codex-page {
+    padding: 14px 10px 0 !important;
+  }
+
+  .codex-page .codex-shell {
+    padding-bottom: 48px !important;
+  }
+
+  .codex-page .codex-hero-v2 {
+    gap: 22px;
+    padding: 25px 19px;
+    border-radius: 23px;
+  }
+
+  .codex-page .codex-hero-copy h1 {
+    font-size: 37px;
+  }
+
+  .codex-page .codex-hero-copy p {
+    font-size: 15px;
+  }
+
+  .codex-page .codex-hero-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .codex-page .codex-pill-nav {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .codex-page .codex-pill-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .codex-page .codex-card-block {
+    padding: 22px 18px;
+    border-radius: 20px;
+  }
+
+  .codex-page .codex-card-block h2 {
+    align-items: flex-start;
+    font-size: 24px;
+  }
+
+  .codex-page .codex-grid-2,
+  .codex-page .codex-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .codex-page .codex-table {
+    table-layout: auto;
+    font-size: 13px;
+  }
+
+  .codex-page .codex-table th,
+  .codex-page .codex-table td {
+    padding: 10px;
+  }
+}
+min-width:92px;
   display:inline-flex;
   align-items:center;
   justify-content:center;
