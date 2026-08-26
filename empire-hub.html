@@ -4976,6 +4976,8 @@ const data = await res.json();
       throw new Error(data.error || "Failed to load Foundry balances.");
     }
 
+    applyBlueprintOverhaulConfig(data.blueprintOverhaul);
+
     const fragmentValue = Number(data.imperialFragments || 0).toLocaleString();
 const smpValue = Number(data.smpBalance || 0).toLocaleString();
 const empValue = Number(data.empBalance || 0).toLocaleString();
@@ -5696,12 +5698,30 @@ async function constructImperialMint() {
 }
 window.loadImperialMintworks =
   loadImperialMintworks;
-const BLUEPRINT_OVERHAUL_UI_CONFIG = Object.freeze({
-  B1: Object.freeze({ nextTier: "B2", chancePercent: 50, smpCost: 3, empCost: 25 }),
-  B2: Object.freeze({ nextTier: "B3", chancePercent: 40, smpCost: 5, empCost: 50 }),
-  B3: Object.freeze({ nextTier: "B4", chancePercent: 25, smpCost: 8, empCost: 75 }),
-  B4: Object.freeze({ nextTier: "B5", chancePercent: 12, smpCost: 10, empCost: 150 }),
-});
+let blueprintOverhaulEnabled = true;
+let BLUEPRINT_OVERHAUL_UI_CONFIG = {
+  B1: { nextTier: "B2", chancePercent: 50, smpCost: 3, empCost: 25 },
+  B2: { nextTier: "B3", chancePercent: 40, smpCost: 5, empCost: 50 },
+  B3: { nextTier: "B4", chancePercent: 25, smpCost: 8, empCost: 75 },
+  B4: { nextTier: "B5", chancePercent: 12, smpCost: 10, empCost: 150 },
+};
+
+function applyBlueprintOverhaulConfig(settings) {
+  if (!settings || typeof settings !== "object") return;
+
+  blueprintOverhaulEnabled = settings.enabled !== false;
+  for (const level of ["B1", "B2", "B3", "B4"]) {
+    const incoming = settings[level];
+    if (!incoming) continue;
+
+    BLUEPRINT_OVERHAUL_UI_CONFIG[level] = {
+      nextTier: String(incoming.nextTier || BLUEPRINT_OVERHAUL_UI_CONFIG[level].nextTier),
+      chancePercent: Number(incoming.chancePercent),
+      smpCost: Number(incoming.smpCost),
+      empCost: Number(incoming.empCost),
+    };
+  }
+}
 
 async function loadBlueprintOverhaulOptions() {
   const select = document.getElementById("blueprint-overhaul-select");
@@ -5756,10 +5776,12 @@ async function loadBlueprintOverhaulOptions() {
       select.appendChild(option);
     }
 
-    select.disabled = eligible.length === 0;
-    status.textContent = eligible.length
-      ? "Select a Blueprint to begin."
-      : "No unlocked B1–B4 Blueprints are available.";
+    select.disabled = !blueprintOverhaulEnabled || eligible.length === 0;
+    status.textContent = !blueprintOverhaulEnabled
+      ? "Blueprint Overhaul is temporarily paused by the Empire administration."
+      : eligible.length
+        ? "Select a Blueprint to begin."
+        : "No unlocked B1–B4 Blueprints are available.";
     updateBlueprintOverhaulPreview();
   } catch (err) {
     console.error("Blueprint Overhaul inventory error:", err);
@@ -5782,6 +5804,13 @@ function updateBlueprintOverhaulPreview() {
   const industry = String(option?.dataset?.industry || "").toUpperCase();
   const config = BLUEPRINT_OVERHAUL_UI_CONFIG[level];
 
+  if (!blueprintOverhaulEnabled) {
+    preview.textContent =
+      "Blueprint Overhaul is temporarily paused by the Empire administration.";
+    button.disabled = true;
+    return;
+  }
+
   if (!select.value || !config) {
     preview.textContent =
       "Select a B1–B4 Blueprint to view its upgrade chance and cost.";
@@ -5802,6 +5831,13 @@ async function attemptBlueprintOverhaul() {
   const username = getLoggedInUser();
 
   if (!select || !button || !status || !username) return;
+
+  if (!blueprintOverhaulEnabled) {
+    status.textContent =
+      "Blueprint Overhaul is temporarily paused by the Empire administration.";
+    button.disabled = true;
+    return;
+  }
 
   const blueprintId = Number(select.value);
   const option = select.options[select.selectedIndex];
