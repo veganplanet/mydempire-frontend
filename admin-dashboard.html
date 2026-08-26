@@ -501,6 +501,11 @@
         >
           🎡 Activity Wheel
         </button>
+          data-admin-tab="blueprint-overhaul"
+          onclick="switchAdminTab('blueprint-overhaul')"
+        >
+          ⚙️ Blueprint Overhaul
+        </button>
         <button
           class="admin-tab-btn"
           data-admin-tab="trade-fair"
@@ -1949,6 +1954,111 @@ forkyishere,529"
               Ticket report not loaded yet.
             </div>
           </div>
+        </div>
+      </div>
+      <!-- ===================================== -->
+      <!-- ⚙️ BLUEPRINT OVERHAUL ADMIN -->
+      <!-- ===================================== -->
+      <div class="admin-tab-panel" data-admin-panel="blueprint-overhaul">
+        <div class="section">
+          <h2>⚙️ Blueprint Overhaul Control</h2>
+          <div class="small" style="margin-bottom: 16px">
+            Changes apply immediately to future attempts. The backend remains
+            authoritative for all chances and costs.
+          </div>
+
+          <label style="display:flex;align-items:center;gap:10px;font-weight:900;margin-bottom:16px">
+            <input id="overhaul-admin-enabled" type="checkbox" />
+            Enable Blueprint Overhaul
+          </label>
+
+          <div class="all-players-wrap">
+            <div class="all-players-box">
+              <table class="all-players-table">
+                <thead>
+                  <tr>
+                    <th>Upgrade</th>
+                    <th>Success Chance %</th>
+                    <th>SMP Cost</th>
+                    <th>EMP Cost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>B1 → B2</strong></td>
+                    <td><input id="overhaul-b1-chance" type="number" min="0" max="100" step="1" /></td>
+                    <td><input id="overhaul-b1-smp" type="number" min="0" step="1" /></td>
+                    <td><input id="overhaul-b1-emp" type="number" min="0" step="1" /></td>
+                  </tr>
+                  <tr>
+                    <td><strong>B2 → B3</strong></td>
+                    <td><input id="overhaul-b2-chance" type="number" min="0" max="100" step="1" /></td>
+                    <td><input id="overhaul-b2-smp" type="number" min="0" step="1" /></td>
+                    <td><input id="overhaul-b2-emp" type="number" min="0" step="1" /></td>
+                  </tr>
+                  <tr>
+                    <td><strong>B3 → B4</strong></td>
+                    <td><input id="overhaul-b3-chance" type="number" min="0" max="100" step="1" /></td>
+                    <td><input id="overhaul-b3-smp" type="number" min="0" step="1" /></td>
+                    <td><input id="overhaul-b3-emp" type="number" min="0" step="1" /></td>
+                  </tr>
+                  <tr>
+                    <td><strong>B4 → B5</strong></td>
+                    <td><input id="overhaul-b4-chance" type="number" min="0" max="100" step="1" /></td>
+                    <td><input id="overhaul-b4-smp" type="number" min="0" step="1" /></td>
+                    <td><input id="overhaul-b4-emp" type="number" min="0" step="1" /></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top: 16px">
+            <button id="overhaul-admin-save-btn" class="primary" type="button" onclick="saveBlueprintOverhaulAdmin()">
+              Save Settings
+            </button>
+            <button type="button" onclick="loadBlueprintOverhaulAdmin()">
+              Refresh
+            </button>
+            <button class="danger" type="button" onclick="resetBlueprintOverhaulAdmin()">
+              Restore Defaults
+            </button>
+          </div>
+          <div id="overhaul-admin-status" class="status">
+            Open this tab to load Blueprint Overhaul settings.
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>📊 Overhaul Economy Report</h2>
+          <div class="metrics">
+            <div class="card"><div class="label">Total Attempts</div><div id="overhaul-total-attempts" class="value">--</div></div>
+            <div class="card"><div class="label">Successful</div><div id="overhaul-total-success" class="value">--</div></div>
+            <div class="card"><div class="label">Failed</div><div id="overhaul-total-failed" class="value">--</div></div>
+            <div class="card"><div class="label">Success Rate</div><div id="overhaul-success-rate" class="value">--</div></div>
+            <div class="card"><div class="label">SMP Burned</div><div id="overhaul-smp-burned" class="value">--</div></div>
+            <div class="card"><div class="label">EMP Burned</div><div id="overhaul-emp-burned" class="value">--</div></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Tier-wise Performance</h2>
+          <div class="all-players-wrap"><div class="all-players-box">
+            <table class="all-players-table">
+              <thead><tr><th>Tier</th><th>Attempts</th><th>Success</th><th>Failed</th><th>Rate</th><th>SMP Burned</th><th>EMP Burned</th></tr></thead>
+              <tbody id="overhaul-tier-stats-body"><tr><td colspan="7">No data loaded.</td></tr></tbody>
+            </table>
+          </div></div>
+        </div>
+
+        <div class="section">
+          <h2>Recent Player Attempts</h2>
+          <div class="all-players-wrap"><div class="all-players-box">
+            <table class="all-players-table">
+              <thead><tr><th>Time</th><th>Player</th><th>Blueprint</th><th>From</th><th>Result</th><th>SMP</th><th>EMP</th><th>Outcome</th></tr></thead>
+              <tbody id="overhaul-recent-body"><tr><td colspan="8">No data loaded.</td></tr></tbody>
+            </table>
+          </div></div>
         </div>
       </div>
       <!-- ================================= -->
@@ -6528,6 +6638,197 @@ Players snapshotted: ${data.players_snapshotted}
           }
         });
 
+      function setBlueprintOverhaulAdminSettings(settings = {}) {
+        const enabled = document.getElementById("overhaul-admin-enabled");
+        if (enabled) enabled.checked = settings.enabled !== false;
+
+        for (const tier of ["B1", "B2", "B3", "B4"]) {
+          const key = tier.toLowerCase();
+          const config = settings[tier] || {};
+          const chance = document.getElementById(`overhaul-${key}-chance`);
+          const smp = document.getElementById(`overhaul-${key}-smp`);
+          const emp = document.getElementById(`overhaul-${key}-emp`);
+          if (chance) chance.value = Number(config.chancePercent ?? 0);
+          if (smp) smp.value = Number(config.smpCost ?? 0);
+          if (emp) emp.value = Number(config.empCost ?? 0);
+        }
+      }
+
+      function readBlueprintOverhaulAdminSettings() {
+        const payload = {
+          enabled: !!document.getElementById("overhaul-admin-enabled")?.checked,
+        };
+
+        for (const tier of ["b1", "b2", "b3", "b4"]) {
+          payload[`${tier}_chance`] = Number(document.getElementById(`overhaul-${tier}-chance`)?.value);
+          payload[`${tier}_smp`] = Number(document.getElementById(`overhaul-${tier}-smp`)?.value);
+          payload[`${tier}_emp`] = Number(document.getElementById(`overhaul-${tier}-emp`)?.value);
+        }
+
+        return payload;
+      }
+
+      function escapeOverhaulAdminHtml(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function renderBlueprintOverhaulAdminReport(data) {
+        const totals = data.totals || {};
+        const metricMap = {
+          "overhaul-total-attempts": totals.totalAttempts,
+          "overhaul-total-success": totals.successfulAttempts,
+          "overhaul-total-failed": totals.failedAttempts,
+          "overhaul-success-rate": `${Number(totals.successPercent || 0).toFixed(2)}%`,
+          "overhaul-smp-burned": totals.totalSmpBurned,
+          "overhaul-emp-burned": totals.totalEmpBurned,
+        };
+
+        for (const [id, value] of Object.entries(metricMap)) {
+          const element = document.getElementById(id);
+          if (element) {
+            element.textContent = typeof value === "number"
+              ? value.toLocaleString()
+              : String(value ?? "0");
+          }
+        }
+
+        const tierMap = new Map(
+          (data.tierStats || []).map((row) => [String(row.source_tier || "").toUpperCase(), row]),
+        );
+        const tierBody = document.getElementById("overhaul-tier-stats-body");
+        if (tierBody) {
+          tierBody.innerHTML = ["B1", "B2", "B3", "B4"].map((tier) => {
+            const row = tierMap.get(tier) || {};
+            const attempts = Number(row.attempts || 0);
+            const successes = Number(row.successes || 0);
+            const rate = attempts > 0 ? ((successes / attempts) * 100).toFixed(2) : "0.00";
+            return `<tr>
+              <td><strong>${tier}</strong></td>
+              <td>${attempts.toLocaleString()}</td>
+              <td>${successes.toLocaleString()}</td>
+              <td>${Number(row.failures || 0).toLocaleString()}</td>
+              <td>${rate}%</td>
+              <td>${Number(row.smp_burned || 0).toLocaleString()}</td>
+              <td>${Number(row.emp_burned || 0).toLocaleString()}</td>
+            </tr>`;
+          }).join("");
+        }
+
+        const recentBody = document.getElementById("overhaul-recent-body");
+        if (recentBody) {
+          const attempts = data.recentAttempts || [];
+          recentBody.innerHTML = attempts.length
+            ? attempts.map((row) => {
+                const success = String(row.detail || "").startsWith("SUCCESS:");
+                const time = row.created_at
+                  ? new Date(row.created_at).toLocaleString()
+                  : "--";
+                return `<tr>
+                  <td>${escapeOverhaulAdminHtml(time)}</td>
+                  <td><strong>@${escapeOverhaulAdminHtml(row.username)}</strong></td>
+                  <td>#${Number(row.blueprint_id || 0)}</td>
+                  <td>${escapeOverhaulAdminHtml(row.source_tier || "--")}</td>
+                  <td>${escapeOverhaulAdminHtml(row.result_tier || "--")}</td>
+                  <td>${Number(row.smp_spent || 0).toLocaleString()}</td>
+                  <td>${Number(row.emp_spent || 0).toLocaleString()}</td>
+                  <td style="font-weight:900;color:${success ? "#15803d" : "#b91c1c"}">${success ? "SUCCESS" : "FAILED"}</td>
+                </tr>`;
+              }).join("")
+            : '<tr><td colspan="8">No Blueprint Overhaul attempts yet.</td></tr>';
+        }
+      }
+
+      async function loadBlueprintOverhaulAdmin() {
+        const status = document.getElementById("overhaul-admin-status");
+        if (status) status.textContent = "Loading Blueprint Overhaul administration...";
+
+        try {
+          const response = await fetch(`${API_BASE}/admin/blueprint-overhaul`, {
+            headers: { "x-admin-key": ADMIN_KEY },
+          });
+          const data = await response.json();
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Failed to load Blueprint Overhaul administration.");
+          }
+
+          setBlueprintOverhaulAdminSettings(data.settings);
+          renderBlueprintOverhaulAdminReport(data);
+          if (status) {
+            status.textContent = data.settings?.enabled === false
+              ? "⏸ Blueprint Overhaul is currently paused."
+              : "✅ Blueprint Overhaul is enabled.";
+          }
+        } catch (err) {
+          console.error("Blueprint Overhaul admin load error:", err);
+          if (status) status.textContent = `❌ ${err.message}`;
+        }
+      }
+
+      async function saveBlueprintOverhaulAdmin() {
+        const status = document.getElementById("overhaul-admin-status");
+        const button = document.getElementById("overhaul-admin-save-btn");
+        const payload = readBlueprintOverhaulAdminSettings();
+
+        for (const tier of ["b1", "b2", "b3", "b4"]) {
+          const chance = payload[`${tier}_chance`];
+          const smp = payload[`${tier}_smp`];
+          const emp = payload[`${tier}_emp`];
+          if (!Number.isInteger(chance) || chance < 0 || chance > 100 ||
+              !Number.isInteger(smp) || smp < 0 ||
+              !Number.isInteger(emp) || emp < 0) {
+            if (status) status.textContent = `❌ Enter valid whole-number values for ${tier.toUpperCase()}.`;
+            return;
+          }
+        }
+
+        if (!confirm("Save Blueprint Overhaul settings? Changes will apply to future attempts immediately.")) return;
+
+        try {
+          if (button) button.disabled = true;
+          if (status) status.textContent = "Saving Blueprint Overhaul settings...";
+          const response = await fetch(`${API_BASE}/admin/blueprint-overhaul/settings`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY },
+            body: JSON.stringify(payload),
+          });
+          const data = await response.json();
+          if (!response.ok || !data.success) throw new Error(data.error || "Save failed.");
+          setBlueprintOverhaulAdminSettings(data.settings);
+          if (status) status.textContent = `✅ ${data.message}`;
+        } catch (err) {
+          console.error("Blueprint Overhaul admin save error:", err);
+          if (status) status.textContent = `❌ ${err.message}`;
+        } finally {
+          if (button) button.disabled = false;
+        }
+      }
+
+      async function resetBlueprintOverhaulAdmin() {
+        if (!confirm("Restore the original Blueprint Overhaul chances and costs? This will also enable the feature.")) return;
+        const status = document.getElementById("overhaul-admin-status");
+        try {
+          if (status) status.textContent = "Restoring Blueprint Overhaul defaults...";
+          const response = await fetch(`${API_BASE}/admin/blueprint-overhaul/reset`, {
+            method: "POST",
+            headers: { "x-admin-key": ADMIN_KEY },
+          });
+          const data = await response.json();
+          if (!response.ok || !data.success) throw new Error(data.error || "Reset failed.");
+          await loadBlueprintOverhaulAdmin();
+          if (status) status.textContent = `✅ ${data.message}`;
+        } catch (err) {
+          console.error("Blueprint Overhaul admin reset error:", err);
+          if (status) status.textContent = `❌ ${err.message}`;
+        }
+      }
+
+      // =============================
+
       // =============================
       // CLEAN ADMIN LOGIN GATE + TABS
       // =============================
@@ -6544,6 +6845,9 @@ Players snapshotted: ${data.players_snapshotted}
         });
         if (tabName === "trade-fair") {
           loadTradeFairAdminStatus();
+        }
+        if (tabName === "blueprint-overhaul") {
+          loadBlueprintOverhaulAdmin();
         }
       }
       // =====================================================
@@ -7556,6 +7860,9 @@ Players snapshotted: ${data.players_snapshotted}
         }
         if (tabName === "economy") {
           loadFactoryTierRewardAdmin();
+        }
+        if (tabName === "blueprint-overhaul") {
+          loadBlueprintOverhaulAdmin();
         }
       }
 
