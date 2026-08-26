@@ -21721,3 +21721,197 @@ body.read-only-mode #bulk-maintenance-actions {
   opacity: 1 !important;
 }
 
+/* =========================================
+   BLUEPRINT OVERHAUL CARD — SCOPED
+   ========================================= */
+.foundry-overhaul-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 26px 0 28px;
+  padding: 26px 28px;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-top: 5px solid #6366f1;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(251, 191, 36, 0.16), transparent 28%),
+    radial-gradient(circle at 5% 10%, rgba(99, 102, 241, 0.16), transparent 30%),
+    linear-gradient(135deg, #ffffff 0%, #f8faff 58%, #fffaf0 100%);
+  box-shadow:
+    0 18px 40px rgba(30, 64, 175, 0.12),
+    0 3px 10px rgba(15, 23, 42, 0.05);
+}
+
+.foundry-overhaul-card::after {
+  content: "⚙";
+  position: absolute;
+  z-index: -1;
+  top: -46px;
+  right: 24px;
+  color: rgba(99, 102, 241, 0.055);
+  font-size: 190px;
+  line-height: 1;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
+
+.foundry-overhaul-card .foundry-recipe-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: #172554;
+  font-size: clamp(24px, 2.2vw, 31px);
+  font-weight: 950;
+  letter-spacing: -0.02em;
+}
+
+.foundry-overhaul-card > .foundry-recipe-text:first-of-type {
+  max-width: 980px;
+  margin: 0 0 22px;
+  color: #475569;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.foundry-overhaul-card label.foundry-recipe-text {
+  display: block;
+  margin: 0 0 8px;
+  color: #1e293b;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+}
+
+#blueprint-overhaul-select {
+  width: min(100%, 680px);
+  min-height: 50px;
+  padding: 0 46px 0 16px;
+  border: 1px solid #c7d2fe;
+  border-radius: 14px;
+  background-color: rgba(255, 255, 255, 0.96);
+  color: #172554;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 750;
+  box-shadow: 0 7px 18px rgba(30, 64, 175, 0.08);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+#blueprint-overhaul-select:hover:not(:disabled) {
+  border-color: #818cf8;
+}
+
+#blueprint-overhaul-select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.16),
+    0 9px 22px rgba(30, 64, 175, 0.1);
+}
+
+#blueprint-overhaul-select:disabled {
+  color: #94a3b8;
+  background-color: #f8fafc;
+  cursor: not-allowed;
+}
+
+#blueprint-overhaul-preview {
+  width: min(100%, 680px);
+  min-height: 48px;
+  margin: 14px 0 20px;
+  padding: 13px 16px;
+  border: 1px solid #dbeafe;
+  border-left: 5px solid #6366f1;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #eef2ff, rgba(239, 246, 255, 0.72));
+  color: #334155;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+#blueprint-overhaul-btn {
+  width: min(100%, 680px);
+  min-height: 52px;
+  border: 0;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #4f46e5 0%, #2563eb 55%, #0891b2 100%);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  box-shadow: 0 11px 24px rgba(37, 99, 235, 0.24);
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
+}
+
+#blueprint-overhaul-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: saturate(1.12);
+  box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+}
+
+#blueprint-overhaul-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+#blueprint-overhaul-btn:focus-visible {
+  outline: 4px solid rgba(99, 102, 241, 0.22);
+  outline-offset: 3px;
+}
+
+#blueprint-overhaul-btn:disabled {
+  border: 1px solid #cbd5e1;
+  background: linear-gradient(135deg, #e2e8f0, #dbeafe);
+  color: #64748b;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.82;
+}
+
+#blueprint-overhaul-status {
+  width: min(100%, 680px);
+  min-height: 24px;
+  margin-top: 14px;
+  padding: 10px 13px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #475569;
+  font-size: 14px;
+  font-weight: 700;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .foundry-overhaul-card {
+    margin: 20px 0 24px;
+    padding: 21px 18px;
+    border-radius: 20px;
+  }
+
+  .foundry-overhaul-card::after {
+    top: -28px;
+    right: -16px;
+    font-size: 130px;
+  }
+
+  .foundry-overhaul-card .foundry-recipe-title {
+    font-size: 23px;
+  }
+
+  #blueprint-overhaul-select,
+  #blueprint-overhaul-preview,
+  #blueprint-overhaul-btn,
+  #blueprint-overhaul-status {
+    width: 100%;
+  }
+}
+
