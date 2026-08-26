@@ -61,15 +61,21 @@
           }
 
           const signature =
-            typeof response.result === "string"
-              ? response.result
-              : response.result?.signature || response.signature || "";
+  typeof response.result === "string"
+    ? response.result
+    : response.result?.signature ||
+      response.signature ||
+      response.result?.signatures?.[0] ||
+      "";
 
-          if (!/^[a-f0-9]{130}$/i.test(signature)) {
-            reject(new Error("Hive Keychain returned an invalid signature."));
-            return;
-          }
-          resolve(signature);
+const normalizedSignature = String(signature).trim();
+
+if (!normalizedSignature) {
+  reject(new Error("Hive Keychain returned an empty signature."));
+  return;
+}
+
+resolve(normalizedSignature);
         },
       );
     });
