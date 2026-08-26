@@ -96,6 +96,7 @@ resolve(normalizedSignature);
       body: JSON.stringify({ username }),
     });
     const signature = await signWithKeychain(username, challenge.challenge);
+    alert("Signature received. Verifying login...");
     const verified = await jsonRequest("/auth/verify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
