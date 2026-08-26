@@ -2794,6 +2794,27 @@ forkyishere,529"
 
       let ADMIN_KEY = sessionStorage.getItem("MYDEMPIRE_ADMIN_KEY") || "";
 
+      // Authenticate every protected admin API request from this dashboard.
+      const nativeDashboardFetch = window.fetch.bind(window);
+      window.fetch = function (input, init = {}) {
+        const requestUrl =
+          typeof input === "string" ? input : String(input?.url || "");
+
+        if (requestUrl.includes("/admin/")) {
+          const headers = new Headers(init.headers || input?.headers || {});
+          const adminKey =
+            sessionStorage.getItem("MYDEMPIRE_ADMIN_KEY") || ADMIN_KEY;
+
+          if (adminKey && !headers.has("x-admin-key")) {
+            headers.set("x-admin-key", adminKey);
+          }
+
+          init = { ...init, headers };
+        }
+
+        return nativeDashboardFetch(input, init);
+      };
+
       function setStatus(message) {
         document.getElementById("admin-status").textContent = message;
       }
