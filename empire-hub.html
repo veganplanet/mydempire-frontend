@@ -41,15 +41,14 @@
   class="subnav-btn"
   onclick="switchHubTab('activity')"
 >
-  🎡 Activity Wheel
-  <span style="color:#16a34a;font-weight:900;">NEW</span>
+  🎯 Activity
 </button>
   <button
     type="button"
     class="subnav-btn"
     onclick="switchHubTab('management')"
   >
-    👔 Empire Management <span style="color:#dc2626;font-weight:900;">NEW</span>
+    👔 Empire Management
   </button>
 
   <button
@@ -86,6 +85,11 @@
 <!-- ========================================= -->
 
 <section id="activity-panel" class="hub-panel" style="display:none;">
+  <div class="activity-mode-tabs" role="tablist" aria-label="Activity features">
+    <button id="activity-wheel-tab-btn" class="activity-mode-tab active" type="button" onclick="switchActivityMode('wheel')">🎡 Activity Wheel</button>
+    <button id="activity-league-tab-btn" class="activity-mode-tab" type="button" onclick="switchActivityMode('league')">🏆 Activity League <span>NEW</span></button>
+  </div>
+  <div id="activity-wheel-view" class="activity-mode-view">
   <div
     class="card"
     style="
@@ -217,6 +221,52 @@
       </section>
 
     </div>
+  </div>
+  </div>
+
+  <div id="activity-league-view" class="activity-mode-view" style="display:none;">
+    <div class="activity-league-hero">
+      <div>
+        <div class="activity-league-kicker">🏆 IMPERIAL ACTIVITY LEAGUE</div>
+        <h2 id="activity-league-title">Next round begins 1 September</h2>
+        <p>Every Activity Point earned during the round counts. Wheel AP remains separate.</p>
+      </div>
+      <div class="activity-league-clock">
+        <span id="activity-league-clock-label">ROUND COUNTDOWN</span>
+        <strong id="activity-league-countdown">--</strong>
+        <small id="activity-league-dates">1 Sep 00:00 UTC — 15 Sep 00:00 UTC</small>
+      </div>
+    </div>
+
+    <div id="activity-league-waiting" class="activity-league-message">The first League round opens automatically on 1 September 2026 at 00:00 UTC.</div>
+
+    <div id="activity-league-live" style="display:none;">
+      <div class="activity-league-summary">
+        <div><span>My Rank</span><strong id="activity-league-my-rank">--</strong></div>
+        <div><span>My League AP</span><strong id="activity-league-my-ap">0 AP</strong></div>
+        <div><span>Prize Pool</span><strong id="activity-league-pool">0 EMP</strong></div>
+      </div>
+
+      <div class="activity-league-grid">
+        <section class="activity-league-card">
+          <h3>🏅 Live Standings</h3>
+          <div id="activity-league-standings" class="activity-league-table"></div>
+        </section>
+        <section class="activity-league-card">
+          <h3>💰 EMP Prizes</h3>
+          <div id="activity-league-prizes" class="activity-league-prizes"></div>
+          <details class="activity-league-details">
+            <summary>My AP source breakdown</summary>
+            <div id="activity-league-sources"></div>
+          </details>
+        </section>
+      </div>
+    </div>
+
+    <section class="activity-league-card activity-league-history-card">
+      <h3>📜 Previous Round Winners</h3>
+      <div id="activity-league-history" class="activity-league-history">No completed rounds yet.</div>
+    </section>
   </div>
 </section>
         <section id="operations-panel" class="hub-panel">
@@ -5996,7 +6046,37 @@ if (initialTab === "management") {
 </script>
     <script src="js/navbar.js"></script>
 <script src="js/notifications.js"></script>
-<script src="js/activity-wheel.js?v=20260714-aprebalance1"></script>
+<script src="js/activity-wheel.js?v=20260827-activity-league1"></script>
+
+<style>
+  .activity-mode-tabs{display:flex;gap:10px;margin:0 0 16px;padding:6px;background:#eef2ff;border:1px solid #dbeafe;border-radius:16px;width:max-content;max-width:100%;}
+  .activity-mode-tab{border:0;background:transparent;color:#475569;padding:11px 18px;border-radius:11px;font-weight:900;cursor:pointer;}
+  .activity-mode-tab.active{background:#fff;color:#6d28d9;box-shadow:0 5px 15px rgba(76,29,149,.13);}
+  .activity-mode-tab span{color:#16a34a;margin-left:4px;}
+  .activity-league-hero{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:26px;border-radius:20px;color:#fff;background:radial-gradient(circle at top right,rgba(250,204,21,.32),transparent 35%),linear-gradient(135deg,#312e81,#6d28d9 60%,#9333ea);box-shadow:0 16px 35px rgba(76,29,149,.22);}
+  .activity-league-kicker{font-size:12px;font-weight:1000;letter-spacing:.12em;color:#fde68a;}
+  .activity-league-hero h2{font-size:29px;margin:7px 0 5px;color:#fff;}
+  .activity-league-hero p{margin:0;color:#ede9fe;font-weight:700;}
+  .activity-league-clock{min-width:250px;text-align:center;padding:16px 20px;border:1px solid rgba(255,255,255,.24);border-radius:15px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);}
+  .activity-league-clock span,.activity-league-clock small{display:block;color:#ede9fe;font-weight:800;}
+  .activity-league-clock strong{display:block;font-size:25px;margin:5px 0;color:#fff;}
+  .activity-league-message{margin-top:16px;padding:18px;border:1px solid #c4b5fd;border-radius:14px;background:#f5f3ff;color:#5b21b6;font-weight:800;}
+  .activity-league-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0;}
+  .activity-league-summary>div{padding:17px;border-radius:15px;border:1px solid #e2e8f0;background:#fff;box-shadow:0 7px 18px rgba(15,23,42,.06);}
+  .activity-league-summary span{display:block;color:#64748b;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;}
+  .activity-league-summary strong{display:block;margin-top:6px;font-size:23px;color:#4c1d95;}
+  .activity-league-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.85fr);gap:16px;}
+  .activity-league-card{padding:19px;border:1px solid #e2e8f0;border-radius:17px;background:#fff;box-shadow:0 8px 22px rgba(15,23,42,.06);}
+  .activity-league-card h3{margin:0 0 14px;color:#1e1b4b;}
+  .activity-league-row{display:grid;grid-template-columns:55px minmax(120px,1fr) 110px 95px;align-items:center;gap:8px;padding:11px 8px;border-bottom:1px solid #f1f5f9;}
+  .activity-league-row.header{color:#64748b;font-size:11px;font-weight:900;text-transform:uppercase;}
+  .activity-league-row.me{background:#f5f3ff;border-radius:10px;border-bottom-color:transparent;}
+  .activity-league-row .rank{font-weight:1000;color:#6d28d9;}.activity-league-row .player{font-weight:900;color:#1e293b;}.activity-league-row .score,.activity-league-row .prize{text-align:right;font-weight:900;}
+  .activity-league-prize-row,.activity-league-source-row{display:flex;justify-content:space-between;gap:12px;padding:10px 11px;margin-bottom:7px;border-radius:10px;background:#faf5ff;font-weight:900;color:#4c1d95;}
+  .activity-league-details{margin-top:16px;border-top:1px solid #e2e8f0;padding-top:13px;}.activity-league-details summary{cursor:pointer;font-weight:900;color:#475569;margin-bottom:10px;}
+  .activity-league-history-card{margin-top:16px;}.activity-league-history-round{padding:12px 0;border-top:1px solid #e2e8f0;}.activity-league-history-round:first-child{border-top:0;}.activity-league-history-round strong{color:#4c1d95;}.activity-league-history-winner{display:flex;justify-content:space-between;gap:10px;margin-top:7px;color:#475569;font-weight:750;}
+  @media(max-width:760px){.activity-mode-tabs{width:100%;}.activity-mode-tab{flex:1;padding:10px 8px}.activity-league-hero{align-items:stretch;flex-direction:column;padding:20px}.activity-league-clock{min-width:0}.activity-league-summary{grid-template-columns:1fr}.activity-league-grid{grid-template-columns:1fr}.activity-league-row{grid-template-columns:42px minmax(90px,1fr) 72px}.activity-league-row .prize{display:none}.activity-league-row.header span:last-child{display:none}.activity-league-hero h2{font-size:24px}}
+</style>
 
 <style>
   .fulfillment-title-row {

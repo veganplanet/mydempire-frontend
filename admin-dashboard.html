@@ -2068,6 +2068,57 @@ forkyishere,529"
       <!-- ================================= -->
 
       <div class="admin-tab-panel" data-admin-panel="activity-wheel">
+        <div class="section" style="border-top:5px solid #7c3aed">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+            <div>
+              <h2 style="margin-bottom:4px">🏆 Imperial Activity League Control</h2>
+              <div class="small">Round prizes are copied and locked when each round begins. Saved changes apply to the next round.</div>
+            </div>
+            <button id="activity-league-admin-refresh" type="button">Refresh League</button>
+          </div>
+
+          <div class="metrics" style="margin-top:14px">
+            <div class="card"><div class="label">League Status</div><div id="activity-league-admin-status-value" class="value" style="font-size:20px">--</div><div class="small">Automatic round engine</div></div>
+            <div class="card"><div class="label">Current Round</div><div id="activity-league-admin-round" class="value" style="font-size:17px">--</div><div id="activity-league-admin-dates" class="small">--</div></div>
+            <div class="card"><div class="label">Current Prize Pool</div><div id="activity-league-admin-pool" class="value">--</div><div class="small">EMP locked for active round</div></div>
+            <div class="card"><div class="label">Participants</div><div id="activity-league-admin-participants" class="value">--</div><div class="small">Players with League AP</div></div>
+          </div>
+
+          <div class="row" style="align-items:flex-end;margin-top:16px">
+            <label style="min-width:170px"><strong>League Enabled</strong><select id="activity-league-admin-enabled"><option value="true">Enabled</option><option value="false">Paused</option></select></label>
+            <label style="min-width:190px"><strong>Automatic EMP Payout</strong><select id="activity-league-admin-auto-payout"><option value="true">Enabled</option><option value="false">Disabled</option></select></label>
+            <label style="min-width:230px"><strong>Launch Date & Time (UTC)</strong><input id="activity-league-admin-launch" type="datetime-local" /></label>
+            <label style="min-width:150px"><strong>Mid-month Day</strong><input id="activity-league-admin-split-day" type="number" min="2" max="28" value="15" /></label>
+          </div>
+          <div class="row" style="align-items:flex-end">
+            <label style="flex:1;min-width:320px"><strong>EMP Prizes by Rank</strong><input id="activity-league-admin-prizes" type="text" placeholder="800, 500, 300, 250, 150" /><span class="small">Comma-separated. Add or remove amounts to control the number of winning positions.</span></label>
+            <label style="flex:1;min-width:260px"><strong>Excluded Accounts</strong><input id="activity-league-admin-excluded" type="text" placeholder="mydempire" /><span class="small">Comma-separated system or test accounts.</span></label>
+          </div>
+          <div class="row">
+            <button id="activity-league-admin-save" type="button" class="primary">Save League Settings</button>
+            <button id="activity-league-admin-reconcile" type="button">Run Round Check</button>
+            <button id="activity-league-admin-retry" type="button">Retry Failed Payouts</button>
+            <button id="activity-league-admin-close" type="button" class="danger">Emergency Close Current Round</button>
+          </div>
+          <div id="activity-league-admin-message" class="status">League controls not loaded yet.</div>
+        </div>
+
+        <div class="section">
+          <h2>🏅 Live League Standings</h2>
+          <div class="all-players-wrap"><div class="all-players-box"><table class="all-players-table">
+            <thead><tr><th>Rank</th><th>Player</th><th>Round AP</th><th>Current Prize</th></tr></thead>
+            <tbody id="activity-league-admin-standings"><tr><td colspan="4">No League data loaded.</td></tr></tbody>
+          </table></div></div>
+        </div>
+
+        <div class="section">
+          <h2>💳 League Payout History</h2>
+          <div class="all-players-wrap"><div class="all-players-box"><table class="all-players-table">
+            <thead><tr><th>Round</th><th>Rank</th><th>Player</th><th>AP</th><th>EMP</th><th>Status</th><th>Paid At</th></tr></thead>
+            <tbody id="activity-league-admin-payouts"><tr><td colspan="7">No payouts recorded.</td></tr></tbody>
+          </table></div></div>
+        </div>
+
         <!-- PLAYERWISE AP TABLE -->
         <div class="section">
           <div
@@ -6851,6 +6902,9 @@ Players snapshotted: ${data.players_snapshotted}
         if (tabName === "blueprint-overhaul") {
           loadBlueprintOverhaulAdmin();
         }
+        if (tabName === "activity-wheel") {
+          loadActivityLeagueAdmin();
+        }
       }
       // =====================================================
       // 🏛 IMPERIAL TRADE FAIR — ADMIN STATUS
@@ -7865,6 +7919,9 @@ Players snapshotted: ${data.players_snapshotted}
         }
         if (tabName === "blueprint-overhaul") {
           loadBlueprintOverhaulAdmin();
+        }
+        if (tabName === "activity-wheel") {
+          loadActivityLeagueAdmin();
         }
       }
 
@@ -9397,6 +9454,117 @@ Players snapshotted: ${data.players_snapshotted}
           }
         }
       }
+      // =====================================
+      // 🏆 IMPERIAL ACTIVITY LEAGUE ADMIN
+      // =====================================
+      function activityLeagueAdminHeaders() {
+        return { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY };
+      }
+
+      function toLeagueDateTimeInput(value) {
+        if (!value) return "";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "";
+        return date.toISOString().slice(0, 16);
+      }
+
+      function formatLeagueAdminDate(value) {
+        if (!value) return "--";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "--";
+        return date.toLocaleString("en-GB", { day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit", hour12:false, timeZone:"UTC" }) + " UTC";
+      }
+
+      async function loadActivityLeagueAdmin() {
+        const message = document.getElementById("activity-league-admin-message");
+        try {
+          if (!ADMIN_KEY) throw new Error("Unlock the Admin Dashboard first.");
+          if (message) message.textContent = "Loading Activity League controls...";
+          const response = await fetch(`${API_BASE}/admin/activity-league`, { headers: { "x-admin-key": ADMIN_KEY } });
+          const data = await response.json();
+          if (!response.ok || !data.success) throw new Error(data.error || "Failed to load Activity League.");
+          const settings = data.settings || {};
+          const round = data.round || null;
+          const prizes = Array.isArray(round?.prizes) ? round.prizes.map(Number) : [];
+          document.getElementById("activity-league-admin-enabled").value = String(settings.enabled !== false);
+          document.getElementById("activity-league-admin-auto-payout").value = String(settings.autoPayout !== false);
+          document.getElementById("activity-league-admin-launch").value = toLeagueDateTimeInput(settings.launchAt);
+          document.getElementById("activity-league-admin-split-day").value = Number(settings.splitDay || 15);
+          document.getElementById("activity-league-admin-prizes").value = (settings.prizes || []).join(", ");
+          document.getElementById("activity-league-admin-excluded").value = (settings.excludedUsernames || []).join(", ");
+          document.getElementById("activity-league-admin-status-value").textContent = settings.enabled === false ? "PAUSED" : (data.active ? "ACTIVE" : "SCHEDULED");
+          document.getElementById("activity-league-admin-round").textContent = round?.label || "Waiting to start";
+          document.getElementById("activity-league-admin-dates").textContent = round ? `${formatLeagueAdminDate(round.startAt)} — ${formatLeagueAdminDate(round.endAt)}` : `Launch: ${formatLeagueAdminDate(settings.launchAt)}`;
+          document.getElementById("activity-league-admin-pool").textContent = `${prizes.reduce((sum, value) => sum + value, 0).toLocaleString()} EMP`;
+          const standings = Array.isArray(data.standings) ? data.standings : [];
+          document.getElementById("activity-league-admin-participants").textContent = standings.length.toLocaleString();
+          document.getElementById("activity-league-admin-standings").innerHTML = standings.length
+            ? standings.map((row) => `<tr><td>#${Number(row.rank)}</td><td><strong>@${escapeActivityAdminText(row.username)}</strong></td><td>${Number(row.leagueAP || 0).toLocaleString()} AP</td><td>${Number(prizes[Number(row.rank)-1] || 0).toLocaleString()} EMP</td></tr>`).join("")
+            : `<tr><td colspan="4">No League AP recorded for this round.</td></tr>`;
+          const payouts = Array.isArray(data.payouts) ? data.payouts : [];
+          document.getElementById("activity-league-admin-payouts").innerHTML = payouts.length
+            ? payouts.map((row) => `<tr><td>${escapeActivityAdminText(row.label)}</td><td>#${Number(row.final_rank)}</td><td><strong>@${escapeActivityAdminText(row.username)}</strong></td><td>${Number(row.final_ap || 0).toLocaleString()}</td><td>${Number(row.emp_amount || 0).toLocaleString()}</td><td>${escapeActivityAdminText(row.status)}</td><td>${formatLeagueAdminDate(row.paid_at)}</td></tr>`).join("")
+            : `<tr><td colspan="7">No League payouts recorded.</td></tr>`;
+          if (message) message.textContent = "Activity League controls loaded. Current-round prize values are locked.";
+        } catch (err) {
+          console.error("Activity League admin load failed:", err);
+          if (message) message.textContent = err.message || "Failed to load Activity League controls.";
+        }
+      }
+
+      async function saveActivityLeagueAdmin() {
+        const message = document.getElementById("activity-league-admin-message");
+        try {
+          const prizes = String(document.getElementById("activity-league-admin-prizes").value || "")
+            .split(",").map((value) => Number(value.trim())).filter((value) => Number.isInteger(value) && value >= 0);
+          if (!prizes.length) throw new Error("Enter at least one valid EMP prize.");
+          const launchValue = document.getElementById("activity-league-admin-launch").value;
+          const body = {
+            enabled: document.getElementById("activity-league-admin-enabled").value === "true",
+            autoPayout: document.getElementById("activity-league-admin-auto-payout").value === "true",
+            launchAt: launchValue ? `${launchValue}:00.000Z` : null,
+            splitDay: Number(document.getElementById("activity-league-admin-split-day").value || 15),
+            prizes,
+            excludedUsernames: String(document.getElementById("activity-league-admin-excluded").value || "").split(",").map((value) => value.trim()).filter(Boolean),
+          };
+          const confirmed = window.confirm(`Save Activity League settings?\n\nNext-round prize pool: ${prizes.reduce((sum,value)=>sum+value,0).toLocaleString()} EMP\nWinning positions: ${prizes.length}\n\nThe active round will keep its locked prize values.`);
+          if (!confirmed) return;
+          if (message) message.textContent = "Saving Activity League settings...";
+          const response = await fetch(`${API_BASE}/admin/activity-league/settings`, { method:"POST", headers:activityLeagueAdminHeaders(), body:JSON.stringify(body) });
+          const data = await response.json();
+          if (!response.ok || !data.success) throw new Error(data.error || "Failed to save settings.");
+          if (message) message.textContent = `✅ ${data.message}`;
+          await loadActivityLeagueAdmin();
+        } catch (err) {
+          console.error("Activity League settings save failed:", err);
+          if (message) message.textContent = `❌ ${err.message}`;
+        }
+      }
+
+      async function runActivityLeagueAdminAction(path, workingText) {
+        const message = document.getElementById("activity-league-admin-message");
+        try {
+          if (message) message.textContent = workingText;
+          const response = await fetch(`${API_BASE}${path}`, { method:"POST", headers:activityLeagueAdminHeaders(), body:"{}" });
+          const data = await response.json();
+          if (!response.ok || !data.success) throw new Error(data.error || "League action failed.");
+          if (message) message.textContent = "✅ Activity League action completed.";
+          await loadActivityLeagueAdmin();
+        } catch (err) {
+          if (message) message.textContent = `❌ ${err.message}`;
+        }
+      }
+
+      document.getElementById("activity-league-admin-refresh")?.addEventListener("click", loadActivityLeagueAdmin);
+      document.getElementById("activity-league-admin-save")?.addEventListener("click", saveActivityLeagueAdmin);
+      document.getElementById("activity-league-admin-reconcile")?.addEventListener("click", () => runActivityLeagueAdminAction("/admin/activity-league/reconcile", "Checking League round status..."));
+      document.getElementById("activity-league-admin-retry")?.addEventListener("click", () => runActivityLeagueAdminAction("/admin/activity-league/retry-payouts", "Retrying pending and failed payouts..."));
+      document.getElementById("activity-league-admin-close")?.addEventListener("click", () => {
+        if (window.confirm("Close and finalize the current Activity League round now?\n\nThis emergency action cannot be undone and may immediately credit EMP prizes.")) {
+          runActivityLeagueAdminAction("/admin/activity-league/close-current", "Closing and finalizing the current round...");
+        }
+      });
+
       // =====================================
       // 🎡 PLAYERWISE ACTIVITY POINTS TABLE
       // =====================================

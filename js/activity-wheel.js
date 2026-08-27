@@ -914,6 +914,124 @@
         statusEl.textContent = "Failed to load Activity Wheel data.";
     }
   }
+  let activityLeagueCountdownTimer = null;
+
+  function escapeLeagueHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function formatLeagueDate(value) {
+    if (!value) return "--";
+    return new Date(value).toLocaleString("en-GB", {
+      day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit",
+      hour12: false, timeZone: "UTC",
+    }) + " UTC";
+  }
+
+  function startLeagueCountdown(targetDate, waiting = false) {
+    if (activityLeagueCountdownTimer) clearInterval(activityLeagueCountdownTimer);
+    const el = document.getElementById("activity-league-countdown");
+    const label = document.getElementById("activity-league-clock-label");
+    if (label) label.textContent = waiting ? "STARTS IN" : "ROUND ENDS IN";
+    function update() {
+      if (!el) return;
+      const remaining = Math.max(0, new Date(targetDate).getTime() - Date.now());
+      const days = Math.floor(remaining / 86400000);
+      const hours = Math.floor((remaining % 86400000) / 3600000);
+      const minutes = Math.floor((remaining % 3600000) / 60000);
+      const seconds = Math.floor((remaining % 60000) / 1000);
+      el.textContent = `${days}d ${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s`;
+      if (remaining <= 0) setTimeout(loadActivityLeagueState, 1200);
+    }
+    update();
+    activityLeagueCountdownTimer = setInterval(update, 1000);
+  }
+
+  function renderLeagueHistory(history) {
+    const el = document.getElementById("activity-league-history");
+    if (!el) return;
+    if (!Array.isArray(history) || !history.length) {
+      el.textContent = "No completed rounds yet.";
+      return;
+    }
+    el.innerHTML = history.map((round) => {
+      const winners = Array.isArray(round.winners) ? round.winners : [];
+      return `<div class="activity-league-history-round">
+        <strong>${escapeLeagueHtml(round.label)}</strong>
+        ${winners.map((winner) => `<div class="activity-league-history-winner"><span>#${Number(winner.rank)} @${escapeLeagueHtml(winner.username)}</span><span>${Number(winner.empAmount || 0).toLocaleString()} EMP</span></div>`).join("") || "<div>No prize winners.</div>"}
+      </div>`;
+    }).join("");
+  }
+
+  async function loadActivityLeagueState() {
+    const waitingEl = document.getElementById("activity-league-waiting");
+    const liveEl = document.getElementById("activity-league-live");
+    const titleEl = document.getElementById("activity-league-title");
+    try {
+      const username = getViewedUsername() || "";
+      const response = await fetch(`${getApiBase()}/activity-league?username=${encodeURIComponent(username)}`);
+      const data = await response.json();
+      if (!data.success) throw new Error(data.error || "Failed to load Activity League.");
+      renderLeagueHistory(data.history);
+      if (!data.active || !data.round) {
+        if (waitingEl) waitingEl.style.display = "block";
+        if (liveEl) liveEl.style.display = "none";
+        if (titleEl) titleEl.textContent = "First round begins 1 September";
+        const launchAt = data.launchAt || "2026-09-01T00:00:00.000Z";
+        document.getElementById("activity-league-dates").textContent = `Launch: ${formatLeagueDate(launchAt)}`;
+        startLeagueCountdown(launchAt, true);
+        return;
+      }
+      if (waitingEl) waitingEl.style.display = "none";
+      if (liveEl) liveEl.style.display = "block";
+      if (titleEl) titleEl.textContent = data.round.label;
+      document.getElementById("activity-league-dates").textContent = `${formatLeagueDate(data.round.startAt)} — ${formatLeagueDate(data.round.endAt)}`;
+      startLeagueCountdown(data.round.endAt, false);
+      const prizes = Array.isArray(data.round.prizes) ? data.round.prizes.map(Number) : [];
+      const my = data.myStanding;
+      document.getElementById("activity-league-my-rank").textContent = my ? `#${my.rank}` : "--";
+      document.getElementById("activity-league-my-ap").textContent = `${Number(my?.leagueAP || 0).toLocaleString()} AP`;
+      document.getElementById("activity-league-pool").textContent = `${prizes.reduce((sum, value) => sum + Number(value || 0), 0).toLocaleString()} EMP`;
+      const standingsEl = document.getElementById("activity-league-standings");
+      const standings = Array.isArray(data.standings) ? data.standings : [];
+      standingsEl.innerHTML = `<div class="activity-league-row header"><span>Rank</span><span>Player</span><span>AP</span><span>Prize</span></div>` +
+        (standings.length ? standings.map((row) => {
+          const isMe = username && String(row.username).toLowerCase() === String(username).toLowerCase();
+          const prize = prizes[Number(row.rank) - 1] || 0;
+          return `<div class="activity-league-row${isMe ? " me" : ""}"><span class="rank">#${Number(row.rank)}</span><span class="player">@${escapeLeagueHtml(row.username)}</span><span class="score">${Number(row.leagueAP || 0).toLocaleString()}</span><span class="prize">${prize ? `${Number(prize).toLocaleString()} EMP` : "—"}</span></div>`;
+        }).join("") : `<div class="activity-empty">No AP has been earned in this round yet.</div>`);
+      document.getElementById("activity-league-prizes").innerHTML = prizes.map((amount, index) => `<div class="activity-league-prize-row"><span>#${index + 1}</span><strong>${Number(amount).toLocaleString()} EMP</strong></div>`).join("");
+      const sources = Array.isArray(data.sources) ? data.sources : [];
+      document.getElementById("activity-league-sources").innerHTML = sources.length
+        ? sources.map((source) => `<div class="activity-league-source-row"><span>${escapeLeagueHtml(String(source.activityType || "").replaceAll("_", " "))}</span><strong>${Number(source.points || 0).toLocaleString()} AP</strong></div>`).join("")
+        : `<div class="activity-empty">No League AP earned yet.</div>`;
+    } catch (err) {
+      console.error("Activity League load failed:", err);
+      if (waitingEl) {
+        waitingEl.style.display = "block";
+        waitingEl.textContent = "Activity League information is temporarily unavailable.";
+      }
+      if (liveEl) liveEl.style.display = "none";
+    }
+  }
+
+  function switchActivityMode(mode) {
+    const league = mode === "league";
+    document.getElementById("activity-wheel-view").style.display = league ? "none" : "block";
+    document.getElementById("activity-league-view").style.display = league ? "block" : "none";
+    document.getElementById("activity-wheel-tab-btn").classList.toggle("active", !league);
+    document.getElementById("activity-league-tab-btn").classList.toggle("active", league);
+    if (league) loadActivityLeagueState();
+    else loadActivityWheelState();
+  }
+
+  window.switchActivityMode = switchActivityMode;
+  window.loadActivityLeagueState = loadActivityLeagueState;
   window.loadActivityWheelState = loadActivityWheelState;
   document.addEventListener("DOMContentLoaded", function () {
     drawActivityWheel();
