@@ -840,13 +840,30 @@ forkyishere,529"
         <!-- 📚 PLAYER HIVE + EMP TREASURY REPORT -->
         <!-- ===================================== -->
         <div class="section">
-          <h2>📚 Player HIVE + EMP Treasury Report</h2>
-          <p class="sub">Complete recorded HIVE and EMP movement by player.</p>
-          <button id="load-player-treasury-report-btn" class="primary">Load Treasury Report</button>
-          <div id="player-treasury-report-status" class="status">Click load to view the report.</div>
-          <div class="scroll-box" style="margin-top:12px;overflow:auto;"><table class="all-players-table"><thead><tr><th>Player</th><th>HIVE IN</th><th>HIVE OUT</th><th>HIVE Balance</th><th>EMP IN</th><th>EMP OUT</th><th>EMP Net</th></tr></thead><tbody id="player-treasury-summary-body"><tr><td colspan="7">Report not loaded.</td></tr></tbody></table></div>
-          <h3 style="margin-top:18px">Transaction Detail</h3>
-          <div class="scroll-box" style="overflow:auto;max-height:520px;"><table class="all-players-table"><thead><tr><th>Date (UTC)</th><th>Player</th><th>Currency</th><th>Direction</th><th>Amount</th><th>Source</th><th>Note</th><th>Reference</th></tr></thead><tbody id="player-treasury-transactions-body"><tr><td colspan="8">Report not loaded.</td></tr></tbody></table></div>
+          <h2>📚 Player Treasury Reports</h2>
+          <p class="sub">Select currency and date range to view player-wise records.</p>
+          <div class="row">
+            <label>From <input id="treasury-from-date" type="date" /></label>
+            <label>To <input id="treasury-to-date" type="date" /></label>
+            <button id="load-player-treasury-report-btn" class="primary">Apply Filter</button>
+          </div>
+          <div class="row">
+            <button id="treasury-hive-tab" class="primary">💧 HIVE Report</button>
+            <button id="treasury-emp-tab">⚡ EMP Report</button>
+          </div>
+          <div id="player-treasury-report-status" class="status">Choose dates and click Apply Filter.</div>
+          <div id="treasury-hive-view">
+            <h3>HIVE Player Summary</h3>
+            <div class="scroll-box" style="overflow:auto;"><table class="all-players-table"><thead><tr><th>Player</th><th>HIVE IN</th><th>HIVE OUT</th><th>Current Balance</th></tr></thead><tbody id="treasury-hive-summary-body"><tr><td colspan="4">Report not loaded.</td></tr></tbody></table></div>
+            <h3>HIVE Transactions</h3>
+            <div class="scroll-box" style="overflow:auto;max-height:520px;"><table class="all-players-table"><thead><tr><th>Date (UTC)</th><th>Player</th><th>Direction</th><th>Amount</th><th>Source</th><th>Note</th><th>Reference</th></tr></thead><tbody id="treasury-hive-transactions-body"><tr><td colspan="7">Report not loaded.</td></tr></tbody></table></div>
+          </div>
+          <div id="treasury-emp-view" style="display:none;">
+            <h3>EMP Player Summary</h3>
+            <div class="scroll-box" style="overflow:auto;"><table class="all-players-table"><thead><tr><th>Player</th><th>EMP IN</th><th>EMP OUT</th><th>EMP Net</th></tr></thead><tbody id="treasury-emp-summary-body"><tr><td colspan="4">Report not loaded.</td></tr></tbody></table></div>
+            <h3>EMP Transactions</h3>
+            <div class="scroll-box" style="overflow:auto;max-height:520px;"><table class="all-players-table"><thead><tr><th>Date (UTC)</th><th>Player</th><th>Direction</th><th>Amount</th><th>Source</th><th>Note</th><th>Reference</th></tr></thead><tbody id="treasury-emp-transactions-body"><tr><td colspan="7">Report not loaded.</td></tr></tbody></table></div>
+          </div>
         </div>
 
         <!-- 🔥 MAINTENANCE EMP BURN -->
@@ -6468,18 +6485,44 @@ Players snapshotted: ${data.players_snapshotted}
         });
       }
 
+      let playerTreasuryCache = null;
+      let playerTreasuryCurrency = "HIVE";
+
+      function renderPlayerTreasuryReport() {
+        const from = document.getElementById("treasury-from-date").value;
+        const to = document.getElementById("treasury-to-date").value;
+        const all = playerTreasuryCache?.transactions || [];
+        const filtered = all.filter(t => {
+          if (t.currency !== playerTreasuryCurrency) return false;
+          const day = String(t.occurred_at || "").slice(0, 10);
+          return (!from || day >= from) && (!to || day <= to);
+        });
+        const pRows = playerTreasuryCache?.players || [];
+        const summary = pRows.map(p => playerTreasuryCurrency === "HIVE"
+          ? `<tr><td>@${p.username}</td><td>${Number(p.hive_in||0).toFixed(3)}</td><td>${Number(p.hive_out||0).toFixed(3)}</td><td>${Number(p.hive_balance||0).toFixed(3)}</td></tr>`
+          : `<tr><td>@${p.username}</td><td>${Number(p.emp_in||0).toLocaleString()}</td><td>${Number(p.emp_out||0).toLocaleString()}</td><td>${(Number(p.emp_in||0)-Number(p.emp_out||0)).toLocaleString()}</td></tr>`).join("");
+        const summaryBody=document.getElementById(playerTreasuryCurrency==="HIVE"?"treasury-hive-summary-body":"treasury-emp-summary-body");
+        const detailBody=document.getElementById(playerTreasuryCurrency==="HIVE"?"treasury-hive-transactions-body":"treasury-emp-transactions-body");
+        summaryBody.innerHTML=summary||'<tr><td colspan="4">No player records found.</td></tr>';
+        detailBody.innerHTML=filtered.map(t=>`<tr><td>${new Date(t.occurred_at).toLocaleString()}</td><td>@${t.username}</td><td>${t.direction}</td><td>${t.currency==="HIVE"?Number(t.amount||0).toFixed(3):Number(t.amount||0).toLocaleString()}</td><td>${t.source||"--"}</td><td>${t.note||"--"}</td><td>${t.reference||"--"}</td></tr>`).join("")||'<tr><td colspan="7">No transactions for selected dates.</td></tr>';
+        document.getElementById("treasury-hive-view").style.display=playerTreasuryCurrency==="HIVE"?"block":"none";
+        document.getElementById("treasury-emp-view").style.display=playerTreasuryCurrency==="EMP"?"block":"none";
+      }
       async function loadPlayerTreasuryReport() {
-        const status=document.getElementById("player-treasury-report-status"), summary=document.getElementById("player-treasury-summary-body"), details=document.getElementById("player-treasury-transactions-body");
-        status.textContent="Loading HIVE and EMP treasury report...";
+        const status=document.getElementById("player-treasury-report-status");
+        status.textContent="Loading treasury report...";
         try {
-          const response=await fetch(`${API_BASE}/admin/player-treasury-report`,{headers:{"x-admin-key":ADMIN_KEY}}), data=await response.json();
+          const response=await fetch(`${API_BASE}/admin/player-treasury-report`,{headers:{"x-admin-key":ADMIN_KEY}});
+          const data=await response.json();
           if(!response.ok||!data.success) throw new Error(data.error||"Failed to load treasury report.");
-          summary.innerHTML=(data.players||[]).map(p=>`<tr><td>@${p.username}</td><td>${Number(p.hive_in||0).toFixed(3)}</td><td>${Number(p.hive_out||0).toFixed(3)}</td><td>${Number(p.hive_balance||0).toFixed(3)}</td><td>${Number(p.emp_in||0).toLocaleString()}</td><td>${Number(p.emp_out||0).toLocaleString()}</td><td>${(Number(p.emp_in||0)-Number(p.emp_out||0)).toLocaleString()}</td></tr>`).join("")||'<tr><td colspan="7">No player records found.</td></tr>';
-          details.innerHTML=(data.transactions||[]).map(t=>`<tr><td>${t.occurred_at?new Date(t.occurred_at).toLocaleString():"--"}</td><td>@${t.username}</td><td>${t.currency}</td><td>${t.direction}</td><td>${t.currency==="HIVE"?Number(t.amount||0).toFixed(3):Number(t.amount||0).toLocaleString()}</td><td>${t.note||t.source||"--"}<small style="color:#64748b;display:block;">${t.note?"Source: "+(t.source||"--"):""}</small></td><td>${t.note||"--"}</td><td>${t.reference||"--"}</td></tr>`).join("")||'<tr><td colspan="8">No transactions found.</td></tr>';
-          status.textContent=`Loaded ${(data.players||[]).length} players and ${(data.transactions||[]).length} transactions.`;
+          playerTreasuryCache=data;
+          renderPlayerTreasuryReport();
+          status.textContent=`Loaded ${(data.players||[]).length} players. Showing ${playerTreasuryCurrency} transactions for selected dates.`;
         } catch(err) { console.error("Player treasury report error:",err); status.textContent=err.message||"Failed to load treasury report."; }
       }
       document.getElementById("load-player-treasury-report-btn")?.addEventListener("click",loadPlayerTreasuryReport);
+      document.getElementById("treasury-hive-tab")?.addEventListener("click",()=>{playerTreasuryCurrency="HIVE";renderPlayerTreasuryReport();});
+      document.getElementById("treasury-emp-tab")?.addEventListener("click",()=>{playerTreasuryCurrency="EMP";renderPlayerTreasuryReport();});
 
       async function loadEmpEconomyControlCenter() {
         const summaryBox = document.getElementById("emp-economy-summary");
