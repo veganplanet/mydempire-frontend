@@ -1757,7 +1757,7 @@ let seasonHistoryIndex = 0;
       }
 
       async function getLatestSnapsContainer() {
-        const posts = await hiveRpc("condenser_api.get_discussions_by_blog", [{ tag: "peak.snaps", limit: 50 }]);
+        const posts = await hiveRpc("condenser_api.get_discussions_by_blog", [{ tag: "peak.snaps", limit: 20 }]);
         const authored = (posts || []).filter((post) => String(post.author).toLowerCase() === "peak.snaps");
         const container = authored.find((post) => /snaps container/i.test(`${post.title || ""} ${post.body || ""}`)) || authored[0];
         if (!container?.permlink) throw new Error("The latest @peak.snaps Snaps Container could not be found.");
