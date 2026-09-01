@@ -1625,11 +1625,17 @@ Empire Surge
           .replace("@", "")
           .trim()
           .toLowerCase();
-
+let isMydEmpireRequest = false;
+try {
+  const rawUrl = url instanceof Request ? url.url : String(url);
+  const requestOrigin = new URL(rawUrl, window.location.href).origin;
+  const apiOrigin = new URL(apiUrl("/"), window.location.href).origin;
+  isMydEmpireRequest = requestOrigin === apiOrigin;
+} catch (_) {}
         const newOptions = { ...options };
         const headers = new Headers(newOptions.headers || {});
 
-        if (actor) {
+        if (actor && isMydEmpireRequest) {
           headers.set("x-mde-actor", actor);
           headers.set("x-player-actor", actor);
         }
