@@ -6,6 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="assets/favicon.png" />
+    <style>
+      .daily-empire-report { margin: 16px 0; padding: 22px; border: 1px solid #c9d6d5; border-radius: 14px; background: linear-gradient(135deg, #f7f3ea, #e4f1ef); color: #102a43; }
+      .daily-empire-report-header, .daily-empire-report-grid { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; }
+      .daily-empire-report-kicker { color: #0b7285; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+      .daily-empire-report h2 { margin: 5px 0; }
+      .daily-empire-report p { margin: 0; color: #52606d; }
+      .daily-empire-report-reward { padding: 9px 12px; border-radius: 8px; background: #f4b942; color: #102a43; font-weight: 800; white-space: nowrap; }
+      .daily-empire-report-grid { margin-top: 18px; align-items: stretch; }
+      .daily-empire-report-card, .daily-empire-report-art { flex: 1; min-width: 0; padding: 16px; border-radius: 10px; background: rgba(255,255,255,.72); }
+      .daily-empire-report-card h3 { margin-top: 0; }
+      .daily-empire-report-card ol { min-height: 130px; padding-left: 24px; }
+      .daily-empire-report-card li { margin: 8px 0; }
+      .daily-empire-report-art { display: flex; align-items: center; justify-content: center; }
+      .daily-empire-report-art img { width: 100%; height: auto; border-radius: 8px; }
+      .daily-empire-report-link { display: inline-block; margin-top: 14px; color: #0b7285; font-weight: 800; }
+      @media (max-width: 700px) { .daily-empire-report-header, .daily-empire-report-grid { flex-direction: column; } .daily-empire-report-reward { align-self: flex-start; } }
+    </style>
     <script src="js/player-auth.js?v=20260825-auth3"></script>
 </head>
   <body data-requires-login="true" class="player-dashboard-page empire-hub-wide">
@@ -255,6 +272,30 @@ font-weight:900;
     </button>
   </div>
 </div>
+<!-- DAILY EMPIRE REPORT -->
+<section id="daily-empire-report" class="daily-empire-report" aria-labelledby="daily-empire-report-title">
+  <div class="daily-empire-report-header">
+    <div>
+      <div class="daily-empire-report-kicker">MYDEMPIRE / DAILY INTELLIGENCE</div>
+      <h2 id="daily-empire-report-title">Daily Empire Report</h2>
+      <p id="daily-empire-report-date">Preparing your previous UTC day...</p>
+    </div>
+    <div class="daily-empire-report-reward">+5 EMP</div>
+  </div>
+  <div class="daily-empire-report-grid">
+    <div class="daily-empire-report-card">
+      <h3>Important Activities</h3>
+      <ol id="daily-empire-report-activities"><li>Loading verified game records...</li></ol>
+      <div id="daily-empire-report-status" class="status-text">Loading report...</div>
+      <button id="daily-empire-report-publish" class="primary-button" type="button" disabled>Publish on Hive + Claim 5 EMP</button>
+    </div>
+    <div class="daily-empire-report-art">
+      <img id="daily-empire-report-image" alt="Branded Daily Empire Report" hidden />
+      <div id="daily-empire-report-image-placeholder">Your branded report image will appear here.</div>
+    </div>
+  </div>
+  <a id="daily-empire-report-hive-link" class="daily-empire-report-link" href="#" target="_blank" rel="noopener" hidden>View verified Hive comment</a>
+</section>
 <!-- 🎡 Activity Wheel Dashboard Strip -->
 <div
   id="dashboard-activity-wheel-strip"
@@ -1654,6 +1695,138 @@ let seasonHistoryIndex = 0;
       function apiUrl(path) {
         return API_BASE + path;
       }
+      const dailyEmpireReportState = { report: null, imageUrl: "", publishing: false };
+
+      function setDailyEmpireReportStatus(message) {
+        const status = document.getElementById("daily-empire-report-status");
+        if (status) status.textContent = message;
+      }
+
+      function renderDailyEmpireReport(report) {
+        dailyEmpireReportState.report = report;
+        const dateEl = document.getElementById("daily-empire-report-date");
+        const list = document.getElementById("daily-empire-report-activities");
+        const image = document.getElementById("daily-empire-report-image");
+        const placeholder = document.getElementById("daily-empire-report-image-placeholder");
+        const publish = document.getElementById("daily-empire-report-publish");
+        const hiveLink = document.getElementById("daily-empire-report-hive-link");
+        if (dateEl) dateEl.textContent = `Previous UTC day: ${report.report_date}`;
+        if (list) {
+          list.replaceChildren();
+          (report.activities || []).forEach((activity) => {
+            const item = document.createElement("li");
+            item.textContent = `${activity.activity_type}: ${activity.description}`;
+            list.appendChild(item);
+          });
+          if (!list.children.length) list.innerHTML = "<li>No important activity was recorded.</li>";
+        }
+        dailyEmpireReportState.imageUrl = report.image_url || apiUrl(`/daily-empire-report/image/${encodeURIComponent(report.image_token)}.png`);
+        if (image) {
+          image.src = dailyEmpireReportState.imageUrl;
+          image.hidden = false;
+        }
+        if (placeholder) placeholder.hidden = true;
+        if (report.claim?.hive_author && report.claim?.hive_permlink) {
+          if (publish) publish.disabled = true;
+          if (hiveLink) {
+            hiveLink.href = `https://peakd.com/@${report.claim.hive_author}/${report.claim.hive_permlink}`;
+            hiveLink.hidden = false;
+          }
+          setDailyEmpireReportStatus("Already published and credited: 5 EMP.");
+        } else if (publish) {
+          publish.disabled = false;
+          setDailyEmpireReportStatus("Ready to publish from your Hive account.");
+        }
+      }
+
+      async function hiveRpc(method, params) {
+        const response = await fetch("https://api.hive.blog", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+        });
+        const data = await response.json();
+        if (!response.ok || data.error) throw new Error(data.error?.message || "Hive request failed.");
+        return data.result;
+      }
+
+      async function getLatestSnapsContainer() {
+        const posts = await hiveRpc("condenser_api.get_discussions_by_blog", [{ tag: "peak.snaps", limit: 50 }]);
+        const authored = (posts || []).filter((post) => String(post.author).toLowerCase() === "peak.snaps");
+        const container = authored.find((post) => /snaps container/i.test(`${post.title || ""} ${post.body || ""}`)) || authored[0];
+        if (!container?.permlink) throw new Error("The latest @peak.snaps Snaps Container could not be found.");
+        return container;
+      }
+
+      function requestHiveComment(username, title, body, parent) {
+        return new Promise((resolve, reject) => {
+          if (!window.hive_keychain) return reject(new Error("Hive Keychain is not installed or enabled."));
+          const permlink = `daily-empire-report-${dailyEmpireReportState.report.report_date}-${Math.random().toString(36).slice(2, 10)}`;
+          window.hive_keychain.requestPost(username, title, body, parent.author, parent.permlink, permlink, JSON.stringify({ app: "mydempire/1.0", format: "markdown", tags: ["mydempire", "dailyreport"] }), (response) => {
+            if (!response?.success) return reject(new Error(response?.message || "Hive publication was cancelled."));
+            resolve({ permlink, transactionId: response.result?.id || response.result?.tx_id || "" });
+          });
+        });
+      }
+
+      async function verifyDailyEmpireComment(username, permlink, marker) {
+        for (let attempt = 0; attempt < 6; attempt += 1) {
+          const comment = await hiveRpc("condenser_api.get_content", [username, permlink]);
+          if (String(comment?.author).toLowerCase() === username.toLowerCase() && String(comment?.parent_author).toLowerCase() === "peak.snaps" && String(comment?.body || "").includes(marker)) return comment;
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+        }
+        throw new Error("Hive publication could not be verified yet. No EMP was credited.");
+      }
+
+      async function publishDailyEmpireReport() {
+        if (dailyEmpireReportState.publishing || !dailyEmpireReportState.report) return;
+        if (typeof IS_VISITOR_MODE !== "undefined" && IS_VISITOR_MODE) {
+          setDailyEmpireReportStatus("Visitor mode cannot publish or claim rewards.");
+          return;
+        }
+        dailyEmpireReportState.publishing = true;
+        const button = document.getElementById("daily-empire-report-publish");
+        if (button) { button.disabled = true; button.textContent = "Waiting for Hive Keychain..."; }
+        try {
+          const report = dailyEmpireReportState.report;
+          const parent = await getLatestSnapsContainer();
+          const activityText = (report.activities || []).map((item) => `- ${item.activity_type}: ${item.description}`).join("\n") || "- No important activity recorded.";
+          const body = `## MydEmpire Daily Empire Report\n\n**UTC date:** ${report.report_date}\n\n${activityText}\n\n![Daily Empire Report](${dailyEmpireReportState.imageUrl})\n\n${report.marker}`;
+          const published = await requestHiveComment(report.username, `Daily Empire Report — ${report.report_date}`, body, parent);
+          setDailyEmpireReportStatus("Comment broadcast. Verifying it on Hive...");
+          const verified = await verifyDailyEmpireComment(report.username, published.permlink, report.marker);
+          const claimResponse = await fetch(apiUrl(`/player/${encodeURIComponent(report.username)}/daily-empire-report/claim`), {
+            method: "POST",
+            headers: getActorHeaders(),
+            body: JSON.stringify({ reportDate: report.report_date, hiveAuthor: verified.author, hivePermlink: verified.permlink }),
+          });
+          const claim = await claimResponse.json();
+          if (!claimResponse.ok || !claim.success) throw new Error(claim.error || "Hive was verified, but the EMP reward could not be credited.");
+          report.claim = { hive_author: verified.author, hive_permlink: verified.permlink };
+          renderDailyEmpireReport(report);
+          setDailyEmpireReportStatus(claim.duplicate ? "Already credited: 5 EMP." : "Verified on Hive. 5 EMP credited.");
+          const hiveLink = document.getElementById("daily-empire-report-hive-link");
+          if (hiveLink) { hiveLink.href = `https://peakd.com/@${verified.author}/${verified.permlink}`; hiveLink.hidden = false; }
+        } catch (error) {
+          setDailyEmpireReportStatus(error.message || "Daily Empire Report publication failed. No EMP was credited.");
+          if (button) { button.disabled = false; button.textContent = "Publish on Hive + Claim 5 EMP"; }
+        } finally {
+          dailyEmpireReportState.publishing = false;
+        }
+      }
+
+      async function loadDailyEmpireReport() {
+        try {
+          const response = await fetch(apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/daily-empire-report`));
+          const data = await response.json();
+          if (!response.ok || !data.success) throw new Error(data.error || "Failed to load Daily Empire Report.");
+          renderDailyEmpireReport(data.report);
+        } catch (error) {
+          setDailyEmpireReportStatus(error.message || "Failed to load Daily Empire Report.");
+        }
+      }
+
+      document.getElementById("daily-empire-report-publish")?.addEventListener("click", publishDailyEmpireReport);
       async function loadDashboardActivityWheelStrip() {
   const strip = document.getElementById("dashboard-activity-wheel-strip");
   if (!strip) return;
@@ -8115,6 +8288,7 @@ function enableSafeDashboardImages() {
           setupDashboardNavbar();
 
           await loadDashboardSummary();
+          await loadDailyEmpireReport();
           startCrateResetTimer();
 
           const crateEls = getCrateModalEls();
