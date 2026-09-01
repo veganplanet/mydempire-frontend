@@ -1816,11 +1816,13 @@ let seasonHistoryIndex = 0;
       }
 
       async function loadDailyEmpireReport() {
+        setDailyEmpireReportStatus("");
         try {
           const response = await fetch(apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/daily-empire-report`));
           const data = await response.json();
           if (!response.ok || !data.success) throw new Error(data.error || "Failed to load Daily Empire Report.");
           renderDailyEmpireReport(data.report);
+          setDailyEmpireReportStatus("");
         } catch (error) {
           setDailyEmpireReportStatus(error.message || "Failed to load Daily Empire Report.");
         }
