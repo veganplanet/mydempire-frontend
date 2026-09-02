@@ -1765,15 +1765,37 @@ let seasonHistoryIndex = 0;
       }
 
       function requestHiveComment(username, title, body, parent) {
-        return new Promise((resolve, reject) => {
-          if (!window.hive_keychain) return reject(new Error("Hive Keychain is not installed or enabled."));
-          const permlink = `daily-empire-report-${dailyEmpireReportState.report.report_date}-${Math.random().toString(36).slice(2, 10)}`;
-          window.hive_keychain.requestPost(username, title, body, parent.author, parent.permlink, permlink, JSON.stringify({ app: "mydempire/1.0", format: "markdown", tags: ["mydempire", "dailyreport"] }), (response) => {
-            if (!response?.success) return reject(new Error(response?.message || "Hive publication was cancelled."));
-            resolve({ permlink, transactionId: response.result?.id || response.result?.tx_id || "" });
-          });
+  return new Promise((resolve, reject) => {
+    if (!window.hive_keychain) return reject(new Error("Hive Keychain is not installed or enabled."));
+
+    const permlink = `daily-empire-report-${dailyEmpireReportState.report.report_date}-${Math.random().toString(36).slice(2, 10)}`;
+    const metadata = {
+      app: "mydempire/1.0",
+      format: "markdown",
+      tags: ["mydempire", "dailyreport"],
+    };
+
+    window.hive_keychain.requestPost(
+      username,
+      title,
+      body,
+      parent.permlink,
+      parent.author,
+      metadata,
+      permlink,
+      null,
+      (response) => {
+        if (!response?.success) {
+          return reject(new Error(response?.message || "Hive publication was cancelled."));
+        }
+        resolve({
+          permlink,
+          transactionId: response.result?.id || response.result?.tx_id || "",
         });
       }
+    );
+  });
+}
 
       async function verifyDailyEmpireComment(username, permlink, marker) {
         for (let attempt = 0; attempt < 6; attempt += 1) {
