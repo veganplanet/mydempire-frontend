@@ -1764,9 +1764,18 @@ let seasonHistoryIndex = 0;
         return container;
       }
 
-      function requestHiveComment(username, title, body, parent) {
+function requestHiveComment(username, title, body, parent) {
   return new Promise((resolve, reject) => {
-    if (!window.hive_keychain) return reject(new Error("Hive Keychain is not installed or enabled."));
+    if (!window.hive_keychain) {
+      return reject(new Error("Hive Keychain is not installed or enabled."));
+    }
+
+    const parentAuthor = String(parent?.author || "").trim().toLowerCase();
+    const parentPermlink = String(parent?.permlink || "").trim();
+
+    if (!parentAuthor || !parentPermlink) {
+      return reject(new Error("The latest @peak.snaps container is invalid."));
+    }
 
     const permlink = `daily-empire-report-${dailyEmpireReportState.report.report_date}-${Math.random().toString(36).slice(2, 10)}`;
     const metadata = {
@@ -1775,19 +1784,28 @@ let seasonHistoryIndex = 0;
       tags: ["mydempire", "dailyreport"],
     };
 
-    window.hive_keychain.requestPost(
+    const operation = [
+      "comment",
+      {
+        parent_author: parentAuthor,
+        parent_permlink: parentPermlink,
+        author: username,
+        permlink,
+        title,
+        body,
+        json_metadata: JSON.stringify(metadata),
+      },
+    ];
+
+    window.hive_keychain.requestBroadcast(
       username,
-      title,
-      body,
-      parent.permlink,
-      parent.author,
-      metadata,
-      permlink,
-      null,
+      [operation],
+      "Posting",
       (response) => {
         if (!response?.success) {
           return reject(new Error(response?.message || "Hive publication was cancelled."));
         }
+
         resolve({
           permlink,
           transactionId: response.result?.id || response.result?.tx_id || "",
@@ -1796,7 +1814,6 @@ let seasonHistoryIndex = 0;
     );
   });
 }
-
       async function verifyDailyEmpireComment(username, permlink, marker) {
         for (let attempt = 0; attempt < 6; attempt += 1) {
           const comment = await hiveRpc("condenser_api.get_content", [username, permlink]);
