@@ -3728,37 +3728,17 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           box.innerHTML = `<div style="color:#b91c1c;font-weight:800;">Failed to load Factory Fulfillment log.</div>`;
         }
       }
-      async function getDailyEmpireReportPostUrl(author, permlink) {
-  try {
-    const rpcResponse = await fetch("https://api.hive.blog", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        method: "condenser_api.get_content",
-        params: [author, permlink],
-        id: 1,
-      }),
-    });
+     async function getDailyEmpireReportPostUrl(author, permlink) {
+  const cleanAuthor = String(author || "").trim();
+  const cleanPermlink = String(permlink || "").trim();
 
-    const rpcData = await rpcResponse.json();
-    const comment = rpcData?.result;
-
-    if (!comment?.parent_author || !comment?.parent_permlink) {
-      return null;
-    }
-
-    return (
-      `https://peakd.com/@${comment.parent_author}/${comment.parent_permlink}` +
-      `#@${author}/${permlink}`
-    );
-  } catch (error) {
-    console.warn("Could not build Daily Empire Report link:", error);
+  if (!cleanAuthor || !cleanPermlink) {
     return null;
   }
+
+  return `https://peakd.com/hive-124838/@${cleanAuthor}/${cleanPermlink}`;
 }
+
 
 async function loadDailyEmpireReportUsage() {
   const status = document.getElementById(
