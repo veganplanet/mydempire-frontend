@@ -20,7 +20,40 @@
       .daily-empire-report-card li { margin: 8px 0; }
       .daily-empire-report-art { display: flex; align-items: center; justify-content: center; }
       .daily-empire-report-art img { width: 100%; height: auto; border-radius: 8px; }
-      .daily-empire-report-link { display: inline-block; margin-top: 14px; color: #0b7285; font-weight: 800; }
+      .daily-empire-report-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 10px 16px;
+  border: 1px solid #0b7285;
+  border-radius: 10px;
+  background: #0b7285;
+  color: #ffffff;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(11, 114, 133, 0.2);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.daily-empire-report-link:hover {
+  background: #085f70;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(11, 114, 133, 0.28);
+}
+
+.daily-empire-report-link:focus-visible {
+  outline: 3px solid rgba(244, 185, 66, 0.55);
+  outline-offset: 3px;
+}
+
+.daily-empire-report-link[hidden] {
+  display: none;
+}
       @media (max-width: 700px) { .daily-empire-report-header, .daily-empire-report-grid { flex-direction: column; } .daily-empire-report-reward { align-self: flex-start; } }
     </style>
     <script src="js/player-auth.js?v=20260825-auth3"></script>
@@ -294,7 +327,7 @@ font-weight:900;
       <div id="daily-empire-report-image-placeholder">Your branded report image will appear here.</div>
     </div>
   </div>
-  <a id="daily-empire-report-hive-link" class="daily-empire-report-link" href="#" target="_blank" rel="noopener" hidden>View verified Hive comment</a>
+  <a id="daily-empire-report-hive-link" class="daily-empire-report-link" href="#" target="_blank" rel="noopener" hidden>View Report on Hive ↗</a>
 </section>
 <!-- 🎡 Activity Wheel Dashboard Strip -->
 <div
