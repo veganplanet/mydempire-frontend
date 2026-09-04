@@ -1740,31 +1740,21 @@ let seasonHistoryIndex = 0;
         const status = document.getElementById("daily-empire-report-status");
         if (status) status.textContent = message;
       }
-      async function showDailyEmpireReportHiveLink(author, permlink) {
-        const hiveLink = document.getElementById(
-          "daily-empire-report-hive-link",
-        );
-        if (!hiveLink || !author || !permlink) return;
+     async function showDailyEmpireReportHiveLink(author, permlink) {
+  const hiveLink = document.getElementById(
+    "daily-empire-report-hive-link",
+  );
+  const cleanAuthor = String(author || "").trim();
+  const cleanPermlink = String(permlink || "").trim();
 
-        try {
-          const comment = await hiveRpc("condenser_api.get_content", [
-            author,
-            permlink,
-          ]);
+  if (!hiveLink || !cleanAuthor || !cleanPermlink) {
+    return;
+  }
 
-          if (!comment?.parent_author || !comment?.parent_permlink) {
-            throw new Error("Hive comment parent was not found.");
-          }
-
-          hiveLink.href =
-            `https://peakd.com/@${comment.parent_author}/${comment.parent_permlink}` +
-            `#@${author}/${permlink}`;
-          hiveLink.hidden = false;
-        } catch (error) {
-          console.warn("Daily Empire Report Hive link could not be built:", error);
-          hiveLink.hidden = true;
-        }
-      }
+  hiveLink.href =
+    `https://peakd.com/hive-124838/@${cleanAuthor}/${cleanPermlink}`;
+  hiveLink.hidden = false;
+}
       function renderDailyEmpireReport(report) {
         dailyEmpireReportState.report = report;
         const dateEl = document.getElementById("daily-empire-report-date");
