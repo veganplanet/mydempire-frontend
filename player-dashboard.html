@@ -280,14 +280,14 @@ font-weight:900;
       <h2 id="daily-empire-report-title">Daily Empire Report</h2>
       <p id="daily-empire-report-date">Preparing your previous UTC day...</p>
     </div>
-    <div class="daily-empire-report-reward">+5 EMP</div>
+    <div class="daily-empire-report-reward">+5 EMP +1 AP</div>
   </div>
   <div class="daily-empire-report-grid">
     <div class="daily-empire-report-card">
       <h3>Important Activities</h3>
       <ol id="daily-empire-report-activities"><li>Loading verified game records...</li></ol>
       <div id="daily-empire-report-status" class="status-text">Loading report...</div>
-      <button id="daily-empire-report-publish" class="primary-button" type="button" disabled>Publish on Hive + Claim 5 EMP</button>
+      <button id="daily-empire-report-publish" class="primary-button" type="button" disabled>Publish on Hive + Claim 5 EMP + 1 AP</button>
     </div>
     <div class="daily-empire-report-art">
       <img id="daily-empire-report-image" alt="Branded Daily Empire Report" hidden />
@@ -1820,7 +1820,7 @@ function requestHiveComment(username, title, body, parent) {
           if (String(comment?.author).toLowerCase() === username.toLowerCase() && String(comment?.parent_author).toLowerCase() === "peak.snaps" && String(comment?.body || "").includes(marker)) return comment;
           await new Promise((resolve) => setTimeout(resolve, 1500));
         }
-        throw new Error("Hive publication could not be verified yet. No EMP was credited.");
+        throw new Error("Hive publication could not be verified yet. No EMP or AP was credited.");
       }
 
       async function publishDailyEmpireReport() {
@@ -1845,16 +1845,50 @@ function requestHiveComment(username, title, body, parent) {
             headers: getActorHeaders(),
             body: JSON.stringify({ reportDate: report.report_date, hiveAuthor: verified.author, hivePermlink: verified.permlink }),
           });
-          const claim = await claimResponse.json();
-          if (!claimResponse.ok || !claim.success) throw new Error(claim.error || "Hive was verified, but the EMP reward could not be credited.");
-          report.claim = { hive_author: verified.author, hive_permlink: verified.permlink };
+            const claim = await claimResponse.json();
+          if (!claimResponse.ok || !claim.success) {
+            throw new Error(
+              claim.error ||
+                "Hive was verified, but the EMP and AP rewards could not be credited.",
+            );
+          }
+
+          report.claim = {
+            hive_author: verified.author,
+            hive_permlink: verified.permlink,
+          };
           renderDailyEmpireReport(report);
-          setDailyEmpireReportStatus(claim.duplicate ? "Already credited: 5 EMP." : "Verified on Hive. 5 EMP credited.");
-          const hiveLink = document.getElementById("daily-empire-report-hive-link");
-          if (hiveLink) { hiveLink.href = `https://peakd.com/@${verified.author}/${verified.permlink}`; hiveLink.hidden = false; }
-        } catch (error) {
-          setDailyEmpireReportStatus(error.message || "Daily Empire Report publication failed. No EMP was credited.");
-          if (button) { button.disabled = false; button.textContent = "Publish on Hive + Claim 5 EMP"; }
+
+          const empReward = Number(claim.amount ?? 5);
+          const apReward = Number(claim.apAmount ?? 1);
+
+          setDailyEmpireReportStatus(
+            claim.duplicate
+              ? "Daily Empire Report reward was already claimed."
+              : `Verified on Hive. ${empReward} EMP + ${apReward} AP credited.`,
+          );
+
+          await Promise.allSettled([
+            loadDashboardSummary(),
+            loadDashboardActivityWheelStrip(),
+          ]);
+
+          const hiveLink = document.getElementById(
+            "daily-empire-report-hive-link",
+          );
+          if (hiveLink) {
+            hiveLink.href = `https://peakd.com/@${verified.author}/${verified.permlink}`;
+            hiveLink.hidden = false;
+          }
+                } catch (error) {
+          setDailyEmpireReportStatus(
+            error.message ||
+              "Daily Empire Report publication failed. No EMP or AP was credited.",
+          );
+          if (button) {
+            button.disabled = false;
+            button.textContent = "Publish on Hive + Claim 5 EMP + 1 AP";
+          }
         } finally {
           dailyEmpireReportState.publishing = false;
         }
