@@ -4,7 +4,7 @@
     ["Build Factory", "2 AP"],
     ["Upgrade Factory", "5 AP"],
     ["Maintenance", "1 AP/factory • Max 10/day"],
-    ["Crate Open", "1 AP/crate • Max 8/day"],
+    ["Crate Open", "1 AP/crate • Max 4/day"],
     ["Local Empire Operation", "2 AP"],
     ["Regional Empire Operation", "5 AP"],
     ["Imperial Empire Operation", "7 AP"],
