@@ -1448,6 +1448,29 @@ forkyishere,529"
           </div>
         </div>
         <div class="section">
+  <h2>📰 Daily Empire Report Usage</h2>
+
+  <div class="row">
+    <button
+      type="button"
+      class="primary"
+      onclick="loadDailyEmpireReportUsage()"
+    >
+      Load Report Usage
+    </button>
+  </div>
+
+  <div id="daily-empire-report-usage-status" class="status">
+    Click the button to see who has used Daily Empire Report.
+  </div>
+
+  <div
+    id="daily-empire-report-usage-table"
+    class="all-players-wrap"
+    style="display: none"
+  ></div>
+</div>
+        <div class="section">
           <h2>🔥 Foundry Craft Log</h2>
 
           <div class="metrics" style="margin-top: 14px">
@@ -3705,6 +3728,149 @@ ${netOperationEmpResult >= 0 ? "+" : ""}${netOperationEmpResult.toFixed(3)} EMP
           box.innerHTML = `<div style="color:#b91c1c;font-weight:800;">Failed to load Factory Fulfillment log.</div>`;
         }
       }
+      async function getDailyEmpireReportPostUrl(author, permlink) {
+  try {
+    const rpcResponse = await fetch("https://api.hive.blog", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        method: "condenser_api.get_content",
+        params: [author, permlink],
+        id: 1,
+      }),
+    });
+
+    const rpcData = await rpcResponse.json();
+    const comment = rpcData?.result;
+
+    if (!comment?.parent_author || !comment?.parent_permlink) {
+      return null;
+    }
+
+    return (
+      `https://peakd.com/@${comment.parent_author}/${comment.parent_permlink}` +
+      `#@${author}/${permlink}`
+    );
+  } catch (error) {
+    console.warn("Could not build Daily Empire Report link:", error);
+    return null;
+  }
+}
+
+async function loadDailyEmpireReportUsage() {
+  const status = document.getElementById(
+    "daily-empire-report-usage-status",
+  );
+  const tableWrap = document.getElementById(
+    "daily-empire-report-usage-table",
+  );
+
+  status.textContent = "Loading Daily Empire Report usage...";
+  tableWrap.style.display = "none";
+  tableWrap.replaceChildren();
+
+  try {
+    const response = await fetch(
+      `${API_BASE}/admin/daily-empire-report-usage`,
+    );
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Failed to load report usage.");
+    }
+
+    const reports = Array.isArray(data.reports) ? data.reports : [];
+
+    if (reports.length === 0) {
+      status.textContent = "No Daily Empire Reports have been claimed yet.";
+      return;
+    }
+
+    const resolvedReports = await Promise.all(
+      reports.map(async (report) => ({
+        ...report,
+        postUrl: await getDailyEmpireReportPostUrl(
+          report.hive_author,
+          report.hive_permlink,
+        ),
+      })),
+    );
+
+    const table = document.createElement("table");
+    table.className = "all-players-table";
+
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+
+    ["Player", "Report Date", "Claimed At", "Hive Post"].forEach(
+      (heading) => {
+        const th = document.createElement("th");
+        th.textContent = heading;
+        headerRow.appendChild(th);
+      },
+    );
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+
+    resolvedReports.forEach((report) => {
+      const row = document.createElement("tr");
+
+      const playerCell = document.createElement("td");
+      playerCell.textContent = `@${report.username}`;
+
+      const reportDateCell = document.createElement("td");
+      reportDateCell.textContent = String(report.report_date || "").slice(
+        0,
+        10,
+      );
+
+      const claimedCell = document.createElement("td");
+      claimedCell.textContent = report.claimed_at
+        ? new Date(report.claimed_at).toLocaleString()
+        : "—";
+
+      const linkCell = document.createElement("td");
+
+      if (report.postUrl) {
+        const link = document.createElement("a");
+        link.href = report.postUrl;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = "View Post ↗";
+        link.style.fontWeight = "700";
+        link.style.color = "#1d4ed8";
+        linkCell.appendChild(link);
+      } else {
+        linkCell.textContent = "Link unavailable";
+      }
+
+      row.append(
+        playerCell,
+        reportDateCell,
+        claimedCell,
+        linkCell,
+      );
+      tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+    tableWrap.style.display = "block";
+
+    status.textContent =
+      `${resolvedReports.length} claimed report(s) found.`;
+  } catch (error) {
+    console.error("Daily Empire Report usage error:", error);
+    status.textContent =
+      error.message || "Failed to load Daily Empire Report usage.";
+  }
+}
       async function loadFoundryLog() {
         const box = document.getElementById("admin-foundry-log");
 
