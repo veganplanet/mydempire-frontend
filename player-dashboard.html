@@ -1740,7 +1740,31 @@ let seasonHistoryIndex = 0;
         const status = document.getElementById("daily-empire-report-status");
         if (status) status.textContent = message;
       }
+      async function showDailyEmpireReportHiveLink(author, permlink) {
+        const hiveLink = document.getElementById(
+          "daily-empire-report-hive-link",
+        );
+        if (!hiveLink || !author || !permlink) return;
 
+        try {
+          const comment = await hiveRpc("condenser_api.get_content", [
+            author,
+            permlink,
+          ]);
+
+          if (!comment?.parent_author || !comment?.parent_permlink) {
+            throw new Error("Hive comment parent was not found.");
+          }
+
+          hiveLink.href =
+            `https://peakd.com/@${comment.parent_author}/${comment.parent_permlink}` +
+            `#@${author}/${permlink}`;
+          hiveLink.hidden = false;
+        } catch (error) {
+          console.warn("Daily Empire Report Hive link could not be built:", error);
+          hiveLink.hidden = true;
+        }
+      }
       function renderDailyEmpireReport(report) {
         dailyEmpireReportState.report = report;
         const dateEl = document.getElementById("daily-empire-report-date");
@@ -1765,13 +1789,15 @@ let seasonHistoryIndex = 0;
           image.hidden = false;
         }
         if (placeholder) placeholder.hidden = true;
-        if (report.claim?.hive_author && report.claim?.hive_permlink) {
+                if (report.claim?.hive_author && report.claim?.hive_permlink) {
           if (publish) publish.disabled = true;
-          if (hiveLink) {
-            hiveLink.href = `https://peakd.com/@${report.claim.hive_author}/${report.claim.hive_permlink}`;
-            hiveLink.hidden = false;
-          }
-          setDailyEmpireReportStatus("Already published and credited: 5 EMP.");
+          void showDailyEmpireReportHiveLink(
+            report.claim.hive_author,
+            report.claim.hive_permlink,
+          );
+          setDailyEmpireReportStatus(
+            "Already published and credited: 5 EMP + 1 AP.",
+          );
         } else if (publish) {
           publish.disabled = false;
           setDailyEmpireReportStatus("Ready to publish from your Hive account.");
@@ -1906,13 +1932,10 @@ function requestHiveComment(username, title, body, parent) {
             loadDashboardActivityWheelStrip(),
           ]);
 
-          const hiveLink = document.getElementById(
-            "daily-empire-report-hive-link",
+                    await showDailyEmpireReportHiveLink(
+            verified.author,
+            verified.permlink,
           );
-          if (hiveLink) {
-            hiveLink.href = `https://peakd.com/@${verified.author}/${verified.permlink}`;
-            hiveLink.hidden = false;
-          }
                 } catch (error) {
           setDailyEmpireReportStatus(
             error.message ||
