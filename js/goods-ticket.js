@@ -712,7 +712,7 @@ function renderTicketRecipe() {
         ? inventoryData.items
         : [];
 
-      ticketEmpBalance = Number(empData.emp_balance || 0);
+      ticketEmpBalance = Number(ticketStateData.emp_balance || 0);
       const ownedCountEl = document.getElementById("ticket-owned-count");
 
       if (ownedCountEl) {
