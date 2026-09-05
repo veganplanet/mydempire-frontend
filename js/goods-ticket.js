@@ -704,7 +704,7 @@ function renderTicketRecipe() {
         );
       }
 
-      if (!empResponse.ok || !empData.success) {
+      if (!empResponse.ok) {
         throw new Error(empData.error || "Failed to load EMP balance.");
       }
 
