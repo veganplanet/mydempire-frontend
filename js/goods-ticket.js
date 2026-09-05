@@ -680,7 +680,7 @@ function renderTicketRecipe() {
           ),
 
           fetch(
-            `${TICKET_API_BASE}/player/${encodeURIComponent(actor)}/emp-balance`,
+            `${TICKET_API_BASE}/player/${encodeURIComponent(actor)}/empire-overview`,
           ),
           fetch(
             `${TICKET_API_BASE}/goods/${encodeURIComponent(
