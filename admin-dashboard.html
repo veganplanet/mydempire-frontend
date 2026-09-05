@@ -3978,63 +3978,160 @@ async function loadDailyEmpireReportUsage() {
       async function loadReferrals() {
         const statusEl = document.getElementById("referrals-status");
         const listEl = document.getElementById("referrals-list");
+        const escapeReferralText = (value) =>
+          String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+        const formatReferralDate = (value) => {
+          const date = new Date(value);
+          return value && !Number.isNaN(date.getTime())
+            ? date.toLocaleString()
+            : "Unknown";
+        };
 
         try {
-          statusEl.textContent = "Loading referrals...";
+          statusEl.textContent = "Loading new players and referrals...";
 
           const res = await fetch(`${API_BASE}/admin/referrals`, {
-            headers: {
-              "x-admin-key": ADMIN_KEY,
-            },
+            headers: { "x-admin-key": ADMIN_KEY },
           });
-
           const data = await res.json();
 
           if (!data.success) {
-            throw new Error(data.error || "Failed to load referrals.");
+            throw new Error(
+              data.error || "Failed to load new players and referrals.",
+            );
           }
 
-          if (!data.referrals.length) {
-            listEl.innerHTML = `<div class="assets-empty">No referrals found yet.</div>`;
-            statusEl.textContent = "No referrals found.";
+          const newPlayers = Array.isArray(data.newPlayers)
+            ? data.newPlayers
+            : [];
+          const referrals = Array.isArray(data.referrals)
+            ? data.referrals
+            : [];
+
+          if (!newPlayers.length && !referrals.length) {
+            listEl.innerHTML =
+              '<div class="assets-empty">No new players or referrals found yet.</div>';
+            statusEl.textContent = "No new players or referrals found.";
             return;
           }
 
-          listEl.innerHTML = data.referrals
-            .map((r) => {
-              const ready = Number(r.packs_bought || 0) >= 10 && !r.reward_paid;
+          const newPlayerRows = newPlayers.length
+            ? newPlayers
+                .map((player) => {
+                  const username = escapeReferralText(player.username);
+                  const referrer = player.referrer_username
+                    ? escapeReferralText(player.referrer_username)
+                    : "";
+                  const factoryBuilt = Number(player.factory_count || 0) > 0;
+                  const builderRewarded = Boolean(player.builder_rewarded_at);
 
-              return `
-          <div class="assets-item">
-            <div>
-              <strong>${r.referrer_username}</strong>
-              → ${r.referred_username}
-              <br>
-              <small>
-                Packs: ${r.packs_bought}/10 |
-                Status: ${r.status} |
-                Reward paid: ${r.reward_paid ? "Yes" : "No"}
-              </small>
+                  let milestone;
+                  if (!referrer) {
+                    milestone = factoryBuilt
+                      ? "🏭 First factory built"
+                      : "⏳ Waiting for first factory";
+                  } else if (builderRewarded) {
+                    milestone = `✅ ${Number(
+                      player.builder_emp_reward || 50,
+                    )} EMP + ${Number(
+                      player.builder_ap_reward || 10,
+                    )} AP awarded to @${referrer}`;
+                  } else if (factoryBuilt) {
+                    milestone =
+                      "⚠️ First factory built; referral reward not recorded";
+                  } else {
+                    milestone = "⏳ Waiting for first factory";
+                  }
+
+                  return `
+                    <div class="assets-item">
+                      <div>
+                        <strong>🆕 @${username}</strong>
+                        <br>
+                        <small>
+                          Joined: ${formatReferralDate(player.joined_at)} |
+                          Source: ${referrer ? `Referred by @${referrer}` : "Direct join"} |
+                          Starter: ${escapeReferralText(player.blueprint_tier || "-")} blueprint +
+                          ${Number(player.starter_emp || 0)} EMP
+                        </small>
+                        <br>
+                        <small>
+                          ${milestone}
+                          ${factoryBuilt ? ` | Factories: ${Number(player.factory_count)}` : ""}
+                        </small>
+                      </div>
+                    </div>
+                  `;
+                })
+                .join("")
+            : '<div class="assets-empty">No genuine new players found yet.</div>';
+
+          const referralRows = referrals.length
+            ? referrals
+                .map((r) => {
+                  const ready =
+                    Number(r.packs_bought || 0) >= 10 && !r.reward_paid;
+                  const referrer = escapeReferralText(r.referrer_username);
+                  const referred = escapeReferralText(r.referred_username);
+                  const factoryState = r.builder_rewarded_at
+                    ? `First factory reward: ${Number(
+                        r.builder_emp_reward || 50,
+                      )} EMP + ${Number(r.builder_ap_reward || 10)} AP paid`
+                    : Number(r.factory_count || 0) > 0
+                      ? "First factory built"
+                      : "First factory pending";
+
+                  return `
+                    <div class="assets-item">
+                      <div>
+                        <strong>@${referrer}</strong>
+                        → @${referred}
+                        <br>
+                        <small>
+                          ${factoryState} |
+                          Packs: ${Number(r.packs_bought || 0)}/10 |
+                          500 EMP reward: ${r.reward_paid ? "Paid" : "Pending"}
+                        </small>
+                      </div>
+                      <div>
+                        ${
+                          ready
+                            ? `<button class="primary" onclick="approveReferral(${Number(
+                                r.id,
+                              )})">Approve 500 EMP</button>`
+                            : r.reward_paid
+                              ? "✅ Paid"
+                              : "⏳ Pending"
+                        }
+                      </div>
+                    </div>
+                  `;
+                })
+                .join("")
+            : '<div class="assets-empty">No referrals found yet.</div>';
+
+          listEl.innerHTML = `
+            <div class="assets-section-title" style="margin-top: 2px">
+              🆕 New Player Notifications
             </div>
+            <div class="assets-list">${newPlayerRows}</div>
+            <div class="assets-section-title">
+              👥 Referral Milestones
+            </div>
+            <div class="assets-list">${referralRows}</div>
+          `;
 
-            <div>
-  ${
-    ready
-      ? `<button class="primary" onclick="approveReferral(${r.id})">
-           Approve 500 EMP
-         </button>`
-      : "⏳ Pending"
-  }
-</div>
-          </div>
-        `;
-            })
-            .join("");
-
-          statusEl.textContent = `Loaded ${data.referrals.length} referral(s).`;
+          statusEl.textContent =
+            `${newPlayers.length} new player(s) • ${referrals.length} referral(s)`;
         } catch (err) {
           console.error("Load referrals error:", err);
-          statusEl.textContent = err.message || "Failed to load referrals.";
+          statusEl.textContent =
+            err.message || "Failed to load new players and referrals.";
         }
       }
 
