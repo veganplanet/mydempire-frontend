@@ -3582,6 +3582,9 @@ setText(
             const factories = Array.isArray(land.factories)
               ? land.factories
               : [];
+            const specialIndustries = Array.isArray(land.special_industries)
+              ? land.special_industries
+              : [];
 
             if (tier === "L1") {
               l1++;
@@ -3594,7 +3597,7 @@ setText(
               totalSlots += 3;
             }
 
-            usedSlots += factories.length;
+            usedSlots += factories.length + specialIndustries.length;
           }
 
           const totalLands =
@@ -7296,12 +7299,19 @@ setTimeout(setupAppbarDropdown, 1000);
           const factories = Array.isArray(land.factories)
             ? land.factories.length
             : 0;
+          const specialIndustries = Array.isArray(land.special_industries)
+            ? land.special_industries.length
+            : 0;
 
           let maxSlots = 1;
           if (tier === "L2" || tier === "2") maxSlots = 2;
           else if (tier === "L3" || tier === "3") maxSlots = 3;
 
-          const needsAction = factories < maxSlots;
+          const occupiedSlots = Math.min(
+            factories + specialIndustries,
+            maxSlots,
+          );
+          const needsAction = occupiedSlots < maxSlots;
 
           const tile = document.createElement("div");
           tile.className =
@@ -7323,10 +7333,10 @@ setTimeout(setupAppbarDropdown, 1000);
           tile.innerHTML = `
   ${needsAction ? `<span class="empire-tile-alert">!</span>` : ""}
   <div class="empire-tile-label">${tierLabel}</div>
-  <small class="empire-tile-meta">🏭 ${factories === maxSlots ? "Full" : `${factories}/${maxSlots}`}</small>
+  <small class="empire-tile-meta">🏭 ${occupiedSlots === maxSlots ? "Full" : `${occupiedSlots}/${maxSlots}`}</small>
 `;
 
-          tile.title = `${tierLabel} • Factories: ${factories}/${maxSlots}`;
+          tile.title = `${tierLabel} • Occupied slots: ${occupiedSlots}/${maxSlots}`;
 
           grid.appendChild(tile);
         }
