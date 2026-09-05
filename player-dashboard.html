@@ -1864,12 +1864,26 @@ function requestHiveComment(username, title, body, parent) {
   });
 }
       async function verifyDailyEmpireComment(username, permlink, marker) {
-        for (let attempt = 0; attempt < 6; attempt += 1) {
-          const comment = await hiveRpc("condenser_api.get_content", [username, permlink]);
-          if (String(comment?.author).toLowerCase() === username.toLowerCase() && String(comment?.parent_author).toLowerCase() === "peak.snaps" && String(comment?.body || "").includes(marker)) return comment;
+        for (let attempt = 0; attempt < 8; attempt += 1) {
+          const result = await hiveRpc("database_api.find_comments", {
+            comments: [[username, permlink]],
+          });
+          const comment = result?.comments?.[0];
+
+          if (
+            String(comment?.author).toLowerCase() === username.toLowerCase() &&
+            String(comment?.parent_author).toLowerCase() === "peak.snaps" &&
+            String(comment?.body || "").includes(marker)
+          ) {
+            return comment;
+          }
+
           await new Promise((resolve) => setTimeout(resolve, 1500));
         }
-        throw new Error("Hive publication could not be verified yet. No EMP or AP was credited.");
+
+        throw new Error(
+          "Hive publication could not be verified yet. No EMP or AP was credited.",
+        );
       }
 
       async function publishDailyEmpireReport() {
