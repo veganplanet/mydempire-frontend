@@ -6,6 +6,12 @@
 
 (function () {
   const TICKET_EMP_COST = 50;
+  const TICKET_R1_PER_INDUSTRY = 2;
+  const TICKET_R2_COUNT = 4;
+  const TICKET_R3_COUNT = 4;
+  const TICKET_R4_COUNT = 2;
+  const TICKET_R5_COUNT = 1;
+  const TICKET_TOTAL_GOODS = 21;
 
   const TICKET_INDUSTRIES = [
     "FOOD",
@@ -88,6 +94,10 @@ function getTicketGoodsRank(good) {
     return "R4";
   }
 
+  if (level === "LUXURY" || level === "R5") {
+    return "R5";
+  }
+
   return "";
 }
 
@@ -105,6 +115,10 @@ function isTicketR3(good) {
 
 function isTicketR4(good) {
   return getTicketGoodsRank(good) === "R4";
+}
+
+function isTicketR5(good) {
+  return getTicketGoodsRank(good) === "R5";
 }
 
 function isAvailableTicketGood(good) {
@@ -233,96 +247,95 @@ function selectTicketGoodsAcrossIndustries({
 
 function buildTicketAutoSelection() {
   const usedIds = new Set();
-
   const selectedR1ByIndustry = {};
 
-  // R1 3★ — one from every industry
+  // R1 3★ — two from every industry
   for (const industry of TICKET_INDUSTRIES) {
     const candidates = ticketInventory
       .filter(
         (good) =>
           isAvailableTicketGood(good) &&
           isTicketR1(good) &&
-          normalizeTicketValue(good.industry) ===
-            industry &&
+          normalizeTicketValue(good.industry) === industry &&
           getTicketStars(good.quality) === 3,
       )
       .sort(sortTicketGoodsByValue);
 
-    const selected = findUnusedGood(
-      candidates,
-      usedIds,
-    );
+    const selected = [];
 
-    selectedR1ByIndustry[industry] =
-      selected;
+    for (const good of candidates) {
+      if (selected.length >= TICKET_R1_PER_INDUSTRY) break;
+      if (usedIds.has(Number(good.id))) continue;
 
-    if (selected) {
-      usedIds.add(Number(selected.id));
+      selected.push(good);
+      usedIds.add(Number(good.id));
     }
+
+    selectedR1ByIndustry[industry] = selected;
   }
 
-  // R2 2★+ — three different industries
-  const selectedR2Goods =
-    selectTicketGoodsAcrossIndustries({
-      rank: "R2",
-      minimumStars: 2,
-      requiredCount: 3,
-      usedIds,
-    });
+  // R2 2★+ — four different industries
+  const selectedR2Goods = selectTicketGoodsAcrossIndustries({
+    rank: "R2",
+    minimumStars: 2,
+    requiredCount: TICKET_R2_COUNT,
+    usedIds,
+  });
 
-  // R3 2★+ — three different industries
-  const selectedR3Goods =
-    selectTicketGoodsAcrossIndustries({
-      rank: "R3",
-      minimumStars: 2,
-      requiredCount: 3,
-      usedIds,
-    });
+  // R3 2★+ — four different industries
+  const selectedR3Goods = selectTicketGoodsAcrossIndustries({
+    rank: "R3",
+    minimumStars: 2,
+    requiredCount: TICKET_R3_COUNT,
+    usedIds,
+  });
 
-  // R4 1★+ — any industry
-  const r4Candidates = ticketInventory
+  // R4 1★+ — two different industries
+  const selectedR4Goods = selectTicketGoodsAcrossIndustries({
+    rank: "R4",
+    minimumStars: 1,
+    requiredCount: TICKET_R4_COUNT,
+    usedIds,
+  });
+
+  // R5 1★+ — any industry
+  const r5Candidates = ticketInventory
     .filter(
       (good) =>
         isAvailableTicketGood(good) &&
-        isTicketR4(good) &&
+        isTicketR5(good) &&
         getTicketStars(good.quality) >= 1 &&
         !usedIds.has(Number(good.id)),
     )
     .sort(sortTicketGoodsProtectQuality);
 
-  const selectedR4Good = findUnusedGood(
-    r4Candidates,
-    usedIds,
-  );
+  const selectedR5Good = findUnusedGood(r5Candidates, usedIds);
 
-  if (selectedR4Good) {
-    usedIds.add(Number(selectedR4Good.id));
+  if (selectedR5Good) {
+    usedIds.add(Number(selectedR5Good.id));
   }
 
-  const selectedR1Goods =
-    TICKET_INDUSTRIES
-      .map(
-        (industry) =>
-          selectedR1ByIndustry[industry],
-      )
-      .filter(Boolean);
+  const selectedR1Goods = TICKET_INDUSTRIES.flatMap(
+    (industry) => selectedR1ByIndustry[industry] || [],
+  );
 
   const selectedGoods = [
     ...selectedR1Goods,
     ...selectedR2Goods,
     ...selectedR3Goods,
+    ...selectedR4Goods,
   ];
 
-  if (selectedR4Good) {
-    selectedGoods.push(selectedR4Good);
+  if (selectedR5Good) {
+    selectedGoods.push(selectedR5Good);
   }
 
   return {
     selectedR1ByIndustry,
     selectedR2Goods,
     selectedR3Goods,
-    selectedR4Good,
+    selectedR4Goods,
+    selectedR5Good,
     selectedGoods,
   };
 }
@@ -393,13 +406,8 @@ function updateTicketGroupCell(
   }
 }
 
-function renderTicketRecipe() {
-  const result =
-    buildTicketAutoSelection();
 
-  ticketSelectedGoods =
-    result.selectedGoods;
-
+function ensureTicketV3RecipeUI() {
   for (const industry of TICKET_INDUSTRIES) {
     const row = document.querySelector(
       `[data-ticket-r1-industry="${industry}"]`,
@@ -407,150 +415,156 @@ function renderTicketRecipe() {
 
     if (!row) continue;
 
-    const progressCell =
-      row.querySelector(
-        "[data-ticket-progress]",
-      );
+    const cells = row.querySelectorAll("td");
+    if (cells[1]) cells[1].textContent = "Two required";
 
-    updateTicketRecipeCell(
-      progressCell,
-      result.selectedR1ByIndustry[
-        industry
-      ],
+    const progress = row.querySelector("[data-ticket-progress]");
+    if (progress && !progress.classList.contains("ticket-slot-complete")) {
+      progress.textContent = "❌ 0 / 2";
+    }
+  }
+
+  const r2Cell = document.getElementById("ticket-r2-count");
+  if (r2Cell) {
+    const row = r2Cell.closest("tr");
+    const cells = row?.querySelectorAll("td") || [];
+    if (cells[1]) cells[1].textContent = "4 different industries";
+    r2Cell.textContent = "❌ 0 / 4";
+  }
+
+  const r3Cell = document.getElementById("ticket-r3-count");
+  if (r3Cell) {
+    const row = r3Cell.closest("tr");
+    const cells = row?.querySelectorAll("td") || [];
+    if (cells[1]) cells[1].textContent = "4 different industries";
+    r3Cell.textContent = "❌ 0 / 4";
+  }
+
+  const r4Cell = document.getElementById("ticket-r4-count");
+  if (r4Cell) {
+    const row = r4Cell.closest("tr");
+    const cells = row?.querySelectorAll("td") || [];
+    if (cells[0]) cells[0].textContent = "👑 R4 Goods 1★+";
+    if (cells[1]) cells[1].textContent = "2 different industries";
+    r4Cell.textContent = "❌ 0 / 2";
+
+    if (!document.getElementById("ticket-r5-count") && row?.parentElement) {
+      const r5Row = document.createElement("tr");
+      r5Row.innerHTML = `
+        <td>💎 R5 Good 1★+</td>
+        <td>Any industry</td>
+        <td id="ticket-r5-count" class="ticket-slot-pending">❌ 0 / 1</td>
+      `;
+      row.parentElement.insertBefore(r5Row, row.nextSibling);
+    }
+  }
+
+  const selectedCountEl = document.getElementById(
+    "ticket-selected-goods-count",
+  );
+  if (selectedCountEl) selectedCountEl.textContent = "0 / 21";
+
+  const recipeCard = document.querySelector(".ticket-recipe-head p");
+  if (recipeCard) {
+    recipeCard.textContent =
+      "Collect two R1 3★ Goods from every industry, four R2 and four R3 Goods from different industries, two R4 Goods from different industries, and one R5 Good.";
+  }
+}
+
+function renderTicketRecipe() {
+  const result = buildTicketAutoSelection();
+  ticketSelectedGoods = result.selectedGoods;
+
+  for (const industry of TICKET_INDUSTRIES) {
+    const row = document.querySelector(
+      `[data-ticket-r1-industry="${industry}"]`,
+    );
+    if (!row) continue;
+
+    updateTicketGroupCell(
+      row.querySelector("[data-ticket-progress]"),
+      result.selectedR1ByIndustry[industry],
+      TICKET_R1_PER_INDUSTRY,
     );
   }
 
   updateTicketGroupCell(
-    document.getElementById(
-      "ticket-r2-count",
-    ),
+    document.getElementById("ticket-r2-count"),
     result.selectedR2Goods,
-    3,
+    TICKET_R2_COUNT,
   );
 
   updateTicketGroupCell(
-    document.getElementById(
-      "ticket-r3-count",
-    ),
+    document.getElementById("ticket-r3-count"),
     result.selectedR3Goods,
-    3,
+    TICKET_R3_COUNT,
   );
 
   updateTicketGroupCell(
-    document.getElementById(
-      "ticket-r4-count",
-    ),
-    result.selectedR4Good
-      ? [result.selectedR4Good]
-      : [],
-    1,
+    document.getElementById("ticket-r4-count"),
+    result.selectedR4Goods,
+    TICKET_R4_COUNT,
   );
 
-  const missingR1Industries =
-    TICKET_INDUSTRIES.filter(
-      (industry) =>
-        !result.selectedR1ByIndustry[
-          industry
-        ],
-    );
+  updateTicketGroupCell(
+    document.getElementById("ticket-r5-count"),
+    result.selectedR5Good ? [result.selectedR5Good] : [],
+    TICKET_R5_COUNT,
+  );
 
-  const selectedCount =
-    ticketSelectedGoods.length;
+  const missingR1Industries = TICKET_INDUSTRIES.filter(
+    (industry) =>
+      (result.selectedR1ByIndustry[industry] || []).length <
+      TICKET_R1_PER_INDUSTRY,
+  );
 
-  const selectedPV =
-    ticketSelectedGoods.reduce(
-      (total, good) =>
-        total +
-        Number(good?.final_value || 0),
-      0,
-    );
+  const selectedCount = ticketSelectedGoods.length;
+  const selectedPV = ticketSelectedGoods.reduce(
+    (total, good) => total + Number(good?.final_value || 0),
+    0,
+  );
 
-  const hasAllR1 =
-    missingR1Industries.length === 0;
+  const hasAllR1 = missingR1Industries.length === 0;
+  const hasAllR2 = result.selectedR2Goods.length === TICKET_R2_COUNT;
+  const hasAllR3 = result.selectedR3Goods.length === TICKET_R3_COUNT;
+  const hasAllR4 = result.selectedR4Goods.length === TICKET_R4_COUNT;
+  const hasR5 = Boolean(result.selectedR5Good);
+  const hasAllGoods = selectedCount === TICKET_TOTAL_GOODS;
+  const hasEnoughEmp = ticketEmpBalance >= TICKET_EMP_COST;
 
-  const hasAllR2 =
-    result.selectedR2Goods.length === 3;
-
-  const hasAllR3 =
-    result.selectedR3Goods.length === 3;
-
-  const hasR4 =
-    Boolean(result.selectedR4Good);
-
-  const hasAllGoods =
-    selectedCount === 12;
-
-  const hasEnoughEmp =
-    ticketEmpBalance >=
-    TICKET_EMP_COST;
-
-  const empEl =
-    document.getElementById(
-      "ticket-emp-requirement",
-    );
-
-  const selectedCountEl =
-    document.getElementById(
-      "ticket-selected-goods-count",
-    );
-
-  const selectedPvEl =
-    document.getElementById(
-      "ticket-selected-pv",
-    );
-
-  const statusEl =
-    document.getElementById(
-      "ticket-mint-status",
-    );
-
-  const mintBtn =
-    document.getElementById(
-      "ticket-mint-btn",
-    );
+  const empEl = document.getElementById("ticket-emp-requirement");
+  const selectedCountEl = document.getElementById("ticket-selected-goods-count");
+  const selectedPvEl = document.getElementById("ticket-selected-pv");
+  const statusEl = document.getElementById("ticket-mint-status");
+  const mintBtn = document.getElementById("ticket-mint-btn");
 
   if (empEl) {
     empEl.textContent =
-      `${ticketEmpBalance.toLocaleString(
-        undefined,
-        {
-          maximumFractionDigits: 2,
-        },
-      )} / ${TICKET_EMP_COST} EMP`;
-
-    empEl.style.color = hasEnoughEmp
-      ? "#15803d"
-      : "#b45309";
+      `${ticketEmpBalance.toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })} / ${TICKET_EMP_COST} EMP`;
+    empEl.style.color = hasEnoughEmp ? "#15803d" : "#b45309";
   }
 
   if (selectedCountEl) {
-    selectedCountEl.textContent =
-      `${selectedCount} / 12`;
-
-    selectedCountEl.style.color =
-      hasAllGoods
-        ? "#15803d"
-        : "#b45309";
+    selectedCountEl.textContent = `${selectedCount} / ${TICKET_TOTAL_GOODS}`;
+    selectedCountEl.style.color = hasAllGoods ? "#15803d" : "#b45309";
   }
 
   if (selectedPvEl) {
     selectedPvEl.textContent =
-      `${selectedPV.toLocaleString(
-        undefined,
-        {
-          maximumFractionDigits: 2,
-        },
-      )} PV`;
-
-    selectedPvEl.style.color =
-      "#7e22ce";
+      `${selectedPV.toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+      })} PV`;
+    selectedPvEl.style.color = "#7e22ce";
   }
 
   const recipeReady =
     hasAllR1 &&
     hasAllR2 &&
     hasAllR3 &&
-    hasR4 &&
+    hasAllR4 &&
+    hasR5 &&
     hasAllGoods &&
     hasEnoughEmp;
 
@@ -558,79 +572,52 @@ function renderTicketRecipe() {
     if (recipeReady) {
       statusEl.textContent =
         "✅ Imperial Ticket recipe is ready. Review the selected Goods and mint your Ticket.";
-
-      statusEl.style.color =
-        "#166534";
-
-      statusEl.style.background =
-        "#f0fdf4";
-
-      statusEl.style.borderColor =
-        "#86efac";
+      statusEl.style.color = "#166534";
+      statusEl.style.background = "#f0fdf4";
+      statusEl.style.borderColor = "#86efac";
     } else {
       const missing = [];
 
       if (!hasAllR1) {
         missing.push(
-          `R1 3★: ${missingR1Industries.join(
-            ", ",
-          )}`,
+          `R1 3★: ${missingR1Industries.join(", ")}`,
         );
       }
-
       if (!hasAllR2) {
         missing.push(
-          `${3 - result.selectedR2Goods.length} R2 2★+ Good(s) from different industries`,
+          `${TICKET_R2_COUNT - result.selectedR2Goods.length} R2 2★+ Good(s) from different industries`,
         );
       }
-
       if (!hasAllR3) {
         missing.push(
-          `${3 - result.selectedR3Goods.length} R3 2★+ Good(s) from different industries`,
+          `${TICKET_R3_COUNT - result.selectedR3Goods.length} R3 2★+ Good(s) from different industries`,
         );
       }
-
-      if (!hasR4) {
+      if (!hasAllR4) {
         missing.push(
-          "1 R4 1★+ Good",
+          `${TICKET_R4_COUNT - result.selectedR4Goods.length} R4 1★+ Good(s) from different industries`,
         );
       }
-
+      if (!hasR5) {
+        missing.push("1 R5 1★+ Good");
+      }
       if (!hasEnoughEmp) {
         missing.push(
-          `${(
-            TICKET_EMP_COST -
-            ticketEmpBalance
-          ).toLocaleString(
-            undefined,
-            {
-              maximumFractionDigits: 2,
-            },
-          )} EMP`,
+          `${(TICKET_EMP_COST - ticketEmpBalance).toLocaleString(undefined, {
+            maximumFractionDigits: 2,
+          })} EMP`,
         );
       }
 
-      statusEl.textContent =
-        `Still required: ${missing.join(
-          " • ",
-        )}`;
-
-      statusEl.style.color =
-        "#92400e";
-
-      statusEl.style.background =
-        "#fffbeb";
-
-      statusEl.style.borderColor =
-        "#fcd34d";
+      statusEl.textContent = `Still required: ${missing.join(" • ")}`;
+      statusEl.style.color = "#92400e";
+      statusEl.style.background = "#fffbeb";
+      statusEl.style.borderColor = "#fcd34d";
     }
   }
 
   if (mintBtn) {
-    mintBtn.disabled =
-      !recipeReady ||
-      ticketMintInProgress;
-
+    mintBtn.disabled = !recipeReady || ticketMintInProgress;
     mintBtn.title = recipeReady
       ? "Mint one Imperial Ticket."
       : "Complete all Ticket requirements first.";
@@ -753,7 +740,7 @@ function renderTicketRecipe() {
       return;
     }
 
-    if (ticketSelectedGoods.length !== 12) {
+    if (ticketSelectedGoods.length !== TICKET_TOTAL_GOODS) {
       alert("The Imperial Ticket recipe is not complete yet.");
       return;
     }
@@ -768,7 +755,7 @@ function renderTicketRecipe() {
         "Mint 1 Imperial Ticket?",
         "",
         "This action will permanently burn:",
-        "• 12 selected Goods",
+        `• ${TICKET_TOTAL_GOODS} selected Goods`,
         `• ${selectedPV.toLocaleString(undefined, {
           maximumFractionDigits: 2,
         })} total Product Value`,
@@ -832,7 +819,7 @@ function renderTicketRecipe() {
           "🎟️ Imperial Ticket minted successfully!",
           "",
           `Ticket NFT ID: #${data.ticket?.id || "--"}`,
-          `Goods burned: ${data.goods_burned || 12}`,
+          `Goods burned: ${data.goods_burned || TICKET_TOTAL_GOODS}`,
           `PV burned: ${data.total_product_value_burned || selectedPV}`,
           `EMP spent: ${data.emp_spent || 50}`,
         ].join("\n"),
@@ -865,6 +852,8 @@ function renderTicketRecipe() {
     }
   }
   function setupTicketMintFrontend() {
+    ensureTicketV3RecipeUI();
+
     const ticketTab = document.querySelector('[data-goods-tab="ticket"]');
     const mintBtn = document.getElementById("ticket-mint-btn");
     if (ticketTab) {
