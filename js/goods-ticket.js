@@ -554,7 +554,7 @@ function renderTicketRecipe() {
     "ticket-selected-goods-count",
   );
   const selectedPvEl = document.getElementById("ticket-selected-pv");
-  const empEl = document.getElementById("ticket-emp-balance");
+  const empEl = document.getElementById("ticket-emp-requirement");
   const mintBtn = document.getElementById("ticket-mint-btn");
   const statusEl = document.getElementById("ticket-mint-status");
 
