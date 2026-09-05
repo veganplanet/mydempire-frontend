@@ -67,8 +67,26 @@
   function getTicketStars(quality) {
     const normalized = normalizeTicketValue(quality);
 
-    if (normalized === "SUPERIOR") return 3;
-    if (normalized === "FINE") return 2;
+    if (
+      normalized === "SUPERIOR" ||
+      normalized === "3★" ||
+      normalized === "3*" ||
+      normalized === "3 STAR"
+    ) return 3;
+
+    if (
+      normalized === "FINE" ||
+      normalized === "2★" ||
+      normalized === "2*" ||
+      normalized === "2 STAR"
+    ) return 2;
+
+    if (
+      normalized === "STANDARD" ||
+      normalized === "1★" ||
+      normalized === "1*" ||
+      normalized === "1 STAR"
+    ) return 1;
 
     return 1;
   }
@@ -304,6 +322,7 @@ function buildTicketAutoSelection() {
       (good) =>
         isAvailableTicketGood(good) &&
         isTicketR5(good) &&
+        TICKET_INDUSTRIES.includes(normalizeTicketValue(good.industry)) &&
         getTicketStars(good.quality) >= 1 &&
         !usedIds.has(Number(good.id)),
     )
@@ -405,7 +424,6 @@ function updateTicketGroupCell(
     cell.removeAttribute("title");
   }
 }
-
 
 function ensureTicketV3RecipeUI() {
   for (const industry of TICKET_INDUSTRIES) {
@@ -532,31 +550,33 @@ function renderTicketRecipe() {
   const hasAllGoods = selectedCount === TICKET_TOTAL_GOODS;
   const hasEnoughEmp = ticketEmpBalance >= TICKET_EMP_COST;
 
-  const empEl = document.getElementById("ticket-emp-requirement");
-  const selectedCountEl = document.getElementById("ticket-selected-goods-count");
+  const selectedCountEl = document.getElementById(
+    "ticket-selected-goods-count",
+  );
   const selectedPvEl = document.getElementById("ticket-selected-pv");
-  const statusEl = document.getElementById("ticket-mint-status");
+  const empEl = document.getElementById("ticket-emp-balance");
   const mintBtn = document.getElementById("ticket-mint-btn");
-
-  if (empEl) {
-    empEl.textContent =
-      `${ticketEmpBalance.toLocaleString(undefined, {
-        maximumFractionDigits: 2,
-      })} / ${TICKET_EMP_COST} EMP`;
-    empEl.style.color = hasEnoughEmp ? "#15803d" : "#b45309";
-  }
+  const statusEl = document.getElementById("ticket-mint-status");
 
   if (selectedCountEl) {
     selectedCountEl.textContent = `${selectedCount} / ${TICKET_TOTAL_GOODS}`;
-    selectedCountEl.style.color = hasAllGoods ? "#15803d" : "#b45309";
   }
 
   if (selectedPvEl) {
-    selectedPvEl.textContent =
-      `${selectedPV.toLocaleString(undefined, {
-        maximumFractionDigits: 2,
-      })} PV`;
-    selectedPvEl.style.color = "#7e22ce";
+    selectedPvEl.textContent = selectedPV.toLocaleString(undefined, {
+      maximumFractionDigits: 2,
+    });
+  }
+
+  if (empEl) {
+    empEl.textContent = `${ticketEmpBalance.toLocaleString(undefined, {
+      maximumFractionDigits: 2,
+    })} / ${TICKET_EMP_COST} EMP`;
+
+    empEl.classList.remove("ticket-slot-pending", "ticket-slot-complete");
+    empEl.classList.add(
+      hasEnoughEmp ? "ticket-slot-complete" : "ticket-slot-pending",
+    );
   }
 
   const recipeReady =
@@ -630,8 +650,6 @@ function renderTicketRecipe() {
     const username = getTicketViewedUser();
     const actor = getTicketLoggedInUser();
 
-    
-
     const statusEl = document.getElementById("ticket-mint-status");
 
     if (!username || !actor) {
@@ -645,8 +663,6 @@ function renderTicketRecipe() {
 
     try {
       ticketLoading = true;
-
-    
 
       if (statusEl) {
         statusEl.textContent = "Checking available Goods and EMP balance...";
@@ -706,8 +722,6 @@ function renderTicketRecipe() {
       }
 
       renderTicketRecipe();
-
-     
     } catch (err) {
       console.error("Imperial Ticket data load failed:", err);
 
@@ -719,12 +733,11 @@ function renderTicketRecipe() {
         statusEl.style.background = "#fef2f2";
         statusEl.style.borderColor = "#fca5a5";
       }
-
-     
     } finally {
       ticketLoading = false;
     }
   }
+
   async function mintImperialTicket() {
     if (ticketMintInProgress) return;
 
@@ -732,7 +745,6 @@ function renderTicketRecipe() {
     const actor = getTicketLoggedInUser();
 
     const mintBtn = document.getElementById("ticket-mint-btn");
-
     const statusEl = document.getElementById("ticket-mint-status");
 
     if (!username || !actor || username !== actor) {
@@ -759,7 +771,7 @@ function renderTicketRecipe() {
         `• ${selectedPV.toLocaleString(undefined, {
           maximumFractionDigits: 2,
         })} total Product Value`,
-        "• 50 EMP",
+        `• ${TICKET_EMP_COST} EMP`,
         "",
         "The burned Goods cannot be recovered.",
       ].join("\n"),
@@ -821,7 +833,7 @@ function renderTicketRecipe() {
           `Ticket NFT ID: #${data.ticket?.id || "--"}`,
           `Goods burned: ${data.goods_burned || TICKET_TOTAL_GOODS}`,
           `PV burned: ${data.total_product_value_burned || selectedPV}`,
-          `EMP spent: ${data.emp_spent || 50}`,
+          `EMP spent: ${data.emp_spent || TICKET_EMP_COST}`,
         ].join("\n"),
       );
 
@@ -851,6 +863,7 @@ function renderTicketRecipe() {
       renderTicketRecipe();
     }
   }
+
   function setupTicketMintFrontend() {
     ensureTicketV3RecipeUI();
 
