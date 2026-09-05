@@ -1899,7 +1899,7 @@ function requestHiveComment(username, title, body, parent) {
           const report = dailyEmpireReportState.report;
           const parent = await getLatestSnapsContainer();
           const activityText = (report.activities || []).map((item) => `- ${item.activity_type}: ${item.description}`).join("\n") || "- No important activity recorded.";
-          const body = `## MydEmpire Daily Empire Report\n\n**UTC date:** ${report.report_date}\n\n${activityText}\n\n![Daily Empire Report](${dailyEmpireReportState.imageUrl})\n\n${report.marker}`;
+          const body = `## MydEmpire Daily Empire Report\n\n**UTC date:** ${report.report_date}\n\n${activityText}\n\n![Daily Empire Report](${dailyEmpireReportState.imageUrl})\n\n🎮 Play MydEmpire: https://www.mydempire.com\n\n#mydempire #hivegame #web3game #hive\n\n${report.marker}`;
           const published = await requestHiveComment(report.username, `Daily Empire Report — ${report.report_date}`, body, parent);
           setDailyEmpireReportStatus("Comment broadcast. Verifying it on Hive...");
           const verified = await verifyDailyEmpireComment(report.username, published.permlink, report.marker);
