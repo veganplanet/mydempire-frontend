@@ -66,7 +66,13 @@
   >
     🔥 Foundry <span style="color:red;font-weight:900;"></span>
   </button>
-
+<button
+  type="button"
+  class="subnav-btn"
+  onclick="switchHubTab('bank')"
+>
+  🏦 Imperial Bank
+</button>
   <button
     type="button"
     class="subnav-btn"
@@ -77,8 +83,21 @@
 </div>
       
 <!-- ========================================= -->
-<!-- 🎡 IMPERIAL ACTIVITY WHEEL — REAL HUB TAB -->
+<!-- 🏦 IMPERIAL BANK / TREASURY DRAW          -->
 <!-- ========================================= -->
+
+<section id="bank-panel" class="hub-panel" style="display: none;">
+  <div id="imperial-bank-root">
+    <div class="section-header">
+      <h2>🏦 Imperial Bank</h2>
+      <small>Deposit EMP and participate in the 14-day Treasury Draw.</small>
+    </div>
+
+    <div id="imperial-bank-content">
+      <p>Loading Imperial Bank...</p>
+    </div>
+  </div>
+</section>
 
 <!-- ========================================= -->
 <!-- 🎡 IMPERIAL ACTIVITY WHEEL — HUB TAB -->
@@ -2525,7 +2544,8 @@ function switchHubTab(tab) {
   management: document.getElementById("management-panel"),
   rats: document.getElementById("rats-panel"),
   foundry: document.getElementById("foundry-panel"),
-  culture: document.getElementById("culture-panel"),
+bank: document.getElementById("bank-panel"),
+culture: document.getElementById("culture-panel"),
 };
 
   document.querySelectorAll(".subnav-btn").forEach((btn) => {
@@ -2591,10 +2611,14 @@ if (
   }
 
   if (tab === "foundry" && typeof loadFoundryPreview === "function") {
-    loadFoundryPreview();
-  }
+  loadFoundryPreview();
+}
 
-  if (tab === "culture") {
+if (tab === "bank" && typeof loadImperialBankState === "function") {
+  loadImperialBankState();
+}
+
+if (tab === "culture") {
     if (typeof loadEmpireCultureHubList === "function") {
       loadEmpireCultureHubList();
     }
@@ -6056,6 +6080,7 @@ if (initialTab === "management") {
     <script src="js/navbar.js"></script>
 <script src="js/notifications.js"></script>
 <script src="js/activity-wheel.js?v=20260827-activity-league1"></script>
+<script src="js/imperial-bank.js?v=20260910-bank1"></script>
 
 <style>
   .activity-mode-tabs{display:flex;gap:10px;margin:0 0 16px;padding:6px;background:#eef2ff;border:1px solid #dbeafe;border-radius:16px;width:max-content;max-width:100%;}
