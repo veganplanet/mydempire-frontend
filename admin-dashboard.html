@@ -529,6 +529,13 @@
         </button>
         <button
           class="admin-tab-btn"
+          data-admin-tab="imperial-bank"
+          onclick="switchAdminTab('imperial-bank'); loadImperialBankAdmin()"
+        >
+          🏦 Imperial Bank
+        </button>
+        <button
+          class="admin-tab-btn"
           data-admin-tab="system"
           onclick="switchAdminTab('system')"
         >
@@ -2853,6 +2860,69 @@ forkyishere,529"
           </div>
         </div>
       </div>
+      <div class="admin-tab-panel" data-admin-panel="imperial-bank">
+        <div class="section">
+          <h2>🏦 Imperial Bank Control</h2>
+          <p>
+            Pause blocks new deposits and Treasury Draws. Players can still
+            withdraw banked EMP. The Render environment switch remains the
+            master safety control.
+          </p>
+          <div class="row">
+            <button id="imperial-bank-admin-refresh" type="button" class="primary" onclick="loadImperialBankAdmin(true)">
+              Refresh
+            </button>
+            <button id="imperial-bank-admin-enable" type="button" onclick="setImperialBankAdminEnabled(true)">
+              Enable Bank
+            </button>
+            <button id="imperial-bank-admin-pause" type="button" class="danger" onclick="setImperialBankAdminEnabled(false)">
+              Pause Bank
+            </button>
+          </div>
+          <div id="imperial-bank-admin-status" class="status">Open this tab to load Imperial Bank data.</div>
+          <div class="metrics">
+            <div class="card"><div class="label">Operational Status</div><div class="value" id="ib-admin-operational">--</div><div class="small" id="ib-admin-master">Master: --</div></div>
+            <div class="card"><div class="label">Total Banked EMP</div><div class="value" id="ib-admin-banked">--</div><div class="small" id="ib-admin-funded">Funded accounts: --</div></div>
+            <div class="card"><div class="label">Active Cycles</div><div class="value" id="ib-admin-active">--</div><div class="small" id="ib-admin-total-cycles">Total cycles: --</div></div>
+            <div class="card"><div class="label">Treasury Draws</div><div class="value" id="ib-admin-draws">--</div><div class="small" id="ib-admin-emp-rewards">EMP rewards: --</div></div>
+            <div class="card"><div class="label">Withdrawn Cycles</div><div class="value" id="ib-admin-withdrawn">--</div><div class="small" id="ib-admin-forfeited">Forfeited draws: --</div></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Player Search</h2>
+          <div class="row">
+            <input id="imperial-bank-admin-username" type="text" placeholder="Hive username (optional)" />
+            <button type="button" class="primary" onclick="loadImperialBankAdmin(true)">Search</button>
+            <button type="button" onclick="clearImperialBankAdminSearch()">Clear</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Treasury Cycles</h2>
+          <div class="all-players-wrap"><div class="all-players-box"><table class="all-players-table">
+            <thead><tr><th>Player</th><th>Status</th><th>Deposit</th><th>Banked</th><th>Draws</th><th>Forfeited</th><th>Started</th><th>Ends</th></tr></thead>
+            <tbody id="imperial-bank-admin-cycles"><tr><td colspan="8">No data loaded.</td></tr></tbody>
+          </table></div></div>
+        </div>
+
+        <div class="section">
+          <h2>Recent Bank Movements</h2>
+          <div class="all-players-wrap"><div class="all-players-box"><table class="all-players-table">
+            <thead><tr><th>Date</th><th>Player</th><th>Movement</th><th>Amount</th><th>Bank Balance</th><th>Note</th></tr></thead>
+            <tbody id="imperial-bank-admin-movements"><tr><td colspan="6">No data loaded.</td></tr></tbody>
+          </table></div></div>
+        </div>
+
+        <div class="section">
+          <h2>Recent Treasury Draws</h2>
+          <div class="all-players-wrap"><div class="all-players-box"><table class="all-players-table">
+            <thead><tr><th>Date</th><th>Player</th><th>Draw</th><th>Reward</th><th>UTC Day</th></tr></thead>
+            <tbody id="imperial-bank-admin-draws-table"><tr><td colspan="5">No data loaded.</td></tr></tbody>
+          </table></div></div>
+        </div>
+      </div>
+
       <div class="admin-tab-panel" data-admin-panel="system">
         <div class="section">
           <h2>🛠 System Controls</h2>
@@ -10589,6 +10659,174 @@ Players snapshotted: ${data.players_snapshotted}
 
         loadAdminTicketRedemptionValue();
       });
+
+      let imperialBankAdminLoaded = false;
+
+      function imperialBankAdminEscape(value) {
+        return String(value == null ? "" : value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function imperialBankAdminNumber(value, digits = 2) {
+        return Number(value || 0).toLocaleString(undefined, {
+          maximumFractionDigits: digits,
+        });
+      }
+
+      function imperialBankAdminDate(value) {
+        if (!value) return "--";
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString();
+      }
+
+      async function loadImperialBankAdmin(force = false) {
+        if (imperialBankAdminLoaded && !force) return;
+        const status = document.getElementById("imperial-bank-admin-status");
+        const username = String(
+          document.getElementById("imperial-bank-admin-username")?.value || "",
+        ).trim().replace(/^@/, "");
+
+        try {
+          if (!ADMIN_KEY) throw new Error("Unlock the Admin Dashboard first.");
+          if (status) status.textContent = "Loading Imperial Bank monitoring...";
+
+          let url = API_BASE + "/admin/imperial-bank?limit=100";
+          if (username) url += "&username=" + encodeURIComponent(username);
+
+          const response = await fetch(url);
+          const data = await response.json();
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Failed to load Imperial Bank monitoring.");
+          }
+
+          const controls = data.controls || {};
+          const summary = data.summary || {};
+          document.getElementById("ib-admin-operational").textContent =
+            controls.operationalEnabled ? "Enabled" : "Paused";
+          document.getElementById("ib-admin-master").textContent =
+            "Master: " + (controls.masterEnabled ? "Enabled" : "Disabled");
+          document.getElementById("ib-admin-banked").textContent =
+            imperialBankAdminNumber(summary.totalBankedEmp) + " EMP";
+          document.getElementById("ib-admin-funded").textContent =
+            "Funded accounts: " + imperialBankAdminNumber(summary.fundedAccounts, 0);
+          document.getElementById("ib-admin-active").textContent =
+            imperialBankAdminNumber(summary.activeCycles, 0);
+          document.getElementById("ib-admin-total-cycles").textContent =
+            "Total cycles: " + imperialBankAdminNumber(summary.totalCycles, 0);
+          document.getElementById("ib-admin-draws").textContent =
+            imperialBankAdminNumber(summary.totalDraws, 0);
+          document.getElementById("ib-admin-emp-rewards").textContent =
+            "EMP rewards: " + imperialBankAdminNumber(summary.empRewards);
+          document.getElementById("ib-admin-withdrawn").textContent =
+            imperialBankAdminNumber(summary.withdrawnCycles, 0);
+          document.getElementById("ib-admin-forfeited").textContent =
+            "Forfeited draws: " + imperialBankAdminNumber(summary.forfeitedDraws, 0);
+
+          const enableButton = document.getElementById("imperial-bank-admin-enable");
+          const pauseButton = document.getElementById("imperial-bank-admin-pause");
+          if (enableButton) {
+            enableButton.disabled =
+              Boolean(controls.operationalEnabled) || !Boolean(controls.masterEnabled);
+          }
+          if (pauseButton) pauseButton.disabled = !Boolean(controls.operationalEnabled);
+
+          const cycles = Array.isArray(data.cycles) ? data.cycles : [];
+          document.getElementById("imperial-bank-admin-cycles").innerHTML =
+            cycles.length
+              ? cycles.map(function (row) {
+                  return "<tr><td>@" + imperialBankAdminEscape(row.username) +
+                    "</td><td>" + imperialBankAdminEscape(row.status) +
+                    "</td><td>" + imperialBankAdminNumber(row.qualifying_emp) +
+                    " EMP</td><td>" + imperialBankAdminNumber(row.bank_balance) +
+                    " EMP</td><td>" + imperialBankAdminNumber(row.draws_consumed, 0) +
+                    " / " + imperialBankAdminNumber(row.total_draws, 0) +
+                    "</td><td>" + imperialBankAdminNumber(row.forfeited_draws, 0) +
+                    "</td><td>" + imperialBankAdminEscape(imperialBankAdminDate(row.created_at)) +
+                    "</td><td>" + imperialBankAdminEscape(imperialBankAdminDate(row.ends_at)) +
+                    "</td></tr>";
+                }).join("")
+              : '<tr><td colspan="8">No Treasury cycles found.</td></tr>';
+
+          const movements = Array.isArray(data.movements) ? data.movements : [];
+          document.getElementById("imperial-bank-admin-movements").innerHTML =
+            movements.length
+              ? movements.map(function (row) {
+                  return "<tr><td>" + imperialBankAdminEscape(imperialBankAdminDate(row.created_at)) +
+                    "</td><td>@" + imperialBankAdminEscape(row.username) +
+                    "</td><td>" + imperialBankAdminEscape(row.movement_type) +
+                    "</td><td>" + imperialBankAdminNumber(row.amount) +
+                    " EMP</td><td>" + imperialBankAdminNumber(row.bank_balance_after) +
+                    " EMP</td><td>" + imperialBankAdminEscape(row.note || "") +
+                    "</td></tr>";
+                }).join("")
+              : '<tr><td colspan="6">No Bank movements found.</td></tr>';
+
+          const draws = Array.isArray(data.draws) ? data.draws : [];
+          document.getElementById("imperial-bank-admin-draws-table").innerHTML =
+            draws.length
+              ? draws.map(function (row) {
+                  return "<tr><td>" + imperialBankAdminEscape(imperialBankAdminDate(row.created_at)) +
+                    "</td><td>@" + imperialBankAdminEscape(row.username) +
+                    "</td><td>#" + imperialBankAdminNumber(row.draw_number, 0) +
+                    "</td><td>" + imperialBankAdminEscape(row.reward_label || row.reward_type || "None") +
+                    "</td><td>" + imperialBankAdminEscape(
+                      row.utc_day ? String(row.utc_day).slice(0, 10) : "--",
+                    ) + "</td></tr>";
+                }).join("")
+              : '<tr><td colspan="5">No Treasury Draws found.</td></tr>';
+
+          imperialBankAdminLoaded = true;
+          if (status) {
+            status.textContent =
+              "✅ Imperial Bank monitoring loaded" +
+              (username ? " for @" + username : "") + ".";
+          }
+        } catch (error) {
+          console.error("Imperial Bank admin load error:", error);
+          if (status) status.textContent = "❌ " + (error.message || "Failed to load.");
+        }
+      }
+
+      async function setImperialBankAdminEnabled(enabled) {
+        const action = enabled ? "enable" : "pause";
+        const warning = enabled
+          ? "Enable new Imperial Bank deposits and Treasury Draws?"
+          : "Pause new deposits and Treasury Draws? Players will still be able to withdraw.";
+        if (!confirm(warning)) return;
+
+        const status = document.getElementById("imperial-bank-admin-status");
+        try {
+          if (!ADMIN_KEY) throw new Error("Unlock the Admin Dashboard first.");
+          if (status) status.textContent = "Updating Imperial Bank status...";
+
+          const response = await fetch(API_BASE + "/admin/imperial-bank/settings", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ enabled: Boolean(enabled) }),
+          });
+          const data = await response.json();
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Failed to " + action + " Imperial Bank.");
+          }
+
+          imperialBankAdminLoaded = false;
+          await loadImperialBankAdmin(true);
+        } catch (error) {
+          console.error("Imperial Bank admin setting error:", error);
+          if (status) status.textContent = "❌ " + (error.message || "Update failed.");
+        }
+      }
+
+      function clearImperialBankAdminSearch() {
+        const input = document.getElementById("imperial-bank-admin-username");
+        if (input) input.value = "";
+        loadImperialBankAdmin(true);
+      }
+
     </script>
     <div
       id="assets-modal"
