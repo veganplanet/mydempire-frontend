@@ -181,11 +181,11 @@
     const liquidEmp = Number(state.balances?.liquidEmp || 0);
     const canStart = enabled && owner && !active && !state.cooldownActive;
     const canDraw = enabled && owner && Boolean(state.todayDrawAvailable);
-    const canWithdraw = enabled && owner && bankEmp > 0;
+    const canWithdraw = owner && bankEmp > 0;
 
     let notice = "";
     if (!enabled) {
-      notice = '<div class="ib-alert ib-alert-warning">The Imperial Bank is currently closed. You can view the rules, but deposits and Treasury Draws are not yet available.</div>';
+      notice = '<div class="ib-alert ib-alert-warning">The Imperial Bank is currently paused. New deposits and Treasury Draws are unavailable, but banked EMP can still be withdrawn.</div>';
     } else if (!owner) {
       notice = '<div class="ib-alert ib-alert-info">Visitor view: Imperial Bank actions are available only to the account owner.</div>';
     } else if (state.todayUsed && active) {
