@@ -54,9 +54,60 @@
 .daily-empire-report-link[hidden] {
   display: none;
 }
+      .player-honors {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 9px;
+      }
+      .player-honor-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        width: fit-content;
+        padding: 7px 11px;
+        border: 1px solid #d4a017;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #fff9db, #f6c453);
+        color: #6b4100;
+        font-size: 12px;
+        font-weight: 900;
+        box-shadow: 0 5px 14px rgba(180, 120, 0, 0.18);
+      }
+      .player-honors[hidden] { display: none; }
+      .historic-honors {
+        margin-bottom: 18px;
+        padding: 18px;
+        border: 1px solid #d4a017;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #fffdf2, #fff2b8);
+        box-shadow: 0 8px 20px rgba(180, 120, 0, 0.12);
+      }
+      .historic-honors-kicker {
+        color: #9a6700;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: 1.25px;
+        text-transform: uppercase;
+      }
+      .historic-honors > h2 { margin: 5px 0 14px; color: #4f3200; }
+      .historic-honor-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 15px;
+        border: 1px solid rgba(180, 120, 0, 0.28);
+        border-radius: 13px;
+        background: rgba(255, 255, 255, 0.74);
+      }
+      .historic-honor-icon { font-size: 38px; line-height: 1; }
+      .historic-honor-card h3 { margin: 0 0 4px; color: #4f3200; }
+      .historic-honor-owner { color: #9a6700; font-weight: 900; }
+      .historic-honor-card p { margin: 5px 0 0; color: #6b5a38; }
       @media (max-width: 700px) { .daily-empire-report-header, .daily-empire-report-grid { flex-direction: column; } .daily-empire-report-reward { align-self: flex-start; } }
     </style>
     <script src="js/player-auth.js?v=20260825-auth3"></script>
+    <script src="js/player-honors.js?v=20260912"></script>
 </head>
   <body data-requires-login="true" class="player-dashboard-page empire-hub-wide">
    <div id="mde-navbar"></div>
@@ -72,6 +123,7 @@
             <strong>@<span id="player-username-display">player</span></strong
             >. Your empire snapshot.
           </div>
+          <div id="player-honors" class="player-honors" hidden aria-live="polite"></div>
         </div>
         <div class="header-right">
           
@@ -1363,6 +1415,13 @@ font-weight:900;
       </section>
 
       <section class="section tab-panel" data-tab-panel="leaderboard">
+        <section class="historic-honors" aria-labelledby="historic-honors-title">
+          <div class="historic-honors-kicker">MydEmpire Hall of Fame</div>
+          <h2 id="historic-honors-title">Historic Milestones</h2>
+          <div id="historic-honors-list">
+            <div class="status-text">Loading permanent honors...</div>
+          </div>
+        </section>
         <div class="leaderboard-subnav">
           <button
             type="button"
