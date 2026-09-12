@@ -77,11 +77,19 @@
       .player-honors[hidden] { display: none; }
       .historic-honors {
         margin-bottom: 18px;
-        padding: 18px;
+        padding: 16px;
         border: 1px solid #d4a017;
         border-radius: 16px;
         background: linear-gradient(135deg, #fffdf2, #fff2b8);
         box-shadow: 0 8px 20px rgba(180, 120, 0, 0.12);
+      }
+      .historic-honors-head,
+      .historic-honors-controls,
+      .historic-honors-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
       }
       .historic-honors-kicker {
         color: #9a6700;
@@ -90,24 +98,131 @@
         letter-spacing: 1.25px;
         text-transform: uppercase;
       }
-      .historic-honors > h2 { margin: 5px 0 14px; color: #4f3200; }
+      .historic-honors-head h2 { margin: 4px 0 0; color: #4f3200; }
+      .historic-honor-filters {
+        display: inline-flex;
+        gap: 4px;
+        padding: 4px;
+        border: 1px solid rgba(180, 120, 0, 0.28);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.58);
+      }
+      .historic-honor-filter,
+      .historic-honor-nav,
+      .historic-honor-view-all,
+      .all-honors-close {
+        border: 0;
+        cursor: pointer;
+        font-weight: 900;
+      }
+      .historic-honor-filter {
+        padding: 7px 11px;
+        border-radius: 999px;
+        background: transparent;
+        color: #795500;
+      }
+      .historic-honor-filter.active {
+        background: #a66b00;
+        color: #ffffff;
+      }
+      .historic-honor-stage { margin: 12px 0; min-height: 104px; }
       .historic-honor-card {
         display: flex;
         align-items: center;
         gap: 14px;
-        padding: 15px;
+        padding: 14px;
         border: 1px solid rgba(180, 120, 0, 0.28);
         border-radius: 13px;
-        background: rgba(255, 255, 255, 0.74);
+        background: rgba(255, 255, 255, 0.76);
       }
-      .historic-honor-icon { font-size: 38px; line-height: 1; }
-      .historic-honor-card h3 { margin: 0 0 4px; color: #4f3200; }
-      .historic-honor-owner { color: #9a6700; font-weight: 900; }
-      .historic-honor-card p { margin: 5px 0 0; color: #6b5a38; }
+      .historic-honor-card-compact { min-height: 76px; }
+      .historic-honor-icon { flex: 0 0 auto; font-size: 36px; line-height: 1; }
+      .historic-honor-body { min-width: 0; }
+      .historic-honor-card h3 { margin: 0 0 3px; color: #4f3200; }
+      .historic-honor-owner { color: #9a6700; font-size: 13px; font-weight: 900; }
+      .historic-honor-card p {
+        margin: 4px 0 0;
+        color: #6b5a38;
+        line-height: 1.35;
+      }
+      .historic-honor-reward {
+        margin-top: 5px;
+        color: #795500;
+        font-size: 12px;
+        font-weight: 900;
+      }
+      .historic-honor-nav {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #ffffff;
+        color: #795500;
+        font-size: 18px;
+      }
+      .historic-honor-count {
+        min-width: 48px;
+        color: #795500;
+        font-size: 12px;
+        font-weight: 900;
+        text-align: center;
+      }
+      .historic-honor-view-all {
+        margin-left: auto;
+        padding: 8px 12px;
+        border-radius: 9px;
+        background: #a66b00;
+        color: #ffffff;
+      }
+      .all-honors-modal[hidden] { display: none; }
+      .all-honors-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 10020;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .all-honors-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.7);
+      }
+      .all-honors-dialog {
+        position: relative;
+        width: min(680px, 100%);
+        max-height: 82vh;
+        overflow-y: auto;
+        padding: 20px;
+        border-radius: 18px;
+        background: #fffdf5;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+      }
+      .all-honors-dialog-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .all-honors-dialog-head h2 { margin: 0; color: #4f3200; }
+      .all-honors-close {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #a66b00;
+        color: #ffffff;
+        font-size: 20px;
+      }
+      .all-honors-group { margin-top: 18px; }
+      .all-honors-group > h3 { color: #795500; }
+      .all-honors-group .historic-honor-card + .historic-honor-card {
+        margin-top: 10px;
+      }
+      body.honors-modal-open { overflow: hidden; }
       @media (max-width: 700px) { .daily-empire-report-header, .daily-empire-report-grid { flex-direction: column; } .daily-empire-report-reward { align-self: flex-start; } }
     </style>
     <script src="js/player-auth.js?v=20260825-auth3"></script>
-    <script src="js/player-honors.js?v=20260912"></script>
+    <script src="js/player-honors.js?v=20260912b"></script>
 </head>
   <body data-requires-login="true" class="player-dashboard-page empire-hub-wide">
    <div id="mde-navbar"></div>
@@ -1416,12 +1531,42 @@ font-weight:900;
 
       <section class="section tab-panel" data-tab-panel="leaderboard">
         <section class="historic-honors" aria-labelledby="historic-honors-title">
-          <div class="historic-honors-kicker">MydEmpire Hall of Fame</div>
-          <h2 id="historic-honors-title">Historic Milestones</h2>
-          <div id="historic-honors-list">
-            <div class="status-text">Loading permanent honors...</div>
+          <div class="historic-honors-head">
+            <div>
+              <div class="historic-honors-kicker">MydEmpire Hall of Fame</div>
+              <h2 id="historic-honors-title">Milestones</h2>
+            </div>
+            <div class="historic-honor-filters" role="tablist" aria-label="Milestone category">
+              <button type="button" class="historic-honor-filter active" data-honor-filter="active" role="tab" aria-selected="true">Active</button>
+              <button type="button" class="historic-honor-filter" data-honor-filter="achieved" role="tab" aria-selected="false">Achieved</button>
+            </div>
+          </div>
+
+          <div id="historic-honor-stage" class="historic-honor-stage">
+            <div class="status-text">Loading milestones...</div>
+          </div>
+
+          <div class="historic-honors-footer">
+            <div class="historic-honors-controls">
+              <button id="historic-honor-prev" class="historic-honor-nav" type="button" aria-label="Previous milestone">‹</button>
+              <span id="historic-honor-count" class="historic-honor-count">0 / 0</span>
+              <button id="historic-honor-next" class="historic-honor-nav" type="button" aria-label="Next milestone">›</button>
+            </div>
+            <button id="historic-honor-view-all" class="historic-honor-view-all" type="button">View All</button>
           </div>
         </section>
+
+        <div id="all-honors-modal" class="all-honors-modal" hidden>
+          <div id="all-honors-backdrop" class="all-honors-backdrop"></div>
+          <div class="all-honors-dialog" role="dialog" aria-modal="true" aria-labelledby="all-honors-title">
+            <div class="all-honors-dialog-head">
+              <h2 id="all-honors-title">MydEmpire Hall of Fame</h2>
+              <button id="all-honors-close" class="all-honors-close" type="button" aria-label="Close">×</button>
+            </div>
+            <div id="all-honors-list"></div>
+          </div>
+        </div>
+
         <div class="leaderboard-subnav">
           <button
             type="button"

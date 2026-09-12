@@ -1,24 +1,36 @@
 (() => {
   "use strict";
 
-  const PLAYER_HONORS = Object.freeze([
+  const HONORS = Object.freeze([
     Object.freeze({
-      username: "danideuder",
+      code: "FIRST_IMPERIAL_ARCHITECT",
+      state: "active",
+      icon: "🏛",
+      heading: "Race to 500,000 Lifetime EP",
+      title: "First Imperial Architect",
+      description:
+        "The first player to reach 500,000 verified Lifetime EP will earn this permanent title.",
+      reward: "Imperial Mint Blueprint + permanent Hall of Fame title",
+    }),
+    Object.freeze({
       code: "GOLDEN_1000TH_PACK",
+      state: "achieved",
+      username: "danideuder",
       icon: "👑",
-      title: "Golden 1000th Pack Holder",
       heading: "The Golden 1000th Pack",
+      title: "Golden 1000th Pack Holder",
       description:
         "Awarded to the player who purchased MydEmpire’s historic 1,000th Genesis Pack.",
       awardedAt: "2026-09-10",
     }),
   ]);
 
+  let activeFilter = "active";
+  let visibleIndex = 0;
+  let rotationTimer = null;
+
   function cleanUsername(value) {
-    return String(value || "")
-      .trim()
-      .replace(/^@/, "")
-      .toLowerCase();
+    return String(value || "").trim().replace(/^@/, "").toLowerCase();
   }
 
   function getViewedUsername() {
@@ -31,73 +43,192 @@
     );
   }
 
+  function getFilteredHonors() {
+    return HONORS.filter((honor) => honor.state === activeFilter);
+  }
+
+  function makeTextElement(tag, className, text) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    element.textContent = text;
+    return element;
+  }
+
+  function buildHonorCard(honor, compact = false) {
+    const card = document.createElement("article");
+    card.className = compact
+      ? "historic-honor-card historic-honor-card-compact"
+      : "historic-honor-card";
+
+    const icon = makeTextElement("div", "historic-honor-icon", honor.icon);
+    icon.setAttribute("aria-hidden", "true");
+
+    const body = document.createElement("div");
+    body.className = "historic-honor-body";
+    body.appendChild(makeTextElement("h3", "", honor.heading));
+
+    if (honor.state === "achieved") {
+      body.appendChild(
+        makeTextElement("div", "historic-honor-owner", `@${honor.username}`),
+      );
+    } else {
+      body.appendChild(
+        makeTextElement("div", "historic-honor-owner", "Awaiting Champion"),
+      );
+    }
+
+    body.appendChild(makeTextElement("p", "", honor.description));
+
+    if (honor.reward) {
+      body.appendChild(
+        makeTextElement("div", "historic-honor-reward", `Reward: ${honor.reward}`),
+      );
+    }
+
+    card.append(icon, body);
+    return card;
+  }
+
   function renderPlayerHonors() {
     const container = document.getElementById("player-honors");
     if (!container) return;
 
     const viewedUsername = getViewedUsername();
-    const honors = PLAYER_HONORS.filter(
-      (honor) => cleanUsername(honor.username) === viewedUsername,
+    const honors = HONORS.filter(
+      (honor) =>
+        honor.state === "achieved" &&
+        cleanUsername(honor.username) === viewedUsername,
     );
 
     container.replaceChildren();
 
-    honors.forEach((honor) => {
+    honors.slice(0, 1).forEach((honor) => {
       const badge = document.createElement("span");
       badge.className = "player-honor-badge";
       badge.title = honor.description;
       badge.setAttribute("aria-label", `${honor.title}: ${honor.description}`);
 
-      const icon = document.createElement("span");
+      const icon = makeTextElement("span", "", honor.icon);
       icon.setAttribute("aria-hidden", "true");
-      icon.textContent = honor.icon;
-
-      const label = document.createElement("span");
-      label.textContent = honor.title;
-
-      badge.append(icon, label);
+      badge.append(icon, makeTextElement("span", "", honor.title));
       container.appendChild(badge);
     });
 
     container.hidden = honors.length === 0;
   }
 
-  function renderHallOfFame() {
-    const list = document.getElementById("historic-honors-list");
-    if (!list) return;
+  function renderCurrentHonor() {
+    const stage = document.getElementById("historic-honor-stage");
+    const count = document.getElementById("historic-honor-count");
+    if (!stage || !count) return;
+
+    const honors = getFilteredHonors();
+    stage.replaceChildren();
+
+    if (!honors.length) {
+      stage.appendChild(
+        makeTextElement("div", "status-text", "No milestones in this category yet."),
+      );
+      count.textContent = "0 / 0";
+      return;
+    }
+
+    visibleIndex = ((visibleIndex % honors.length) + honors.length) % honors.length;
+    stage.appendChild(buildHonorCard(honors[visibleIndex], true));
+    count.textContent = `${visibleIndex + 1} / ${honors.length}`;
+  }
+
+  function setFilter(filter) {
+    if (!["active", "achieved"].includes(filter)) return;
+    activeFilter = filter;
+    visibleIndex = 0;
+
+    document.querySelectorAll("[data-honor-filter]").forEach((button) => {
+      const selected = button.dataset.honorFilter === filter;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-selected", String(selected));
+    });
+
+    renderCurrentHonor();
+    restartRotation();
+  }
+
+  function moveHonor(direction) {
+    const honors = getFilteredHonors();
+    if (!honors.length) return;
+    visibleIndex = (visibleIndex + direction + honors.length) % honors.length;
+    renderCurrentHonor();
+    restartRotation();
+  }
+
+  function restartRotation() {
+    if (rotationTimer) window.clearInterval(rotationTimer);
+    rotationTimer = window.setInterval(() => {
+      const honors = getFilteredHonors();
+      if (honors.length > 1) {
+        visibleIndex = (visibleIndex + 1) % honors.length;
+        renderCurrentHonor();
+      }
+    }, 7000);
+  }
+
+  function openAllHonors() {
+    const modal = document.getElementById("all-honors-modal");
+    const list = document.getElementById("all-honors-list");
+    if (!modal || !list) return;
 
     list.replaceChildren();
 
-    PLAYER_HONORS.forEach((honor) => {
-      const card = document.createElement("article");
-      card.className = "historic-honor-card";
-
-      const icon = document.createElement("div");
-      icon.className = "historic-honor-icon";
-      icon.setAttribute("aria-hidden", "true");
-      icon.textContent = honor.icon;
-
-      const body = document.createElement("div");
-
-      const heading = document.createElement("h3");
-      heading.textContent = honor.heading;
-
-      const owner = document.createElement("div");
-      owner.className = "historic-honor-owner";
-      owner.textContent = `@${honor.username}`;
-
-      const description = document.createElement("p");
-      description.textContent = honor.description;
-
-      body.append(heading, owner, description);
-      card.append(icon, body);
-      list.appendChild(card);
+    [
+      ["Active Challenges", HONORS.filter((honor) => honor.state === "active")],
+      ["Historic Achievements", HONORS.filter((honor) => honor.state === "achieved")],
+    ].forEach(([heading, honors]) => {
+      const section = document.createElement("section");
+      section.className = "all-honors-group";
+      section.appendChild(makeTextElement("h3", "", heading));
+      honors.forEach((honor) => section.appendChild(buildHonorCard(honor)));
+      list.appendChild(section);
     });
+
+    modal.hidden = false;
+    document.body.classList.add("honors-modal-open");
+  }
+
+  function closeAllHonors() {
+    const modal = document.getElementById("all-honors-modal");
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.classList.remove("honors-modal-open");
   }
 
   function renderHonors() {
     renderPlayerHonors();
-    renderHallOfFame();
+
+    document.querySelectorAll("[data-honor-filter]").forEach((button) => {
+      button.addEventListener("click", () => setFilter(button.dataset.honorFilter));
+    });
+
+    document
+      .getElementById("historic-honor-prev")
+      ?.addEventListener("click", () => moveHonor(-1));
+    document
+      .getElementById("historic-honor-next")
+      ?.addEventListener("click", () => moveHonor(1));
+    document
+      .getElementById("historic-honor-view-all")
+      ?.addEventListener("click", openAllHonors);
+    document
+      .getElementById("all-honors-close")
+      ?.addEventListener("click", closeAllHonors);
+    document
+      .getElementById("all-honors-backdrop")
+      ?.addEventListener("click", closeAllHonors);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeAllHonors();
+    });
+
+    setFilter("active");
   }
 
   if (document.readyState === "loading") {
