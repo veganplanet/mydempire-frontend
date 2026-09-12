@@ -13,6 +13,56 @@
       reward: "Imperial Mint Blueprint + permanent Hall of Fame title",
     }),
     Object.freeze({
+      code: "FOOD_INDUSTRY_SPECIALIST",
+      state: "active",
+      icon: "🍞",
+      heading: "Food Industry Specialist",
+      title: "Food Industry Specialist",
+      description:
+        "Reach 100,000 verified Lifetime Food EP. Available to every qualifying player.",
+      reward: "1 Imperial Ticket + permanent Food Industry Specialist title",
+    }),
+    Object.freeze({
+      code: "TEXTILE_INDUSTRY_SPECIALIST",
+      state: "active",
+      icon: "🧵",
+      heading: "Textile Industry Specialist",
+      title: "Textile Industry Specialist",
+      description:
+        "Reach 100,000 verified Lifetime Textile EP. Available to every qualifying player.",
+      reward: "1 Imperial Ticket + permanent Textile Industry Specialist title",
+    }),
+    Object.freeze({
+      code: "PHARMA_INDUSTRY_SPECIALIST",
+      state: "active",
+      icon: "💊",
+      heading: "Pharma Industry Specialist",
+      title: "Pharma Industry Specialist",
+      description:
+        "Reach 100,000 verified Lifetime Pharma EP. Available to every qualifying player.",
+      reward: "1 Imperial Ticket + permanent Pharma Industry Specialist title",
+    }),
+    Object.freeze({
+      code: "CHEMICAL_INDUSTRY_SPECIALIST",
+      state: "active",
+      icon: "⚗️",
+      heading: "Chemical Industry Specialist",
+      title: "Chemical Industry Specialist",
+      description:
+        "Reach 100,000 verified Lifetime Chemical EP. Available to every qualifying player.",
+      reward: "1 Imperial Ticket + permanent Chemical Industry Specialist title",
+    }),
+    Object.freeze({
+      code: "SUPERMARKET_INDUSTRY_SPECIALIST",
+      state: "active",
+      icon: "🛒",
+      heading: "Supermarket Industry Specialist",
+      title: "Supermarket Industry Specialist",
+      description:
+        "Reach 100,000 verified Lifetime Supermarket EP. Available to every qualifying player.",
+      reward: "1 Imperial Ticket + permanent Supermarket Industry Specialist title",
+    }),
+    Object.freeze({
       code: "GOLDEN_1000TH_PACK",
       state: "achieved",
       username: "danideuder",
