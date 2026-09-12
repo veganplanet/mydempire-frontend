@@ -219,6 +219,60 @@
         margin-top: 10px;
       }
       body.honors-modal-open { overflow: hidden; }
+      .industry-top-five-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 14px;
+      }
+      .industry-rank-card {
+        overflow: hidden;
+        border: 1px solid #dbe4ee;
+        border-radius: 14px;
+        background: #ffffff;
+      }
+      .industry-rank-title {
+        padding: 11px 13px;
+        background: linear-gradient(135deg, #eef6ff, #e0ecff);
+        color: #173b7a;
+        font-weight: 900;
+      }
+      .industry-rank-head,
+      .industry-rank-row {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr) 84px 64px;
+        gap: 8px;
+        align-items: center;
+        padding: 9px 11px;
+      }
+      .industry-rank-head {
+        color: #64748b;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: .4px;
+        text-transform: uppercase;
+      }
+      .industry-rank-row {
+        border-top: 1px solid #edf1f5;
+        color: #334155;
+        font-size: 12px;
+      }
+      .industry-rank-row.current-viewer { background: #fff8d6; }
+      .industry-rank-position { color: #9a6700; font-weight: 900; }
+      .industry-rank-player {
+        overflow: hidden;
+        color: #0f172a;
+        font-weight: 800;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .industry-rank-ep,
+      .industry-rank-share { text-align: right; }
+      .industry-rank-empty {
+        padding: 14px;
+        border-top: 1px solid #edf1f5;
+        color: #64748b;
+        font-size: 12px;
+      }
       @media (max-width: 700px) { .daily-empire-report-header, .daily-empire-report-grid { flex-direction: column; } .daily-empire-report-reward { align-self: flex-start; } }
     </style>
     <script src="js/player-auth.js?v=20260825-auth3"></script>
@@ -1631,7 +1685,7 @@ Empire Surge
         <div class="leaderboard-tab-panel" data-lb-panel="industry">
   <div class="section-header">
     <h2> Industry Leaders</h2>
-    <small>Top empire in each industry by lifetime EP</small>
+    <small>Top 5 empires in each industry by Lifetime EP</small>
   </div>
 
   <div class="summary-card card-leaderboard">
@@ -3078,12 +3132,11 @@ async function loadEmpireSurgeLeaderboard() {
           );
           if (!container) return;
 
-          if (!data.success || !data.leaders) {
-            container.innerHTML = "";
-            return;
+          if (!res.ok || !data.success) {
+            throw new Error(data.error || "Failed to load industry leaderboard.");
           }
 
-          const items = [
+          const industries = [
             { label: "Food", key: "food" },
             { label: "Textile", key: "textile" },
             { label: "Pharma", key: "pharma" },
@@ -3091,44 +3144,70 @@ async function loadEmpireSurgeLeaderboard() {
             { label: "Supermarket", key: "supermarket" },
           ];
 
-          let html = `
-  <div class="industry-list">
+          const safeText = (value) =>
+            String(value ?? "")
+              .replaceAll("&", "&amp;")
+              .replaceAll("<", "&lt;")
+              .replaceAll(">", "&gt;")
+              .replaceAll('"', "&quot;")
+              .replaceAll("'", "&#039;");
 
-    <div class="industry-header">
-      <div>Industry</div>
-      <div>Leader</div>
-      <div>EP</div>
-      <div>Share</div>
-    </div>
-`;
+          const viewer = String(PLAYER_USERNAME || "").toLowerCase();
 
-          items.forEach((item) => {
-            const leader = data.leaders[item.key];
+          const cards = industries.map((industry) => {
+            const ranking = Array.isArray(data.rankings?.[industry.key])
+              ? data.rankings[industry.key].slice(0, 5)
+              : data.leaders?.[industry.key]
+                ? [data.leaders[industry.key]]
+                : [];
 
-            html += `
-    <div class="industry-item">
-      <div class="industry-name">${item.label}</div>
+            const rows = ranking.length
+              ? ranking
+                  .map((player, index) => {
+                    const username = String(player.username || "");
+                    const isViewer = username.toLowerCase() === viewer;
+                    const rank = Number(player.rank || index + 1);
+                    const ep = Number(player.ep || 0);
+                    const share = Number(player.industry_share_percent || 0);
 
-      <div class="industry-player">
-        ${leader?.username ?? "—"}
-      </div>
+                    return `
+                      <div class="industry-rank-row${isViewer ? " current-viewer" : ""}">
+                        <div class="industry-rank-position">#${rank}</div>
+                        <div class="industry-rank-player">@${safeText(username)}</div>
+                        <div class="industry-rank-ep">${ep.toFixed(2)}</div>
+                        <div class="industry-rank-share">${share.toFixed(2)}%</div>
+                      </div>
+                    `;
+                  })
+                  .join("")
+              : '<div class="industry-rank-empty">No Lifetime EP recorded yet.</div>';
 
-      <div class="industry-ep">
-        ${leader ? Number(leader.ep).toFixed(2) : "--"} EP
-      </div>
-
-      <div class="industry-share">
-        ${leader ? Number(leader.industry_share_percent).toFixed(2) : "--"}%
-      </div>
-    </div>
-  `;
+            return `
+              <section class="industry-rank-card">
+                <div class="industry-rank-title">${industry.label}</div>
+                <div class="industry-rank-head">
+                  <div>Rank</div>
+                  <div>Player</div>
+                  <div style="text-align:right;">EP</div>
+                  <div style="text-align:right;">Share</div>
+                </div>
+                ${rows}
+              </section>
+            `;
           });
 
-          html += `</div>`;
-
-          container.innerHTML = html;
+          container.className = "";
+          container.innerHTML =
+            '<div class="industry-top-five-grid">' + cards.join("") + "</div>";
         } catch (err) {
           console.error("Industry leaderboard error:", err);
+          const container = document.getElementById(
+            "industry-leaderboard-list",
+          );
+          if (container) {
+            container.className = "leaderboard-empty";
+            container.textContent = "Failed to load industry leaderboard.";
+          }
         }
       }
       function toggleSeasonHistory() {
