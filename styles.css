@@ -21913,5 +21913,231 @@ body.read-only-mode #bulk-maintenance-actions {
   #blueprint-overhaul-status {
     width: 100%;
   }
+}\n\n/* =========================================
+   IMPERIAL EXCHANGE — EMP PRICE HISTORY
+========================================= */
+
+.dao-price-chart-section {
+  overflow: hidden;
 }
 
+.dao-price-chart-header {
+  align-items: center;
+}
+
+.dao-price-chart-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 18px 0 14px;
+}
+
+.dao-price-chart-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dao-price-chart-summary > span {
+  color: #65758f;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dao-price-chart-summary > strong {
+  color: #102a55;
+  font-size: clamp(23px, 3vw, 32px);
+  line-height: 1.15;
+}
+
+.dao-price-chart-summary > small {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.dao-chart-change-up {
+  color: #138457 !important;
+}
+
+.dao-chart-change-down {
+  color: #ca3f4e !important;
+}
+
+.dao-chart-change-flat {
+  color: #6b7890 !important;
+}
+
+.dao-price-chart-filters {
+  display: inline-flex;
+  gap: 5px;
+  padding: 4px;
+  border: 1px solid #d7e1f0;
+  border-radius: 12px;
+  background: #f4f7fc;
+}
+
+.dao-price-chart-filters button {
+  padding: 8px 11px;
+  border: 0;
+  border-radius: 8px;
+  color: #536783;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.dao-price-chart-filters button:hover {
+  color: #174db0;
+  background: #e8effb;
+}
+
+.dao-price-chart-filters button.active {
+  color: #ffffff;
+  background: #2466cc;
+  box-shadow: 0 3px 9px rgba(36, 102, 204, 0.24);
+}
+
+.dao-price-chart-wrap {
+  position: relative;
+  width: 100%;
+  min-height: 310px;
+  border: 1px solid #dbe5f2;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at top right, rgba(66, 128, 225, 0.1), transparent 35%),
+    linear-gradient(180deg, #fbfdff 0%, #f5f8fd 100%);
+}
+
+#dao-price-chart {
+  display: block;
+  width: 100%;
+  height: 310px;
+}
+
+.dao-price-chart-message {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: #65758f;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  pointer-events: none;
+}
+
+.dao-price-chart-message[hidden] {
+  display: none !important;
+}
+
+.dao-chart-grid-line {
+  stroke: rgba(73, 103, 151, 0.16);
+  stroke-width: 1;
+}
+
+.dao-chart-axis-label {
+  fill: #63728b;
+  font: 11px system-ui, sans-serif;
+}
+
+.dao-chart-axis-price {
+  font-size: 10px;
+}
+
+.dao-chart-area {
+  fill: rgba(42, 105, 210, 0.1);
+}
+
+.dao-chart-line {
+  fill: none;
+  stroke: #2869d2;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dao-chart-point {
+  stroke: #ffffff;
+  stroke-width: 2;
+  cursor: help;
+  transition: r 0.15s ease;
+}
+
+.dao-chart-point:hover,
+.dao-chart-point:focus {
+  r: 7;
+  outline: none;
+}
+
+.dao-price-chart-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin-top: 13px;
+  color: #536783;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.dao-price-chart-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dao-price-chart-legend > small {
+  margin-left: auto;
+  color: #65758f;
+  font-weight: 800;
+}
+
+.dao-chart-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #ffffff;
+}
+
+.dao-chart-buy {
+  background: #16a36a;
+}
+
+.dao-chart-sell {
+  background: #df4c5a;
+}
+
+.dao-chart-reinvest {
+  background: #7659d6;
+}
+
+@media (max-width: 640px) {
+  .dao-price-chart-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .dao-price-chart-filters {
+    align-self: flex-start;
+  }
+
+  .dao-price-chart-wrap {
+    min-height: 260px;
+  }
+
+  #dao-price-chart {
+    height: 260px;
+  }
+
+  .dao-price-chart-legend > small {
+    width: 100%;
+    margin-left: 0;
+  }
+}\n

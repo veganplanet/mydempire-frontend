@@ -223,6 +223,54 @@
           </div>
         </div>
       </section>
+      <section class="section dao-price-chart-section">
+        <div class="section-header dao-price-chart-header">
+          <div>
+            <h2>📈 EMP Price History</h2>
+            <small>HIVE value of 1 EMP across completed Exchange trades.</small>
+          </div>
+
+          <button
+            type="button"
+            class="dao-refresh-btn"
+            onclick="loadEmpPriceChart()"
+          >
+            Refresh
+          </button>
+        </div>
+
+        <div class="dao-price-chart-toolbar">
+          <div class="dao-price-chart-summary">
+            <span>Current price</span>
+            <strong id="dao-chart-current-price">—</strong>
+            <small id="dao-chart-change">Waiting for trade data...</small>
+          </div>
+
+          <div class="dao-price-chart-filters" aria-label="Chart trade range">
+            <button type="button" data-chart-limit="10" onclick="setEmpPriceChartLimit(10)">10 Trades</button>
+            <button type="button" data-chart-limit="25" class="active" onclick="setEmpPriceChartLimit(25)">25 Trades</button>
+            <button type="button" data-chart-limit="50" onclick="setEmpPriceChartLimit(50)">50 Trades</button>
+          </div>
+        </div>
+
+        <div id="dao-price-chart-wrap" class="dao-price-chart-wrap">
+          <svg
+            id="dao-price-chart"
+            role="img"
+            aria-label="EMP price in HIVE across recent completed trades"
+          ></svg>
+          <div id="dao-price-chart-message" class="dao-price-chart-message">
+            Loading price history...
+          </div>
+        </div>
+
+        <div class="dao-price-chart-legend">
+          <span><i class="dao-chart-dot dao-chart-buy"></i> EMP bought</span>
+          <span><i class="dao-chart-dot dao-chart-sell"></i> EMP sold</span>
+          <span><i class="dao-chart-dot dao-chart-reinvest"></i> Reinvested</span>
+          <small>Higher line = stronger EMP</small>
+        </div>
+      </section>
       <section class="section dao-trades-section">
         <div class="section-header">
           <div>
@@ -798,10 +846,345 @@
           bonusElement.textContent = "—";
         }
       }
+      let empPriceChartLimit = 25;
+      let empPriceChartPoints = [];
+
+      function formatEmpHivePrice(value) {
+        const number = Number(value);
+        return Number.isFinite(number) && number > 0
+          ? number.toFixed(6)
+          : "—";
+      }
+
+      function setEmpPriceChartLimit(limit) {
+        const cleanLimit = [10, 25, 50].includes(Number(limit))
+          ? Number(limit)
+          : 25;
+
+        empPriceChartLimit = cleanLimit;
+
+        document.querySelectorAll("[data-chart-limit]").forEach((button) => {
+          button.classList.toggle(
+            "active",
+            Number(button.dataset.chartLimit) === cleanLimit,
+          );
+        });
+
+        loadEmpPriceChart();
+      }
+
+      function getEmpChartPointColor(type) {
+        const cleanType = String(type || "").toUpperCase();
+
+        if (cleanType === "BUY_EMP") return "#16a36a";
+        if (cleanType === "SELL_EMP") return "#df4c5a";
+        if (cleanType === "REINVEST") return "#7659d6";
+        return "#71809a";
+      }
+
+      function getEmpChartTradeLabel(type) {
+        const cleanType = String(type || "").toUpperCase();
+
+        if (cleanType === "BUY_EMP") return "EMP bought";
+        if (cleanType === "SELL_EMP") return "EMP sold";
+        if (cleanType === "REINVEST") return "HIVE reinvested";
+        return "Starting price";
+      }
+
+      function createEmpChartSvgElement(name, attributes = {}, text = "") {
+        const element = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          name,
+        );
+
+        Object.entries(attributes).forEach(([key, value]) => {
+          element.setAttribute(key, String(value));
+        });
+
+        if (text) element.textContent = text;
+        return element;
+      }
+
+      function renderEmpPriceChart() {
+        const svg = document.getElementById("dao-price-chart");
+        const wrap = document.getElementById("dao-price-chart-wrap");
+
+        if (!svg || !wrap || empPriceChartPoints.length === 0) return;
+
+        const width = Math.max(320, Math.floor(wrap.clientWidth));
+        const compact = width < 560;
+        const height = compact ? 260 : 310;
+        const margin = {
+          top: 20,
+          right: 18,
+          bottom: 42,
+          left: compact ? 64 : 84,
+        };
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
+        const prices = empPriceChartPoints.map((point) => point.price);
+
+        let minimum = Math.min(...prices);
+        let maximum = Math.max(...prices);
+        let range = maximum - minimum;
+
+        if (range <= 0) {
+          range = Math.max(maximum * 0.002, 0.000001);
+          minimum -= range;
+          maximum += range;
+        } else {
+          minimum -= range * 0.16;
+          maximum += range * 0.16;
+        }
+
+        const xForIndex = (index) =>
+          empPriceChartPoints.length === 1
+            ? margin.left + chartWidth / 2
+            : margin.left +
+              (index / (empPriceChartPoints.length - 1)) * chartWidth;
+
+        const yForPrice = (price) =>
+          margin.top +
+          ((maximum - price) / (maximum - minimum)) * chartHeight;
+
+        svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        svg.replaceChildren();
+
+        for (let index = 0; index <= 4; index += 1) {
+          const ratio = index / 4;
+          const y = margin.top + ratio * chartHeight;
+          const labelValue = maximum - ratio * (maximum - minimum);
+
+          svg.appendChild(
+            createEmpChartSvgElement("line", {
+              x1: margin.left,
+              y1: y,
+              x2: width - margin.right,
+              y2: y,
+              class: "dao-chart-grid-line",
+            }),
+          );
+
+          svg.appendChild(
+            createEmpChartSvgElement(
+              "text",
+              {
+                x: margin.left - 9,
+                y: y + 4,
+                class: "dao-chart-axis-label dao-chart-axis-price",
+                "text-anchor": "end",
+              },
+              formatEmpHivePrice(labelValue),
+            ),
+          );
+        }
+
+        const screenPoints = empPriceChartPoints.map((point, index) => ({
+          ...point,
+          x: xForIndex(index),
+          y: yForPrice(point.price),
+        }));
+
+        if (screenPoints.length > 1) {
+          const linePath = screenPoints
+            .map((point, index) =>
+              `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`,
+            )
+            .join(" ");
+          const areaPath =
+            `M ${screenPoints[0].x} ${margin.top + chartHeight} ` +
+            `${linePath} ` +
+            `L ${screenPoints[screenPoints.length - 1].x} ${
+              margin.top + chartHeight
+            } Z`;
+
+          svg.appendChild(
+            createEmpChartSvgElement("path", {
+              d: areaPath,
+              class: "dao-chart-area",
+            }),
+          );
+          svg.appendChild(
+            createEmpChartSvgElement("path", {
+              d: linePath,
+              class: "dao-chart-line",
+            }),
+          );
+        }
+
+        screenPoints.forEach((point) => {
+          const circle = createEmpChartSvgElement("circle", {
+            cx: point.x,
+            cy: point.y,
+            r: 5,
+            fill: getEmpChartPointColor(point.type),
+            class: "dao-chart-point",
+            tabindex: 0,
+          });
+          const actor = point.username ? ` by @${point.username}` : "";
+
+          circle.appendChild(
+            createEmpChartSvgElement(
+              "title",
+              {},
+              `${getEmpChartTradeLabel(point.type)}${actor}\n` +
+                `1 EMP = ${formatEmpHivePrice(point.price)} HIVE\n` +
+                formatDaoTradeTime(point.time),
+            ),
+          );
+          svg.appendChild(circle);
+        });
+
+        const firstPoint = empPriceChartPoints[0];
+        const lastPoint = empPriceChartPoints[empPriceChartPoints.length - 1];
+
+        svg.appendChild(
+          createEmpChartSvgElement(
+            "text",
+            {
+              x: margin.left,
+              y: height - 15,
+              class: "dao-chart-axis-label",
+              "text-anchor": "start",
+            },
+            new Date(firstPoint.time).toLocaleDateString(),
+          ),
+        );
+        svg.appendChild(
+          createEmpChartSvgElement(
+            "text",
+            {
+              x: width - margin.right,
+              y: height - 15,
+              class: "dao-chart-axis-label",
+              "text-anchor": "end",
+            },
+            new Date(lastPoint.time).toLocaleDateString(),
+          ),
+        );
+      }
+
+      async function loadEmpPriceChart() {
+        const message = document.getElementById("dao-price-chart-message");
+        const currentElement = document.getElementById(
+          "dao-chart-current-price",
+        );
+        const changeElement = document.getElementById("dao-chart-change");
+
+        if (!message || !currentElement || !changeElement) return;
+
+        message.textContent = "Loading price history...";
+        message.hidden = false;
+
+        try {
+          const [tradesResponse, poolResponse] = await Promise.all([
+            fetch(
+              `${API_BASE}/dao/emp-pool/trades?limit=${empPriceChartLimit}`,
+            ),
+            fetch(`${API_BASE}/dao/emp-pool/status`),
+          ]);
+          const tradesData = await tradesResponse.json();
+          const poolData = await poolResponse.json();
+
+          if (!tradesResponse.ok || !tradesData.success) {
+            throw new Error(
+              tradesData.error || "Unable to load price-history trades.",
+            );
+          }
+          if (!poolResponse.ok || !poolData.success) {
+            throw new Error(poolData.error || "Unable to load current price.");
+          }
+
+          const currentPool = poolData.pool || poolData;
+          const currentEmpPerHive = Number(
+            currentPool.current_emp_per_hive ??
+              currentPool.current_price ??
+              currentPool.emp_per_hive,
+          );
+
+          if (!Number.isFinite(currentEmpPerHive) || currentEmpPerHive <= 0) {
+            throw new Error("Current EMP market rate is unavailable.");
+          }
+
+          const chronologicalTrades = (Array.isArray(tradesData.trades)
+            ? tradesData.trades
+            : []
+          )
+            .slice()
+            .reverse()
+            .filter((trade) => Number(trade.market_emp_rate) > 0);
+          const currentHivePerEmp = 1 / currentEmpPerHive;
+
+          if (chronologicalTrades.length === 0) {
+            empPriceChartPoints = [
+              {
+                price: currentHivePerEmp,
+                time: new Date().toISOString(),
+                type: "CURRENT",
+                username: "",
+              },
+            ];
+          } else {
+            empPriceChartPoints = [
+              {
+                price: 1 / Number(chronologicalTrades[0].market_emp_rate),
+                time: chronologicalTrades[0].created_at,
+                type: "START",
+                username: "",
+              },
+              ...chronologicalTrades.map((trade, index) => {
+                const nextTrade = chronologicalTrades[index + 1];
+                const empPerHiveAfter = nextTrade
+                  ? Number(nextTrade.market_emp_rate)
+                  : currentEmpPerHive;
+
+                return {
+                  price: 1 / empPerHiveAfter,
+                  time: trade.created_at,
+                  type: trade.trade_type,
+                  username: String(trade.username || "").replace(/^@/, ""),
+                };
+              }),
+            ];
+          }
+
+          const firstPrice = empPriceChartPoints[0].price;
+          const lastPrice = empPriceChartPoints[empPriceChartPoints.length - 1].price;
+          const changePercent =
+            firstPrice > 0 ? ((lastPrice - firstPrice) / firstPrice) * 100 : 0;
+          const changePrefix = changePercent > 0 ? "+" : "";
+
+          currentElement.textContent = `${formatEmpHivePrice(lastPrice)} HIVE`;
+          changeElement.textContent =
+            `${changePrefix}${changePercent.toFixed(2)}% across ` +
+            `${chronologicalTrades.length} completed trade${
+              chronologicalTrades.length === 1 ? "" : "s"
+            }`;
+          changeElement.className =
+            changePercent > 0
+              ? "dao-chart-change-up"
+              : changePercent < 0
+                ? "dao-chart-change-down"
+                : "dao-chart-change-flat";
+
+          message.hidden = true;
+          renderEmpPriceChart();
+        } catch (error) {
+          console.error("EMP price chart loading error:", error);
+          empPriceChartPoints = [];
+          currentElement.textContent = "—";
+          changeElement.textContent = "Price history unavailable";
+          changeElement.className = "dao-chart-change-flat";
+          message.textContent = "Unable to load EMP price history.";
+          message.hidden = false;
+        }
+      }
       async function loadDaoTrades() {
         const listElement = document.getElementById("dao-trades-list");
 
         if (!listElement) return;
+
+        void loadEmpPriceChart();
 
         listElement.innerHTML = `<div class="dao-trades-empty">Loading recent transactions...</div>`;
 
@@ -1872,6 +2255,19 @@
         loadDaoPool();
         loadDaoTrades();
         loadDaoStatistics();
+
+        let chartResizeFrame = null;
+
+        window.addEventListener("resize", () => {
+          if (chartResizeFrame) {
+            cancelAnimationFrame(chartResizeFrame);
+          }
+
+          chartResizeFrame = requestAnimationFrame(() => {
+            renderEmpPriceChart();
+            chartResizeFrame = null;
+          });
+        });
       });
       // ========================================
       // 💸 EMP TRANSFER
