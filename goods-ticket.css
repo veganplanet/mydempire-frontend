@@ -1840,3 +1840,14 @@
     margin-bottom: 16px;
   }
 }
+
+
+/* Final banner layout safeguard: keep Edition II badge in normal flow everywhere. */
+.goods-trade-fair-banner-v2-badge {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  display: inline-flex;
+  width: fit-content;
+  margin: 0 0 18px auto;
+}
