@@ -2640,6 +2640,12 @@ forkyishere,529"
               receive 25%.
             </div>
           </div>
+          <div style="margin-top: 18px">
+            <strong>Edition Rules (JSON)</strong>
+            <div class="small">Configure contract limits/rewards and Lucky Draw settings before creating the draft. These rules are saved with this edition and locked when activated.</div>
+            <textarea id="trade-fair-contract-config" rows="10" style="width:100%;margin-top:8px;font-family:monospace;padding:10px;border:1px solid #d1d5db;border-radius:10px">{"tiers":{"LOCAL":{"normal_limit":5,"ticket_bonus":1,"emp_reward":15,"ap_reward":5},"MERCHANT":{"normal_limit":4,"ticket_bonus":1,"emp_reward":40,"ap_reward":8},"REGIONAL":{"normal_limit":3,"ticket_bonus":1,"emp_reward":75,"ap_reward":12},"ROYAL":{"normal_limit":2,"ticket_bonus":1,"emp_reward":125,"ap_reward":16},"IMPERIAL":{"normal_limit":1,"ticket_bonus":1,"emp_reward":225,"ap_reward":20}},"requirements":{"industry_1_quantity":1,"industry_2_quantity":1},"quality_bonus_enabled":true}</textarea>
+            <textarea id="trade-fair-draw-config" rows="5" style="width:100%;margin-top:8px;font-family:monospace;padding:10px;border:1px solid #d1d5db;border-radius:10px">{"featured_weight_multiplier":1,"other_weight_multiplier":0.25,"featured_emp_per_pv":0.05,"other_emp_per_pv":0.0125,"max_goods_per_player":0}</textarea>
+          </div>
           <div class="row" style="margin-top: 14px">
             <button id="trade-fair-create-btn" type="button" class="primary">
               ➕ Create New Draft
@@ -6286,7 +6292,16 @@ Players snapshotted: ${data.players_snapshotted}
             return;
           }
 
-          const confirmed = window.confirm(
+          let contractConfig = {};
+        let drawConfig = {};
+        try {
+          contractConfig = JSON.parse(document.getElementById("trade-fair-contract-config")?.value || "{}");
+          drawConfig = JSON.parse(document.getElementById("trade-fair-draw-config")?.value || "{}");
+        } catch (_) {
+          if (statusEl) statusEl.textContent = "❌ Edition Rules must contain valid JSON."; return;
+        }
+
+        const confirmed = window.confirm(
             `Reset Season ${seasonId} back to UPCOMING and remove its starting snapshots?`,
           );
 
@@ -7842,6 +7857,8 @@ Players snapshotted: ${data.players_snapshotted}
                 starts_at: startsAt.toISOString(),
                 ends_at: endsAt.toISOString(),
                 featured_industries: featuredIndustries,
+                contract_config: contractConfig,
+                draw_config: drawConfig,
               }),
             },
           );
