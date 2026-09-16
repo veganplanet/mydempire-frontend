@@ -834,12 +834,23 @@ function updateTradeFairDrawSelection() {
     0,
   );
 
+  const totalFixedEmp = selectedGoods.reduce(
+    (sum, good) => sum + Number(good.fixed_emp_reward || 0),
+    0,
+  );
+
   if (countEl) {
     countEl.textContent = String(selectedGoods.length);
   }
 
   if (weightEl) {
     weightEl.textContent = totalWeight.toFixed(3);
+  }
+
+  const empEl = document.getElementById("trade-fair-draw-total-emp");
+
+  if (empEl) {
+    empEl.textContent = totalFixedEmp.toFixed(4);
   }
   const industryOrder = [
     "FOOD",
@@ -997,7 +1008,7 @@ async function submitTradeFairDrawGoods() {
     if (statusEl) {
       statusEl.textContent =
         `✅ ${submittedCount} Goods burned successfully. ` +
-        `Your total Lucky Draw weight is now ${playerTotalWeight.toFixed(3)}.`;
+        `Your fixed EMP reward has been credited immediately. Your total Lucky Draw weight is now ${playerTotalWeight.toFixed(3)}.`;
     }
   } catch (error) {
     console.error("Trade Fair Lucky Draw submission error:", error);
