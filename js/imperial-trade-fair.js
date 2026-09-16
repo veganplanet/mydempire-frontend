@@ -545,6 +545,7 @@ function renderTradeFairDrawGoodCard(good) {
     <label
       class="
         trade-fair-good-card
+        trade-fair-draw-good-card
         goods-product-card
         goods-collectible-card
         goods-quality-${escapeTradeFairHtml(qualitySlug)}
@@ -608,8 +609,8 @@ function renderTradeFairDrawGoodCard(good) {
   ${Number(good.final_value || 0)} PV
 </div>
 
-        <div class="goods-card-pv">
-  ${Number(good.fixed_emp_reward || 0).toLocaleString()} EMP fixed reward
+        <div class="trade-fair-draw-fixed-emp">
+  EMP reward: ${Number(good.fixed_emp_reward || 0).toLocaleString()}
 </div>
       </div>
     </label>
@@ -677,12 +678,20 @@ function renderTradeFairDrawGoods() {
 
   listEl.innerHTML = industryOrder
     .map((industry) => {
-      const industryGoods = tradeFairDrawGoods.filter(
-        (good) =>
-          String(good.industry || "")
-            .trim()
-            .toUpperCase() === industry,
-      );
+      const industryGoods = tradeFairDrawGoods
+        .filter(
+          (good) =>
+            String(good.industry || "")
+              .trim()
+              .toUpperCase() === industry,
+        )
+        .sort((a, b) => {
+          const nameCompare = String(a.product_name || "").localeCompare(
+            String(b.product_name || ""),
+          );
+          if (nameCompare !== 0) return nameCompare;
+          return Number(a.id || 0) - Number(b.id || 0);
+        });
 
       if (!industryGoods.length) {
         return "";
