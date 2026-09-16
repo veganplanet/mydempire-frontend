@@ -325,7 +325,7 @@ function startTradeFairCountdown(event) {
 
       setTradeFairText(
         "trade-fair-countdown-note",
-        "The 72-hour Trade Fair window has closed.",
+        "The Trade Fair event window has closed.",
       );
 
       return;
@@ -606,6 +606,10 @@ function renderTradeFairDrawGoodCard(good) {
 
         <div class="goods-card-pv">
   ${Number(good.final_value || 0)} PV
+</div>
+
+        <div class="goods-card-pv">
+  ${Number(good.fixed_emp_reward || 0).toLocaleString()} EMP fixed reward
 </div>
       </div>
     </label>
