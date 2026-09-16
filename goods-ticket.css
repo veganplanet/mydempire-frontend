@@ -1828,3 +1828,15 @@
     min-width: 0;
   }
 }
+
+
+/* Keep the Edition II badge clear of the pre-launch status on small screens. */
+@media (max-width: 760px) {
+  .goods-trade-fair-banner-v2-badge {
+    position: relative;
+    top: auto;
+    right: auto;
+    display: inline-flex;
+    margin-bottom: 16px;
+  }
+}
