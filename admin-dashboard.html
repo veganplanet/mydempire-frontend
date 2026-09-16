@@ -2641,10 +2641,35 @@ forkyishere,529"
             </div>
           </div>
           <div style="margin-top: 18px">
-            <strong>Edition Rules (JSON)</strong>
-            <div class="small">Configure contract limits/rewards and Lucky Draw settings before creating the draft. These rules are saved with this edition and locked when activated.</div>
-            <textarea id="trade-fair-contract-config" rows="10" style="width:100%;margin-top:8px;font-family:monospace;padding:10px;border:1px solid #d1d5db;border-radius:10px">{"tiers":{"LOCAL":{"normal_limit":5,"ticket_bonus":1,"emp_reward":15,"ap_reward":5},"MERCHANT":{"normal_limit":4,"ticket_bonus":1,"emp_reward":40,"ap_reward":8},"REGIONAL":{"normal_limit":3,"ticket_bonus":1,"emp_reward":75,"ap_reward":12},"ROYAL":{"normal_limit":2,"ticket_bonus":1,"emp_reward":125,"ap_reward":16},"IMPERIAL":{"normal_limit":1,"ticket_bonus":1,"emp_reward":225,"ap_reward":20}},"requirements":{"industry_1_quantity":1,"industry_2_quantity":1},"quality_bonus_enabled":true}</textarea>
-            <textarea id="trade-fair-draw-config" rows="5" style="width:100%;margin-top:8px;font-family:monospace;padding:10px;border:1px solid #d1d5db;border-radius:10px">{"featured_weight_multiplier":1,"other_weight_multiplier":0.25,"featured_emp_per_pv":0.05,"other_emp_per_pv":0.0125,"max_goods_per_player":0}</textarea>
+            <strong>Contract &amp; Lucky Draw Settings</strong>
+            <div class="small">
+              Enter the rules using normal fields. The system saves these settings with
+              this edition and locks them after activation.
+            </div>
+            <div style="overflow-x:auto;margin-top:10px">
+              <table style="width:100%;border-collapse:collapse;min-width:760px">
+                <thead><tr><th style="text-align:left;padding:8px">Contract</th><th style="padding:8px">Normal completions</th><th style="padding:8px">Ticket extra</th><th style="padding:8px">EMP reward</th><th style="padding:8px">AP reward</th></tr></thead>
+                <tbody>
+                  <tr><td style="padding:6px"><strong>LOCAL</strong></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="LOCAL" data-field="normal_limit" type="number" min="0" value="5"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="LOCAL" data-field="ticket_bonus" type="number" min="0" value="1"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="LOCAL" data-field="emp_reward" type="number" min="0" step="0.01" value="15"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="LOCAL" data-field="ap_reward" type="number" min="0" step="0.01" value="5"></td></tr>
+                  <tr><td style="padding:6px"><strong>MERCHANT</strong></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="MERCHANT" data-field="normal_limit" type="number" min="0" value="4"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="MERCHANT" data-field="ticket_bonus" type="number" min="0" value="1"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="MERCHANT" data-field="emp_reward" type="number" min="0" step="0.01" value="40"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="MERCHANT" data-field="ap_reward" type="number" min="0" step="0.01" value="8"></td></tr>
+                  <tr><td style="padding:6px"><strong>REGIONAL</strong></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="REGIONAL" data-field="normal_limit" type="number" min="0" value="3"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="REGIONAL" data-field="ticket_bonus" type="number" min="0" value="1"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="REGIONAL" data-field="emp_reward" type="number" min="0" step="0.01" value="75"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="REGIONAL" data-field="ap_reward" type="number" min="0" step="0.01" value="12"></td></tr>
+                  <tr><td style="padding:6px"><strong>ROYAL</strong></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="ROYAL" data-field="normal_limit" type="number" min="0" value="2"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="ROYAL" data-field="ticket_bonus" type="number" min="0" value="1"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="ROYAL" data-field="emp_reward" type="number" min="0" step="0.01" value="125"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="ROYAL" data-field="ap_reward" type="number" min="0" step="0.01" value="16"></td></tr>
+                  <tr><td style="padding:6px"><strong>IMPERIAL</strong></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="IMPERIAL" data-field="normal_limit" type="number" min="0" value="1"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="IMPERIAL" data-field="ticket_bonus" type="number" min="0" value="1"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="IMPERIAL" data-field="emp_reward" type="number" min="0" step="0.01" value="225"></td><td style="padding:6px"><input class="trade-fair-rule-input" data-tier="IMPERIAL" data-field="ap_reward" type="number" min="0" step="0.01" value="20"></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row" style="margin-top:12px;align-items:end">
+              <label>Goods required from featured industry 1<input id="trade-fair-industry-1-quantity" type="number" min="1" value="1"></label>
+              <label>Goods required from featured industry 2<input id="trade-fair-industry-2-quantity" type="number" min="1" value="1"></label>
+              <label><input id="trade-fair-quality-bonus-enabled" type="checkbox" checked> Enable quality bonus</label>
+            </div>
+            <div class="row" style="margin-top:12px;align-items:end">
+              <label>Featured Lucky Weight multiplier<input id="trade-fair-featured-weight" type="number" min="0" step="0.01" value="1"></label>
+              <label>Other-industry Lucky Weight multiplier<input id="trade-fair-other-weight" type="number" min="0" step="0.01" value="0.25"></label>
+              <label>Featured fixed EMP per PV<input id="trade-fair-featured-emp-per-pv" type="number" min="0" step="0.0001" value="0.05"></label>
+              <label>Other-industry fixed EMP per PV<input id="trade-fair-other-emp-per-pv" type="number" min="0" step="0.0001" value="0.0125"></label>
+              <label>Maximum Goods per player (0 = unlimited)<input id="trade-fair-max-goods" type="number" min="0" value="0"></label>
+            </div>
           </div>
           <div class="row" style="margin-top: 14px">
             <button id="trade-fair-create-btn" type="button" class="primary">
@@ -6292,15 +6317,6 @@ Players snapshotted: ${data.players_snapshotted}
             return;
           }
 
-          let contractConfig = {};
-        let drawConfig = {};
-        try {
-          contractConfig = JSON.parse(document.getElementById("trade-fair-contract-config")?.value || "{}");
-          drawConfig = JSON.parse(document.getElementById("trade-fair-draw-config")?.value || "{}");
-        } catch (_) {
-          if (statusEl) statusEl.textContent = "❌ Edition Rules must contain valid JSON."; return;
-        }
-
         const confirmed = window.confirm(
             `Reset Season ${seasonId} back to UPCOMING and remove its starting snapshots?`,
           );
@@ -7755,6 +7771,33 @@ Players snapshotted: ${data.players_snapshotted}
           }
         }
       }
+      function readTradeFairAdminRules() {
+        const tiers = {};
+        document.querySelectorAll(".trade-fair-rule-input").forEach((input) => {
+          const tier = String(input.dataset.tier || "").toUpperCase();
+          const field = String(input.dataset.field || "");
+          if (!tiers[tier]) tiers[tier] = {};
+          tiers[tier][field] = Number(input.value || 0);
+        });
+        return {
+          contractConfig: {
+            tiers,
+            requirements: {
+              industry_1_quantity: Number(document.getElementById("trade-fair-industry-1-quantity")?.value || 1),
+              industry_2_quantity: Number(document.getElementById("trade-fair-industry-2-quantity")?.value || 1),
+            },
+            quality_bonus_enabled: Boolean(document.getElementById("trade-fair-quality-bonus-enabled")?.checked),
+          },
+          drawConfig: {
+            featured_weight_multiplier: Number(document.getElementById("trade-fair-featured-weight")?.value || 0),
+            other_weight_multiplier: Number(document.getElementById("trade-fair-other-weight")?.value || 0),
+            featured_emp_per_pv: Number(document.getElementById("trade-fair-featured-emp-per-pv")?.value || 0),
+            other_emp_per_pv: Number(document.getElementById("trade-fair-other-emp-per-pv")?.value || 0),
+            max_goods_per_player: Number(document.getElementById("trade-fair-max-goods")?.value || 0),
+          },
+        };
+      }
+
       async function createTradeFairAdminEvent() {
         const statusEl = document.getElementById("trade-fair-control-status");
 
@@ -7824,6 +7867,8 @@ Players snapshotted: ${data.players_snapshotted}
 
           return;
         }
+
+        const { contractConfig, drawConfig } = readTradeFairAdminRules();
 
         const confirmed = window.confirm(
           `Create "${eventName}" as a new DRAFT Trade Fair?\n\n` +
