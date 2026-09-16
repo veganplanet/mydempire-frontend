@@ -506,7 +506,24 @@ async function loadTradeFairDrawLeaderboard() {
     `;
   }
 }
+function groupTradeFairDrawGoods(goods) {
+  const groups = new Map();
+  goods.forEach((good) => {
+    const key = [
+      good.industry, good.product_key, good.product_name, good.quality,
+      good.product_level, good.final_value, good.draw_weight,
+      good.fixed_emp_reward,
+    ].join("|");
+    if (!groups.has(key)) groups.set(key, { ...good, grouped_goods: [] });
+    groups.get(key).grouped_goods.push(good);
+  });
+  return Array.from(groups.values());
+}
+
 function renderTradeFairDrawGoodCard(good) {
+  const groupedGoods = Array.isArray(good.grouped_goods) ? good.grouped_goods : [good];
+  const groupIds = groupedGoods.map((item) => Number(item.id)).filter(Boolean);
+  const groupCount = groupedGoods.length;
   const industry = String(good.industry || "")
     .trim()
     .toUpperCase();
@@ -555,8 +572,9 @@ function renderTradeFairDrawGoodCard(good) {
       <input
         type="checkbox"
         class="trade-fair-good-checkbox trade-fair-draw-good-checkbox"
-        value="${Number(good.id)}"
-        data-good-id="${Number(good.id)}"
+        value="${groupIds.join(",")}"
+        data-good-id="${groupIds[0]}"
+        data-good-ids="${groupIds.join(",")}"
         data-industry="${escapeTradeFairHtml(industry)}"
       />
 
@@ -564,6 +582,7 @@ function renderTradeFairDrawGoodCard(good) {
         <div class="goods-card-topline">
           <span class="goods-card-name">
             ${escapeTradeFairHtml(good.product_name || "Factory Good")}
+            ${groupCount > 1 ? `<small class="trade-fair-good-quantity">× ${groupCount}</small>` : ""}
           </span>
 
           <span class="goods-card-rarity">
@@ -606,7 +625,7 @@ function renderTradeFairDrawGoodCard(good) {
         </div>
 
         <div class="goods-card-pv">
-  ${Number(good.final_value || 0)} PV
+  ${Number(good.final_value || 0) * groupCount} PV
 </div>
 
         <div class="trade-fair-draw-fixed-emp">
@@ -746,7 +765,7 @@ function renderTradeFairDrawGoods() {
           </div>
 
           <div class="trade-fair-goods-card-grid">
-            ${industryGoods
+            ${groupTradeFairDrawGoods(industryGoods)
               .map((good) => renderTradeFairDrawGoodCard(good))
               .join("")}
           </div>
@@ -759,13 +778,20 @@ function renderTradeFairDrawGoods() {
     .querySelectorAll(".trade-fair-draw-good-checkbox")
     .forEach((checkbox) => {
       checkbox.addEventListener("change", () => {
-        const goodId = Number(checkbox.value);
+        const goodIds = String(
+          checkbox.dataset.goodIds || checkbox.value || "",
+        )
+          .split(",")
+          .map(Number)
+          .filter(Boolean);
 
-        if (checkbox.checked) {
-          selectedTradeFairDrawGoods.add(goodId);
-        } else {
-          selectedTradeFairDrawGoods.delete(goodId);
-        }
+        goodIds.forEach((goodId) => {
+          if (checkbox.checked) {
+            selectedTradeFairDrawGoods.add(goodId);
+          } else {
+            selectedTradeFairDrawGoods.delete(goodId);
+          }
+        });
 
         updateTradeFairDrawSelection();
       });
@@ -834,12 +860,23 @@ function updateTradeFairDrawSelection() {
     0,
   );
 
+  const totalFixedEmp = selectedGoods.reduce(
+    (sum, good) => sum + Number(good.fixed_emp_reward || 0),
+    0,
+  );
+
   if (countEl) {
     countEl.textContent = String(selectedGoods.length);
   }
 
   if (weightEl) {
     weightEl.textContent = totalWeight.toFixed(3);
+  }
+
+  const empEl = document.getElementById("trade-fair-draw-total-emp");
+
+  if (empEl) {
+    empEl.textContent = totalFixedEmp.toFixed(4);
   }
   const industryOrder = [
     "FOOD",
@@ -997,7 +1034,7 @@ async function submitTradeFairDrawGoods() {
     if (statusEl) {
       statusEl.textContent =
         `✅ ${submittedCount} Goods burned successfully. ` +
-        `Your total Lucky Draw weight is now ${playerTotalWeight.toFixed(3)}.`;
+        `Your fixed EMP reward has been credited immediately. Your total Lucky Draw weight is now ${playerTotalWeight.toFixed(3)}.`;
     }
   } catch (error) {
     console.error("Trade Fair Lucky Draw submission error:", error);
@@ -1186,6 +1223,7 @@ function renderTradeFairGoodCard(good, industry, requiredCount, selectionGroup) 
     <label
       class="
         trade-fair-good-card
+        trade-fair-draw-good-card
         goods-product-card
         goods-collectible-card
         goods-quality-${escapeTradeFairHtml(qualitySlug)}
