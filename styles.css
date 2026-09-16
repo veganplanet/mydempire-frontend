@@ -18097,6 +18097,27 @@ border:1px solid rgba(255,255,255,0.16);
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
 }
 
+.trade-fair-draw-group-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 8px 10px;
+  border-top: 1px solid rgba(16, 42, 76, 0.12);
+  color: #17365d;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.trade-fair-draw-group-quantity {
+  width: 48px;
+  padding: 3px 5px;
+  border: 1px solid rgba(16, 42, 76, 0.25);
+  border-radius: 6px;
+  color: #102a4c;
+  font-weight: 800;
+}
+
 .trade-fair-good-quantity {
   margin-left: 5px;
   color: #166534;

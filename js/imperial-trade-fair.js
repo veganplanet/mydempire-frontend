@@ -520,6 +520,16 @@ function groupTradeFairDrawGoods(goods) {
   return Array.from(groups.values());
 }
 
+function setTradeFairDrawGroupQuantity(groupIds, quantity) {
+  const safeIds = groupIds.filter((id) => Number.isInteger(id) && id > 0);
+  const safeQuantity = Math.max(0, Math.min(Number(quantity) || 0, safeIds.length));
+  safeIds.forEach((id, index) => {
+    if (index < safeQuantity) selectedTradeFairDrawGoods.add(id);
+    else selectedTradeFairDrawGoods.delete(id);
+  });
+  return safeQuantity;
+}
+
 function renderTradeFairDrawGoodCard(good) {
   const groupedGoods = Array.isArray(good.grouped_goods) ? good.grouped_goods : [good];
   const groupIds = groupedGoods.map((item) => Number(item.id)).filter(Boolean);
@@ -629,8 +639,13 @@ function renderTradeFairDrawGoodCard(good) {
 </div>
 
         <div class="trade-fair-draw-fixed-emp">
-  EMP reward: ${Number(good.fixed_emp_reward || 0).toLocaleString()}
+  EMP reward: ${(Number(good.fixed_emp_reward || 0) * groupCount).toLocaleString()}
 </div>
+      </div>
+      <div class="trade-fair-draw-group-controls">
+        <span>Available: ${groupCount}</span>
+        <span>Select quantity:</span>
+        <input type="number" class="trade-fair-draw-group-quantity" min="0" max="${groupCount}" value="0" data-group-ids="${groupIds.join(",")}" aria-label="Select quantity" />
       </div>
     </label>
   `;
@@ -778,21 +793,28 @@ function renderTradeFairDrawGoods() {
     .querySelectorAll(".trade-fair-draw-good-checkbox")
     .forEach((checkbox) => {
       checkbox.addEventListener("change", () => {
-        const goodIds = String(
-          checkbox.dataset.goodIds || checkbox.value || "",
-        )
-          .split(",")
-          .map(Number)
-          .filter(Boolean);
+        const groupIds = String(checkbox.dataset.goodIds || checkbox.value || "")
+          .split(",").map(Number).filter(Boolean);
+        const quantityInput = checkbox.closest(".trade-fair-draw-good-card")
+          ?.querySelector(".trade-fair-draw-group-quantity");
+        const quantity = setTradeFairDrawGroupQuantity(groupIds, checkbox.checked ? 1 : 0);
+        if (quantityInput) quantityInput.value = String(quantity);
+        updateTradeFairDrawSelection();
+      });
+    });
 
-        goodIds.forEach((goodId) => {
-          if (checkbox.checked) {
-            selectedTradeFairDrawGoods.add(goodId);
-          } else {
-            selectedTradeFairDrawGoods.delete(goodId);
-          }
-        });
-
+  listEl
+    .querySelectorAll(".trade-fair-draw-group-quantity")
+    .forEach((quantityInput) => {
+      quantityInput.addEventListener("click", (event) => event.stopPropagation());
+      quantityInput.addEventListener("change", () => {
+        const groupIds = String(quantityInput.dataset.groupIds || "")
+          .split(",").map(Number).filter(Boolean);
+        const quantity = setTradeFairDrawGroupQuantity(groupIds, quantityInput.value);
+        quantityInput.value = String(quantity);
+        const checkbox = quantityInput.closest(".trade-fair-draw-good-card")
+          ?.querySelector(".trade-fair-draw-good-checkbox");
+        if (checkbox) checkbox.checked = quantity > 0;
         updateTradeFairDrawSelection();
       });
     });
