@@ -18098,10 +18098,10 @@ border:1px solid rgba(255,255,255,0.16);
 }
 
 .trade-fair-draw-group-controls {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+  gap: 5px 7px;
   padding: 8px 10px;
   border-top: 1px solid rgba(16, 42, 76, 0.12);
   color: #17365d;
@@ -18109,13 +18109,28 @@ border:1px solid rgba(255,255,255,0.16);
   font-weight: 800;
 }
 
+.trade-fair-draw-group-controls span:first-child {
+  grid-column: 1 / -1;
+}
+
+.trade-fair-draw-group-controls span:nth-child(2) {
+  white-space: nowrap;
+}
+
 .trade-fair-draw-group-quantity {
-  width: 48px;
+  position: static !important;
+  grid-column: 2;
+  grid-row: 2;
+  width: 48px !important;
+  height: 24px !important;
+  margin: 0;
   padding: 3px 5px;
   border: 1px solid rgba(16, 42, 76, 0.25);
   border-radius: 6px;
+  background: #ffffff;
   color: #102a4c;
   font-weight: 800;
+  accent-color: auto;
 }
 
 .trade-fair-good-quantity {
