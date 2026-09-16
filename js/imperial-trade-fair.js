@@ -1284,42 +1284,42 @@ function renderTradeFairEligibleGoods(data) {
   const label2 = escapeTradeFairHtml(industry2);
 
   container.className = "trade-fair-goods-list";
-  container.innerHTML = \`
+  container.innerHTML = `
     <div class="trade-fair-selection-summary">
-      <strong>\${escapeTradeFairHtml(data.contract?.name || selectedTradeFairTier)}</strong>
-      <span>Select exactly \${foodRequired} \${label1} and \${pharmaRequired} \${label2} Goods.</span>
+      <strong>${escapeTradeFairHtml(data.contract?.name || selectedTradeFairTier)}</strong>
+      <span>Select exactly ${foodRequired} ${label1} and ${pharmaRequired} ${label2} Goods.</span>
     </div>
 
     <section class="trade-fair-goods-industry-section">
       <div class="trade-fair-goods-industry-head">
         <div>
-          <strong>🏭 \${label1} Goods</strong>
-          <small>Required: <span id="trade-fair-food-selected-count">0</span> / \${foodRequired}</small>
+          <strong>🏭 ${label1} Goods</strong>
+          <small>Required: <span id="trade-fair-food-selected-count">0</span> / ${foodRequired}</small>
         </div>
-        <span class="\${enoughFood ? "trade-fair-enough" : "trade-fair-not-enough"}">Available: \${foodGoods.length}</span>
+        <span class="${enoughFood ? "trade-fair-enough" : "trade-fair-not-enough"}">Available: ${foodGoods.length}</span>
       </div>
       <div class="trade-fair-goods-card-grid">
-        \${foodGoods.length
+        ${foodGoods.length
           ? foodGoods.map((good) => renderTradeFairGoodCard(good, industry1, foodRequired, "food")).join("")
-          : \`<div class="trade-fair-no-goods">No eligible \${label1} Goods found for this contract.</div>\`}
+          : `<div class="trade-fair-no-goods">No eligible ${label1} Goods found for this contract.</div>`}
       </div>
     </section>
 
     <section class="trade-fair-goods-industry-section">
       <div class="trade-fair-goods-industry-head">
         <div>
-          <strong>🏭 \${label2} Goods</strong>
-          <small>Required: <span id="trade-fair-pharma-selected-count">0</span> / \${pharmaRequired}</small>
+          <strong>🏭 ${label2} Goods</strong>
+          <small>Required: <span id="trade-fair-pharma-selected-count">0</span> / ${pharmaRequired}</small>
         </div>
-        <span class="\${enoughPharma ? "trade-fair-enough" : "trade-fair-not-enough"}">Available: \${pharmaGoods.length}</span>
+        <span class="${enoughPharma ? "trade-fair-enough" : "trade-fair-not-enough"}">Available: ${pharmaGoods.length}</span>
       </div>
       <div class="trade-fair-goods-card-grid">
-        \${pharmaGoods.length
+        ${pharmaGoods.length
           ? pharmaGoods.map((good) => renderTradeFairGoodCard(good, industry2, pharmaRequired, "pharma")).join("")
-          : \`<div class="trade-fair-no-goods">No eligible \${label2} Goods found for this contract.</div>\`}
+          : `<div class="trade-fair-no-goods">No eligible ${label2} Goods found for this contract.</div>`}
       </div>
     </section>
-  \`;
+  `;
 
   container.querySelectorAll(".trade-fair-good-checkbox").forEach((checkbox) => {
     checkbox.addEventListener("change", handleTradeFairGoodsSelection);
@@ -1328,12 +1328,12 @@ function renderTradeFairEligibleGoods(data) {
   if (!data.totals?.enough_goods) {
     setTradeFairText(
       "trade-fair-action-status",
-      \`You do not currently have enough eligible \${data.contract?.rarity || ""} \${industry1} and \${industry2} Goods for this contract.\`,
+      `You do not currently have enough eligible ${data.contract?.rarity || ""} ${industry1} and ${industry2} Goods for this contract.`,
     );
   } else {
     setTradeFairText(
       "trade-fair-action-status",
-      \`Select the required \${industry1} and \${industry2} Goods.\`,
+      `Select the required ${industry1} and ${industry2} Goods.`,
     );
   }
 }
@@ -1371,7 +1371,7 @@ async function handleTradeFairGoodsSelection(event) {
     if (!allowed) {
       setTradeFairText(
         "trade-fair-action-status",
-        \`Select only \${selectedTradeFairRequirements.food_required} \${industry1} Goods.\`,
+        `Select only ${selectedTradeFairRequirements.food_required} ${industry1} Goods.`,
       );
     }
   }
@@ -1385,7 +1385,7 @@ async function handleTradeFairGoodsSelection(event) {
     if (!allowed) {
       setTradeFairText(
         "trade-fair-action-status",
-        \`Select only \${selectedTradeFairRequirements.pharma_required} \${industry2} Goods.\`,
+        `Select only ${selectedTradeFairRequirements.pharma_required} ${industry2} Goods.`,
       );
     }
   }
@@ -1410,7 +1410,7 @@ async function handleTradeFairGoodsSelection(event) {
     resetTradeFairPreview();
     setTradeFairText(
       "trade-fair-action-status",
-      \`Selected \${selectedTradeFairFoodIds.length}/\${selectedTradeFairRequirements.food_required} \${industry1} and \${selectedTradeFairPharmaIds.length}/\${selectedTradeFairRequirements.pharma_required} \${industry2} Goods.\`,
+      `Selected ${selectedTradeFairFoodIds.length}/${selectedTradeFairRequirements.food_required} ${industry1} and ${selectedTradeFairPharmaIds.length}/${selectedTradeFairRequirements.pharma_required} ${industry2} Goods.`,
     );
   }
 }
