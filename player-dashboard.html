@@ -2885,13 +2885,13 @@ const titleData = getPlayerTitle(lifetimeRank);
 
             html += `
     <div class="leaderboard-row ${index < 3 ? "leaderboard-top" : ""} ${
-     Number(row.global_ep_share_percent || 0) > 1.5
+     Number(row.global_ep_share_percent || 0) > 1
         ? "crate-qualified"
         : ""
     }" 
 data-tooltip="${
               Number(row.current_ep_per_day || row.ep_per_day || 0) >= 100 &&
-              Number(row.global_ep_share_percent || 0) >= 1.5
+              Number(row.global_ep_share_percent || 0) >= 1
                 ? "Eligible for Daily Crate 🎁"
                 : ""
             }">
