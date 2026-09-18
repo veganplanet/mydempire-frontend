@@ -479,16 +479,16 @@
 >
   <p class="status-text">Loading Factory Fulfillment Board...</p>
 </div>
-<div id="fulfillment-guide-modal" class="fulfillment-guide-modal" style="display:none;">
+<div id="fulfillment-guide-modal" class="fulfillment-guide-modal" role="dialog" aria-modal="true" aria-labelledby="fulfillment-guide-title" aria-describedby="fulfillment-guide-description" aria-hidden="true" style="display:none;">
   <div class="fulfillment-guide-backdrop" onclick="closeFulfillmentGuide()"></div>
 
   <div class="fulfillment-guide-box">
     <div class="fulfillment-guide-head">
-      <h3>🏭 Factory Fulfillment Guide</h3>
-      <button type="button" onclick="closeFulfillmentGuide()">×</button>
+      <h3 id="fulfillment-guide-title">🏭 Factory Fulfillment Guide</h3>
+      <button type="button" aria-label="Close Factory Fulfillment Guide" onclick="closeFulfillmentGuide()">×</button>
     </div>
 
-    <div class="fulfillment-guide-body">
+    <div id="fulfillment-guide-description" class="fulfillment-guide-body">
       <p>
         Factory Fulfillment Board lets your active industries complete real-feeling
         production orders over time.
@@ -524,20 +524,20 @@
     </div>
   </div>
 </div>
-<div id="fulfillment-claim-modal" class="fulfillment-claim-modal" style="display:none;">
+<div id="fulfillment-claim-modal" class="fulfillment-claim-modal" role="dialog" aria-modal="true" aria-labelledby="fulfillment-claim-title" aria-describedby="fulfillment-claim-description" aria-hidden="true" style="display:none;">
   <div class="fulfillment-claim-backdrop" onclick="closeFulfillmentClaimModal()"></div>
 
   <div class="fulfillment-claim-box">
     <div class="fulfillment-claim-head">
       <div>
         <div class="fulfillment-claim-kicker">FULFILLMENT SETTLED</div>
-        <h3>🏭 Factory Fulfillment Complete</h3>
+        <h3 id="fulfillment-claim-title">🏭 Factory Fulfillment Complete</h3>
       </div>
 
-      <button type="button" onclick="closeFulfillmentClaimModal()">×</button>
+      <button type="button" aria-label="Close fulfillment result" onclick="closeFulfillmentClaimModal()">×</button>
     </div>
 
-    <div class="fulfillment-claim-body">
+    <div id="fulfillment-claim-description" class="fulfillment-claim-body">
       <div id="fulfillment-claim-outcome" class="fulfillment-claim-outcome">
         Loading outcome...
       </div>
@@ -583,17 +583,17 @@
     </div>
   </div>
 </div>
-<div id="fulfillment-credit-shop-modal" class="fulfillment-start-modal" style="display:none;">
+<div id="fulfillment-credit-shop-modal" class="fulfillment-start-modal" role="dialog" aria-modal="true" aria-labelledby="fulfillment-credit-shop-title" aria-describedby="fulfillment-credit-shop-description" aria-hidden="true" style="display:none;">
   <div class="fulfillment-start-backdrop" onclick="closeFulfillmentCreditShopModal()"></div>
 
   <div class="fulfillment-start-box">
     <div class="fulfillment-start-head">
       <div>
         <div class="fulfillment-start-kicker">FULFILLMENT CREDIT SHOP</div>
-        <h3>🏪 Spend Fulfillment Credits</h3>
+        <h3 id="fulfillment-credit-shop-title">🏪 Spend Fulfillment Credits</h3>
       </div>
 
-      <button type="button" onclick="closeFulfillmentCreditShopModal()">×</button>
+      <button type="button" aria-label="Close Fulfillment Credit Shop" onclick="closeFulfillmentCreditShopModal()">×</button>
     </div>
 
     <div class="fulfillment-start-body">
@@ -649,6 +649,8 @@
 
       <div
   id="fulfillment-credit-shop-status"
+  role="status"
+  aria-live="polite"
   style="margin-top:14px;color:#64748b;font-size:13px;font-weight:800;line-height:1.5;"
 >
   Select an item to redeem from the Credit Shop.
@@ -656,25 +658,25 @@
     </div>
   </div>
 </div>
-<div id="fulfillment-start-modal" class="fulfillment-start-modal" style="display:none;">
+<div id="fulfillment-start-modal" class="fulfillment-start-modal" role="dialog" aria-modal="true" aria-labelledby="fulfillment-start-title" aria-describedby="fulfillment-start-description" aria-hidden="true" style="display:none;">
   <div class="fulfillment-start-backdrop" onclick="closeFulfillmentStartModal()"></div>
 
   <div class="fulfillment-start-box">
     <div class="fulfillment-start-head">
       <div>
         <div class="fulfillment-start-kicker">ACCEPT FULFILLMENT ORDER</div>
-        <h3>🏭 Confirm Factory Fulfillment</h3>
+        <h3 id="fulfillment-start-title">🏭 Confirm Factory Fulfillment</h3>
       </div>
 
-      <button type="button" onclick="closeFulfillmentStartModal()">×</button>
+      <button type="button" aria-label="Close fulfillment order window" onclick="closeFulfillmentStartModal()">×</button>
     </div>
 
     <div class="fulfillment-start-body">
-      <div class="fulfillment-start-summary" id="fulfillment-start-summary">
+      <div class="fulfillment-start-summary" id="fulfillment-start-summary" aria-live="polite">
         Loading order details...
       </div>
 
-      <div class="fulfillment-start-warning">
+      <div id="fulfillment-start-description" class="fulfillment-start-warning">
         ⚠️ Fulfillment cannot be cancelled after start. Choose carefully before accepting the order.
       </div>
 
@@ -7380,5 +7382,59 @@ if (initialTab === "management") {
   }
 }
 </style>
+  <script>
+/* Accessible Factory Fulfillment dialogs */
+(function () {
+  const dialogIds = ["fulfillment-guide-modal","fulfillment-claim-modal","fulfillment-credit-shop-modal","fulfillment-start-modal"];
+  let lastFocusedElement = null;
+  let activeDialog = null;
+  function getFocusable(dialog) {
+    return Array.from(dialog.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'));
+  }
+  function syncDialog(dialog) {
+    const isOpen = dialog.style.display !== "none" && !dialog.hidden;
+    dialog.setAttribute("aria-hidden", String(!isOpen));
+    if (isOpen && activeDialog !== dialog) {
+      lastFocusedElement = document.activeElement;
+      activeDialog = dialog;
+      const first = getFocusable(dialog)[0];
+      if (first) setTimeout(() => first.focus(), 0);
+    } else if (!isOpen && activeDialog === dialog) {
+      activeDialog = null;
+      if (lastFocusedElement && typeof lastFocusedElement.focus === "function") setTimeout(() => lastFocusedElement.focus(), 0);
+      lastFocusedElement = null;
+    }
+  }
+  const observer = new MutationObserver(() => dialogIds.forEach((id) => {
+    const dialog = document.getElementById(id);
+    if (dialog) syncDialog(dialog);
+  }));
+  function initialise() {
+    dialogIds.forEach((id) => {
+      const dialog = document.getElementById(id);
+      if (dialog) {
+        dialog.setAttribute("aria-hidden", "true");
+        observer.observe(dialog, { attributes: true, attributeFilter: ["style", "hidden"] });
+      }
+    });
+  }
+  document.addEventListener("keydown", (event) => {
+    if (!activeDialog) return;
+    if (event.key === "Escape") {
+      const closeButton = activeDialog.querySelector('button[aria-label^="Close"]');
+      if (closeButton) closeButton.click();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const focusable = getFocusable(activeDialog);
+    if (!focusable.length) return;
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  });
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialise);
+  else initialise();
+})();
+</script>
   </body>
 </html>
