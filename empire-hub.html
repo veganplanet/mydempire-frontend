@@ -4769,21 +4769,21 @@ async function startFactoryFulfillment(fulfillmentType) {
     STANDARD_BATCH: {
       label: "Standard Batch",
       targetPercent: 0.01,
-      baseRewardPercent: 0.08,
+      baseRewardPercent: 0.05,
       cycleHours: 24,
       credits: 1,
     },
     BULK_SHIPMENT: {
       label: "Bulk Shipment",
       targetPercent: 0.025,
-      baseRewardPercent: 0.1,
+      baseRewardPercent: 0.07,
       cycleHours: 48,
       credits: 2,
     },
     GRAND_CONSIGNMENT: {
       label: "Grand Consignment",
       targetPercent: 0.05,
-      baseRewardPercent: 0.12,
+      baseRewardPercent: 0.1,
       cycleHours: 72,
       credits: 4,
     },
@@ -4796,7 +4796,7 @@ async function startFactoryFulfillment(fulfillmentType) {
     return;
   }
 
-  let globalEP = 16960;
+  let globalEP = 0;
 
   try {
     const playerResponse = await fetch(
@@ -4816,7 +4816,12 @@ async function startFactoryFulfillment(fulfillmentType) {
       }
     }
   } catch (err) {
-    console.warn("Fulfillment preview using fallback Global EP:", err);
+    console.warn("Fulfillment preview could not load dynamic Global EP:", err);
+  }
+
+  if (!Number.isFinite(globalEP) || globalEP <= 0) {
+    alert("Current Global EP is unavailable. Please refresh and try again.");
+    return;
   }
 
   const targetPoints = Math.max(
