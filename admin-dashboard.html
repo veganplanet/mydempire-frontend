@@ -7463,7 +7463,12 @@ Players snapshotted: ${data.players_snapshotted}
         const canCancelDraft =
           actions.includes("CANCEL_DRAFT") ||
           data.controls?.can_cancel_draft === true ||
-          String(data.event?.database_status || "").toUpperCase() === "DRAFT";
+          String(
+            data.event?.database_status ||
+              data.event?.status ||
+              data.status ||
+              "",
+          ).toUpperCase() === "DRAFT";
         const canActivate = actions.includes("ACTIVATE");
         const canEnd = actions.includes("END");
 
