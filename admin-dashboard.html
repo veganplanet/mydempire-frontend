@@ -7836,15 +7836,28 @@ Players snapshotted: ${data.players_snapshotted}
         }
 
         /*
-    datetime-local values are entered in the admin's
-    own browser/local time.
-
-    JavaScript converts them to UTC automatically
-    when toISOString() is used before sending.
+    The Admin fields are explicitly labeled UTC. A datetime-local
+    value has no timezone, so append Z instead of letting the
+    browser interpret it in the administrator's local timezone.
   */
-        const startsAt = startsAtValue ? new Date(startsAtValue) : null;
+        function parseTradeFairUtcInput(value) {
+          if (!value) return null;
 
-        const endsAt = endsAtValue ? new Date(endsAtValue) : null;
+          const normalizedValue =
+            value.length === 16
+              ? `${value}:00Z`
+              : value.endsWith("Z")
+                ? value
+                : `${value}Z`;
+
+          const date = new Date(normalizedValue);
+
+          return Number.isNaN(date.getTime()) ? null : date;
+        }
+
+        const startsAt = parseTradeFairUtcInput(startsAtValue);
+
+        const endsAt = parseTradeFairUtcInput(endsAtValue);
 
         const invalidStartsAt = !startsAt || Number.isNaN(startsAt.getTime());
 
@@ -7853,7 +7866,7 @@ Players snapshotted: ${data.players_snapshotted}
         if (!eventName || invalidStartsAt || invalidEndsAt) {
           if (statusEl) {
             statusEl.textContent =
-              "❌ Enter the event name and valid local start and end times.";
+              "❌ Enter the event name and valid UTC start and end times.";
           }
 
           return;
@@ -7872,8 +7885,8 @@ Players snapshotted: ${data.players_snapshotted}
 
         const confirmed = window.confirm(
           `Create "${eventName}" as a new DRAFT Trade Fair?\n\n` +
-            `Start: ${startsAt.toLocaleString()}\n` +
-            `End: ${endsAt.toLocaleString()}`,
+            `Start: ${startsAt.toLocaleString("en-GB", { timeZone: "UTC" })} UTC\n` +
+            `End: ${endsAt.toLocaleString("en-GB", { timeZone: "UTC" })} UTC`,
         );
 
         if (!confirmed) {
