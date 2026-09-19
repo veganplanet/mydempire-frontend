@@ -13,6 +13,56 @@
       reward: "Imperial Mint Blueprint + permanent Hall of Fame title",
     }),
     Object.freeze({
+      code: "FIRST_FOOD_SPECIALIST",
+      state: "active",
+      icon: "🌾",
+      heading: "Race to 100,000 Food EP",
+      title: "First Food Specialist",
+      description:
+        "The first player to reach 100,000 verified Lifetime Food EP will earn this permanent title.",
+      reward: "1 Imperial Ticket + permanent Hall of Fame title",
+    }),
+    Object.freeze({
+      code: "FIRST_TEXTILE_SPECIALIST",
+      state: "active",
+      icon: "🧵",
+      heading: "Race to 100,000 Textile EP",
+      title: "First Textile Specialist",
+      description:
+        "The first player to reach 100,000 verified Lifetime Textile EP will earn this permanent title.",
+      reward: "1 Imperial Ticket + permanent Hall of Fame title",
+    }),
+    Object.freeze({
+      code: "FIRST_PHARMA_SPECIALIST",
+      state: "active",
+      icon: "💊",
+      heading: "Race to 100,000 Pharma EP",
+      title: "First Pharma Specialist",
+      description:
+        "The first player to reach 100,000 verified Lifetime Pharma EP will earn this permanent title.",
+      reward: "1 Imperial Ticket + permanent Hall of Fame title",
+    }),
+    Object.freeze({
+      code: "FIRST_CHEMICAL_SPECIALIST",
+      state: "active",
+      icon: "⚗️",
+      heading: "Race to 100,000 Chemical EP",
+      title: "First Chemical Specialist",
+      description:
+        "The first player to reach 100,000 verified Lifetime Chemical EP will earn this permanent title.",
+      reward: "1 Imperial Ticket + permanent Hall of Fame title",
+    }),
+    Object.freeze({
+      code: "FIRST_SUPERMARKET_SPECIALIST",
+      state: "active",
+      icon: "🛒",
+      heading: "Race to 100,000 Supermarket EP",
+      title: "First Supermarket Specialist",
+      description:
+        "The first player to reach 100,000 verified Lifetime Supermarket EP will earn this permanent title.",
+      reward: "1 Imperial Ticket + permanent Hall of Fame title",
+    }),
+    Object.freeze({
       code: "GOLDEN_1000TH_PACK",
       state: "achieved",
       username: "danideuder",
