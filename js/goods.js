@@ -2626,7 +2626,8 @@ function updateGoodsTradeFairBanner(data) {
     Number.isFinite(endsAt) &&
     now >= startsAt &&
     now < endsAt;
-  const isUpcoming = isActive && Number.isFinite(startsAt) && now < startsAt;
+  const hasUpcomingDate = Number.isFinite(startsAt) && now < startsAt;
+  const isUpcoming = isActive && hasUpcomingDate;
 
   let label = "Opens: Coming Soon";
   let title = "The Imperial Trade Fair will open soon";
@@ -2636,10 +2637,12 @@ function updateGoodsTradeFairBanner(data) {
     label = "Live Now";
     title = "Open the live Imperial Trade Fair";
     enabled = true;
-  } else if (isUpcoming) {
+  } else if (hasUpcomingDate) {
     label = `Opens: ${formatTradeFairBannerDate(event.starts_at)}`;
-    title = "View the upcoming Imperial Trade Fair";
-    enabled = true;
+    title = isActive
+      ? "View the upcoming Imperial Trade Fair"
+      : "The Trade Fair is configured but not activated yet";
+    enabled = isActive;
   } else if (
     isActive &&
     Number.isFinite(endsAt) &&
