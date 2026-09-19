@@ -2677,6 +2677,15 @@ forkyishere,529"
             </button>
 
             <button
+              id="trade-fair-cancel-draft-btn"
+              type="button"
+              class="danger"
+              disabled
+            >
+              🟡 Cancel Draft
+            </button>
+
+            <button
               id="trade-fair-activate-btn"
               type="button"
               class="primary"
@@ -7389,17 +7398,23 @@ Players snapshotted: ${data.players_snapshotted}
 
       function setTradeFairAdminButtons({
         canCreate = false,
+        canCancelDraft = false,
         canActivate = false,
         canEnd = false,
       } = {}) {
         const createBtn = document.getElementById("trade-fair-create-btn");
-
+        const cancelDraftBtn = document.getElementById(
+          "trade-fair-cancel-draft-btn",
+        );
         const activateBtn = document.getElementById("trade-fair-activate-btn");
-
         const endBtn = document.getElementById("trade-fair-end-btn");
 
         if (createBtn) {
           createBtn.disabled = !canCreate;
+        }
+
+        if (cancelDraftBtn) {
+          cancelDraftBtn.disabled = !canCancelDraft;
         }
 
         if (activateBtn) {
@@ -7445,11 +7460,15 @@ Players snapshotted: ${data.players_snapshotted}
         const actions = getTradeFairAdminActions(data);
 
         const canCreate = actions.includes("CREATE");
+        const canCancelDraft =
+          actions.includes("CANCEL_DRAFT") ||
+          data.controls?.can_cancel_draft === true;
         const canActivate = actions.includes("ACTIVATE");
         const canEnd = actions.includes("END");
 
         setTradeFairAdminButtons({
           canCreate,
+          canCancelDraft,
           canActivate,
           canEnd,
         });
@@ -7470,7 +7489,9 @@ Players snapshotted: ${data.players_snapshotted}
 
         if (canActivate) {
           controlStatus.textContent =
-            "The latest Trade Fair is in DRAFT. Review the UTC schedule, then activate it.";
+            canCancelDraft
+              ? "The latest Trade Fair is in DRAFT. Review the UTC schedule, activate it, or cancel it to create a corrected draft."
+              : "The latest Trade Fair is in DRAFT. Review the UTC schedule, then activate it.";
           return;
         }
 
@@ -8070,9 +8091,62 @@ Players snapshotted: ${data.players_snapshotted}
         }
       }
 
+      async function cancelTradeFairDraftAdminEvent() {
+        const statusEl = document.getElementById("trade-fair-control-status");
+
+        if (!ADMIN_KEY) {
+          if (statusEl) statusEl.textContent = "Connect Admin first.";
+          return;
+        }
+
+        const confirmed = window.confirm(
+          "Cancel the current unactivated Trade Fair draft? This keeps the record as ENDED and allows a corrected draft to be created.",
+        );
+
+        if (!confirmed) return;
+
+        try {
+          const response = await fetch(
+            `${API_BASE}/admin/imperial-trade-fair/cancel-draft`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-admin-key": ADMIN_KEY,
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Failed to cancel the draft.");
+          }
+
+          if (statusEl) {
+            statusEl.textContent =
+              data.message || "Trade Fair draft cancelled successfully.";
+          }
+
+          await loadTradeFairAdminStatus();
+        } catch (err) {
+          console.error("Trade Fair draft cancellation error:", err);
+
+          if (statusEl) {
+            statusEl.textContent = `❌ ${err.message || "Failed to cancel the draft."}`;
+          }
+
+          await loadTradeFairAdminStatus();
+        }
+      }
+
       document
         .getElementById("trade-fair-create-btn")
         ?.addEventListener("click", createTradeFairAdminEvent);
+
+      document
+        .getElementById("trade-fair-cancel-draft-btn")
+        ?.addEventListener("click", cancelTradeFairDraftAdminEvent);
 
       document
         .getElementById("trade-fair-activate-btn")
