@@ -7462,7 +7462,8 @@ Players snapshotted: ${data.players_snapshotted}
         const canCreate = actions.includes("CREATE");
         const canCancelDraft =
           actions.includes("CANCEL_DRAFT") ||
-          data.controls?.can_cancel_draft === true;
+          data.controls?.can_cancel_draft === true ||
+          String(data.event?.database_status || "").toUpperCase() === "DRAFT";
         const canActivate = actions.includes("ACTIVATE");
         const canEnd = actions.includes("END");
 
