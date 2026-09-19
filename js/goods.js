@@ -2578,3 +2578,123 @@ function openImperialTicketMarketplace() {
   window.location.href =
     "marketplace.html?tab=premium&material=IMPERIAL_TICKET";
 }
+
+
+// =========================================
+// 🏛 TRADE FAIR — FACTORY BANNER STATUS
+// =========================================
+
+function formatTradeFairBannerDate(value) {
+  const date = new Date(value);
+
+  if (!Number.isFinite(date.getTime())) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  })
+    .format(date)
+    .toUpperCase();
+}
+
+function updateGoodsTradeFairBanner(data) {
+  const statusEl = document.getElementById("goods-trade-fair-banner-status");
+  const viewButton = document.getElementById("goods-trade-fair-banner-view");
+
+  if (!statusEl || !viewButton) return;
+
+  const dot = statusEl.querySelector(".goods-trade-fair-banner-v2-status-dot");
+  const event = data?.event;
+  const databaseStatus = String(
+    event?.database_status || event?.status || "",
+  )
+    .trim()
+    .toUpperCase();
+
+  const startsAt = new Date(event?.starts_at).getTime();
+  const endsAt = new Date(event?.ends_at).getTime();
+  const now = Date.now();
+
+  const isActive = databaseStatus === "ACTIVE";
+  const isLive =
+    isActive &&
+    Number.isFinite(startsAt) &&
+    Number.isFinite(endsAt) &&
+    now >= startsAt &&
+    now < endsAt;
+  const isUpcoming = isActive && Number.isFinite(startsAt) && now < startsAt;
+
+  let label = "Opens: Coming Soon";
+  let title = "The Imperial Trade Fair will open soon";
+  let enabled = false;
+
+  if (isLive) {
+    label = "Live Now";
+    title = "Open the live Imperial Trade Fair";
+    enabled = true;
+  } else if (isUpcoming) {
+    label = `Opens: ${formatTradeFairBannerDate(event.starts_at)}`;
+    title = "View the upcoming Imperial Trade Fair";
+    enabled = true;
+  } else if (
+    isActive &&
+    Number.isFinite(endsAt) &&
+    now >= endsAt
+  ) {
+    label = "Event Ended";
+    title = "This Imperial Trade Fair has ended";
+  }
+
+  statusEl.replaceChildren();
+  if (dot) {
+    statusEl.appendChild(dot);
+  }
+  statusEl.appendChild(document.createTextNode(label));
+
+  viewButton.disabled = !enabled;
+  viewButton.setAttribute("aria-disabled", String(!enabled));
+  viewButton.title = title;
+  viewButton.classList.toggle(
+    "goods-trade-fair-banner-v2-enter-live",
+    enabled,
+  );
+
+  if (enabled) {
+    viewButton.onclick = () => {
+      window.location.href = "imperial-trade-fair.html";
+    };
+  } else {
+    viewButton.onclick = null;
+  }
+}
+
+async function loadGoodsTradeFairBannerStatus() {
+  const username = getGoodsLoggedInUser();
+
+  if (!username) return;
+
+  try {
+    const response = await fetch(
+      `${GOODS_API_BASE}/imperial-trade-fair/state/${encodeURIComponent(
+        username,
+      )}?t=${Date.now()}`,
+      { cache: "no-store" },
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Unable to load Trade Fair status.");
+    }
+
+    updateGoodsTradeFairBanner(data);
+  } catch (error) {
+    console.error("Trade Fair banner status error:", error);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadGoodsTradeFairBannerStatus);
