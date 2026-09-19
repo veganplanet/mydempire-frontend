@@ -1851,3 +1851,18 @@
   width: fit-content;
   margin: 0 0 18px auto;
 }
+
+
+.goods-trade-fair-banner-v2-enter-live {
+  border-color: #f8d995;
+  background: linear-gradient(135deg, #f8d995, #bd7a34);
+  color: #35204f;
+  cursor: pointer;
+  opacity: 1;
+  box-shadow: 0 8px 18px rgba(248, 217, 149, 0.22);
+}
+
+.goods-trade-fair-banner-v2-enter-live:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(248, 217, 149, 0.34);
+}
