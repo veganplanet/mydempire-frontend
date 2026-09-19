@@ -7576,6 +7576,10 @@ Players snapshotted: ${data.players_snapshotted}
 
         const activateBtn = document.getElementById("trade-fair-activate-btn");
 
+        const cancelDraftBtn = document.getElementById(
+          "trade-fair-cancel-draft-btn",
+        );
+
         const endBtn = document.getElementById("trade-fair-end-btn");
 
         const playerReportBody = document.getElementById(
@@ -7686,6 +7690,16 @@ Players snapshotted: ${data.players_snapshotted}
 
           if (activateBtn) {
             activateBtn.disabled = !controls.can_activate;
+          }
+
+          if (cancelDraftBtn) {
+            const eventStatus = String(
+              event.database_status || event.status || "",
+            ).toUpperCase();
+
+            cancelDraftBtn.disabled = !(
+              controls.can_cancel_draft === true || eventStatus === "DRAFT"
+            );
           }
 
           if (endBtn) {
