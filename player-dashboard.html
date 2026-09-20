@@ -3818,6 +3818,21 @@ if (!Array.isArray(overviewData.lands)) {
   window.cachedEmpireOverviewData = overviewData;
 }
 
+    let blueprintCount = 0;
+    try {
+      const blueprintsRes = await fetch(
+        apiUrl(`/player/${encodeURIComponent(PLAYER_USERNAME)}/blueprints`)
+      );
+      if (blueprintsRes.ok) {
+        const blueprintsData = await blueprintsRes.json();
+        blueprintCount = Array.isArray(blueprintsData.blueprints)
+          ? blueprintsData.blueprints.length
+          : 0;
+      }
+    } catch (error) {
+      console.warn("Failed to load blueprint count:", error);
+    }
+
     window.dashboardData = data;
 
     updateCrateCardDisplay();
@@ -3960,12 +3975,12 @@ setText(
           );
 
           // ===== BLUEPRINTS =====
-          const totalBlueprints = 0;
+          const totalBlueprints = blueprintCount;
 
           setText("summary-factories-total", totalFactories);
           setText(
             "summary-factories-breakdown",
-           `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories} | Blueprints: ${Number(data.blueprintCount || 0)}`,
+           `Active: ${activeFactories} | Building: ${buildingFactories} | Inactive: ${inactiveFactories} | Blueprints: ${totalBlueprints}`,
           );
 setText("maintenance-active-count", activeFactories);
 setText("maintenance-attention-count", inactiveFactories);
