@@ -22232,3 +22232,154 @@ body.read-only-mode #bulk-maintenance-actions {
     margin-left: 0;
   }
 }\n
+
+/* =========================================
+   DYNAMIC REINVEST BONUS INFO
+========================================= */
+
+.dao-reinvest-bonus-card .dao-bonus-info-btn {
+  align-self: flex-start;
+  margin-top: 10px;
+  padding: 0;
+  border: 0;
+  color: #5b6f94;
+  background: transparent;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.3;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.dao-reinvest-bonus-card .dao-bonus-info-btn:hover,
+.dao-reinvest-bonus-card .dao-bonus-info-btn:focus-visible {
+  color: #2d4d85;
+}
+
+.dao-reinvest-bonus-card .dao-bonus-info-btn:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid #d5aa45;
+  outline-offset: 4px;
+}
+
+.dao-bonus-info-modal .dao-modal-panel {
+  width: min(560px, calc(100vw - 28px));
+}
+
+.dao-bonus-info-modal h2 {
+  margin: 6px 44px 10px 0;
+}
+
+.dao-bonus-info-intro {
+  margin: 0 0 18px;
+  color: #586987;
+  line-height: 1.6;
+}
+
+.dao-bonus-live {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.dao-bonus-live > div {
+  padding: 14px;
+  border: 1px solid rgba(92, 115, 157, 0.2);
+  border-radius: 12px;
+  background: #f5f8ff;
+}
+
+.dao-bonus-live span {
+  display: block;
+  margin-bottom: 6px;
+  color: #7383a1;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dao-bonus-live strong {
+  display: block;
+  color: #082b62;
+  font-size: 1.05rem;
+}
+
+.dao-bonus-scale {
+  overflow: hidden;
+  margin: 18px 0;
+  border: 1px solid rgba(92, 115, 157, 0.22);
+  border-radius: 12px;
+}
+
+.dao-bonus-scale-header,
+.dao-bonus-scale-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 11px 14px;
+}
+
+.dao-bonus-scale-header {
+  color: #fff;
+  background: linear-gradient(135deg, #123d78, #4f2f70);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dao-bonus-scale-header span:last-child,
+.dao-bonus-scale-row strong {
+  text-align: right;
+}
+
+.dao-bonus-scale-row {
+  color: #4f607e;
+  background: #fff;
+  font-size: 0.9rem;
+}
+
+.dao-bonus-scale-row:nth-child(odd) {
+  background: #f7f9fd;
+}
+
+.dao-bonus-scale-row + .dao-bonus-scale-row {
+  border-top: 1px solid rgba(92, 115, 157, 0.14);
+}
+
+.dao-bonus-scale-row strong {
+  color: #082b62;
+}
+
+.dao-bonus-info-note {
+  margin: 0;
+  padding: 13px 14px;
+  border-left: 4px solid #d5aa45;
+  border-radius: 8px;
+  color: #596984;
+  background: #fff8e7;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.dao-bonus-info-close-btn {
+  width: 100%;
+  margin-top: 18px;
+}
+
+@media (max-width: 560px) {
+  .dao-bonus-live {
+    grid-template-columns: 1fr;
+  }
+
+  .dao-bonus-scale-header,
+  .dao-bonus-scale-row {
+    gap: 10px;
+    padding: 10px 11px;
+  }
+}
