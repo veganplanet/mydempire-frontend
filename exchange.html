@@ -216,10 +216,18 @@
             <small>Completed transactions</small>
           </div>
 
-          <div class="dao-stat-card">
+          <div class="dao-stat-card dao-reinvest-bonus-card">
             <span>Reinvest Bonus</span>
             <strong id="dao-stat-bonus">—</strong>
-            <small>Current bonus rate</small>
+            <small>Dynamic: 0–25% by EMP price</small>
+            <button
+              type="button"
+              class="dao-bonus-info-btn"
+              onclick="openDaoBonusInfo()"
+              aria-haspopup="dialog"
+            >
+              ⓘ How it works
+            </button>
           </div>
         </div>
       </section>
@@ -294,6 +302,95 @@
         </div>
       </section>
     </main>
+    <!-- ========================================
+     DYNAMIC REINVEST BONUS INFO
+======================================== -->
+
+    <div
+      id="dao-bonus-info-modal"
+      class="dao-modal dao-bonus-info-modal"
+      aria-hidden="true"
+    >
+      <div class="dao-modal-backdrop" onclick="closeDaoBonusInfo()"></div>
+
+      <div
+        class="dao-modal-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="dao-bonus-info-title"
+      >
+        <button
+          type="button"
+          class="dao-modal-close"
+          onclick="closeDaoBonusInfo()"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+        <span class="dao-modal-eyebrow">Imperial Exchange</span>
+        <h2 id="dao-bonus-info-title">Dynamic Reinvest Bonus</h2>
+
+        <p class="dao-bonus-info-intro">
+          The reinvestment bonus automatically adjusts with the live EMP market
+          rate. As EMP becomes stronger (fewer EMP per HIVE), the bonus decreases
+          to protect the economy and keep rewards sustainable.
+        </p>
+
+        <div class="dao-bonus-live">
+          <div>
+            <span>Current market rate</span>
+            <strong id="dao-bonus-info-current-rate">—</strong>
+          </div>
+          <div>
+            <span>Current reinvest bonus</span>
+            <strong id="dao-bonus-info-current-percent">—</strong>
+          </div>
+        </div>
+
+        <div class="dao-bonus-scale" aria-label="Dynamic bonus scale">
+          <div class="dao-bonus-scale-header">
+            <span>EMP market rate</span>
+            <span>Reinvest bonus</span>
+          </div>
+          <div class="dao-bonus-scale-row">
+            <span>100+ EMP per HIVE</span>
+            <strong>25%</strong>
+          </div>
+          <div class="dao-bonus-scale-row">
+            <span>95 EMP per HIVE</span>
+            <strong>18.75%</strong>
+          </div>
+          <div class="dao-bonus-scale-row">
+            <span>90 EMP per HIVE</span>
+            <strong>12.50%</strong>
+          </div>
+          <div class="dao-bonus-scale-row">
+            <span>85 EMP per HIVE</span>
+            <strong>6.25%</strong>
+          </div>
+          <div class="dao-bonus-scale-row">
+            <span>80 or fewer EMP per HIVE</span>
+            <strong>0%</strong>
+          </div>
+        </div>
+
+        <p class="dao-bonus-info-note">
+          Between these rates, the bonus changes proportionally. The exact
+          percentage is calculated when you request a quote and checked again
+          before reinvestment is completed.
+        </p>
+
+        <button
+          type="button"
+          class="dao-primary-btn dao-bonus-info-close-btn"
+          onclick="closeDaoBonusInfo()"
+        >
+          Got it
+        </button>
+      </div>
+    </div>
+
     <!-- ========================================
      DAO SELL EMP MODAL
 ======================================== -->
@@ -816,9 +913,13 @@
         }
 
         try {
-          const response = await fetch(`${API_BASE}/dao/emp-pool/statistics`);
+          const [response, poolResponse] = await Promise.all([
+            fetch(`${API_BASE}/dao/emp-pool/statistics`),
+            fetch(`${API_BASE}/dao/emp-pool/status`),
+          ]);
 
           const data = await response.json();
+          const poolData = await poolResponse.json();
 
           if (!response.ok || !data.success) {
             throw new Error(
@@ -826,7 +927,26 @@
             );
           }
 
+          if (!poolResponse.ok || !poolData.success) {
+            throw new Error(
+              poolData.error || "Unable to load live reinvest bonus.",
+            );
+          }
+
           const statistics = data.statistics || {};
+          const livePool = poolData.pool || poolData;
+          const currentEmpPerHive = Number(
+            livePool.current_emp_per_hive ??
+              livePool.current_price ??
+              livePool.emp_per_hive,
+          );
+          const backendBonus = Number(livePool.reinvest_bonus_percent);
+          const dynamicBonus = Number.isFinite(backendBonus)
+            ? backendBonus
+            : Math.min(
+                25,
+                Math.max(0, (currentEmpPerHive - 80) * 1.25),
+              );
 
           volumeElement.textContent = `${formatDaoNumber(statistics.total_volume_hive)} HIVE`;
 
@@ -836,7 +956,25 @@
             statistics.total_trades || 0,
           ).toLocaleString();
 
-          bonusElement.textContent = `${formatDaoNumber(25)}%`;
+          bonusElement.textContent = `${formatDaoNumber(dynamicBonus, 2)}%`;
+
+          const bonusInfoRate = document.getElementById(
+            "dao-bonus-info-current-rate",
+          );
+          const bonusInfoPercent = document.getElementById(
+            "dao-bonus-info-current-percent",
+          );
+
+          if (bonusInfoRate) {
+            bonusInfoRate.textContent = Number.isFinite(currentEmpPerHive)
+              ? `${formatDaoNumber(currentEmpPerHive, 3)} EMP/HIVE`
+              : "Unavailable";
+          }
+
+          if (bonusInfoPercent) {
+            bonusInfoPercent.textContent =
+              `${formatDaoNumber(dynamicBonus, 2)}%`;
+          }
         } catch (error) {
           console.error("DAO statistics loading error:", error);
 
@@ -1357,6 +1495,24 @@
         )
           .trim()
           .toLowerCase();
+      }
+
+      function setDaoBonusInfoModalOpen(isOpen) {
+        const modal = document.getElementById("dao-bonus-info-modal");
+
+        if (!modal) return;
+
+        modal.classList.toggle("is-open", isOpen);
+        modal.setAttribute("aria-hidden", String(!isOpen));
+        document.body.classList.toggle("dao-modal-open", isOpen);
+      }
+
+      function openDaoBonusInfo() {
+        setDaoBonusInfoModalOpen(true);
+      }
+
+      function closeDaoBonusInfo() {
+        setDaoBonusInfoModalOpen(false);
       }
 
       function setDaoModalOpen(isOpen) {
