@@ -219,7 +219,7 @@
           <div class="dao-stat-card">
             <span>Reinvest Bonus</span>
             <strong id="dao-stat-bonus">—</strong>
-            <small>Current bonus rate</small>
+            <small>Dynamic: 0–25% by EMP price</small>
           </div>
         </div>
       </section>
@@ -816,9 +816,13 @@
         }
 
         try {
-          const response = await fetch(`${API_BASE}/dao/emp-pool/statistics`);
+          const [response, poolResponse] = await Promise.all([
+            fetch(`${API_BASE}/dao/emp-pool/statistics`),
+            fetch(`${API_BASE}/dao/emp-pool/status`),
+          ]);
 
           const data = await response.json();
+          const poolData = await poolResponse.json();
 
           if (!response.ok || !data.success) {
             throw new Error(
@@ -826,7 +830,26 @@
             );
           }
 
+          if (!poolResponse.ok || !poolData.success) {
+            throw new Error(
+              poolData.error || "Unable to load live reinvest bonus.",
+            );
+          }
+
           const statistics = data.statistics || {};
+          const livePool = poolData.pool || poolData;
+          const currentEmpPerHive = Number(
+            livePool.current_emp_per_hive ??
+              livePool.current_price ??
+              livePool.emp_per_hive,
+          );
+          const backendBonus = Number(livePool.reinvest_bonus_percent);
+          const dynamicBonus = Number.isFinite(backendBonus)
+            ? backendBonus
+            : Math.min(
+                25,
+                Math.max(0, (currentEmpPerHive - 80) * 1.25),
+              );
 
           volumeElement.textContent = `${formatDaoNumber(statistics.total_volume_hive)} HIVE`;
 
@@ -836,7 +859,7 @@
             statistics.total_trades || 0,
           ).toLocaleString();
 
-          bonusElement.textContent = `${formatDaoNumber(25)}%`;
+          bonusElement.textContent = `${formatDaoNumber(dynamicBonus, 2)}%`;
         } catch (error) {
           console.error("DAO statistics loading error:", error);
 
