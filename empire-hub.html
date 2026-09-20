@@ -5079,9 +5079,9 @@ const rawSmp = Number(data.smpBalance || 0);
 const rawEmp = Number(data.empBalance || 0);
 
 const canCraftB4 =
-  rawFragments >= 5 &&
-  rawSmp >= 5 &&
-  rawEmp >= 100;
+  rawFragments >= 6 &&
+  rawSmp >= 10 &&
+  rawEmp >= 250;
 
 if (craftB4Btn) {
   craftB4Btn.disabled = !canCraftB4;
@@ -5093,16 +5093,16 @@ if (craftB4Status) {
   } else {
     const missing = [];
 
-    if (rawFragments < 5) {
-      missing.push(`${5 - rawFragments} Fragment${5 - rawFragments === 1 ? "" : "s"}`);
+    if (rawFragments < 6) {
+      missing.push(`${6 - rawFragments} Fragment${6 - rawFragments === 1 ? "" : "s"}`);
     }
 
-    if (rawSmp < 5) {
-      missing.push(`${5 - rawSmp} SMP`);
+    if (rawSmp < 10) {
+      missing.push(`${10 - rawSmp} SMP`);
     }
 
-    if (rawEmp < 100) {
-      missing.push(`${100 - rawEmp} EMP`);
+    if (rawEmp < 250) {
+      missing.push(`${250 - rawEmp} EMP`);
     }
 
     craftB4Status.textContent =
