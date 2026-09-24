@@ -4,13 +4,15 @@
   const HONORS = Object.freeze([
     Object.freeze({
       code: "FIRST_IMPERIAL_ARCHITECT",
-      state: "active",
+      state: "achieved",
+      username: "newenx",
       icon: "🏛",
-      heading: "Race to 500,000 Lifetime EP",
+      heading: "First to 500,000 Lifetime EP",
       title: "First Imperial Architect",
       description:
-        "The first player to reach 500,000 verified Lifetime EP will earn this permanent title.",
+        "Awarded to the first player in MydEmpire history to reach 500,000 verified Lifetime EP.",
       reward: "Imperial Mint Blueprint + permanent Hall of Fame title",
+      awardedAt: "2026-09-24",
     }),
     Object.freeze({
       code: "GOLDEN_1000TH_PACK",
