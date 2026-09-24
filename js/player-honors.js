@@ -11,7 +11,7 @@
       title: "First Imperial Architect",
       description:
         "Awarded to the first player in MydEmpire history to reach 500,000 verified Lifetime EP.",
-      reward: "Imperial Mint Blueprint + permanent Hall of Fame title",
+      reward: "Imperial Mint Blueprint — awarded",
       awardedAt: "2026-09-24",
     }),
     Object.freeze({
