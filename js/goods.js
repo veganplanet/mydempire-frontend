@@ -2648,7 +2648,8 @@ function updateGoodsTradeFairBanner(data) {
     (Number.isFinite(endsAt) && now >= endsAt)
   ) {
     label = "Event Ended";
-    title = "This Imperial Trade Fair has ended";
+    title = "View the completed Imperial Trade Fair";
+    enabled = true;
   }
 
   statusEl.replaceChildren();
