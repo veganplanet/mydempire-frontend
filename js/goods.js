@@ -2644,9 +2644,8 @@ function updateGoodsTradeFairBanner(data) {
       : "The Trade Fair is configured but not activated yet";
     enabled = isActive;
   } else if (
-    isActive &&
-    Number.isFinite(endsAt) &&
-    now >= endsAt
+    databaseStatus === "ENDED" ||
+    (Number.isFinite(endsAt) && now >= endsAt)
   ) {
     label = "Event Ended";
     title = "This Imperial Trade Fair has ended";
