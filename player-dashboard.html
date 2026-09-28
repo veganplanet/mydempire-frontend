@@ -54,6 +54,125 @@
 .daily-empire-report-link[hidden] {
   display: none;
 }
+
+      /* ================================
+         PLAYER ACTIVITY & TRANSACTION LOG
+         Ten rows visible; internal scroll for newer history.
+         ================================ */
+      .player-activity-card {
+        margin: 18px 0 24px;
+        padding: 18px;
+        border: 1px solid #cbd5e1;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #f8fafc, #eef6ff);
+        box-shadow: 0 8px 20px rgba(30, 64, 175, 0.08);
+      }
+      .player-activity-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 12px;
+      }
+      .player-activity-head h2 {
+        margin: 0 0 4px;
+        color: #0f172a;
+        font-size: 19px;
+      }
+      .player-activity-head p {
+        margin: 0;
+        color: #475569;
+        font-size: 13px;
+      }
+      .player-activity-status {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .player-activity-scroll {
+        height: 420px;
+        max-height: 420px;
+        overflow: auto;
+        border: 1px solid #dbe4ef;
+        border-radius: 12px;
+        background: #ffffff;
+      }
+      .player-activity-table {
+        width: 100%;
+        min-width: 760px;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      .player-activity-table th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        padding: 10px 9px;
+        border-bottom: 1px solid #cbd5e1;
+        background: #eaf2ff;
+        color: #1e3a8a;
+        text-align: left;
+        font-size: 11px;
+        letter-spacing: .03em;
+        text-transform: uppercase;
+      }
+      .player-activity-table td {
+        height: 42px;
+        padding: 8px 9px;
+        border-bottom: 1px solid #eef2f7;
+        color: #334155;
+        vertical-align: middle;
+      }
+      .player-activity-table tr:last-child td {
+        border-bottom: 0;
+      }
+      .player-activity-direction {
+        display: inline-flex;
+        min-width: 42px;
+        justify-content: center;
+        padding: 3px 6px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 900;
+      }
+      .player-activity-direction.in {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .player-activity-direction.out {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .player-activity-direction.info {
+        background: #e2e8f0;
+        color: #475569;
+      }
+      .player-activity-asset {
+        color: #0f172a;
+        font-weight: 900;
+      }
+      .player-activity-amount {
+        color: #1d4ed8;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+      .player-activity-empty {
+        padding: 28px 18px;
+        color: #64748b;
+        text-align: center;
+        font-weight: 700;
+      }
+      @media (max-width: 700px) {
+        .player-activity-head {
+          display: block;
+        }
+        .player-activity-status {
+          display: block;
+          margin-top: 6px;
+        }
+      }
+
       .player-honors {
         display: flex;
         flex-wrap: wrap;
@@ -933,6 +1052,20 @@ font-weight:900;
     "
   >
     View EMP Transactions
+  </a>
+  <a
+    href="#player-activity-log"
+    onclick="document.getElementById('player-activity-log')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); return false;"
+    style="
+      display:block;
+      margin-top:6px;
+      font-size:13px;
+      font-weight:800;
+      color:#0f766e;
+      text-decoration:none;
+    "
+  >
+    View All Activity &amp; Transactions ↓
   </a>
 </div>
             </div>
@@ -8794,6 +8927,89 @@ function enableSafeDashboardImages() {
     );
   });
 }
+
+      function playerActivityEscape(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function playerActivityAmount(row) {
+        const value = Number(row?.amount);
+        if (!Number.isFinite(value) || value === 0) return "—";
+        const formatted = Number.isInteger(value)
+          ? value.toLocaleString()
+          : value.toLocaleString(undefined, { maximumFractionDigits: 4 });
+        return formatted;
+      }
+
+      async function loadPlayerActivityLog() {
+        const body = document.getElementById("player-activity-log-body");
+        const status = document.getElementById("player-activity-log-status");
+        if (!body) return;
+
+        try {
+          const username = String(PLAYER_USERNAME || "").trim().replace(/^@/, "");
+          if (!username) throw new Error("Player username is unavailable.");
+
+          const response = await fetch(
+            apiUrl("/player/" + encodeURIComponent(username) + "/activity-log?limit=500"),
+          );
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Activity log could not be loaded.");
+          }
+
+          const rows = Array.isArray(data.activity) ? data.activity : [];
+
+          if (!rows.length) {
+            body.innerHTML = '<tr><td colspan="6" class="player-activity-empty">No new activity recorded yet.</td></tr>';
+            if (status) status.textContent = "No new activity";
+            return;
+          }
+
+          body.innerHTML = rows.map((row) => {
+            const direction = String(row.direction || "INFO").toUpperCase();
+            const directionClass =
+              direction === "IN" ? "in" :
+              direction === "OUT" ? "out" : "info";
+            const occurredAt = row.occurred_at
+              ? new Date(row.occurred_at).toLocaleString()
+              : "—";
+
+            return (
+              "<tr>" +
+                "<td>" + playerActivityEscape(occurredAt) + "</td>" +
+                "<td>" + playerActivityEscape(row.category || "Activity") + "</td>" +
+                '<td><span class="player-activity-direction ' + directionClass + '">' +
+                  playerActivityEscape(direction) +
+                "</span></td>" +
+                '<td class="player-activity-asset">' +
+                  playerActivityEscape(row.asset || "—") +
+                "</td>" +
+                '<td class="player-activity-amount">' +
+                  playerActivityEscape(playerActivityAmount(row)) +
+                "</td>" +
+                "<td>" + playerActivityEscape(row.description || "—") + "</td>" +
+              "</tr>"
+            );
+          }).join("");
+
+          if (status) {
+            status.textContent = rows.length + (rows.length === 1 ? " entry" : " entries");
+          }
+        } catch (error) {
+          console.error("Player activity log load failed:", error);
+          body.innerHTML =
+            '<tr><td colspan="6" class="player-activity-empty">Activity log is temporarily unavailable.</td></tr>';
+          if (status) status.textContent = "Unavailable";
+        }
+      }
+
      document.addEventListener("DOMContentLoaded", async () => {
         try {
           enableSafeDashboardImages();
@@ -8801,6 +9017,7 @@ function enableSafeDashboardImages() {
 
           await loadDashboardSummary();
           await loadDailyEmpireReport();
+          await loadPlayerActivityLog();
           startCrateResetTimer();
 
           const crateEls = getCrateModalEls();
@@ -10207,6 +10424,38 @@ function closeWithdrawalHistoryModal() {
         </div>
       </div>
     </div>
+
+
+    <!-- PLAYER ACTIVITY & TRANSACTION LOG -->
+    <section id="player-activity-log" class="player-activity-card" aria-labelledby="player-activity-log-title">
+      <div class="player-activity-head">
+        <div>
+          <h2 id="player-activity-log-title">📜 Player Activity &amp; Transaction Log</h2>
+          <p>New rewards, assets, spending, transfers, and game activity appear here.</p>
+        </div>
+        <div id="player-activity-log-status" class="player-activity-status">Loading...</div>
+      </div>
+
+      <div class="player-activity-scroll">
+        <table class="player-activity-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Activity</th>
+              <th>Direction</th>
+              <th>Asset</th>
+              <th>Amount</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="player-activity-log-body">
+            <tr>
+              <td colspan="6" class="player-activity-empty">Loading activity...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
     <!-- IMPERIAL SUPPLY CRATE HISTORY MODAL -->
     <div id="crate-history-modal" class="crate-modal" style="display: none">
