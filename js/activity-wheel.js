@@ -26,7 +26,7 @@
     { label: "80 EMP", key: "EMP_80" },
     { label: "100 EMP", key: "EMP_100" },
     { label: "1 SMP", key: "SMP_1" },
-    { label: "2 SMP", key: "SMP_2" },
+    { label: "10 AP", key: "AP_10" },
     { label: "150 EMP", key: "EMP_150" },
     { label: "1 Fragment", key: "FRAGMENT_1" },
     { label: "250 EMP", key: "EMP_250" },
