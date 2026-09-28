@@ -58,10 +58,11 @@
       /* ================================
          PLAYER ACTIVITY & TRANSACTION LOG
          Ten rows visible; internal scroll for newer history.
+         High-volume goods activity is summarized to keep this readable.
          ================================ */
       .player-activity-card {
-        margin: 18px 0 24px;
-        padding: 18px;
+        margin: 16px 0 20px;
+        padding: 16px;
         border: 1px solid #cbd5e1;
         border-radius: 16px;
         background: linear-gradient(135deg, #f8fafc, #eef6ff);
@@ -72,7 +73,7 @@
         align-items: flex-start;
         justify-content: space-between;
         gap: 14px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
       }
       .player-activity-head h2 {
         margin: 0 0 4px;
@@ -91,8 +92,8 @@
         white-space: nowrap;
       }
       .player-activity-scroll {
-        height: 420px;
-        max-height: 420px;
+        height: 380px;
+        max-height: 380px;
         overflow: auto;
         border: 1px solid #dbe4ef;
         border-radius: 12px;
@@ -100,7 +101,8 @@
       }
       .player-activity-table {
         width: 100%;
-        min-width: 760px;
+        min-width: 620px;
+        table-layout: fixed;
         border-collapse: collapse;
         font-size: 12px;
       }
@@ -108,7 +110,7 @@
         position: sticky;
         top: 0;
         z-index: 1;
-        padding: 10px 9px;
+        padding: 9px 8px;
         border-bottom: 1px solid #cbd5e1;
         background: #eaf2ff;
         color: #1e3a8a;
@@ -117,9 +119,12 @@
         letter-spacing: .03em;
         text-transform: uppercase;
       }
+      .player-activity-table th:nth-child(1) { width: 142px; }
+      .player-activity-table th:nth-child(2) { width: 42%; }
+      .player-activity-table th:nth-child(3) { width: 145px; }
       .player-activity-table td {
-        height: 42px;
-        padding: 8px 9px;
+        height: 36px;
+        padding: 6px 8px;
         border-bottom: 1px solid #eef2f7;
         color: #334155;
         vertical-align: middle;
@@ -127,11 +132,41 @@
       .player-activity-table tr:last-child td {
         border-bottom: 0;
       }
+      .player-activity-time,
+      .player-activity-details {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .player-activity-category {
+        display: block;
+        overflow: hidden;
+        color: #0f172a;
+        font-weight: 900;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .player-activity-description {
+        display: block;
+        overflow: hidden;
+        color: #64748b;
+        font-size: 11px;
+        line-height: 1.25;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .player-activity-value {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        min-width: 0;
+        white-space: nowrap;
+      }
       .player-activity-direction {
         display: inline-flex;
-        min-width: 42px;
+        min-width: 36px;
         justify-content: center;
-        padding: 3px 6px;
+        padding: 3px 5px;
         border-radius: 999px;
         font-size: 10px;
         font-weight: 900;
@@ -149,11 +184,15 @@
         color: #475569;
       }
       .player-activity-asset {
+        overflow: hidden;
         color: #0f172a;
+        font-size: 11px;
         font-weight: 900;
+        text-overflow: ellipsis;
       }
       .player-activity-amount {
         color: #1d4ed8;
+        font-size: 11px;
         font-weight: 900;
         white-space: nowrap;
       }
@@ -171,8 +210,17 @@
           display: block;
           margin-top: 6px;
         }
+        .player-activity-scroll {
+          height: 360px;
+          max-height: 360px;
+        }
+        .player-activity-table {
+          min-width: 560px;
+        }
+        .player-activity-table th:nth-child(1) { width: 128px; }
+        .player-activity-table th:nth-child(2) { width: 220px; }
+        .player-activity-table th:nth-child(3) { width: 132px; }
       }
-
       .player-honors {
         display: flex;
         flex-wrap: wrap;
@@ -8960,6 +9008,72 @@ function enableSafeDashboardImages() {
         return formatted;
       }
 
+      function summarizePlayerActivityRows(rows) {
+        const groups = new Map();
+        const visibleRows = [];
+
+        rows.forEach((row, index) => {
+          const category = String(row.category || "Activity").trim();
+          const asset = String(row.asset || "").trim().toUpperCase();
+          const direction = String(row.direction || "INFO").trim().toUpperCase();
+          const isGoodsActivity =
+            asset === "GOODS" || category.toUpperCase().includes("GOODS");
+
+          if (!isGoodsActivity) {
+            visibleRows.push(row);
+            return;
+          }
+
+          const timestamp = Date.parse(row.occurred_at || "");
+          const timeBucket = Number.isFinite(timestamp)
+            ? Math.floor(timestamp / (15 * 60 * 1000))
+            : "row-" + index;
+          const groupKey = category.toUpperCase() + "|" + direction + "|" + timeBucket;
+          let group = groups.get(groupKey);
+
+          if (!group) {
+            group = {
+              ...row,
+              _isGoodsSummary: true,
+              _rawCount: 0,
+              _totalAmount: 0,
+              _labels: [],
+              _firstRow: row,
+            };
+            groups.set(groupKey, group);
+            visibleRows.push(group);
+          }
+
+          group._rawCount += 1;
+          const amount = Number(row.amount);
+          if (Number.isFinite(amount)) {
+            group._totalAmount += amount;
+          }
+
+          const label = String(row.description || row.category || "Goods").trim();
+          if (label && !group._labels.includes(label) && group._labels.length < 3) {
+            group._labels.push(label);
+          }
+        });
+
+        return visibleRows.map((row) => {
+          if (row._isGoodsSummary && row._rawCount === 1) {
+            return row._firstRow;
+          }
+          return row;
+        });
+      }
+
+      function playerActivitySignedAmount(row) {
+        const amount = playerActivityAmount(row);
+        if (amount === "—") return amount;
+
+        const direction = String(row.direction || "INFO").toUpperCase();
+        if (direction === "OUT") return "−" + amount;
+        if (direction === "IN") return "+" + amount;
+        return amount;
+      }
+
       async function loadPlayerActivityLog() {
         const body = document.getElementById("player-activity-log-body");
         const status = document.getElementById("player-activity-log-status");
@@ -8981,45 +9095,101 @@ function enableSafeDashboardImages() {
           const rows = Array.isArray(data.activity) ? data.activity : [];
 
           if (!rows.length) {
-            body.innerHTML = '<tr><td colspan="6" class="player-activity-empty">No new activity recorded yet.</td></tr>';
+            body.innerHTML = '<tr><td colspan="4" class="player-activity-empty">No new activity recorded yet.</td></tr>';
             if (status) status.textContent = "No new activity";
             return;
           }
 
-          body.innerHTML = rows.map((row) => {
+          const visibleRows = summarizePlayerActivityRows(rows);
+
+          body.innerHTML = visibleRows.map((row) => {
             const direction = String(row.direction || "INFO").toUpperCase();
             const directionClass =
               direction === "IN" ? "in" :
               direction === "OUT" ? "out" : "info";
             const occurredAt = row.occurred_at
+              ? new Date(row.occurred_at).toLocaleString(undefined, {
+                  month: "short",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "—";
+            const fullOccurredAt = row.occurred_at
               ? new Date(row.occurred_at).toLocaleString()
               : "—";
+            const isGoodsSummary = Boolean(row._isGoodsSummary && row._rawCount > 1);
+            const category = isGoodsSummary
+              ? "Goods summary"
+              : String(row.category || "Activity");
+            const description = isGoodsSummary
+              ? row._rawCount.toLocaleString() +
+                " goods records combined" +
+                (row._labels.length
+                  ? " • " + row._labels.join(", ")
+                  : "")
+              : String(row.description || "—");
+            const details = isGoodsSummary
+              ? row._rawCount.toLocaleString() + " raw records"
+              : String(row.reference || "—");
+            const asset = String(row.asset || "—");
+            const amount = isGoodsSummary
+              ? playerActivitySignedAmount({
+                  ...row,
+                  amount: row._totalAmount,
+                })
+              : playerActivitySignedAmount(row);
 
             return (
               "<tr>" +
-                "<td>" + playerActivityEscape(occurredAt) + "</td>" +
-                "<td>" + playerActivityEscape(row.category || "Activity") + "</td>" +
-                '<td><span class="player-activity-direction ' + directionClass + '">' +
-                  playerActivityEscape(direction) +
-                "</span></td>" +
-                '<td class="player-activity-asset">' +
-                  playerActivityEscape(row.asset || "—") +
+                '<td class="player-activity-time" title="' +
+                  playerActivityEscape(fullOccurredAt) +
+                '">' +
+                  playerActivityEscape(occurredAt) +
                 "</td>" +
-                '<td class="player-activity-amount">' +
-                  playerActivityEscape(playerActivityAmount(row)) +
+                '<td class="player-activity-activity">' +
+                  '<span class="player-activity-category">' +
+                    playerActivityEscape(category) +
+                  "</span>" +
+                  '<span class="player-activity-description" title="' +
+                    playerActivityEscape(description) +
+                  '">' +
+                    playerActivityEscape(description) +
+                  "</span>" +
                 "</td>" +
-                "<td>" + playerActivityEscape(row.description || "—") + "</td>" +
+                '<td class="player-activity-value">' +
+                  '<span class="player-activity-direction ' + directionClass + '">' +
+                    playerActivityEscape(direction) +
+                  "</span>" +
+                  '<span class="player-activity-asset">' +
+                    playerActivityEscape(asset) +
+                  "</span>" +
+                  '<span class="player-activity-amount">' +
+                    playerActivityEscape(amount) +
+                  "</span>" +
+                "</td>" +
+                '<td class="player-activity-details" title="' +
+                  playerActivityEscape(details) +
+                '">' +
+                  playerActivityEscape(details) +
+                "</td>" +
               "</tr>"
             );
           }).join("");
 
           if (status) {
-            status.textContent = rows.length + (rows.length === 1 ? " entry" : " entries");
+            status.textContent =
+              rows.length === visibleRows.length
+                ? rows.length + (rows.length === 1 ? " entry" : " entries")
+                : rows.length.toLocaleString() +
+                  " events • " +
+                  visibleRows.length.toLocaleString() +
+                  " shown";
           }
         } catch (error) {
           console.error("Player activity log load failed:", error);
           body.innerHTML =
-            '<tr><td colspan="6" class="player-activity-empty">Activity log is temporarily unavailable.</td></tr>';
+            '<tr><td colspan="4" class="player-activity-empty">Activity log is temporarily unavailable.</td></tr>';
           if (status) status.textContent = "Unavailable";
         }
       }
@@ -10220,7 +10390,7 @@ function showPreviousCultureSpotlight() {
       <div class="player-activity-head">
         <div>
           <h2 id="player-activity-log-title">📜 Player Activity &amp; Transaction Log</h2>
-          <p>New rewards, assets, spending, transfers, and game activity appear here.</p>
+          <p>Goods movements are grouped into compact summaries; the total and raw-record count stay visible.</p>
         </div>
         <div id="player-activity-log-status" class="player-activity-status">Loading...</div>
       </div>
@@ -10231,15 +10401,13 @@ function showPreviousCultureSpotlight() {
             <tr>
               <th>Time</th>
               <th>Activity</th>
-              <th>Direction</th>
-              <th>Asset</th>
-              <th>Amount</th>
+              <th>Value</th>
               <th>Details</th>
             </tr>
           </thead>
           <tbody id="player-activity-log-body">
             <tr>
-              <td colspan="6" class="player-activity-empty">Loading activity...</td>
+              <td colspan="4" class="player-activity-empty">Loading activity...</td>
             </tr>
           </tbody>
         </table>
