@@ -104,7 +104,7 @@
     const amount = Number(reward?.reward_amount || 0);
 
     if (type === "EMP") return `EMP_${amount}`;
-    if (type === "SMP") return `SMP_${amount}`;
+    if (type === "SMP") return `SMP_${amount}`;\n    if (type === "AP") return `AP_${amount}`;\n    if (type === "AP") return `AP_${amount}`;
     if (type === "IMPERIAL_FRAGMENT") return "FRAGMENT_1";
     if (type === "GENESIS_PACK") return "PACK_1";
 
