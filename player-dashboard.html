@@ -2209,6 +2209,11 @@ let seasonHistoryIndex = 0;
           setDailyEmpireReportStatus(
             "Already published and credited: 5 EMP + 1 AP.",
           );
+        } else if (!Array.isArray(report.activities) || report.activities.length === 0) {
+          if (publish) publish.disabled = true;
+          setDailyEmpireReportStatus(
+            "No game activity was recorded for the previous UTC day. EMP and AP are not available.",
+          );
         } else if (publish) {
           publish.disabled = false;
           setDailyEmpireReportStatus("Ready to publish from your Hive account.");
@@ -2311,6 +2316,15 @@ function requestHiveComment(username, title, body, parent) {
         if (dailyEmpireReportState.publishing || !dailyEmpireReportState.report) return;
         if (typeof IS_VISITOR_MODE !== "undefined" && IS_VISITOR_MODE) {
           setDailyEmpireReportStatus("Visitor mode cannot publish or claim rewards.");
+          return;
+        }
+        if (
+          !Array.isArray(dailyEmpireReportState.report.activities) ||
+          dailyEmpireReportState.report.activities.length === 0
+        ) {
+          setDailyEmpireReportStatus(
+            "No game activity was recorded for the previous UTC day. EMP and AP are not available.",
+          );
           return;
         }
         dailyEmpireReportState.publishing = true;
