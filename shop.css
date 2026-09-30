@@ -3145,12 +3145,33 @@
   color: #ffffff;
 }
 
+.pack-reinvestment-purchase-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.pack-reinvestment-purchase-copy {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
 .pack-reinvestment-balance,
 .pack-reinvestment-required,
 .pack-reinvestment-status {
   margin-top: 10px;
   font-size: 13px;
   line-height: 1.45;
+}
+
+.pack-reinvestment-purchase-copy .pack-reinvestment-balance {
+  margin-top: 0;
+}
+
+.pack-reinvestment-purchase-copy .pack-reinvestment-required {
+  margin-top: 6px;
 }
 
 .pack-reinvestment-balance {
@@ -3167,8 +3188,10 @@
 }
 
 .pack-reinvestment-buy-btn {
-  width: 100%;
-  margin-top: 13px;
+  flex: 0 1 230px;
+  min-width: 190px;
+  width: auto;
+  margin-top: 0;
   padding: 12px 16px;
   border: 0;
   border-radius: 12px;
@@ -3297,6 +3320,16 @@
   .pack-reinvestment-info-link {
     display: inline-block;
     margin-top: 9px;
+  }
+
+  .pack-reinvestment-purchase-row {
+    display: block;
+  }
+
+  .pack-reinvestment-buy-btn {
+    width: 100%;
+    min-width: 0;
+    margin-top: 12px;
   }
 
   .pack-reinvestment-popup-box {
