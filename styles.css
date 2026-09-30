@@ -22520,3 +22520,10 @@ body.read-only-mode #bulk-maintenance-actions {
     border-left: 0;
   }
 }
+
+
+/* Keep the Genesis offer between summary rows. */
+.dashboard-genesis-offer {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
