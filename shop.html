@@ -1369,6 +1369,7 @@ if (!confirmRes.ok || !confirmData.success) {
 }
   
 let shopWalletHiveBalance = null;
+let shopWalletHiveBalanceUser = "";
 let reinvestmentPurchaseInProgress = false;
 
 function formatShopHive(value) {
@@ -1377,7 +1378,8 @@ function formatShopHive(value) {
 
 function getReinvestmentPackQuantity() {
   const qtyInput = document.getElementById("pack-qty");
-  const packs = Number.parseInt(qtyInput?.value || "", 10);
+  const rawValue = String(qtyInput?.value || "").trim();
+  const packs = Number(rawValue);
 
   return Number.isInteger(packs) && packs >= 1 && packs <= 50 ? packs : 0;
 }
@@ -1389,11 +1391,15 @@ function updateReinvestmentPurchaseState() {
   const buttonEl = document.getElementById("buy-reinvestment-packs-btn");
   const activeUser = getShopActiveUser();
   const packs = getReinvestmentPackQuantity();
+  const hasCurrentWalletBalance =
+    Boolean(activeUser) &&
+    shopWalletHiveBalanceUser === activeUser &&
+    shopWalletHiveBalance !== null;
 
   if (balanceEl) {
     if (!activeUser) {
       balanceEl.textContent = "Wallet HIVE: connect wallet to view";
-    } else if (shopWalletHiveBalance === null) {
+    } else if (!hasCurrentWalletBalance) {
       balanceEl.textContent = "Wallet HIVE: checking balance...";
     } else {
       balanceEl.textContent =
@@ -1432,7 +1438,7 @@ function updateReinvestmentPurchaseState() {
     return;
   }
 
-  if (shopWalletHiveBalance === null) {
+  if (!hasCurrentWalletBalance) {
     statusEl.textContent = "Checking your Wallet HIVE balance...";
     return;
   }
@@ -1458,9 +1464,14 @@ async function loadWalletHiveBalance() {
 
   if (!activeUser) {
     shopWalletHiveBalance = null;
+    shopWalletHiveBalanceUser = "";
     updateReinvestmentPurchaseState();
     return;
   }
+
+  shopWalletHiveBalance = null;
+  shopWalletHiveBalanceUser = "";
+  updateReinvestmentPurchaseState();
 
   try {
     const res = await fetch(
@@ -1480,9 +1491,11 @@ async function loadWalletHiveBalance() {
     }
 
     shopWalletHiveBalance = Number(data.hive_balance || 0);
+    shopWalletHiveBalanceUser = activeUser;
   } catch (err) {
     console.error("Wallet HIVE balance error:", err);
     shopWalletHiveBalance = null;
+    shopWalletHiveBalanceUser = "";
 
     const statusEl = document.getElementById("reinvestment-status");
     if (statusEl) {
@@ -1510,11 +1523,13 @@ async function buyReinvestmentPacks() {
   const requiredHive = packs * 9;
 
   if (
+    shopWalletHiveBalanceUser !== activeUser ||
     shopWalletHiveBalance === null ||
     shopWalletHiveBalance + 0.0000001 < requiredHive
   ) {
     await loadWalletHiveBalance();
     if (
+      shopWalletHiveBalanceUser !== activeUser ||
       shopWalletHiveBalance === null ||
       shopWalletHiveBalance + 0.0000001 < requiredHive
     ) {
@@ -1582,6 +1597,7 @@ async function buyReinvestmentPacks() {
     );
 
     shopWalletHiveBalance = null;
+    shopWalletHiveBalanceUser = "";
     await loadWalletHiveBalance();
     await loadGenesisPackProgress();
     await updateLiveGenesisPrice();
@@ -1712,8 +1728,9 @@ if (whitelistPopup) {
 
     <p class="pack-reinvestment-popup-note">
       For quantities above 5, the bonus repeats in complete groups of five plus
-      the remaining packs. The bonus is credited immediately and this offer is
-      permanently available with no campaign or lifetime limit.
+      the remaining packs. The bonus is credited immediately, the maximum is 50
+      packs per transaction, and this offer is permanently available with no
+      campaign or lifetime limit.
     </p>
 
     <p class="pack-reinvestment-popup-note">
