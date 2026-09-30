@@ -3415,3 +3415,122 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ========================================= */
+/* LIGHT MYDEMPIRE STYLE — BONUS INFO POPUP */
+/* ========================================= */
+
+#pack-reinvestment-popup {
+  background: rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(4px);
+}
+
+.pack-reinvestment-popup-box {
+  width: min(620px, calc(100vw - 28px));
+  max-height: min(90vh, 720px);
+  overflow-x: hidden;
+  padding: 28px;
+  border: 1px solid rgba(244, 185, 66, 0.65);
+  border-radius: 20px;
+  background: linear-gradient(145deg, #fffdf7 0%, #eef8f6 100%);
+  color: #102a43;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.32);
+}
+
+.pack-reinvestment-popup-kicker {
+  color: #0b7285;
+}
+
+.pack-reinvestment-popup-box h2 {
+  color: #102a43;
+}
+
+.pack-reinvestment-popup-box p,
+.pack-reinvestment-popup-note {
+  color: #52606d;
+}
+
+.pack-reinvestment-popup-box strong {
+  color: #102a43;
+}
+
+.pack-reinvestment-close-btn {
+  color: #52606d;
+}
+
+.pack-reinvestment-close-btn:hover {
+  color: #102a43;
+}
+
+.pack-reinvestment-table {
+  table-layout: fixed;
+  border: 1px solid #c9d6d5;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pack-reinvestment-table th,
+.pack-reinvestment-table td {
+  border-bottom: 1px solid #dce8e5;
+  color: #102a43;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.pack-reinvestment-table th:first-child,
+.pack-reinvestment-table td:first-child {
+  width: 36%;
+}
+
+.pack-reinvestment-table th {
+  background: #e4f1ef;
+  color: #0b7285;
+}
+
+.pack-reinvestment-table td {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.pack-reinvestment-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.pack-reinvestment-popup-box .popup-ok-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 20px;
+  background: #0b7285;
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pack-reinvestment-popup-box .popup-ok-btn:hover {
+  background: #085f70;
+}
+
+.pack-reinvestment-close-btn:focus-visible,
+.pack-reinvestment-popup-box .popup-ok-btn:focus-visible {
+  outline: 3px solid rgba(244, 185, 66, 0.75);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .pack-reinvestment-popup-box {
+    width: calc(100vw - 24px);
+    padding: 22px 18px;
+  }
+
+  .pack-reinvestment-table th,
+  .pack-reinvestment-table td {
+    padding: 9px 8px;
+    font-size: 13px;
+  }
+}
