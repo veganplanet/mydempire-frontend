@@ -370,6 +370,41 @@ and expansion-era opportunities as the empire evolves.
 </div>
 
       <button id="buy-packs-btn" class="shop-buy-main-btn" type="button">Buy Packs</button>
+
+      <div class="pack-reinvestment-offer">
+        <div class="pack-reinvestment-offer-head">
+          <div>
+            <div class="pack-reinvestment-offer-label">PACK REINVESTMENT BONUS</div>
+            <div class="pack-reinvestment-offer-title">Buy with Wallet HIVE</div>
+          </div>
+          <button
+            id="open-pack-reinvestment-info"
+            class="pack-reinvestment-info-link"
+            type="button"
+          >
+            View bonus details ⓘ
+          </button>
+        </div>
+
+        <div id="reinvestment-wallet-balance" class="pack-reinvestment-balance">
+          Wallet HIVE: checking balance...
+        </div>
+        <div id="reinvestment-required-hive" class="pack-reinvestment-required">
+          Required: 9 HIVE per pack
+        </div>
+
+        <button
+          id="buy-reinvestment-packs-btn"
+          class="pack-reinvestment-buy-btn"
+          type="button"
+          disabled
+        >
+          Buy with Wallet HIVE
+        </button>
+        <div id="reinvestment-status" class="pack-reinvestment-status">
+          Connect your wallet to use Wallet HIVE.
+        </div>
+      </div>
     </div>
   </div>
   </div>
@@ -1332,11 +1367,295 @@ if (!confirmRes.ok || !confirmData.success) {
     alert(err.message || "Pack purchase failed.");
   }
 }
-  document.addEventListener("DOMContentLoaded", () => {
+  
+let shopWalletHiveBalance = null;
+let shopWalletHiveBalanceUser = "";
+let reinvestmentPurchaseInProgress = false;
+
+function formatShopHive(value) {
+  return Number(value || 0).toFixed(3);
+}
+
+function getReinvestmentPackQuantity() {
+  const qtyInput = document.getElementById("pack-qty");
+  const rawValue = String(qtyInput?.value || "").trim();
+  const packs = Number(rawValue);
+
+  return Number.isInteger(packs) && packs >= 1 && packs <= 50 ? packs : 0;
+}
+
+function updateReinvestmentPurchaseState() {
+  const balanceEl = document.getElementById("reinvestment-wallet-balance");
+  const requiredEl = document.getElementById("reinvestment-required-hive");
+  const statusEl = document.getElementById("reinvestment-status");
+  const buttonEl = document.getElementById("buy-reinvestment-packs-btn");
+  const activeUser = getShopActiveUser();
+  const packs = getReinvestmentPackQuantity();
+  const hasCurrentWalletBalance =
+    Boolean(activeUser) &&
+    shopWalletHiveBalanceUser === activeUser &&
+    shopWalletHiveBalance !== null;
+
+  if (balanceEl) {
+    if (!activeUser) {
+      balanceEl.textContent = "Wallet HIVE: connect wallet to view";
+    } else if (!hasCurrentWalletBalance) {
+      balanceEl.textContent = "Wallet HIVE: checking balance...";
+    } else {
+      balanceEl.textContent =
+        "Wallet HIVE: " + formatShopHive(shopWalletHiveBalance);
+    }
+  }
+
+  if (requiredEl) {
+    requiredEl.textContent = packs
+      ? "Required for " +
+        packs +
+        " pack" +
+        (packs > 1 ? "s" : "") +
+        ": " +
+        formatShopHive(packs * 9) +
+        " HIVE"
+      : "Required: 9 HIVE per pack";
+  }
+
+  if (!buttonEl || !statusEl) return;
+
+  buttonEl.disabled = true;
+
+  if (reinvestmentPurchaseInProgress) {
+    statusEl.textContent = "Processing your Wallet HIVE purchase...";
+    return;
+  }
+
+  if (!activeUser) {
+    statusEl.textContent = "Connect your wallet to use Wallet HIVE.";
+    return;
+  }
+
+  if (!packs) {
+    statusEl.textContent = "Enter a quantity from 1 to 50 packs.";
+    return;
+  }
+
+  if (!hasCurrentWalletBalance) {
+    statusEl.textContent = "Checking your Wallet HIVE balance...";
+    return;
+  }
+
+  const requiredHive = packs * 9;
+  if (shopWalletHiveBalance + 0.0000001 < requiredHive) {
+    statusEl.textContent =
+      "You need at least " +
+      formatShopHive(requiredHive) +
+      " HIVE in your wallet balance.";
+    return;
+  }
+
+  buttonEl.disabled = false;
+  statusEl.textContent =
+    "Ready: " +
+    formatShopHive(requiredHive) +
+    " HIVE will be used and the bonus will be credited immediately.";
+}
+
+async function loadWalletHiveBalance() {
+  const activeUser = getShopActiveUser();
+
+  if (!activeUser) {
+    shopWalletHiveBalance = null;
+    shopWalletHiveBalanceUser = "";
+    updateReinvestmentPurchaseState();
+    return;
+  }
+
+  shopWalletHiveBalance = null;
+  shopWalletHiveBalanceUser = "";
+  updateReinvestmentPurchaseState();
+
+  try {
+    const res = await fetch(
+      shopApiUrl(
+        "/player/" +
+          encodeURIComponent(activeUser) +
+          "/wallet-hive",
+      ),
+      {
+        headers: getShopActorHeaders(),
+      },
+    );
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Failed to load Wallet HIVE balance.");
+    }
+
+    shopWalletHiveBalance = Number(data.hive_balance || 0);
+    shopWalletHiveBalanceUser = activeUser;
+  } catch (err) {
+    console.error("Wallet HIVE balance error:", err);
+    shopWalletHiveBalance = null;
+    shopWalletHiveBalanceUser = "";
+
+    const statusEl = document.getElementById("reinvestment-status");
+    if (statusEl) {
+      statusEl.textContent = "Wallet HIVE balance is temporarily unavailable.";
+    }
+  }
+
+  updateReinvestmentPurchaseState();
+}
+
+async function buyReinvestmentPacks() {
+  const activeUser = getShopActiveUser();
+  const packs = getReinvestmentPackQuantity();
+
+  if (!activeUser) {
+    alert("Please connect wallet first.");
+    return;
+  }
+
+  if (!packs) {
+    alert("Please enter a pack quantity from 1 to 50.");
+    return;
+  }
+
+  const requiredHive = packs * 9;
+
+  if (
+    shopWalletHiveBalanceUser !== activeUser ||
+    shopWalletHiveBalance === null ||
+    shopWalletHiveBalance + 0.0000001 < requiredHive
+  ) {
+    await loadWalletHiveBalance();
+    if (
+      shopWalletHiveBalanceUser !== activeUser ||
+      shopWalletHiveBalance === null ||
+      shopWalletHiveBalance + 0.0000001 < requiredHive
+    ) {
+      alert(
+        "You need at least " +
+          formatShopHive(requiredHive) +
+          " HIVE in your wallet balance.",
+      );
+      return;
+    }
+  }
+
+  const confirmed = window.confirm(
+    "Spend " +
+      formatShopHive(requiredHive) +
+      " HIVE from your Wallet HIVE balance for " +
+      packs +
+      " Genesis pack" +
+      (packs > 1 ? "s" : "") +
+      "? The bonus will be credited immediately.",
+  );
+
+  if (!confirmed) return;
+
+  reinvestmentPurchaseInProgress = true;
+  updateReinvestmentPurchaseState();
+
+  try {
+    const requestId =
+      window.crypto && typeof window.crypto.randomUUID === "function"
+        ? window.crypto.randomUUID()
+        : activeUser + "_" + Date.now();
+
+    const res = await fetch(shopApiUrl("/create-reinvestment-order"), {
+      method: "POST",
+      headers: getShopActorHeaders(),
+      body: JSON.stringify({
+        username: activeUser,
+        packs,
+        request_id: requestId,
+      }),
+    });
+
+    let data = {};
+    try {
+      data = await res.json();
+    } catch (parseErr) {
+      data = {};
+    }
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Pack Reinvestment Bonus purchase failed.");
+    }
+
+    alert(
+      "✅ " +
+        packs +
+        " Genesis pack" +
+        (packs > 1 ? "s" : "") +
+        " purchased.\n\n" +
+        data.emp_bonus +
+        " EMP + " +
+        data.activity_points_bonus +
+        " AP credited immediately.",
+    );
+
+    shopWalletHiveBalance = null;
+    shopWalletHiveBalanceUser = "";
+    await loadWalletHiveBalance();
+    await loadGenesisPackProgress();
+    await updateLiveGenesisPrice();
+  } catch (err) {
+    console.error("Wallet HIVE pack purchase error:", err);
+    const statusEl = document.getElementById("reinvestment-status");
+    if (statusEl) statusEl.textContent = err.message || "Purchase failed.";
+    alert(err.message || "Pack Reinvestment Bonus purchase failed.");
+  } finally {
+    reinvestmentPurchaseInProgress = false;
+    updateReinvestmentPurchaseState();
+  }
+}
+
+window.showPackReinvestmentInfo = function () {
+  const popup = document.getElementById("pack-reinvestment-popup");
+  if (popup) popup.classList.remove("hidden");
+};
+
+window.closePackReinvestmentInfo = function () {
+  const popup = document.getElementById("pack-reinvestment-popup");
+  if (popup) popup.classList.add("hidden");
+};
+
+document.addEventListener("DOMContentLoaded", () => {
   const buyBtn = document.getElementById("buy-packs-btn");
   if (buyBtn) {
     buyBtn.addEventListener("click", buyPacks);
   }
+
+  const reinvestmentButton = document.getElementById(
+    "buy-reinvestment-packs-btn",
+  );
+  if (reinvestmentButton) {
+    reinvestmentButton.addEventListener("click", buyReinvestmentPacks);
+  }
+
+  const infoButton = document.getElementById("open-pack-reinvestment-info");
+  if (infoButton) {
+    infoButton.addEventListener("click", showPackReinvestmentInfo);
+  }
+
+  const reinvestmentPopup = document.getElementById("pack-reinvestment-popup");
+  if (reinvestmentPopup) {
+    reinvestmentPopup.addEventListener("click", (event) => {
+      if (event.target === reinvestmentPopup) {
+        closePackReinvestmentInfo();
+      }
+    });
+  }
+
+  const qtyInput = document.getElementById("pack-qty");
+  if (qtyInput) {
+    qtyInput.addEventListener("input", updateReinvestmentPurchaseState);
+  }
+
+  updateReinvestmentPurchaseState();
+  loadWalletHiveBalance();
 });
 function showWhitelistPopup() {
   const popup = document.getElementById("whitelist-popup");
@@ -1362,6 +1681,73 @@ if (whitelistPopup) {
 
 
 </script>
+
+<div id="pack-reinvestment-popup" class="hidden">
+  <div class="pack-reinvestment-popup-box">
+    <div class="pack-reinvestment-popup-head">
+      <div>
+        <div class="pack-reinvestment-popup-kicker">GENESIS SHOP OFFER</div>
+        <h2>Pack Reinvestment Bonus</h2>
+      </div>
+      <button
+        class="pack-reinvestment-close-btn"
+        type="button"
+        onclick="closePackReinvestmentInfo()"
+        aria-label="Close bonus details"
+      >
+        ×
+      </button>
+    </div>
+
+    <p>
+      Purchase Genesis packs directly from the Shop for <strong>9 HIVE per pack</strong>
+      using your withdrawable Wallet HIVE balance. No Keychain transaction is used.
+    </p>
+
+    <p>
+      The HIVE amount is recorded as an internal pack-sale ledger entry for later
+      admin transfer to <strong>@mydempiregain</strong>. Packs are completed Genesis
+      orders and count toward Genesis sale progress.
+    </p>
+
+    <table class="pack-reinvestment-table">
+      <thead>
+        <tr>
+          <th>Packs purchased</th>
+          <th>Immediate bonus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>100 EMP + 10 AP</td></tr>
+        <tr><td>2</td><td>250 EMP + 20 AP</td></tr>
+        <tr><td>3</td><td>400 EMP + 30 AP</td></tr>
+        <tr><td>4</td><td>550 EMP + 40 AP</td></tr>
+        <tr><td>5</td><td>750 EMP + 50 AP</td></tr>
+      </tbody>
+    </table>
+
+    <p class="pack-reinvestment-popup-note">
+      For quantities above 5, the bonus repeats in complete groups of five plus
+      the remaining packs. The bonus is credited immediately, the maximum is 50
+      packs per transaction, and this offer is permanently available with no
+      campaign or lifetime limit.
+    </p>
+
+    <p class="pack-reinvestment-popup-note">
+      Only direct Shop purchases qualify. Marketplace purchases, transferred packs,
+      and other pack transfers do not qualify for this bonus.
+    </p>
+
+    <button
+      class="popup-ok-btn"
+      type="button"
+      onclick="closePackReinvestmentInfo()"
+    >
+      Got it
+    </button>
+  </div>
+</div>
+
 <div id="whitelist-popup" class="hidden">
   <div class="whitelist-popup-box">
 
