@@ -3145,12 +3145,33 @@
   color: #ffffff;
 }
 
+.pack-reinvestment-purchase-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.pack-reinvestment-purchase-copy {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
 .pack-reinvestment-balance,
 .pack-reinvestment-required,
 .pack-reinvestment-status {
   margin-top: 10px;
   font-size: 13px;
   line-height: 1.45;
+}
+
+.pack-reinvestment-purchase-copy .pack-reinvestment-balance {
+  margin-top: 0;
+}
+
+.pack-reinvestment-purchase-copy .pack-reinvestment-required {
+  margin-top: 6px;
 }
 
 .pack-reinvestment-balance {
@@ -3167,8 +3188,10 @@
 }
 
 .pack-reinvestment-buy-btn {
-  width: 100%;
-  margin-top: 13px;
+  flex: 0 1 230px;
+  min-width: 190px;
+  width: auto;
+  margin-top: 0;
   padding: 12px 16px;
   border: 0;
   border-radius: 12px;
@@ -3299,6 +3322,16 @@
     margin-top: 9px;
   }
 
+  .pack-reinvestment-purchase-row {
+    display: block;
+  }
+
+  .pack-reinvestment-buy-btn {
+    width: 100%;
+    min-width: 0;
+    margin-top: 12px;
+  }
+
   .pack-reinvestment-popup-box {
     padding: 22px 18px;
   }
@@ -3311,5 +3344,74 @@
   .pack-reinvestment-table td {
     padding: 9px 8px;
     font-size: 13px;
+  }
+}
+
+
+/* ========================================= */
+/* TWO-ROW GENESIS PURCHASE LAYOUT */
+/* ========================================= */
+
+.shop-buy-actions-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+
+.shop-buy-action-card {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.shop-keychain-action-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.shop-buy-action-label {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.shop-buy-action-title {
+  margin-top: 4px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.shop-keychain-action-card .shop-buy-main-btn {
+  margin-top: 13px;
+}
+
+.shop-buy-actions-row .pack-reinvestment-offer {
+  margin-top: 0;
+}
+
+.shop-buy-actions-row .pack-reinvestment-offer-head {
+  min-height: 42px;
+}
+
+.shop-buy-actions-row .pack-reinvestment-buy-btn {
+  width: 100%;
+  min-width: 0;
+  margin-top: 13px;
+  flex: none;
+}
+
+.shop-buy-actions-row .pack-reinvestment-purchase-copy {
+  margin-top: 11px;
+}
+
+@media (max-width: 640px) {
+  .shop-buy-actions-row {
+    grid-template-columns: 1fr;
   }
 }
