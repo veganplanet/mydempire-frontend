@@ -353,25 +353,36 @@ and expansion-era opportunities as the empire evolves.
     <div class="shop-buy-dominant-right">
       <label for="pack-qty" class="shop-buy-field-label">Pack Quantity</label>
       <input id="pack-qty" type="number" min="1" max="50" placeholder="Enter pack quantity" />
-<div class="shop-pack-live-price">
-  <div class="shop-pack-live-label">
-    CURRENT GENESIS PRICE
-  </div>
 
-  <div class="shop-pack-live-value" id="live-pack-price-value">
-    Loading live HIVE price...
-  </div>
+      <div class="shop-pack-live-price">
+        <div class="shop-pack-live-label">
+          CURRENT GENESIS PRICE
+        </div>
 
-  <div class="shop-pack-live-sub" id="shop-pack-live-total">
-    Enter quantity to preview total HIVE amount
-  </div>
-</div>      <div class="shop-buy-helper">
-  No lifetime wallet cap • Max 50 packs per transaction • Max 9 HIVE per pack protection
-</div>
+        <div class="shop-pack-live-value" id="live-pack-price-value">
+          Loading live HIVE price...
+        </div>
 
-      <button id="buy-packs-btn" class="shop-buy-main-btn" type="button">Buy Packs</button>
+        <div class="shop-pack-live-sub" id="shop-pack-live-total">
+          Enter quantity to preview total HIVE amount
+        </div>
+      </div>
 
-      <div id="pack-reinvestment-bonus" class="pack-reinvestment-offer">
+      <div class="shop-buy-helper">
+        No lifetime wallet cap • Max 50 packs per transaction • Max 9 HIVE per pack protection
+      </div>
+    </div>
+
+    <div class="shop-buy-actions-row">
+      <div class="shop-buy-action-card shop-keychain-action-card">
+        <div class="shop-buy-action-label">STANDARD PURCHASE</div>
+        <div class="shop-buy-action-title">Pay with Hive Keychain</div>
+        <button id="buy-packs-btn" class="shop-buy-main-btn" type="button">
+          Buy Packs
+        </button>
+      </div>
+
+      <div id="pack-reinvestment-bonus" class="pack-reinvestment-offer shop-buy-action-card">
         <div class="pack-reinvestment-offer-head">
           <div>
             <div class="pack-reinvestment-offer-label">PACK REINVESTMENT BONUS</div>
@@ -386,24 +397,22 @@ and expansion-era opportunities as the empire evolves.
           </button>
         </div>
 
-        <div class="pack-reinvestment-purchase-row">
-          <div class="pack-reinvestment-purchase-copy">
-            <div id="reinvestment-wallet-balance" class="pack-reinvestment-balance">
-              Wallet HIVE: checking balance...
-            </div>
-            <div id="reinvestment-required-hive" class="pack-reinvestment-required">
-              Required: 9 HIVE per pack
-            </div>
-          </div>
+        <button
+          id="buy-reinvestment-packs-btn"
+          class="pack-reinvestment-buy-btn"
+          type="button"
+          disabled
+        >
+          Buy with Wallet HIVE
+        </button>
 
-          <button
-            id="buy-reinvestment-packs-btn"
-            class="pack-reinvestment-buy-btn"
-            type="button"
-            disabled
-          >
-            Buy with Wallet HIVE
-          </button>
+        <div class="pack-reinvestment-purchase-copy">
+          <div id="reinvestment-wallet-balance" class="pack-reinvestment-balance">
+            Wallet HIVE: checking balance...
+          </div>
+          <div id="reinvestment-required-hive" class="pack-reinvestment-required">
+            Required: 9 HIVE per pack
+          </div>
         </div>
 
         <div id="reinvestment-status" class="pack-reinvestment-status">
