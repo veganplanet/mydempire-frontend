@@ -592,6 +592,38 @@
 
       <div class="admin-tab-panel" data-admin-panel="economy">
         <!-- ===================================== -->
+        <!-- 🏛 PACK REINVESTMENT CONTROL & REPORT -->
+        <!-- ===================================== -->
+        <div class="section">
+          <h2>🏛 Pack Reinvestment Control & Report</h2>
+          <div class="row">
+            <button type="button" class="primary" onclick="loadPackReinvestmentAdmin()">Load Report & Settings</button>
+            <button type="button" onclick="savePackReinvestmentAdmin()">Save Settings</button>
+          </div>
+          <div class="row" style="margin-top:12px">
+            <label><input id="pack-reinvest-enabled" type="checkbox" checked> Enabled</label>
+            <label>Price HIVE <input id="pack-reinvest-price" type="number" min="0.001" step="0.001" style="width:110px"></label>
+            <label>Max packs/transaction <input id="pack-reinvest-max" type="number" min="1" style="width:90px"></label>
+          </div>
+          <div class="small">Bundle rewards (EMP + AP): 1–5 packs purchased together.</div>
+          <div class="row" style="margin-top:8px;flex-wrap:wrap">
+            <input id="pack-reinvest-r1" placeholder="1 pack: EMP,AP e.g. 100,10">
+            <input id="pack-reinvest-r2" placeholder="2 packs: EMP,AP">
+            <input id="pack-reinvest-r3" placeholder="3 packs: EMP,AP">
+            <input id="pack-reinvest-r4" placeholder="4 packs: EMP,AP">
+            <input id="pack-reinvest-r5" placeholder="5 packs: EMP,AP">
+          </div>
+          <div id="pack-reinvest-admin-status" class="status">Not loaded.</div>
+          <div id="pack-reinvest-admin-metrics" class="metrics"></div>
+          <div class="all-players-wrap" style="margin-top:14px;overflow:auto">
+            <table class="all-players-table">
+              <thead><tr><th>Date</th><th>Player</th><th>Packs</th><th>HIVE</th><th>EMP</th><th>AP</th><th>Status</th><th>Order</th></tr></thead>
+              <tbody id="pack-reinvest-admin-rows"><tr><td colspan="8">Report not loaded.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ===================================== -->
         <!-- ⚡ EMP ECONOMY CONTROL CENTER -->
         <!-- ===================================== -->
         <div class="section">
@@ -11029,5 +11061,42 @@ Players snapshotted: ${data.players_snapshotted}
         <div id="assets-modal-body">Loading...</div>
       </div>
     </div>
-  </body>
+  <script>
+async function loadPackReinvestmentAdmin() {
+  const status = document.getElementById("pack-reinvest-admin-status");
+  try {
+    const headers = {"x-admin-key": ADMIN_KEY};
+    const [configRes, reportRes] = await Promise.all([
+      fetch(`${API_BASE}/admin/pack-reinvestment/config`, {headers}),
+      fetch(`${API_BASE}/admin/pack-reinvestment/report?limit=100`, {headers})
+    ]);
+    const configData = await configRes.json();
+    const reportData = await reportRes.json();
+    if (!configData.success) throw new Error(configData.error || "Failed to load settings.");
+    const cfg = configData.config;
+    document.getElementById("pack-reinvest-enabled").checked = !!cfg.enabled;
+    document.getElementById("pack-reinvest-price").value = cfg.priceHive;
+    document.getElementById("pack-reinvest-max").value = cfg.maxPacksPerTransaction;
+    for (let n=1;n<=5;n++) document.getElementById("pack-reinvest-r"+n).value = `${cfg.rewards[n].emp},${cfg.rewards[n].ap}`;
+    const t = reportData.totals || {};
+    document.getElementById("pack-reinvest-admin-metrics").innerHTML =
+      [["Orders",t.orders||0],["Packs",t.packs||0],["HIVE collected",Number(t.hive||0).toFixed(3)],["EMP bonus",t.emp||0]].map(x=>`<div class="card"><div class="label">${x[0]}</div><div class="value">${x[1]}</div></div>`).join("");
+    document.getElementById("pack-reinvest-admin-rows").innerHTML = (reportData.orders||[]).map(o=>`<tr><td>${new Date(o.created_at).toLocaleString()}</td><td>@${o.username}</td><td>${o.packs}</td><td>${Number(o.hive_amount||0).toFixed(3)}</td><td>${o.emp_bonus||0}</td><td>${o.ap_bonus||0}</td><td>${o.status}</td><td>#${o.order_id}</td></tr>`).join("") || '<tr><td colspan="8">No reinvestment orders yet.</td></tr>';
+    status.textContent = "Loaded successfully.";
+  } catch (err) { status.textContent = err.message || "Failed to load pack reinvestment report."; }
+}
+async function savePackReinvestmentAdmin() {
+  const rewards = {};
+  for (let n=1;n<=5;n++) {
+    const parts = document.getElementById("pack-reinvest-r"+n).value.split(",").map(Number);
+    rewards[n] = {emp: parts[0], ap: parts[1]};
+  }
+  const payload = {enabled: document.getElementById("pack-reinvest-enabled").checked, priceHive: Number(document.getElementById("pack-reinvest-price").value), maxPacksPerTransaction: Number(document.getElementById("pack-reinvest-max").value), rewards};
+  const r = await fetch(`${API_BASE}/admin/pack-reinvestment/config`, {method:"POST", headers:{"Content-Type":"application/json","x-admin-key":ADMIN_KEY}, body:JSON.stringify(payload)});
+  const data = await r.json();
+  document.getElementById("pack-reinvest-admin-status").textContent = data.success ? "Settings saved successfully." : (data.error || "Failed to save settings.");
+  if (data.success) loadPackReinvestmentAdmin();
+}
+</script>
+</body>
 </html>
