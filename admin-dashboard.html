@@ -11080,7 +11080,7 @@ async function loadPackReinvestmentAdmin() {
     for (let n=1;n<=5;n++) document.getElementById("pack-reinvest-r"+n).value = `${cfg.rewards[n].emp},${cfg.rewards[n].ap}`;
     const t = reportData.totals || {};
     document.getElementById("pack-reinvest-admin-metrics").innerHTML =
-      [["Orders",t.orders||0],["Packs",t.packs||0],["HIVE collected",Number(t.hive||0).toFixed(3)],["EMP bonus",t.emp||0]].map(x=>`<div class="card"><div class="label">${x[0]}</div><div class="value">${x[1]}</div></div>`).join("");
+      [["Orders",t.orders||0],["Packs",t.packs||0],["HIVE collected",Number(t.hive||0).toFixed(3)],["EMP bonus",t.emp||0],["AP bonus",t.ap||0]].map(x=>`<div class="card"><div class="label">${x[0]}</div><div class="value">${x[1]}</div></div>`).join("");
     document.getElementById("pack-reinvest-admin-rows").innerHTML = (reportData.orders||[]).map(o=>`<tr><td>${new Date(o.created_at).toLocaleString()}</td><td>@${o.username}</td><td>${o.packs}</td><td>${Number(o.hive_amount||0).toFixed(3)}</td><td>${o.emp_bonus||0}</td><td>${o.ap_bonus||0}</td><td>${o.status}</td><td>#${o.order_id}</td></tr>`).join("") || '<tr><td colspan="8">No reinvestment orders yet.</td></tr>';
     status.textContent = "Loaded successfully.";
   } catch (err) { status.textContent = err.message || "Failed to load pack reinvestment report."; }
