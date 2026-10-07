@@ -965,9 +965,12 @@ const mintCost =
       else if (tier === "L2") totalSlots += 2;
       else if (tier === "L3") totalSlots += 3;
     }
-
-        const totalBlueprints = Array.isArray(blueprintsData.blueprints)
-      ? blueprintsData.blueprints.length
+    // The inventory list hides marketplace-locked blueprints from usable stock.
+    // Use the backend's effective count so listed blueprints still consume mint capacity.
+    const reportedBlueprintCount = Number(blueprintsData.totalBlueprints);
+    // Fail closed if the backend does not provide the reservation-aware count.
+    const totalBlueprints = Number.isFinite(reportedBlueprintCount)
+      ? Math.max(reportedBlueprintCount, 0)
       : 0;
 
     let totalFactories = 0;
