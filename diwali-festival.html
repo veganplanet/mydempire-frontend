@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MydEmpire — Diwali Festival 2026</title>
+    <link rel="icon" href="assets/favicon.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      :root {
+        --diwali-night: #24104f;
+        --diwali-purple: #6d28d9;
+        --diwali-pink: #db2777;
+        --diwali-orange: #f97316;
+        --diwali-gold: #fbbf24;
+        --diwali-cream: #fff7ed;
+        --diwali-ink: #27123f;
+        --diwali-muted: #6b5b7d;
+        --diwali-card: rgba(255, 255, 255, 0.92);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body.diwali-page {
+        min-height: 100vh;
+        margin: 0;
+        color: var(--diwali-ink);
+        background:
+          radial-gradient(circle at 8% 8%, rgba(251, 191, 36, 0.28), transparent 24rem),
+          radial-gradient(circle at 92% 12%, rgba(219, 39, 119, 0.18), transparent 25rem),
+          linear-gradient(145deg, #fff7ed 0%, #fdf4ff 44%, #fff7ed 100%);
+      }
+
+      .diwali-shell {
+        width: min(1260px, calc(100% - 28px));
+        margin: 0 auto;
+        padding: 28px 0 70px;
+      }
+
+      .diwali-hero {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(26px, 5vw, 58px);
+        border: 1px solid rgba(109, 40, 217, 0.22);
+        border-radius: 32px;
+        background:
+          linear-gradient(130deg, rgba(36, 16, 79, 0.98), rgba(109, 40, 217, 0.95) 55%, rgba(219, 39, 119, 0.92)),
+          var(--diwali-night);
+        color: #fff;
+        box-shadow: 0 28px 70px rgba(70, 24, 111, 0.24);
+      }
+
+      .diwali-hero::before,
+      .diwali-hero::after {
+        position: absolute;
+        pointer-events: none;
+        opacity: 0.38;
+      }
+
+      .diwali-hero::before {
+        content: "✦  ·  ✧   ·  ✦   ·  ✧";
+        top: 22px;
+        right: 30px;
+        color: var(--diwali-gold);
+        font-size: 22px;
+        letter-spacing: 0.55em;
+      }
+
+      .diwali-hero::after {
+        content: "🪔";
+        right: 34px;
+        bottom: -32px;
+        font-size: 190px;
+        filter: drop-shadow(0 0 24px rgba(251, 191, 36, 0.65));
+      }
+
+      .diwali-hero-grid {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.7fr);
+        gap: 28px;
+        align-items: center;
+      }
+
+      .diwali-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+        padding: 8px 13px;
+        border: 1px solid rgba(251, 191, 36, 0.45);
+        border-radius: 999px;
+        background: rgba(251, 191, 36, 0.14);
+        color: #fde68a;
+        font-size: 12px;
+        font-weight: 950;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .diwali-title {
+        max-width: 760px;
+        margin: 0;
+        color: #fff;
+        font-size: clamp(35px, 6vw, 68px);
+        font-weight: 1000;
+        line-height: 1;
+      }
+
+      .diwali-subtitle {
+        max-width: 760px;
+        margin: 18px 0 0;
+        color: #f5eaff;
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 1.7;
+      }
+
+      .diwali-countdown-card {
+        padding: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 24px;
+        background: rgba(20, 7, 50, 0.4);
+        backdrop-filter: blur(10px);
+        text-align: center;
+      }
+
+      .diwali-countdown-label {
+        color: #fde68a;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .diwali-countdown {
+        margin-top: 9px;
+        color: #fff;
+        font-size: clamp(28px, 4vw, 45px);
+        font-weight: 1000;
+        letter-spacing: 0.04em;
+      }
+
+      .diwali-countdown-note {
+        margin: 9px 0 0;
+        color: #eadcff;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .diwali-stat-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 13px;
+        margin-top: 22px;
+      }
+
+      .diwali-stat {
+        padding: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.17);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.09);
+      }
+
+      .diwali-stat span {
+        display: block;
+        color: #eadcff;
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .diwali-stat strong {
+        display: block;
+        margin-top: 7px;
+        color: #fff;
+        font-size: 21px;
+        font-weight: 1000;
+      }
+
+      .diwali-section {
+        margin-top: 24px;
+        padding: clamp(21px, 4vw, 32px);
+        border: 1px solid rgba(109, 40, 217, 0.14);
+        border-radius: 26px;
+        background: var(--diwali-card);
+        box-shadow: 0 18px 42px rgba(83, 37, 106, 0.09);
+      }
+
+      .diwali-section-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: flex-start;
+        margin-bottom: 20px;
+      }
+
+      .diwali-section h2 {
+        margin: 0;
+        color: var(--diwali-ink);
+        font-size: clamp(23px, 3vw, 31px);
+        font-weight: 1000;
+      }
+
+      .diwali-section h3 {
+        margin: 0;
+        color: var(--diwali-ink);
+        font-size: 19px;
+        font-weight: 950;
+      }
+
+      .diwali-section p {
+        color: var(--diwali-muted);
+        line-height: 1.65;
+      }
+
+      .diwali-section-head p {
+        max-width: 730px;
+        margin: 7px 0 0;
+      }
+
+      .diwali-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 31px;
+        padding: 6px 11px;
+        border-radius: 999px;
+        background: #f3e8ff;
+        color: #6d28d9;
+        font-size: 12px;
+        font-weight: 950;
+        white-space: nowrap;
+      }
+
+      .diwali-intro-grid,
+      .diwali-reward-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 17px;
+      }
+
+      .diwali-info-card {
+        padding: 21px;
+        border: 1px solid #f0d8ff;
+        border-radius: 20px;
+        background: linear-gradient(145deg, #fff, #fff7fd);
+      }
+
+      .diwali-info-card p {
+        margin-bottom: 0;
+      }
+
+      .diwali-steps {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
+        margin-top: 18px;
+      }
+
+      .diwali-step {
+        padding: 19px;
+        border-radius: 20px;
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+      }
+
+      .diwali-step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--diwali-orange), var(--diwali-pink));
+        color: #fff;
+        font-weight: 1000;
+      }
+
+      .diwali-step h3 {
+        margin-top: 13px;
+      }
+
+      .diwali-step p {
+        margin-bottom: 0;
+        font-size: 14px;
+      }
+
+      .diwali-free-note {
+        margin-top: 17px;
+        padding: 14px 17px;
+        border-left: 5px solid var(--diwali-gold);
+        border-radius: 12px;
+        background: #fffbeb;
+        color: #78350f;
+        font-weight: 750;
+        line-height: 1.55;
+      }
+
+      .diwali-player-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(270px, 0.55fr);
+        gap: 21px;
+      }
+
+      .diwali-inventory {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+        gap: 12px;
+        max-height: 510px;
+        overflow: auto;
+        padding: 2px;
+      }
+
+      .diwali-good-card {
+        min-height: 142px;
+        padding: 14px;
+        border: 2px solid #f1e5fa;
+        border-radius: 17px;
+        background: #fff;
+        color: var(--diwali-ink);
+        text-align: left;
+        cursor: pointer;
+        transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+      }
+
+      .diwali-good-card:hover:not(:disabled) {
+        transform: translateY(-2px);
+        border-color: #c084fc;
+        box-shadow: 0 10px 23px rgba(109, 40, 217, 0.12);
+      }
+
+      .diwali-good-card.selected {
+        border-color: var(--diwali-orange);
+        background: #fff7ed;
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
+      }
+
+      .diwali-good-card:disabled {
+        cursor: not-allowed;
+        opacity: 0.58;
+      }
+
+      .diwali-good-name {
+        display: block;
+        min-height: 38px;
+        font-weight: 950;
+        line-height: 1.2;
+      }
+
+      .diwali-good-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 7px;
+        margin-top: 12px;
+        color: var(--diwali-muted);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .diwali-good-pv {
+        color: #c2410c;
+        font-weight: 1000;
+      }
+
+      .diwali-basket-summary {
+        align-self: start;
+        position: sticky;
+        top: 15px;
+        padding: 22px;
+        border: 1px solid #fed7aa;
+        border-radius: 21px;
+        background: linear-gradient(145deg, #fff7ed, #fff1f2);
+      }
+
+      .diwali-progress {
+        height: 12px;
+        margin: 14px 0 9px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #fed7aa;
+      }
+
+      .diwali-progress span {
+        display: block;
+        height: 100%;
+        width: 0;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--diwali-orange), var(--diwali-pink));
+        transition: width 0.2s ease;
+      }
+
+      .diwali-total {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        color: var(--diwali-muted);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .diwali-total strong {
+        color: var(--diwali-ink);
+        font-size: 25px;
+        font-weight: 1000;
+      }
+
+      .diwali-primary-btn,
+      .diwali-secondary-btn {
+        width: 100%;
+        min-height: 45px;
+        margin-top: 14px;
+        border: 0;
+        border-radius: 13px;
+        font-weight: 950;
+        cursor: pointer;
+      }
+
+      .diwali-primary-btn {
+        background: linear-gradient(135deg, var(--diwali-orange), var(--diwali-pink));
+        color: #fff;
+        box-shadow: 0 10px 21px rgba(219, 39, 119, 0.22);
+      }
+
+      .diwali-primary-btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+        box-shadow: none;
+      }
+
+      .diwali-secondary-btn {
+        border: 1px solid #c084fc;
+        background: #faf5ff;
+        color: #6d28d9;
+      }
+
+      .diwali-status {
+        min-height: 23px;
+        margin: 13px 0 0;
+        color: #7c2d12;
+        font-size: 13px;
+        font-weight: 800;
+        line-height: 1.5;
+      }
+
+      .diwali-login-note {
+        padding: 20px;
+        border-radius: 18px;
+        background: #faf5ff;
+        color: #6b21a8;
+        font-weight: 750;
+        line-height: 1.6;
+      }
+
+      .diwali-nft-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 14px;
+      }
+
+      .diwali-nft-card {
+        padding: 19px;
+        border: 1px solid #f5c2e7;
+        border-radius: 20px;
+        background:
+          radial-gradient(circle at 88% 8%, rgba(251, 191, 36, 0.24), transparent 6rem),
+          linear-gradient(145deg, #fff, #fdf2f8);
+      }
+
+      .diwali-nft-card strong {
+        display: block;
+        margin-top: 7px;
+        color: var(--diwali-ink);
+        font-size: 20px;
+        font-weight: 1000;
+      }
+
+      .diwali-nft-card p {
+        margin: 8px 0 0;
+        font-size: 13px;
+      }
+
+      .diwali-days-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 13px;
+      }
+
+      .diwali-day-card {
+        min-height: 194px;
+        padding: 17px;
+        border: 1px solid #ead8fb;
+        border-radius: 19px;
+        background: linear-gradient(145deg, #fff, #faf5ff);
+      }
+
+      .diwali-day-card.live {
+        border-color: #fbbf24;
+        box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.13);
+      }
+
+      .diwali-day-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        color: var(--diwali-muted);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .diwali-day-card h3 {
+        margin: 12px 0 15px;
+        font-size: 20px;
+      }
+
+      .diwali-winner-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 8px;
+        color: var(--diwali-muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .diwali-winner-line strong {
+        color: var(--diwali-ink);
+        text-align: right;
+      }
+
+      .diwali-odds {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 14px;
+      }
+
+      .diwali-odds th,
+      .diwali-odds td {
+        padding: 12px 10px;
+        border-bottom: 1px solid #f2e8ff;
+        text-align: left;
+      }
+
+      .diwali-odds th {
+        color: #6d28d9;
+        font-size: 12px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .diwali-odds td:last-child,
+      .diwali-odds th:last-child {
+        text-align: right;
+        font-weight: 950;
+      }
+
+      .diwali-suspense {
+        text-align: center;
+        background:
+          radial-gradient(circle at 50% 0%, rgba(251, 191, 36, 0.2), transparent 13rem),
+          linear-gradient(145deg, #fff7ed, #fdf2f8);
+      }
+
+      .diwali-suspense h2 {
+        color: #9a3412;
+      }
+
+      .diwali-muted {
+        color: var(--diwali-muted);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 900px) {
+        .diwali-hero-grid,
+        .diwali-player-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .diwali-hero::after {
+          right: -13px;
+        }
+
+        .diwali-days-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 650px) {
+        .diwali-shell {
+          width: min(100% - 18px, 1260px);
+          padding-top: 14px;
+        }
+
+        .diwali-stat-row,
+        .diwali-intro-grid,
+        .diwali-reward-grid,
+        .diwali-steps {
+          grid-template-columns: 1fr;
+        }
+
+        .diwali-days-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .diwali-section-head {
+          display: block;
+        }
+
+        .diwali-section-head .diwali-chip {
+          margin-top: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body class="diwali-page">
+    <div id="mde-navbar"></div>
+
+    <main class="diwali-shell">
+      <section class="diwali-hero">
+        <div class="diwali-hero-grid">
+          <div>
+            <div class="diwali-kicker">🪔 Diwali Festival 2026 · 7 Days</div>
+            <h1 class="diwali-title">Light up your empire.</h1>
+            <p class="diwali-subtitle">
+              Build one Daily Diwali Basket, enter the automatic midnight draw,
+              and celebrate light, prosperity, trade, and new beginnings with
+              players around the world.
+            </p>
+          </div>
+
+          <div class="diwali-countdown-card">
+            <div id="diwali-countdown-label" class="diwali-countdown-label">
+              Loading festival clock
+            </div>
+            <div id="diwali-countdown" class="diwali-countdown">--:--:--</div>
+            <p id="diwali-countdown-note" class="diwali-countdown-note">
+              All times are shown in UTC.
+            </p>
+          </div>
+        </div>
+
+        <div class="diwali-stat-row">
+          <div class="diwali-stat">
+            <span>Festival</span>
+            <strong id="diwali-event-status">Loading</strong>
+          </div>
+          <div class="diwali-stat">
+            <span>Dates</span>
+            <strong id="diwali-event-dates">1–7 Nov</strong>
+          </div>
+          <div class="diwali-stat">
+            <span>Daily draw</span>
+            <strong>15 HIVE + NFT</strong>
+          </div>
+          <div class="diwali-stat">
+            <span>Total HIVE</span>
+            <strong>105 HIVE</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="diwali-section">
+        <div class="diwali-section-head">
+          <div>
+            <h2>What is Diwali?</h2>
+            <p>
+              Diwali, also known as Deepavali, is one of South Asia’s most
+              cherished festivals. Traditionally a Hindu festival, it is also
+              observed by Jain, Sikh, and some Buddhist communities, and is
+              celebrated by people across the globe.
+            </p>
+          </div>
+          <span class="diwali-chip">Festival of light & prosperity</span>
+        </div>
+
+        <div class="diwali-intro-grid">
+          <article class="diwali-info-card">
+            <h3>🌟 Light over darkness</h3>
+            <p>
+              Diwali represents light over darkness, knowledge over ignorance,
+              and good over evil. It is a time for gratitude, hope, family,
+              friendship, and fresh beginnings.
+            </p>
+          </article>
+          <article class="diwali-info-card">
+            <h3>🏛️ Why it fits MydEmpire</h3>
+            <p>
+              MydEmpire is built around production, trade, cooperation, and
+              prosperity. A shared festival gives every empire a simple way to
+              contribute goods, celebrate achievement, and welcome a brighter
+              season together.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="diwali-section">
+        <div class="diwali-section-head">
+          <div>
+            <h2>How to participate</h2>
+            <p>
+              No entry payment. Your Daily Diwali Basket is your qualification
+              for that day’s draw.
+            </p>
+          </div>
+          <span class="diwali-chip">One entry per player per UTC day</span>
+        </div>
+
+        <div class="diwali-steps">
+          <article class="diwali-step">
+            <span class="diwali-step-number">1</span>
+            <h3>Choose Goods</h3>
+            <p>Select any 3 or more available Goods. Any rarity and quality are accepted.</p>
+          </article>
+          <article class="diwali-step">
+            <span class="diwali-step-number">2</span>
+            <h3>Reach 250 PV</h3>
+            <p>Your selected Goods must total at least 250 displayed Product Value.</p>
+          </article>
+          <article class="diwali-step">
+            <span class="diwali-step-number">3</span>
+            <h3>Submit once</h3>
+            <p>Goods are consumed, your entry is recorded, and you are included in the 00:00 UTC draw.</p>
+          </article>
+        </div>
+
+        <div class="diwali-free-note">
+          💜 Entry is free — there is no HIVE fee. The basket itself is the
+          daily qualification. The 15 HIVE reward is paid from
+          <strong>@mydempire</strong>, not from the treasury.
+        </div>
+      </section>
+
+      <section class="diwali-section">
+        <div class="diwali-section-head">
+          <div>
+            <h2>🎁 Build today’s Diwali Basket</h2>
+            <p>
+              Select your Goods below. The server checks ownership, availability,
+              the 250 PV minimum, and the one-entry-per-day rule.
+            </p>
+          </div>
+          <span id="diwali-player-days" class="diwali-chip">0 / 7 days</span>
+        </div>
+
+        <div id="diwali-login-note" class="diwali-login-note">
+          Connect your Hive account to load your Goods and submit a Daily Diwali Basket.
+        </div>
+
+        <div id="diwali-player-app" class="diwali-player-panel hidden">
+          <div>
+            <div id="diwali-inventory" class="diwali-inventory"></div>
+            <div id="diwali-inventory-status" class="diwali-status"></div>
+          </div>
+
+          <aside class="diwali-basket-summary">
+            <h3>Today’s basket</h3>
+            <p id="diwali-basket-date" class="diwali-muted">UTC day</p>
+            <div class="diwali-total">
+              <span>Selected Goods</span>
+              <strong id="diwali-selected-count">0</strong>
+            </div>
+            <div class="diwali-total">
+              <span>Product Value</span>
+              <strong><span id="diwali-selected-pv">0</span> PV</strong>
+            </div>
+            <div class="diwali-progress" aria-label="Basket Product Value progress">
+              <span id="diwali-progress-bar"></span>
+            </div>
+            <div id="diwali-basket-help" class="diwali-status">
+              Select at least 3 Goods and reach 250 PV.
+            </div>
+            <button id="diwali-submit-basket" class="diwali-primary-btn" type="button" disabled>
+              Submit Daily Basket
+            </button>
+          </aside>
+        </div>
+      </section>
+
+      <section class="diwali-section">
+        <div class="diwali-section-head">
+          <div>
+            <h2>🪔 Your sealed Diwali NFT</h2>
+            <p>
+              Seven unique NFTs exist: one sealed edition per day. The reward is
+              hidden until the current holder opens it.
+            </p>
+          </div>
+          <span class="diwali-chip">DIWALI_2026 · 001/007–007/007</span>
+        </div>
+        <div id="diwali-nft-list" class="diwali-nft-list">
+          <div class="diwali-muted">Connect your account to see your sealed NFT.</div>
+        </div>
+        <div id="diwali-nft-status" class="diwali-status"></div>
+      </section>
+
+      <section class="diwali-section">
+        <div class="diwali-section-head">
+          <div>
+            <h2>✨ Rewards & suspense</h2>
+            <p>
+              Each day awards one player 15 HIVE and a different player one
+              sealed NFT. The same player may win again on another day.
+            </p>
+          </div>
+          <span class="diwali-chip">105 HIVE total from @mydempire</span>
+        </div>
+
+        <div class="diwali-reward-grid">
+          <article class="diwali-info-card">
+            <h3>Every sealed NFT guarantees</h3>
+            <p>
+              <strong>500 EMP</strong><br />
+              <strong>1 Imperial Fragment</strong><br />
+              <strong>2 SMP</strong>
+            </p>
+          </article>
+          <article class="diwali-info-card">
+            <h3>Participation milestones</h3>
+            <p>
+              Complete 3 days: <strong>50 EMP</strong><br />
+              Complete all 7 days: <strong>100 EMP + 5 AP</strong>
+            </p>
+          </article>
+        </div>
+
+        <table class="diwali-odds">
+          <thead>
+            <tr>
+              <th>Hidden bonus inside the NFT</th>
+              <th>Chance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>No bonus</td><td>50%</td></tr>
+            <tr><td>Random B2 Blueprint</td><td>15%</td></tr>
+            <tr><td>L2 Land</td><td>15%</td></tr>
+            <tr><td>Imperial Ticket</td><td>15%</td></tr>
+            <tr><td>Genesis Pack</td><td>5%</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="diwali-section">
+        <div class="diwali-section-head">
+          <div>
+            <h2>🏆 Daily draw board</h2>
+            <p>
+              Draws happen automatically at 00:00 UTC. The NFT winner is removed
+              before the 15 HIVE winner is selected, so there is no same-day
+              double win.
+            </p>
+          </div>
+          <span class="diwali-chip">Winner history</span>
+        </div>
+        <div id="diwali-days-grid" class="diwali-days-grid"></div>
+      </section>
+
+      <section class="diwali-section diwali-suspense">
+        <h2>🌙 A little festival suspense</h2>
+        <p>
+          Submit your basket, light a diya in your own way, and return after
+          midnight. Your empire may be carrying the next sealed surprise.
+        </p>
+      </section>
+    </main>
+
+    <script src="js/nav-auth.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/diwali-festival.js"></script>
+  </body>
+</html>
