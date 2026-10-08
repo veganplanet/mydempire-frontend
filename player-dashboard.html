@@ -1430,6 +1430,10 @@ font-weight:900;
   All <span class="land-filter-count" id="land-count-all">0</span>
 </button>
 
+<button class="land-filter-btn land-filter-ready-btn" data-land-filter="READY">
+  🚀 Ready to Upgrade <span class="land-filter-count" id="land-count-ready">0</span>
+</button>
+
 <button class="land-filter-btn" data-land-filter="L1">
   L1 <span class="land-filter-count" id="land-count-l1">0</span>
 </button>
@@ -6643,6 +6647,7 @@ landSummaryHtml = `
 
     const factoriesList = document.createElement("div");
     factoriesList.className = "factories-list";
+    let readyUpgradeFactoryCount = 0;
 
     if (
   !factories.length &&
@@ -6772,6 +6777,15 @@ const blockedByExistingTopTier =
   !reachedLandUpgradeCap &&
   !blockedByExistingTopTier;
 
+        if (canUpgrade) {
+          readyUpgradeFactoryCount += 1;
+        }
+
+        row.dataset.upgradeReady = canUpgrade ? "true" : "false";
+        if (canUpgrade) {
+          row.classList.add("factory-row-upgrade-ready");
+        }
+
         let upgradeMatrix = "";
 
         if (isMaxTier) {
@@ -6799,7 +6813,8 @@ const blockedByExistingTopTier =
           <div class="factory-main">
             <div class="factory-title-row">
               <div class="factory-title">${factoryName}</div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <div class="factory-actions">
+                ${canUpgrade ? `<span class="factory-ready-badge">🚀 Upgrade Ready</span>` : ""}
                 ${canRename ? `<button class="rename-factory-btn" data-factory-id="${factoryId}">Rename</button>` : ""}
                 ${canUpgrade ? `<button class="upgrade-factory-btn" data-factory-id="${factoryId}">Upgrade</button>` : ""}
                 ${
@@ -6988,6 +7003,8 @@ try {
       }
     }
 
+    landCard.dataset.upgradeReady = readyUpgradeFactoryCount > 0 ? "true" : "false";
+
     const rightCol = landCard.querySelector(`#land-factories-${idx}`);
     if (rightCol) rightCol.appendChild(factoriesList);
 
@@ -6995,6 +7012,7 @@ try {
   }
 
   updateLandFilterCounts();
+  applyLandFilter(window.activeLandFilter || "ALL");
   wireEmptySlotBuildActions();
 }
      
@@ -7947,12 +7965,20 @@ setTimeout(setupAppbarDropdown, 1000);
     SUPERMARKET: 0,
   };
 
+  let readyFactoryCount = 0;
+
   cards.forEach((card) => {
     const tier = String(card.dataset.landTier || "").toUpperCase();
     const industries = String(card.dataset.industry || "").toUpperCase();
 
     if (counts[tier] !== undefined) {
       counts[tier]++;
+    }
+
+    if (card.dataset.upgradeReady === "true") {
+      readyFactoryCount += card.querySelectorAll(
+        '.factory-row[data-upgrade-ready="true"]'
+      ).length;
     }
 
     ["FOOD", "PHARMA", "TEXTILE", "CHEMICAL", "SUPERMARKET"].forEach((industry) => {
@@ -7976,49 +8002,48 @@ setTimeout(setupAppbarDropdown, 1000);
   setCount("land-count-textile", counts.TEXTILE);
   setCount("land-count-chemical", counts.CHEMICAL);
   setCount("land-count-supermarket", counts.SUPERMARKET);
+  setCount("land-count-ready", readyFactoryCount);
 }
-      function setupLandFilters() {
-        
+
+function applyLandFilter(filter) {
+  const cards = document.querySelectorAll(".land-card-row");
+
+  cards.forEach((card) => {
+    const tier = String(card.dataset.landTier || "").toUpperCase();
+    const industries = String(card.dataset.industry || "").toUpperCase();
+
+    let show = false;
+
+    if (filter === "ALL") {
+      show = true;
+    } else if (filter === "READY") {
+      show = card.dataset.upgradeReady === "true";
+    } else if (filter === "L1" || filter === "L2" || filter === "L3") {
+      show = tier === filter;
+    } else {
+      show = industries.includes(filter);
+    }
+
+    card.style.display = show ? "" : "none";
+  });
+}
+
+function setupLandFilters() {
   const buttons = document.querySelectorAll(".land-filter-btn");
 
   buttons.forEach((btn) => {
     btn.addEventListener("click", () => {
-
       buttons.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
 
-      const filter = btn.dataset.landFilter;
-
-      const cards = document.querySelectorAll(".land-card-row");
-
-      cards.forEach((card) => {
-
-        const tier = String(card.dataset.landTier || "").toUpperCase();
-
-        const industries = String(card.dataset.industry || "").toUpperCase();
-
-        let show = false;
-
-        if (filter === "ALL") {
-          show = true;
-        }
-        else if (
-          filter === "L1" ||
-          filter === "L2" ||
-          filter === "L3"
-        ) {
-          show = tier === filter;
-        }
-        else {
-          show = industries.includes(filter);
-        }
-
-        card.style.display = show ? "" : "none";
-      });
+      window.activeLandFilter = btn.dataset.landFilter || "ALL";
+      applyLandFilter(window.activeLandFilter);
     });
   });
+
+  window.activeLandFilter = "ALL";
 }
-      function getFreeBuildLands() {
+function getFreeBuildLands() {
         if (!Array.isArray(empireLands)) return [];
 
         return empireLands.filter((land) => {
