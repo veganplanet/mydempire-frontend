@@ -44,7 +44,8 @@
   <a href="codex.html">Codex</a>
   <a href="transparency.html">Transparency</a>
 </div>
-</div>${authLinks}
+</div>
+${authLinks}
 
 ${
   user
