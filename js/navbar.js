@@ -15,7 +15,7 @@
 <a href="${empireHubLink}" class="appbar-link">
   Empire Hub
 <a href="factory-products.html" class="appbar-link">
-  Goods <span class="live-pill">LIVE</span>
+  Goods
 </a>
   `
     : "";
@@ -55,7 +55,7 @@ ${
           href="exchange.html"
           class="appbar-link exchange-nav-link"
         >
-          Imperial Exchange <span class="live-pill">LIVE</span> ▼
+          Imperial Exchange ▼
         </a>
 
         <div class="exchange-nav-dropdown-menu">
