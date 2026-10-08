@@ -72,6 +72,14 @@ ${
     `
     : ``
 }         
+
+<span
+  class="appbar-link diwali-event-teaser"
+  title="A special Diwali event is coming soon"
+  aria-label="Diwali Event Soon"
+>
+  🪔 Diwali Event <span class="nav-new-pill">SOON</span>
+</span>
  </nav>
         </div>
 
