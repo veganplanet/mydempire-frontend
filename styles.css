@@ -23336,3 +23336,16 @@ body.home-v2-page html {
     right: 10px;
   }
 }
+
+/* HOME V2 — remove global mobile offset and reserve footer space */
+body.home-v2-page {
+  padding-top: 0 !important;
+}
+
+.home-v2-page .home-v2-main {
+  padding-bottom: 64px !important;
+}
+
+.home-v2-page #global-footer {
+  min-height: 48px;
+}
