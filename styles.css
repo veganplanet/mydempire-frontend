@@ -23091,3 +23091,150 @@ body.home-v2-page {
     order: 0;
   }
 }
+
+/* HOME V2 — edge-to-edge layout and always-visible social footer */
+body.home-v2-page,
+body.home-v2-page html {
+  margin: 0;
+  padding: 0;
+}
+
+.home-v2-page .home-v2-shell {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.home-v2-page .appbar-inner {
+  max-width: none;
+}
+
+.home-v2-page .home-v2-main {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 74px 0 0;
+  gap: 0;
+}
+
+.home-v2-page .home-v2-hero {
+  gap: 0;
+}
+
+.home-v2-page .home-v2-copy,
+.home-v2-page .home-v2-art {
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+}
+
+.home-v2-page .home-v2-status {
+  gap: 0;
+}
+
+.home-v2-page .home-v2-status-card {
+  border-radius: 0;
+  border-left-width: 0;
+}
+
+.home-v2-page .home-v2-status-card:last-child {
+  border-right-width: 0;
+}
+
+.home-v2-page .home-v2-journey {
+  padding: 0 18px;
+}
+
+.home-v2-page .home-v2-step-grid {
+  gap: 0;
+}
+
+.home-v2-page .home-v2-step {
+  border-radius: 0;
+  border-right-width: 0;
+}
+
+.home-v2-page .home-v2-step:last-child {
+  border-right-width: 1px;
+}
+
+.home-v2-page #global-footer {
+  width: 100%;
+  min-height: 48px;
+  background: rgba(255, 255, 255, 0.72);
+  border-top: 1px solid #d9e1f0;
+}
+
+.home-v2-page .site-footer {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 7px 18px 9px;
+}
+
+.home-v2-page .footer-brand-center {
+  width: 100%;
+  min-height: 32px;
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.home-v2-page .footer-socials {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.home-v2-page .footer-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.home-v2-page .footer-social-icon {
+  display: block !important;
+  width: 28px !important;
+  height: 28px !important;
+  object-fit: contain;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.home-v2-page .foot {
+  order: -1;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .home-v2-page .home-v2-main {
+    padding-top: 66px;
+  }
+
+  .home-v2-page .home-v2-journey {
+    padding: 0 10px;
+  }
+
+  .home-v2-page .home-v2-status-card {
+    border-left-width: 0;
+    border-right-width: 0;
+  }
+
+  .home-v2-page .footer-brand-center {
+    flex-direction: row;
+  }
+
+  .home-v2-page .site-footer {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
