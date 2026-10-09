@@ -23285,3 +23285,54 @@ body.home-v2-page html {
     right: 10px;
   }
 }
+
+/* HOME V2 — enforce zero top offset and visible footer */
+.home-v2-page #mde-navbar {
+  width: 100%;
+  height: 74px;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block;
+}
+
+.home-v2-page .appbar {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+}
+
+.home-v2-page .home-v2-main {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.home-v2-page #global-footer {
+  position: fixed !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  left: 20px;
+  right: 20px;
+  bottom: 0;
+  z-index: 1100;
+}
+
+.home-v2-page #global-footer .footer-socials,
+.home-v2-page #global-footer .footer-social-link,
+.home-v2-page #global-footer .footer-social-icon {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 720px) {
+  .home-v2-page #mde-navbar {
+    height: 66px;
+  }
+
+  .home-v2-page #global-footer {
+    left: 10px;
+    right: 10px;
+  }
+}
