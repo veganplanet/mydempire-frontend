@@ -82,7 +82,6 @@ ${user ? `
             🪔 Diwali Event <span class="nav-new-pill">SOON</span>
           </span>
         ` : ``}
-</span>
  </nav>
         </div>
 
