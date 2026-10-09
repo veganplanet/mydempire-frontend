@@ -23238,3 +23238,50 @@ body.home-v2-page html {
     padding-right: 0;
   }
 }
+
+/* HOME V2 — final viewport spacing and pinned social footer */
+.home-v2-page .appbar {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  width: 100%;
+}
+
+.home-v2-page .home-v2-main {
+  width: calc(100% - 40px);
+  max-width: none;
+  margin: 0 auto;
+  padding: 0 0 50px;
+}
+
+.home-v2-page #global-footer {
+  position: fixed;
+  left: 20px;
+  right: 20px;
+  bottom: 0;
+  z-index: 1100;
+  width: auto;
+  min-height: 48px;
+  display: block;
+  overflow: visible;
+}
+
+.home-v2-page .site-footer,
+.home-v2-page .footer-brand-center,
+.home-v2-page .footer-socials {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 720px) {
+  .home-v2-page .home-v2-main {
+    width: calc(100% - 20px);
+    padding-bottom: 50px;
+  }
+
+  .home-v2-page #global-footer {
+    left: 10px;
+    right: 10px;
+  }
+}
