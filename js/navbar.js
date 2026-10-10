@@ -9,16 +9,25 @@
     : "empire-hub.html";
   const authLinks = user
     ? `
-    <a href="player-dashboard.html" class="appbar-link">Dashboard</a>
-<a href="shop.html" class="appbar-link">Shop</a>
-<a href="marketplace.html" class="appbar-link">Marketplace</a>
-<a href="${empireHubLink}" class="appbar-link">
-  Empire Hub
-<a href="factory-products.html" class="appbar-link">
-  Goods
-</a>
+    <a id="dashboardLink" href="player-dashboard.html" class="appbar-link">Dashboard</a>
+    <div class="shop-nav-dropdown">
+      <a id="shopLink" href="shop.html" class="appbar-link shop-nav-link">
+        Shop ▼
+      </a>
+      <div class="shop-nav-dropdown-menu">
+        <a id="marketplaceLink" href="marketplace.html" class="shop-nav-dropdown-item">
+          Marketplace
+        </a>
+      </div>
+    </div>
+    <a href="${empireHubLink}" class="appbar-link">
+      Empire Hub
+    </a>
+    <a href="factory-products.html" class="appbar-link">
+      Goods
+    </a>
   `
-    : "";
+    : ""
 
   const navbar = `
     <header class="appbar">
