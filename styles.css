@@ -23349,3 +23349,164 @@ body.home-v2-page {
 .home-v2-page #global-footer {
   min-height: 48px;
 }
+
+/* HOME V2 — correct logo crop and compact 100% viewport layout */
+.home-v2-page .home-v2-logo-lockup {
+  width: 190px;
+  height: 92px;
+}
+
+.home-v2-page .home-v2-logo-lockup img {
+  position: static;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  display: block;
+  object-fit: contain;
+}
+
+.home-v2-page .appbar-logo img {
+  position: static;
+  width: 132px;
+  height: 56px;
+  max-width: none;
+  object-fit: contain;
+}
+
+@media (max-height: 700px) and (min-width: 721px) {
+  .home-v2-page .appbar,
+  .home-v2-page #mde-navbar {
+    height: 64px;
+  }
+
+  .home-v2-page .appbar-logo {
+    width: 112px;
+    height: 48px;
+  }
+
+  .home-v2-page .appbar-logo img {
+    width: 112px;
+    height: 48px;
+  }
+
+  .home-v2-page .home-v2-main {
+    grid-template-rows: minmax(220px, 1fr) auto minmax(116px, 0.42fr);
+    padding-bottom: 54px !important;
+  }
+
+  .home-v2-page .home-v2-copy {
+    padding: 10px 28px;
+  }
+
+  .home-v2-page .home-v2-logo-lockup {
+    width: 150px;
+    height: 66px;
+  }
+
+  .home-v2-live-pill {
+    margin-top: 6px;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .home-v2-copy h1 {
+    margin: 8px 0 5px;
+    font-size: clamp(1.8rem, 3vw, 2.55rem);
+  }
+
+  .home-v2-copy-text {
+    font-size: 13px;
+    line-height: 1.28;
+  }
+
+  .home-v2-actions {
+    margin-top: 10px;
+    gap: 8px;
+  }
+
+  .home-v2-primary,
+  .home-v2-secondary {
+    min-height: 36px;
+    padding: 0 13px;
+    font-size: 13px;
+  }
+
+  .home-v2-footnote {
+    margin-top: 7px;
+    font-size: 11px;
+  }
+
+  .home-v2-art-badge {
+    padding: 7px 10px;
+  }
+
+  .home-v2-art-badge-top {
+    top: 10px;
+    right: 10px;
+  }
+
+  .home-v2-art-badge-bottom {
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .home-v2-art-badge strong {
+    font-size: 13px;
+  }
+
+  .home-v2-art-badge span {
+    font-size: 11px;
+  }
+
+  .home-v2-status-card {
+    padding: 7px 12px;
+  }
+
+  .home-v2-status-card span {
+    font-size: 11px;
+  }
+
+  .home-v2-status-card strong {
+    font-size: 14px;
+  }
+
+  .home-v2-journey {
+    gap: 5px;
+  }
+
+  .home-v2-eyebrow {
+    font-size: 10px;
+  }
+
+  .home-v2-journey h2 {
+    font-size: 18px;
+  }
+
+  .home-v2-journey-note {
+    font-size: 11px;
+  }
+
+  .home-v2-step {
+    min-height: 78px;
+    padding: 9px 12px;
+  }
+
+  .home-v2-step-number {
+    font-size: 11px;
+  }
+
+  .home-v2-step h3 {
+    margin: 4px 0 2px;
+    font-size: 14px;
+  }
+
+  .home-v2-step p {
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  .home-v2-page .footer-social-icon {
+    width: 24px !important;
+    height: 24px !important;
+  }
+}
