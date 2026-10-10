@@ -23547,8 +23547,75 @@ body.home-v2-page {
   }
 }
 
+/* NAVBAR — Shop dropdown */
+.shop-nav-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
 
-/* HOME V2 — prevent logged-in navbar overlap at 100% width */
+.shop-nav-link {
+  cursor: pointer;
+}
+
+.shop-nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  min-width: 190px;
+  margin-top: 0;
+  padding: 8px;
+  background: #ffffff;
+  border: 1px solid #d9e1f2;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(25, 42, 78, 0.18);
+  display: none;
+}
+
+.shop-nav-dropdown:hover .shop-nav-dropdown-menu,
+.shop-nav-dropdown:focus-within .shop-nav-dropdown-menu {
+  display: block;
+}
+
+.shop-nav-dropdown-menu a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #24324b;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.shop-nav-dropdown-menu a:hover {
+  background: #eef3ff;
+  color: #2546a8;
+}
+
+@media (max-width: 900px) {
+  .shop-nav-dropdown {
+    width: 100%;
+    display: block;
+  }
+
+  .shop-nav-dropdown-menu {
+    position: static;
+    display: block;
+    min-width: 0;
+    margin-top: 4px;
+    padding: 4px 0 4px 16px;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .shop-nav-dropdown-menu a {
+    padding: 8px 10px;
+  }
+}
+
+/* HOME V2 — stable navbar row and compact logged-in menu */
 @media (min-width: 769px) and (max-width: 1440px) {
   .home-v2-page .appbar {
     height: 74px !important;
@@ -23562,7 +23629,7 @@ body.home-v2-page {
     min-width: 0 !important;
     flex-wrap: nowrap !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 6px !important;
     padding: 0 12px !important;
   }
 
@@ -23572,28 +23639,28 @@ body.home-v2-page {
     flex: 1 1 auto !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 6px !important;
   }
 
   .home-v2-page .appbar-logo {
-    width: 112px !important;
+    width: 100px !important;
     height: 48px !important;
-    flex: 0 0 112px !important;
+    flex: 0 0 100px !important;
   }
 
   .home-v2-page .appbar-logo img {
-    width: 112px !important;
-    height: 112px !important;
-    top: -32px !important;
+    width: 100px !important;
+    height: 100px !important;
+    top: -29px !important;
   }
 
   .home-v2-page .mobile-menu-btn {
     display: inline-flex !important;
-    flex: 0 0 36px !important;
-    width: 36px !important;
-    height: 36px !important;
+    flex: 0 0 34px !important;
+    width: 34px !important;
+    height: 34px !important;
     padding: 0 !important;
-    font-size: 20px !important;
+    font-size: 19px !important;
   }
 
   .home-v2-page .appbar-nav {
@@ -23603,21 +23670,30 @@ body.home-v2-page {
     width: auto !important;
     flex-wrap: nowrap !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 4px !important;
     overflow: visible !important;
     white-space: nowrap !important;
   }
 
-  .home-v2-page .appbar-nav > .appbar-link.auth-only {
+  /* Only these items stay in the compact row. */
+  .home-v2-page .appbar-nav > .appbar-link:not(.appbar-home-link):not(.diwali-event-teaser),
+  .home-v2-page .appbar-nav > .shop-nav-dropdown,
+  .home-v2-page .appbar-nav > .exchange-nav-dropdown {
     display: none !important;
   }
 
   .home-v2-page .appbar-nav .appbar-link,
   .home-v2-page .appbar-nav .exchange-nav-link {
-    min-height: 32px !important;
-    padding: 0 6px !important;
-    font-size: 14px !important;
+    min-height: 30px !important;
+    padding: 0 4px !important;
+    font-size: 13px !important;
     white-space: nowrap !important;
+  }
+
+  .home-v2-page .appbar-nav .diwali-event-teaser {
+    max-width: 150px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
   .home-v2-page .appbar-nav.mobile-open {
@@ -23641,19 +23717,49 @@ body.home-v2-page {
     box-shadow: 0 16px 34px rgba(15, 23, 42, 0.24) !important;
   }
 
-  .home-v2-page .appbar-nav.mobile-open > .appbar-link.auth-only {
+  .home-v2-page .appbar-nav.mobile-open > .appbar-link {
     display: inline-flex !important;
     width: 100% !important;
+    min-height: 38px !important;
     justify-content: flex-start !important;
-    padding: 9px 12px !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
   }
 
-  .home-v2-page .appbar-nav.mobile-open .home-nav-dropdown,
-  .home-v2-page .appbar-nav.mobile-open .exchange-nav-dropdown {
+  .home-v2-page .appbar-nav.mobile-open > .shop-nav-dropdown,
+  .home-v2-page .appbar-nav.mobile-open > .exchange-nav-dropdown {
+    display: block !important;
     width: 100% !important;
   }
 
-  .home-v2-page .appbar-nav.mobile-open .appbar-link,
+  .home-v2-page .appbar-nav.mobile-open .home-nav-dropdown {
+    width: 100% !important;
+  }
+
+  .home-v2-page .appbar-nav.mobile-open .shop-nav-dropdown-menu,
+  .home-v2-page .appbar-nav.mobile-open .exchange-nav-dropdown-menu {
+    position: static !important;
+    display: block !important;
+    min-width: 0 !important;
+    margin-top: 4px !important;
+    padding: 4px 0 4px 16px !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .home-v2-page .appbar-nav.mobile-open .shop-nav-dropdown-menu a,
+  .home-v2-page .appbar-nav.mobile-open .exchange-nav-dropdown-menu a {
+    display: flex !important;
+    width: 100% !important;
+    min-height: 34px !important;
+    align-items: center !important;
+    padding: 6px 10px !important;
+    color: #ffffff !important;
+    font-size: 13px !important;
+  }
+
+  .home-v2-page .appbar-nav.mobile-open .shop-nav-link,
   .home-v2-page .appbar-nav.mobile-open .exchange-nav-link {
     width: 100% !important;
     min-height: 38px !important;
@@ -23665,19 +23771,150 @@ body.home-v2-page {
   .home-v2-page .appbar-right {
     width: auto !important;
     flex: 0 0 auto !important;
-    gap: 6px !important;
+    gap: 4px !important;
     margin: 0 !important;
     position: static !important;
   }
 
   .home-v2-page .appbar-account-btn,
   .home-v2-page .appbar-login-btn {
-    max-width: 150px !important;
-    min-height: 36px !important;
-    padding: 0 10px !important;
-    font-size: 14px !important;
+    max-width: 128px !important;
+    min-height: 34px !important;
+    padding: 0 8px !important;
+    font-size: 13px !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
+  }
+}
+
+/* HOME V2 — compact navbar on phone/tablet widths */
+@media (max-width: 768px) {
+  .home-v2-page .appbar-nav {
+    display: flex !important;
+    position: static !important;
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: hidden !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 2px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .home-v2-page .appbar-nav > .appbar-link:not(.appbar-home-link):not(.diwali-event-teaser),
+  .home-v2-page .appbar-nav > .shop-nav-dropdown,
+  .home-v2-page .appbar-nav > .exchange-nav-dropdown {
+    display: none !important;
+  }
+
+  .home-v2-page .appbar-nav .appbar-link,
+  .home-v2-page .appbar-nav .diwali-event-teaser {
+    width: auto !important;
+    min-height: 30px !important;
+    max-width: 132px !important;
+    justify-content: center !important;
+    padding: 0 4px !important;
+    font-size: 12px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .home-v2-page .appbar-nav.mobile-open {
+    position: fixed !important;
+    top: 74px !important;
+    left: 10px !important;
+    right: 10px !important;
+    z-index: 1000000 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+    width: auto !important;
+    max-height: calc(100vh - 90px) !important;
+    overflow-y: auto !important;
+    padding: 10px !important;
+    border: 1px solid rgba(255,255,255,0.18) !important;
+    border-radius: 0 0 16px 16px !important;
+    background: linear-gradient(180deg, rgba(142,68,173,0.98), rgba(59,71,88,0.98)) !important;
+    box-shadow: 0 16px 34px rgba(15,23,42,0.28) !important;
+  }
+
+  .home-v2-page .appbar-nav.mobile-open > .appbar-link,
+  .home-v2-page .appbar-nav.mobile-open > .shop-nav-dropdown,
+  .home-v2-page .appbar-nav.mobile-open > .exchange-nav-dropdown {
+    display: flex !important;
+    width: 100% !important;
+    min-height: 38px !important;
+    justify-content: flex-start !important;
+    padding: 8px 12px !important;
+    color: #ffffff !important;
+  }
+
+  .home-v2-page .appbar-nav.mobile-open .shop-nav-dropdown-menu,
+  .home-v2-page .appbar-nav.mobile-open .exchange-nav-dropdown-menu {
+    position: static !important;
+    display: block !important;
+    min-width: 0 !important;
+    padding: 4px 0 4px 16px !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .home-v2-page .appbar-nav.mobile-open .shop-nav-dropdown-menu a,
+  .home-v2-page .appbar-nav.mobile-open .exchange-nav-dropdown-menu a {
+    display: flex !important;
+    width: 100% !important;
+    min-height: 34px !important;
+    align-items: center !important;
+    padding: 6px 10px !important;
+    color: #ffffff !important;
+    font-size: 13px !important;
+  }
+
+  .home-v2-page .appbar-logo {
+    width: 88px !important;
+    height: 46px !important;
+    flex: 0 0 88px !important;
+  }
+
+  .home-v2-page .appbar-logo img {
+    width: 88px !important;
+    height: 88px !important;
+    top: -25px !important;
+  }
+
+  .home-v2-page .mobile-menu-btn {
+    display: inline-flex !important;
+    flex: 0 0 32px !important;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    font-size: 18px !important;
+  }
+
+  .home-v2-page .appbar-right {
+    width: auto !important;
+    flex: 0 0 auto !important;
+    position: static !important;
+    gap: 2px !important;
+    margin: 0 !important;
+  }
+
+  .home-v2-page .appbar-account-btn,
+  .home-v2-page .appbar-login-btn {
+    max-width: 90px !important;
+    min-height: 32px !important;
+    padding: 0 6px !important;
+    font-size: 12px !important;
   }
 }
