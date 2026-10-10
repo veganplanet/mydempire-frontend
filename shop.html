@@ -976,7 +976,10 @@ const mintCost =
     let totalFactories = 0;
     for (const land of lands) {
       const factories = Array.isArray(land.factories) ? land.factories : [];
-      totalFactories += factories.length;
+      const specialIndustries = Array.isArray(land.special_industries)
+        ? land.special_industries
+        : [];
+      totalFactories += factories.length + specialIndustries.length;
     }
 
     const emptySlots = Math.max(totalSlots - totalFactories, 0);
