@@ -26,7 +26,7 @@
 
         <div class="appbar-left">
           <a href="index.html" class="appbar-logo">
-            <img src="assets/logo-cropped.svg" alt="MydEmpire">
+            <img src="assets/logo.png" alt="MydEmpire">
           </a>
 
           <button id="mobileMenuBtn" class="mobile-menu-btn" type="button">

@@ -23510,3 +23510,39 @@ body.home-v2-page {
     height: 24px !important;
   }
 }
+
+/* HOME V2 — navbar-only branding */
+.home-v2-page .home-v2-logo-lockup {
+  display: none !important;
+}
+
+.home-v2-page .appbar-logo {
+  display: inline-flex !important;
+  width: 132px;
+  height: 56px;
+  overflow: hidden;
+  position: relative;
+}
+
+.home-v2-page .appbar-logo img {
+  position: absolute !important;
+  left: 0;
+  top: -38px;
+  width: 132px !important;
+  height: 132px !important;
+  max-width: none !important;
+  object-fit: contain !important;
+}
+
+@media (max-width: 720px) {
+  .home-v2-page .appbar-logo {
+    width: 110px;
+    height: 48px;
+  }
+
+  .home-v2-page .appbar-logo img {
+    top: -32px;
+    width: 110px !important;
+    height: 110px !important;
+  }
+}
