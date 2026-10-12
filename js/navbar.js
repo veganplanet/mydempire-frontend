@@ -82,9 +82,11 @@ ${
     : ``
 }         
 
+${user ? `
 <a href="diwali-festival.html" class="appbar-link diwali-event-teaser" style="color:#fbbf24;font-weight:950;">
 🪔 Diwali <span class="nav-new-pill">EVENT</span>
 </a>
+` : ``}
 
  </nav>
         </div>
