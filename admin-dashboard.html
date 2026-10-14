@@ -1562,6 +1562,14 @@ forkyishere,529"
         <div class="section">
           <h2>🏆 Empire Culture Rewards</h2>
 
+          <div style="display:flex;align-items:end;gap:10px;flex-wrap:wrap;margin:14px 0 8px;">
+            <label for="culture-reward-emp-input" style="font-weight:800;">Reward for future winners (EMP)
+              <input id="culture-reward-emp-input" type="number" min="1" step="1" value="250" style="display:block;margin-top:6px;width:180px;padding:9px;border:1px solid #cbd5e1;border-radius:8px;">
+            </label>
+            <button class="primary" type="button" onclick="saveEmpireCultureRewardConfig()">Save Reward</button>
+          </div>
+          <div class="small">Applies when a future weekly winner is declared. Existing winner rewards are unchanged.</div>
+
           <div class="metrics" style="margin-top: 14px">
             <div class="card">
               <div class="label">Pending Culture Rewards</div>
@@ -9317,6 +9325,29 @@ Players snapshotted: ${data.players_snapshotted}
           alert("Failed to mark reward as paid.");
         }
       }
+      async function saveEmpireCultureRewardConfig() {
+        const input = document.getElementById("culture-reward-emp-input");
+        const messageBox = document.getElementById("culture-reward-admin-message");
+        const rewardEmp = Number(input?.value);
+        if (!Number.isSafeInteger(rewardEmp) || rewardEmp < 1) {
+          if (messageBox) messageBox.textContent = "Enter a positive whole number of EMP.";
+          return;
+        }
+        try {
+          const res = await fetch(`${API_BASE}/admin/empire-culture/reward-config`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY },
+            body: JSON.stringify({ reward_emp: rewardEmp }),
+          });
+          const data = await res.json();
+          if (!res.ok || !data.success) throw new Error(data.error || "Failed to save reward setting.");
+          if (input) input.value = data.reward_emp;
+          if (messageBox) messageBox.textContent = `Reward saved at ${data.reward_emp} EMP. This applies to future winners; existing rewards are unchanged.`;
+        } catch (err) {
+          if (messageBox) messageBox.textContent = err.message || "Failed to save reward setting.";
+        }
+      }
+
       async function loadEmpireCultureRewardAdmin() {
         const box = document.getElementById("culture-reward-admin-list");
         const messageBox = document.getElementById(
@@ -9328,6 +9359,14 @@ Players snapshotted: ${data.players_snapshotted}
         box.innerHTML = "Loading Empire Culture rewards...";
 
         try {
+          const configRes = await fetch(`${API_BASE}/admin/empire-culture/reward-config`, {
+            headers: { "x-admin-key": ADMIN_KEY },
+          });
+          const configData = await configRes.json();
+          if (!configRes.ok || !configData.success) throw new Error(configData.error || "Failed to load reward setting.");
+          const rewardInput = document.getElementById("culture-reward-emp-input");
+          if (rewardInput) rewardInput.value = configData.reward_emp;
+
           const res = await fetch(
             `${API_BASE}/admin/empire-culture/winners?limit=100`,
             {
