@@ -1448,7 +1448,7 @@ function renderEmpireCultureHubList(data) {
   if (!listEl) return;
 
   const roundKey = data?.round_key || "--";
-  const rewardEmp = Number(data?.reward_emp || 100);
+  const rewardEmp = Number(data?.reward_emp || 250);
 
   empireCultureHubItems = Array.isArray(data?.spotlight)
     ? data.spotlight.filter((item) => {
@@ -1751,7 +1751,7 @@ function renderCultureWinnerCard(winner, labelText) {
   const owner = String(winner.username || "unknown").replace("@", "");
   const roundKey = String(winner.round_key || "--");
   const votes = Number(winner.votes || 0);
-  const rewardEmp = Number(winner.reward_emp || 100);
+  const rewardEmp = Number(winner.reward_emp || 250);
   const status = String(winner.reward_status || "PENDING_ADMIN_TRANSFER");
 
   const statusLabel =
