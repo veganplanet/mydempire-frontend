@@ -630,7 +630,7 @@
 
         <div style="border:1px solid #f59e0b;border-radius:16px;padding:14px;background:#fffbeb;">
           <div style="font-weight:950;color:#111827;font-size:17px;">L2 Estate Land</div>
-          <div style="margin-top:8px;color:#475569;font-weight:800;">Cost: 25 Credits + 250 EMP</div>
+          <div style="margin-top:8px;color:#475569;font-weight:800;"><span id="fulfillment-credit-shop-l2-cost">Cost: Loading...</span></div>
           <div
   id="fulfillment-credit-shop-l2-progress"
   style="margin-top:8px;color:#92400e;font-weight:900;"
@@ -639,7 +639,7 @@
 </div>
           <button
   type="button"
-  onclick="redeemFulfillmentCreditShopItem('L2_LAND')"
+  id="fulfillment-credit-shop-l2-button" disabled onclick="redeemFulfillmentCreditShopItem('L2_LAND')"
   style="margin-top:12px;width:100%;padding:10px;border-radius:12px;border:1px solid #d97706;background:#d97706;color:#ffffff;font-weight:900;cursor:pointer;"
 >
   Redeem L2 Land
@@ -3925,11 +3925,17 @@ async function loadFulfillmentCreditShopStatus() {
       throw new Error(data.error || "Failed to load shop status.");
     }
 
-    const redeemed = Number(data.l2Progress?.redeemed || 0);
-    const stockLimit = Number(data.l2Progress?.stockLimit || 10);
-
-    if (progressEl) {
-      progressEl.textContent = `Batch Progress: ${redeemed} / ${stockLimit} redeemed`;
+    const redeemed = Number(data.l2Progress?.redeemed ?? 0);
+    const stockLimit = Number(data.l2Progress?.stockLimit ?? 0);
+    const costEl = document.getElementById("fulfillment-credit-shop-l2-cost");
+    const button = document.getElementById("fulfillment-credit-shop-l2-button");
+    if (costEl) costEl.textContent = `Cost: ${data.l2Progress.fcCost} Credits + ${data.l2Progress.empCost} EMP`;
+    if (progressEl) progressEl.textContent = `Batch ${data.l2Progress.batch}: ${redeemed} / ${stockLimit} redeemed`;
+    if (button) {
+      button.disabled = redeemed >= stockLimit;
+      button.textContent = button.disabled ? "Sold Out — Batch Completed" : "Redeem L2 Land";
+      button.style.opacity = button.disabled ? "0.55" : "1";
+      button.style.cursor = button.disabled ? "not-allowed" : "pointer";
     }
   } catch (err) {
     console.error("Credit Shop status load failed:", err);
@@ -3937,6 +3943,8 @@ async function loadFulfillmentCreditShopStatus() {
     if (progressEl) {
       progressEl.textContent = "Batch Progress: Unable to load";
     }
+    const button = document.getElementById("fulfillment-credit-shop-l2-button");
+    if (button) button.disabled = true;
   }
 }
 function closeFulfillmentCreditShopModal() {
@@ -3990,6 +3998,7 @@ async function redeemFulfillmentCreditShopItem(itemKey) {
       if (statusEl) {
         statusEl.textContent = data.error || "Redemption failed.";
       }
+      if (itemKey === "L2_LAND") await loadFulfillmentCreditShopStatus();
       return;
     }
 
@@ -3998,6 +4007,7 @@ async function redeemFulfillmentCreditShopItem(itemKey) {
     }
 
     await loadFactoryFulfillmentBoard();
+    await loadFulfillmentCreditShopStatus();
 
     if (typeof loadPlayerDashboard === "function") {
       await loadPlayerDashboard();
