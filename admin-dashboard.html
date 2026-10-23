@@ -11142,6 +11142,7 @@ async function savePackReinvestmentAdmin() {
 <p id="l2-credit-admin-progress">Loading batch settings...</p>
 <label>Credit cost <input id="l2-credit-cost" type="number" min="1" step="1" value="35"></label>
 <label>EMP cost <input id="l2-emp-cost" type="number" min="1" step="1" value="400"></label>
+<label>SMP cost <input id="l2-smp-cost" type="number" min="0" step="1" value="2"></label>
 <label>Batch quantity <input id="l2-batch-quantity" type="number" min="0" step="1" value="10"></label>
 <button type="button" onclick="saveL2CreditSettings(false)">Save Settings</button>
 <button type="button" onclick="saveL2CreditSettings(true)">Start New Batch</button>
@@ -11155,6 +11156,7 @@ async function loadL2CreditSettings() {
   const p=j.l2Progress;
   document.getElementById("l2-credit-cost").value=p.fcCost;
   document.getElementById("l2-emp-cost").value=p.empCost;
+  document.getElementById("l2-smp-cost").value=p.smpCost;
   document.getElementById("l2-batch-quantity").value=p.stockLimit;
   document.getElementById("l2-credit-admin-progress").textContent=`Batch ${p.batch}: ${p.redeemed}/${p.stockLimit} redeemed (${p.remaining} remaining)`;
  } catch(e) {document.getElementById("l2-credit-admin-progress").textContent=e.message;}
@@ -11163,7 +11165,7 @@ async function saveL2CreditSettings(renewBatch) {
  const message=document.getElementById("l2-credit-admin-message");
  const payload={fcCost:Number(document.getElementById("l2-credit-cost").value),
  empCost:Number(document.getElementById("l2-emp-cost").value),
- stockLimit:Number(document.getElementById("l2-batch-quantity").value),renewBatch};
+ stockLimit:Number(document.getElementById("l2-batch-quantity").value),smpCost:Number(document.getElementById("l2-smp-cost").value),renewBatch};
  if(renewBatch&&!confirm("Start a new L2 land batch? Current batch progress will close and new stock will become available."))return;
  try {
   const r=await fetch(`${API_BASE}/admin/fulfillment-credit-shop/l2-settings`,{method:"POST",

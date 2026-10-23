@@ -3929,7 +3929,7 @@ async function loadFulfillmentCreditShopStatus() {
     const stockLimit = Number(data.l2Progress?.stockLimit ?? 0);
     const costEl = document.getElementById("fulfillment-credit-shop-l2-cost");
     const button = document.getElementById("fulfillment-credit-shop-l2-button");
-    if (costEl) costEl.textContent = `Cost: ${data.l2Progress.fcCost} Credits + ${data.l2Progress.empCost} EMP`;
+    if (costEl) costEl.textContent = `Cost: ${data.l2Progress.fcCost} Credits + ${data.l2Progress.empCost} EMP + ${data.l2Progress.smpCost} SMP`;
     if (progressEl) progressEl.textContent = `Batch ${data.l2Progress.batch}: ${redeemed} / ${stockLimit} redeemed`;
     if (button) {
       button.disabled = redeemed >= stockLimit;
