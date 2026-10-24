@@ -205,6 +205,27 @@
         overflow: auto;
       }
 
+      .all-players-table thead th.sortable {
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .all-players-table thead th.sortable::after {
+        content: " ↕";
+        color: #64748b;
+        font-size: 12px;
+      }
+
+      .all-players-table thead th.sortable[aria-sort="ascending"]::after {
+        content: " ↑";
+        color: #3730a3;
+      }
+
+      .all-players-table thead th.sortable[aria-sort="descending"]::after {
+        content: " ↓";
+        color: #3730a3;
+      }
+
       .all-players-table thead th {
         background: #eef2ff;
         color: #111827;
@@ -1209,6 +1230,7 @@ forkyishere,529"
               Load All Players
             </button>
           </div>
+          <div class="small">Click a column heading to sort. Numeric columns show the highest values first.</div>
           <div class="status" id="all-players-status">
             No player list loaded yet.
           </div>
@@ -1217,16 +1239,16 @@ forkyishere,529"
               <table class="all-players-table">
                 <thead>
                   <tr>
-                    <th>Username</th>
-                    <th>EMP</th>
-                    <th>SMP</th>
-                    <th>Fragments</th>
-                    <th>Imperial Tickets</th>
-                    <th>Writs</th>
-                    <th>Packs Bought</th>
-                    <th>Factories</th>
-                    <th>Lands</th>
-                    <th>Blueprints</th>
+                    <th class="sortable" data-sort-key="username" aria-sort="ascending" tabindex="0" title="Click to sort">Username</th>
+                    <th class="sortable" data-sort-key="emp" aria-sort="none" tabindex="0" title="Click to sort">EMP</th>
+                    <th class="sortable" data-sort-key="smp" aria-sort="none" tabindex="0" title="Click to sort">SMP</th>
+                    <th class="sortable" data-sort-key="fragments" aria-sort="none" tabindex="0" title="Click to sort">Fragments</th>
+                    <th class="sortable" data-sort-key="tickets" aria-sort="none" tabindex="0" title="Click to sort">Imperial Tickets</th>
+                    <th class="sortable" data-sort-key="writs" aria-sort="none" tabindex="0" title="Click to sort">Writs</th>
+                    <th class="sortable" data-sort-key="packs_bought" aria-sort="none" tabindex="0" title="Click to sort">Packs Bought</th>
+                    <th class="sortable" data-sort-key="factories" aria-sort="none" tabindex="0" title="Click to sort">Factories</th>
+                    <th class="sortable" data-sort-key="lands" aria-sort="none" tabindex="0" title="Click to sort">Lands</th>
+                    <th class="sortable" data-sort-key="blueprints" aria-sort="none" tabindex="0" title="Click to sort">Blueprints</th>
                   </tr>
                 </thead>
                 <tbody id="all-players-tbody">
@@ -6034,6 +6056,136 @@ async function loadDailyEmpireReportUsage() {
           }
         });
 
+      let adminAllPlayers = [];
+      let adminAllPlayersSortKey = "username";
+      let adminAllPlayersSortDirection = "asc";
+
+      function sortAllPlayersBy(key) {
+        const allowedKeys = [
+          "username", "emp", "smp", "fragments", "tickets", "writs",
+          "packs_bought", "factories", "lands", "blueprints",
+        ];
+        if (!allowedKeys.includes(key)) return;
+
+        if (adminAllPlayersSortKey === key) {
+          adminAllPlayersSortDirection =
+            adminAllPlayersSortDirection === "asc" ? "desc" : "asc";
+        } else {
+          adminAllPlayersSortKey = key;
+          adminAllPlayersSortDirection = key === "username" ? "asc" : "desc";
+        }
+        renderAllPlayersTable();
+      }
+
+      function renderAllPlayersTable() {
+        const statusEl = document.getElementById("all-players-status");
+        const tbody = document.getElementById("all-players-tbody");
+        const sortedPlayers = [...adminAllPlayers];
+        const key = adminAllPlayersSortKey;
+        const direction = adminAllPlayersSortDirection === "asc" ? 1 : -1;
+
+        sortedPlayers.sort((a, b) => {
+          if (key === "username") {
+            return direction * String(a.username || "").localeCompare(
+              String(b.username || ""),
+              undefined,
+              { sensitivity: "base" },
+            );
+          }
+          const difference = Number(a[key] || 0) - Number(b[key] || 0);
+          if (difference !== 0) return direction * difference;
+          return String(a.username || "").localeCompare(
+            String(b.username || ""),
+            undefined,
+            { sensitivity: "base" },
+          );
+        });
+
+        document.querySelectorAll("th[data-sort-key]").forEach((header) => {
+          header.setAttribute(
+            "aria-sort",
+            header.dataset.sortKey === key
+              ? adminAllPlayersSortDirection === "asc" ? "ascending" : "descending"
+              : "none",
+          );
+        });
+
+        const orderLabel =
+          key === "username"
+            ? adminAllPlayersSortDirection === "asc" ? "A–Z" : "Z–A"
+            : adminAllPlayersSortDirection === "asc" ? "lowest first" : "highest first";
+        statusEl.textContent =
+          `Loaded ${sortedPlayers.length} player(s); mydempire excluded. Sorted by ${key.replaceAll("_", " ")} (${orderLabel}).`;
+
+        if (!sortedPlayers.length) {
+          tbody.innerHTML = `<tr><td colspan="10">No players found.</td></tr>`;
+          return;
+        }
+
+        const totals = sortedPlayers.reduce(
+          (sum, player) => {
+            sum.emp += Number(player.emp || 0);
+            sum.smp += Number(player.smp || 0);
+            sum.fragments += Number(player.fragments || 0);
+            sum.tickets += Number(player.tickets || 0);
+            sum.writs += Number(player.writs || 0);
+            sum.packs += Number(player.packs_bought || 0);
+            sum.factories += Number(player.factories || 0);
+            sum.lands += Number(player.lands || 0);
+            sum.blueprints += Number(player.blueprints || 0);
+            return sum;
+          },
+          {
+            emp: 0, smp: 0, fragments: 0, tickets: 0, writs: 0,
+            packs: 0, factories: 0, lands: 0, blueprints: 0,
+          },
+        );
+
+        const playerRows = sortedPlayers
+          .map(
+            (p) => `
+      <tr>
+        <td>@${p.username}</td>
+        <td>${Number(p.emp || 0).toLocaleString()}</td>
+        <td>${Number(p.smp || 0).toLocaleString()}</td>
+        <td>${Number(p.fragments || 0).toLocaleString()}</td>
+        <td>${Number(p.tickets || 0).toLocaleString()}</td>
+        <td>${Number(p.writs || 0).toLocaleString()}</td>
+        <td>${Number(p.packs_bought || 0)}</td>
+        <td>${Number(p.factories || 0)}</td>
+        <td>${Number(p.lands || 0)}</td>
+        <td>${Number(p.blueprints || 0)}</td>
+      </tr>
+    `,
+          )
+          .join("");
+
+        tbody.innerHTML = playerRows + `
+      <tr class="all-players-total-row">
+        <td>TOTAL (${sortedPlayers.length} players)</td>
+        <td>${totals.emp.toLocaleString()}</td>
+        <td>${totals.smp.toLocaleString()}</td>
+        <td>${totals.fragments.toLocaleString()}</td>
+        <td>${totals.tickets.toLocaleString()}</td>
+        <td>${totals.writs.toLocaleString()}</td>
+        <td>${totals.packs.toLocaleString()}</td>
+        <td>${totals.factories.toLocaleString()}</td>
+        <td>${totals.lands.toLocaleString()}</td>
+        <td>${totals.blueprints.toLocaleString()}</td>
+      </tr>
+    `;
+      }
+
+      document.querySelectorAll("th[data-sort-key]").forEach((header) => {
+        header.addEventListener("click", () => sortAllPlayersBy(header.dataset.sortKey));
+        header.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            sortAllPlayersBy(header.dataset.sortKey);
+          }
+        });
+      });
+
       async function loadAllPlayers() {
         if (!ADMIN_KEY) {
           document.getElementById("all-players-status").textContent =
@@ -6042,7 +6194,6 @@ async function loadDailyEmpireReportUsage() {
         }
 
         const statusEl = document.getElementById("all-players-status");
-        const tbody = document.getElementById("all-players-tbody");
 
         try {
           statusEl.textContent = "Loading all players...";
@@ -6058,73 +6209,8 @@ async function loadDailyEmpireReportUsage() {
             return;
           }
 
-          const players = data.players || [];
-          statusEl.textContent = `Loaded ${players.length} player(s); mydempire excluded.`;
-
-          if (!players.length) {
-            tbody.innerHTML = `<tr><td colspan="10">No players found.</td></tr>`;
-            return;
-          }
-
-          const totals = players.reduce(
-            (sum, player) => {
-              sum.emp += Number(player.emp || 0);
-              sum.smp += Number(player.smp || 0);
-              sum.fragments += Number(player.fragments || 0);
-              sum.tickets += Number(player.tickets || 0);
-              sum.writs += Number(player.writs || 0);
-              sum.packs += Number(player.packs_bought || 0);
-              sum.factories += Number(player.factories || 0);
-              sum.lands += Number(player.lands || 0);
-              sum.blueprints += Number(player.blueprints || 0);
-              return sum;
-            },
-            {
-              emp: 0,
-              smp: 0,
-              fragments: 0,
-              tickets: 0,
-              writs: 0,
-              packs: 0,
-              factories: 0,
-              lands: 0,
-              blueprints: 0,
-            },
-          );
-
-          const playerRows = players
-            .map(
-              (p) => `
-      <tr>
-        <td>@${p.username}</td>
-        <td>${Number(p.emp || 0).toLocaleString()}</td>
-        <td>${Number(p.smp || 0).toLocaleString()}</td>
-        <td>${Number(p.fragments || 0).toLocaleString()}</td>
-        <td>${Number(p.tickets || 0).toLocaleString()}</td>
-        <td>${Number(p.writs || 0).toLocaleString()}</td>
-        <td>${Number(p.packs_bought || 0)}</td>
-        <td>${Number(p.factories || 0)}</td>
-        <td>${Number(p.lands || 0)}</td>
-        <td>${Number(p.blueprints || 0)}</td>
-      </tr>
-    `,
-            )
-            .join("");
-
-          tbody.innerHTML = playerRows + `
-      <tr class="all-players-total-row">
-        <td>TOTAL (${players.length} players)</td>
-        <td>${totals.emp.toLocaleString()}</td>
-        <td>${totals.smp.toLocaleString()}</td>
-        <td>${totals.fragments.toLocaleString()}</td>
-        <td>${totals.tickets.toLocaleString()}</td>
-        <td>${totals.writs.toLocaleString()}</td>
-        <td>${totals.packs.toLocaleString()}</td>
-        <td>${totals.factories.toLocaleString()}</td>
-        <td>${totals.lands.toLocaleString()}</td>
-        <td>${totals.blueprints.toLocaleString()}</td>
-      </tr>
-    `;
+          adminAllPlayers = data.players || [];
+          renderAllPlayersTable();
         } catch (err) {
           console.error("loadAllPlayers error:", err);
           statusEl.textContent = "Error loading all players.";
