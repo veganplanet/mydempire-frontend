@@ -231,7 +231,7 @@ function renderDiwaliDays(days) {
 async function registerForDiwali() {
   const username = getDiwaliUsername();
   if (!username) return;
-  if (!window.confirm("Register for Diwali Festival for a one-time 100 EMP fee?")) return;
+  if (!window.confirm("Register for Diwali Festival for a one-time " + Number(diwaliEvent?.entry_fee_emp ?? 100) + " EMP fee?")) return;
   const button = document.getElementById("diwali-register-button");
   if (button) button.disabled = true;
   try {
@@ -295,11 +295,11 @@ function renderDiwaliPlayer() {
   const registerStatus = document.getElementById("diwali-register-status");
   if (registerButton) {
     registerButton.disabled = Boolean(diwaliPlayer.registered) || diwaliEvent?.status === "ENDED";
-    registerButton.textContent = diwaliPlayer.registered ? "Registered ✓" : "Register — 100 EMP";
+    registerButton.textContent = diwaliPlayer.registered ? "Registered ✓" : "Register — " + Number(diwaliEvent?.entry_fee_emp ?? 100) + " EMP";
   }
   if (registerStatus) registerStatus.textContent = diwaliPlayer.registered
-    ? "Registration complete. Your 100 EMP fee has been paid."
-    : "Register now for 100 EMP (one time) to participate from 1 November.";
+    ? "Registration complete. Your " + Number(diwaliPlayer.entry_fee_paid_emp || 0) + " EMP fee has been paid."
+    : "Register now for " + Number(diwaliEvent?.entry_fee_emp ?? 100) + " EMP (one time) to participate from 1 November.";
   setDiwaliText(
     "diwali-player-days",
     String(diwaliPlayer.days_completed || 0) + " / 7 days",
