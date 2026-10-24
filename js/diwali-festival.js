@@ -242,7 +242,7 @@ async function registerForDiwali() {
   } catch (error) {
     window.alert(error.message);
   } finally {
-    if (button) button.disabled = false;
+    if (button) button.disabled = Boolean(diwaliPlayer?.registered) || diwaliEvent?.status === "ENDED";
   }
 }
 
