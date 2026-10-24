@@ -233,6 +233,16 @@
         background: #eff6ff;
       }
 
+      .all-players-table tbody tr.all-players-total-row {
+        background: #e0e7ff;
+        border-top: 2px solid #6366f1;
+        font-weight: 800;
+      }
+
+      .all-players-table tbody tr.all-players-total-row td {
+        font-weight: 800;
+      }
+
       .all-players-name {
         font-weight: 700;
         color: #1e3a8a;
@@ -6049,14 +6059,40 @@ async function loadDailyEmpireReportUsage() {
           }
 
           const players = data.players || [];
-          statusEl.textContent = `Loaded ${players.length} player(s).`;
+          statusEl.textContent = `Loaded ${players.length} player(s); mydempire excluded.`;
 
           if (!players.length) {
             tbody.innerHTML = `<tr><td colspan="10">No players found.</td></tr>`;
             return;
           }
 
-          tbody.innerHTML = players
+          const totals = players.reduce(
+            (sum, player) => {
+              sum.emp += Number(player.emp || 0);
+              sum.smp += Number(player.smp || 0);
+              sum.fragments += Number(player.fragments || 0);
+              sum.tickets += Number(player.tickets || 0);
+              sum.writs += Number(player.writs || 0);
+              sum.packs += Number(player.packs_bought || 0);
+              sum.factories += Number(player.factories || 0);
+              sum.lands += Number(player.lands || 0);
+              sum.blueprints += Number(player.blueprints || 0);
+              return sum;
+            },
+            {
+              emp: 0,
+              smp: 0,
+              fragments: 0,
+              tickets: 0,
+              writs: 0,
+              packs: 0,
+              factories: 0,
+              lands: 0,
+              blueprints: 0,
+            },
+          );
+
+          const playerRows = players
             .map(
               (p) => `
       <tr>
@@ -6074,6 +6110,21 @@ async function loadDailyEmpireReportUsage() {
     `,
             )
             .join("");
+
+          tbody.innerHTML = playerRows + `
+      <tr class="all-players-total-row">
+        <td>TOTAL (${players.length} players)</td>
+        <td>${totals.emp.toLocaleString()}</td>
+        <td>${totals.smp.toLocaleString()}</td>
+        <td>${totals.fragments.toLocaleString()}</td>
+        <td>${totals.tickets.toLocaleString()}</td>
+        <td>${totals.writs.toLocaleString()}</td>
+        <td>${totals.packs.toLocaleString()}</td>
+        <td>${totals.factories.toLocaleString()}</td>
+        <td>${totals.lands.toLocaleString()}</td>
+        <td>${totals.blueprints.toLocaleString()}</td>
+      </tr>
+    `;
         } catch (err) {
           console.error("loadAllPlayers error:", err);
           statusEl.textContent = "Error loading all players.";
