@@ -1209,6 +1209,10 @@ forkyishere,529"
                   <tr>
                     <th>Username</th>
                     <th>EMP</th>
+                    <th>SMP</th>
+                    <th>Fragments</th>
+                    <th>Imperial Tickets</th>
+                    <th>Writs</th>
                     <th>Packs Bought</th>
                     <th>Factories</th>
                     <th>Lands</th>
@@ -1217,7 +1221,7 @@ forkyishere,529"
                 </thead>
                 <tbody id="all-players-tbody">
                   <tr>
-                    <td colspan="6">No data loaded yet.</td>
+                    <td colspan="10">No data loaded yet.</td>
                   </tr>
                 </tbody>
               </table>
@@ -4489,6 +4493,9 @@ async function loadDailyEmpireReportUsage() {
           document.getElementById("player-inspector-box").innerHTML = `
           <div class="kv"><span>Player</span><span>@${data.username}</span></div>
           <div class="kv"><span>EMP Balance</span><span>${data.emp_balance}</span></div>
+          <div class="kv"><span>SMP Balance</span><span>${data.smp_balance}</span></div>
+          <div class="kv"><span>Fragments</span><span>${data.fragment_balance}</span></div>
+          <div class="kv"><span>Available Imperial Tickets</span><span>${data.ticket_balance}</span></div>
           <div class="kv"><span>Lands</span><span>${data.total_lands}</span></div>
           <div class="kv"><span>Factories</span><span>${data.total_factories}</span></div>
           <div class="kv"><span>Blueprints</span><span>${data.total_blueprints}</span></div>
@@ -6045,7 +6052,7 @@ async function loadDailyEmpireReportUsage() {
           statusEl.textContent = `Loaded ${players.length} player(s).`;
 
           if (!players.length) {
-            tbody.innerHTML = `<tr><td colspan="6">No players found.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="10">No players found.</td></tr>`;
             return;
           }
 
@@ -6055,6 +6062,10 @@ async function loadDailyEmpireReportUsage() {
       <tr>
         <td>@${p.username}</td>
         <td>${Number(p.emp || 0).toLocaleString()}</td>
+        <td>${Number(p.smp || 0).toLocaleString()}</td>
+        <td>${Number(p.fragments || 0).toLocaleString()}</td>
+        <td>${Number(p.tickets || 0).toLocaleString()}</td>
+        <td>${Number(p.writs || 0).toLocaleString()}</td>
         <td>${Number(p.packs_bought || 0)}</td>
         <td>${Number(p.factories || 0)}</td>
         <td>${Number(p.lands || 0)}</td>
