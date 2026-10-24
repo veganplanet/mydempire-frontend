@@ -413,9 +413,9 @@ function renderDiwaliBasket() {
   pvEl.textContent = Number(totalPv).toLocaleString();
   if (progress) progress.style.width = Math.min(100, (totalPv / Number(diwaliEvent?.minimum_pv || 500)) * 100) + "%";
 
-  let message = "Select Goods totaling at least 500 PV.";
+  let message = "Select Goods totaling at least " + Number(diwaliEvent?.minimum_pv || 500) + " PV.";
   if (!registered) {
-    message = "Register for the festival (100 EMP once) before submitting Goods.";
+    message = "Register for the festival (" + Number(diwaliEvent?.entry_fee_emp ?? 100) + " EMP once) before submitting Goods.";
   } else if (submitted) {
     message = "✅ Submitted for today. Come back after the next UTC midnight.";
   } else if (!eventLive) {
