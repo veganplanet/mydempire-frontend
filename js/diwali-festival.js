@@ -357,9 +357,9 @@ function renderDiwaliBasket() {
 
   countEl.textContent = String(count);
   pvEl.textContent = Number(totalPv).toLocaleString();
-  if (progress) progress.style.width = Math.min(100, (totalPv / 250) * 100) + "%";
+  if (progress) progress.style.width = Math.min(100, (totalPv / Number(diwaliEvent?.minimum_pv || 500)) * 100) + "%";
 
-  let message = "Select at least 3 Goods and reach 250 PV.";
+  let message = "Select Goods totaling at least 500 PV.";
   if (submitted) {
     message = "✅ Submitted for today. Come back after the next UTC midnight.";
   } else if (!eventLive) {
@@ -367,16 +367,16 @@ function renderDiwaliBasket() {
       diwaliEvent?.status === "UPCOMING"
         ? "The basket opens on 1 Nov 2026 at 00:00 UTC."
         : "The festival has ended.";
-  } else if (count < 3) {
-    message = "Select " + String(3 - count) + " more Good(s).";
-  } else if (totalPv < 250) {
-    message = "Add " + Number(250 - totalPv).toLocaleString() + " more PV.";
+  } else if (count < 1) {
+    message = "Select at least one Good.";
+  } else if (totalPv < Number(diwaliEvent?.minimum_pv || 500)) {
+    message = "Add " + Number(Number(diwaliEvent?.minimum_pv || 500) - totalPv).toLocaleString() + " more PV.";
   } else {
     message = "Ready. Submitting will consume these Goods for today’s entry.";
   }
 
   help.textContent = message;
-  submit.disabled = submitted || !eventLive || count < 3 || totalPv < 250;
+  submit.disabled = submitted || !eventLive || count < 1 || totalPv < Number(diwaliEvent?.minimum_pv || 500);
 }
 
 function renderDiwaliNfts(nfts) {
@@ -469,7 +469,7 @@ async function submitDiwaliBasket() {
     0,
   );
 
-  if (selected.length < 3 || totalPv < 250) return;
+  if (selected.length < 1 || totalPv < Number(diwaliEvent?.minimum_pv || 500)) return;
 
   const confirmed = window.confirm(
     "Submit " +
