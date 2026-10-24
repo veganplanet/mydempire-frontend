@@ -406,6 +406,7 @@ function renderDiwaliBasket() {
   );
   const count = selected.length;
   const submitted = Boolean(diwaliPlayer?.today_basket);
+  const registered = Boolean(diwaliPlayer?.registered);
   const eventLive = diwaliEvent?.status === "LIVE";
 
   countEl.textContent = String(count);
@@ -413,7 +414,9 @@ function renderDiwaliBasket() {
   if (progress) progress.style.width = Math.min(100, (totalPv / Number(diwaliEvent?.minimum_pv || 500)) * 100) + "%";
 
   let message = "Select Goods totaling at least 500 PV.";
-  if (submitted) {
+  if (!registered) {
+    message = "Register for the festival (100 EMP once) before submitting Goods.";
+  } else if (submitted) {
     message = "✅ Submitted for today. Come back after the next UTC midnight.";
   } else if (!eventLive) {
     message =
@@ -429,7 +432,7 @@ function renderDiwaliBasket() {
   }
 
   help.textContent = message;
-  submit.disabled = submitted || !eventLive || count < 1 || totalPv < Number(diwaliEvent?.minimum_pv || 500);
+  submit.disabled = !registered || submitted || !eventLive || count < 1 || totalPv < Number(diwaliEvent?.minimum_pv || 500);
 }
 
 function renderDiwaliNfts(nfts) {
@@ -522,7 +525,7 @@ async function submitDiwaliBasket() {
     0,
   );
 
-  if (selected.length < 1 || totalPv < Number(diwaliEvent?.minimum_pv || 500)) return;
+  if (!diwaliPlayer.registered || selected.length < 1 || totalPv < Number(diwaliEvent?.minimum_pv || 500)) return;
 
   const confirmed = window.confirm(
     "Submit " +
@@ -622,5 +625,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("diwali-register-button")?.addEventListener("click", registerForDiwali);
+  const registrationButton = document.getElementById("diwali-register-button");
+  if (registrationButton && !getDiwaliUsername()) registrationButton.disabled = true;
   loadDiwaliPublicActivity();
 });
