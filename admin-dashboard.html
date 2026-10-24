@@ -3004,7 +3004,16 @@ forkyishere,529"
       </div>
 
       <div class="admin-tab-panel" data-admin-panel="system">
-        <div class="section">
+        <section style="margin:24px;padding:18px;border:1px solid #888;border-radius:10px">
+<h3>🪔 Diwali Festival Controls</h3>
+<p>Daily minimum PV and one-time registration EMP fee. Changes apply to future registrations and baskets.</p>
+<label>Daily minimum PV <input id="diwali-admin-pv" type="number" min="1" value="500"></label>
+<label>Entry fee EMP <input id="diwali-admin-fee" type="number" min="0" value="100"></label>
+<button type="button" onclick="saveDiwaliAdminSettings()">Save Diwali Settings</button>
+<p id="diwali-admin-message"></p>
+<p>Registration fees collected: <strong id="diwali-admin-treasury">—</strong> EMP (event treasury accounting)</p>
+</section>
+<div class="section">
           <h2>🛠 System Controls</h2>
           <div class="top-row">
             <button id="run-rewards-btn" class="primary">
@@ -11178,15 +11187,7 @@ async function saveL2CreditSettings(renewBatch) {
 }
 document.addEventListener("DOMContentLoaded",loadL2CreditSettings);
 </script>
-<section style="margin:24px;padding:18px;border:1px solid #888;border-radius:10px">
-<h3>🪔 Diwali Festival Controls</h3>
-<p>Daily minimum PV and one-time registration EMP fee. Changes apply to future registrations and baskets.</p>
-<label>Daily minimum PV <input id="diwali-admin-pv" type="number" min="1" value="500"></label>
-<label>Entry fee EMP <input id="diwali-admin-fee" type="number" min="0" value="100"></label>
-<button type="button" onclick="saveDiwaliAdminSettings()">Save Diwali Settings</button>
-<p id="diwali-admin-message"></p>
-<p>Registration fees collected: <strong id="diwali-admin-treasury">—</strong> EMP (event treasury accounting)</p>
-</section>
+
 <script>
 async function loadDiwaliAdminSettings() {
   const status = document.getElementById("diwali-admin-message");
