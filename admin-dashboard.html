@@ -11178,5 +11178,44 @@ async function saveL2CreditSettings(renewBatch) {
 }
 document.addEventListener("DOMContentLoaded",loadL2CreditSettings);
 </script>
+<section style="margin:24px;padding:18px;border:1px solid #888;border-radius:10px">
+<h3>🪔 Diwali Festival Controls</h3>
+<p>Daily minimum PV and one-time registration EMP fee. Changes apply to future registrations and baskets.</p>
+<label>Daily minimum PV <input id="diwali-admin-pv" type="number" min="1" value="500"></label>
+<label>Entry fee EMP <input id="diwali-admin-fee" type="number" min="0" value="100"></label>
+<button type="button" onclick="saveDiwaliAdminSettings()">Save Diwali Settings</button>
+<p id="diwali-admin-message"></p>
+<p>Registration fees collected: <strong id="diwali-admin-treasury">—</strong> EMP (event treasury accounting)</p>
+</section>
+<script>
+async function loadDiwaliAdminSettings() {
+  const status = document.getElementById("diwali-admin-message");
+  try {
+    const response = await fetch(API_BASE + "/admin/diwali-festival/settings");
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.error || "Unable to load settings");
+    document.getElementById("diwali-admin-pv").value = data.settings.minimum_pv;
+    document.getElementById("diwali-admin-fee").value = data.settings.entry_fee_emp;
+    document.getElementById("diwali-admin-treasury").textContent = data.registration_fee_treasury_emp;
+  } catch (error) { status.textContent = error.message; }
+}
+async function saveDiwaliAdminSettings() {
+  const status = document.getElementById("diwali-admin-message");
+  try {
+    const response = await fetch(API_BASE + "/admin/diwali-festival/settings", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        minimum_pv: Number(document.getElementById("diwali-admin-pv").value),
+        entry_fee_emp: Number(document.getElementById("diwali-admin-fee").value),
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.error || "Unable to save settings");
+    status.textContent = "Settings saved.";
+    await loadDiwaliAdminSettings();
+  } catch (error) { status.textContent = error.message; }
+}
+document.addEventListener("DOMContentLoaded", loadDiwaliAdminSettings);
+</script>
 </body>
 </html>
