@@ -268,10 +268,10 @@
         <div class="market-header-left">
           <h2>Premium Materials &amp; Writ Marketplace</h2>
           <div class="market-header-sub">
-            EMP-only trading for Fragments, SMP, Imperial Tickets, and Writ NFTs. Writs transfer to the buyer and are never burned.
+            EMP trading is available for Fragments, SMP, Imperial Tickets, and Writs. Writs can also be listed and bought in HIVE; HIVE purchases use Keychain and include a 5% fee to the vault.
           </div>
         </div>
-        <div class="pill">EMP Only</div>
+        <div class="pill">EMP + HIVE Writs</div>
       </div>
 
       <div class="premium-material-tabs">
@@ -355,7 +355,20 @@
         </div>
 
         <div class="field" style="width:100%;">
-          <label for="premium-material-price-emp">Price per Item (EMP)</label>
+          <div class="field" id="premium-material-currency-field" style="width:100%; display:none;">
+            <label for="premium-material-currency">Listing Currency</label>
+            <select
+              id="premium-material-currency"
+              onchange="updatePremiumMaterialCurrency()"
+              style="width:100%; min-height:48px;"
+            >
+              <option value="EMP">EMP</option>
+              <option value="HIVE">HIVE</option>
+            </select>
+            <div class="hint">HIVE Writ purchases are paid through Hive Keychain. A 5% HIVE fee goes to the vault.</div>
+          </div>
+
+          <label for="premium-material-price-emp" id="premium-material-price-label">Price per Item (EMP)</label>
           <input
             id="premium-material-price-emp"
             type="number"
@@ -893,26 +906,46 @@ function getPremiumMaterialLabel(materialType = currentPremiumMaterial) {
     example: "Example: 5 Fragments × 25 EMP = 125 EMP total."
   };
 }
+function updatePremiumMaterialCurrency() {
+  const currencyField = document.getElementById("premium-material-currency-field");
+  const currencySelect = document.getElementById("premium-material-currency");
+  const priceLabel = document.getElementById("premium-material-price-label");
+  const priceInput = document.getElementById("premium-material-price-emp");
+  const isWrit = currentPremiumMaterial === "WRIT";
+  if (currencyField) currencyField.style.display = isWrit ? "block" : "none";
+  if (!isWrit && currencySelect) currencySelect.value = "EMP";
+  const currency = isWrit ? String(currencySelect?.value || "EMP").toUpperCase() : "EMP";
+  if (priceLabel) priceLabel.textContent = \`Price per Item (\${currency})\`;
+  if (priceInput) {
+    priceInput.min = currency === "HIVE" ? "0.001" : "1";
+    priceInput.step = currency === "HIVE" ? "0.001" : "1";
+    priceInput.placeholder = currency === "HIVE" ? "e.g. 0.250" : "e.g. 25";
+  }
+  updatePremiumMaterialPreview();
+}
+
 function updatePremiumMaterialPreview() {
   const qtyInput = document.getElementById("premium-material-quantity");
   const priceInput = document.getElementById("premium-material-price-emp");
   const preview = document.getElementById("premium-material-listing-preview");
-
   if (!preview) return;
-
   const qty = Number(qtyInput?.value || 0);
   const price = Number(priceInput?.value || 0);
   const label = getPremiumMaterialLabel();
-
+  const isWrit = currentPremiumMaterial === "WRIT";
+  const currency = isWrit
+    ? String(document.getElementById("premium-material-currency")?.value || "EMP").toUpperCase()
+    : "EMP";
   if (!qty || !price) {
-    preview.textContent = label.example;
+    preview.textContent = isWrit && currency === "HIVE"
+      ? "Example: 1 Writ × 0.250 HIVE = 0.250 HIVE total. A 5% fee is paid to the vault."
+      : label.example;
     return;
   }
-
   const total = qty * price;
-
-  preview.textContent =
-    `${qty} ${label.short} × ${price} EMP = ${total.toLocaleString()} EMP total.`;
+  const formattedPrice = currency === "HIVE" ? price.toFixed(3) : price.toLocaleString();
+  const formattedTotal = currency === "HIVE" ? total.toFixed(3) : total.toLocaleString();
+  preview.textContent = \`\${qty} \${label.short} × \${formattedPrice} \${currency} = \${formattedTotal} \${currency} total.\`;
 }
 
 async function cancelPremiumMaterialListing(listingId) {
@@ -975,76 +1008,84 @@ if (!response.ok || !data.success) {
 
 window.cancelPremiumMaterialListing = cancelPremiumMaterialListing;
 
-async function buyPremiumMaterialListing(listingId, maxAvailable) {
-  const username =
-    typeof ACTIVE_USER !== "undefined" && ACTIVE_USER
-      ? ACTIVE_USER
-      : getMarketplaceLoggedInUser();
+async function buyPremiumMaterialListing(listingId, maxAvailable, currency = "EMP") {
+  const username = ACTIVE_USER || getMarketplaceLoggedInUser();
+  if (!username) return alert("Please login first.");
+  if (!ensureOwnMarketplaceAction()) return;
 
-  if (!username) {
-    alert("Please login first.");
-    return;
-  }
-
-  if (!ensureOwnMarketplaceAction()) {
-    return;
-  }
-
-  const quantityText = prompt(
-    `How many do you want to buy? Available: ${maxAvailable}`,
-    "1"
-  );
-
-  if (quantityText === null) {
-    return;
-  }
-
+  const quantityText = prompt(\`How many do you want to buy? Available: \${maxAvailable}\`, "1");
+  if (quantityText === null) return;
   const quantity = parseInt(quantityText, 10);
-
-  if (!Number.isInteger(quantity) || quantity <= 0) {
-    alert("Enter a valid whole number.");
-    return;
-  }
-
-  if (quantity > Number(maxAvailable || 0)) {
-    alert(`Only ${maxAvailable} item(s) available.`);
-    return;
-  }
+  if (!Number.isInteger(quantity) || quantity <= 0) return alert("Enter a valid whole number.");
+  if (quantity > Number(maxAvailable || 0)) return alert(\`Only \${maxAvailable} item(s) available.\`);
 
   try {
-    const confirmed = confirm(`Confirm purchase of ${quantity} item(s)?`);
+    if (String(currency).toUpperCase() === "HIVE") {
+      const initRes = await fetch(apiUrl("/marketplace/materials/buy-init"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-mde-actor": username },
+        body: JSON.stringify({ username, listing_id: listingId, quantity })
+      });
+      const initData = await initRes.json();
+      if (!initRes.ok || !initData.success) throw new Error(initData.error || "Failed to start HIVE Writ purchase.");
 
-    if (!confirmed) {
-      return;
+      const session = initData.session;
+      const sellerAmount = Number(session.seller_net_hive || 0).toFixed(3);
+      const feeAmount = Number(session.fee_hive || 0).toFixed(3);
+      const sellerTo = session.seller_account || session.seller;
+      const confirmText =
+        \`Buy \${session.quantity} Writ(s) for \${Number(session.total_hive).toFixed(3)} HIVE?\\n\\n\` +
+        \`Seller receives: \${sellerAmount} HIVE to @\${sellerTo}\\n\` +
+        (Number(session.fee_hive) > 0
+          ? \`Marketplace fee: \${feeAmount} HIVE to @\${session.fee_account}\`
+          : "Marketplace fee: 0.000 HIVE");
+      if (!confirm(confirmText)) {
+        await fetch(apiUrl("/marketplace/materials/buy-cancel"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-mde-actor": username },
+          body: JSON.stringify({ username, session_key: session.session_key })
+        });
+        await loadPremiumMaterialListings();
+        return;
+      }
+
+      const sellerTransfer = await hiveTransfer(username, sellerTo, sellerAmount, session.seller_memo);
+      let feeTransfer = null;
+      if (Number(session.fee_hive) > 0) {
+        feeTransfer = await hiveTransfer(username, session.fee_account, feeAmount, session.fee_memo);
+      }
+      const finalizeRes = await fetch(apiUrl("/marketplace/materials/buy-finalize"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-mde-actor": username },
+        body: JSON.stringify({
+          username,
+          session_key: session.session_key,
+          seller_payment_txid: sellerTransfer?.tx_id || "",
+          fee_payment_txid: feeTransfer?.tx_id || ""
+        })
+      });
+      const finalizeData = await finalizeRes.json();
+      if (!finalizeRes.ok || !finalizeData.success) throw new Error(finalizeData.error || "Failed to complete HIVE Writ purchase.");
+      alert(\`✅ \${finalizeData.quantity} Writ(s) purchased for \${Number(finalizeData.total_hive).toFixed(3)} HIVE.\`);
+    } else {
+      if (!confirm(\`Confirm purchase of \${quantity} item(s) for EMP?\`)) return;
+      const response = await fetch(apiUrl("/marketplace/materials/buy"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-mde-actor": username },
+        body: JSON.stringify({ username, listing_id: listingId, quantity })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.error || "Purchase failed.");
+      alert("✅ Material purchase completed successfully.");
     }
 
-    const response = await fetch(apiUrl("/marketplace/materials/buy"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-mde-actor": username
-      },
-      body: JSON.stringify({
-        username,
-        listing_id: listingId,
-        quantity
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.error || "Purchase failed.");
-    }
-
-    alert("✅ Material purchase completed successfully.");
-    loadPremiumMaterialListings();
-    if (typeof loadActiveUser === "function") {
-  loadActiveUser();
-}
+    await loadPremiumMaterialListings();
+    await loadPremiumMaterialHistory();
+    if (typeof loadActiveUser === "function") loadActiveUser();
   } catch (err) {
     console.error("Buy premium material listing error:", err);
     alert(err.message || "Failed to buy material listing.");
+    try { await loadPremiumMaterialListings(); } catch (_) {}
   }
 }
 
@@ -1052,208 +1093,127 @@ window.buyPremiumMaterialListing = buyPremiumMaterialListing;
 async function loadPremiumMaterialHistory() {
   const materialType =
     document.getElementById("premium-selected-material")?.value ||
-    currentPremiumMaterial ||
-    "IMPERIAL_FRAGMENT";
-
+    currentPremiumMaterial || "IMPERIAL_FRAGMENT";
   const historyBox = document.getElementById("premium-material-history-list");
-
   if (!historyBox) return;
 
   try {
-    historyBox.innerHTML = `<div class="empty">Loading material trade history...</div>`;
-
-    const url =
-      apiUrl("/marketplace/materials/history") +
-      `?material_type=${encodeURIComponent(materialType)}`;
-
+    historyBox.innerHTML = \`<div class="empty">Loading material trade history...</div>\`;
+    const url = apiUrl("/marketplace/materials/history") +
+      \`?material_type=\${encodeURIComponent(materialType)}\`;
     const response = await fetch(url);
     const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.error || "Failed to load material trade history.");
-    }
-
+    if (!response.ok || !data.success) throw new Error(data.error || "Failed to load material trade history.");
     const history = data.history || [];
-
     if (!history.length) {
-      historyBox.innerHTML = `<div class="empty">No material trade history yet.</div>`;
+      historyBox.innerHTML = \`<div class="empty">No material trade history yet.</div>\`;
       return;
     }
 
-    historyBox.innerHTML = `
+    historyBox.innerHTML = \`
       <div class="compact-list">
-        ${history
-          .map((trade) => {
-            const qty = Number(trade.quantity || 0);
-            const price = Number(trade.price_per_item_emp || 0);
-            const total = Number(trade.total_emp || 0);
-            const materialLabel = getPremiumMaterialLabel(trade.material_type).full;
-
-            const dateText = trade.created_at
-              ? new Date(trade.created_at).toLocaleString()
-              : "--";
-
-            return `
-              <div class="compact-row">
-
-                <div class="compact-cell">
-                  <div class="compact-asset-title">
-                    ${qty} ${materialLabel}
-                  </div>
-                  <div class="compact-asset-sub">
-                    Trade #${trade.id || "--"}
-                  </div>
-                </div>
-
-                <div class="compact-cell">
-                  <div class="compact-seller">
-                    @${trade.seller || "--"} → @${trade.buyer || "--"}
-                  </div>
-                  <div class="compact-asset-sub">
-                    Seller → Buyer
-                  </div>
-                </div>
-
-                <div class="compact-cell compact-details">
-                  <strong>Price:</strong> ${price.toLocaleString()} EMP each<br>
-                  <strong>Total:</strong> ${total.toLocaleString()} EMP
-                </div>
-
-                <div class="compact-cell compact-price">
-                  ${dateText}
-                </div>
-
+        \${history.map((trade) => {
+          const qty = Number(trade.quantity || 0);
+          const currency = String(trade.currency || "EMP").toUpperCase();
+          const price = currency === "HIVE"
+            ? Number(trade.price_per_item_hive || 0)
+            : Number(trade.price_per_item_emp || 0);
+          const total = currency === "HIVE"
+            ? Number(trade.total_hive || 0)
+            : Number(trade.total_emp || 0);
+          const formattedPrice = currency === "HIVE" ? price.toFixed(3) : price.toLocaleString();
+          const formattedTotal = currency === "HIVE" ? total.toFixed(3) : total.toLocaleString();
+          const materialLabel = getPremiumMaterialLabel(trade.material_type).full;
+          const dateText = trade.created_at ? new Date(trade.created_at).toLocaleString() : "--";
+          return \`
+            <div class="compact-row">
+              <div class="compact-cell">
+                <div class="compact-asset-title">\${qty} \${materialLabel}</div>
+                <div class="compact-asset-sub">Trade #\${trade.id || "--"}</div>
               </div>
-            `;
-          })
-          .join("")}
-      </div>
-    `;
+              <div class="compact-cell">
+                <div class="compact-seller">@\${trade.seller || "--"} → @\${trade.buyer || "--"}</div>
+                <div class="compact-asset-sub">Seller → Buyer</div>
+              </div>
+              <div class="compact-cell compact-details">
+                <strong>Price:</strong> \${formattedPrice} \${currency} each<br>
+                <strong>Total:</strong> \${formattedTotal} \${currency}
+              </div>
+              <div class="compact-cell compact-price">\${dateText}</div>
+            </div>\`;
+        }).join("")}
+      </div>\`;
   } catch (err) {
     console.error("Load material history error:", err);
-    historyBox.innerHTML = `<div class="empty">Failed to load material trade history.</div>`;
+    historyBox.innerHTML = \`<div class="empty">Failed to load material trade history.</div>\`;
   }
 }
 
 window.loadPremiumMaterialHistory = loadPremiumMaterialHistory;
 async function loadPremiumMaterialListings() {
-  const username =
-    typeof ACTIVE_USER !== "undefined" && ACTIVE_USER
-      ? ACTIVE_USER
-      : getMarketplaceLoggedInUser();
-
+  const username = ACTIVE_USER || getMarketplaceLoggedInUser();
   const materialType =
     document.getElementById("premium-selected-material")?.value ||
-    currentPremiumMaterial ||
-    "IMPERIAL_FRAGMENT";
-
-  const view =
-    document.getElementById("premium-material-view-select")?.value || "market";
-
+    currentPremiumMaterial || "IMPERIAL_FRAGMENT";
+  const view = document.getElementById("premium-material-view-select")?.value || "market";
   const listBox = document.getElementById("premium-material-list");
   const countPill = document.getElementById("premium-material-count-pill");
-
   if (!listBox) return;
 
   try {
-    listBox.innerHTML = `<div class="empty">Loading material listings...</div>`;
-
-    const url =
-      apiUrl("/marketplace/materials/listings") +
-      `?material_type=${encodeURIComponent(materialType)}` +
-      `&view=${encodeURIComponent(view)}` +
-      `&username=${encodeURIComponent(username || "")}`;
-
+    listBox.innerHTML = \`<div class="empty">Loading material listings...</div>\`;
+    const url = apiUrl("/marketplace/materials/listings") +
+      \`?material_type=\${encodeURIComponent(materialType)}&view=\${encodeURIComponent(view)}&username=\${encodeURIComponent(username || "")}\`;
     const response = await fetch(url);
     const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.error || "Failed to load material listings.");
-    }
+    if (!response.ok || !data.success) throw new Error(data.error || "Failed to load material listings.");
 
     const listings = data.listings || [];
-
-    if (countPill) {
-      countPill.textContent = `${listings.length} LISTINGS`;
-    }
-
+    if (countPill) countPill.textContent = \`\${listings.length} LISTINGS\`;
     if (!listings.length) {
-      listBox.innerHTML = `<div class="empty">No active listings yet.</div>`;
+      listBox.innerHTML = \`<div class="empty">No active listings yet.</div>\`;
       return;
     }
 
-    listBox.innerHTML = `
-  <div class="compact-list">
-    ${listings
-      .map((listing) => {
-        const qty = Number(listing.quantity_remaining || 0);
-        const price = Number(listing.price_per_item_emp || 0);
-        const total = qty * price;
-        const materialLabel = getPremiumMaterialLabel(materialType).full;
-
-        return `
-          <div class="compact-row">
-
-            <div class="compact-cell">
-              <div class="compact-asset-title">
-                ${qty} ${materialLabel}
+    listBox.innerHTML = \`
+      <div class="compact-list">
+        \${listings.map((listing) => {
+          const qty = Number(listing.quantity_remaining || 0);
+          const currency = String(listing.currency || "EMP").toUpperCase();
+          const price = currency === "HIVE"
+            ? Number(listing.price_per_item_hive || 0)
+            : Number(listing.price_per_item_emp || 0);
+          const total = qty * price;
+          const formattedPrice = currency === "HIVE" ? price.toFixed(3) : price.toLocaleString();
+          const formattedTotal = currency === "HIVE" ? total.toFixed(3) : total.toLocaleString();
+          const materialLabel = getPremiumMaterialLabel(materialType).full;
+          const isMine = String(listing.seller || "").toLowerCase() === String(username || "").toLowerCase();
+          return \`
+            <div class="compact-row">
+              <div class="compact-cell">
+                <div class="compact-asset-title">\${qty} \${materialLabel}</div>
+                <div class="compact-asset-sub">Listing #\${listing.id || "--"}</div>
               </div>
-              <div class="compact-asset-sub">
-                Listing #${listing.id || "--"}
+              <div class="compact-cell">
+                <div class="compact-seller">@\${listing.seller || "--"}</div>
+                <div class="compact-asset-sub">Seller</div>
               </div>
-            </div>
-
-            <div class="compact-cell">
-              <div class="compact-seller">
-                @${listing.seller || "--"}
+              <div class="compact-cell compact-details">
+                <strong>Price / Item:</strong> \${formattedPrice} \${currency}<br>
+                <strong>Quantity:</strong> \${qty}
               </div>
-              <div class="compact-asset-sub">
-                Seller
+              <div class="compact-cell compact-price">\${formattedTotal} \${currency}</div>
+              <div class="compact-cell compact-action">
+                \${isMine
+                  ? \`<button class="compact-buy-btn" type="button" onclick="cancelPremiumMaterialListing(\${listing.id})">Cancel</button>\`
+                  : \`<button class="compact-buy-btn" type="button" onclick="buyPremiumMaterialListing(\${listing.id}, \${qty}, '\${currency}')">Buy</button>\`}
               </div>
-            </div>
-
-            <div class="compact-cell compact-details">
-              <strong>Price / Item:</strong> ${price.toLocaleString()} EMP<br>
-              <strong>Quantity:</strong> ${qty}
-            </div>
-
-            <div class="compact-cell compact-price">
-              ${total.toLocaleString()} EMP
-            </div>
-
-            <div class="compact-cell compact-action">
-            ${
-  String(listing.seller || "").toLowerCase() === String(username || "").toLowerCase()
-    ? `
-      <button
-        class="compact-buy-btn"
-        type="button"
-        onclick="cancelPremiumMaterialListing(${listing.id})"
-      >
-        Cancel
-      </button>
-    `
-    : `
-      <button
-        class="compact-buy-btn"
-        type="button"
-        onclick="buyPremiumMaterialListing(${listing.id}, ${qty})"
-      >
-        Buy
-      </button>
-    `
-}
-            </div>
-
-          </div>
-        `;
-      })
-      .join("")}
-  </div>
-`;
+            </div>\`;
+        }).join("")}
+      </div>\`;
   } catch (err) {
     console.error("Load premium material listings error:", err);
-    listBox.innerHTML = `<div class="empty">Failed to load material listings.</div>`;
+    listBox.innerHTML = \`<div class="empty">Failed to load material listings.</div>\`;
   }
 }
 
@@ -1261,156 +1221,86 @@ window.loadPremiumMaterialListings = loadPremiumMaterialListings;
 
 async function createPremiumMaterialListing() {
   try {
-    const username =
-      typeof ACTIVE_USER !== "undefined" && ACTIVE_USER
-        ? ACTIVE_USER
-        : getMarketplaceLoggedInUser();
-
+    const username = ACTIVE_USER || getMarketplaceLoggedInUser();
     const materialType =
       document.getElementById("premium-selected-material")?.value ||
-      currentPremiumMaterial ||
-      "IMPERIAL_FRAGMENT";
-
-    const quantity = Number(
-      document.getElementById("premium-material-quantity")?.value || 0
-    );
-
-    const pricePerItemEmp = Number(
-      document.getElementById("premium-material-price-emp")?.value || 0
-    );
+      currentPremiumMaterial || "IMPERIAL_FRAGMENT";
+    const quantity = Number(document.getElementById("premium-material-quantity")?.value || 0);
+    const currency = materialType === "WRIT"
+      ? String(document.getElementById("premium-material-currency")?.value || "EMP").toUpperCase()
+      : "EMP";
+    const price = Number(document.getElementById("premium-material-price-emp")?.value || 0);
 
     if (!username) {
       setStatus("premium-material-create-status", "Please login first.", true);
       return;
     }
-
-    if (!ensureOwnMarketplaceAction()) {
+    if (!ensureOwnMarketplaceAction()) return;
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+      setStatus("premium-material-create-status", "Enter a valid whole quantity.", true);
       return;
     }
-
-    if (!quantity || quantity <= 0) {
-      setStatus("premium-material-create-status", "Enter valid quantity.", true);
+    if (!Number.isFinite(price) || price <= 0) {
+      setStatus("premium-material-create-status", \`Enter a valid \${currency} price per item.\`, true);
       return;
     }
-
-    if (!pricePerItemEmp || pricePerItemEmp <= 0) {
-      setStatus(
-        "premium-material-create-status",
-        "Enter valid EMP price per item.",
-        true
-      );
+    if (currency === "HIVE" && Math.round(price * 1000) !== price * 1000) {
+      setStatus("premium-material-create-status", "HIVE prices can have up to 3 decimal places.", true);
       return;
     }
 
     setStatus("premium-material-create-status", "Creating material listing...");
-
     const response = await fetch(apiUrl("/marketplace/materials/list"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-mde-actor": username
-      },
+      headers: { "Content-Type": "application/json", "x-mde-actor": username },
       body: JSON.stringify({
         username,
         material_type: materialType,
         quantity,
-        price_per_item_emp: pricePerItemEmp
+        currency,
+        price_per_item_emp: currency === "EMP" ? price : 0,
+        price_per_item_hive: currency === "HIVE" ? price : 0
       })
     });
-
     const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.error || "Failed to create material listing.");
 
-    if (!response.ok || !data.success) {
-      throw new Error(data.error || "Failed to create material listing.");
-    }
-
-    setStatus(
-      "premium-material-create-status",
-      "✅ Material listing created successfully."
-    );
-
+    setStatus("premium-material-create-status", "✅ Material listing created successfully.");
     document.getElementById("premium-material-quantity").value = "";
-document.getElementById("premium-material-price-emp").value = "";
-
-updatePremiumMaterialPreview();
-
-if (typeof loadPremiumMaterialListings === "function") {
-  await loadPremiumMaterialListings();
-}
-
-if (typeof loadPremiumMaterialHistory === "function") {
-  await loadPremiumMaterialHistory();
-}
+    document.getElementById("premium-material-price-emp").value = "";
+    updatePremiumMaterialPreview();
+    await loadPremiumMaterialListings();
+    await loadPremiumMaterialHistory();
   } catch (err) {
     console.error("Create premium material listing error:", err);
-    setStatus(
-      "premium-material-create-status",
-      err.message || "Failed to create material listing.",
-      true
-    );
+    setStatus("premium-material-create-status", err.message || "Failed to create material listing.", true);
   }
 }
 
 window.createPremiumMaterialListing = createPremiumMaterialListing;
 function setPremiumMaterial(materialType) {
   const cleanType = String(materialType || "IMPERIAL_FRAGMENT").toUpperCase();
-
- currentPremiumMaterial =
-  cleanType === "SMP"
-    ? "SMP"
-    : cleanType === "IMPERIAL_TICKET"
-      ? "IMPERIAL_TICKET"
-      : cleanType === "WRIT"
-        ? "WRIT"
-        : "IMPERIAL_FRAGMENT";
-
+  currentPremiumMaterial =
+    cleanType === "SMP" ? "SMP" :
+    cleanType === "IMPERIAL_TICKET" ? "IMPERIAL_TICKET" :
+    cleanType === "WRIT" ? "WRIT" : "IMPERIAL_FRAGMENT";
   const hiddenInput = document.getElementById("premium-selected-material");
-  if (hiddenInput) {
-    hiddenInput.value = currentPremiumMaterial;
-  }
-
+  if (hiddenInput) hiddenInput.value = currentPremiumMaterial;
   document.querySelectorAll(".premium-material-tab[data-material-tab]").forEach((btn) => {
-    btn.classList.toggle(
-      "active",
-      String(btn.dataset.materialTab || "").toUpperCase() === currentPremiumMaterial
-    );
+    btn.classList.toggle("active", String(btn.dataset.materialTab || "").toUpperCase() === currentPremiumMaterial);
   });
-
   const label = getPremiumMaterialLabel();
-
   const selectedLabel = document.getElementById("premium-selected-material-label");
-  if (selectedLabel) {
-    selectedLabel.textContent = label.full;
-  }
-
+  if (selectedLabel) selectedLabel.textContent = label.full;
   const feedTitle = document.getElementById("premium-material-feed-title");
-  if (feedTitle) {
-    feedTitle.textContent = label.title;
-  }
-
+  if (feedTitle) feedTitle.textContent = label.title;
   const feedSubtitle = document.getElementById("premium-material-feed-subtitle");
-  if (feedSubtitle) {
-    feedSubtitle.textContent = label.subtitle;
-  }
-
+  if (feedSubtitle) feedSubtitle.textContent = label.subtitle;
   const listBox = document.getElementById("premium-material-list");
-  if (listBox) {
-    listBox.innerHTML = `
-      <div class="empty">
-        Loading ${label.full} listings...
-      </div>
-    `;
-  }
-
-  updatePremiumMaterialPreview();
-
-if (typeof loadPremiumMaterialListings === "function") {
-  loadPremiumMaterialListings();
-}
-
-if (typeof loadPremiumMaterialHistory === "function") {
-  loadPremiumMaterialHistory();
-}
+  if (listBox) listBox.innerHTML = \`<div class="empty">Loading \${label.full} listings...</div>\`;
+  updatePremiumMaterialCurrency();
+  if (typeof loadPremiumMaterialListings === "function") loadPremiumMaterialListings();
+  if (typeof loadPremiumMaterialHistory === "function") loadPremiumMaterialHistory();
 }
     /* BLUEPRINTS */
     let playerBlueprintInventory = [];
