@@ -449,7 +449,7 @@
         <div class="market-header-left">
           <h2>Recent Material Trade History</h2>
           <div class="market-header-sub">
-           Last 10 completed Fragments / SMP / Ticket trades
+           Last 10 completed Fragment / SMP / Ticket / Writ trades
           </div>
         </div>
       </div>
@@ -1022,7 +1022,7 @@ async function buyPremiumMaterialListing(listingId, maxAvailable, currency = "EM
         body: JSON.stringify({ username, listing_id: listingId, quantity })
       });
       const initData = await initRes.json();
-      if (!initRes.ok || !initData.success) throw new Error(initData.error || "Failed to start HIVE Writ purchase.");
+      if (!initRes.ok || !initData.success) throw new Error(initData.error || "Failed to start HIVE material purchase.");
 
       const session = initData.session;
       const materialName = getPremiumMaterialLabel(session.material_type || currentPremiumMaterial).full;
@@ -1061,7 +1061,7 @@ async function buyPremiumMaterialListing(listingId, maxAvailable, currency = "EM
         })
       });
       const finalizeData = await finalizeRes.json();
-      if (!finalizeRes.ok || !finalizeData.success) throw new Error(finalizeData.error || "Failed to complete HIVE Writ purchase.");
+      if (!finalizeRes.ok || !finalizeData.success) throw new Error(finalizeData.error || "Failed to complete HIVE material purchase.");
       const purchasedName = getPremiumMaterialLabel(finalizeData.material_type || session.material_type).full;
       alert(`✅ ${finalizeData.quantity} ${purchasedName} item(s) purchased for ${Number(finalizeData.total_hive).toFixed(3)} HIVE.`);
     } else {
