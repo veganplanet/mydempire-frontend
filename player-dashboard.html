@@ -2282,7 +2282,10 @@ let seasonHistoryIndex = 0;
             `${Number(cfg.batchRemaining || 0)} / ${Number(cfg.batchQuantity || 0)}`;
           if (!data.enabled) statusEl.textContent = "Purchases are currently closed.";
           else if (Number(data.purchasable || 0) > 0) statusEl.textContent = `Available to buy now: ${Number(data.purchasable)} pack(s).`;
-          else if (Array.isArray(data.cooldowns) && data.cooldowns.length) statusEl.textContent = `${data.cooldowns.length} Writ(s) on a 30-day cooldown. Cooldown follows the Writ if traded.`;
+          else if (Array.isArray(data.cooldowns) && data.cooldowns.length) {
+            const nextUnlock = data.cooldowns.map((item) => new Date(item.cooldownUntil).getTime()).filter((time) => Number.isFinite(time) && time > Date.now()).sort((a, b) => a - b)[0];
+            statusEl.textContent = `${data.cooldowns.length} Writ(s) on a 30-day cooldown${nextUnlock ? `; next unlock ${new Date(nextUnlock).toLocaleDateString()}` : ""}. Cooldown follows the Writ if traded.`;
+          }
           else statusEl.textContent = "No pack allowance available right now.";
         } catch (err) {
           console.warn("Writ pack dashboard status unavailable:", err);
