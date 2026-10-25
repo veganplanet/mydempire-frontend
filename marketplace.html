@@ -268,10 +268,10 @@
         <div class="market-header-left">
           <h2>Premium Materials &amp; Writ Marketplace</h2>
           <div class="market-header-sub">
-            EMP trading is available for Fragments, SMP, Imperial Tickets, and Writs. Writs can also be listed and bought in HIVE; HIVE purchases use Keychain and include a 5% fee to the vault.
+            Fragments, SMP, Imperial Tickets, and Writs can be listed in EMP or HIVE. HIVE purchases use Hive Keychain and include a 5% fee paid to the vault.
           </div>
         </div>
-        <div class="pill">EMP + HIVE Writs</div>
+        <div class="pill">EMP + HIVE</div>
       </div>
 
       <div class="premium-material-tabs">
@@ -355,7 +355,7 @@
         </div>
 
         <div class="field" style="width:100%;">
-          <div class="field" id="premium-material-currency-field" style="width:100%; display:none;">
+          <div class="field" id="premium-material-currency-field" style="width:100%;">
             <label for="premium-material-currency">Listing Currency</label>
             <select
               id="premium-material-currency"
@@ -449,7 +449,7 @@
         <div class="market-header-left">
           <h2>Recent Material Trade History</h2>
           <div class="market-header-sub">
-           Last 10 completed Fragments / SMP / Ticket trades
+           Last 10 completed Fragment / SMP / Ticket / Writ trades
           </div>
         </div>
       </div>
@@ -911,10 +911,8 @@ function updatePremiumMaterialCurrency() {
   const currencySelect = document.getElementById("premium-material-currency");
   const priceLabel = document.getElementById("premium-material-price-label");
   const priceInput = document.getElementById("premium-material-price-emp");
-  const isWrit = currentPremiumMaterial === "WRIT";
-  if (currencyField) currencyField.style.display = isWrit ? "block" : "none";
-  if (!isWrit && currencySelect) currencySelect.value = "EMP";
-  const currency = isWrit ? String(currencySelect?.value || "EMP").toUpperCase() : "EMP";
+  if (currencyField) currencyField.style.display = "block";
+  const currency = String(currencySelect?.value || "EMP").toUpperCase();
   if (priceLabel) priceLabel.textContent = `Price per Item (${currency})`;
   if (priceInput) {
     priceInput.min = currency === "HIVE" ? "0.001" : "1";
@@ -932,13 +930,10 @@ function updatePremiumMaterialPreview() {
   const qty = Number(qtyInput?.value || 0);
   const price = Number(priceInput?.value || 0);
   const label = getPremiumMaterialLabel();
-  const isWrit = currentPremiumMaterial === "WRIT";
-  const currency = isWrit
-    ? String(document.getElementById("premium-material-currency")?.value || "EMP").toUpperCase()
-    : "EMP";
+  const currency = String(document.getElementById("premium-material-currency")?.value || "EMP").toUpperCase();
   if (!qty || !price) {
-    preview.textContent = isWrit && currency === "HIVE"
-      ? "Example: 1 Writ × 0.250 HIVE = 0.250 HIVE total. A 5% fee is paid to the vault."
+    preview.textContent = currency === "HIVE"
+      ? `Example: 1 ${label.short} × 0.250 HIVE = 0.250 HIVE total. A 5% fee is paid to the vault.`
       : label.example;
     return;
   }
@@ -1027,14 +1022,15 @@ async function buyPremiumMaterialListing(listingId, maxAvailable, currency = "EM
         body: JSON.stringify({ username, listing_id: listingId, quantity })
       });
       const initData = await initRes.json();
-      if (!initRes.ok || !initData.success) throw new Error(initData.error || "Failed to start HIVE Writ purchase.");
+      if (!initRes.ok || !initData.success) throw new Error(initData.error || "Failed to start HIVE material purchase.");
 
       const session = initData.session;
+      const materialName = getPremiumMaterialLabel(session.material_type || currentPremiumMaterial).full;
       const sellerAmount = Number(session.seller_net_hive || 0).toFixed(3);
       const feeAmount = Number(session.fee_hive || 0).toFixed(3);
       const sellerTo = session.seller_account || session.seller;
       const confirmText =
-        `Buy ${session.quantity} Writ(s) for ${Number(session.total_hive).toFixed(3)} HIVE?\n\n` +
+        `Buy ${session.quantity} ${materialName} item(s) for ${Number(session.total_hive).toFixed(3)} HIVE?\n\n` +
         `Seller receives: ${sellerAmount} HIVE to @${sellerTo}\n` +
         (Number(session.fee_hive) > 0
           ? `Marketplace fee: ${feeAmount} HIVE to @${session.fee_account}`
@@ -1065,8 +1061,9 @@ async function buyPremiumMaterialListing(listingId, maxAvailable, currency = "EM
         })
       });
       const finalizeData = await finalizeRes.json();
-      if (!finalizeRes.ok || !finalizeData.success) throw new Error(finalizeData.error || "Failed to complete HIVE Writ purchase.");
-      alert(`✅ ${finalizeData.quantity} Writ(s) purchased for ${Number(finalizeData.total_hive).toFixed(3)} HIVE.`);
+      if (!finalizeRes.ok || !finalizeData.success) throw new Error(finalizeData.error || "Failed to complete HIVE material purchase.");
+      const purchasedName = getPremiumMaterialLabel(finalizeData.material_type || session.material_type).full;
+      alert(`✅ ${finalizeData.quantity} ${purchasedName} item(s) purchased for ${Number(finalizeData.total_hive).toFixed(3)} HIVE.`);
     } else {
       if (!confirm(`Confirm purchase of ${quantity} item(s) for EMP?`)) return;
       const response = await fetch(apiUrl("/marketplace/materials/buy"), {
@@ -1226,9 +1223,7 @@ async function createPremiumMaterialListing() {
       document.getElementById("premium-selected-material")?.value ||
       currentPremiumMaterial || "IMPERIAL_FRAGMENT";
     const quantity = Number(document.getElementById("premium-material-quantity")?.value || 0);
-    const currency = materialType === "WRIT"
-      ? String(document.getElementById("premium-material-currency")?.value || "EMP").toUpperCase()
-      : "EMP";
+    const currency = String(document.getElementById("premium-material-currency")?.value || "EMP").toUpperCase();
     const price = Number(document.getElementById("premium-material-price-emp")?.value || 0);
 
     if (!username) {
