@@ -266,9 +266,9 @@
     <div class="card">
       <div class="market-header">
         <div class="market-header-left">
-          <h2>Premium Materials Marketplace</h2>
+          <h2>Premium Materials &amp; Writ Marketplace</h2>
           <div class="market-header-sub">
-            EMP-only trading for Imperial Fragments, Salvaged Machinery Parts, and Imperial Construction Tickets.
+            EMP-only trading for Fragments, SMP, Imperial Tickets, and Writ NFTs. Writs transfer to the buyer and are never burned.
           </div>
         </div>
         <div class="pill">EMP Only</div>
@@ -307,10 +307,10 @@
 
         <button
           type="button"
-          class="premium-material-tab disabled"
-          disabled
+          class="premium-material-tab"
+          data-material-tab="WRIT"
         >
-          📜 Writs Soon
+          📜 Writs
         </button>
       </div>
 
@@ -875,6 +875,16 @@ function getPremiumMaterialLabel(materialType = currentPremiumMaterial) {
     };
   }
 
+  if (type === "WRIT") {
+    return {
+      short: "Writs",
+      full: "Genesis Writs",
+      title: "Writ Market Listings",
+      subtitle: "Browse and trade Genesis Writ NFTs.",
+      example: "Set your own EMP price for each Writ."
+    };
+  }
+
   return {
     short: "Fragments",
     full: "Imperial Fragments",
@@ -1350,7 +1360,9 @@ function setPremiumMaterial(materialType) {
     ? "SMP"
     : cleanType === "IMPERIAL_TICKET"
       ? "IMPERIAL_TICKET"
-      : "IMPERIAL_FRAGMENT";
+      : cleanType === "WRIT"
+        ? "WRIT"
+        : "IMPERIAL_FRAGMENT";
 
   const hiddenInput = document.getElementById("premium-selected-material");
   if (hiddenInput) {
@@ -1385,7 +1397,7 @@ function setPremiumMaterial(materialType) {
   if (listBox) {
     listBox.innerHTML = `
       <div class="empty">
-        ${label.full} marketplace backend will be connected in the next step.
+        Loading ${label.full} listings...
       </div>
     `;
   }
