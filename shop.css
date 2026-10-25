@@ -3534,3 +3534,104 @@
     font-size: 13px;
   }
 }
+
+/* Limited Writ pack offer: compact card below the Genesis purchase panel. */
+.emp-writ-pack-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 22px;
+  align-items: center;
+  margin: 18px 0 30px;
+  padding: 22px 24px;
+  border: 1px solid #d9c4ed;
+  border-radius: 18px;
+  background: linear-gradient(120deg, #fbf7ff 0%, #f2f7ff 100%);
+  box-shadow: 0 8px 22px rgba(79, 39, 112, 0.08);
+  color: #1f2937;
+}
+.emp-writ-pack-copy { min-width: 0; }
+.emp-writ-pack-kicker {
+  color: #7e22ce;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.emp-writ-pack-copy h2 {
+  margin: 6px 0 8px;
+  color: #241334;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.2;
+}
+.emp-writ-pack-copy p {
+  max-width: 700px;
+  margin: 0;
+  color: #5d6470;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.emp-writ-pack-recipe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.emp-writ-pack-recipe span {
+  padding: 7px 11px;
+  border: 1px solid #e1d2ee;
+  border-radius: 999px;
+  background: #fff;
+  color: #4b2b64;
+  font-size: 13px;
+}
+.emp-writ-pack-action {
+  min-width: 0;
+  padding-left: 20px;
+  border-left: 1px solid #dfd1e9;
+}
+.emp-writ-pack-status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 13px;
+}
+.emp-writ-pack-status-grid div {
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid #e8e0ef;
+  border-radius: 11px;
+  background: rgba(255,255,255,.8);
+}
+.emp-writ-pack-status-grid span,
+.emp-writ-pack-status-grid strong { display: block; }
+.emp-writ-pack-status-grid span { color: #6b7280; font-size: 10px; font-weight: 700; }
+.emp-writ-pack-status-grid strong { margin-top: 3px; color: #31164a; font-size: 13px; }
+.emp-writ-pack-quantity-label { display: block; margin-bottom: 5px; color: #443250; font-size: 12px; font-weight: 800; }
+.emp-writ-pack-buy-row { display: flex; gap: 9px; }
+.emp-writ-pack-buy-row input {
+  width: 78px;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #d6c2e5;
+  border-radius: 10px;
+  background: #fff;
+  color: #21142d;
+  font: inherit;
+}
+.emp-writ-pack-buy-row button {
+  flex: 1;
+  min-height: 42px;
+  border: 0;
+  border-radius: 10px;
+  background: #6d28d9;
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+.emp-writ-pack-buy-row button:disabled { background: #a9a0b4; cursor: not-allowed; }
+.emp-writ-pack-buy-status,.emp-writ-pack-cooldowns { margin-top: 8px; color: #5e5268; font-size: 11px; line-height: 1.4; }
+.emp-writ-pack-cooldowns { color: #6b7280; }
+@media (max-width: 760px) {
+  .emp-writ-pack-card { grid-template-columns: 1fr; gap: 15px; padding: 17px; }
+  .emp-writ-pack-action { padding: 14px 0 0; border-left: 0; border-top: 1px solid #dfd1e9; }
+}
