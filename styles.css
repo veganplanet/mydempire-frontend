@@ -23918,3 +23918,36 @@ body.home-v2-page {
     font-size: 12px !important;
   }
 }
+
+
+/* Compact Writ pack status panel in the player dashboard. */
+.dashboard-writ-pack-card {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(265px, 330px);
+  gap: 20px;
+  align-items: center;
+  margin-top: 4px;
+  padding: 17px 19px;
+  border: 1px solid #ded0eb;
+  border-radius: 16px;
+  background: linear-gradient(120deg, #fbf8ff, #f3f7ff);
+  box-shadow: 0 7px 18px rgba(48, 30, 66, .055);
+}
+.dashboard-writ-pack-main { min-width: 0; }
+.dashboard-writ-pack-kicker { color: #7e22ce; font-size: 10px; font-weight: 900; letter-spacing: .1em; }
+.dashboard-writ-pack-card h3 { margin: 4px 0 5px; color: #30203d; font-size: 18px; }
+.dashboard-writ-pack-card p { margin: 0; color: #647080; font-size: 12px; line-height: 1.45; }
+.dashboard-writ-pack-recipe { margin-top: 9px; color: #4b2b64; font-size: 12px; font-weight: 800; }
+.dashboard-writ-pack-details { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+.dashboard-writ-pack-details > div:not(.dashboard-writ-pack-status) { padding: 8px; border: 1px solid #e7deef; border-radius: 9px; background: rgba(255,255,255,.8); }
+.dashboard-writ-pack-details span,.dashboard-writ-pack-details strong { display: block; }
+.dashboard-writ-pack-details span { color: #73717c; font-size: 9px; font-weight: 700; }
+.dashboard-writ-pack-details strong { margin-top: 2px; color: #32203f; font-size: 12px; }
+.dashboard-writ-pack-status { grid-column: 1 / -1; color: #5c5265; font-size: 11px; line-height: 1.35; }
+.dashboard-writ-pack-details a { grid-column: 1 / -1; color: #6d28d9; font-size: 12px; font-weight: 900; text-decoration: none; }
+.dashboard-writ-pack-details a:hover { text-decoration: underline; }
+@media (max-width: 760px) {
+  .dashboard-writ-pack-card { grid-template-columns: 1fr; gap: 13px; padding: 15px; }
+  .dashboard-writ-pack-details { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

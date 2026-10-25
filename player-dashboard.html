@@ -1367,6 +1367,21 @@ font-weight:900;
               </div>
             </div>
           </div>
+          <section class="dashboard-writ-pack-card" aria-labelledby="dashboard-writ-pack-title">
+            <div class="dashboard-writ-pack-main">
+              <div class="dashboard-writ-pack-kicker">LIMITED PACK OFFER</div>
+              <h3 id="dashboard-writ-pack-title">Writ Pack Purchase Status</h3>
+              <p>Use eligible Writs to purchase limited-batch packs. Each pack has Genesis Pack contents and odds, without a Writ award or Genesis supply count.</p>
+              <div class="dashboard-writ-pack-recipe" id="dashboard-writ-pack-recipe">Recipe: loading…</div>
+            </div>
+            <div class="dashboard-writ-pack-details">
+              <div><span>Eligible Writs</span><strong id="dashboard-writ-pack-eligible">--</strong></div>
+              <div><span>30-day player limit</span><strong id="dashboard-writ-pack-usage">--</strong></div>
+              <div><span>Batch stock</span><strong id="dashboard-writ-pack-stock">--</strong></div>
+              <div class="dashboard-writ-pack-status" id="dashboard-writ-pack-status" role="status">Loading availability…</div>
+              <a id="dashboard-writ-pack-shop-link" href="shop.html#emp-writ-pack-offer">View Writ Pack offer →</a>
+            </div>
+          </section>
         </div>
 
         <!-- ===== BLOCK 2: EMPIRE PREVIEW ===== -->
@@ -2241,6 +2256,41 @@ let seasonHistoryIndex = 0;
 
       function apiUrl(path) {
         return API_BASE + path;
+      }
+      async function loadEmpWritPackDashboard() {
+        const statusEl = document.getElementById("dashboard-writ-pack-status");
+        const user = String(PLAYER_USERNAME || "").trim().replace("@", "").toLowerCase();
+        const link = document.getElementById("dashboard-writ-pack-shop-link");
+        if (!statusEl || !user) {
+          if (statusEl) statusEl.textContent = "Log in to view your pack allowance.";
+          if (link) link.hidden = true;
+          return;
+        }
+        if (link) link.href = `shop.html?user=${encodeURIComponent(user)}#emp-writ-pack-offer`;
+        try {
+          const response = await fetch(apiUrl(`/player/${encodeURIComponent(user)}/emp-writ-pack/status`));
+          const data = await response.json();
+          if (!response.ok || !data.success) throw new Error(data.error || "Availability unavailable.");
+          const cfg = data.config || {};
+          document.getElementById("dashboard-writ-pack-recipe").textContent =
+            `Per pack: ${Number(cfg.empCost || 0).toLocaleString()} EMP + ${Number(cfg.smpCost || 0).toLocaleString()} SMP + ${Number(cfg.fragmentCost || 0).toLocaleString()} Fragment`;
+          document.getElementById("dashboard-writ-pack-eligible").textContent =
+            `${Number(data.eligibleWritCount || 0)} / ${Number(data.writCount || 0)}`;
+          document.getElementById("dashboard-writ-pack-usage").textContent =
+            `${Number(data.purchasesLast30Days || 0)} / ${Number(data.playerLimit || 3)} used`;
+          document.getElementById("dashboard-writ-pack-stock").textContent =
+            `${Number(cfg.batchRemaining || 0)} / ${Number(cfg.batchQuantity || 0)}`;
+          if (!data.enabled) statusEl.textContent = "Purchases are currently closed.";
+          else if (Number(data.purchasable || 0) > 0) statusEl.textContent = `Available to buy now: ${Number(data.purchasable)} pack(s).`;
+          else if (Array.isArray(data.cooldowns) && data.cooldowns.length) {
+            const nextUnlock = data.cooldowns.map((item) => new Date(item.cooldownUntil).getTime()).filter((time) => Number.isFinite(time) && time > Date.now()).sort((a, b) => a - b)[0];
+            statusEl.textContent = `${data.cooldowns.length} Writ(s) on a 30-day cooldown${nextUnlock ? `; next unlock ${new Date(nextUnlock).toLocaleDateString()}` : ""}. Cooldown follows the Writ if traded.`;
+          }
+          else statusEl.textContent = "No pack allowance available right now.";
+        } catch (err) {
+          console.warn("Writ pack dashboard status unavailable:", err);
+          statusEl.textContent = "Writ pack availability is temporarily unavailable.";
+        }
       }
       const dailyEmpireReportState = { report: null, imageUrl: "", publishing: false };
 
@@ -4231,6 +4281,7 @@ setText("maintenance-attention-count", inactiveFactories);
           // ===== WRITS =====
           const writCount = Number(data.writCount ?? 0);
           setText("summary-writ-count", writCount);
+          loadEmpWritPackDashboard();
 
         // ===== PRODUCTION =====
 // ===== PRODUCTION =====

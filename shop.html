@@ -423,6 +423,33 @@ and expansion-era opportunities as the empire evolves.
   </div>
   </div>
 </section>
+
+<section class="emp-writ-pack-card" id="emp-writ-pack-offer" aria-labelledby="emp-writ-pack-title">
+  <div class="emp-writ-pack-copy">
+    <div class="emp-writ-pack-kicker">LIMITED WRIT PACK BATCH</div>
+    <h2 id="emp-writ-pack-title">Get a Pack with Your Empire Materials</h2>
+    <p>Each pack has the same contents and odds as a Genesis Pack, but does not award a Writ or count toward the 5,000 Genesis Pack supply.</p>
+    <div class="emp-writ-pack-recipe" aria-label="Pack recipe">
+      <span><strong id="emp-writ-pack-emp-cost">500</strong> EMP</span>
+      <span><strong id="emp-writ-pack-smp-cost">2</strong> SMP</span>
+      <span><strong id="emp-writ-pack-fragment-cost">1</strong> Fragment</span>
+    </div>
+  </div>
+  <div class="emp-writ-pack-action">
+    <div class="emp-writ-pack-status-grid">
+      <div><span>Eligible Writs</span><strong id="emp-writ-pack-writs">--</strong></div>
+      <div><span>Your 30-day cap</span><strong id="emp-writ-pack-player-cap">--</strong></div>
+      <div><span>Batch stock</span><strong id="emp-writ-pack-stock">--</strong></div>
+    </div>
+    <label class="emp-writ-pack-quantity-label" for="emp-writ-pack-quantity">Packs to buy</label>
+    <div class="emp-writ-pack-buy-row">
+      <input id="emp-writ-pack-quantity" type="number" min="1" max="3" value="1" inputmode="numeric" aria-describedby="emp-writ-pack-buy-status">
+      <button id="emp-writ-pack-buy-button" type="button" disabled>Buy Pack</button>
+    </div>
+    <div id="emp-writ-pack-buy-status" class="emp-writ-pack-buy-status" role="status" aria-live="polite">Checking availability...</div>
+    <div id="emp-writ-pack-cooldowns" class="emp-writ-pack-cooldowns"></div>
+  </div>
+</section>
  
 
   
@@ -1641,6 +1668,100 @@ window.closePackReinvestmentInfo = function () {
   const popup = document.getElementById("pack-reinvestment-popup");
   if (popup) popup.classList.add("hidden");
 };
+
+let empWritPackStatus = null;
+let empWritPackBusy = false;
+
+function setEmpWritPackPurchaseState(status) {
+  empWritPackStatus = status;
+  const statusEl = document.getElementById("emp-writ-pack-buy-status");
+  const quantityEl = document.getElementById("emp-writ-pack-quantity");
+  const buttonEl = document.getElementById("emp-writ-pack-buy-button");
+  if (!statusEl || !quantityEl || !buttonEl) return;
+  const purchasable = Number(status?.purchasable || 0);
+  quantityEl.max = String(Math.max(1, Math.min(3, purchasable)));
+  if (Number(quantityEl.value) > purchasable && purchasable > 0) quantityEl.value = String(purchasable);
+  const qty = Number.parseInt(quantityEl.value, 10);
+  buttonEl.disabled = empWritPackBusy || !status?.enabled || !Number.isInteger(qty) || qty < 1 || qty > purchasable;
+  if (empWritPackBusy) statusEl.textContent = "Processing purchase...";
+  else if (!getShopActiveUser()) statusEl.textContent = "Log in to purchase a Writ pack.";
+  else if (!status?.enabled) statusEl.textContent = "Writ pack purchases are currently closed.";
+  else if (!purchasable) statusEl.textContent = status?.cooldowns?.length
+    ? "Your Writs are on cooldown or your 30-day player limit has been reached."
+    : "No eligible Writs or packs are currently available.";
+  else statusEl.textContent = `You can buy up to ${purchasable} pack${purchasable === 1 ? "" : "s"} now. Each Writ used is locked from another pack purchase for 30 days.`;
+}
+
+async function loadEmpWritPackStatus() {
+  const activeUser = getShopActiveUser();
+  const statusEl = document.getElementById("emp-writ-pack-buy-status");
+  if (!activeUser) {
+    setEmpWritPackPurchaseState({ enabled: true, purchasable: 0, cooldowns: [] });
+    return;
+  }
+  if (statusEl) statusEl.textContent = "Checking availability...";
+  try {
+    const res = await fetch(shopApiUrl(`/player/${encodeURIComponent(activeUser)}/emp-writ-pack/status`));
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || "Unable to check Writ pack availability.");
+    const cfg = data.config || {};
+    document.getElementById("emp-writ-pack-emp-cost").textContent = Number(cfg.empCost || 0).toLocaleString();
+    document.getElementById("emp-writ-pack-smp-cost").textContent = Number(cfg.smpCost || 0).toLocaleString();
+    document.getElementById("emp-writ-pack-fragment-cost").textContent = Number(cfg.fragmentCost || 0).toLocaleString();
+    document.getElementById("emp-writ-pack-writs").textContent = `${Number(data.eligibleWritCount || 0)} / ${Number(data.writCount || 0)}`;
+    document.getElementById("emp-writ-pack-player-cap").textContent = `${Number(data.purchasesLast30Days || 0)} / ${Number(data.playerLimit || 3)} used`;
+    document.getElementById("emp-writ-pack-stock").textContent = `${Number(cfg.batchRemaining || 0)} / ${Number(cfg.batchQuantity || 0)}`;
+    const cooldownEl = document.getElementById("emp-writ-pack-cooldowns");
+    const cooldowns = Array.isArray(data.cooldowns) ? data.cooldowns : [];
+    const nextUnlock = cooldowns
+      .map((item) => new Date(item.cooldownUntil).getTime())
+      .filter((time) => Number.isFinite(time) && time > Date.now())
+      .sort((a, b) => a - b)[0];
+    cooldownEl.textContent = cooldowns.length
+      ? `${cooldowns.length} Writ${cooldowns.length === 1 ? " is" : "s are"} on cooldown${nextUnlock ? `; next unlock: ${new Date(nextUnlock).toLocaleDateString()}` : ""}. Cooldown stays with each Writ if traded.`
+      : "A Writ used for a purchase gets a 30-day cooldown that follows it if traded.";
+    setEmpWritPackPurchaseState(data);
+  } catch (err) {
+    console.error("Writ pack availability error:", err);
+    if (statusEl) statusEl.textContent = err.message || "Writ pack availability is temporarily unavailable.";
+    const buttonEl = document.getElementById("emp-writ-pack-buy-button");
+    if (buttonEl) buttonEl.disabled = true;
+  }
+}
+
+async function buyEmpWritPacks() {
+  const activeUser = getShopActiveUser();
+  const quantityEl = document.getElementById("emp-writ-pack-quantity");
+  const quantity = Number.parseInt(quantityEl?.value, 10);
+  const cfg = empWritPackStatus?.config || {};
+  if (!activeUser || !Number.isInteger(quantity) || quantity < 1) return;
+  const recipe = `${Number(cfg.empCost || 0) * quantity} EMP, ${Number(cfg.smpCost || 0) * quantity} SMP, and ${Number(cfg.fragmentCost || 0) * quantity} Fragment(s)`;
+  if (!window.confirm(`Buy ${quantity} Writ pack${quantity > 1 ? "s" : ""} for ${recipe}? The EMP will be burned, the materials consumed, and each Writ used will receive a 30-day cooldown.`)) return;
+  empWritPackBusy = true;
+  setEmpWritPackPurchaseState(empWritPackStatus);
+  try {
+    const res = await fetch(shopApiUrl("/emp-writ-pack/purchase"), {
+      method: "POST",
+      headers: getShopActorHeaders(),
+      body: JSON.stringify({ username: activeUser, quantity }),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || "Pack purchase failed.");
+    document.getElementById("emp-writ-pack-buy-status").textContent = `${data.message} Recipe charged: ${recipe}.`;
+    await loadEmpWritPackStatus();
+  } catch (err) {
+    document.getElementById("emp-writ-pack-buy-status").textContent = err.message || "Pack purchase failed.";
+  } finally {
+    empWritPackBusy = false;
+    setEmpWritPackPurchaseState(empWritPackStatus);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("emp-writ-pack-buy-button")?.addEventListener("click", buyEmpWritPacks);
+  document.getElementById("emp-writ-pack-quantity")?.addEventListener("input", () => setEmpWritPackPurchaseState(empWritPackStatus));
+  loadEmpWritPackStatus();
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   const buyBtn = document.getElementById("buy-packs-btn");
