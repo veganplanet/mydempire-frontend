@@ -654,6 +654,24 @@
           </div>
         </div>
 
+        <div class="section" id="emp-writ-pack-admin">
+          <h2>🎁 EMP Writ Pack Batch Control</h2>
+          <p class="small">Same pack contents and odds as a Genesis Pack. Writ packs do not count toward Genesis supply and do not award Writs. Each eligible Writ used for a purchase receives a 30-day cooldown.</p>
+          <div class="row">
+            <button type="button" class="primary" onclick="loadEmpWritPackAdmin()">Load Settings</button>
+            <button type="button" onclick="saveEmpWritPackAdmin()">Save Settings</button>
+            <button type="button" onclick="issueNextEmpWritPackBatch()">Issue New Batch</button>
+          </div>
+          <div class="row" style="margin-top:12px;flex-wrap:wrap;align-items:center">
+            <label><input id="emp-writ-pack-enabled" type="checkbox" checked> Purchases enabled</label>
+            <label>EMP cost <input id="emp-writ-pack-admin-emp" type="number" min="0.001" step="0.001" value="500" style="width:110px"></label>
+            <label>SMP cost <input id="emp-writ-pack-admin-smp" type="number" min="0" step="1" value="2" style="width:90px"></label>
+            <label>Fragment cost <input id="emp-writ-pack-admin-fragment" type="number" min="0" step="1" value="1" style="width:100px"></label>
+            <label>Batch quantity <input id="emp-writ-pack-admin-quantity" type="number" min="0" step="1" value="50" style="width:100px"></label>
+          </div>
+          <div id="emp-writ-pack-admin-progress" class="status">Not loaded.</div>
+        </div>
+
         <!-- ===================================== -->
         <!-- ⚡ EMP ECONOMY CONTROL CENTER -->
         <!-- ===================================== -->
@@ -11292,6 +11310,49 @@ async function savePackReinvestmentAdmin() {
   const data = await r.json();
   document.getElementById("pack-reinvest-admin-status").textContent = data.success ? "Settings saved successfully." : (data.error || "Failed to save settings.");
   if (data.success) loadPackReinvestmentAdmin();
+}
+async function loadEmpWritPackAdmin() {
+  const status = document.getElementById("emp-writ-pack-admin-progress");
+  try {
+    const response = await fetch(`${API_BASE}/admin/emp-writ-pack/config`, { headers: { "x-admin-key": ADMIN_KEY } });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.error || "Unable to load Writ pack settings.");
+    const cfg = data.config || {};
+    document.getElementById("emp-writ-pack-enabled").checked = !!cfg.enabled;
+    document.getElementById("emp-writ-pack-admin-emp").value = cfg.empCost;
+    document.getElementById("emp-writ-pack-admin-smp").value = cfg.smpCost;
+    document.getElementById("emp-writ-pack-admin-fragment").value = cfg.fragmentCost;
+    document.getElementById("emp-writ-pack-admin-quantity").value = cfg.batchQuantity;
+    status.textContent = `Batch #${cfg.batchNumber}: ${cfg.batchSold} sold / ${cfg.batchQuantity} total; ${cfg.batchRemaining} remaining.`;
+  } catch (err) { status.textContent = err.message || "Unable to load settings."; }
+}
+async function saveEmpWritPackAdmin() {
+  const status = document.getElementById("emp-writ-pack-admin-progress");
+  const payload = {
+    enabled: document.getElementById("emp-writ-pack-enabled").checked,
+    empCost: Number(document.getElementById("emp-writ-pack-admin-emp").value),
+    smpCost: Number(document.getElementById("emp-writ-pack-admin-smp").value),
+    fragmentCost: Number(document.getElementById("emp-writ-pack-admin-fragment").value),
+    batchQuantity: Number(document.getElementById("emp-writ-pack-admin-quantity").value),
+  };
+  try {
+    const response = await fetch(`${API_BASE}/admin/emp-writ-pack/config`, { method: "POST", headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY }, body: JSON.stringify(payload) });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.error || "Unable to save settings.");
+    status.textContent = `Settings saved. Batch #${data.config.batchNumber}: ${data.config.batchSold} sold / ${data.config.batchQuantity} total; ${data.config.batchRemaining} remaining.`;
+  } catch (err) { status.textContent = err.message || "Unable to save settings."; }
+}
+async function issueNextEmpWritPackBatch() {
+  const status = document.getElementById("emp-writ-pack-admin-progress");
+  const batchQuantity = Number(document.getElementById("emp-writ-pack-admin-quantity").value);
+  if (!Number.isInteger(batchQuantity) || batchQuantity < 1) { status.textContent = "Batch quantity must be a whole number above zero."; return; }
+  if (!confirm(`Issue a new batch of ${batchQuantity} Writ packs? This is available after the current batch sells out.`)) return;
+  try {
+    const response = await fetch(`${API_BASE}/admin/emp-writ-pack/new-batch`, { method: "POST", headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY }, body: JSON.stringify({ batchQuantity }) });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.error || "Unable to issue a new batch.");
+    status.textContent = `Batch #${data.config.batchNumber} issued: ${data.config.batchRemaining} packs available.`;
+  } catch (err) { status.textContent = err.message || "Unable to issue a new batch."; }
 }
 </script>
 <section style="background:white;padding:20px;margin:18px 0;border:1px solid #dbe2ec;border-radius:12px" id="l2-credit-shop-admin">
