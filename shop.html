@@ -1713,8 +1713,12 @@ async function loadEmpWritPackStatus() {
     document.getElementById("emp-writ-pack-stock").textContent = `${Number(cfg.batchRemaining || 0)} / ${Number(cfg.batchQuantity || 0)}`;
     const cooldownEl = document.getElementById("emp-writ-pack-cooldowns");
     const cooldowns = Array.isArray(data.cooldowns) ? data.cooldowns : [];
+    const nextUnlock = cooldowns
+      .map((item) => new Date(item.cooldownUntil).getTime())
+      .filter((time) => Number.isFinite(time) && time > Date.now())
+      .sort((a, b) => a - b)[0];
     cooldownEl.textContent = cooldowns.length
-      ? `${cooldowns.length} Writ${cooldowns.length === 1 ? " is" : "s are"} on cooldown. Cooldown stays with each Writ if traded.`
+      ? `${cooldowns.length} Writ${cooldowns.length === 1 ? " is" : "s are"} on cooldown${nextUnlock ? `; next unlock: ${new Date(nextUnlock).toLocaleDateString()}` : ""}. Cooldown stays with each Writ if traded.`
       : "A Writ used for a purchase gets a 30-day cooldown that follows it if traded.";
     setEmpWritPackPurchaseState(data);
   } catch (err) {
