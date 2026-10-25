@@ -915,7 +915,7 @@ function updatePremiumMaterialCurrency() {
   if (currencyField) currencyField.style.display = isWrit ? "block" : "none";
   if (!isWrit && currencySelect) currencySelect.value = "EMP";
   const currency = isWrit ? String(currencySelect?.value || "EMP").toUpperCase() : "EMP";
-  if (priceLabel) priceLabel.textContent = \`Price per Item (\${currency})\`;
+  if (priceLabel) priceLabel.textContent = `Price per Item (${currency})`;
   if (priceInput) {
     priceInput.min = currency === "HIVE" ? "0.001" : "1";
     priceInput.step = currency === "HIVE" ? "0.001" : "1";
@@ -945,7 +945,7 @@ function updatePremiumMaterialPreview() {
   const total = qty * price;
   const formattedPrice = currency === "HIVE" ? price.toFixed(3) : price.toLocaleString();
   const formattedTotal = currency === "HIVE" ? total.toFixed(3) : total.toLocaleString();
-  preview.textContent = \`\${qty} \${label.short} × \${formattedPrice} \${currency} = \${formattedTotal} \${currency} total.\`;
+  preview.textContent = `${qty} ${label.short} × ${formattedPrice} ${currency} = ${formattedTotal} ${currency} total.`;
 }
 
 async function cancelPremiumMaterialListing(listingId) {
@@ -1013,11 +1013,11 @@ async function buyPremiumMaterialListing(listingId, maxAvailable, currency = "EM
   if (!username) return alert("Please login first.");
   if (!ensureOwnMarketplaceAction()) return;
 
-  const quantityText = prompt(\`How many do you want to buy? Available: \${maxAvailable}\`, "1");
+  const quantityText = prompt(`How many do you want to buy? Available: ${maxAvailable}`, "1");
   if (quantityText === null) return;
   const quantity = parseInt(quantityText, 10);
   if (!Number.isInteger(quantity) || quantity <= 0) return alert("Enter a valid whole number.");
-  if (quantity > Number(maxAvailable || 0)) return alert(\`Only \${maxAvailable} item(s) available.\`);
+  if (quantity > Number(maxAvailable || 0)) return alert(`Only ${maxAvailable} item(s) available.`);
 
   try {
     if (String(currency).toUpperCase() === "HIVE") {
@@ -1034,10 +1034,10 @@ async function buyPremiumMaterialListing(listingId, maxAvailable, currency = "EM
       const feeAmount = Number(session.fee_hive || 0).toFixed(3);
       const sellerTo = session.seller_account || session.seller;
       const confirmText =
-        \`Buy \${session.quantity} Writ(s) for \${Number(session.total_hive).toFixed(3)} HIVE?\\n\\n\` +
-        \`Seller receives: \${sellerAmount} HIVE to @\${sellerTo}\\n\` +
+        `Buy ${session.quantity} Writ(s) for ${Number(session.total_hive).toFixed(3)} HIVE?\n\n` +
+        `Seller receives: ${sellerAmount} HIVE to @${sellerTo}\n` +
         (Number(session.fee_hive) > 0
-          ? \`Marketplace fee: \${feeAmount} HIVE to @\${session.fee_account}\`
+          ? `Marketplace fee: ${feeAmount} HIVE to @${session.fee_account}`
           : "Marketplace fee: 0.000 HIVE");
       if (!confirm(confirmText)) {
         await fetch(apiUrl("/marketplace/materials/buy-cancel"), {
@@ -1066,9 +1066,9 @@ async function buyPremiumMaterialListing(listingId, maxAvailable, currency = "EM
       });
       const finalizeData = await finalizeRes.json();
       if (!finalizeRes.ok || !finalizeData.success) throw new Error(finalizeData.error || "Failed to complete HIVE Writ purchase.");
-      alert(\`✅ \${finalizeData.quantity} Writ(s) purchased for \${Number(finalizeData.total_hive).toFixed(3)} HIVE.\`);
+      alert(`✅ ${finalizeData.quantity} Writ(s) purchased for ${Number(finalizeData.total_hive).toFixed(3)} HIVE.`);
     } else {
-      if (!confirm(\`Confirm purchase of \${quantity} item(s) for EMP?\`)) return;
+      if (!confirm(`Confirm purchase of ${quantity} item(s) for EMP?`)) return;
       const response = await fetch(apiUrl("/marketplace/materials/buy"), {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-mde-actor": username },
@@ -1098,21 +1098,21 @@ async function loadPremiumMaterialHistory() {
   if (!historyBox) return;
 
   try {
-    historyBox.innerHTML = \`<div class="empty">Loading material trade history...</div>\`;
+    historyBox.innerHTML = `<div class="empty">Loading material trade history...</div>`;
     const url = apiUrl("/marketplace/materials/history") +
-      \`?material_type=\${encodeURIComponent(materialType)}\`;
+      `?material_type=${encodeURIComponent(materialType)}`;
     const response = await fetch(url);
     const data = await response.json();
     if (!response.ok || !data.success) throw new Error(data.error || "Failed to load material trade history.");
     const history = data.history || [];
     if (!history.length) {
-      historyBox.innerHTML = \`<div class="empty">No material trade history yet.</div>\`;
+      historyBox.innerHTML = `<div class="empty">No material trade history yet.</div>`;
       return;
     }
 
-    historyBox.innerHTML = \`
+    historyBox.innerHTML = `
       <div class="compact-list">
-        \${history.map((trade) => {
+        ${history.map((trade) => {
           const qty = Number(trade.quantity || 0);
           const currency = String(trade.currency || "EMP").toUpperCase();
           const price = currency === "HIVE"
@@ -1125,27 +1125,27 @@ async function loadPremiumMaterialHistory() {
           const formattedTotal = currency === "HIVE" ? total.toFixed(3) : total.toLocaleString();
           const materialLabel = getPremiumMaterialLabel(trade.material_type).full;
           const dateText = trade.created_at ? new Date(trade.created_at).toLocaleString() : "--";
-          return \`
+          return `
             <div class="compact-row">
               <div class="compact-cell">
-                <div class="compact-asset-title">\${qty} \${materialLabel}</div>
-                <div class="compact-asset-sub">Trade #\${trade.id || "--"}</div>
+                <div class="compact-asset-title">${qty} ${materialLabel}</div>
+                <div class="compact-asset-sub">Trade #${trade.id || "--"}</div>
               </div>
               <div class="compact-cell">
-                <div class="compact-seller">@\${trade.seller || "--"} → @\${trade.buyer || "--"}</div>
+                <div class="compact-seller">@${trade.seller || "--"} → @${trade.buyer || "--"}</div>
                 <div class="compact-asset-sub">Seller → Buyer</div>
               </div>
               <div class="compact-cell compact-details">
-                <strong>Price:</strong> \${formattedPrice} \${currency} each<br>
-                <strong>Total:</strong> \${formattedTotal} \${currency}
+                <strong>Price:</strong> ${formattedPrice} ${currency} each<br>
+                <strong>Total:</strong> ${formattedTotal} ${currency}
               </div>
-              <div class="compact-cell compact-price">\${dateText}</div>
-            </div>\`;
+              <div class="compact-cell compact-price">${dateText}</div>
+            </div>`;
         }).join("")}
-      </div>\`;
+      </div>`;
   } catch (err) {
     console.error("Load material history error:", err);
-    historyBox.innerHTML = \`<div class="empty">Failed to load material trade history.</div>\`;
+    historyBox.innerHTML = `<div class="empty">Failed to load material trade history.</div>`;
   }
 }
 
@@ -1161,23 +1161,23 @@ async function loadPremiumMaterialListings() {
   if (!listBox) return;
 
   try {
-    listBox.innerHTML = \`<div class="empty">Loading material listings...</div>\`;
+    listBox.innerHTML = `<div class="empty">Loading material listings...</div>`;
     const url = apiUrl("/marketplace/materials/listings") +
-      \`?material_type=\${encodeURIComponent(materialType)}&view=\${encodeURIComponent(view)}&username=\${encodeURIComponent(username || "")}\`;
+      `?material_type=${encodeURIComponent(materialType)}&view=${encodeURIComponent(view)}&username=${encodeURIComponent(username || "")}`;
     const response = await fetch(url);
     const data = await response.json();
     if (!response.ok || !data.success) throw new Error(data.error || "Failed to load material listings.");
 
     const listings = data.listings || [];
-    if (countPill) countPill.textContent = \`\${listings.length} LISTINGS\`;
+    if (countPill) countPill.textContent = `${listings.length} LISTINGS`;
     if (!listings.length) {
-      listBox.innerHTML = \`<div class="empty">No active listings yet.</div>\`;
+      listBox.innerHTML = `<div class="empty">No active listings yet.</div>`;
       return;
     }
 
-    listBox.innerHTML = \`
+    listBox.innerHTML = `
       <div class="compact-list">
-        \${listings.map((listing) => {
+        ${listings.map((listing) => {
           const qty = Number(listing.quantity_remaining || 0);
           const currency = String(listing.currency || "EMP").toUpperCase();
           const price = currency === "HIVE"
@@ -1188,32 +1188,32 @@ async function loadPremiumMaterialListings() {
           const formattedTotal = currency === "HIVE" ? total.toFixed(3) : total.toLocaleString();
           const materialLabel = getPremiumMaterialLabel(materialType).full;
           const isMine = String(listing.seller || "").toLowerCase() === String(username || "").toLowerCase();
-          return \`
+          return `
             <div class="compact-row">
               <div class="compact-cell">
-                <div class="compact-asset-title">\${qty} \${materialLabel}</div>
-                <div class="compact-asset-sub">Listing #\${listing.id || "--"}</div>
+                <div class="compact-asset-title">${qty} ${materialLabel}</div>
+                <div class="compact-asset-sub">Listing #${listing.id || "--"}</div>
               </div>
               <div class="compact-cell">
-                <div class="compact-seller">@\${listing.seller || "--"}</div>
+                <div class="compact-seller">@${listing.seller || "--"}</div>
                 <div class="compact-asset-sub">Seller</div>
               </div>
               <div class="compact-cell compact-details">
-                <strong>Price / Item:</strong> \${formattedPrice} \${currency}<br>
-                <strong>Quantity:</strong> \${qty}
+                <strong>Price / Item:</strong> ${formattedPrice} ${currency}<br>
+                <strong>Quantity:</strong> ${qty}
               </div>
-              <div class="compact-cell compact-price">\${formattedTotal} \${currency}</div>
+              <div class="compact-cell compact-price">${formattedTotal} ${currency}</div>
               <div class="compact-cell compact-action">
-                \${isMine
-                  ? \`<button class="compact-buy-btn" type="button" onclick="cancelPremiumMaterialListing(\${listing.id})">Cancel</button>\`
-                  : \`<button class="compact-buy-btn" type="button" onclick="buyPremiumMaterialListing(\${listing.id}, \${qty}, '\${currency}')">Buy</button>\`}
+                ${isMine
+                  ? `<button class="compact-buy-btn" type="button" onclick="cancelPremiumMaterialListing(${listing.id})">Cancel</button>`
+                  : `<button class="compact-buy-btn" type="button" onclick="buyPremiumMaterialListing(${listing.id}, ${qty}, '${currency}')">Buy</button>`}
               </div>
-            </div>\`;
+            </div>`;
         }).join("")}
-      </div>\`;
+      </div>`;
   } catch (err) {
     console.error("Load premium material listings error:", err);
-    listBox.innerHTML = \`<div class="empty">Failed to load material listings.</div>\`;
+    listBox.innerHTML = `<div class="empty">Failed to load material listings.</div>`;
   }
 }
 
@@ -1241,7 +1241,7 @@ async function createPremiumMaterialListing() {
       return;
     }
     if (!Number.isFinite(price) || price <= 0) {
-      setStatus("premium-material-create-status", \`Enter a valid \${currency} price per item.\`, true);
+      setStatus("premium-material-create-status", `Enter a valid ${currency} price per item.`, true);
       return;
     }
     if (currency === "HIVE" && Math.round(price * 1000) !== price * 1000) {
@@ -1297,7 +1297,7 @@ function setPremiumMaterial(materialType) {
   const feedSubtitle = document.getElementById("premium-material-feed-subtitle");
   if (feedSubtitle) feedSubtitle.textContent = label.subtitle;
   const listBox = document.getElementById("premium-material-list");
-  if (listBox) listBox.innerHTML = \`<div class="empty">Loading \${label.full} listings...</div>\`;
+  if (listBox) listBox.innerHTML = `<div class="empty">Loading ${label.full} listings...</div>`;
   updatePremiumMaterialCurrency();
   if (typeof loadPremiumMaterialListings === "function") loadPremiumMaterialListings();
   if (typeof loadPremiumMaterialHistory === "function") loadPremiumMaterialHistory();
