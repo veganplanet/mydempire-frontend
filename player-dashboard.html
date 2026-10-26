@@ -4826,7 +4826,7 @@ if (claimableHiveEl) {
             return;
           }
 
-          const transferAmount = Math.floor(requestedAmount * 1000) / 1000;
+          const transferAmount = Math.floor(requestedAmount * 1000 + 0.0000001) / 1000;
           if (transferAmount < 1) {
             if (statusEl) {
               statusEl.textContent = "Selected amount is below the 1.000 HIVE minimum.";
