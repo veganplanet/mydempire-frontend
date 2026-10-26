@@ -4788,13 +4788,13 @@ if (claimableHiveEl) {
           }
 
           const confirmed = confirm(
-            `Request withdrawal of ${walletAmount.toFixed(3)} HIVE?`,
+            `Withdraw ${walletAmount.toFixed(3)} HIVE to your Hive account now?`,
           );
 
           if (!confirmed) return;
 
           if (statusEl) {
-            statusEl.textContent = "Creating withdrawal request...";
+            statusEl.textContent = "Submitting automatic withdrawal...";
           }
 
           const res = await fetch(
@@ -4812,7 +4812,7 @@ if (claimableHiveEl) {
           }
 
           if (statusEl) {
-            statusEl.textContent = `✅ Withdrawal request created for ${walletAmount.toFixed(3)} HIVE`;
+            statusEl.textContent = `✅ ${walletAmount.toFixed(3)} HIVE withdrawal queued for automatic payment. No admin approval is needed.`;
           }
 
           await loadRewardSummary();
