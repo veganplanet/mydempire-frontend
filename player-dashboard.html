@@ -1246,8 +1246,27 @@ font-weight:900;
               <div class="summary-value" id="summary-wallet-hive">0.000</div>
               <div class="summary-sub">Claimed reward balance</div>
               <div class="summary-actions">
+                <label for="withdraw-hive-mode" style="display:block;font-weight:800;margin:6px 0 4px;">
+                  Withdrawal amount
+                </label>
+                <select id="withdraw-hive-mode" class="form-control" style="width:100%;margin-bottom:8px;">
+                  <option value="25">25% of balance</option>
+                  <option value="50">50% of balance</option>
+                  <option value="100" selected>100% of balance</option>
+                  <option value="custom">Custom amount</option>
+                </select>
+                <input
+                  id="withdraw-hive-custom-amount"
+                  type="number"
+                  min="1"
+                  step="0.001"
+                  inputmode="decimal"
+                  placeholder="Enter HIVE amount"
+                  aria-label="Custom HIVE withdrawal amount"
+                  style="display:none;width:100%;box-sizing:border-box;margin-bottom:8px;"
+                >
                 <button id="withdraw-hive-btn" class="primary-button">
-                  Withdraw HIVE
+                  Withdraw Selected Amount
                 </button>
                 <div id="withdraw-hive-status" class="status-text">
 
@@ -4779,6 +4798,12 @@ if (claimableHiveEl) {
 
         try {
           const walletAmount = Number(EXACT_WALLET_HIVE || 0);
+          const mode = document.getElementById("withdraw-hive-mode")?.value || "100";
+          const customAmount = Number(
+            document.getElementById("withdraw-hive-custom-amount")?.value || 0,
+          );
+          const requestedAmount =
+            mode === "custom" ? customAmount : walletAmount * (Number(mode) / 100);
 
           if (!Number.isFinite(walletAmount) || walletAmount < 1) {
             if (statusEl) {
@@ -4787,19 +4812,41 @@ if (claimableHiveEl) {
             return;
           }
 
+          if (
+            !Number.isFinite(requestedAmount) ||
+            requestedAmount < 1 ||
+            requestedAmount > walletAmount + 0.00000001
+          ) {
+            if (statusEl) {
+              statusEl.textContent =
+                requestedAmount < 1
+                  ? "Selected amount is below the 1.000 HIVE minimum."
+                  : "Enter a valid amount up to your available Wallet HIVE balance.";
+            }
+            return;
+          }
+
+          const transferAmount = Math.floor(requestedAmount * 1000 + 0.0000001) / 1000;
+          if (transferAmount < 1) {
+            if (statusEl) {
+              statusEl.textContent = "Selected amount is below the 1.000 HIVE minimum.";
+            }
+            return;
+          }
+
           const confirmed = confirm(
-            `Request withdrawal of ${walletAmount.toFixed(3)} HIVE?`,
+            `Withdraw ${transferAmount.toFixed(3)} HIVE to your Hive account now?`,
           );
 
           if (!confirmed) return;
 
           if (statusEl) {
-            statusEl.textContent = "Creating withdrawal request...";
+            statusEl.textContent = "Submitting automatic withdrawal...";
           }
 
           const res = await fetch(
             apiUrl(
-              `/player/${encodeURIComponent(PLAYER_USERNAME)}/request-withdraw/${walletAmount.toFixed(8)}`,
+              `/player/${encodeURIComponent(PLAYER_USERNAME)}/request-withdraw/${requestedAmount.toFixed(8)}`,
             ),
           );
 
@@ -4812,7 +4859,7 @@ if (claimableHiveEl) {
           }
 
           if (statusEl) {
-            statusEl.textContent = `✅ Withdrawal request created for ${walletAmount.toFixed(3)} HIVE`;
+            statusEl.textContent = `✅ ${transferAmount.toFixed(3)} HIVE withdrawal queued for automatic payment. No admin approval is needed.`;
           }
 
           await loadRewardSummary();
@@ -9480,6 +9527,19 @@ document.querySelectorAll(".blueprint-filter-btn").forEach((btn) => {
      loadBlueprints();
   });
 });
+  const withdrawMode = document.getElementById("withdraw-hive-mode");
+  const customWithdrawAmount = document.getElementById("withdraw-hive-custom-amount");
+  if (withdrawMode && customWithdrawAmount) {
+    const syncCustomWithdrawAmount = () => {
+      const isCustom = withdrawMode.value === "custom";
+      customWithdrawAmount.style.display = isCustom ? "block" : "none";
+      customWithdrawAmount.required = isCustom;
+      if (isCustom) customWithdrawAmount.focus();
+    };
+    withdrawMode.addEventListener("change", syncCustomWithdrawAmount);
+    syncCustomWithdrawAmount();
+  }
+
   const withdrawBtn = document.getElementById("withdraw-hive-btn");
   if (withdrawBtn) {
     withdrawBtn.addEventListener("click", requestWithdrawHive);
