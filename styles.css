@@ -24028,6 +24028,12 @@ body.home-v2-page {
     overflow: visible !important;
     flex-wrap: wrap !important;
   }
+  .player-dashboard-page .dashboard-nav-group > summary {
+    border-radius: 12px;
+  }
+  .player-dashboard-page .dashboard-nav-menu .subnav-btn {
+    border-radius: 12px !important;
+  }
   .player-dashboard-page .dashboard-nav-menu {
     min-width: min(220px, calc(100vw - 36px));
   }
