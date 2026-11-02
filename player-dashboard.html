@@ -2751,6 +2751,13 @@ if (tabName === "operations") {
 }
 
 }
+
+document.querySelectorAll(".dashboard-nav-group").forEach((group) => {
+  group.addEventListener("mouseleave", () => {
+    group.open = false;
+  });
+});
+
 let empireOperationsRefreshInterval = null;
 let empireOperationsCountdownInterval = null;
 
