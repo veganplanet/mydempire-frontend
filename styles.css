@@ -23974,7 +23974,7 @@ body.home-v2-page {
   min-height: 36px;
   padding: 8px 13px;
   border: 2px solid #d7e0f0;
-  border-radius: 12px;
+  border-radius: 999px;
   background: #fff;
   color: #17305c;
   font-size: 13px;
@@ -24016,7 +24016,7 @@ body.home-v2-page {
   width: 100%;
   min-height: 36px;
   padding: 8px 11px !important;
-  border-radius: 8px !important;
+  border-radius: 999px !important;
   text-align: left;
 }
 .player-dashboard-page .dashboard-nav-group:last-child .dashboard-nav-menu {
