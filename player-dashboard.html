@@ -482,72 +482,25 @@
       </header>
 
       <!-- ===== SUB NAV (TABS) ===== -->
-      <div class="subnav">
-        <button
-          type="button"
-          class="subnav-btn subnav-btn-active"
-          data-tab="overview"
-          onclick="setActiveTab('overview')"
-        >
-          Overview
-        </button>
-        <button
-          type="button"
-          class="subnav-btn"
-          data-tab="assets"
-          onclick="setActiveTab('assets')"
-        >
-          Empire Assets
-        </button>
-        <button
-          type="button"
-          class="subnav-btn"
-          data-tab="packs"
-          onclick="setActiveTab('packs')"
-        >
-          Packs
-        </button>
-        <button
-          type="button"
-          class="subnav-btn"
-          data-tab="lands"
-          onclick="setActiveTab('lands')"
-        >
-          Lands
-        </button>
-        <button
-          type="button"
-          class="subnav-btn"
-          data-tab="blueprints"
-          onclick="setActiveTab('blueprints')"
-        >
-          Factory Blueprints
-        </button>
-        <button
-          type="button"
-          class="subnav-btn"
-          data-tab="construction"
-          onclick="setActiveTab('construction')"
-        >
-          Under Construction
-        </button>
-        <button
-          type="button"
-          class="subnav-btn"
-          data-tab="global"
-          onclick="setActiveTab('global')"
-        >
-          Global Health
-        </button>
-        <button
-          type="button"
-          class="subnav-btn"
-          data-tab="leaderboard"
-          onclick="setActiveTab('leaderboard')"
-        >
-          Leaderboard
-        </button>
-        
+      <div class="subnav player-dashboard-subnav" aria-label="Player dashboard sections">
+        <button type="button" class="subnav-btn subnav-btn-active" data-tab="overview" onclick="setActiveTab('overview')">Overview</button>
+        <details class="dashboard-nav-group">
+          <summary>My Empire</summary>
+          <div class="dashboard-nav-menu" role="group" aria-label="My Empire pages">
+            <button type="button" class="subnav-btn" data-tab="packs" onclick="setActiveTab('packs')">Packs</button>
+            <button type="button" class="subnav-btn" data-tab="lands" onclick="setActiveTab('lands')">Lands</button>
+            <button type="button" class="subnav-btn" data-tab="blueprints" onclick="setActiveTab('blueprints')">Factory Blueprints</button>
+            <button type="button" class="subnav-btn" data-tab="construction" onclick="setActiveTab('construction')">Under Construction</button>
+            <button type="button" class="subnav-btn" data-tab="assets" onclick="setActiveTab('assets')">Empire Assets</button>
+          </div>
+        </details>
+        <details class="dashboard-nav-group">
+          <summary>Game Status &amp; Rankings</summary>
+          <div class="dashboard-nav-menu" role="group" aria-label="Game status and rankings">
+            <button type="button" class="subnav-btn" data-tab="global" onclick="setActiveTab('global')">Global Health</button>
+            <button type="button" class="subnav-btn" data-tab="leaderboard" onclick="setActiveTab('leaderboard')">Leaderboard</button>
+          </div>
+        </details>
       </div>
 
       <!-- ===== TAB: OVERVIEW ===== -->
@@ -2763,6 +2716,14 @@ function showEmpirePopup(title, message, type = "info") {
           } else {
             btn.classList.remove("subnav-btn-active");
           }
+        });
+
+        document.querySelectorAll(".dashboard-nav-group").forEach((group) => {
+          group.classList.toggle(
+            "dashboard-nav-group-active",
+            Boolean(group.querySelector(".subnav-btn-active")),
+          );
+          group.open = false;
         });
 
         panels.forEach((panel) => {
