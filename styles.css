@@ -23951,3 +23951,84 @@ body.home-v2-page {
   .dashboard-writ-pack-card { grid-template-columns: 1fr; gap: 13px; padding: 15px; }
   .dashboard-writ-pack-details { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+/* Player dashboard navigation grouping: scoped to the dashboard, leaves the
+   global navbar and existing dashboard cell styles unchanged. */
+.player-dashboard-page .player-dashboard-subnav {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  overflow: visible !important;
+  gap: 8px !important;
+  position: relative;
+  z-index: 80;
+}
+.player-dashboard-page .dashboard-nav-group {
+  position: relative;
+  flex: 0 0 auto;
+}
+.player-dashboard-page .dashboard-nav-group > summary {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 36px;
+  padding: 8px 13px;
+  border: 2px solid #d7e0f0;
+  border-radius: 12px;
+  background: #fff;
+  color: #17305c;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.player-dashboard-page .dashboard-nav-group > summary::-webkit-details-marker {
+  display: none;
+}
+.player-dashboard-page .dashboard-nav-group > summary::after {
+  content: "▾";
+  font-size: 11px;
+}
+.player-dashboard-page .dashboard-nav-group[open] > summary::after {
+  content: "▴";
+}
+.player-dashboard-page .dashboard-nav-group-active > summary,
+.player-dashboard-page .dashboard-nav-group[open] > summary {
+  border-color: #93c5fd;
+  background: linear-gradient(180deg, #e9f2ff 0%, #dceaff 100%);
+  color: #1d4ed8;
+}
+.player-dashboard-page .dashboard-nav-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 120;
+  display: grid;
+  gap: 4px;
+  min-width: 220px;
+  padding: 7px;
+  border: 1px solid #dbe2ee;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(31, 45, 75, 0.16);
+}
+.player-dashboard-page .dashboard-nav-menu .subnav-btn {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 11px !important;
+  border-radius: 8px !important;
+  text-align: left;
+}
+.player-dashboard-page .dashboard-nav-group:last-child .dashboard-nav-menu {
+  left: auto;
+  right: 0;
+}
+@media (max-width: 640px) {
+  .player-dashboard-page .player-dashboard-subnav {
+    overflow: visible !important;
+    flex-wrap: wrap !important;
+  }
+  .player-dashboard-page .dashboard-nav-menu {
+    min-width: min(220px, calc(100vw - 36px));
+  }
+}
