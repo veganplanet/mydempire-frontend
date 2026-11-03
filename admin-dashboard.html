@@ -670,6 +670,21 @@
             <label>Batch quantity <input id="emp-writ-pack-admin-quantity" type="number" min="0" step="1" value="50" style="width:100px"></label>
           </div>
           <div id="emp-writ-pack-admin-progress" class="status">Not loaded.</div>
+          <div class="section" style="margin:16px 0 0;padding:14px">
+            <h3 style="margin:0 0 6px">EMP Writ Pack Purchase History</h3>
+            <p class="small">See which players bought Writ packs. Shows the 200 most recent purchases.</p>
+            <div class="row">
+              <button type="button" class="primary" onclick="loadEmpWritPackPurchaseHistory()">Load Purchase History</button>
+              <span id="emp-writ-pack-purchases-status" class="status" style="margin:0">Not loaded.</span>
+            </div>
+            <div id="emp-writ-pack-purchases-totals" class="metrics" style="margin:12px 0"></div>
+            <div class="all-players-wrap" style="overflow:auto">
+              <table class="all-players-table" style="min-width:980px">
+                <thead><tr><th>Date</th><th>Player</th><th>Pack NFT</th><th>Writ NFT</th><th>Batch</th><th>EMP</th><th>SMP</th><th>Fragments</th></tr></thead>
+                <tbody id="emp-writ-pack-purchases-rows"><tr><td colspan="8">Purchase history not loaded.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
         <!-- ===================================== -->
@@ -11354,6 +11369,48 @@ async function issueNextEmpWritPackBatch() {
     status.textContent = `Batch #${data.config.batchNumber} issued: ${data.config.batchRemaining} packs available.`;
   } catch (err) { status.textContent = err.message || "Unable to issue a new batch."; }
 }
+async function loadEmpWritPackPurchaseHistory() {
+  const status = document.getElementById("emp-writ-pack-purchases-status");
+  const totalsEl = document.getElementById("emp-writ-pack-purchases-totals");
+  const rowsEl = document.getElementById("emp-writ-pack-purchases-rows");
+  const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[char]);
+  const number = value => Number(value || 0).toLocaleString(undefined, { maximumFractionDigits: 3 });
+  const date = value => {
+    const parsed = value ? new Date(value) : null;
+    return parsed && !Number.isNaN(parsed.getTime()) ? parsed.toLocaleString() : "--";
+  };
+  try {
+    if (!ADMIN_KEY) throw new Error("Unlock the Admin Dashboard first.");
+    status.textContent = "Loading purchase history...";
+    const response = await fetch(`${API_BASE}/admin/emp-writ-pack/purchases?limit=200`, {
+      headers: { "x-admin-key": ADMIN_KEY }
+    });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.error || "Unable to load purchase history.");
+    const totals = data.totals || {};
+    const metrics = [
+      ["Packs purchased", totals.packs],
+      ["Unique buyers", totals.buyers],
+      ["EMP spent", number(totals.empBurned)],
+      ["SMP spent", number(totals.smpSpent)],
+      ["Fragments spent", number(totals.fragmentsSpent)]
+    ];
+    totalsEl.innerHTML = metrics.map(([label, value]) =>
+      `<div class="card"><div class="label">${label}</div><div class="value">${value ?? 0}</div></div>`
+    ).join("");
+    const purchases = Array.isArray(data.purchases) ? data.purchases : [];
+    rowsEl.innerHTML = purchases.length ? purchases.map(row =>
+      `<tr><td>${escapeHtml(date(row.purchased_at))}</td><td>@${escapeHtml(row.username)}</td><td>#${escapeHtml(row.pack_nft_id)}</td><td>#${escapeHtml(row.writ_nft_id)}</td><td>#${escapeHtml(row.batch_number)}</td><td>${escapeHtml(number(row.emp_cost))}</td><td>${escapeHtml(number(row.smp_cost))}</td><td>${escapeHtml(number(row.fragment_cost))}</td></tr>`
+    ).join("") : '<tr><td colspan="8">No EMP Writ pack purchases found.</td></tr>';
+    status.textContent = `Loaded ${purchases.length} recent purchase${purchases.length === 1 ? "" : "s"}.`;
+  } catch (error) {
+    status.textContent = error.message || "Unable to load purchase history.";
+    rowsEl.innerHTML = '<tr><td colspan="8">Could not load purchase history.</td></tr>';
+  }
+}
+
 </script>
 <section style="background:white;padding:20px;margin:18px 0;border:1px solid #dbe2ec;border-radius:12px" id="l2-credit-shop-admin">
 <h2>🏪 Fulfillment Credit Shop — L2 Land</h2>
