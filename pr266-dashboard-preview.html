@@ -3,7 +3,7 @@
   <head>
     <base href="https://www.mydempire.com/" />
     <meta charset="UTF-8" />
-    <title>MydEmpire Player Dashboard — PR 266 Preview</title>
+    <title>MydEmpire Player Dashboard — Navigation Preview</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="assets/favicon.png" />
@@ -491,7 +491,7 @@
       <!-- ===== SUB NAV (TABS) ===== -->
       <div class="subnav player-dashboard-subnav" aria-label="Player dashboard sections">
         <button type="button" class="subnav-btn subnav-btn-active" data-tab="overview" onclick="setActiveTab('overview')">Overview</button>
-        <details class="dashboard-nav-group">
+        <details class="dashboard-nav-group" name="dashboard-nav">
           <summary>My Empire</summary>
           <div class="dashboard-nav-menu" role="group" aria-label="My Empire pages">
             <button type="button" class="subnav-btn" data-tab="packs" onclick="setActiveTab('packs')">Packs</button>
@@ -501,7 +501,7 @@
             <button type="button" class="subnav-btn" data-tab="assets" onclick="setActiveTab('assets')">Empire Assets</button>
           </div>
         </details>
-        <details class="dashboard-nav-group">
+        <details class="dashboard-nav-group" name="dashboard-nav">
           <summary>Game Status &amp; Rankings</summary>
           <div class="dashboard-nav-menu" role="group" aria-label="Game status and rankings">
             <button type="button" class="subnav-btn" data-tab="global" onclick="setActiveTab('global')">Global Health</button>
@@ -2506,5 +2506,27 @@ Empire Surge
 </div>
     
 <script src="https://www.mydempire.com/js/navbar.js"></script>
-<script>document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("button,input,select,textarea").forEach(e=>e.disabled=true);document.addEventListener("click",e=>{e.preventDefault();e.stopImmediatePropagation()},true);document.addEventListener("submit",e=>{e.preventDefault();e.stopImmediatePropagation()},true)});</script></body>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  document.querySelectorAll("button,input,select,textarea").forEach(e=>e.disabled=true);
+  const groups=Array.from(document.querySelectorAll(".dashboard-nav-group"));
+  groups.forEach(group=>{
+    group.addEventListener("toggle",()=>{
+      if(!group.open)return;
+      groups.forEach(other=>{if(other!==group)other.open=false;});
+    });
+    group.addEventListener("mouseenter",()=>{
+      groups.forEach(other=>{if(other!==group)other.open=false;});
+    });
+    group.addEventListener("mouseleave",()=>{group.open=false;});
+  });
+  document.addEventListener("click",e=>{
+    if(e.target.closest(".dashboard-nav-group > summary"))return;
+    e.preventDefault();e.stopImmediatePropagation();
+  },true);
+  document.addEventListener("submit",e=>{
+    e.preventDefault();e.stopImmediatePropagation();
+  },true);
+});
+</script></body>
 </html>
