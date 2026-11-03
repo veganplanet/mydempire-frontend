@@ -484,7 +484,7 @@
       <!-- ===== SUB NAV (TABS) ===== -->
       <div class="subnav player-dashboard-subnav" aria-label="Player dashboard sections">
         <button type="button" class="subnav-btn subnav-btn-active" data-tab="overview" onclick="setActiveTab('overview')">Overview</button>
-        <details class="dashboard-nav-group">
+        <details class="dashboard-nav-group" name="dashboard-nav">
           <summary>My Empire</summary>
           <div class="dashboard-nav-menu" role="group" aria-label="My Empire pages">
             <button type="button" class="subnav-btn" data-tab="packs" onclick="setActiveTab('packs')">Packs</button>
@@ -494,7 +494,7 @@
             <button type="button" class="subnav-btn" data-tab="assets" onclick="setActiveTab('assets')">Empire Assets</button>
           </div>
         </details>
-        <details class="dashboard-nav-group">
+        <details class="dashboard-nav-group" name="dashboard-nav">
           <summary>Game Status &amp; Rankings</summary>
           <div class="dashboard-nav-menu" role="group" aria-label="Game status and rankings">
             <button type="button" class="subnav-btn" data-tab="global" onclick="setActiveTab('global')">Global Health</button>
@@ -2782,6 +2782,27 @@ if (tabName === "operations") {
 }
 
 }
+// Keep dashboard dropdowns mutually exclusive and close them when the pointer leaves.
+const dashboardNavGroups = Array.from(document.querySelectorAll(".dashboard-nav-group"));
+dashboardNavGroups.forEach((group) => {
+  group.addEventListener("toggle", () => {
+    if (!group.open) return;
+    dashboardNavGroups.forEach((other) => {
+      if (other !== group) other.open = false;
+    });
+  });
+
+  group.addEventListener("mouseenter", () => {
+    dashboardNavGroups.forEach((other) => {
+      if (other !== group) other.open = false;
+    });
+  });
+
+  group.addEventListener("mouseleave", () => {
+    group.open = false;
+  });
+});
+
 let empireOperationsRefreshInterval = null;
 let empireOperationsCountdownInterval = null;
 
