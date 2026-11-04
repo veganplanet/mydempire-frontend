@@ -24000,7 +24000,7 @@ body.home-v2-page {
 }
 .player-dashboard-page .dashboard-nav-menu {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% - 1px);
   left: 0;
   z-index: 120;
   display: grid;
