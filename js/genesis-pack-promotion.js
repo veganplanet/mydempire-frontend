@@ -44,7 +44,7 @@
 
       const user = escapeName(window.PLAYER_USERNAME || "");
       let playerPacks = 0;
-      if (user && typeof window.getActorHeaders === "function") {
+      if (user && typeof window.getActorHeaders === "function" && (typeof window.isOwnEmpireView !== "function" || window.isOwnEmpireView())) {
         try {
           const playerRes = await fetch(`${apiBase}/genesis-pack-promotion/player/${encodeURIComponent(user)}`, {
             headers: window.getActorHeaders(),
