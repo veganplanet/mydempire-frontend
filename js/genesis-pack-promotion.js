@@ -55,7 +55,7 @@
             $("genesis-pack-promo-player").textContent =
               `Your packs: ${playerPacks} · Draw entries: ${Number(progress.entries || 0)}`;
             $("genesis-pack-promo-modal-progress").textContent =
-              `You have ${playerPacks} eligible pack${playerPacks === 1 ? "" : "s"} and ${Number(progress.entries || 0)} draw entries. Every 5 packs earns another entry.`;
+              `You have ${playerPacks} eligible pack${playerPacks === 1 ? "" : "s"} and ${Number(progress.entries || 0)} draw entries. Every 5 eligible packs across your purchases earns another entry.`;
           }
         } catch (error) {
           console.warn("Promotion player progress unavailable:", error);
