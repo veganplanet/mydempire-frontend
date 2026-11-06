@@ -66,11 +66,10 @@
       }
 
       if (status.active && playerPacks < 5 && user) {
-        const key = `mde_genesis_pack_promo_notice_${user}`;
-        const lastShown = Number(localStorage.getItem(key) || 0);
-        if (Date.now() - lastShown >= 86400000) {
+        const key = `mde_genesis_pack_promo_notice_shown_${user}`;
+        if (localStorage.getItem(key) !== "1") {
           $("genesis-pack-promo-modal").hidden = false;
-          localStorage.setItem(key, String(Date.now()));
+          localStorage.setItem(key, "1");
         }
       }
       if (status.active) {
