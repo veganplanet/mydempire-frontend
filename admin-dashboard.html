@@ -654,7 +654,20 @@
           </div>
         </div>
 
-        <div class="section" id="emp-writ-pack-admin">
+        
+        <div class="section" id="genesis-pack-promotion-admin">
+          <h2>🎁 Genesis Pack Promotion</h2>
+          <p class="small">After Diwali, start one 21-day promotion: +200 EMP for each of the first 250 HIVE-paid Genesis packs. Every 5 eligible packs earns 1 Imperial Mint Blueprint draw entry. EMP is credited automatically when payment is confirmed.</p>
+          <div class="row" style="flex-wrap:wrap">
+            <button type="button" class="primary" id="genesis-pack-promo-admin-load">Refresh status</button>
+            <button type="button" id="genesis-pack-promo-admin-start">Start 21-day offer</button>
+            <button type="button" id="genesis-pack-promo-admin-draw" disabled>Draw Blueprint winner</button>
+          </div>
+          <div id="genesis-pack-promo-admin-status" class="status">Load status to begin.</div>
+          <div id="genesis-pack-promo-admin-summary" class="metrics"></div>
+        </div>
+
+<div class="section" id="emp-writ-pack-admin">
           <h2>🎁 EMP Writ Pack Batch Control</h2>
           <p class="small">Same pack contents and odds as a Genesis Pack. Writ packs do not count toward Genesis supply and do not award Writs. Each eligible Writ used for a purchase receives a 30-day cooldown.</p>
           <div class="row">
@@ -11573,5 +11586,6 @@ document.addEventListener("DOMContentLoaded", loadDiwaliAdminSettings);
   });
 })();
 </script>
+<script src="js/admin-genesis-pack-promotion.js?v=20261106"></script>
 </body>
 </html>
