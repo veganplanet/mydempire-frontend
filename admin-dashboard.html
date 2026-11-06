@@ -2942,6 +2942,28 @@ forkyishere,529"
           </div>
         </div>
 
+
+        <div class="section" id="dao-liquidity-section">
+          <h2>💧 DAO Pool Liquidity Management</h2>
+          <p class="small">Admin-only internal reserve adjustments. No HIVE wallet transfer is made. EMP is calculated automatically at the current pool ratio.</p>
+          <button type="button" class="primary" id="dao-liquidity-refresh">Refresh Live Pool</button>
+          <div class="metrics" style="margin-top:14px">
+            <div class="card"><div class="label">HIVE Reserve</div><div class="value" id="dao-liq-hive">--</div></div>
+            <div class="card"><div class="label">EMP Reserve</div><div class="value" id="dao-liq-emp">--</div></div>
+            <div class="card"><div class="label">EMP per HIVE</div><div class="value" id="dao-liq-rate">--</div></div>
+          </div>
+          <div class="row" style="margin-top:16px">
+            <label>Action <select id="dao-liq-action"><option value="ADD">Add Liquidity</option><option value="REMOVE">Remove Liquidity</option></select></label>
+            <label>HIVE Amount <input id="dao-liq-amount" type="number" min="0.001" step="0.001" placeholder="e.g. 100.000" /></label>
+            <label>Reason (optional) <input id="dao-liq-note" maxlength="500" placeholder="Internal accounting note" /></label>
+          </div>
+          <div class="card" id="dao-liq-preview">Refresh to load the current reserves.</div>
+          <div class="row" style="margin-top:12px"><button type="button" class="primary" id="dao-liq-confirm" disabled>Confirm Liquidity Adjustment</button></div>
+          <div class="status" id="dao-liq-status">No adjustment submitted.</div>
+          <h3>Recent Liquidity Adjustments</h3>
+          <div style="overflow-x:auto"><table class="all-players-table"><thead><tr><th>UTC</th><th>Action</th><th>HIVE</th><th>EMP</th><th>HIVE After</th><th>EMP After</th><th>Note</th></tr></thead><tbody id="dao-liq-history"><tr><td colspan="7">Not loaded.</td></tr></tbody></table></div>
+        </div>
+
         <div class="section">
           <h2>Pending Settlement Records</h2>
 
@@ -11483,6 +11505,73 @@ async function saveDiwaliAdminSettings() {
   } catch (error) { status.textContent = error.message; }
 }
 document.addEventListener("DOMContentLoaded", loadDiwaliAdminSettings);
+</script>
+
+<script>
+(function () {
+  let snapshot = null;
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n, d=3) => Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+  function preview() {
+    const amount = Number($('dao-liq-amount').value);
+    const action = $('dao-liq-action').value;
+    const valid = snapshot && Number.isFinite(amount) && amount > 0 &&
+      Math.abs(amount*1000-Math.round(amount*1000)) < 0.000001 &&
+      (action !== 'REMOVE' || amount < snapshot.hive);
+    $('dao-liq-confirm').disabled = !valid;
+    if (!snapshot) return;
+    if (!valid) { $('dao-liq-preview').textContent='Enter a valid HIVE amount (maximum 3 decimals). Removal must leave positive reserves.'; return; }
+    const emp = amount * snapshot.emp / snapshot.hive;
+    const sign = action === 'ADD' ? 1 : -1;
+    $('dao-liq-preview').textContent = action+': '+fmt(amount)+' HIVE and '+fmt(emp,8)+' EMP. After: '+fmt(snapshot.hive+sign*amount)+' HIVE / '+fmt(snapshot.emp+sign*emp,8)+' EMP. Spot price remains approximately '+fmt(snapshot.emp/snapshot.hive,6)+' EMP/HIVE.';
+  }
+  async function load() {
+    if (typeof ADMIN_KEY === 'undefined' || !ADMIN_KEY) { $('dao-liq-status').textContent='Connect Admin first.'; return; }
+    $('dao-liq-confirm').disabled=true;
+    $('dao-liq-status').textContent='Loading live DAO reserves...';
+    try {
+      const r=await fetch(API_BASE+'/admin/dao-liquidity',{headers:{'x-admin-key':ADMIN_KEY}});
+      const d=await r.json();
+      if (!r.ok || !d.success) throw new Error(d.error || 'Unable to load liquidity.');
+      snapshot={hive:Number(d.pool.hive_reserve),emp:Number(d.pool.emp_reserve)};
+      $('dao-liq-hive').textContent=fmt(snapshot.hive);
+      $('dao-liq-emp').textContent=fmt(snapshot.emp);
+      $('dao-liq-rate').textContent=fmt(snapshot.emp/snapshot.hive,6);
+      const body=$('dao-liq-history'); body.replaceChildren();
+      for (const item of d.history || []) {
+        const tr=document.createElement('tr');
+        const values=[new Date(item.created_at).toISOString().replace('T',' ').slice(0,19),item.action,fmt(item.hive_amount),fmt(item.emp_amount,8),fmt(item.hive_after),fmt(item.emp_after,8),item.note || '—'];
+        for (const value of values) { const td=document.createElement('td');td.textContent=value;tr.appendChild(td); }
+        body.appendChild(tr);
+      }
+      if (!body.children.length) body.innerHTML='<tr><td colspan="7">No adjustments yet.</td></tr>';
+      $('dao-liq-status').textContent='Live reserves loaded. Actual HIVE wallet movements are handled manually.';
+      preview();
+    } catch(e) { snapshot=null; $('dao-liq-status').textContent=e.message; $('dao-liq-preview').textContent='Unable to preview.'; }
+  }
+  async function submit() {
+    if (!snapshot) return;
+    const action=$('dao-liq-action').value;
+    const amount=Number($('dao-liq-amount').value);
+    const emp=amount*snapshot.emp/snapshot.hive;
+    if (!confirm('Confirm '+action+' '+fmt(amount)+' HIVE and '+fmt(emp,8)+' EMP in the internal DAO pool?\n\nNo HIVE wallet transfer will occur.')) return;
+    $('dao-liq-confirm').disabled=true;
+    try {
+      const r=await fetch(API_BASE+'/admin/dao-liquidity',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':ADMIN_KEY},body:JSON.stringify({action,hive_amount:amount,expected_hive_reserve:snapshot.hive,expected_emp_reserve:snapshot.emp,note:$('dao-liq-note').value})});
+      const d=await r.json();
+      if (!r.ok || !d.success) throw new Error(d.error || 'Adjustment failed.');
+      $('dao-liq-amount').value=''; $('dao-liq-note').value='';
+      await load();
+      $('dao-liq-status').textContent='Liquidity adjustment saved successfully. Remember to reconcile your actual HIVE wallet manually.';
+    } catch(e) { $('dao-liq-status').textContent=e.message; await load(); }
+  }
+  document.addEventListener('DOMContentLoaded',()=>{
+    $('dao-liquidity-refresh')?.addEventListener('click',load);
+    $('dao-liq-action')?.addEventListener('change',preview);
+    $('dao-liq-amount')?.addEventListener('input',preview);
+    $('dao-liq-confirm')?.addEventListener('click',submit);
+  });
+})();
 </script>
 </body>
 </html>
