@@ -65,6 +65,7 @@
     $("genesis-pack-promo-admin-draw")?.addEventListener("click", () =>
       postAction("draw", "Conduct the weighted draw now? The winner will be final.")
     );
+    $("unlock-admin-btn")?.addEventListener("click", () => window.setTimeout(loadPromotion, 300));
     loadPromotion();
   });
 })();
