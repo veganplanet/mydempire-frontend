@@ -42,7 +42,7 @@
         ? formatRemaining(status.endsAt)
         : (total >= cap ? "250-pack cap reached" : "Offer ended");
 
-      const user = escapeName(window.PLAYER_USERNAME || "");
+      const user = escapeName(typeof PLAYER_USERNAME !== "undefined" ? PLAYER_USERNAME : window.PLAYER_USERNAME || "");
       let playerPacks = 0;
       if (user && typeof window.getActorHeaders === "function" && (typeof window.isOwnEmpireView !== "function" || window.isOwnEmpireView())) {
         try {
