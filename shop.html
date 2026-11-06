@@ -8,6 +8,22 @@
   <link rel="stylesheet" href="shop.css" />
   <link rel="icon" href="assets/favicon.png">
   <script src="js/player-auth.js?v=20260825-auth3"></script>
+
+<style>
+.genesis-promo-shop{margin:0 0 20px;padding:18px;border:1px solid #d9a441;border-radius:16px;background:linear-gradient(120deg,#fff8e6,#fffdf7 58%,#eaf7f3);color:#183044;box-shadow:0 8px 20px rgba(120,85,20,.12)}
+.genesis-promo-shop[hidden]{display:none}
+.genesis-promo-shop-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.genesis-promo-shop-kicker{font-size:11px;font-weight:900;letter-spacing:1.2px;color:#9a6700}
+.genesis-promo-shop h2{margin:4px 0;color:#4f3200}
+.genesis-promo-shop p{margin:6px 0;color:#52606d}
+.genesis-promo-shop-bonus{padding:8px 12px;border-radius:10px;background:#f4b942;color:#422d00;font-size:20px;font-weight:900;white-space:nowrap}
+.genesis-promo-shop-bar{height:9px;margin:12px 0 6px;border-radius:99px;background:#e7e5df;overflow:hidden}
+.genesis-promo-shop-bar span{display:block;height:100%;background:linear-gradient(90deg,#d18c00,#f4b942);border-radius:99px}
+.genesis-promo-shop-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;font-weight:800;color:#52606d}
+.genesis-promo-shop-cta{display:inline-flex;margin-top:12px;padding:9px 14px;border-radius:9px;background:#0b7285;color:white;text-decoration:none;font-weight:900}
+@media(max-width:600px){.genesis-promo-shop-head{display:block}.genesis-promo-shop-bonus{display:inline-block;margin-top:8px}.genesis-promo-shop-meta{display:block}.genesis-promo-shop-meta span{display:block;margin-top:4px}}
+</style>
+
 </head>
 
 <body class="page-root" data-requires-login="true">
@@ -30,6 +46,25 @@
 <div class="founder-era-strip">
   👑 Genesis Open Expansion • 5,000 Founder Packs • Max 9 HIVE per pack protection
 </div>
+
+  <section id="genesis-promo-shop" class="genesis-promo-shop" hidden aria-labelledby="genesis-promo-shop-title">
+    <div class="genesis-promo-shop-head">
+      <div>
+        <div class="genesis-promo-shop-kicker">LIMITED GENESIS PACK OFFER</div>
+        <h2 id="genesis-promo-shop-title">Get +200 EMP with every eligible HIVE-paid pack</h2>
+        <p>Offer cap: 250 packs · 21 days · every 5 eligible packs earns 1 entry in the draw for an Imperial Mint Blueprint.</p>
+      </div>
+      <div class="genesis-promo-shop-bonus">+200 EMP</div>
+    </div>
+    <div class="genesis-promo-shop-bar"><span id="genesis-promo-shop-bar" style="width:0%"></span></div>
+    <div class="genesis-promo-shop-meta">
+      <span id="genesis-promo-shop-total">Eligible packs: loading…</span>
+      <span id="genesis-promo-shop-player">Your progress: loading…</span>
+      <span id="genesis-promo-shop-time">21-day offer</span>
+    </div>
+    <a class="genesis-promo-shop-cta" href="#pack-qty">Buy Genesis Packs</a>
+  </section>
+
   <!-- PACK PURCHASE -->
  <section class="shop-section">
   <h2>Genesis Pack Purchase</h2>
@@ -2032,5 +2067,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 500);
 });
 </script>
-  </body>
+  <script src="js/genesis-pack-promotion-shop.js?v=20261106"></script>
+</body>
 </html>
