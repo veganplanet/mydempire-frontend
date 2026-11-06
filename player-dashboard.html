@@ -451,6 +451,25 @@
         font-size: 12px;
       }
       @media (max-width: 700px) { .daily-empire-report-header, .daily-empire-report-grid { flex-direction: column; } .daily-empire-report-reward { align-self: flex-start; } }
+    
+      .genesis-pack-promo-card{margin:16px 0;padding:18px;border:1px solid #d9a441;border-radius:16px;background:linear-gradient(120deg,#fff8e6,#fffdf7 58%,#eaf7f3);color:#183044;box-shadow:0 8px 20px rgba(120,85,20,.12)}
+      .genesis-pack-promo-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+      .genesis-pack-promo-kicker{font-size:11px;font-weight:900;letter-spacing:1.2px;color:#9a6700}
+      .genesis-pack-promo-card h2{margin:4px 0;color:#4f3200}
+      .genesis-pack-promo-card p{margin:6px 0;color:#52606d}
+      .genesis-pack-promo-bonus{padding:8px 12px;border-radius:10px;background:#f4b942;color:#422d00;font-size:20px;font-weight:900;white-space:nowrap}
+      .genesis-pack-promo-progress{height:9px;margin:12px 0 6px;border-radius:99px;background:#e7e5df;overflow:hidden}
+      .genesis-pack-promo-progress span{display:block;height:100%;background:linear-gradient(90deg,#d18c00,#f4b942);border-radius:99px}
+      .genesis-pack-promo-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;font-weight:800;color:#52606d}
+      .genesis-pack-promo-cta{display:inline-flex;margin-top:12px;padding:9px 14px;border-radius:9px;background:#0b7285;color:white;text-decoration:none;font-weight:900}
+      .genesis-pack-promo-modal[hidden],.genesis-pack-promo-card[hidden]{display:none}
+      .genesis-pack-promo-modal{position:fixed;inset:0;z-index:10050;display:flex;align-items:center;justify-content:center;padding:18px}
+      .genesis-pack-promo-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.66)}
+      .genesis-pack-promo-dialog{position:relative;width:min(480px,100%);padding:22px;border-radius:18px;background:#fffdf7;box-shadow:0 20px 60px rgba(0,0,0,.28)}
+      .genesis-pack-promo-dialog h2{margin:0 0 8px;color:#4f3200}
+      .genesis-pack-promo-close{position:absolute;top:10px;right:12px;border:0;background:transparent;font-size:24px;cursor:pointer}
+      @media(max-width:600px){.genesis-pack-promo-head{display:block}.genesis-pack-promo-bonus{display:inline-block;margin-top:8px}.genesis-pack-promo-meta{display:block}.genesis-pack-promo-meta span{display:block;margin-top:4px}}
+
     </style>
     <script src="js/player-auth.js?v=20260825-auth3"></script>
     <script src="js/player-honors.js?v=20260912b"></script>
@@ -529,7 +548,37 @@
             🌿 Loading empire status...
           </div>
         </div>
-        <!-- 🏛 EMPIRE RANK PROGRESS STRIP -->
+        
+        <section id="genesis-pack-promo-card" class="genesis-pack-promo-card" hidden aria-labelledby="genesis-pack-promo-title">
+          <div class="genesis-pack-promo-head">
+            <div>
+              <div class="genesis-pack-promo-kicker">LIMITED GENESIS PACK OFFER</div>
+              <h2 id="genesis-pack-promo-title">Get +200 EMP with every eligible HIVE pack</h2>
+              <p>Every 5 packs earns 1 entry in the draw for an Imperial Mint Blueprint.</p>
+            </div>
+            <div class="genesis-pack-promo-bonus">+200 EMP</div>
+          </div>
+          <div class="genesis-pack-promo-progress" aria-label="Promotion pack progress"><span id="genesis-pack-promo-progress-bar" style="width:0%"></span></div>
+          <div class="genesis-pack-promo-meta">
+            <span id="genesis-pack-promo-total">Eligible packs: loading…</span>
+            <span id="genesis-pack-promo-player">Your packs and draw entries: loading…</span>
+            <span id="genesis-pack-promo-countdown">21-day offer</span>
+          </div>
+          <a class="genesis-pack-promo-cta" href="shop.html">View Genesis Pack offer</a>
+        </section>
+        <div id="genesis-pack-promo-modal" class="genesis-pack-promo-modal" hidden role="dialog" aria-modal="true" aria-labelledby="genesis-pack-promo-modal-title">
+          <div class="genesis-pack-promo-backdrop" data-promo-close></div>
+          <div class="genesis-pack-promo-dialog">
+            <button class="genesis-pack-promo-close" type="button" aria-label="Close promotion announcement" data-promo-close>×</button>
+            <div class="genesis-pack-promo-kicker">LIMITED GENESIS PACK OFFER</div>
+            <h2 id="genesis-pack-promo-modal-title">Earn +200 EMP per eligible pack</h2>
+            <p>Buy Genesis Packs with HIVE during the 21-day offer. Every 5 packs earns 1 draw entry toward an Imperial Mint Blueprint.</p>
+            <p id="genesis-pack-promo-modal-progress"></p>
+            <a class="genesis-pack-promo-cta" href="shop.html">View the offer</a>
+          </div>
+        </div>
+
+<!-- 🏛 EMPIRE RANK PROGRESS STRIP -->
 <!-- 🏛 EMPIRE RANK COMPETITIVE STRIP -->
 <div id="empire-rank-strip" class="empire-rank-strip" style="display:none;">
   <div class="empire-rank-left">
@@ -11096,5 +11145,6 @@ function closeWithdrawalHistoryModal() {
   </div>
 </div>
     <script src="js/diwali-registration-reminder.js?v=20261024"></script>
+<script src="js/genesis-pack-promotion.js?v=20261106"></script>
 </body>
 </html>
