@@ -461,7 +461,7 @@
       .genesis-pack-promo-progress{height:9px;margin:12px 0 6px;border-radius:99px;background:#e7e5df;overflow:hidden}
       .genesis-pack-promo-progress span{display:block;height:100%;background:linear-gradient(90deg,#d18c00,#f4b942);border-radius:99px}
       .genesis-pack-promo-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;font-weight:800;color:#52606d}
-      .genesis-pack-promo-cta{display:inline-flex;margin-top:12px;padding:9px 14px;border-radius:9px;background:#0b7285;color:white;text-decoration:none;font-weight:900}
+      .genesis-pack-promo-cta{display:inline-flex;margin-top:12px;padding:9px 14px;border-radius:9px;background:#0b7285;color:white;text-decoration:none;font-weight:900}.genesis-pack-promo-cta.promo-disabled{background:#94a3a8;color:#f8fafc;cursor:not-allowed;opacity:.75;pointer-events:none}
       .genesis-pack-promo-modal[hidden],.genesis-pack-promo-card[hidden]{display:none}
       .genesis-pack-promo-modal{position:fixed;inset:0;z-index:10050;display:flex;align-items:center;justify-content:center;padding:18px}
       .genesis-pack-promo-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.66)}
@@ -564,7 +564,7 @@
             <span id="genesis-pack-promo-player">Your packs and draw entries: loading…</span>
             <span id="genesis-pack-promo-countdown">21-day offer</span>
           </div>
-          <a class="genesis-pack-promo-cta" href="shop.html">View Genesis Pack offer</a>
+          <a id="genesis-pack-promo-dashboard-cta" class="genesis-pack-promo-cta promo-disabled" href="shop.html" aria-disabled="true" tabindex="-1" title="Available when the promotion is activated">View Genesis Pack offer</a>
         </section>
         <div id="genesis-pack-promo-modal" class="genesis-pack-promo-modal" hidden role="dialog" aria-modal="true" aria-labelledby="genesis-pack-promo-modal-title">
           <div class="genesis-pack-promo-backdrop" data-promo-close></div>

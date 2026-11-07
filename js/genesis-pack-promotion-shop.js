@@ -20,6 +20,14 @@
       if (!response.ok || !data.success) return;
       $("genesis-promo-shop").hidden = false;
       const prelaunch = !data.launched;
+      const promoCta = $("genesis-promo-shop-cta");
+      if (promoCta) {
+        const disabled = !data.active;
+        promoCta.classList.toggle("promo-disabled", disabled);
+        promoCta.setAttribute("aria-disabled", String(disabled));
+        promoCta.tabIndex = disabled ? -1 : 0;
+        promoCta.title = disabled ? "Available when the promotion is activated" : "Buy eligible Genesis Packs";
+      }
       document.querySelectorAll(".genesis-promo-shop-kicker").forEach((el) => {
         el.textContent = prelaunch ? "COMING SOON" : "LIMITED GENESIS PACK OFFER";
       });
@@ -59,5 +67,11 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", load);
+  document.addEventListener("DOMContentLoaded", () => {
+    const promoCta = $("genesis-promo-shop-cta");
+    promoCta?.addEventListener("click", (event) => {
+      if (promoCta.getAttribute("aria-disabled") === "true") event.preventDefault();
+    });
+    load();
+  });
 })();
