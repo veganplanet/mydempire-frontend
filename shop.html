@@ -20,7 +20,7 @@
 .genesis-promo-shop-bar{height:9px;margin:12px 0 6px;border-radius:99px;background:#e7e5df;overflow:hidden}
 .genesis-promo-shop-bar span{display:block;height:100%;background:linear-gradient(90deg,#d18c00,#f4b942);border-radius:99px}
 .genesis-promo-shop-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;font-weight:800;color:#52606d}
-.genesis-promo-shop-cta{display:inline-flex;margin-top:12px;padding:9px 14px;border-radius:9px;background:#0b7285;color:white;text-decoration:none;font-weight:900}
+.genesis-promo-shop-cta{display:inline-flex;margin-top:12px;padding:9px 14px;border-radius:9px;background:#0b7285;color:white;text-decoration:none;font-weight:900}.genesis-promo-shop-cta.promo-disabled{background:#94a3a8;color:#f8fafc;cursor:not-allowed;opacity:.75;pointer-events:none}
 @media(max-width:600px){.genesis-promo-shop-head{display:block}.genesis-promo-shop-bonus{display:inline-block;margin-top:8px}.genesis-promo-shop-meta{display:block}.genesis-promo-shop-meta span{display:block;margin-top:4px}}
 </style>
 
@@ -62,7 +62,7 @@
       <span id="genesis-promo-shop-player">Your progress: loading…</span>
       <span id="genesis-promo-shop-time">21-day offer</span>
     </div>
-    <a class="genesis-promo-shop-cta" href="#pack-qty">Buy Genesis Packs</a>
+    <a id="genesis-promo-shop-cta" class="genesis-promo-shop-cta promo-disabled" href="#pack-qty" aria-disabled="true" tabindex="-1" title="Available when the promotion is activated">Buy Genesis Packs</a>
   </section>
 
   <!-- PACK PURCHASE -->
