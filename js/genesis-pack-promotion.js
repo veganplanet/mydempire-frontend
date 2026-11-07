@@ -25,26 +25,34 @@
     try {
       const statusRes = await fetch(`${apiBase}/genesis-pack-promotion/status`);
       const status = await statusRes.json();
-      if (!statusRes.ok || !status.success || !status.launched) return;
+      if (!statusRes.ok || !status.success) return;
 
       const card = $("genesis-pack-promo-card");
       if (!card) return;
       card.hidden = false;
+      const prelaunch = !status.launched;
+      document.querySelectorAll(".genesis-pack-promo-kicker").forEach((el) => {
+        el.textContent = prelaunch ? "COMING SOON" : "LIMITED GENESIS PACK OFFER";
+      });
 
       const total = Number(status.packsAwarded || 0);
       const cap = Number(status.packCap || 250);
       const pct = Math.min(100, cap ? total / cap * 100 : 0);
-      $("genesis-pack-promo-total").textContent = status.winnerUsername
-        ? `Offer complete: ${total} / ${cap} packs · Winner @${status.winnerUsername}`
-        : `Eligible packs: ${total} / ${cap}`;
+      $("genesis-pack-promo-total").textContent = prelaunch
+        ? `Coming soon · Eligible packs: 0 / ${cap}`
+        : status.winnerUsername
+          ? `Offer complete: ${total} / ${cap} packs · Winner @${status.winnerUsername}`
+          : `Eligible packs: ${total} / ${cap}`;
       $("genesis-pack-promo-progress-bar").style.width = `${pct}%`;
-      $("genesis-pack-promo-countdown").textContent = status.active
-        ? formatRemaining(status.endsAt)
-        : (total >= cap ? "250-pack cap reached" : "Offer ended");
+      $("genesis-pack-promo-countdown").textContent = prelaunch
+        ? "Starts when activated"
+        : status.active
+          ? formatRemaining(status.endsAt)
+          : (total >= cap ? "250-pack cap reached" : "Offer ended");
 
       const user = escapeName(typeof PLAYER_USERNAME !== "undefined" ? PLAYER_USERNAME : window.PLAYER_USERNAME || "");
       let playerPacks = 0;
-      if (user && typeof window.getActorHeaders === "function" && (typeof window.isOwnEmpireView !== "function" || window.isOwnEmpireView())) {
+      if (status.launched && user && typeof window.getActorHeaders === "function" && (typeof window.isOwnEmpireView !== "function" || window.isOwnEmpireView())) {
         try {
           const playerRes = await fetch(`${apiBase}/genesis-pack-promotion/player/${encodeURIComponent(user)}`, {
             headers: window.getActorHeaders(),
@@ -61,11 +69,15 @@
           console.warn("Promotion player progress unavailable:", error);
         }
       }
-      if (!user || playerPacks === 0) {
+      if (prelaunch) {
+        $("genesis-pack-promo-player").textContent = "Pack purchases count after activation";
+        $("genesis-pack-promo-modal-progress").textContent =
+          "The EMP bonus and 21-day countdown begin when the offer is activated.";
+      } else if (!user || playerPacks === 0) {
         $("genesis-pack-promo-player").textContent = "5 packs = 1 draw entry";
       }
 
-      if (status.active && playerPacks < 5 && user) {
+      if ((!status.launched || status.active) && playerPacks < 5 && user) {
         const key = `mde_genesis_pack_promo_notice_shown_${user}`;
         if (localStorage.getItem(key) !== "1") {
           $("genesis-pack-promo-modal").hidden = false;
