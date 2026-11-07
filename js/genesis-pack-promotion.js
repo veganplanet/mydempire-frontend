@@ -35,6 +35,15 @@
         el.textContent = prelaunch ? "COMING SOON" : "LIMITED GENESIS PACK OFFER";
       });
 
+      const promoCta = $("genesis-pack-promo-dashboard-cta");
+      if (promoCta) {
+        const disabled = !status.active;
+        promoCta.classList.toggle("promo-disabled", disabled);
+        promoCta.setAttribute("aria-disabled", String(disabled));
+        promoCta.tabIndex = disabled ? -1 : 0;
+        promoCta.title = disabled ? "Available when the promotion is activated" : "View the active Genesis Pack promotion";
+      }
+
       const total = Number(status.packsAwarded || 0);
       const cap = Number(status.packCap || 250);
       const pct = Math.min(100, cap ? total / cap * 100 : 0);
@@ -96,6 +105,10 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("[data-promo-close]").forEach((el) => el.addEventListener("click", closeModal));
+    const promoCta = $("genesis-pack-promo-dashboard-cta");
+    promoCta?.addEventListener("click", (event) => {
+      if (promoCta.getAttribute("aria-disabled") === "true") event.preventDefault();
+    });
     loadPromotion();
   });
 })();
