@@ -26,7 +26,7 @@
         ? "Offer is live. Payments confirmed before the cap or deadline receive the bonus automatically."
         : data.launched
           ? "Offer is closed. Run the draw when ready."
-          : "Ready. Start this only after the Diwali event ends.";
+          : "Ready. Start the offer when you want the promotion to begin.";
       $("genesis-pack-promo-admin-start").disabled = Boolean(data.launched);
       $("genesis-pack-promo-admin-draw").disabled = !data.launched || data.active || Boolean(data.winnerUsername);
     } catch (error) {
