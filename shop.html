@@ -1675,7 +1675,15 @@ async function buyReinvestmentPacks() {
         data.emp_bonus +
         " EMP + " +
         data.activity_points_bonus +
-        " AP credited immediately.",
+        " AP Wallet HIVE bonus" +
+        (Number(data.promotion_emp_bonus || 0) > 0
+          ? "\n+" +
+            Number(data.promotion_emp_bonus) +
+            " EMP Genesis promotion bonus\nTotal: " +
+            (Number(data.emp_bonus || 0) +
+              Number(data.promotion_emp_bonus || 0)) +
+            " EMP credited."
+          : " credited immediately."),
     );
 
     shopWalletHiveBalance = null;
