@@ -682,19 +682,27 @@ margin-right:auto;
         ${renderOperationOdds(operation, key)}
 
         <div class="summary-sub" style="margin-top:10px;">
-          Select Budget
+          Fixed Operation Budget
         </div>
-
-        <select id="operation-budget-${key}" class="primary-select">
-          ${operation.budgets
-            .map((b) => `<option value="${b}">${b} EMP</option>`)
-            .join("")}
-        </select>
+        <div
+          style="
+            margin-top:6px;
+            padding:11px 14px;
+            border-radius:12px;
+            background:#f8fafc;
+            border:1px solid #e2e8f0;
+            color:#0f172a;
+            font-size:18px;
+            font-weight:900;
+          "
+        >
+          ${Number(operation.budgets[0] || 0).toLocaleString()} EMP
+        </div>
 
         <button
           class="primary-button"
           style="margin-top:12px; width:100%;"
-          onclick="startEmpireOperation('${key}')"
+          onclick="startEmpireOperation('${key}', ${Number(operation.budgets[0] || 0)})"
           ${!unlocked || activeOperation ? "disabled" : ""}
         >
           ${
@@ -1036,7 +1044,7 @@ function renderOperationOdds(operation, operationKey) {
     </details>
   `;
 }
-async function startEmpireOperation(operationType) {
+async function startEmpireOperation(operationType, fixedBudget) {
   const params = new URLSearchParams(window.location.search);
 
   const username =
@@ -1051,16 +1059,12 @@ async function startEmpireOperation(operationType) {
     return;
   }
 
-  const budgetSelect = document.getElementById(
-    `operation-budget-${operationType}`,
-  );
-
-  const budget = Number(budgetSelect?.value || 0);
+  const budget = Number(fixedBudget || 0);
 
   if (!budget) {
     showEmpirePopup(
-      "⚠️ Budget Required",
-      "Please select operational budget.",
+      "⚠️ Operation Budget Missing",
+      "The fixed budget for this operation is unavailable. Please refresh and try again.",
       "error",
     );
     return;
