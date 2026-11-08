@@ -806,8 +806,8 @@ margin-right:auto;
     <div style="width:min(100%,1050px); max-height:85vh; display:flex; flex-direction:column; overflow:hidden; border-radius:20px; background:#fff; box-shadow:0 24px 70px rgba(15,23,42,0.28);">
       <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:20px 22px; border-bottom:1px solid #e2e8f0; background:linear-gradient(135deg,#fffbeb,#fff7ed);">
         <div>
-          <div id="empire-operation-jackpot-title" style="font-size:20px; font-weight:900; color:#0f172a;">🏆 Operation Jackpot Winners</div>
-          <div style="margin-top:5px; font-size:13px; color:#64748b;">Confirmed jackpot awards from completed operations. All dates are shown in UTC.</div>
+          <div id="empire-operation-jackpot-title" style="font-size:20px; font-weight:900; color:#0f172a;">🏆 Empire Operations Records</div>
+          <div style="margin-top:5px; font-size:13px; color:#64748b;">Jackpot awards, redeemed IA milestones, and all-time operation totals. Dates are shown in UTC.</div>
         </div>
         <button type="button" onclick="closeEmpireOperationJackpotWinners()" aria-label="Close winners history" style="border:0; border-radius:10px; padding:8px 12px; background:#fff; color:#334155; font-size:20px; font-weight:800; cursor:pointer;">×</button>
       </div>
@@ -1325,27 +1325,92 @@ async function loadEmpireOperationJackpotWinners() {
   if (!content || empireOperationJackpotIsLoading) return;
   empireOperationJackpotIsLoading = true;
 
+  const formatDateUTC = (raw) => {
+    const timestamp = parseOperationTime(raw);
+    if (!Number.isFinite(timestamp)) return "—";
+    return new Date(timestamp).toLocaleString("en-GB", {
+      timeZone: "UTC",
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }) + " UTC";
+  };
+
+  const appendTable = (headers, rows, minWidth = "600px") => {
+    const scroll = document.createElement("div");
+    scroll.style.cssText = "width:100%; overflow-x:auto; margin-bottom:20px;";
+    const table = document.createElement("table");
+    table.style.cssText = "width:100%; min-width:" + minWidth + "; border-collapse:collapse; text-align:left; font-size:13px;";
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+
+    headers.forEach((label) => {
+      const th = document.createElement("th");
+      th.textContent = label;
+      th.style.cssText = "padding:11px 10px; color:#475569; background:#f8fafc; border-bottom:1px solid #e2e8f0; font-weight:900; white-space:nowrap;";
+      headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    const tbody = document.createElement("tbody");
+
+    rows.forEach((values) => {
+      const row = document.createElement("tr");
+      row.style.borderBottom = "1px solid #e2e8f0";
+      values.forEach((value, index) => {
+        const cell = document.createElement("td");
+        cell.textContent = String(value ?? "—");
+        cell.style.cssText = "padding:12px 10px; color:#334155; white-space:nowrap;";
+        if (index === 3) {
+          cell.style.fontWeight = "900";
+          cell.style.color = String(value || "").includes("Blueprint") ? "#7c3aed" : "#b45309";
+        }
+        row.appendChild(cell);
+      });
+      tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+    scroll.appendChild(table);
+    content.appendChild(scroll);
+  };
+
+  const appendSectionHeading = (label) => {
+    const heading = document.createElement("div");
+    heading.textContent = label;
+    heading.style.cssText = "margin:4px 0 9px; color:#334155; font-size:14px; font-weight:900;";
+    content.appendChild(heading);
+  };
+
+  const appendEmptyMessage = (message) => {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.textContent = message;
+    emptyMessage.style.cssText = "margin:0 0 20px; padding:16px; border-radius:12px; background:#f8fafc; color:#64748b; text-align:center;";
+    content.appendChild(emptyMessage);
+  };
+
   try {
     const response = await fetch(`${API_BASE}/empire-operations/jackpot-winners`, {
       cache: "no-store",
     });
     const data = await response.json();
     if (!response.ok || !data.success) {
-      throw new Error(data.error || "Could not load jackpot winners.");
+      throw new Error(data.error || "Could not load operations history.");
     }
 
     const winners = Array.isArray(data.winners) ? data.winners : [];
+    const milestoneRedemptions = Array.isArray(data.milestoneRedemptions)
+      ? data.milestoneRedemptions
+      : [];
     const counts = data.operationCounts || {};
     content.replaceChildren();
 
     const summary = document.createElement("div");
     summary.style.cssText = "display:grid; grid-template-columns:repeat(auto-fit,minmax(145px,1fr)); gap:10px; margin-bottom:20px;";
-    appendOperationCountCard(
-      summary,
-      "All Completed",
-      data.totalCompletedOperations,
-      "#64748b",
-    );
+    appendOperationCountCard(summary, "All Completed", data.totalCompletedOperations, "#64748b");
     appendOperationCountCard(summary, "Local Supply", counts.LOCAL_SUPPLY, "#22c55e");
     appendOperationCountCard(summary, "Regional Trade", counts.REGIONAL_TRADE, "#eab308");
     appendOperationCountCard(summary, "Imperial Expansion", counts.IMPERIAL_EXPANSION, "#f97316");
@@ -1356,81 +1421,50 @@ async function loadEmpireOperationJackpotWinners() {
     summary.prepend(summaryLabel);
     content.appendChild(summary);
 
-    if (!winners.length) {
-      const emptyMessage = document.createElement("p");
-      emptyMessage.textContent = "No operation jackpot winners have been recorded yet.";
-      emptyMessage.style.cssText = "margin:0; padding:18px; border-radius:12px; background:#f8fafc; color:#64748b; text-align:center;";
-      content.appendChild(emptyMessage);
-      return;
+    appendSectionHeading("Jackpot Winners");
+    if (winners.length) {
+      const winnerRows = winners.map((winner) => {
+        const operationText = String(winner.operation_type || "")
+          .replaceAll("_", " ")
+          .toLowerCase()
+          .replace(/\b\w/g, (character) => character.toUpperCase());
+        return [
+          formatDateUTC(winner.completed_at),
+          winner.username || "—",
+          operationText || "—",
+          winner.reward_label || "—",
+          Number(winner.emp_committed || 0).toLocaleString() + " EMP",
+          winner.result || "Jackpot awarded",
+        ];
+      });
+      appendTable(
+        ["Date (UTC)", "Winner", "Operation", "Reward", "Budget", "Result"],
+        winnerRows,
+        "760px",
+      );
+    } else {
+      appendEmptyMessage("No operation jackpot winners have been recorded yet.");
     }
 
-    const sectionLabel = document.createElement("div");
-    sectionLabel.textContent = "Jackpot Winners";
-    sectionLabel.style.cssText = "margin-bottom:9px; color:#334155; font-size:13px; font-weight:900;";
-    content.appendChild(sectionLabel);
-
-    const scroll = document.createElement("div");
-    scroll.style.cssText = "width:100%; overflow-x:auto;";
-    const table = document.createElement("table");
-    table.style.cssText = "width:100%; min-width:760px; border-collapse:collapse; text-align:left; font-size:13px;";
-    const thead = document.createElement("thead");
-    const headerRow = document.createElement("tr");
-    ["Date (UTC)", "Winner", "Operation", "Reward", "Budget", "Result"].forEach((label) => {
-      const th = document.createElement("th");
-      th.textContent = label;
-      th.style.cssText = "padding:11px 10px; color:#475569; background:#f8fafc; border-bottom:1px solid #e2e8f0; font-weight:900; white-space:nowrap;";
-      headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-
-    const tbody = document.createElement("tbody");
-    winners.forEach((winner) => {
-      const row = document.createElement("tr");
-      row.style.borderBottom = "1px solid #e2e8f0";
-      const completedAt = parseOperationTime(winner.completed_at);
-      const dateText = Number.isFinite(completedAt)
-        ? new Date(completedAt).toLocaleString("en-GB", {
-            timeZone: "UTC",
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }) + " UTC"
-        : "—";
-      const operationText = String(winner.operation_type || "")
-        .replaceAll("_", " ")
-        .toLowerCase()
-        .replace(/\b\w/g, (character) => character.toUpperCase());
-      const values = [
-        dateText,
-        winner.username || "—",
-        operationText || "—",
-        winner.reward_label || "—",
-        Number(winner.emp_committed || 0).toLocaleString() + " EMP",
-        winner.result || "Jackpot awarded",
-      ];
-
-      values.forEach((value, index) => {
-        const cell = document.createElement("td");
-        cell.textContent = String(value);
-        cell.style.cssText = "padding:12px 10px; color:#334155; white-space:nowrap;";
-        if (index === 3) {
-          cell.style.fontWeight = "900";
-          cell.style.color = String(winner.reward_label || "").includes("Blueprint") ? "#7c3aed" : "#b45309";
-        }
-        row.appendChild(cell);
-      });
-      tbody.appendChild(row);
-    });
-
-    table.appendChild(tbody);
-    scroll.appendChild(table);
-    content.appendChild(scroll);
+    appendSectionHeading("IA Milestone Redemptions");
+    if (milestoneRedemptions.length) {
+      const redemptionRows = milestoneRedemptions.map((redemption) => [
+        formatDateUTC(redemption.claimed_at),
+        redemption.username || "—",
+        Number(redemption.milestone_ia || 0).toLocaleString() + " IA",
+        redemption.reward_label || "—",
+      ]);
+      appendTable(
+        ["Redeemed (UTC)", "Player", "Milestone", "Reward"],
+        redemptionRows,
+        "520px",
+      );
+    } else {
+      appendEmptyMessage("No IA milestone redemptions have been recorded yet.");
+    }
   } catch (err) {
-    console.error("Failed to load operation jackpot winners:", err);
-    content.innerHTML = '<p style="margin:0; padding:14px; border-radius:12px; background:#fef2f2; color:#b91c1c;">Winner history could not be loaded. Please try again.</p>';
+    console.error("Failed to load operation rewards history:", err);
+    content.innerHTML = '<p style="margin:0; padding:14px; border-radius:12px; background:#fef2f2; color:#b91c1c;">Operations history could not be loaded. Please try again.</p>';
   } finally {
     empireOperationJackpotIsLoading = false;
   }
