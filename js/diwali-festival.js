@@ -246,10 +246,60 @@ async function registerForDiwali() {
   }
 }
 
+function renderDiwaliSupplement(draw) {
+  const status = document.getElementById("diwali-supplement-status");
+  const prizes = document.getElementById("diwali-supplement-prizes");
+  const winners = document.getElementById("diwali-supplement-winners");
+  if (!status || !prizes || !winners) return;
+
+  const prizeList = [
+    "1st — 25 HIVE",
+    "2nd — Diwali NFT",
+    "3rd — L2 Land",
+    "4th — B3 Blueprint",
+    "5th — Imperial Fragment",
+  ];
+
+  prizes.innerHTML =
+    "<strong>Prizes</strong><br>" +
+    prizeList.map(escapeDiwaliHtml).join("<br>");
+
+  if (!draw || draw.status !== "COMPLETED") {
+    status.textContent = "Scheduled for 9 Nov 2026 at 13:00 UTC. One entry per qualifying account.";
+    winners.innerHTML = "";
+    return;
+  }
+
+  const blockUrl = draw.hive_block_num
+    ? "https://hiveblocks.com/b/" + encodeURIComponent(draw.hive_block_num)
+    : "";
+  status.innerHTML =
+    "<strong>Verified draw completed.</strong> " +
+    escapeDiwaliHtml(String(draw.eligible_players?.length || 0)) +
+    " eligible accounts. " +
+    (blockUrl
+      ? '<a href="' + blockUrl + '" target="_blank" rel="noopener">Hive block #' +
+        escapeDiwaliHtml(draw.hive_block_num) + "</a>"
+      : "") +
+    "<br>Seed: <code>" + escapeDiwaliHtml(draw.seed || "—") + "</code>" +
+    "<br>Method: SHA256(Hive block seed + account name)";
+
+  winners.innerHTML = (draw.winners || [])
+    .map((winner) =>
+      '<div class="diwali-total"><strong>' +
+      escapeDiwaliHtml(winner.prize_label) +
+      "</strong><span>@" +
+      escapeDiwaliHtml(winner.username) +
+      "</span></div>"
+    )
+    .join("");
+}
+
 async function loadDiwaliPublicActivity() {
   try {
     const data = await fetchDiwaliJson("/diwali-festival/activity?t=" + Date.now());
     const activity = data.activity || {};
+    renderDiwaliSupplement(activity.supplement_draw || {});
     const count = document.getElementById("diwali-registration-count");
     if (count) count.textContent = String(activity.total_registered || 0);
     const players = document.getElementById("diwali-registered-players");
