@@ -1286,27 +1286,40 @@ ${
   }
 }
 
+let empireOperationJackpotRefreshInterval = null;
+let empireOperationJackpotIsLoading = false;
+
 function closeEmpireOperationJackpotWinners() {
   const modal = document.getElementById("empire-operation-jackpot-modal");
   if (!modal) return;
   modal.style.display = "none";
   modal.setAttribute("aria-hidden", "true");
   document.removeEventListener("keydown", handleEmpireOperationWinnersKeydown);
+  clearInterval(empireOperationJackpotRefreshInterval);
+  empireOperationJackpotRefreshInterval = null;
 }
 
 function handleEmpireOperationWinnersKeydown(event) {
   if (event.key === "Escape") closeEmpireOperationJackpotWinners();
 }
 
-async function openEmpireOperationJackpotWinners() {
-  const modal = document.getElementById("empire-operation-jackpot-modal");
-  const content = document.getElementById("empire-operation-jackpot-content");
-  if (!modal || !content) return;
+function appendOperationCountCard(container, label, count, accent) {
+  const card = document.createElement("div");
+  card.style.cssText = "padding:14px 15px; border:1px solid #e2e8f0; border-top:3px solid " + accent + "; border-radius:14px; background:#fff;";
+  const heading = document.createElement("div");
+  heading.textContent = label;
+  heading.style.cssText = "font-size:11px; font-weight:900; color:#64748b; text-transform:uppercase; letter-spacing:.04em;";
+  const value = document.createElement("div");
+  value.textContent = Number(count || 0).toLocaleString();
+  value.style.cssText = "margin-top:7px; font-size:23px; line-height:1; font-weight:900; color:#0f172a;";
+  card.append(heading, value);
+  container.appendChild(card);
+}
 
-  modal.style.display = "flex";
-  modal.setAttribute("aria-hidden", "false");
-  content.innerHTML = '<p style="margin:0; color:#64748b;">Loading winner history…</p>';
-  document.addEventListener("keydown", handleEmpireOperationWinnersKeydown);
+async function loadEmpireOperationJackpotWinners() {
+  const content = document.getElementById("empire-operation-jackpot-content");
+  if (!content || empireOperationJackpotIsLoading) return;
+  empireOperationJackpotIsLoading = true;
 
   try {
     const response = await fetch(`${API_BASE}/empire-operations/jackpot-winners`, {
@@ -1318,7 +1331,26 @@ async function openEmpireOperationJackpotWinners() {
     }
 
     const winners = Array.isArray(data.winners) ? data.winners : [];
+    const counts = data.operationCounts || {};
     content.replaceChildren();
+
+    const summary = document.createElement("div");
+    summary.style.cssText = "display:grid; grid-template-columns:repeat(auto-fit,minmax(145px,1fr)); gap:10px; margin-bottom:20px;";
+    appendOperationCountCard(
+      summary,
+      "All Completed",
+      data.totalCompletedOperations,
+      "#64748b",
+    );
+    appendOperationCountCard(summary, "Local Supply", counts.LOCAL_SUPPLY, "#22c55e");
+    appendOperationCountCard(summary, "Regional Trade", counts.REGIONAL_TRADE, "#eab308");
+    appendOperationCountCard(summary, "Imperial Expansion", counts.IMPERIAL_EXPANSION, "#f97316");
+
+    const summaryLabel = document.createElement("div");
+    summaryLabel.textContent = "Completed Operations · All Time";
+    summaryLabel.style.cssText = "grid-column:1/-1; margin-bottom:-3px; color:#334155; font-size:13px; font-weight:900;";
+    summary.prepend(summaryLabel);
+    content.appendChild(summary);
 
     if (!winners.length) {
       const emptyMessage = document.createElement("p");
@@ -1327,6 +1359,11 @@ async function openEmpireOperationJackpotWinners() {
       content.appendChild(emptyMessage);
       return;
     }
+
+    const sectionLabel = document.createElement("div");
+    sectionLabel.textContent = "Jackpot Winners";
+    sectionLabel.style.cssText = "margin-bottom:9px; color:#334155; font-size:13px; font-weight:900;";
+    content.appendChild(sectionLabel);
 
     const scroll = document.createElement("div");
     scroll.style.cssText = "width:100%; overflow-x:auto;";
@@ -1390,6 +1427,24 @@ async function openEmpireOperationJackpotWinners() {
   } catch (err) {
     console.error("Failed to load operation jackpot winners:", err);
     content.innerHTML = '<p style="margin:0; padding:14px; border-radius:12px; background:#fef2f2; color:#b91c1c;">Winner history could not be loaded. Please try again.</p>';
+  } finally {
+    empireOperationJackpotIsLoading = false;
   }
 }
 
+async function openEmpireOperationJackpotWinners() {
+  const modal = document.getElementById("empire-operation-jackpot-modal");
+  if (!modal) return;
+
+  modal.style.display = "flex";
+  modal.setAttribute("aria-hidden", "false");
+  document.addEventListener("keydown", handleEmpireOperationWinnersKeydown);
+
+  await loadEmpireOperationJackpotWinners();
+  clearInterval(empireOperationJackpotRefreshInterval);
+  empireOperationJackpotRefreshInterval = setInterval(() => {
+    if (modal.style.display === "flex") {
+      loadEmpireOperationJackpotWinners();
+    }
+  }, 60000);
+}
