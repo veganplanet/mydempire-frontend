@@ -274,6 +274,11 @@ function renderEmpireOperations(area, operations, playerData) {
     <div style="color:#dc2626; font-weight:800;">
   📜 Hold 1 Founder WRIT and reach Industrial Authority rewards 5% faster.
 </div>
+    <a
+      href="#"
+      onclick="openEmpireOperationJackpotWinners(); return false;"
+      style="display:inline-flex; align-items:center; gap:7px; padding:9px 14px; border-radius:999px; background:#fff; border:1px solid #fbbf24; color:#92400e; font-weight:900; text-decoration:none; box-shadow:0 4px 10px rgba(146,64,14,0.08);"
+    >🏆 Jackpot Winners</a>
   </div>
   ${
     fulfillmentCooldown.active
@@ -780,6 +785,31 @@ margin-right:auto;
   `;
   }
 
+  html += `
+  <div
+    id="empire-operation-jackpot-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="empire-operation-jackpot-title"
+    aria-hidden="true"
+    onclick="if (event.target === this) closeEmpireOperationJackpotWinners();"
+    style="display:none; position:fixed; inset:0; z-index:10050; align-items:center; justify-content:center; padding:18px; background:rgba(15,23,42,0.58);"
+  >
+    <div style="width:min(100%,1050px); max-height:85vh; display:flex; flex-direction:column; overflow:hidden; border-radius:20px; background:#fff; box-shadow:0 24px 70px rgba(15,23,42,0.28);">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:20px 22px; border-bottom:1px solid #e2e8f0; background:linear-gradient(135deg,#fffbeb,#fff7ed);">
+        <div>
+          <div id="empire-operation-jackpot-title" style="font-size:20px; font-weight:900; color:#0f172a;">🏆 Operation Jackpot Winners</div>
+          <div style="margin-top:5px; font-size:13px; color:#64748b;">Confirmed jackpot awards from completed operations. All dates are shown in UTC.</div>
+        </div>
+        <button type="button" onclick="closeEmpireOperationJackpotWinners()" aria-label="Close winners history" style="border:0; border-radius:10px; padding:8px 12px; background:#fff; color:#334155; font-size:20px; font-weight:800; cursor:pointer;">×</button>
+      </div>
+      <div id="empire-operation-jackpot-content" style="padding:18px 22px 22px; overflow:auto;">
+        <p style="margin:0; color:#64748b;">Loading winner history…</p>
+      </div>
+    </div>
+  </div>
+`;
+
   area.innerHTML = html;
 
   if (fulfillmentCooldown.active) {
@@ -1255,3 +1285,111 @@ ${
     console.error("Empire operation collection refresh error:", err);
   }
 }
+
+function closeEmpireOperationJackpotWinners() {
+  const modal = document.getElementById("empire-operation-jackpot-modal");
+  if (!modal) return;
+  modal.style.display = "none";
+  modal.setAttribute("aria-hidden", "true");
+  document.removeEventListener("keydown", handleEmpireOperationWinnersKeydown);
+}
+
+function handleEmpireOperationWinnersKeydown(event) {
+  if (event.key === "Escape") closeEmpireOperationJackpotWinners();
+}
+
+async function openEmpireOperationJackpotWinners() {
+  const modal = document.getElementById("empire-operation-jackpot-modal");
+  const content = document.getElementById("empire-operation-jackpot-content");
+  if (!modal || !content) return;
+
+  modal.style.display = "flex";
+  modal.setAttribute("aria-hidden", "false");
+  content.innerHTML = '<p style="margin:0; color:#64748b;">Loading winner history…</p>';
+  document.addEventListener("keydown", handleEmpireOperationWinnersKeydown);
+
+  try {
+    const response = await fetch(`${API_BASE}/empire-operations/jackpot-winners`, {
+      cache: "no-store",
+    });
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Could not load jackpot winners.");
+    }
+
+    const winners = Array.isArray(data.winners) ? data.winners : [];
+    content.replaceChildren();
+
+    if (!winners.length) {
+      const emptyMessage = document.createElement("p");
+      emptyMessage.textContent = "No operation jackpot winners have been recorded yet.";
+      emptyMessage.style.cssText = "margin:0; padding:18px; border-radius:12px; background:#f8fafc; color:#64748b; text-align:center;";
+      content.appendChild(emptyMessage);
+      return;
+    }
+
+    const scroll = document.createElement("div");
+    scroll.style.cssText = "width:100%; overflow-x:auto;";
+    const table = document.createElement("table");
+    table.style.cssText = "width:100%; min-width:760px; border-collapse:collapse; text-align:left; font-size:13px;";
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    ["Date (UTC)", "Winner", "Operation", "Reward", "Budget", "Result"].forEach((label) => {
+      const th = document.createElement("th");
+      th.textContent = label;
+      th.style.cssText = "padding:11px 10px; color:#475569; background:#f8fafc; border-bottom:1px solid #e2e8f0; font-weight:900; white-space:nowrap;";
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    winners.forEach((winner) => {
+      const row = document.createElement("tr");
+      row.style.borderBottom = "1px solid #e2e8f0";
+      const completedAt = parseOperationTime(winner.completed_at);
+      const dateText = Number.isFinite(completedAt)
+        ? new Date(completedAt).toLocaleString("en-GB", {
+            timeZone: "UTC",
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }) + " UTC"
+        : "—";
+      const operationText = String(winner.operation_type || "")
+        .replaceAll("_", " ")
+        .toLowerCase()
+        .replace(/\b\w/g, (character) => character.toUpperCase());
+      const values = [
+        dateText,
+        winner.username || "—",
+        operationText || "—",
+        winner.reward_label || "—",
+        Number(winner.emp_committed || 0).toLocaleString() + " EMP",
+        winner.result || "Jackpot awarded",
+      ];
+
+      values.forEach((value, index) => {
+        const cell = document.createElement("td");
+        cell.textContent = String(value);
+        cell.style.cssText = "padding:12px 10px; color:#334155; white-space:nowrap;";
+        if (index === 3) {
+          cell.style.fontWeight = "900";
+          cell.style.color = String(winner.reward_label || "").includes("Blueprint") ? "#7c3aed" : "#b45309";
+        }
+        row.appendChild(cell);
+      });
+      tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+    scroll.appendChild(table);
+    content.appendChild(scroll);
+  } catch (err) {
+    console.error("Failed to load operation jackpot winners:", err);
+    content.innerHTML = '<p style="margin:0; padding:14px; border-radius:12px; background:#fef2f2; color:#b91c1c;">Winner history could not be loaded. Please try again.</p>';
+  }
+}
+
