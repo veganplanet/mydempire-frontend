@@ -273,18 +273,31 @@ function renderDiwaliSupplement(draw) {
   const blockUrl = draw.hive_block_num
     ? "https://hiveblocks.com/b/" + encodeURIComponent(draw.hive_block_num)
     : "";
+  const txUrl = draw.chain_tx_id
+    ? "https://hiveblocks.com/tx/" + encodeURIComponent(draw.chain_tx_id)
+    : "";
+  const eligiblePlayers = Array.isArray(draw.eligible_players)
+    ? draw.eligible_players
+    : [];
   status.innerHTML =
     "<strong>Verified draw completed.</strong> " +
-    escapeDiwaliHtml(String(draw.eligible_players?.length || 0)) +
+    escapeDiwaliHtml(String(eligiblePlayers.length)) +
     " eligible accounts. " +
     (blockUrl
       ? '<a href="' + blockUrl + '" target="_blank" rel="noopener">Hive block #' +
         escapeDiwaliHtml(draw.hive_block_num) + "</a>"
       : "") +
+    (txUrl
+      ? ' · <a href="' + txUrl + '" target="_blank" rel="noopener">Hive draw transaction</a>'
+      : "") +
     "<br>Seed: <code>" + escapeDiwaliHtml(draw.seed || "—") + "</code>" +
-    "<br>Method: SHA256(Hive block seed + account name)";
+    "<br>Method: SHA256(seed:account_name)";
 
-  winners.innerHTML = (draw.winners || [])
+  winners.innerHTML =
+    '<details><summary>Show eligible accounts (' + eligiblePlayers.length + ")</summary><p>" +
+    eligiblePlayers.map((player) => "@" + escapeDiwaliHtml(player)).join(", ") +
+    "</p></details>" +
+    (draw.winners || [])
     .map((winner) =>
       '<div class="diwali-total"><strong>' +
       escapeDiwaliHtml(winner.prize_label) +
