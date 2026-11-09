@@ -11587,5 +11587,44 @@ document.addEventListener("DOMContentLoaded", loadDiwaliAdminSettings);
 })();
 </script>
 <script src="js/admin-genesis-pack-promotion.js?v=20261106"></script>
+
+<section id="diwali-supplement-nft-admin" class="section" style="margin-top:24px;border:2px solid #f59e0b;">
+  <h2>🪔 Diwali Supplement NFT Distribution</h2>
+  <p>Temporary one-time tool for the verified Supplement Mega Draw. Winner: <strong>@sieghard1990</strong>.</p>
+  <button id="diwali-supplement-nft-assign-btn" class="danger" type="button">
+    Assign Sealed Diwali NFT
+  </button>
+  <div id="diwali-supplement-nft-status" class="status" style="margin-top:12px;">
+    Not distributed yet.
+  </div>
+</section>
+<script>
+(() => {
+  const button = document.getElementById("diwali-supplement-nft-assign-btn");
+  const status = document.getElementById("diwali-supplement-nft-status");
+  if (!button || !status) return;
+  button.addEventListener("click", async () => {
+    if (!confirm("Assign the sealed Diwali NFT to @sieghard1990? This action cannot be reversed automatically.")) return;
+    button.disabled = true;
+    status.textContent = "Distributing sealed Diwali NFT...";
+    try {
+      const response = await fetch(API_BASE + "/admin/diwali-supplement/assign-nft", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY },
+        body: JSON.stringify({ username: "sieghard1990" }),
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.error || "Distribution failed.");
+      status.textContent = data.already_distributed
+        ? "Already distributed. No duplicate NFT was created."
+        : `Distributed NFT #${data.nft_id} — sealed serial ${String(data.serial_number).padStart(3, "0")}.`;
+    } catch (error) {
+      button.disabled = false;
+      status.textContent = error.message || "Distribution failed.";
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
