@@ -24038,3 +24038,89 @@ body.home-v2-page {
     min-width: min(220px, calc(100vw - 36px));
   }
 }
+
+
+/* Dashboard navigation refresh — shared compact dropdown styling. */
+.player-dashboard-page .dashboard-nav-group > summary {
+  transition: background .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+.player-dashboard-page .dashboard-nav-group > summary:focus-visible,
+.player-dashboard-page .dashboard-nav-menu .subnav-btn:focus-visible {
+  outline: 3px solid #60a5fa;
+  outline-offset: 2px;
+}
+.player-dashboard-page .dashboard-nav-group[open] > summary {
+  box-shadow: 0 3px 10px rgba(31, 75, 150, .10);
+}
+.player-dashboard-page .dashboard-nav-menu {
+  top: calc(100% - 2px); /* No pointer gap between trigger and menu. */
+  gap: 3px;
+  min-width: 238px;
+  max-width: min(300px, calc(100vw - 32px));
+  padding: 9px;
+  border: 1px solid #e1e8f4;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 16px 38px rgba(20, 44, 91, .17), 0 4px 10px rgba(20, 44, 91, .06);
+}
+.player-dashboard-page .dashboard-nav-menu .subnav-btn {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 9px 11px !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+  background: transparent;
+  color: #17305c;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: none;
+  white-space: normal;
+  transition: background .15s ease, color .15s ease;
+}
+.player-dashboard-page .dashboard-nav-menu .subnav-btn::before {
+  content: "◆";
+  display: inline-grid;
+  flex: 0 0 22px;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: #eaf0ff;
+  color: #4569cc;
+  font-size: 12px;
+}
+.player-dashboard-page .dashboard-nav-menu .subnav-btn::after {
+  content: "›";
+  margin-left: auto;
+  color: #8090ad;
+  font-size: 20px;
+  font-weight: 500;
+}
+.player-dashboard-page .dashboard-nav-menu .subnav-btn:hover,
+.player-dashboard-page .dashboard-nav-menu .subnav-btn:focus-visible,
+.player-dashboard-page .dashboard-nav-menu .subnav-btn-active {
+  background: #edf4ff !important;
+  color: #174cbd !important;
+}
+.player-dashboard-page .dashboard-nav-menu [data-tab="packs"]::before { content: "▣"; color: #8b3ce8; background: #f3eaff; }
+.player-dashboard-page .dashboard-nav-menu [data-tab="lands"]::before { content: "▲"; color: #16a34a; background: #e7f9ec; }
+.player-dashboard-page .dashboard-nav-menu [data-tab="blueprints"]::before { content: "▥"; color: #2563eb; background: #e8f0ff; }
+.player-dashboard-page .dashboard-nav-menu [data-tab="construction"]::before { content: "⚒"; color: #b77906; background: #fff3d8; }
+.player-dashboard-page .dashboard-nav-menu [data-tab="assets"]::before { content: "⬡"; color: #9333ea; background: #f5eaff; }
+.player-dashboard-page .dashboard-nav-menu [data-tab="global"]::before { content: "♥"; color: #16a34a; background: #e7f9ec; }
+.player-dashboard-page .dashboard-nav-menu [data-tab="leaderboard"]::before { content: "★"; color: #d97706; background: #fff3d8; }
+.player-dashboard-page .dashboard-nav-menu a[href="diwali-festival.html"] {
+  margin-top: 5px;
+  border-top: 1px solid #e4eaf5 !important;
+  border-radius: 0 0 10px 10px !important;
+}
+.player-dashboard-page .dashboard-nav-menu a[href="diwali-festival.html"]::before {
+  content: "✦"; color: #d97706; background: #fff3df;
+}
+@media (max-width: 640px) {
+  .player-dashboard-page .dashboard-nav-menu { min-width: min(238px, calc(100vw - 32px)); }
+}
