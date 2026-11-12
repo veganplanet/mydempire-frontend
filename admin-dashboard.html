@@ -447,7 +447,20 @@
         display: block !important;
       }
     </style>
-  </head>
+  
+<style>
+.genesis-promo-audit{margin-top:14px;padding-top:10px;border-top:1px solid rgba(82,96,109,.2);color:#334155}
+.genesis-promo-audit summary{cursor:pointer;font-weight:900;color:#0b7285}
+.genesis-promo-audit-table-wrap{margin-top:10px;max-height:360px;overflow:auto;border:1px solid #dbe4ef;border-radius:10px;background:#fff}
+.genesis-promo-audit-table{width:100%;min-width:380px;border-collapse:collapse;font-size:12px}
+.genesis-promo-audit-table th,.genesis-promo-audit-table td{padding:8px 10px;border-bottom:1px solid #e8edf3;text-align:left}
+.genesis-promo-audit-table th{position:sticky;top:0;background:#eaf2ff;color:#1e3a8a}
+.genesis-promo-audit-proof{margin-top:12px;padding:12px;border:1px solid #bfdbfe;border-radius:10px;background:#eff6ff;color:#1e3a8a}
+.genesis-promo-audit-proof code{display:block;overflow-wrap:anywhere;margin:4px 0}
+.genesis-promo-audit-proof[hidden]{display:none}
+.genesis-promo-audit-empty{padding:10px;color:#64748b}
+
+</head>
   <body>
     <div id="admin-login-gate" class="admin-login-gate">
       <div class="admin-login-card">
@@ -665,6 +678,9 @@
           </div>
           <div id="genesis-pack-promo-admin-status" class="status">Load status to begin.</div>
           <div id="genesis-pack-promo-admin-summary" class="metrics"></div>
+          <h3 style="margin:16px 0 6px">Player-wise pack sales and draw entries</h3>
+          <div id="genesis-pack-promo-admin-players"></div>
+          <div id="genesis-pack-promo-admin-proof" class="genesis-promo-audit-proof" hidden></div>
         </div>
 
 <div class="section" id="emp-writ-pack-admin">
@@ -11586,7 +11602,7 @@ document.addEventListener("DOMContentLoaded", loadDiwaliAdminSettings);
   });
 })();
 </script>
-<script src="js/admin-genesis-pack-promotion.js?v=20261106"></script>
+<script src="js/admin-genesis-pack-promotion.js?v=20261112"></script>
 
 <section id="diwali-supplement-nft-admin" class="section" style="margin-top:24px;border:2px solid #f59e0b;">
   <h2>🪔 Diwali Supplement NFT Distribution</h2>
