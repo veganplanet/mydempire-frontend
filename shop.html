@@ -22,6 +22,17 @@
 .genesis-promo-shop-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;font-weight:800;color:#52606d}
 .genesis-promo-shop-cta{display:inline-flex;margin-top:12px;padding:9px 14px;border-radius:9px;background:#0b7285;color:white;text-decoration:none;font-weight:900}.genesis-promo-shop-cta.promo-disabled{background:#94a3a8;color:#f8fafc;cursor:not-allowed;opacity:.75;pointer-events:none}
 @media(max-width:600px){.genesis-promo-shop-head{display:block}.genesis-promo-shop-bonus{display:inline-block;margin-top:8px}.genesis-promo-shop-meta{display:block}.genesis-promo-shop-meta span{display:block;margin-top:4px}}
+
+.genesis-promo-audit{margin-top:14px;padding-top:10px;border-top:1px solid rgba(82,96,109,.2);color:#334155}
+.genesis-promo-audit summary{cursor:pointer;font-weight:900;color:#0b7285}
+.genesis-promo-audit-table-wrap{margin-top:10px;max-height:360px;overflow:auto;border:1px solid #dbe4ef;border-radius:10px;background:#fff}
+.genesis-promo-audit-table{width:100%;min-width:380px;border-collapse:collapse;font-size:12px}
+.genesis-promo-audit-table th,.genesis-promo-audit-table td{padding:8px 10px;border-bottom:1px solid #e8edf3;text-align:left}
+.genesis-promo-audit-table th{position:sticky;top:0;background:#eaf2ff;color:#1e3a8a}
+.genesis-promo-audit-proof{margin-top:12px;padding:12px;border:1px solid #bfdbfe;border-radius:10px;background:#eff6ff;color:#1e3a8a}
+.genesis-promo-audit-proof code{display:block;overflow-wrap:anywhere;margin:4px 0}
+.genesis-promo-audit-proof[hidden]{display:none}
+.genesis-promo-audit-empty{padding:10px;color:#64748b}
 </style>
 
 </head>
@@ -62,6 +73,11 @@
       <span id="genesis-promo-shop-player">Your progress: loading…</span>
       <span id="genesis-promo-shop-time">21-day offer</span>
     </div>
+    <details class="genesis-promo-audit">
+      <summary>View player pack sales and draw entries</summary>
+      <div id="genesis-promo-shop-players"></div>
+      <div id="genesis-promo-shop-proof" class="genesis-promo-audit-proof" hidden></div>
+    </details>
     <a id="genesis-promo-shop-cta" class="genesis-promo-shop-cta promo-disabled" href="#pack-qty" aria-disabled="true" tabindex="-1" title="Available when the promotion is activated">Buy Genesis Packs</a>
   </section>
 
@@ -2075,6 +2091,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 500);
 });
 </script>
-  <script src="js/genesis-pack-promotion-shop.js?v=20261108"></script>
+  <script src="js/genesis-pack-promotion-shop.js?v=20261112"></script>
 </body>
 </html>
