@@ -64,7 +64,7 @@ ${
           href="exchange.html"
           class="appbar-link exchange-nav-link"
         >
-          Imperial Exchange ▼
+          Imperial Markets ▼
         </a>
 
         <div class="exchange-nav-dropdown-menu">
@@ -73,7 +73,7 @@ ${
           </a>
 
           <a href="share-market.html">
-            📈 Share Market
+            📈 Industrial Investment Board
             <span class="nav-new-pill">SOON</span>
           </a>
         </div>
