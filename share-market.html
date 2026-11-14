@@ -1,97 +1,78 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>MydEmpire — Empire Share Market</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="assets/favicon.png" />
-    <script src="js/player-auth.js?v=20260825-auth3"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MydEmpire — Industrial Investment Board</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="assets/favicon.png" />
+  <script src="js/player-auth.js?v=20260825-auth3"></script>
+  <style>
+    .iib-teaser { max-width: 1160px; margin: 0 auto; padding: 126px 20px 72px; color: #23304b; }
+    .iib-hero { position: relative; overflow: hidden; padding: clamp(28px, 5vw, 62px); border-radius: 28px; border: 1px solid #ddd6fe; background: radial-gradient(circle at 90% 10%, #ede9fe 0, transparent 35%), linear-gradient(125deg,#fff,#f5f3ff 65%,#eff6ff); box-shadow: 0 18px 45px rgba(49,46,129,.09); }
+    .iib-tag { display: inline-block; border-radius: 100px; padding: 7px 13px; background: #fef3c7; color: #92400e; font-size: 12px; font-weight: 900; letter-spacing: .08em; }
+    .iib-hero h1 { margin: 22px 0 14px; font-size: clamp(35px,5vw,62px); line-height: 1.06; letter-spacing: -.035em; color: #24184d; }
+    .iib-hero p { max-width: 720px; font-size: clamp(16px,2vw,20px); line-height: 1.7; color: #475569; }
+    .iib-emphasis { color: #6d28d9; }
+    .iib-metrics { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .iib-metric { min-width: 140px; padding: 14px 18px; background: rgba(255,255,255,.82); border: 1px solid #e5e7eb; border-radius: 15px; }
+    .iib-metric strong { display: block; font-size: 23px; color: #312e81; }
+    .iib-metric span { display: block; margin-top: 3px; font-size: 12px; color: #64748b; }
+    .iib-section-title { margin: 38px 0 16px; font-size: 25px; color: #24184d; }
+    .iib-industries { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 12px; }
+    .iib-industry { background: white; border: 1px solid #e2e8f0; border-radius: 18px; padding: 22px 12px; text-align: center; box-shadow: 0 7px 22px rgba(15,23,42,.04); }
+    .iib-industry .symbol { font-size: 32px; display: block; margin-bottom: 9px; }
+    .iib-industry strong { font-size: 15px; color: #334155; }
+    .iib-cards { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; margin-top: 16px; }
+    .iib-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 23px; }
+    .iib-card .symbol { font-size: 29px; }
+    .iib-card h3 { color: #312e81; font-size: 19px; margin: 12px 0 8px; }
+    .iib-card p { color: #64748b; font-size: 14px; line-height: 1.65; margin: 0; }
+    .iib-footer { margin-top: 26px; border: 1px solid #c4b5fd; background: linear-gradient(120deg,#f5f3ff,#fff); padding: 28px; border-radius: 22px; text-align: center; }
+    .iib-footer h2 { margin: 0 0 10px; color: #312e81; font-size: 26px; }
+    .iib-footer p { margin: 0 auto; max-width: 650px; line-height: 1.7; color: #475569; }
+    .iib-note { margin-top: 16px; color: #64748b; font-size: 12px; text-align: center; line-height: 1.6; }
+    @media(max-width:800px) { .iib-industries { grid-template-columns: repeat(3,minmax(0,1fr)); } .iib-cards { grid-template-columns: 1fr; } }
+    @media(max-width:520px) { .iib-teaser { padding: 105px 12px 45px; } .iib-hero { padding: 28px 20px; } .iib-industries { grid-template-columns: repeat(2,minmax(0,1fr)); } .iib-metric { flex: 1 1 120px; min-width: 0; } }
+  </style>
 </head>
+<body class="page-root share-market-page" data-requires-login="true">
+  <div id="mde-navbar"></div>
+  <main class="iib-teaser">
+    <section class="iib-hero">
+      <span class="iib-tag">🏭 COMING SOON · NEW INDUSTRIAL GAMEPLAY</span>
+      <h1>Industrial<br /><span class="iib-emphasis">Investment Board</span></h1>
+      <p>Five industries. A changing economy. Your decisions matter. Read the market, move your capital, and decide when to book your profit.</p>
+      <div class="iib-metrics">
+        <div class="iib-metric"><strong>1,000 IIC</strong><span>Free weekly starting capital</span></div>
+        <div class="iib-metric"><strong>5</strong><span>Industries to choose from</span></div>
+        <div class="iib-metric"><strong>2 Hours</strong><span>Market movement intervals</span></div>
+        <div class="iib-metric"><strong>1:1</strong><span>Positive IIC profit to EMP</span></div>
+      </div>
+    </section>
 
-  <body class="page-root share-market-page" data-requires-login="true">
-    <div id="mde-navbar"></div>
+    <h2 class="iib-section-title">Where will you invest?</h2>
+    <section class="iib-industries" aria-label="Industrial sectors">
+      <div class="iib-industry"><span class="symbol">🌾</span><strong>Food</strong></div>
+      <div class="iib-industry"><span class="symbol">🧵</span><strong>Textile</strong></div>
+      <div class="iib-industry"><span class="symbol">💊</span><strong>Pharma</strong></div>
+      <div class="iib-industry"><span class="symbol">⚗️</span><strong>Chemical</strong></div>
+      <div class="iib-industry"><span class="symbol">🛒</span><strong>Supermarket</strong></div>
+    </section>
 
-    <main class="share-market-shell">
-      <section class="share-teaser-hero">
-        <div class="share-teaser-inner">
-          <div class="share-kicker">🏦 Coming Soon</div>
+    <h2 class="iib-section-title">Your strategy. Your timing.</h2>
+    <section class="iib-cards">
+      <article class="iib-card"><span class="symbol">📊</span><h3>Follow a Living Market</h3><p>Industry production, shifting demand, input costs and unexpected events will shape a fictional industrial economy. Every market cycle brings new decisions.</p></article>
+      <article class="iib-card"><span class="symbol">🔀</span><h3>Concentrate or Diversify</h3><p>Start with 1,000 free IIC if you qualify. Invest in one industry, or expand your capital to spread investments across multiple sectors. Minimum opening allocation: 1,000 IIC per industry.</p></article>
+      <article class="iib-card"><span class="symbol">🏁</span><h3>Know When to Exit</h3><p>Join during the week, change industries, or choose to exit and book your final result. Positive net portfolio profit earns EMP; a losing portfolio earns no reward.</p></article>
+    </section>
 
-          <h1>Empire Share Market</h1>
-
-          <p class="share-lead">
-            A new trust-based industrial market is being prepared inside
-            MydEmpire. Powerful empires will soon be able to open their
-            industries for public backing.
-          </p>
-
-          <div class="share-mystery-line">
-            Some players will raise EMP. Some will back the right empire early.
-            The market will decide who deserves confidence.
-          </div>
-
-          <div class="share-teaser-actions">
-            <div class="share-teaser-chip">🏭 For serious industrialists</div>
-            <div class="share-teaser-chip">🤝 For strategic backers</div>
-            <div class="share-teaser-chip">📈 Growth matters</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="share-teaser-grid">
-        <div class="share-teaser-card">
-          <div class="share-card-symbol">🏦</div>
-          <h2>Raise Industrial Confidence</h2>
-          <p>
-            Eligible empire owners will soon be able to bring one of their
-            industries into the public market and earn the trust of the
-            community.
-          </p>
-          <div class="share-hidden-rule">Details unlocking soon...</div>
-        </div>
-
-        <div class="share-teaser-card">
-          <div class="share-card-symbol">🤝</div>
-          <h2>Back the Right Empire</h2>
-          <p>
-            Backers will not simply buy numbers. They will choose players,
-            activity, reputation, and growth potential.
-          </p>
-          <div class="share-hidden-rule">Choose carefully...</div>
-        </div>
-
-        <div class="share-teaser-card">
-          <div class="share-card-symbol">🛡️</div>
-          <h2>Confidence Will Be Visible</h2>
-          <p>
-            Every listed empire will carry a Backer Confidence Score, showing
-            whether the empire is growing, stable, weakening, or silent.
-          </p>
-          <div class="share-hidden-rule">Trust will have a score...</div>
-        </div>
-      </section>
-
-      <section class="share-teaser-banner">
-        <div>
-          <div class="share-banner-label">The next layer of MydEmpire</div>
-          <h2>
-            Not every empire will qualify. Not every backer will choose wisely.
-          </h2>
-          <p>
-            The Empire Share Market will reward activity, reputation, and
-            confidence. More details will be revealed as the market gets closer
-            to launch.
-          </p>
-        </div>
-      </section>
-
-      <section class="share-teaser-warning">
-        Empire Shares will be in-game backing units only. They are not
-        real-world equity, ownership, or HIVE dividends.
-      </section>
-    </main>
-
-    <script src="js/navbar.js"></script>
-  </body>
+    <section class="iib-footer">
+      <h2>Will you read the market correctly?</h2>
+      <p>Designed for industrialists producing at least <strong>1,000 EP/day</strong>. A new seven-day challenge begins every Monday at 00:00 UTC. A 10-week pilot is planned. Trading is not yet active.</p>
+    </section>
+    <p class="iib-note">Preview of planned gameplay. IIC is a fictional in-game unit, not real-world equity or ownership. Rules and launch timing will be confirmed before activation.</p>
+  </main>
+  <script src="js/navbar.js"></script>
+</body>
 </html>
