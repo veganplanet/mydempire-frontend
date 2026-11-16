@@ -1903,6 +1903,12 @@ async function createBlueprintListing() {
       if (!/Vault fee transfer not found on Hive/i.test(first.data.error || "")) {
         throw new Error(first.data.error || "Settlement cannot be verified. Contact support.");
       }
+      // If Keychain already confirmed a fee transaction, never charge it again.
+      // Hive history indexing can lag; support must reconcile this payment.
+      if (paidReceipt.fee_tx_id) {
+        throw new Error("Marketplace fee was already submitted (tx " +
+          paidReceipt.fee_tx_id + "). Wait for Hive verification or contact support; do not pay again.");
+      }
       if (!paidReceipt.fee_payment || !paidReceipt.fee_payment.to ||
           !paidReceipt.fee_payment.amount || !paidReceipt.fee_payment.memo) {
         throw new Error("Fee payment details unavailable. Contact support; do not pay the seller again.");
