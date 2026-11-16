@@ -1900,6 +1900,9 @@ async function createBlueprintListing() {
         await loadBlueprintInventory(); await loadBlueprintListings();
         return;
       }
+      if (paidReceipt.state === "seller_payment_unconfirmed") {
+        throw new Error("Seller payment outcome is uncertain. Check Hive history or contact support before making any further payment.");
+      }
       if (!/Vault fee transfer not found on Hive/i.test(first.data.error || "")) {
         throw new Error(first.data.error || "Settlement cannot be verified. Contact support.");
       }
@@ -1956,6 +1959,19 @@ async function createBlueprintListing() {
     );
     if (!ok) return;
 
+    // Save intent before opening Keychain: a transfer may succeed even if the
+    // browser closes before the Keychain callback returns.
+    localStorage.setItem(recoveryKey, JSON.stringify({
+      listing_id: listingId,
+      session_id: session.id,
+      seller_tx_id: "",
+      seller: session.seller_payment.to,
+      amount: session.seller_payment.amount,
+      seller_payment: session.seller_payment,
+      fee_payment: session.fee_payment,
+      state: "seller_payment_unconfirmed",
+      saved_at: new Date().toISOString()
+    }));
     const sellerTransfer = await hiveTransfer(
       ACTIVE_USER, session.seller_payment.to,
       session.seller_payment.amount, session.seller_payment.memo
@@ -1970,6 +1986,7 @@ async function createBlueprintListing() {
       seller: session.seller_payment.to,
       amount: session.seller_payment.amount,
       fee_payment: session.fee_payment,
+      state: "seller_payment_confirmed",
       saved_at: new Date().toISOString()
     }));
 
