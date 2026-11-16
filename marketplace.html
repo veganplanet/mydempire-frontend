@@ -3371,6 +3371,11 @@ const blueprint =
   "Blueprint";
         const level = item.blueprint_level || "";
         const price = Number(item.total_price_hive || 0);
+        const feeWaived = String(item.vault_transfer_status || "").toLowerCase() === "waived";
+        const feeQuoted = Number(item.fee_amount_hive || 0);
+        const feeNote = feeWaived
+          ? "Marketplace fee: waived (0.000 HIVE collected)"
+          : "Marketplace fee: " + feeQuoted.toFixed(3) + " HIVE";
 
         const seller = item.seller_username || "--";
         const buyer = item.buyer_username || "--";
@@ -3388,7 +3393,7 @@ const blueprint =
             </div>
 
             <div class="trade-col trade-total">
-              ${price.toFixed(3)} HIVE
+              ${price.toFixed(3)} HIVE\n              <small style="display:block;opacity:.75">${feeNote}</small>
             </div>
 
             <div class="trade-col trade-time">
