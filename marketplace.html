@@ -1908,7 +1908,10 @@ async function createBlueprintListing() {
       }
       // If Keychain already confirmed a fee transaction, never charge it again.
       // Hive history indexing can lag; support must reconcile this payment.
-      if (paidReceipt.fee_tx_id) {
+      if (paidReceipt.state === "fee_payment_unconfirmed") {
+        throw new Error("Fee payment outcome is uncertain. Check Hive history or contact support; do not pay again.");
+      }
+      if (paidReceipt.fee_tx_id || paidReceipt.state === "fee_payment_confirmed") {
         throw new Error("Marketplace fee was already submitted (tx " +
           paidReceipt.fee_tx_id + "). Wait for Hive verification or contact support; do not pay again.");
       }
@@ -1990,13 +1993,19 @@ async function createBlueprintListing() {
       saved_at: new Date().toISOString()
     }));
 
+    // Mark fee as in-flight before Keychain opens. A missing callback does not
+    // prove that the Hive transfer failed.
+    const beforeFee = JSON.parse(localStorage.getItem(recoveryKey) || "{}");
+    beforeFee.state = "fee_payment_unconfirmed";
+    localStorage.setItem(recoveryKey, JSON.stringify(beforeFee));
     const feeTransfer = await hiveTransfer(
       ACTIVE_USER, session.fee_payment.to,
       session.fee_payment.amount, session.fee_payment.memo
     );
     const paymentTxId = feeTransfer?.tx_id || feeTransfer?.id || sellerTxId;
     const savedReceipt = JSON.parse(localStorage.getItem(recoveryKey) || "{}");
-    savedReceipt.fee_tx_id = paymentTxId;
+    savedReceipt.fee_tx_id = feeTransfer?.tx_id || feeTransfer?.id || "";
+    savedReceipt.state = "fee_payment_confirmed";
     localStorage.setItem(recoveryKey, JSON.stringify(savedReceipt));
     const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
       method: "POST",
