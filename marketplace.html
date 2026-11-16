@@ -1918,9 +1918,9 @@ async function createBlueprintListing() {
         " is missing. Pay this fee now to finish the original trade?")) return;
       const feeTransfer = await hiveTransfer(ACTIVE_USER, paidReceipt.fee_payment.to,
         paidReceipt.fee_payment.amount, paidReceipt.fee_payment.memo);
-      paidReceipt.fee_tx_id = feeTransfer.tx_id;
+      paidReceipt.fee_tx_id = feeTransfer?.tx_id || feeTransfer?.id || "";
       localStorage.setItem(recoveryKey, JSON.stringify(paidReceipt));
-      const second = await finalize(feeTransfer.tx_id);
+      const second = await finalize(paidReceipt.fee_tx_id || paidReceipt.seller_tx_id);
       if (!second.response.ok || !second.data.success) {
         throw new Error(second.data.error || "Fee paid but settlement not confirmed");
       }
@@ -1961,7 +1961,7 @@ async function createBlueprintListing() {
       session.seller_payment.amount, session.seller_payment.memo
     );
     sellerPaymentSucceeded = true;
-    sellerTxId = sellerTransfer.tx_id;
+    sellerTxId = sellerTransfer?.tx_id || sellerTransfer?.id || "";
     // Persist before initiating the second Keychain prompt or any API call.
     localStorage.setItem(recoveryKey, JSON.stringify({
       listing_id: listingId,
@@ -1977,7 +1977,7 @@ async function createBlueprintListing() {
       ACTIVE_USER, session.fee_payment.to,
       session.fee_payment.amount, session.fee_payment.memo
     );
-    const paymentTxId = feeTransfer.tx_id;
+    const paymentTxId = feeTransfer?.tx_id || feeTransfer?.id || sellerTxId;
     const savedReceipt = JSON.parse(localStorage.getItem(recoveryKey) || "{}");
     savedReceipt.fee_tx_id = paymentTxId;
     localStorage.setItem(recoveryKey, JSON.stringify(savedReceipt));
