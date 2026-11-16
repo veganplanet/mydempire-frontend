@@ -1866,94 +1866,101 @@ async function createBlueprintListing() {
     }
 
    async function buyBlueprintListing(listingId) {
+  if (!ACTIVE_USER) {
+    alert("No active user found.");
+    return;
+  }
+
+  // A seller payment is irreversible. Never initiate another purchase for the
+  // same listing while the earlier paid session needs manual reconciliation.
+  const recoveryKey = `mde_blueprint_paid_${ACTIVE_USER}_${listingId}`;
+  let paidReceipt = null;
   try {
-    if (!ACTIVE_USER) {
-      alert("No active user found.");
-      return;
-    }
-const confirmBeforeReserve = confirm("Buy this blueprint?");
-if (!confirmBeforeReserve) return;
+    paidReceipt = JSON.parse(localStorage.getItem(recoveryKey) || "null");
+  } catch (_) {}
+  if (paidReceipt) {
+    alert(
+      "A seller payment was already submitted for this Blueprint listing. " +
+      "Do NOT pay again. Contact MydEmpire support with listing #" + listingId +
+      " and seller transaction " + (paidReceipt.seller_tx_id || "(check Hive history)") +
+      ". Your original payment must be reconciled first."
+    );
+    return;
+  }
+
+  let sellerPaymentSucceeded = false;
+  let sellerTxId = "";
+  try {
+    if (!confirm("Buy this blueprint?")) return;
     const initRes = await fetch(apiUrl("/marketplace/blueprint/buy-init"), {
       method: "POST",
-      headers: {
-  "Content-Type": "application/json",
-  "x-mde-actor": ACTIVE_USER,
-},
-      body: JSON.stringify({
-        username: ACTIVE_USER,
-        listing_id: listingId
-      })
+      headers: { "Content-Type": "application/json", "x-mde-actor": ACTIVE_USER },
+      body: JSON.stringify({ username: ACTIVE_USER, listing_id: listingId })
     });
-
     const initData = await initRes.json();
-
     if (!initRes.ok || !initData.success) {
       throw new Error(initData.error || "Failed to initialize blueprint purchase.");
     }
-
     const session = initData.session;
-
-    const confirmText =
-      `Buy Blueprint?\n\n` +
-      `Seller payment: ${session.seller_payment.amount} HIVE to @${session.seller_payment.to}\n` +
-      `Fee payment: ${session.fee_payment.amount} HIVE to @${session.fee_payment.to}`;
-
-    const ok = confirm(confirmText);
+    const ok = confirm(
+      "Buy Blueprint?\\n\\n" +
+      `Seller payment: ${session.seller_payment.amount} HIVE to @${session.seller_payment.to}\\n` +
+      `Fee payment: ${session.fee_payment.amount} HIVE to @${session.fee_payment.to}`
+    );
     if (!ok) return;
 
     const sellerTransfer = await hiveTransfer(
-      ACTIVE_USER,
-      session.seller_payment.to,
-      session.seller_payment.amount,
-      session.seller_payment.memo
+      ACTIVE_USER, session.seller_payment.to,
+      session.seller_payment.amount, session.seller_payment.memo
     );
+    sellerPaymentSucceeded = true;
+    sellerTxId = sellerTransfer.tx_id;
+    // Persist before initiating the second Keychain prompt or any API call.
+    localStorage.setItem(recoveryKey, JSON.stringify({
+      listing_id: listingId,
+      session_id: session.id,
+      seller_tx_id: sellerTxId,
+      seller: session.seller_payment.to,
+      amount: session.seller_payment.amount,
+      saved_at: new Date().toISOString()
+    }));
 
     const feeTransfer = await hiveTransfer(
-      ACTIVE_USER,
-      session.fee_payment.to,
-      session.fee_payment.amount,
-      session.fee_payment.memo
+      ACTIVE_USER, session.fee_payment.to,
+      session.fee_payment.amount, session.fee_payment.memo
     );
-
-    console.log("sellerTransfer =", sellerTransfer);
-    console.log("feeTransfer =", feeTransfer);
-
-    const paymentTxId =
-      feeTransfer?.tx_id ||
-      feeTransfer?.id ||
-      sellerTransfer?.tx_id ||
-      sellerTransfer?.id ||
-      null;
-
-    if (!paymentTxId) {
-      throw new Error("Transaction ID not returned by Keychain.");
-    }
-
+    const paymentTxId = feeTransfer.tx_id;
     const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
       method: "POST",
-      headers: {
-  "Content-Type": "application/json",
-  "x-mde-actor": ACTIVE_USER,
-},
+      headers: { "Content-Type": "application/json", "x-mde-actor": ACTIVE_USER },
       body: JSON.stringify({
         username: ACTIVE_USER,
         session_id: session.id,
         payment_tx_id: paymentTxId
       })
     });
-
     const finalizeData = await finalizeRes.json();
-
     if (!finalizeRes.ok || !finalizeData.success) {
       throw new Error(finalizeData.error || "Failed to finalize blueprint trade.");
     }
-
+    // Only clear the safety lock after the server confirms delivery.
+    localStorage.removeItem(recoveryKey);
     alert("✅ Blueprint trade completed successfully.");
     await loadBlueprintInventory();
     await loadBlueprintListings();
   } catch (err) {
     console.error("buyBlueprintListing error:", err);
-    alert(err.message || "Blueprint purchase failed.");
+    if (sellerPaymentSucceeded) {
+      alert(
+        "IMPORTANT: Your HIVE payment to the seller may already be complete, " +
+        "but Blueprint delivery is NOT confirmed. Do not purchase again or pay twice. " +
+        "Contact MydEmpire support with listing #" + listingId +
+        " and seller transaction " + sellerTxId + ". " +
+        "Details: " + (err.message || "Settlement interrupted.")
+      );
+    } else {
+      alert(err.message || "Blueprint purchase failed. Check Hive history before retrying.");
+    }
   }
 }
     /* PACKS */
