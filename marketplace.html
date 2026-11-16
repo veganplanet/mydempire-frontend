@@ -1879,12 +1879,53 @@ async function createBlueprintListing() {
     paidReceipt = JSON.parse(localStorage.getItem(recoveryKey) || "null");
   } catch (_) {}
   if (paidReceipt) {
-    alert(
-      "A seller payment was already submitted for this Blueprint listing. " +
-      "Do NOT pay again. Contact MydEmpire support with listing #" + listingId +
-      " and seller transaction " + (paidReceipt.seller_tx_id || "(check Hive history)") +
-      ". Your original payment must be reconciled first."
-    );
+    // The seller must NEVER be paid twice. Try server-side reconciliation first:
+    // finalize verifies both payments on Hive and is idempotent.
+    if (!confirm("Seller payment already recorded for listing #" + listingId +
+      ". Do NOT pay the seller again. Check whether this trade can be completed?")) return;
+    try {
+      const finalize = async (txid) => {
+        const response = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-mde-actor": ACTIVE_USER },
+          body: JSON.stringify({username: ACTIVE_USER, session_id: paidReceipt.session_id, payment_tx_id: txid})
+        });
+        const data = await response.json();
+        return {response, data};
+      };
+      const first = await finalize(paidReceipt.fee_tx_id || paidReceipt.seller_tx_id);
+      if (first.response.ok && first.data.success) {
+        localStorage.removeItem(recoveryKey);
+        alert("Blueprint trade completed. No additional payment required.");
+        await loadBlueprintInventory(); await loadBlueprintListings();
+        return;
+      }
+      if (!/Vault fee transfer not found on Hive/i.test(first.data.error || "")) {
+        throw new Error(first.data.error || "Settlement cannot be verified. Contact support.");
+      }
+      if (!paidReceipt.fee_payment || !paidReceipt.fee_payment.to ||
+          !paidReceipt.fee_payment.amount || !paidReceipt.fee_payment.memo) {
+        throw new Error("Fee payment details unavailable. Contact support; do not pay the seller again.");
+      }
+      if (!confirm("Seller payment is already recorded. Only the marketplace fee of " +
+        paidReceipt.fee_payment.amount + " HIVE to @" + paidReceipt.fee_payment.to +
+        " is missing. Pay this fee now to finish the original trade?")) return;
+      const feeTransfer = await hiveTransfer(ACTIVE_USER, paidReceipt.fee_payment.to,
+        paidReceipt.fee_payment.amount, paidReceipt.fee_payment.memo);
+      paidReceipt.fee_tx_id = feeTransfer.tx_id;
+      localStorage.setItem(recoveryKey, JSON.stringify(paidReceipt));
+      const second = await finalize(feeTransfer.tx_id);
+      if (!second.response.ok || !second.data.success) {
+        throw new Error(second.data.error || "Fee paid but settlement not confirmed");
+      }
+      localStorage.removeItem(recoveryKey);
+      alert("Blueprint trade completed successfully.");
+      await loadBlueprintInventory(); await loadBlueprintListings();
+    } catch (err) {
+      alert("Do NOT pay the seller again. The original trade needs reconciliation. " +
+        "Listing #" + listingId + ", seller transaction " +
+        (paidReceipt.seller_tx_id || "check Hive history") + ". " + err.message);
+    }
     return;
   }
 
@@ -1922,6 +1963,7 @@ async function createBlueprintListing() {
       seller_tx_id: sellerTxId,
       seller: session.seller_payment.to,
       amount: session.seller_payment.amount,
+      fee_payment: session.fee_payment,
       saved_at: new Date().toISOString()
     }));
 
@@ -1930,6 +1972,9 @@ async function createBlueprintListing() {
       session.fee_payment.amount, session.fee_payment.memo
     );
     const paymentTxId = feeTransfer.tx_id;
+    const savedReceipt = JSON.parse(localStorage.getItem(recoveryKey) || "{}");
+    savedReceipt.fee_tx_id = paymentTxId;
+    localStorage.setItem(recoveryKey, JSON.stringify(savedReceipt));
     const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-mde-actor": ACTIVE_USER },
