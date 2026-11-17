@@ -1922,9 +1922,13 @@ async function createBlueprintListing() {
       if (!confirm("Seller payment is already recorded. Only the marketplace fee of " +
         paidReceipt.fee_payment.amount + " HIVE to @" + paidReceipt.fee_payment.to +
         " is missing. Pay this fee now to finish the original trade?")) return;
+      // The fee can settle even when Keychain's callback is lost.
+      paidReceipt.state = "fee_payment_unconfirmed";
+      localStorage.setItem(recoveryKey, JSON.stringify(paidReceipt));
       const feeTransfer = await hiveTransfer(ACTIVE_USER, paidReceipt.fee_payment.to,
         paidReceipt.fee_payment.amount, paidReceipt.fee_payment.memo);
       paidReceipt.fee_tx_id = feeTransfer?.tx_id || feeTransfer?.id || "";
+      paidReceipt.state = "fee_payment_confirmed";
       localStorage.setItem(recoveryKey, JSON.stringify(paidReceipt));
       const second = await finalize(paidReceipt.fee_tx_id || paidReceipt.seller_tx_id);
       if (!second.response.ok || !second.data.success) {
