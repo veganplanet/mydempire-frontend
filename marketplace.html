@@ -2032,6 +2032,32 @@ async function createBlueprintListing() {
   } catch (err) {
     console.error("buyBlueprintListing error:", err);
     if (sellerPaymentSucceeded) {
+      // Reconcile on-chain seller payment even when the fee Keychain prompt
+      // fails. The backend holds the NFT for this buyer if the fee is absent.
+      try {
+        const receipt = JSON.parse(localStorage.getItem(recoveryKey) || "null");
+        if (receipt?.session_id) {
+          const check = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-mde-actor": ACTIVE_USER },
+            body: JSON.stringify({
+              username: ACTIVE_USER,
+              session_id: receipt.session_id,
+              payment_tx_id: receipt.fee_tx_id || sellerTxId
+            })
+          });
+          const result = await check.json();
+          if (check.ok && result.success) {
+            localStorage.removeItem(recoveryKey);
+            alert("Blueprint delivery completed. No further payment is needed.");
+            await loadBlueprintInventory();
+            await loadBlueprintListings();
+            return;
+          }
+        }
+      } catch (reconcileError) {
+        console.warn("Blueprint reconciliation pending:", reconcileError);
+      }
       alert(
         "IMPORTANT: Your HIVE payment to the seller may already be complete, " +
         "but Blueprint delivery is NOT confirmed. Do not purchase again or pay twice. " +
