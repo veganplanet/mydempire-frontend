@@ -1960,8 +1960,8 @@ async function createBlueprintListing() {
     }
     const session = initData.session;
     const ok = confirm(
-      "Buy Blueprint?\\n\\n" +
-      `Seller payment: ${session.seller_payment.amount} HIVE to @${session.seller_payment.to}\\n` +
+      "Buy Blueprint?\n\n" +
+      `Seller payment: ${session.seller_payment.amount} HIVE to @${session.seller_payment.to}\n` +
       `Fee payment: ${session.fee_payment.amount} HIVE to @${session.fee_payment.to}`
     );
     if (!ok) return;
