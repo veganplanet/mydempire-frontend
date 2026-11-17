@@ -1383,6 +1383,25 @@ forkyishere,529"
       </div>
 
       <div class="admin-tab-panel" data-admin-panel="marketplace">
+        <div class="section" id="blueprint-payment-monitor">
+          <h2>Blueprint Payment & Discord Monitor</h2>
+          <p class="small">Read-only view of partially paid Blueprint purchases, completed trades, and Discord notification delivery. No HIVE or NFT action is performed here.</p>
+          <div class="row">
+            <button type="button" class="primary" id="refresh-blueprint-payment-monitor">Refresh Payment Monitor</button>
+          </div>
+          <div class="status" id="blueprint-payment-monitor-status">Click Refresh to load recent Blueprint transactions.</div>
+          <h3>Partially Paid & Recent Completed Trades</h3>
+          <div class="all-players-wrap"><div class="all-players-box">
+            <table class="all-players-table"><thead><tr><th>Session</th><th>Listing</th><th>Buyer</th><th>Seller</th><th>Session</th><th>Listing Status</th><th>Seller Paid</th><th>Fee</th><th>Created</th></tr></thead>
+            <tbody id="blueprint-payment-monitor-rows"><tr><td colspan="9">Not loaded.</td></tr></tbody></table>
+          </div></div>
+          <h3>Discord Notification Queue</h3>
+          <div class="all-players-wrap"><div class="all-players-box">
+            <table class="all-players-table"><thead><tr><th>Session</th><th>Listing</th><th>Buyer</th><th>Attempts</th><th>Delivery</th><th>Next Retry</th><th>Last Error</th></tr></thead>
+            <tbody id="blueprint-discord-monitor-rows"><tr><td colspan="7">Not loaded.</td></tr></tbody></table>
+          </div></div>
+        </div>
+
         <div class="section">
           <h2>Marketplace Listings (Pack)</h2>
           <div class="row">
@@ -1476,6 +1495,18 @@ forkyishere,529"
       </div>
 
       <div class="admin-tab-panel" data-admin-panel="operations">
+<section style="background:white;padding:20px;margin:18px 0;border:1px solid #dbe2ec;border-radius:12px" id="l2-credit-shop-admin">
+<h2>🏪 Fulfillment Credit Shop — L2 Land</h2>
+<p id="l2-credit-admin-progress">Loading batch settings...</p>
+<label>Credit cost <input id="l2-credit-cost" type="number" min="1" step="1" value="35"></label>
+<label>EMP cost <input id="l2-emp-cost" type="number" min="1" step="1" value="400"></label>
+<label>SMP cost <input id="l2-smp-cost" type="number" min="0" step="1" value="2"></label>
+<label>Batch quantity <input id="l2-batch-quantity" type="number" min="0" step="1" value="10"></label>
+<button type="button" onclick="saveL2CreditSettings(false)">Save Settings</button>
+<button type="button" onclick="saveL2CreditSettings(true)">Start New Batch</button>
+<p id="l2-credit-admin-message" role="status"></p>
+</section>
+
         <div class="section">
           <div
             style="
@@ -11464,17 +11495,7 @@ async function loadEmpWritPackPurchaseHistory() {
 }
 
 </script>
-<section style="background:white;padding:20px;margin:18px 0;border:1px solid #dbe2ec;border-radius:12px" id="l2-credit-shop-admin">
-<h2>🏪 Fulfillment Credit Shop — L2 Land</h2>
-<p id="l2-credit-admin-progress">Loading batch settings...</p>
-<label>Credit cost <input id="l2-credit-cost" type="number" min="1" step="1" value="35"></label>
-<label>EMP cost <input id="l2-emp-cost" type="number" min="1" step="1" value="400"></label>
-<label>SMP cost <input id="l2-smp-cost" type="number" min="0" step="1" value="2"></label>
-<label>Batch quantity <input id="l2-batch-quantity" type="number" min="0" step="1" value="10"></label>
-<button type="button" onclick="saveL2CreditSettings(false)">Save Settings</button>
-<button type="button" onclick="saveL2CreditSettings(true)">Start New Batch</button>
-<p id="l2-credit-admin-message" role="status"></p>
-</section>
+
 <script>
 async function loadL2CreditSettings() {
  try {
@@ -11605,41 +11626,60 @@ document.addEventListener("DOMContentLoaded", loadDiwaliAdminSettings);
 </script>
 <script src="js/admin-genesis-pack-promotion.js?v=20261112"></script>
 
-<section id="diwali-supplement-nft-admin" class="section" style="margin-top:24px;border:2px solid #f59e0b;">
-  <h2>🪔 Diwali Supplement NFT Distribution</h2>
-  <p>Temporary one-time tool for the verified Supplement Mega Draw. Winner: <strong>@sieghard1990</strong>.</p>
-  <button id="diwali-supplement-nft-assign-btn" class="danger" type="button">
-    Assign Sealed Diwali NFT
-  </button>
-  <div id="diwali-supplement-nft-status" class="status" style="margin-top:12px;">
-    Not distributed yet.
-  </div>
-</section>
+
+
+
 <script>
 (() => {
-  const button = document.getElementById("diwali-supplement-nft-assign-btn");
-  const status = document.getElementById("diwali-supplement-nft-status");
-  if (!button || !status) return;
-  button.addEventListener("click", async () => {
-    if (!confirm("Assign the sealed Diwali NFT to @sieghard1990? This action cannot be reversed automatically.")) return;
-    button.disabled = true;
-    status.textContent = "Distributing sealed Diwali NFT...";
+  const el = id => document.getElementById(id);
+  const showDate = value => value ? new Date(value).toLocaleString() : "—";
+  const textCell = (tr, value) => {
+    const td = document.createElement("td");
+    td.textContent = value == null ? "—" : String(value);
+    tr.appendChild(td);
+  };
+  async function refreshBlueprintPaymentMonitor() {
+    const status = el("blueprint-payment-monitor-status");
+    const trades = el("blueprint-payment-monitor-rows");
+    const queue = el("blueprint-discord-monitor-rows");
+    status.textContent = "Loading payment records...";
     try {
-      const response = await fetch(API_BASE + "/admin/diwali-supplement/assign-nft", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY },
-        body: JSON.stringify({ username: "sieghard1990" }),
+      if (!ADMIN_KEY) throw new Error("Unlock the admin dashboard first.");
+      const response = await fetch(API_BASE + "/admin/marketplace/blueprint-payment-monitor", {
+        headers: {"x-admin-key": ADMIN_KEY}
       });
       const data = await response.json();
-      if (!response.ok || !data.success) throw new Error(data.error || "Distribution failed.");
-      status.textContent = data.already_distributed
-        ? "Already distributed. No duplicate NFT was created."
-        : `Distributed NFT #${data.nft_id} — sealed serial ${String(data.serial_number).padStart(3, "0")}.`;
+      if (!response.ok || !data.success) throw new Error(data.error || "Unable to load monitor.");
+      trades.replaceChildren();
+      for (const item of data.sessions || []) {
+        const tr = document.createElement("tr");
+        [item.session_id, item.listing_id, item.buyer_username, item.seller_username,
+         item.status, item.listing_status,
+         item.seller_payout_status || "—", item.vault_transfer_status || "—",
+         showDate(item.created_at)].forEach(value => textCell(tr, value));
+        trades.appendChild(tr);
+      }
+      if (!trades.children.length) trades.innerHTML = '<tr><td colspan="9">No matching transactions.</td></tr>';
+      queue.replaceChildren();
+      for (const item of data.notifications || []) {
+        const tr = document.createElement("tr");
+        [item.session_id, item.listing_id, item.buyer_username, item.attempts,
+         item.sent_at ? "Sent " + showDate(item.sent_at) : "Pending",
+         item.sent_at ? "—" : showDate(item.next_attempt_at),
+         item.last_error || "—"].forEach(value => textCell(tr, value));
+        queue.appendChild(tr);
+      }
+      if (!queue.children.length) queue.innerHTML = '<tr><td colspan="7">No notification records.</td></tr>';
+      status.textContent = (data.sessions || []).filter(item => item.status === "seller_paid").length +
+        " partially paid session(s); " + (data.sessions || []).length +
+        " total recent sessions. Discord outbox: " +
+        (data.discord_outbox_available ? "available" : "not installed yet") + ".";
     } catch (error) {
-      button.disabled = false;
-      status.textContent = error.message || "Distribution failed.";
+      status.textContent = error.message || "Unable to load monitor.";
     }
-  });
+  }
+  document.addEventListener("DOMContentLoaded", () =>
+    el("refresh-blueprint-payment-monitor")?.addEventListener("click", refreshBlueprintPaymentMonitor));
 })();
 </script>
 
