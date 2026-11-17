@@ -1866,94 +1866,208 @@ async function createBlueprintListing() {
     }
 
    async function buyBlueprintListing(listingId) {
+  if (!ACTIVE_USER) {
+    alert("No active user found.");
+    return;
+  }
+
+  // A seller payment is irreversible. Never initiate another purchase for the
+  // same listing while the earlier paid session needs manual reconciliation.
+  const recoveryKey = `mde_blueprint_paid_${ACTIVE_USER}_${listingId}`;
+  let paidReceipt = null;
   try {
-    if (!ACTIVE_USER) {
-      alert("No active user found.");
-      return;
+    paidReceipt = JSON.parse(localStorage.getItem(recoveryKey) || "null");
+  } catch (_) {}
+  if (paidReceipt) {
+    // The seller must NEVER be paid twice. Try server-side reconciliation first:
+    // finalize verifies both payments on Hive and is idempotent.
+    if (!confirm("Seller payment already recorded for listing #" + listingId +
+      ". Do NOT pay the seller again. Check whether this trade can be completed?")) return;
+    try {
+      const finalize = async (txid) => {
+        const response = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-mde-actor": ACTIVE_USER },
+          body: JSON.stringify({username: ACTIVE_USER, session_id: paidReceipt.session_id, payment_tx_id: txid})
+        });
+        const data = await response.json();
+        return {response, data};
+      };
+      const first = await finalize(paidReceipt.fee_tx_id || paidReceipt.seller_tx_id);
+      if (first.response.ok && first.data.success) {
+        localStorage.removeItem(recoveryKey);
+        alert("Blueprint trade completed. No additional payment required.");
+        await loadBlueprintInventory(); await loadBlueprintListings();
+        return;
+      }
+      if (paidReceipt.state === "seller_payment_unconfirmed") {
+        throw new Error("Seller payment outcome is uncertain. Check Hive history or contact support before making any further payment.");
+      }
+      if (!/Vault fee transfer not found on Hive/i.test(first.data.error || "")) {
+        throw new Error(first.data.error || "Settlement cannot be verified. Contact support.");
+      }
+      // If Keychain already confirmed a fee transaction, never charge it again.
+      // Hive history indexing can lag; support must reconcile this payment.
+      if (paidReceipt.state === "fee_payment_unconfirmed") {
+        throw new Error("Fee payment outcome is uncertain. Check Hive history or contact support; do not pay again.");
+      }
+      if (paidReceipt.fee_tx_id || paidReceipt.state === "fee_payment_confirmed") {
+        throw new Error("Marketplace fee was already submitted (tx " +
+          paidReceipt.fee_tx_id + "). Wait for Hive verification or contact support; do not pay again.");
+      }
+      if (!paidReceipt.fee_payment || !paidReceipt.fee_payment.to ||
+          !paidReceipt.fee_payment.amount || !paidReceipt.fee_payment.memo) {
+        throw new Error("Fee payment details unavailable. Contact support; do not pay the seller again.");
+      }
+      if (!confirm("Seller payment is already recorded. Only the marketplace fee of " +
+        paidReceipt.fee_payment.amount + " HIVE to @" + paidReceipt.fee_payment.to +
+        " is missing. Pay this fee now to finish the original trade?")) return;
+      // The fee can settle even when Keychain's callback is lost.
+      paidReceipt.state = "fee_payment_unconfirmed";
+      localStorage.setItem(recoveryKey, JSON.stringify(paidReceipt));
+      const feeTransfer = await hiveTransfer(ACTIVE_USER, paidReceipt.fee_payment.to,
+        paidReceipt.fee_payment.amount, paidReceipt.fee_payment.memo);
+      paidReceipt.fee_tx_id = feeTransfer?.tx_id || feeTransfer?.id || "";
+      paidReceipt.state = "fee_payment_confirmed";
+      localStorage.setItem(recoveryKey, JSON.stringify(paidReceipt));
+      const second = await finalize(paidReceipt.fee_tx_id || paidReceipt.seller_tx_id);
+      if (!second.response.ok || !second.data.success) {
+        throw new Error(second.data.error || "Fee paid but settlement not confirmed");
+      }
+      localStorage.removeItem(recoveryKey);
+      alert("Blueprint trade completed successfully.");
+      await loadBlueprintInventory(); await loadBlueprintListings();
+    } catch (err) {
+      alert("Do NOT pay the seller again. The original trade needs reconciliation. " +
+        "Listing #" + listingId + ", seller transaction " +
+        (paidReceipt.seller_tx_id || "check Hive history") + ". " + err.message);
     }
-const confirmBeforeReserve = confirm("Buy this blueprint?");
-if (!confirmBeforeReserve) return;
+    return;
+  }
+
+  let sellerPaymentSucceeded = false;
+  let sellerTxId = "";
+  try {
+    if (!confirm("Buy this blueprint?")) return;
     const initRes = await fetch(apiUrl("/marketplace/blueprint/buy-init"), {
       method: "POST",
-      headers: {
-  "Content-Type": "application/json",
-  "x-mde-actor": ACTIVE_USER,
-},
-      body: JSON.stringify({
-        username: ACTIVE_USER,
-        listing_id: listingId
-      })
+      headers: { "Content-Type": "application/json", "x-mde-actor": ACTIVE_USER },
+      body: JSON.stringify({ username: ACTIVE_USER, listing_id: listingId })
     });
-
     const initData = await initRes.json();
-
     if (!initRes.ok || !initData.success) {
       throw new Error(initData.error || "Failed to initialize blueprint purchase.");
     }
-
     const session = initData.session;
-
-    const confirmText =
-      `Buy Blueprint?\n\n` +
+    const ok = confirm(
+      "Buy Blueprint?\n\n" +
       `Seller payment: ${session.seller_payment.amount} HIVE to @${session.seller_payment.to}\n` +
-      `Fee payment: ${session.fee_payment.amount} HIVE to @${session.fee_payment.to}`;
-
-    const ok = confirm(confirmText);
+      `Fee payment: ${session.fee_payment.amount} HIVE to @${session.fee_payment.to}`
+    );
     if (!ok) return;
 
+    // Save intent before opening Keychain: a transfer may succeed even if the
+    // browser closes before the Keychain callback returns.
+    localStorage.setItem(recoveryKey, JSON.stringify({
+      listing_id: listingId,
+      session_id: session.id,
+      seller_tx_id: "",
+      seller: session.seller_payment.to,
+      amount: session.seller_payment.amount,
+      seller_payment: session.seller_payment,
+      fee_payment: session.fee_payment,
+      state: "seller_payment_unconfirmed",
+      saved_at: new Date().toISOString()
+    }));
     const sellerTransfer = await hiveTransfer(
-      ACTIVE_USER,
-      session.seller_payment.to,
-      session.seller_payment.amount,
-      session.seller_payment.memo
+      ACTIVE_USER, session.seller_payment.to,
+      session.seller_payment.amount, session.seller_payment.memo
     );
+    sellerPaymentSucceeded = true;
+    sellerTxId = sellerTransfer?.tx_id || sellerTransfer?.id || "";
+    // Persist before initiating the second Keychain prompt or any API call.
+    localStorage.setItem(recoveryKey, JSON.stringify({
+      listing_id: listingId,
+      session_id: session.id,
+      seller_tx_id: sellerTxId,
+      seller: session.seller_payment.to,
+      amount: session.seller_payment.amount,
+      fee_payment: session.fee_payment,
+      state: "seller_payment_confirmed",
+      saved_at: new Date().toISOString()
+    }));
 
+    // Mark fee as in-flight before Keychain opens. A missing callback does not
+    // prove that the Hive transfer failed.
+    const beforeFee = JSON.parse(localStorage.getItem(recoveryKey) || "{}");
+    beforeFee.state = "fee_payment_unconfirmed";
+    localStorage.setItem(recoveryKey, JSON.stringify(beforeFee));
     const feeTransfer = await hiveTransfer(
-      ACTIVE_USER,
-      session.fee_payment.to,
-      session.fee_payment.amount,
-      session.fee_payment.memo
+      ACTIVE_USER, session.fee_payment.to,
+      session.fee_payment.amount, session.fee_payment.memo
     );
-
-    console.log("sellerTransfer =", sellerTransfer);
-    console.log("feeTransfer =", feeTransfer);
-
-    const paymentTxId =
-      feeTransfer?.tx_id ||
-      feeTransfer?.id ||
-      sellerTransfer?.tx_id ||
-      sellerTransfer?.id ||
-      null;
-
-    if (!paymentTxId) {
-      throw new Error("Transaction ID not returned by Keychain.");
-    }
-
+    const paymentTxId = feeTransfer?.tx_id || feeTransfer?.id || sellerTxId;
+    const savedReceipt = JSON.parse(localStorage.getItem(recoveryKey) || "{}");
+    savedReceipt.fee_tx_id = feeTransfer?.tx_id || feeTransfer?.id || "";
+    savedReceipt.state = "fee_payment_confirmed";
+    localStorage.setItem(recoveryKey, JSON.stringify(savedReceipt));
     const finalizeRes = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
       method: "POST",
-      headers: {
-  "Content-Type": "application/json",
-  "x-mde-actor": ACTIVE_USER,
-},
+      headers: { "Content-Type": "application/json", "x-mde-actor": ACTIVE_USER },
       body: JSON.stringify({
         username: ACTIVE_USER,
         session_id: session.id,
         payment_tx_id: paymentTxId
       })
     });
-
     const finalizeData = await finalizeRes.json();
-
     if (!finalizeRes.ok || !finalizeData.success) {
       throw new Error(finalizeData.error || "Failed to finalize blueprint trade.");
     }
-
+    // Only clear the safety lock after the server confirms delivery.
+    localStorage.removeItem(recoveryKey);
     alert("✅ Blueprint trade completed successfully.");
     await loadBlueprintInventory();
     await loadBlueprintListings();
   } catch (err) {
     console.error("buyBlueprintListing error:", err);
-    alert(err.message || "Blueprint purchase failed.");
+    if (sellerPaymentSucceeded) {
+      // Reconcile on-chain seller payment even when the fee Keychain prompt
+      // fails. The backend holds the NFT for this buyer if the fee is absent.
+      try {
+        const receipt = JSON.parse(localStorage.getItem(recoveryKey) || "null");
+        if (receipt?.session_id) {
+          const check = await fetch(apiUrl("/marketplace/blueprint/buy-finalize"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-mde-actor": ACTIVE_USER },
+            body: JSON.stringify({
+              username: ACTIVE_USER,
+              session_id: receipt.session_id,
+              payment_tx_id: receipt.fee_tx_id || sellerTxId
+            })
+          });
+          const result = await check.json();
+          if (check.ok && result.success) {
+            localStorage.removeItem(recoveryKey);
+            alert("Blueprint delivery completed. No further payment is needed.");
+            await loadBlueprintInventory();
+            await loadBlueprintListings();
+            return;
+          }
+        }
+      } catch (reconcileError) {
+        console.warn("Blueprint reconciliation pending:", reconcileError);
+      }
+      alert(
+        "IMPORTANT: Your HIVE payment to the seller may already be complete, " +
+        "but Blueprint delivery is NOT confirmed. Do not purchase again or pay twice. " +
+        "Contact MydEmpire support with listing #" + listingId +
+        " and seller transaction " + sellerTxId + ". " +
+        "Details: " + (err.message || "Settlement interrupted.")
+      );
+    } else {
+      alert(err.message || "Blueprint purchase failed. Check Hive history before retrying.");
+    }
   }
 }
     /* PACKS */
@@ -3319,6 +3433,11 @@ const blueprint =
   "Blueprint";
         const level = item.blueprint_level || "";
         const price = Number(item.total_price_hive || 0);
+        const feeWaived = String(item.vault_transfer_status || "").toLowerCase() === "waived";
+        const feeQuoted = Number(item.fee_amount_hive || 0);
+        const feeNote = feeWaived
+          ? "Marketplace fee: waived (0.000 HIVE collected)"
+          : "Marketplace fee: " + feeQuoted.toFixed(3) + " HIVE";
 
         const seller = item.seller_username || "--";
         const buyer = item.buyer_username || "--";
@@ -3336,7 +3455,7 @@ const blueprint =
             </div>
 
             <div class="trade-col trade-total">
-              ${price.toFixed(3)} HIVE
+              ${price.toFixed(3)} HIVE\n              <small style="display:block;opacity:.75">${feeNote}</small>
             </div>
 
             <div class="trade-col trade-time">
