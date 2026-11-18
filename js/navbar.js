@@ -52,6 +52,7 @@
   <a href="economy.html">Economy</a>
   <a href="codex.html">Codex</a>
   <a href="transparency.html">Transparency</a>
+  <a href="past-events.html">Past Offers &amp; Events</a>
 </div>
 </div>
 ${authLinks}
