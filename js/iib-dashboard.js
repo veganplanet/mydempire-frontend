@@ -56,7 +56,7 @@ async function loadHistory(){
  }catch(_){if(requestId===state.historyRequestId)text("iibHistoryMessage","Price history is temporarily unavailable.");}
 }
 async function init(){
- if(!window.MDEAuth?.getToken()){text("iibStatus","Please sign in with Hive Keychain to view market data.");text("iibEligibility","Sign in required.");return;}
+ if(!window.MDEAuth?.getToken()){text("iibStatus","Please sign in with Hive Keychain to view market data.");text("iibEligibility","Sign in required.");renderSectors();text("iibHistoryMessage","Sign in to view published prices.");return;}
  try{
   const result=await get("/status");
   state.active=result.active===true;
