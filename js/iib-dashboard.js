@@ -43,6 +43,15 @@ async function loadHistory(){
  try{
   const result=await get("/history?industry="+encodeURIComponent(industry)+"&limit=84");
   if(requestId!==state.historyRequestId)return;
+  // The week may close between /status, /week and /history requests.
+  // Fail closed instead of presenting stale prices as an active market.
+  if(result.active!==true){
+   state.active=false;
+   renderSectors();
+   text("iibStatus","Market not active. Trading is unavailable.");
+   text("iibHistoryMessage","Market week is no longer open. No live prices are shown.");
+   return;
+  }
   const rows=Array.isArray(result.history)?result.history:[];
   for(const row of rows.slice(0,84)){
    const tr=document.createElement("tr");
