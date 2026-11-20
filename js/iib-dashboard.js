@@ -1,6 +1,6 @@
 (function(){
 "use strict";
-const api=(location.hostname==="localhost"||location.hostname==="127.0.0.1"?"http://localhost:10000":"https://mydempire-backend-1.onrender.com")+"/api/iib";
+const api=(location.hostname==="localhost"||location.hostname==="127.0.0.1"?"http://localhost:10000":"https://mydempire-backend-1.onrender.com")+"/api/industrial-investment";
 const industries=[["food","🌾 Food"],["textile","🧵 Textile"],["pharma","💊 Pharma"],["chemical","⚗️ Chemical"],["supermarket","🛒 Supermarket"]];
 const el=id=>document.getElementById(id);
 const state={active:false,selected:"food"};
