@@ -33,3 +33,8 @@ test("dashboard requires an OPEN week before showing live price history", () => 
  assert.match(dashboard, /state\.active=week\.active===true&&week\.week\?\.status==="OPEN"/);
  assert.match(dashboard, /state\.active=false/);
 });
+
+test("dashboard fails closed when history reports that the week has ended", () => {
+ assert.match(dashboard, /if\(result\.active!==true\)/);
+ assert.match(dashboard, /state\.active=false;[\s\S]*renderSectors\(\);[\s\S]*Market week is no longer open/);
+});
