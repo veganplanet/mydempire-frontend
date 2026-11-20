@@ -59,14 +59,15 @@ async function init(){
  if(!window.MDEAuth?.getToken()){text("iibStatus","Please sign in with Hive Keychain to view market data.");text("iibEligibility","Sign in required.");renderSectors();text("iibHistoryMessage","Sign in to view published prices.");return;}
  try{
   const result=await get("/status");
-  state.active=result.active===true;
-  text("iibStatus",state.active?"Market is active — read-only dashboard":"Market not active. Trading is unavailable.");
-  if(state.active){
+  state.active=false;
+  if(result.active===true){
    try{
     const week=await get("/week");
+    state.active=week.active===true&&week.week?.status==="OPEN";
     text("iibWeek",week.week?"Week: "+new Date(week.week.week_start).toISOString().slice(0,10)+" to "+new Date(week.week.week_end).toISOString().slice(0,10)+" UTC · "+week.week.status:"No active market week.");
-   }catch(_){text("iibWeek","Week information unavailable.");}
+   }catch(_){text("iibWeek","Week information unavailable. Market data is paused.");}
   }
+  text("iibStatus",state.active?"Market is active — read-only dashboard":"Market not active. Trading is unavailable.");
  }catch(_){text("iibStatus","IIB API is not available yet. No live market data is being shown.");}
  renderSectors();await loadHistory();
  try{
