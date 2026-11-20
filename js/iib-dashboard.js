@@ -3,7 +3,7 @@
 const api=(location.hostname==="localhost"||location.hostname==="127.0.0.1"?"http://localhost:10000":"https://mydempire-backend-1.onrender.com")+"/api/industrial-investment";
 const industries=[["food","🌾 Food"],["textile","🧵 Textile"],["pharma","💊 Pharma"],["chemical","⚗️ Chemical"],["supermarket","🛒 Supermarket"]];
 const el=id=>document.getElementById(id);
-const state={active:false,selected:"food"};
+const state={active:false,selected:"food",historyRequestId:0};
 async function get(path){
  const response=await fetch(api+path,{headers:{"Accept":"application/json"},cache:"no-store"});
  const data=await response.json().catch(()=>({}));
@@ -35,11 +35,14 @@ function draw(rows){
  svg.append(line);
 }
 async function loadHistory(){
- text("iibHistoryTitle","Published price history — "+state.selected);
+ const requestId=++state.historyRequestId;
+ const industry=state.selected;
+ text("iibHistoryTitle","Published price history — "+industry);
  const tbody=el("iibHistory");tbody.replaceChildren();el("iibChart").replaceChildren();
  if(!state.active){text("iibHistoryMessage","No live market prices are available.");return;}
  try{
-  const result=await get("/history?industry="+encodeURIComponent(state.selected)+"&limit=84");
+  const result=await get("/history?industry="+encodeURIComponent(industry)+"&limit=84");
+  if(requestId!==state.historyRequestId)return;
   const rows=Array.isArray(result.history)?result.history:[];
   for(const row of rows.slice(0,84)){
    const tr=document.createElement("tr");
@@ -50,7 +53,7 @@ async function loadHistory(){
   }
   draw([...rows].reverse());
   text("iibHistoryMessage",rows.length?rows.length+" published price observations":"No published prices yet.");
- }catch(_){text("iibHistoryMessage","Price history is temporarily unavailable.");}
+ }catch(_){if(requestId===state.historyRequestId)text("iibHistoryMessage","Price history is temporarily unavailable.");}
 }
 async function init(){
  if(!window.MDEAuth?.getToken()){text("iibStatus","Please sign in with Hive Keychain to view market data.");text("iibEligibility","Sign in required.");return;}
