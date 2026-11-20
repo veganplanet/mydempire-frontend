@@ -28,3 +28,8 @@ test("industry changes invalidate stale price history requests", () => {
  assert.match(dashboard, /historyRequestId/);
  assert.match(dashboard, /requestId!==state\.historyRequestId/);
 });
+
+test("dashboard requires an OPEN week before showing live price history", () => {
+ assert.match(dashboard, /state\.active=week\.active===true&&week\.week\?\.status==="OPEN"/);
+ assert.match(dashboard, /state\.active=false/);
+});
