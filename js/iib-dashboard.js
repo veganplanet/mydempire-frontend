@@ -52,7 +52,15 @@ async function loadHistory(){
    text("iibHistoryMessage","Market week is no longer open. No live prices are shown.");
    return;
   }
-  const rows=Array.isArray(result.history)?result.history:[];
+  // Reject malformed payloads rather than presenting partial or fabricated history.
+  if(!Array.isArray(result.history) || result.industry!==industry){
+   state.active=false;
+   renderSectors();
+   text("iibStatus","Market data unavailable. Live status cannot be confirmed.");
+   text("iibHistoryMessage","Invalid market history response.");
+   return;
+  }
+  const rows=result.history;
   for(const row of rows.slice(0,84)){
    const tr=document.createElement("tr");
    for(const value of [new Date(row.settlement_at).toLocaleString("en-GB",{timeZone:"UTC"})+" UTC",row.previous_price,row.next_price]){
