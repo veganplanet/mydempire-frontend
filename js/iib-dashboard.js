@@ -71,8 +71,11 @@ async function loadHistory(){
    typeof row.settlement_at==="string"&&Number.isFinite(Date.parse(row.settlement_at)));
   // API returns newest-first settlements. Duplicates, gaps, or reversed
   // indexes indicate an inconsistent market history and must not be charted.
-  const coherent=rows.every((row,i)=>i===0||
-   Number(rows[i-1].settlement_index)===Number(row.settlement_index)+1);
+  const coherent=rows.every((row,i)=>i===0||(
+   Number(rows[i-1].settlement_index)===Number(row.settlement_index)+1&&
+   Date.parse(rows[i-1].settlement_at)>Date.parse(row.settlement_at)&&
+   Date.parse(rows[i-1].settlement_at)-Date.parse(row.settlement_at)===2*60*60*1000
+  ));
   if(!valid||!coherent){
    state.active=false;
    renderSectors();
