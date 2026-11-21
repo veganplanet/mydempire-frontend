@@ -108,8 +108,14 @@ async function init(){
   if(result.active===true){
    try{
     const week=await get("/week");
-    state.active=week.active===true&&week.week?.status==="OPEN";
-    text("iibWeek",week.week?"Week: "+new Date(week.week.week_start).toISOString().slice(0,10)+" to "+new Date(week.week.week_end).toISOString().slice(0,10)+" UTC · "+week.week.status:"No active market week.");
+    const start=Date.parse(week.week?.week_start),end=Date.parse(week.week?.week_end);
+    const validWeek=Number.isFinite(start)&&Number.isFinite(end)&&
+     end-start===7*24*60*60*1000&&
+     new Date(start).getUTCDay()===1&&
+     new Date(start).getUTCHours()===0&&new Date(start).getUTCMinutes()===0&&
+     new Date(start).getUTCSeconds()===0&&new Date(start).getUTCMilliseconds()===0;
+    state.active=week.active===true&&week.week?.status==="OPEN"&&validWeek;
+    text("iibWeek",validWeek?"Week: "+new Date(start).toISOString().slice(0,10)+" to "+new Date(end).toISOString().slice(0,10)+" UTC · "+week.week.status:"Market week information unavailable.");
    }catch(_){text("iibWeek","Week information unavailable. Market data is paused.");}
   }
   text("iibStatus",state.active?"Market is active — read-only dashboard":"Market not active. Trading is unavailable.");
