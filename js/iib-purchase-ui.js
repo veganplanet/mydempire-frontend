@@ -17,13 +17,15 @@ function init(){
   const token=window.MDEAuth?.getToken();
   if(!token)return;
   try{
-   const [weekResponse,portfolioResponse]=await Promise.all([
+   const [weekResponse,portfolioResponse,eligibilityResponse]=await Promise.all([
     fetch(API+"/week",{headers:{"Authorization":"Bearer "+token},cache:"no-store"}),
-    fetch(API+"/portfolio",{headers:{"Authorization":"Bearer "+token},cache:"no-store"})
+    fetch(API+"/portfolio",{headers:{"Authorization":"Bearer "+token},cache:"no-store"}),
+    fetch(API+"/eligibility",{headers:{"Authorization":"Bearer "+token},cache:"no-store"})
    ]);
    const week=await weekResponse.json(),portfolio=await portfolioResponse.json();
-   const username=window.MDEAuth?.getUsername?.();
-   if(!weekResponse.ok||!portfolioResponse.ok||week.active!==true||
+   const eligibility=await eligibilityResponse.json();
+   const username=eligibility.username;
+   if(!weekResponse.ok||!portfolioResponse.ok||!eligibilityResponse.ok||eligibility.success!==true||week.active!==true||
       portfolio.enrolled!==true||!Number.isSafeInteger(Number(week.week?.id))||
       Number(week.week.id)!==Number(portfolio.portfolio?.weekId)||
       typeof username!=="string"||!/^[a-z][a-z0-9.-]{2,15}$/.test(username))
