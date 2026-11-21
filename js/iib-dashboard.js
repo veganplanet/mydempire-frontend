@@ -35,7 +35,8 @@ async function loadQuotes(){
   const index=Number(result.settlementIndex);
   const at=Date.parse(result.settlementAt);
   if(names.size!==industries.length||!Number.isSafeInteger(index)||index<1||index>84||
-     !Number.isFinite(at)||result.quotes.length!==industries.length||
+     !Number.isFinite(at)||at>Date.now()||Date.now()-at>=2*60*60*1000||
+     result.quotes.length!==industries.length||
      !result.quotes.every(row=>industries.some(([name])=>name===row.industry)&&
       Number(row.settlement_index)===index&&Date.parse(row.settlement_at)===at&&
       Number.isFinite(Number(row.next_price))&&Number(row.next_price)>0))
