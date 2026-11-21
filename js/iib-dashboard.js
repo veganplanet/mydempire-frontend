@@ -62,7 +62,7 @@ async function loadPortfolio(){
   const p=result.portfolio;
   if(!p||typeof p.availableCashIic!=="string"||typeof p.ledgerCashIic!=="string"||
      !Array.isArray(p.holdings)||!p.holdings.every(h=>industries.some(([id])=>id===h.industry)&&
-     typeof h.unitsIic==="string"&&/^\\d+(?:\\.\\d{1,6})?$/.test(h.unitsIic)))
+     typeof h.unitsIic==="string"&&/^\d+(?:\.\d{1,6})?$/.test(h.unitsIic)))
    throw Error("Invalid portfolio");
   text("iibPortfolio","Available: "+p.availableCashIic+" IIC · Total: "+p.ledgerCashIic+" IIC");
   const tbody=el("iibHoldings");tbody.replaceChildren();
