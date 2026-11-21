@@ -55,10 +55,10 @@ async function loadQuotes(){
  }
 }
 async function loadPortfolio(){
- if(!window.MDEAuth?.getToken()){text("iibPortfolio","Sign in to view your holdings.");return;}
+ if(!window.MDEAuth?.getToken()){text("iibPortfolio","Sign in to view your holdings.");el("iibHoldings").replaceChildren();return;}
  try{
   const result=await get("/portfolio");
-  if(result.enrolled!==true){text("iibPortfolio","Not enrolled in the current IIB week.");return;}
+  if(result.enrolled!==true){text("iibPortfolio","Not enrolled in the current IIB week.");el("iibHoldings").replaceChildren();return;}
   const p=result.portfolio;
   if(!p||typeof p.availableCashIic!=="string"||typeof p.ledgerCashIic!=="string"||
      !Array.isArray(p.holdings)||!p.holdings.every(h=>industries.some(([id])=>id===h.industry)&&
