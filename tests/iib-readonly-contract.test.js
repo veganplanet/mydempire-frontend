@@ -68,3 +68,65 @@ test("history checks that consecutive settlements are exactly two hours apart", 
  assert.match(dashboard, /Date\.parse\(rows\[i-1\]\.settlement_at\)>Date\.parse\(row\.settlement_at\)/);
  assert.match(dashboard, /Date\.parse\(rows\[i-1\]\.settlement_at\)-Date\.parse\(row\.settlement_at\)===2\*60\*60\*1000/);
 });
+
+const vm = require("node:vm");
+
+async function runDashboardScenario(historyPayload) {
+ const elements=new Map();
+ function element(id){
+  if(!elements.has(id))elements.set(id,{
+   textContent:"",children:[],attributes:{},
+   replaceChildren(){this.children=[];},
+   append(...children){this.children.push(...children);},
+   setAttribute(k,v){this.attributes[k]=v;},
+   addEventListener(){},
+  });
+  return elements.get(id);
+ }
+ const calls=[];
+ const fetch=async url=>{
+  calls.push(url);
+  let body;
+  if(url.endsWith("/status"))body={success:true,active:true};
+  else if(url.endsWith("/week"))body={success:true,active:true,week:{
+   status:"OPEN",week_start:"2026-11-16T00:00:00Z",week_end:"2026-11-23T00:00:00Z"
+  }};
+  else if(url.includes("/history?"))body=historyPayload;
+  else if(url.endsWith("/eligibility"))body={success:true,epDay:1200,minEpDay:1000,eligible:true};
+  else throw Error("Unexpected URL "+url);
+  return {ok:true,json:async()=>body};
+ };
+ vm.runInNewContext(dashboard,{
+  location:{hostname:"localhost"},
+  window:{MDEAuth:{getToken:()=>"test-session"}},
+  document:{getElementById:element,createElement:()=>element(Symbol()),createElementNS:()=>element(Symbol())},
+  fetch,console,Date,Number,Array,String,Math,encodeURIComponent
+ });
+ // The dashboard initializes asynchronously on load.
+ for(let i=0;i<8;i++)await new Promise(resolve=>setImmediate(resolve));
+ return {elements,calls,get:id=>element(id)};
+}
+test("runtime: closed-week history hides live market and price rows",async()=>{
+ const view=await runDashboardScenario({success:true,active:false,industry:"food",history:[]});
+ assert.match(view.get("iibStatus").textContent,/Market not active/);
+ assert.equal(view.get("iibHistory").children.length,0);
+ assert.match(view.get("iibHistoryMessage").textContent,/no longer open/);
+});
+test("runtime: inconsistent settlements never render a partial price chart",async()=>{
+ const row=(index,time)=>({industry:"food",settlement_index:index,settlement_at:time,previous_price:"100",next_price:"101"});
+ const view=await runDashboardScenario({success:true,active:true,industry:"food",history:[
+  row(3,"2026-11-16T06:00:00Z"),row(1,"2026-11-16T02:00:00Z")
+ ]});
+ assert.match(view.get("iibHistoryMessage").textContent,/Invalid market price records/);
+ assert.equal(view.get("iibHistory").children.length,0);
+ assert.equal(view.get("iibChart").children.length,0);
+});
+test("runtime: valid contiguous settlements render newest-first history",async()=>{
+ const row=(index,time,price)=>({industry:"food",settlement_index:index,settlement_at:time,previous_price:"100",next_price:price});
+ const view=await runDashboardScenario({success:true,active:true,industry:"food",history:[
+  row(2,"2026-11-16T04:00:00Z","103"),row(1,"2026-11-16T02:00:00Z","101")
+ ]});
+ assert.match(view.get("iibStatus").textContent,/Market is active/);
+ assert.equal(view.get("iibHistory").children.length,2);
+ assert.equal(view.get("iibChart").children.length,1);
+});
