@@ -35,6 +35,21 @@
 <p id="iibPortfolio" class="iib-muted" role="status">Checking portfolio…</p>
 <div style="overflow:auto"><table class="iib-table"><thead><tr><th>Industry</th><th>Units held</th></tr></thead><tbody id="iibHoldings"></tbody></table></div>
 <p class="iib-muted">Balances and holdings are read-only until trading is released.</p></section>
+<section class="iib-panel"><h2>Trade ticket — preview</h2>
+<p class="iib-muted">Prepare a BUY or SELL instruction. Execution remains disabled until the market passes release testing.</p>
+<form id="iibTradeForm">
+<label for="iibTradeIndustry">Industry</label>
+<select id="iibTradeIndustry" style="display:block;width:100%;padding:10px;margin:6px 0 12px">
+<option value="food">Food</option><option value="textile">Textile</option><option value="pharma">Pharma</option>
+<option value="chemical">Chemical</option><option value="supermarket">Supermarket</option></select>
+<label for="iibTradeSide">Action</label>
+<select id="iibTradeSide" style="display:block;width:100%;padding:10px;margin:6px 0 12px">
+<option value="BUY">BUY</option><option value="SELL">SELL</option></select>
+<label id="iibTradeAmountLabel" for="iibTradeAmount">IIC budget to spend</label>
+<input id="iibTradeAmount" type="text" inputmode="decimal" placeholder="100.000000"
+ style="display:block;width:100%;box-sizing:border-box;padding:10px;margin:6px 0 12px">
+<button id="iibTradeSubmit" type="submit" disabled>Trading not released</button>
+<p id="iibTradeMessage" class="iib-muted" role="status"></p></form></section>
 <section class="iib-panel"><h2>Your eligibility</h2><p id="iibEligibility" class="iib-muted">Checking eligibility…</p>
 <p><a href="share-market.html">Investment Board overview</a> · <a href="industrial-market-preview.html">Illustrative market preview</a></p></section>
-</main><script src="js/navbar.js"></script><script src="js/iib-dashboard.js"></script></body></html>
+</main><script src="js/navbar.js"></script><script src="js/iib-dashboard.js"></script><script src="js/iib-trade-ui.js"></script></body></html>
