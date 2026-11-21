@@ -63,3 +63,8 @@ test("dashboard rejects duplicate or missing settlement indexes", () => {
  assert.match(dashboard, /Number\(rows\[i-1\]\.settlement_index\)===Number\(row\.settlement_index\)\+1/);
  assert.match(dashboard, /if\(!valid\|\|!coherent\)/);
 });
+
+test("history checks that consecutive settlements are exactly two hours apart", () => {
+ assert.match(dashboard, /Date\.parse\(rows\[i-1\]\.settlement_at\)>Date\.parse\(row\.settlement_at\)/);
+ assert.match(dashboard, /Date\.parse\(rows\[i-1\]\.settlement_at\)-Date\.parse\(row\.settlement_at\)===2\*60\*60\*1000/);
+});
