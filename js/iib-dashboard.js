@@ -62,7 +62,13 @@ async function loadHistory(){
   }
   draw([...rows].reverse());
   text("iibHistoryMessage",rows.length?rows.length+" published price observations":"No published prices yet.");
- }catch(_){if(requestId===state.historyRequestId)text("iibHistoryMessage","Price history is temporarily unavailable.");}
+ }catch(_){if(requestId===state.historyRequestId){
+  // A failed history request cannot be treated as a confirmed live quote.
+  state.active=false;
+  renderSectors();
+  text("iibStatus","Market data unavailable. Live status cannot be confirmed.");
+  text("iibHistoryMessage","Price history is temporarily unavailable.");
+ }}
 }
 async function init(){
  if(!window.MDEAuth?.getToken()){text("iibStatus","Please sign in with Hive Keychain to view market data.");text("iibEligibility","Sign in required.");renderSectors();text("iibHistoryMessage","Sign in to view published prices.");return;}
