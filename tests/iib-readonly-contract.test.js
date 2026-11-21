@@ -199,3 +199,13 @@ test("runtime: empty quote board never fabricates sector prices",async()=>{
  assert.equal(buttons.length,5);
  assert.equal(buttons.every(button=>button.children[1].textContent==="View published prices"),true);
 });
+
+test("portfolio validation accepts six-decimal server ledger balances",()=>{
+ const pattern=dashboard.match(/typeof h\.unitsIic==="string"&&\/(.*?)\/\.test\(h\.unitsIic\)/);
+ assert.ok(pattern,"portfolio validation regex must be present");
+ const decimal=new RegExp(pattern[1]);
+ assert.equal(decimal.test("10.123456"),true);
+ assert.equal(decimal.test("0.000001"),true);
+ assert.equal(decimal.test("10\\123456"),false);
+ assert.equal(decimal.test("1.1234567"),false);
+});
