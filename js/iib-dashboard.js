@@ -61,6 +61,21 @@ async function loadHistory(){
    return;
   }
   const rows=result.history;
+  // Validate the complete response before rendering any prices. Never show
+  // nonpositive, nonnumeric or wrong-industry settlements as live quotes.
+  const valid=rows.every(row=>row&&row.industry===industry&&
+   Number.isFinite(Number(row.previous_price))&&Number(row.previous_price)>0&&
+   Number.isFinite(Number(row.next_price))&&Number(row.next_price)>0&&
+   Number.isSafeInteger(Number(row.settlement_index))&&Number(row.settlement_index)>=1&&
+   Number(row.settlement_index)<=84&&
+   typeof row.settlement_at==="string"&&Number.isFinite(Date.parse(row.settlement_at)));
+  if(!valid){
+   state.active=false;
+   renderSectors();
+   text("iibStatus","Market data unavailable. Live status cannot be confirmed.");
+   text("iibHistoryMessage","Invalid market price records.");
+   return;
+  }
   for(const row of rows.slice(0,84)){
    const tr=document.createElement("tr");
    for(const value of [new Date(row.settlement_at).toLocaleString("en-GB",{timeZone:"UTC"})+" UTC",row.previous_price,row.next_price]){
