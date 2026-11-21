@@ -49,3 +49,11 @@ test("dashboard rejects malformed history payloads and mismatched industry", () 
  assert.match(dashboard, /!Array\.isArray\(result\.history\) \|\| result\.industry!==industry/);
  assert.match(dashboard, /Invalid market history response\./);
 });
+
+test("dashboard validates settlement prices and indexes before rendering", () => {
+ assert.match(dashboard, /row\.industry===industry/);
+ assert.match(dashboard, /Number\.isFinite\(Number\(row\.next_price\)\)/);
+ assert.match(dashboard, /Number\(row\.next_price\)>0/);
+ assert.match(dashboard, /Number\.isSafeInteger\(Number\(row\.settlement_index\)\)/);
+ assert.match(dashboard, /Invalid market price records\./);
+});
