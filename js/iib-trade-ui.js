@@ -21,7 +21,7 @@ function init(){
  const amount=document.getElementById("iibTradeAmount"),label=document.getElementById("iibTradeAmountLabel");
  const message=document.getElementById("iibTradeMessage"),submit=document.getElementById("iibTradeSubmit");
  const quote=document.getElementById("iibTradeQuote");
- let snapshot=null,requestId=0,busy=false;
+ let snapshot=null,requestId=0,busy=false,pendingOrder=null;
  async function loadQuote(){
   const current=++requestId;snapshot=null;quote.textContent="Checking latest published price…";
   const token=window.MDEAuth?.getToken();
@@ -62,7 +62,7 @@ function init(){
    (side.value==="BUY"?"units":"gross IIC")+": "+format(estimate)+
    " (before fees; not an executable quote)";
  }
- for(const control of [side,industry,amount])control.addEventListener("input",refresh);
+ for(const control of [side,industry,amount])control.addEventListener("input",()=>{pendingOrder=null;refresh();});
  document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadQuote();});
  form.addEventListener("submit",async event=>{
   event.preventDefault();
@@ -75,8 +75,12 @@ function init(){
    if(Date.now()-Date.parse(snapshot.settlementAt)>=2*60*60*1000)throw Error("Price expired");
    const token=window.MDEAuth?.getToken();
    if(!token)throw Error("Sign in required");
-   const requestKey="iib:"+crypto.randomUUID();
-   const payload={industry:selectedIndustry,side:selectedSide,requestKey,
+   const signature=[selectedIndustry,selectedSide,value].join("|");
+   if(!pendingOrder||pendingOrder.signature!==signature){
+    if(!globalThis.crypto?.randomUUID)throw Error("Secure order identifier unavailable");
+    pendingOrder={signature,requestKey:"iib:"+crypto.randomUUID()};
+   }
+   const payload={industry:selectedIndustry,side:selectedSide,requestKey:pendingOrder.requestKey,
     ...(selectedSide==="BUY"?{budgetIic:value}:{unitsAmount:value})};
    busy=true;refresh();message.textContent="Submitting immediate trade…";
    const response=await fetch(API+"/trade",{method:"POST",headers:{
@@ -85,10 +89,11 @@ function init(){
    const result=await response.json();
    if(!response.ok||result.success!==true||!(result.filled===true||result.alreadyFilled===true))
     throw Error("Trade rejected by server");
+   pendingOrder=null;
    document.dispatchEvent(new Event("iib:portfolio-updated"));
    await loadQuote();
    message.textContent=result.alreadyFilled===true?"Trade was already filled. Portfolio refreshed.":"Trade filled. Portfolio refresh requested.";
-  }catch(_){message.textContent="Trade was not confirmed. Check your portfolio before retrying.";}
+  }catch(_){message.textContent="Trade not confirmed. Check portfolio; retrying unchanged details uses the same order ID to prevent duplicate fills.";}
   finally{busy=false;refresh();}
  });
  refresh();loadQuote();
