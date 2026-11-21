@@ -30,3 +30,15 @@ test("price preview handles eight decimal places and rejects stale snapshots",()
  assert.match(js,/Date\.now\(\)-Date\.parse\(result\.settlementAt\)>2\*60\*60\*1000/);
  assert.match(js,/submit\.disabled=busy\|\|!TRADING_RELEASE_APPROVED/);
 });
+
+test("trade input regex accepts decimal points rather than literal backslashes",()=>{
+ const vm=require("node:vm");
+ const start=js.indexOf("const SCALE=");
+ const end=js.indexOf("function init(){");
+ const source=js.slice(start,end)+";({micro,priceMicro})";
+ const {micro,priceMicro}=vm.runInNewContext(source,{BigInt});
+ assert.equal(micro("100.123456"),100123456n);
+ assert.equal(priceMicro("100.12345678"),10012345678n);
+ assert.throws(()=>micro("100\\123456"));
+ assert.throws(()=>priceMicro("100.123456789"));
+});
