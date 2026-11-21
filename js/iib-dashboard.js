@@ -180,5 +180,6 @@ async function init(){
   text("iibEligibility",String(result.epDay)+" EP/day · minimum "+String(result.minEpDay)+" EP/day · "+(result.eligible?"Eligible":"Not yet eligible"));
  }catch(_){text("iibEligibility","Eligibility information unavailable.");}
 }
+document.addEventListener("iib:portfolio-updated",()=>{void loadPortfolio();});
 init();
 })();
