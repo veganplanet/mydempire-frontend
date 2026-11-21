@@ -3,11 +3,15 @@
 /** Read-only market-price trade preview. Never submits orders or payments. */
 const industries=new Set(["food","textile","pharma","chemical","supermarket"]);
 const API=(location.hostname==="localhost"||location.hostname==="127.0.0.1"?"http://localhost:10000":"https://mydempire-backend-1.onrender.com")+"/api/industrial-investment";
-const SCALE=1000000n;
+const SCALE=1000000n,PRICE_SCALE=100000000n;
 function micro(value){
  if(typeof value!=="string"||!/^(0|[1-9][0-9]*)(?:\\.[0-9]{1,6})?$/.test(value))throw Error("Invalid decimal");
  const [whole,frac=""]=value.split(".");
  return BigInt(whole)*SCALE+BigInt(frac.padEnd(6,"0"));
+}
+function priceMicro(value){
+ if(typeof value!=="string"||!/^(0|[1-9][0-9]*)(?:\\.[0-9]{1,8})?$/.test(value))throw Error("Invalid market price");
+ const [whole,frac=""]=value.split(".");return BigInt(whole)*PRICE_SCALE+BigInt(frac.padEnd(8,"0"));
 }
 function format(n){return (n/SCALE)+"."+(n%SCALE).toString().padStart(6,"0");}
 function init(){
@@ -31,7 +35,10 @@ function init(){
       !result.quotes.every(q=>industries.has(q.industry)&&
        Number(q.settlement_index)===Number(result.settlementIndex)&&
        Date.parse(q.settlement_at)===Date.parse(result.settlementAt)&&
-       typeof q.next_price==="string"&&micro(q.next_price)>0n))
+       typeof q.next_price==="string"&&priceMicro(q.next_price)>0n)&&
+      Number.isFinite(Date.parse(result.settlementAt))&&
+      Date.parse(result.settlementAt)<=Date.now()&&
+      Date.now()-Date.parse(result.settlementAt)<=2*60*60*1000)
     throw Error("Unverified price board");
    snapshot=result;refresh();
   }catch(_){if(current===requestId){snapshot=null;quote.textContent="Verified price unavailable. No trade estimate shown.";}}
@@ -46,9 +53,9 @@ function init(){
   message.textContent="Preview only. No order can be submitted.";
   if(!snapshot){quote.textContent="Verified price unavailable.";return;}
   const row=snapshot.quotes.find(q=>q.industry===industry.value);
-  const price=micro(row.next_price);
+  const price=priceMicro(row.next_price);
   // Informational estimate only; no claim of executable quantity or final fee.
-  const estimate=side.value==="BUY"?(n*SCALE/price):(n*price/SCALE);
+  const estimate=side.value==="BUY"?(n*PRICE_SCALE/price):(n*price/PRICE_SCALE);
   quote.textContent="Last published: "+row.next_price+" IIC/unit · Estimated "+
    (side.value==="BUY"?"units":"gross IIC")+": "+format(estimate)+
    " (before fees; not an executable quote)";
