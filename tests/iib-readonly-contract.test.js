@@ -170,3 +170,18 @@ test("runtime: non-Monday week boundaries cannot activate market",async()=>{
  assert.match(view.get("iibStatus").textContent,/Market not active/);
  assert.equal(view.calls.some(url=>url.includes("/history?")),false);
 });
+
+test("runtime: expired week is not displayed as live",async()=>{
+ const view=await runDashboardScenario({success:true,active:true,industry:"food",history:[]},{
+  success:true,active:true,week:{status:"OPEN",week_start:"2020-11-16T00:00:00Z",week_end:"2020-11-23T00:00:00Z"}
+ });
+ assert.match(view.get("iibStatus").textContent,/Market not active/);
+ assert.equal(view.calls.some(url=>url.includes("/history?")),false);
+});
+test("runtime: future week cannot display live prices",async()=>{
+ const view=await runDashboardScenario({success:true,active:true,industry:"food",history:[]},{
+  success:true,active:true,week:{status:"OPEN",week_start:"2030-11-18T00:00:00Z",week_end:"2030-11-25T00:00:00Z"}
+ });
+ assert.match(view.get("iibStatus").textContent,/Market not active/);
+ assert.equal(view.calls.some(url=>url.includes("/history?")),false);
+});
