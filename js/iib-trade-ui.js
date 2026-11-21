@@ -1,6 +1,7 @@
 (function(){
 "use strict";
-/** Read-only market-price trade preview. Never submits orders or payments. */
+/** Trade ticket wired to the authenticated API; release remains explicitly locked. */
+const TRADING_RELEASE_APPROVED=false;
 const industries=new Set(["food","textile","pharma","chemical","supermarket"]);
 const API=(location.hostname==="localhost"||location.hostname==="127.0.0.1"?"http://localhost:10000":"https://mydempire-backend-1.onrender.com")+"/api/industrial-investment";
 const SCALE=1000000n,PRICE_SCALE=100000000n;
@@ -20,7 +21,7 @@ function init(){
  const amount=document.getElementById("iibTradeAmount"),label=document.getElementById("iibTradeAmountLabel");
  const message=document.getElementById("iibTradeMessage"),submit=document.getElementById("iibTradeSubmit");
  const quote=document.getElementById("iibTradeQuote");
- let snapshot=null,requestId=0;
+ let snapshot=null,requestId=0,busy=false;
  async function loadQuote(){
   const current=++requestId;snapshot=null;quote.textContent="Checking latest published price…";
   const token=window.MDEAuth?.getToken();
@@ -45,12 +46,12 @@ function init(){
  }
  function refresh(){
   label.textContent=side.value==="BUY"?"IIC budget to spend":"Industry units to sell";
-  submit.disabled=true; // Not an authorization mechanism; server routes are also locked.
+  submit.disabled=busy||!TRADING_RELEASE_APPROVED; // Server-side interlocks independently deny unreleased trading.
   let n;
   try{n=micro(amount.value.trim());if(n<=0n)throw Error("Nonpositive");}
   catch(_){message.textContent="Enter a positive amount with up to six decimal places.";quote.textContent=snapshot?"Enter an amount to estimate.":"Verified price unavailable.";return;}
   if(!industries.has(industry.value)||!["BUY","SELL"].includes(side.value))return;
-  message.textContent="Preview only. No order can be submitted.";
+  message.textContent=TRADING_RELEASE_APPROVED?"Review your trade before submitting.":"Preview only. No order can be submitted.";
   if(snapshot&&(Date.now()-Date.parse(snapshot.settlementAt)>2*60*60*1000||Date.parse(snapshot.settlementAt)>Date.now()))snapshot=null;
   if(!snapshot){quote.textContent="Verified fresh price unavailable. Refresh to check current prices.";return;}
   const row=snapshot.quotes.find(q=>q.industry===industry.value);
@@ -63,8 +64,32 @@ function init(){
  }
  for(const control of [side,industry,amount])control.addEventListener("input",refresh);
  document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadQuote();});
- form.addEventListener("submit",event=>{
-  event.preventDefault();message.textContent="Trading is not released. No order was submitted.";
+ form.addEventListener("submit",async event=>{
+  event.preventDefault();
+  if(!TRADING_RELEASE_APPROVED){message.textContent="Trading is not released. No order was submitted.";return;}
+  if(busy||!snapshot){message.textContent="A verified price is required.";return;}
+  const selectedSide=side.value,selectedIndustry=industry.value,value=amount.value.trim();
+  try{
+   if(!industries.has(selectedIndustry)||!["BUY","SELL"].includes(selectedSide)||micro(value)<=0n)
+    throw Error("Invalid trade");
+   if(Date.now()-Date.parse(snapshot.settlementAt)>=2*60*60*1000)throw Error("Price expired");
+   const token=window.MDEAuth?.getToken();
+   if(!token)throw Error("Sign in required");
+   const requestKey="iib:"+crypto.randomUUID();
+   const payload={industry:selectedIndustry,side:selectedSide,requestKey,
+    ...(selectedSide==="BUY"?{budgetIic:value}:{unitsAmount:value})};
+   busy=true;refresh();message.textContent="Submitting immediate trade…";
+   const response=await fetch(API+"/trade",{method:"POST",headers:{
+    "Content-Type":"application/json","Accept":"application/json","Authorization":"Bearer "+token
+   },body:JSON.stringify(payload),cache:"no-store"});
+   const result=await response.json();
+   if(!response.ok||result.success!==true||!(result.filled===true||result.alreadyFilled===true))
+    throw Error("Trade rejected by server");
+   message.textContent="Trade filled. Refreshing your portfolio…";
+   document.dispatchEvent(new Event("iib:portfolio-updated"));
+   await loadQuote();
+  }catch(_){message.textContent="Trade was not confirmed. Check your portfolio before retrying.";}
+  finally{busy=false;refresh();}
  });
  refresh();loadQuote();
 }
