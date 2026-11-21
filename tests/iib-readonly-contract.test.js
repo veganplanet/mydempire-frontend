@@ -57,3 +57,9 @@ test("dashboard validates settlement prices and indexes before rendering", () =>
  assert.match(dashboard, /Number\.isSafeInteger\(Number\(row\.settlement_index\)\)/);
  assert.match(dashboard, /Invalid market price records\./);
 });
+
+test("dashboard rejects duplicate or missing settlement indexes", () => {
+ assert.match(dashboard, /const coherent=rows\.every/);
+ assert.match(dashboard, /Number\(rows\[i-1\]\.settlement_index\)===Number\(row\.settlement_index\)\+1/);
+ assert.match(dashboard, /if\(!valid\|\|!coherent\)/);
+});
