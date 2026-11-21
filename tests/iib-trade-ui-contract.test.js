@@ -17,3 +17,12 @@ test("trade ticket cannot issue POST requests or Hive transfers",()=>{
  assert.match(js,/submit\.disabled=true/);
  assert.match(js,/event\.preventDefault\(\)/);
 });
+
+test("price preview handles eight decimal places and rejects stale snapshots",()=>{
+ assert.match(js,/PRICE_SCALE=100000000n/);
+ assert.match(js,/priceMicro\(row\.next_price\)/);
+ assert.match(js,/n\*PRICE_SCALE\/price/);
+ assert.match(js,/n\*price\/PRICE_SCALE/);
+ assert.match(js,/Date\.now\(\)-Date\.parse\(result\.settlementAt\)>2\*60\*60\*1000/);
+ assert.match(js,/submit\.disabled=true/);
+});
