@@ -85,9 +85,9 @@ function init(){
    const result=await response.json();
    if(!response.ok||result.success!==true||!(result.filled===true||result.alreadyFilled===true))
     throw Error("Trade rejected by server");
-   message.textContent="Trade filled. Refreshing your portfolio…";
    document.dispatchEvent(new Event("iib:portfolio-updated"));
    await loadQuote();
+   message.textContent="Trade filled. Portfolio refresh requested.";
   }catch(_){message.textContent="Trade was not confirmed. Check your portfolio before retrying.";}
   finally{busy=false;refresh();}
  });
