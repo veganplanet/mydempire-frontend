@@ -51,7 +51,8 @@ function init(){
   catch(_){message.textContent="Enter a positive amount with up to six decimal places.";quote.textContent=snapshot?"Enter an amount to estimate.":"Verified price unavailable.";return;}
   if(!industries.has(industry.value)||!["BUY","SELL"].includes(side.value))return;
   message.textContent="Preview only. No order can be submitted.";
-  if(!snapshot){quote.textContent="Verified price unavailable.";return;}
+  if(snapshot&&(Date.now()-Date.parse(snapshot.settlementAt)>2*60*60*1000||Date.parse(snapshot.settlementAt)>Date.now()))snapshot=null;
+  if(!snapshot){quote.textContent="Verified fresh price unavailable. Refresh to check current prices.";return;}
   const row=snapshot.quotes.find(q=>q.industry===industry.value);
   const price=priceMicro(row.next_price);
   // Informational estimate only; no claim of executable quantity or final fee.
@@ -61,6 +62,7 @@ function init(){
    " (before fees; not an executable quote)";
  }
  for(const control of [side,industry,amount])control.addEventListener("input",refresh);
+ document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadQuote();});
  form.addEventListener("submit",event=>{
   event.preventDefault();message.textContent="Trading is not released. No order was submitted.";
  });
