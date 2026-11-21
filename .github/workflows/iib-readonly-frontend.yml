@@ -1,0 +1,28 @@
+name: IIB read-only frontend contract
+
+on:
+  pull_request:
+    paths:
+      - 'industrial-investment-board.html'
+      - 'js/iib-dashboard.js'
+      - 'js/player-auth.js'
+      - 'tests/iib-readonly-contract.test.js'
+      - '.github/workflows/iib-readonly-frontend.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  readonly-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check dashboard syntax
+        run: node --check js/iib-dashboard.js
+      - name: Check read-only API and session contract
+        run: node --test tests/iib-readonly-contract.test.js
