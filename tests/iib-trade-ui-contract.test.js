@@ -42,3 +42,11 @@ test("trade input regex accepts decimal points rather than literal backslashes",
  assert.throws(()=>micro("100\\123456"));
  assert.throws(()=>priceMicro("100.123456789"));
 });
+
+test("uncertain trade retries retain the original idempotency key",()=>{
+ assert.match(js,/pendingOrder=null/);
+ assert.match(js,/pendingOrder\.signature!==signature/);
+ assert.match(js,/requestKey:pendingOrder\.requestKey/);
+ assert.match(js,/pendingOrder=null;\s*document\.dispatchEvent/);
+ assert.match(js,/retrying unchanged details uses the same order ID/);
+});
