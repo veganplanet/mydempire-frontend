@@ -5,7 +5,7 @@ const industries=[["food","🌾 Food"],["textile","🧵 Textile"],["pharma","�
 const el=id=>document.getElementById(id);
 const state={active:false,selected:"food",historyRequestId:0};
 async function get(path){
- const response=await fetch(api+path,{headers:{"Accept":"application/json"},cache:"no-store"});
+ const response=await fetch(api+path,{headers:{"Accept":"application/json","Authorization":"Bearer "+window.MDEAuth.getToken()},cache:"no-store"});
  const data=await response.json().catch(()=>({}));
  if(!response.ok||data.success!==true)throw new Error(data.error||"Market service unavailable");
  return data;
@@ -52,6 +52,27 @@ async function loadQuotes(){
    renderSectors();
   }
  }
+}
+async function loadPortfolio(){
+ if(!window.MDEAuth?.getToken()){text("iibPortfolio","Sign in to view your holdings.");return;}
+ try{
+  const result=await get("/portfolio");
+  if(result.enrolled!==true){text("iibPortfolio","Not enrolled in the current IIB week.");return;}
+  const p=result.portfolio;
+  if(!p||typeof p.availableCashIic!=="string"||typeof p.ledgerCashIic!=="string"||
+     !Array.isArray(p.holdings)||!p.holdings.every(h=>industries.some(([id])=>id===h.industry)&&
+     typeof h.unitsIic==="string"&&/^\\d+(?:\\.\\d{1,6})?$/.test(h.unitsIic)))
+   throw Error("Invalid portfolio");
+  text("iibPortfolio","Available: "+p.availableCashIic+" IIC · Total: "+p.ledgerCashIic+" IIC");
+  const tbody=el("iibHoldings");tbody.replaceChildren();
+  for(const h of p.holdings){
+   const tr=document.createElement("tr");
+   for(const v of [h.industry,h.unitsIic]){
+    const td=document.createElement("td");td.textContent=v;tr.append(td);
+   }
+   tbody.append(tr);
+  }
+ }catch(_){text("iibPortfolio","Portfolio unavailable. No balances can be confirmed.");el("iibHoldings").replaceChildren();}
 }
 function draw(rows){
  const svg=el("iibChart");svg.replaceChildren();
@@ -152,7 +173,7 @@ async function init(){
   }
   text("iibStatus",state.active?"Market is active — read-only dashboard":"Market not active. Trading is unavailable.");
  }catch(_){text("iibStatus","IIB API is not available yet. No live market data is being shown.");}
- renderSectors();await loadHistory();await loadQuotes();
+ renderSectors();await loadHistory();await loadQuotes();await loadPortfolio();
  try{
   const result=await get("/eligibility");
   text("iibEligibility",String(result.epDay)+" EP/day · minimum "+String(result.minEpDay)+" EP/day · "+(result.eligible?"Eligible":"Not yet eligible"));
