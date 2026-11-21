@@ -44,3 +44,8 @@ test("dashboard does not claim active market after a history request failure", (
  assert.match(dashboard, /Market data unavailable\. Live status cannot be confirmed\./);
  assert.match(dashboard, /state\.active=false;[\s\S]*renderSectors\(\);/);
 });
+
+test("dashboard rejects malformed history payloads and mismatched industry", () => {
+ assert.match(dashboard, /!Array\.isArray\(result\.history\) \|\| result\.industry!==industry/);
+ assert.match(dashboard, /Invalid market history response\./);
+});
