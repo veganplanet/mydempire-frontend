@@ -22,6 +22,37 @@ function renderSectors(){
   root.append(button);
  }
 }
+async function loadQuotes(){
+ const requestId=state.historyRequestId;
+ if(!state.active)return;
+ try{
+  const result=await get("/quotes");
+  if(requestId!==state.historyRequestId||!state.active)return;
+  if(result.active!==true)return;
+  if(!Array.isArray(result.quotes))throw Error("Invalid quote response");
+  if(result.quotes.length===0)return;
+  const names=new Set(result.quotes.map(row=>row.industry));
+  const index=Number(result.settlementIndex);
+  const at=Date.parse(result.settlementAt);
+  if(names.size!==industries.length||!Number.isSafeInteger(index)||index<1||index>84||
+     !Number.isFinite(at)||result.quotes.length!==industries.length||
+     !result.quotes.every(row=>industries.some(([name])=>name===row.industry)&&
+      Number(row.settlement_index)===index&&Date.parse(row.settlement_at)===at&&
+      Number.isFinite(Number(row.next_price))&&Number(row.next_price)>0))
+   throw Error("Incomplete quote board");
+  const quoteMap=new Map(result.quotes.map(row=>[row.industry,row.next_price]));
+  const buttons=el("iibSectors").children;
+  industries.forEach(([industry],i)=>{
+   const note=buttons[i]?.children?.[1];
+   if(note)note.textContent="Last published: "+String(quoteMap.get(industry))+" IIC";
+  });
+ }catch(_){
+  if(requestId===state.historyRequestId){
+   // Never present partial or unverifiable prices as executable quotes.
+   renderSectors();
+  }
+ }
+}
 function draw(rows){
  const svg=el("iibChart");svg.replaceChildren();
  if(rows.length<2)return;
@@ -121,7 +152,7 @@ async function init(){
   }
   text("iibStatus",state.active?"Market is active — read-only dashboard":"Market not active. Trading is unavailable.");
  }catch(_){text("iibStatus","IIB API is not available yet. No live market data is being shown.");}
- renderSectors();await loadHistory();
+ renderSectors();await loadHistory();await loadQuotes();
  try{
   const result=await get("/eligibility");
   text("iibEligibility",String(result.epDay)+" EP/day · minimum "+String(result.minEpDay)+" EP/day · "+(result.eligible?"Eligible":"Not yet eligible"));
