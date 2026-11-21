@@ -39,7 +39,7 @@ function init(){
        typeof q.next_price==="string"&&priceMicro(q.next_price)>0n)||
       !Number.isFinite(Date.parse(result.settlementAt))||
       Date.parse(result.settlementAt)>Date.now()||
-      Date.now()-Date.parse(result.settlementAt)>2*60*60*1000)
+      Date.now()-Date.parse(result.settlementAt)>=2*60*60*1000)
     throw Error("Unverified price board");
    snapshot=result;refresh();
   }catch(_){if(current===requestId){snapshot=null;quote.textContent="Verified price unavailable. No trade estimate shown.";}}
@@ -52,7 +52,7 @@ function init(){
   catch(_){message.textContent="Enter a positive amount with up to six decimal places.";quote.textContent=snapshot?"Enter an amount to estimate.":"Verified price unavailable.";return;}
   if(!industries.has(industry.value)||!["BUY","SELL"].includes(side.value))return;
   message.textContent=TRADING_RELEASE_APPROVED?"Review your trade before submitting.":"Preview only. No order can be submitted.";
-  if(snapshot&&(Date.now()-Date.parse(snapshot.settlementAt)>2*60*60*1000||Date.parse(snapshot.settlementAt)>Date.now()))snapshot=null;
+  if(snapshot&&(Date.now()-Date.parse(snapshot.settlementAt)>=2*60*60*1000||Date.parse(snapshot.settlementAt)>Date.now()))snapshot=null;
   if(!snapshot){quote.textContent="Verified fresh price unavailable. Refresh to check current prices.";return;}
   const row=snapshot.quotes.find(q=>q.industry===industry.value);
   const price=priceMicro(row.next_price);
