@@ -6,12 +6,12 @@ const industries=new Set(["food","textile","pharma","chemical","supermarket"]);
 const API=(location.hostname==="localhost"||location.hostname==="127.0.0.1"?"http://localhost:10000":"https://mydempire-backend-1.onrender.com")+"/api/industrial-investment";
 const SCALE=1000000n,PRICE_SCALE=100000000n;
 function micro(value){
- if(typeof value!=="string"||!/^(0|[1-9][0-9]*)(?:\\.[0-9]{1,6})?$/.test(value))throw Error("Invalid decimal");
+ if(typeof value!=="string"||!/^(0|[1-9][0-9]*)(?:\.[0-9]{1,6})?$/.test(value))throw Error("Invalid decimal");
  const [whole,frac=""]=value.split(".");
  return BigInt(whole)*SCALE+BigInt(frac.padEnd(6,"0"));
 }
 function priceMicro(value){
- if(typeof value!=="string"||!/^(0|[1-9][0-9]*)(?:\\.[0-9]{1,8})?$/.test(value))throw Error("Invalid market price");
+ if(typeof value!=="string"||!/^(0|[1-9][0-9]*)(?:\.[0-9]{1,8})?$/.test(value))throw Error("Invalid market price");
  const [whole,frac=""]=value.split(".");return BigInt(whole)*PRICE_SCALE+BigInt(frac.padEnd(8,"0"));
 }
 function format(n){return (n/SCALE)+"."+(n%SCALE).toString().padStart(6,"0");}
