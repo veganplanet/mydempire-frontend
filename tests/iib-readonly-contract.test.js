@@ -91,7 +91,10 @@ async function runDashboardScenario(historyPayload) {
   else if(url.endsWith("/week"))body={success:true,active:true,week:{
    status:"OPEN",week_start:"2026-11-16T00:00:00Z",week_end:"2026-11-23T00:00:00Z"
   }};
-  else if(url.includes("/history?"))body=historyPayload;
+  else if(url.includes("/history?")){
+   if(historyPayload instanceof Error)throw historyPayload;
+   body=historyPayload;
+  }
   else if(url.endsWith("/eligibility"))body={success:true,epDay:1200,minEpDay:1000,eligible:true};
   else throw Error("Unexpected URL "+url);
   return {ok:true,json:async()=>body};
@@ -129,4 +132,25 @@ test("runtime: valid contiguous settlements render newest-first history",async()
  assert.match(view.get("iibStatus").textContent,/Market is active/);
  assert.equal(view.get("iibHistory").children.length,2);
  assert.equal(view.get("iibChart").children.length,1);
+});
+
+test("runtime: network failure clears live status and keeps chart empty",async()=>{
+ const view=await runDashboardScenario(new Error("simulated network outage"));
+ assert.match(view.get("iibStatus").textContent,/Market data unavailable/);
+ assert.match(view.get("iibHistoryMessage").textContent,/temporarily unavailable/);
+ assert.equal(view.get("iibHistory").children.length,0);
+ assert.equal(view.get("iibChart").children.length,0);
+});
+test("runtime: malformed industry response is not displayed",async()=>{
+ const view=await runDashboardScenario({success:true,active:true,industry:"chemical",history:[]});
+ assert.match(view.get("iibHistoryMessage").textContent,/Invalid market history response/);
+ assert.equal(view.get("iibHistory").children.length,0);
+});
+test("runtime: nonpositive settlement prices are rejected",async()=>{
+ const view=await runDashboardScenario({success:true,active:true,industry:"food",history:[{
+  industry:"food",settlement_index:1,settlement_at:"2026-11-16T02:00:00Z",
+  previous_price:"100",next_price:"0"
+ }]});
+ assert.match(view.get("iibHistoryMessage").textContent,/Invalid market price records/);
+ assert.equal(view.get("iibHistory").children.length,0);
 });
