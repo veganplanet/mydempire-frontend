@@ -69,7 +69,11 @@ async function loadHistory(){
    Number.isSafeInteger(Number(row.settlement_index))&&Number(row.settlement_index)>=1&&
    Number(row.settlement_index)<=84&&
    typeof row.settlement_at==="string"&&Number.isFinite(Date.parse(row.settlement_at)));
-  if(!valid){
+  // API returns newest-first settlements. Duplicates, gaps, or reversed
+  // indexes indicate an inconsistent market history and must not be charted.
+  const coherent=rows.every((row,i)=>i===0||
+   Number(rows[i-1].settlement_index)===Number(row.settlement_index)+1);
+  if(!valid||!coherent){
    state.active=false;
    renderSectors();
    text("iibStatus","Market data unavailable. Live status cannot be confirmed.");
