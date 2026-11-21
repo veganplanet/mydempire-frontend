@@ -95,6 +95,7 @@ async function runDashboardScenario(historyPayload,weekPayload=null) {
    if(historyPayload instanceof Error)throw historyPayload;
    body=historyPayload;
   }
+  else if(url.endsWith("/quotes"))body={success:true,active:true,quotes:[],settlementIndex:null};
   else if(url.endsWith("/eligibility"))body={success:true,epDay:1200,minEpDay:1000,eligible:true};
   else throw Error("Unexpected URL "+url);
   return {ok:true,json:async()=>body};
@@ -184,4 +185,17 @@ test("runtime: future week cannot display live prices",async()=>{
  });
  assert.match(view.get("iibStatus").textContent,/Market not active/);
  assert.equal(view.calls.some(url=>url.includes("/history?")),false);
+});
+
+test("dashboard requests the authenticated read-only five-industry quote endpoint",()=>{
+ assert.match(dashboard,/get\("\/quotes"\)/);
+ assert.match(dashboard,/Incomplete quote board/);
+ assert.match(dashboard,/Last published:/);
+});
+test("runtime: empty quote board never fabricates sector prices",async()=>{
+ const view=await runDashboardScenario({success:true,active:true,industry:"food",history:[]});
+ assert.equal(view.calls.some(url=>url.endsWith("/quotes")),true);
+ const buttons=view.get("iibSectors").children;
+ assert.equal(buttons.length,5);
+ assert.equal(buttons.every(button=>button.children[1].textContent==="View published prices"),true);
 });
