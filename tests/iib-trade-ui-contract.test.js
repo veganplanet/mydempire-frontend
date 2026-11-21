@@ -27,7 +27,7 @@ test("price preview handles eight decimal places and rejects stale snapshots",()
  assert.match(js,/priceMicro\(row\.next_price\)/);
  assert.match(js,/n\*PRICE_SCALE\/price/);
  assert.match(js,/n\*price\/PRICE_SCALE/);
- assert.match(js,/Date\.now\(\)-Date\.parse\(result\.settlementAt\)>2\*60\*60\*1000/);
+ assert.match(js,/Date\.now\(\)-Date\.parse\(result\.settlementAt\)>=2\*60\*60\*1000/);
  assert.match(js,/submit\.disabled=busy\|\|!TRADING_RELEASE_APPROVED/);
 });
 
