@@ -38,3 +38,9 @@ test("dashboard fails closed when history reports that the week has ended", () =
  assert.match(dashboard, /if\(result\.active!==true\)/);
  assert.match(dashboard, /state\.active=false;[\s\S]*renderSectors\(\);[\s\S]*Market week is no longer open/);
 });
+
+test("dashboard does not claim active market after a history request failure", () => {
+ assert.match(dashboard, /catch\(_\)\{if\(requestId===state\.historyRequestId\)\{/);
+ assert.match(dashboard, /Market data unavailable\. Live status cannot be confirmed\./);
+ assert.match(dashboard, /state\.active=false;[\s\S]*renderSectors\(\);/);
+});
