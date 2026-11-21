@@ -35,10 +35,10 @@ function init(){
       !result.quotes.every(q=>industries.has(q.industry)&&
        Number(q.settlement_index)===Number(result.settlementIndex)&&
        Date.parse(q.settlement_at)===Date.parse(result.settlementAt)&&
-       typeof q.next_price==="string"&&priceMicro(q.next_price)>0n)&&
-      Number.isFinite(Date.parse(result.settlementAt))&&
-      Date.parse(result.settlementAt)<=Date.now()&&
-      Date.now()-Date.parse(result.settlementAt)<=2*60*60*1000)
+       typeof q.next_price==="string"&&priceMicro(q.next_price)>0n)||
+      !Number.isFinite(Date.parse(result.settlementAt))||
+      Date.parse(result.settlementAt)>Date.now()||
+      Date.now()-Date.parse(result.settlementAt)>2*60*60*1000)
     throw Error("Unverified price board");
    snapshot=result;refresh();
   }catch(_){if(current===requestId){snapshot=null;quote.textContent="Verified price unavailable. No trade estimate shown.";}}
