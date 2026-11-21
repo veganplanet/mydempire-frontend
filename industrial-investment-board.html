@@ -51,8 +51,21 @@
 <p id="iibTradeQuote" class="iib-muted" role="status">Checking published price…</p>
 <button id="iibTradeSubmit" type="submit" disabled>Trading not released</button>
 <p id="iibTradeMessage" class="iib-muted" role="status"></p></form></section>
+<section class="iib-panel"><h2>Purchase additional IIC</h2>
+<p class="iib-muted">1000 IIC per 1 HIVE. Purchase confirmation requires an irreversible Hive transfer. Payments are not yet enabled.</p>
+<p id="iibPurchaseMemo" class="iib-muted" role="status">Verified weekly payment instructions unavailable until release.</p>
+<form id="iibPurchaseForm">
+<label for="iibPurchaseBlock">Hive block number</label>
+<input id="iibPurchaseBlock" type="number" min="1" step="1" required placeholder="Irreversible block number" style="display:block;width:100%;padding:10px;margin:6px 0 12px">
+<label for="iibPurchaseTx">Hive transaction ID</label>
+<input id="iibPurchaseTx" type="text" maxlength="40" required placeholder="40-character transaction ID" style="display:block;width:100%;padding:10px;margin:6px 0 12px">
+<label for="iibPurchaseOp">Transfer operation index (starts at 0)</label>
+<input id="iibPurchaseOp" type="number" min="0" max="99" step="1" value="0" required style="display:block;width:100%;padding:10px;margin:6px 0 12px">
+<button id="iibPurchaseSubmit" type="submit" disabled>HIVE purchases not released</button>
+<p id="iibPurchaseStatus" class="iib-muted" role="status"></p>
+</form></section>
 <section class="iib-panel"><h2>Your eligibility</h2><p id="iibEligibility" class="iib-muted">Checking eligibility…</p>
 <p id="iibEnrollmentStatus" class="iib-muted" role="status">Enrollment is not released.</p>
 <button id="iibEnrollButton" type="button" disabled>Enroll for 1,000 weekly IIC — not released</button>
 <p><a href="share-market.html">Investment Board overview</a> · <a href="industrial-market-preview.html">Illustrative market preview</a></p></section>
-</main><script src="js/navbar.js"></script><script src="js/iib-dashboard.js"></script><script src="js/iib-trade-ui.js"></script><script src="js/iib-enrollment-ui.js"></script></body></html>
+</main><script src="js/navbar.js"></script><script src="js/iib-dashboard.js"></script><script src="js/iib-trade-ui.js"></script><script src="js/iib-enrollment-ui.js"></script><script src="js/iib-purchase-ui.js"></script></body></html>
