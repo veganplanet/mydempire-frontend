@@ -28,9 +28,9 @@ async function loadQuotes(){
  try{
   const result=await get("/quotes");
   if(requestId!==state.historyRequestId||!state.active)return;
-  if(result.active!==true)return;
+  if(result.active!==true)throw Error("Market quote board inactive");
   if(!Array.isArray(result.quotes))throw Error("Invalid quote response");
-  if(result.quotes.length===0)return;
+  if(result.quotes.length===0)throw Error("Missing quote board");
   const names=new Set(result.quotes.map(row=>row.industry));
   const index=Number(result.settlementIndex);
   const at=Date.parse(result.settlementAt);
