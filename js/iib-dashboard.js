@@ -113,7 +113,8 @@ async function init(){
      end-start===7*24*60*60*1000&&
      new Date(start).getUTCDay()===1&&
      new Date(start).getUTCHours()===0&&new Date(start).getUTCMinutes()===0&&
-     new Date(start).getUTCSeconds()===0&&new Date(start).getUTCMilliseconds()===0;
+     new Date(start).getUTCSeconds()===0&&new Date(start).getUTCMilliseconds()===0&&
+     start<=Date.now()&&Date.now()<end;
     state.active=week.active===true&&week.week?.status==="OPEN"&&validWeek;
     text("iibWeek",validWeek?"Week: "+new Date(start).toISOString().slice(0,10)+" to "+new Date(end).toISOString().slice(0,10)+" UTC · "+week.week.status:"Market week information unavailable.");
    }catch(_){text("iibWeek","Week information unavailable. Market data is paused.");}
