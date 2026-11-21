@@ -30,7 +30,7 @@ test("industry changes invalidate stale price history requests", () => {
 });
 
 test("dashboard requires an OPEN week before showing live price history", () => {
- assert.match(dashboard, /state\.active=week\.active===true&&week\.week\?\.status==="OPEN"/);
+ assert.match(dashboard, /state\.active=week\.active===true&&week\.week\?\.status==="OPEN"&&validWeek/);
  assert.match(dashboard, /state\.active=false/);
 });
 
@@ -71,7 +71,7 @@ test("history checks that consecutive settlements are exactly two hours apart", 
 
 const vm = require("node:vm");
 
-async function runDashboardScenario(historyPayload) {
+async function runDashboardScenario(historyPayload,weekPayload=null) {
  const elements=new Map();
  function element(id){
   if(!elements.has(id))elements.set(id,{
@@ -88,7 +88,7 @@ async function runDashboardScenario(historyPayload) {
   calls.push(url);
   let body;
   if(url.endsWith("/status"))body={success:true,active:true};
-  else if(url.endsWith("/week"))body={success:true,active:true,week:{
+  else if(url.endsWith("/week"))body=weekPayload||{success:true,active:true,week:{
    status:"OPEN",week_start:"2026-11-16T00:00:00Z",week_end:"2026-11-23T00:00:00Z"
   }};
   else if(url.includes("/history?")){
@@ -153,4 +153,20 @@ test("runtime: nonpositive settlement prices are rejected",async()=>{
  }]});
  assert.match(view.get("iibHistoryMessage").textContent,/Invalid market price records/);
  assert.equal(view.get("iibHistory").children.length,0);
+});
+
+test("runtime: malformed week dates never show a live market or request history",async()=>{
+ const view=await runDashboardScenario({success:true,active:true,industry:"food",history:[]},{
+  success:true,active:true,week:{status:"OPEN",week_start:"not-a-date",week_end:"2026-11-23T00:00:00Z"}
+ });
+ assert.match(view.get("iibStatus").textContent,/Market not active/);
+ assert.match(view.get("iibWeek").textContent,/unavailable/);
+ assert.equal(view.calls.some(url=>url.includes("/history?")),false);
+});
+test("runtime: non-Monday week boundaries cannot activate market",async()=>{
+ const view=await runDashboardScenario({success:true,active:true,industry:"food",history:[]},{
+  success:true,active:true,week:{status:"OPEN",week_start:"2026-11-17T00:00:00Z",week_end:"2026-11-24T00:00:00Z"}
+ });
+ assert.match(view.get("iibStatus").textContent,/Market not active/);
+ assert.equal(view.calls.some(url=>url.includes("/history?")),false);
 });
