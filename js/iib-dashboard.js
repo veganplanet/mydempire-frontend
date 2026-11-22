@@ -178,6 +178,7 @@ async function init(){
  try{
   const result=await get("/eligibility");
   text("iibEligibility",String(result.epDay)+" EP/day · minimum "+String(result.minEpDay)+" EP/day · "+(result.eligible?"Eligible":"Not yet eligible"));
+  document.dispatchEvent(new CustomEvent("iib:eligibility-loaded",{detail:{eligible:result.eligible===true,active:state.active}}));
  }catch(_){text("iibEligibility","Eligibility information unavailable.");}
 }
 if(typeof document.addEventListener==="function")document.addEventListener("iib:portfolio-updated",()=>{void loadPortfolio();});
