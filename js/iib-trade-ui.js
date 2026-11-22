@@ -56,11 +56,21 @@ function init(){
   if(!snapshot){quote.textContent="Verified fresh price unavailable. Refresh to check current prices.";return;}
   const row=snapshot.quotes.find(q=>q.industry===industry.value);
   const price=priceMicro(row.next_price);
-  // Informational estimate only; no claim of executable quantity or final fee.
-  const estimate=side.value==="BUY"?(n*PRICE_SCALE/price):(n*price/PRICE_SCALE);
-  quote.textContent="Last published: "+row.next_price+" IIC/unit · Estimated "+
-   (side.value==="BUY"?"units":"gross IIC")+": "+format(estimate)+
-   " (before fees; not an executable quote)";
+  // Match the backend fee policy: BUY has no trading fee, SELL has a
+  // 0.25% reallocation fee rounded up to six-decimal IIC precision.
+  // This remains an informational preview; the server computes the fill.
+  if(side.value==="BUY"){
+   const estimatedUnits=n*PRICE_SCALE/price;
+   quote.textContent="Last published: "+row.next_price+" IIC/unit · Estimated units: "+
+    format(estimatedUnits)+" · BUY fee: 0 IIC (preview only)";
+  }else{
+   const gross=n*price/PRICE_SCALE;
+   const fee=(gross*25n+9999n)/10000n;
+   const net=gross>=fee?gross-fee:0n;
+   quote.textContent="Last published: "+row.next_price+" IIC/unit · Estimated gross: "+
+    format(gross)+" IIC · SELL fee (0.25%): "+format(fee)+
+    " IIC · Estimated net: "+format(net)+" IIC (preview only)";
+  }
  }
  for(const control of [side,industry,amount])control.addEventListener("input",()=>{pendingOrder=null;refresh();});
  document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadQuote();});
