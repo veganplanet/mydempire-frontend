@@ -8,8 +8,10 @@ function init(){
  const status=document.getElementById("iibEnrollmentStatus");
  if(!button||!status)return;
  button.disabled=!ENROLLMENT_RELEASE_APPROVED;
- button.addEventListener("click",async()=>{
-  if(!ENROLLMENT_RELEASE_APPROVED)return;
+ let inFlight=false,attempted=false;
+ async function enroll(){
+  if(!ENROLLMENT_RELEASE_APPROVED||inFlight)return;
+  inFlight=true;attempted=true;
   const token=window.MDEAuth?.getToken();
   if(!token){status.textContent="Sign in with Hive to enroll.";return;}
   button.disabled=true;status.textContent="Checking weekly enrollment…";
@@ -24,7 +26,14 @@ function init(){
    status.textContent="Enrolled for this week. Your IIC portfolio is refreshing.";
    document.dispatchEvent(new Event("iib:portfolio-updated"));
   }catch(_){status.textContent="Enrollment was not confirmed. Please check your portfolio.";}
-  finally{button.disabled=!ENROLLMENT_RELEASE_APPROVED;}
+  finally{inFlight=false;button.disabled=!ENROLLMENT_RELEASE_APPROVED;}
+ }
+ button.addEventListener("click",enroll);
+ // Auto-enroll on the first eligible dashboard visit of each week.
+ // The backend grants only once per player/week, even across devices or retries.
+ document.addEventListener("iib:eligibility-loaded",event=>{
+  if(ENROLLMENT_RELEASE_APPROVED&&!attempted&&event.detail?.eligible===true&&event.detail?.active===true)
+   void enroll();
  });
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
