@@ -52,7 +52,7 @@ async function refresh(){
   if(!response.ok||data.success!==true)throw Error('unavailable');
   if(!data.active){history=[];week=null;svg.replaceChildren();note.textContent='No active market week.';return;}
   if(!Array.isArray(data.history)||!data.week)throw Error('invalid');
-  history=data.history.filter(r=>Object.hasOwn(names,r.industry)&&/^\\d+$/.test(String(r.priceMicro))&&Number(r.priceMicro)>0&&Number.isInteger(r.intervalIndex));
+  history=data.history.filter(r=>Object.hasOwn(names,r.industry)&&/^[0-9]+$/.test(String(r.priceMicro))&&Number(r.priceMicro)>0&&Number.isInteger(r.intervalIndex));
   week=data.week;draw();
  }catch(error){svg.replaceChildren();note.textContent='Market history is temporarily unavailable.';}
 }
