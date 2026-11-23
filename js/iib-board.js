@@ -73,13 +73,22 @@ async function refresh(){
      const profitText=(profit>0n?'+':profit<0n?'-':'')+micro(absolute.toString());
      const box=el('liveProfit');box.replaceChildren();
      const title=document.createElement('strong');
-     title.textContent='Weekly profit / loss: '+profitText+' IIC';
+     title.textContent='Overall weekly profit / loss: '+profitText+' IIC';
      title.className=profit<0n?'error':'ok';
      const details=document.createElement('div');
-     details.textContent='Total value: '+micro(total.toString())+' IIC · Estimated EMP reward: '+micro((profit>0n?profit:0n).toString())+' EMP';
+     if(!Array.isArray(d.industryResults)||typeof d.estimatedEmpRewardMicro!=='string')throw Error('Industry results unavailable');
+     details.textContent='Total value: '+micro(total.toString())+' IIC · Estimated EMP reward: '+micro(d.estimatedEmpRewardMicro)+' EMP';
+     const sectors=document.createElement('div');
+     for(const result of d.industryResults.filter(r=>r.active)){
+      if(!/^-?[0-9]+$/.test(result.profitMicro)||!/^\d+$/.test(result.rewardMicro))throw Error('Invalid industry result');
+      const amount=BigInt(result.profitMicro),line=document.createElement('div');
+      line.className=amount<0n?'error':'ok';
+      line.textContent=(labels[result.industry]||result.industry)+': '+(amount>0n?'+':amount<0n?'-':'')+micro((amount<0n?-amount:amount).toString())+' IIC · '+micro(result.rewardMicro)+' EMP';
+      sectors.append(line);
+     }
      const hint=document.createElement('small');
-     hint.textContent='Estimate at the latest published values; the final reward is calculated at the weekly reset.';
-     box.append(title,details,hint);box.hidden=false;
+     hint.textContent='Each profitable industry earns EMP independently. Estimates use the latest published values; the final reward is calculated at the weekly reset.';
+     box.append(title,details,sectors,hint);box.hidden=false;
     }catch(_){
      const box=el('liveProfit');box.textContent='Weekly profit / loss is unavailable until all investment values load.';box.hidden=false;
     }
