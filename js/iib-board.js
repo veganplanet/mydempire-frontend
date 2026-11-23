@@ -108,5 +108,22 @@ el('purchase').onclick=()=>run(async()=>{
  localStorage.setItem(key('payment'),id);el('txid').value=id;
  try{await claim(id);}catch(e){message('Payment sent. Credit is pending: '+e.message+' Retry payment credit shortly.',true);}
 });
+// The navbar is shared markup; this page supplies its own secure login handler.
+const loginButton=document.getElementById('appbarLoginBtn');
+if(loginButton){
+ loginButton.addEventListener('click',async()=>{
+  if(state.busy)return;
+  const params=new URLSearchParams(location.search);
+  const suggested=params.get('user')||localStorage.getItem('mde_username')||'';
+  const entered=prompt('Enter your Hive username to connect:',suggested);
+  if(entered===null)return;
+  const name=entered.trim().replace(/^@/,'').toLowerCase();
+  if(!name){message('Enter your Hive username.',true);return;}
+  state.busy=true;render();
+  try{await window.MDEAuth.signIn(name);location.reload();}
+  catch(error){message(error.message||'Unable to sign in.',true);}
+  finally{state.busy=false;render();}
+ });
+}
 refresh();setInterval(refresh,60000);
 })();
