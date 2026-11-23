@@ -75,7 +75,7 @@ ${
 
           <a href="share-market.html">
             📈 Industrial Investment Board
-            <span class="nav-new-pill">SOON</span>
+
           </a>
         </div>
       </div>
