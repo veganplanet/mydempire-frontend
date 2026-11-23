@@ -5,6 +5,7 @@ const names={food:'🌾 Food',textile:'🧵 Textile',pharma:'💊 Pharma',chemic
 const svg=document.getElementById('history-chart'),note=document.getElementById('history-note'),buttons=document.getElementById('history-industries');
 const ns='http://www.w3.org/2000/svg';
 let selected='food',history=[],week=null;
+const factorNote=document.getElementById('history-factors');
 function node(tag,attributes,text){
  const item=document.createElementNS(ns,tag);
  for(const [key,value] of Object.entries(attributes))item.setAttribute(key,String(value));
@@ -21,6 +22,7 @@ function controls(){
 }
 function draw(){
  svg.replaceChildren();
+ factorNote.textContent='';
  const rows=history.filter(r=>r.industry===selected).sort((a,b)=>a.intervalIndex-b.intervalIndex);
  if(!rows.length){note.textContent='No published updates for '+names[selected]+' yet.';return;}
  const points=rows.map(r=>({time:Date.parse(r.publishedAt),pct:(Number(r.priceMicro)/100000000-1)*100})).filter(p=>Number.isFinite(p.time)&&Number.isFinite(p.pct));
@@ -42,6 +44,11 @@ function draw(){
  for(const p of points)svg.append(node('circle',{cx:x(p.time),cy:y(p.pct),r:3,fill:color}));
  svg.append(node('text',{x:50,y:252,'font-size':11,fill:'#64748b'},new Date(weekStart).toISOString().slice(5,10)+' UTC'));
  svg.append(node('text',{x:690,y:252,'text-anchor':'end','font-size':11,fill:'#64748b'},new Date(weekEnd).toISOString().slice(5,10)+' UTC'));
+ const signal=rows[rows.length-1]?.signals;
+ if(signal&&['factoryBps','productionBps','demandBps','randomBps'].every(key=>Number.isFinite(signal[key]))){
+  const fmt=v=>(v>=0?'+':'')+(v/100).toFixed(2)+'%';
+  factorNote.textContent='Last update: factories '+fmt(signal.factoryBps)+' · goods claimed '+fmt(signal.productionBps)+' · goods redeemed '+fmt(signal.demandBps)+' · random '+fmt(signal.randomBps)+'.';
+ }else factorNote.textContent='Factor details are not available for this earlier update.';
  const last=points[points.length-1];
  note.textContent=names[selected]+': '+(last.pct>=0?'+':'')+last.pct.toFixed(2)+'% this week · '+points.length+' published update'+(points.length===1?'':'s')+' · last updated '+new Date(last.time).toUTCString();
 }
@@ -50,11 +57,11 @@ async function refresh(){
   const response=await fetch(api,{cache:'no-store',headers:{Accept:'application/json'}});
   const data=await response.json();
   if(!response.ok||data.success!==true)throw Error('unavailable');
-  if(!data.active){history=[];week=null;svg.replaceChildren();note.textContent='No active market week.';return;}
+  if(!data.active){history=[];week=null;svg.replaceChildren();factorNote.textContent='';note.textContent='No active market week.';return;}
   if(!Array.isArray(data.history)||!data.week)throw Error('invalid');
   history=data.history.filter(r=>Object.hasOwn(names,r.industry)&&/^[0-9]+$/.test(String(r.priceMicro))&&Number(r.priceMicro)>0&&Number.isInteger(r.intervalIndex));
   week=data.week;draw();
- }catch(error){svg.replaceChildren();note.textContent='Market history is temporarily unavailable.';}
+ }catch(error){svg.replaceChildren();factorNote.textContent='';note.textContent='Market history is temporarily unavailable.';}
 }
 controls();refresh();setInterval(refresh,60000);
 })();
