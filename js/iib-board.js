@@ -27,6 +27,9 @@ function render(){
   box.append(title,price);root.append(box);
  }
  const signed=!!username(),ready=state.active&&signed&&!state.busy;
+ el('loginStatus').textContent=signed?'Signed in as @'+username():'Sign in with Hive Keychain to invest.';
+ el('boardSignIn').hidden=signed;
+ el('boardSignIn').disabled=state.busy;
  el('enroll').disabled=!ready||!!state.account;
  el('buy').disabled=!ready||!state.account;
  el('sell').disabled=!ready||!state.account;
@@ -108,22 +111,24 @@ el('purchase').onclick=()=>run(async()=>{
  localStorage.setItem(key('payment'),id);el('txid').value=id;
  try{await claim(id);}catch(e){message('Payment sent. Credit is pending: '+e.message+' Retry payment credit shortly.',true);}
 });
-// The navbar is shared markup; this page supplies its own secure login handler.
-const loginButton=document.getElementById('appbarLoginBtn');
-if(loginButton){
- loginButton.addEventListener('click',async()=>{
-  if(state.busy)return;
-  const params=new URLSearchParams(location.search);
-  const suggested=params.get('user')||localStorage.getItem('mde_username')||'';
-  const entered=prompt('Enter your Hive username to connect:',suggested);
-  if(entered===null)return;
-  const name=entered.trim().replace(/^@/,'').toLowerCase();
-  if(!name){message('Enter your Hive username.',true);return;}
-  state.busy=true;render();
-  try{await window.MDEAuth.signIn(name);location.reload();}
-  catch(error){message(error.message||'Unable to sign in.',true);}
-  finally{state.busy=false;render();}
- });
+// Both login buttons use a signed Hive session and stay on this board.
+async function connectBoardWallet(){
+ if(state.busy)return;
+ const suggested=new URLSearchParams(location.search).get('user')||localStorage.getItem('mde_username')||'';
+ const entered=prompt('Enter your Hive username to connect:',suggested);
+ if(entered===null)return;
+ const name=entered.trim().replace(/^@/,'').toLowerCase();
+ if(!name){message('Enter your Hive username.',true);return;}
+ state.busy=true;render();
+ try{
+  await window.MDEAuth.signIn(name);
+  // Drop any username query parameter; authentication uses the signed session.
+  location.replace('iib-player-board.html');
+ }catch(error){message(error.message||'Unable to sign in.',true);}
+ finally{state.busy=false;render();}
 }
+document.getElementById('boardSignIn').addEventListener('click',connectBoardWallet);
+const loginButton=document.getElementById('appbarLoginBtn');
+if(loginButton)loginButton.addEventListener('click',connectBoardWallet);
 refresh();setInterval(refresh,60000);
 })();
