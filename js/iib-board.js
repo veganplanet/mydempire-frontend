@@ -23,7 +23,7 @@ function render(){
  for(const id of ids){
   const box=document.createElement('div');box.className='sector';
   const title=document.createElement('strong');title.textContent=labels[id];
-  const price=document.createElement('span');price.textContent=state.prices[id]?'IIC '+micro(String(state.prices[id].priceMicro)):'Awaiting price';
+  const price=document.createElement('span');price.textContent=state.prices[id]?((Number(state.prices[id].priceMicro)/100000000-1)*100).toFixed(2)+'% this week':'Awaiting update';
   box.append(title,price);root.append(box);
  }
  const signed=!!username(),ready=state.active&&signed&&!state.busy;
@@ -34,7 +34,7 @@ function render(){
  el('claim').disabled=!signed||state.busy;
  el('retryTrade').hidden=!signed||!sessionStorage.getItem(key('order'));
  const selected=state.prices[el('industry').value];
- el('quote').textContent=selected?'Last published price: '+micro(String(selected.priceMicro))+' IIC per unit.':'No current published price.';
+ el('quote').textContent=selected?'Industry change this week: '+((Number(selected.priceMicro)/100000000-1)*100).toFixed(2)+'%.':'No current market value.';
 }
 async function refresh(){
  try{
@@ -53,7 +53,9 @@ async function refresh(){
    for(const position of d?.positions||[]){
     const row=document.createElement('div');row.className='row';
     const title=document.createElement('span');title.textContent=labels[position.industry]||position.industry;
-    const value=document.createElement('strong');value.textContent=micro(String(position.unitsMicro))+' units';
+    const value=document.createElement('strong');const quote=state.prices[position.industry];
+    const investmentValue=quote?(BigInt(position.unitsMicro)*BigInt(quote.priceMicro)/1000000n).toString():null;
+    value.textContent=investmentValue!==null?micro(investmentValue)+' IIC current value':'Value unavailable';
     row.append(title,value);el('holdings').append(row);
    }
   }catch(e){el('account').textContent='Account unavailable. Please refresh.';}
@@ -71,10 +73,10 @@ async function sendOrder(order){
 }
 function order(side){return run(async()=>{
  if(sessionStorage.getItem(key('order')))throw Error('Retry the pending order before placing another one.');
- const units=el('units').value.trim();
- if(!/^(0|[1-9][0-9]*)(?:\.[0-9]{1,6})?$/.test(units)||Number(units)<=0)throw Error('Enter a positive number of units, up to six decimal places.');
+ const amount=el('units').value.trim();
+ if(!/^(0|[1-9][0-9]*)(?:\.[0-9]{1,6})?$/.test(amount)||Number(amount)<=0)throw Error('Enter a positive IIC amount, up to six decimal places.');
  if(!crypto.randomUUID)throw Error('Secure order IDs are unavailable in this browser.');
- const order={industry:el('industry').value,side,units,clientOrderId:crypto.randomUUID()};
+ const order={industry:el('industry').value,side,amount,clientOrderId:crypto.randomUUID()};
  sessionStorage.setItem(key('order'),JSON.stringify({weekId:state.weekId,order}));
  try{await sendOrder(order);}catch(e){if(e.status===400||e.status===403)sessionStorage.removeItem(key('order'));message(e.message+(e.status===400||e.status===403?'':' If the result is uncertain, retry the same order.'),true);}
 });}
