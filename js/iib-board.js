@@ -49,10 +49,41 @@ async function refresh(){
  }catch(e){state.active=false;state.prices={};el('status').textContent='Market data unavailable.';}
  try{state.purchase=await api('/purchase-options');}catch(e){state.purchase=null;}
  state.account=null;el('holdings').replaceChildren();
+ el('liveProfit').hidden=true;el('liveProfit').textContent='';
  if(username()){
   try{
    const data=await api('/dashboard');const d=data.dashboard;state.account=d?.account||null;
    el('account').textContent=state.account?'Available: '+micro(String(state.account.cashMicro))+' IIC':'No IIB account for this week yet.';
+   if(d?.active&&state.account&&Array.isArray(d.positions)&&Array.isArray(d.prices)){
+    try{
+     const whole=value=>{if(typeof value!=='string'||!/^[0-9]+$/.test(value))throw Error('Missing balance');return BigInt(value);};
+     let total=whole(state.account.cashMicro);
+     const baseline=whole(state.account.freeGrantMicro)+whole(state.account.contributedMicro)+whole(state.account.carriedForwardMicro);
+     const quoteMap=new Map(d.prices.map(p=>[p.industry,p]));
+     for(const p of d.positions){
+      const units=whole(p.unitsMicro);
+      if(units===0n)continue;
+      const quote=quoteMap.get(p.industry);
+      if(!quote)throw Error('Missing market value');
+      const price=whole(quote.priceMicro);
+      if(price===0n)throw Error('Invalid market value');
+      total+=units*price/1000000n;
+     }
+     const profit=total-baseline,absolute=profit<0n?-profit:profit;
+     const profitText=(profit>0n?'+':profit<0n?'-':'')+micro(absolute.toString());
+     const box=el('liveProfit');box.replaceChildren();
+     const title=document.createElement('strong');
+     title.textContent='Weekly profit / loss: '+profitText+' IIC';
+     title.className=profit<0n?'error':'ok';
+     const details=document.createElement('div');
+     details.textContent='Total value: '+micro(total.toString())+' IIC · Estimated EMP reward: '+micro((profit>0n?profit:0n).toString())+' EMP';
+     const hint=document.createElement('small');
+     hint.textContent='Estimate at the latest published values; the final reward is calculated at the weekly reset.';
+     box.append(title,details,hint);box.hidden=false;
+    }catch(_){
+     const box=el('liveProfit');box.textContent='Weekly profit / loss is unavailable until all investment values load.';box.hidden=false;
+    }
+   }
    for(const position of d?.positions||[]){
     const row=document.createElement('div');row.className='row';
     const title=document.createElement('span');title.textContent=labels[position.industry]||position.industry;
