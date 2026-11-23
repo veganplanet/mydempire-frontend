@@ -4,7 +4,7 @@ const base=(location.hostname==='localhost'||location.hostname==='127.0.0.1'?'ht
 const ids=['food','textile','pharma','chemical','supermarket'];
 const labels={food:'🌾 Food',textile:'🧵 Textile',pharma:'💊 Pharma',chemical:'⚗️ Chemical',supermarket:'🛒 Supermarket'};
 const el=id=>document.getElementById(id);
-const state={active:false,account:null,prices:{},purchase:null,busy:false};
+const state={active:false,weekId:null,account:null,prices:{},purchase:null,busy:false};
 function username(){return window.MDEAuth?.getUsername()||'';}
 function key(kind){return 'myd_iib_'+kind+'_'+username();}
 function message(text,error){el('message').textContent=text;el('message').className=error?'error':'ok';}
@@ -15,7 +15,7 @@ function micro(value){
 async function api(path,options={}){
  const response=await fetch(base+path,{cache:'no-store',...options,headers:{Accept:'application/json',...(options.body?{'Content-Type':'application/json'}:{}),...(options.headers||{})}});
  const data=await response.json().catch(()=>({}));
- if(!response.ok||data.success!==true)throw Error(data.error||'IIB service unavailable');
+ if(!response.ok||data.success!==true){const error=Error(data.error||'IIB service unavailable');error.status=response.status;throw error;}
  return data;
 }
 function render(){
@@ -39,7 +39,7 @@ function render(){
 async function refresh(){
  try{
   const market=await api('/market');
-  state.active=market.active===true;
+  state.active=market.active===true;state.weekId=market.week?.id||null;
   state.prices=Object.fromEntries((market.prices||[]).filter(p=>ids.includes(p.industry)).map(p=>[p.industry,p]));
   el('status').textContent=state.active?'Market open':'The market is not currently open.';
   el('week').textContent=market.week?'Week ends '+new Date(market.week.endsAt).toUTCString():'';
@@ -75,11 +75,11 @@ function order(side){return run(async()=>{
  if(!/^(0|[1-9][0-9]*)(?:\.[0-9]{1,6})?$/.test(units)||Number(units)<=0)throw Error('Enter a positive number of units, up to six decimal places.');
  if(!crypto.randomUUID)throw Error('Secure order IDs are unavailable in this browser.');
  const order={industry:el('industry').value,side,units,clientOrderId:crypto.randomUUID()};
- sessionStorage.setItem(key('order'),JSON.stringify(order));
- try{await sendOrder(order);}catch(e){message(e.message+' If the result is uncertain, retry the same order.',true);}
+ sessionStorage.setItem(key('order'),JSON.stringify({weekId:state.weekId,order}));
+ try{await sendOrder(order);}catch(e){if(e.status===400||e.status===403)sessionStorage.removeItem(key('order'));message(e.message+(e.status===400||e.status===403?'':' If the result is uncertain, retry the same order.'),true);}
 });}
 el('buy').onclick=()=>order('BUY');el('sell').onclick=()=>order('SELL');
-el('retryTrade').onclick=()=>run(async()=>{const pending=sessionStorage.getItem(key('order'));if(!pending)throw Error('No pending order.');await sendOrder(JSON.parse(pending));});
+el('retryTrade').onclick=()=>run(async()=>{const pending=sessionStorage.getItem(key('order'));if(!pending)throw Error('No pending order.');const saved=JSON.parse(pending);if(!state.weekId||saved.weekId!==state.weekId)throw Error('This pending order belongs to an earlier week; contact support before placing another order.');await sendOrder(saved.order);});
 async function claim(txId){
  if(!/^[a-f0-9]{40}$/.test(txId))throw Error('Enter a valid 40-character transaction ID.');
  await api('/hive-purchase/claim',{method:'POST',body:JSON.stringify({txId,operationIndex:0})});
@@ -92,6 +92,8 @@ el('purchase').onclick=()=>run(async()=>{
  // Refresh server options immediately before opening the wallet.
  const options=await api('/purchase-options');
  if(!options.enabled||!options.recipient||options.memo!=='mydempire:iib'||options.iicPerHive!==1000)throw Error('HIVE purchases are unavailable.');
+ const eligibility=await api('/hive-purchase/eligibility');
+ if(eligibility.eligible!==true)throw Error('You need at least 1,000 EP/day and an open IIB week to purchase IIC.');
  const amount=Number(el('hiveAmount').value);
  if(!Number.isSafeInteger(amount)||amount<1||amount>100000)throw Error('Enter a positive whole HIVE amount.');
  localStorage.setItem(key('payment'),'unknown');
