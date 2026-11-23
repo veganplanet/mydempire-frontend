@@ -2,7 +2,6 @@
 'use strict';
 const api=(location.hostname==='localhost'||location.hostname==='127.0.0.1'?'http://localhost:10000':'https://mydempire-backend-1.onrender.com')+'/api/iib/v2/history';
 const names={food:'🌾 Food',textile:'🧵 Textile',pharma:'💊 Pharma',chemical:'⚗️ Chemical',supermarket:'🛒 Supermarket'};
-const colors={food:'#16a34a',textile:'#7c3aed',pharma:'#e11d48',chemical:'#0891b2',supermarket:'#ea580c'};
 const svg=document.getElementById('history-chart'),note=document.getElementById('history-note'),buttons=document.getElementById('history-industries');
 const ns='http://www.w3.org/2000/svg';
 let selected='food',history=[],week=null;
@@ -37,9 +36,10 @@ function draw(){
   svg.append(node('line',{x1:50,y1:yy,x2:690,y2:yy,stroke:'#e5e7eb'}));
   svg.append(node('text',{x:44,y:yy+4,'text-anchor':'end','font-size':11,fill:'#64748b'},v.toFixed(1)+'%'));
  }
+ const color=points[points.length-1].pct>=0?'#16a34a':'#dc2626';
  const zero=y(0);svg.append(node('line',{x1:50,y1:zero,x2:690,y2:zero,stroke:'#94a3b8','stroke-dasharray':'4 4'}));
- if(points.length>1)svg.append(node('polyline',{points:points.map(p=>x(p.time)+','+y(p.pct)).join(' '),fill:'none',stroke:colors[selected],'stroke-width':3,'stroke-linejoin':'round'}));
- for(const p of points)svg.append(node('circle',{cx:x(p.time),cy:y(p.pct),r:3,fill:colors[selected]}));
+ if(points.length>1)svg.append(node('polyline',{points:points.map(p=>x(p.time)+','+y(p.pct)).join(' '),fill:'none',stroke:color,'stroke-width':3,'stroke-linejoin':'round'}));
+ for(const p of points)svg.append(node('circle',{cx:x(p.time),cy:y(p.pct),r:3,fill:color}));
  svg.append(node('text',{x:50,y:252,'font-size':11,fill:'#64748b'},new Date(weekStart).toISOString().slice(5,10)+' UTC'));
  svg.append(node('text',{x:690,y:252,'text-anchor':'end','font-size':11,fill:'#64748b'},new Date(weekEnd).toISOString().slice(5,10)+' UTC'));
  const last=points[points.length-1];
