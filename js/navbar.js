@@ -73,9 +73,9 @@ ${
             ⚡ EMP Exchange
           </a>
 
-          <a href="share-market.html">
+          <a href="industrial-investment-board.html">
             📈 Industrial Investment Board
-
+            <span class="nav-new-pill">SOON</span>
           </a>
         </div>
       </div>
