@@ -39,7 +39,28 @@ function render(){
  const selected=state.prices[el('industry').value];
  el('quote').textContent=selected?'Industry change this week: '+((Number(selected.priceMicro)/100000000-1)*100).toFixed(2)+'%.':'No current market value.';
 }
+let leaderboardData=null,leaderboardPeriod='current';
+function renderLeaderboard(){
+ const current=leaderboardPeriod==='current',board=leaderboardData?.[leaderboardPeriod],rows=el('leaderboardRows');rows.replaceChildren();
+ el('leaderboardCurrent').setAttribute('aria-pressed',String(current));
+ el('leaderboardPrevious').setAttribute('aria-pressed',String(!current));
+ if(!board||!board.players.length){el('leaderboardStatus').textContent=current?'No eligible participants yet this week.':'No settled results available for the previous week.';return;}
+ el('leaderboardStatus').textContent=(current?'Estimated rewards':'Final rewards')+' · Week ending '+new Date(board.week.endsAt).toUTCString();
+ board.players.forEach((player,index)=>{
+  const tr=document.createElement('tr');
+  const values=[String(index+1),'@'+player.username,micro(player.rewardMicro)+' EMP',player.returnPercent===null?'—':(Number(player.returnPercent)>0?'+':'')+player.returnPercent+'%'];
+  for(const value of values){const td=document.createElement('td');td.textContent=value;tr.append(td);}
+  rows.append(tr);
+ });
+}
+async function refreshLeaderboard(){
+ try{leaderboardData=await api('/leaderboard');renderLeaderboard();}
+ catch(_){el('leaderboardRows').replaceChildren();el('leaderboardStatus').textContent='Leaderboard unavailable. Please refresh.';}
+}
+el('leaderboardCurrent').onclick=()=>{leaderboardPeriod='current';renderLeaderboard();};
+el('leaderboardPrevious').onclick=()=>{leaderboardPeriod='previous';renderLeaderboard();};
 async function refresh(){
+ void refreshLeaderboard();
  try{
   const market=await api('/market');
   state.active=market.active===true;state.weekId=market.week?.id||null;
@@ -77,7 +98,8 @@ async function refresh(){
      title.className=profit<0n?'error':'ok';
      const details=document.createElement('div');
      if(!Array.isArray(d.industryResults)||typeof d.estimatedEmpRewardMicro!=='string')throw Error('Industry results unavailable');
-     details.textContent='Total value: '+micro(total.toString())+' IIC · Estimated EMP reward: '+micro(d.estimatedEmpRewardMicro)+' EMP';
+     details.textContent='Total value: '+micro(total.toString())+' IIC';
+     const reward=document.createElement('strong');reward.className='iib-reward';reward.textContent='Estimated EMP reward: '+micro(d.estimatedEmpRewardMicro)+' EMP';
      const sectors=document.createElement('div');
      for(const result of d.industryResults.filter(r=>r.active)){
       if(!/^-?[0-9]+$/.test(result.profitMicro)||!/^\d+$/.test(result.rewardMicro))throw Error('Invalid industry result');
@@ -88,7 +110,7 @@ async function refresh(){
      }
      const hint=document.createElement('small');
      hint.textContent='Each profitable industry earns EMP independently. Estimates use the latest published values; the final reward is calculated at the weekly reset.';
-     box.append(title,details,sectors,hint);box.hidden=false;
+     box.append(reward,title,details,sectors,hint);box.hidden=false;
     }catch(_){
      const box=el('liveProfit');box.textContent='Weekly profit / loss is unavailable until all investment values load.';box.hidden=false;
     }
