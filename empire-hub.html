@@ -1180,7 +1180,8 @@
     Result: 1 random B5 Blueprint
   </p>
 
-  <strong class="foundry-coming-soon">Coming Soon</strong>
+  <button id="craft-b5-btn" class="primary-button foundry-craft-btn visitor-lock-action" type="button" onclick="craftFoundryB5()" disabled>Craft Random B5 Blueprint</button>
+  <div id="craft-b5-status" class="status-text foundry-craft-status">Loading Foundry balances...</div>
 </div>
 
   <div class="card foundry-recipe-card foundry-relic-card">
@@ -5120,6 +5121,21 @@ if (craftB4Status) {
   }
 }
 
+const craftB5Btn = document.getElementById("craft-b5-btn");
+const craftB5Status = document.getElementById("craft-b5-status");
+const canCraftB5 = rawFragments >= 12 && rawSmp >= 20 && rawEmp >= 300;
+const isB5Visitor = username !== String(getLoggedInUser() || "").replace("@", "").trim().toLowerCase();
+if (craftB5Btn) craftB5Btn.disabled = !canCraftB5 || isB5Visitor;
+if (craftB5Status) {
+  const missing = [];
+  if (rawFragments < 12) missing.push(`${12 - rawFragments} Fragments`);
+  if (rawSmp < 20) missing.push(`${20 - rawSmp} SMP`);
+  if (rawEmp < 300) missing.push(`${300 - rawEmp} EMP`);
+  craftB5Status.textContent = isB5Visitor
+    ? "Visitor mode: crafting is disabled."
+    : canCraftB5 ? "✅ Foundry B5 crafting is ready." : `❌ Missing: ${missing.join(" + ")}`;
+}
+
 fragmentEl.textContent = fragmentValue;
 smpEl.textContent = smpValue;
 empEl.textContent = empValue;
@@ -6053,6 +6069,56 @@ async function craftFoundryB4() {
   }
 }
 window.craftFoundryB4 = craftFoundryB4;
+async function craftFoundryB5() {
+  const btn = document.getElementById("craft-b5-btn");
+  const status = document.getElementById("craft-b5-status");
+
+  const username = getLoggedInUser();
+
+  if (!username) {
+    status.textContent = "Please connect wallet first.";
+    return;
+  }
+
+  const confirmed = confirm(
+    "Craft Random B5 Blueprint?\n\nCost:\n12 Imperial Fragments\n20 SMP\n300 EMP\n\nResult: 1 random B5 Blueprint"
+  );
+
+  if (!confirmed) return;
+
+  try {
+    btn.disabled = true;
+    status.textContent = "Crafting B5 blueprint...";
+
+    const res = await fetch(
+      `${API_BASE}/player/${encodeURIComponent(username)}/foundry/craft-b5`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mde-actor": username,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || data.success === false) {
+      throw new Error(data.error || "Crafting failed.");
+    }
+
+    status.textContent = `✅ Crafted successfully: ${data.blueprint?.tier || "Random B5 Blueprint"}`;
+  } catch (err) {
+    console.error("Foundry B5 craft error:", err);
+    status.textContent = `❌ ${err.message || "Crafting failed."}`;
+  } finally {
+    const resultMessage = status.textContent;
+    foundryPreviewLoaded = false;
+    await loadFoundryPreview();
+    status.textContent = resultMessage;
+  }
+}
+window.craftFoundryB5 = craftFoundryB5;
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
 
