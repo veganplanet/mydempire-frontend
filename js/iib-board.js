@@ -90,15 +90,14 @@ async function refresh(){
       if(price===0n)throw Error('Invalid market value');
       total+=units*price/1000000n;
      }
-     const profit=total-baseline,absolute=profit<0n?-profit:profit;
-     const profitText=(profit>0n?'+':profit<0n?'-':'')+micro(absolute.toString());
+     if(!Array.isArray(d.industryResults)||typeof d.estimatedEmpRewardMicro!=='string')throw Error('Industry results unavailable');
+     const totalLoss=d.industryResults.reduce((sum,r)=>{if(!/^-?[0-9]+$/.test(r.profitMicro))throw Error('Invalid industry result');const n=BigInt(r.profitMicro);return n<0n?sum-n:sum;},0n);
      const box=el('liveProfit');box.replaceChildren();
      const title=document.createElement('strong');
-     title.textContent='Overall weekly profit / loss: '+profitText+' IIC';
-     title.className=profit<0n?'error':'ok';
+     title.textContent='Total loss from losing industries: '+micro(totalLoss.toString())+' IIC';
+     title.className=totalLoss>0n?'error':'ok';
      const details=document.createElement('div');
-     if(!Array.isArray(d.industryResults)||typeof d.estimatedEmpRewardMicro!=='string')throw Error('Industry results unavailable');
-     details.textContent='Total value: '+micro(total.toString())+' IIC';
+     details.textContent='Current account value (includes unrealized gains): '+micro(total.toString())+' IIC';
      const reward=document.createElement('strong');reward.className='iib-reward';reward.textContent='Estimated EMP reward: '+micro(d.estimatedEmpRewardMicro)+' EMP';
      const sectors=document.createElement('div');
      for(const result of d.industryResults.filter(r=>r.active)){
