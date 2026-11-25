@@ -4,7 +4,7 @@ const base=(location.hostname==='localhost'||location.hostname==='127.0.0.1'?'ht
 const ids=['food','textile','pharma','chemical','supermarket'];
 const labels={food:'🌾 Food',textile:'🧵 Textile',pharma:'💊 Pharma',chemical:'⚗️ Chemical',supermarket:'🛒 Supermarket'};
 const el=id=>document.getElementById(id);
-const state={active:false,weekId:null,account:null,prices:{},purchase:null,busy:false};
+const state={active:false,weekId:null,account:null,prices:{},purchase:null,busy:false,separateFree:false,freePosition:null};
 function username(){return window.MDEAuth?.getUsername()||'';}
 function key(kind){return 'myd_iib_'+kind+'_'+username();}
 function message(text,error){el('message').textContent=text;el('message').className=error?'error':'ok';}
@@ -33,6 +33,8 @@ function render(){
  el('enroll').disabled=!ready||!!state.account;
  el('buy').disabled=!ready||!state.account;
  el('sell').disabled=!ready||!state.account;
+ el('investFree').disabled=!ready||!state.account||!state.separateFree||!!state.freePosition||String(state.account.freeGrantMicro)!=='1000000000';
+ el('investFree').hidden=!state.separateFree;
  el('purchase').disabled=!ready||!state.purchase?.enabled||!!localStorage.getItem(key('payment'));
  el('claim').disabled=!signed||state.busy;
  el('retryTrade').hidden=!signed||!sessionStorage.getItem(key('order'));
@@ -73,13 +75,14 @@ async function refresh(){
  el('liveProfit').hidden=true;el('liveProfit').textContent='';
  if(username()){
   try{
-   const data=await api('/dashboard');const d=data.dashboard;state.account=d?.account||null;
+   const data=await api('/dashboard');const d=data.dashboard;state.account=d?.account||null;state.separateFree=!!d?.separateFree;state.freePosition=d?.freePosition||null;
+   const freeBox=el('freePosition');freeBox.hidden=!state.separateFree;if(state.separateFree)freeBox.textContent=state.freePosition?'Free investment: '+(labels[state.freePosition.industry]||state.freePosition.industry)+' · '+micro(state.freePosition.valueMicro)+' IIC · '+micro(state.freePosition.rewardMicro)+' EMP estimated · locked until reset':'Free IIC: '+(state.account?.freeGrantMicro==='1000000000'?'1,000 available to invest in one industry':'not yet allocated');
    el('account').textContent=state.account?'Available: '+micro(String(state.account.cashMicro))+' IIC':'No IIB account for this week yet.';
    if(d?.active&&state.account&&Array.isArray(d.positions)&&Array.isArray(d.prices)){
     try{
      const whole=value=>{if(typeof value!=='string'||!/^[0-9]+$/.test(value))throw Error('Missing balance');return BigInt(value);};
      let total=whole(state.account.cashMicro);
-     const baseline=whole(state.account.freeGrantMicro)+whole(state.account.contributedMicro)+whole(state.account.carriedForwardMicro);
+     const baseline=(d.separateFree?0n:whole(state.account.freeGrantMicro))+whole(state.account.contributedMicro)+whole(state.account.carriedForwardMicro);
      const quoteMap=new Map(d.prices.map(p=>[p.industry,p]));
      for(const p of d.positions){
       const units=whole(p.unitsMicro);
@@ -94,11 +97,11 @@ async function refresh(){
      const profitText=(profit>0n?'+':profit<0n?'-':'')+micro(absolute.toString());
      const box=el('liveProfit');box.replaceChildren();
      const title=document.createElement('strong');
-     title.textContent='Overall weekly profit / loss: '+profitText+' IIC';
+     title.textContent=(d.separateFree?'Purchased IIC profit / loss: ':'Overall weekly profit / loss: ')+profitText+' IIC';
      title.className=profit<0n?'error':'ok';
      const details=document.createElement('div');
      if(!Array.isArray(d.industryResults)||typeof d.estimatedEmpRewardMicro!=='string')throw Error('Industry results unavailable');
-     details.textContent='Total value: '+micro(total.toString())+' IIC';
+     details.textContent=(d.separateFree?'Purchased IIC current value: ':'Total value: ')+micro(total.toString())+' IIC';
      const reward=document.createElement('strong');reward.className='iib-reward';reward.textContent='Estimated EMP reward: '+micro(d.estimatedEmpRewardMicro)+' EMP';
      const sectors=document.createElement('div');
      for(const result of d.industryResults.filter(r=>r.active)){
@@ -145,6 +148,7 @@ function order(side){return run(async()=>{
  sessionStorage.setItem(key('order'),JSON.stringify({weekId:state.weekId,order}));
  try{await sendOrder(order);}catch(e){if(e.status===400||e.status===403)sessionStorage.removeItem(key('order'));message(e.message+(e.status===400||e.status===403?'':' If the result is uncertain, retry the same order.'),true);}
 });}
+el('investFree').onclick=()=>run(async()=>{await api('/free-investment',{method:'POST',body:JSON.stringify({industry:el('industry').value})});message('Free investment locked until the weekly reset.');await refresh();});
 el('buy').onclick=()=>order('BUY');el('sell').onclick=()=>order('SELL');
 el('retryTrade').onclick=()=>run(async()=>{const pending=sessionStorage.getItem(key('order'));if(!pending)throw Error('No pending order.');const saved=JSON.parse(pending);if(!state.weekId||saved.weekId!==state.weekId)throw Error('This pending order belongs to an earlier week; contact support before placing another order.');await sendOrder(saved.order);});
 async function claim(txId){
