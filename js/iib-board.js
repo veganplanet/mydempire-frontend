@@ -95,10 +95,11 @@ async function refresh(){
      }
      const profit=total-baseline;
      if(!Array.isArray(d.industryResults))throw Error('Industry results unavailable');
-     const loss=d.industryResults.reduce((sum,r)=>{if(!/^-?[0-9]+$/.test(r.profitMicro))throw Error('Invalid industry result');const n=BigInt(r.profitMicro);return n<0n?sum-n:sum;},0n);
+     let loss=d.industryResults.reduce((sum,r)=>{if(!/^-?[0-9]+$/.test(r.profitMicro))throw Error('Invalid industry result');const n=BigInt(r.profitMicro);return n<0n?sum-n:sum;},0n);
+     if(d.freePosition){const n=BigInt(d.freePosition.profitMicro);if(n<0n)loss-=n;}
      const box=el('liveProfit');box.replaceChildren();
      const title=document.createElement('strong');
-     title.textContent='Loss in losing '+(d.separateFree?'purchased ':'')+'industries: '+micro(loss.toString())+' IIC';
+     title.textContent='Loss in losing investments: '+micro(loss.toString())+' IIC';
      title.className=loss>0n?'error':'ok';
      const details=document.createElement('div');
      if(!Array.isArray(d.industryResults)||typeof d.estimatedEmpRewardMicro!=='string')throw Error('Industry results unavailable');
