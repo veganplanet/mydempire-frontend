@@ -93,12 +93,13 @@ async function refresh(){
       if(price===0n)throw Error('Invalid market value');
       total+=units*price/1000000n;
      }
-     const profit=total-baseline,absolute=profit<0n?-profit:profit;
-     const profitText=(profit>0n?'+':profit<0n?'-':'')+micro(absolute.toString());
+     const profit=total-baseline;
+     if(!Array.isArray(d.industryResults))throw Error('Industry results unavailable');
+     const loss=d.industryResults.reduce((sum,r)=>{if(!/^-?[0-9]+$/.test(r.profitMicro))throw Error('Invalid industry result');const n=BigInt(r.profitMicro);return n<0n?sum-n:sum;},0n);
      const box=el('liveProfit');box.replaceChildren();
      const title=document.createElement('strong');
-     title.textContent=(d.separateFree?'Purchased IIC profit / loss: ':'Overall weekly profit / loss: ')+profitText+' IIC';
-     title.className=profit<0n?'error':'ok';
+     title.textContent='Loss in losing '+(d.separateFree?'purchased ':'')+'industries: '+micro(loss.toString())+' IIC';
+     title.className=loss>0n?'error':'ok';
      const details=document.createElement('div');
      if(!Array.isArray(d.industryResults)||typeof d.estimatedEmpRewardMicro!=='string')throw Error('Industry results unavailable');
      details.textContent=(d.separateFree?'Purchased IIC current value: ':'Total value: ')+micro(total.toString())+' IIC';
