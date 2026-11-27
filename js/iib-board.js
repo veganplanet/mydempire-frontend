@@ -151,6 +151,7 @@ function order(side){return run(async()=>{
  if(sessionStorage.getItem(key('order')))throw Error('Retry the pending order before placing another one.');
  const amount=el('units').value.trim();
  if(!/^(0|[1-9][0-9]*)(?:\.[0-9]{1,6})?$/.test(amount)||Number(amount)<=0)throw Error('Enter a positive IIC amount, up to six decimal places.');
+ if(side==='BUY'&&Number(amount)<1000)throw Error('Minimum investment is 1,000 IIC.');
  if(!crypto.randomUUID)throw Error('Secure order IDs are unavailable in this browser.');
  const order={industry:el('industry').value,side,amount,clientOrderId:crypto.randomUUID()};
  sessionStorage.setItem(key('order'),JSON.stringify({weekId:state.weekId,order}));
