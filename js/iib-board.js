@@ -4,14 +4,16 @@ const base=(location.hostname==='localhost'||location.hostname==='127.0.0.1'?'ht
 const ids=['food','textile','pharma','chemical','supermarket'];
 const labels={food:'🌾 Food',textile:'🧵 Textile',pharma:'💊 Pharma',chemical:'⚗️ Chemical',supermarket:'🛒 Supermarket'};
 const el=id=>document.getElementById(id);
-const state={active:false,weekId:null,account:null,prices:{},purchase:null,busy:false,separateFree:false,freePosition:null};
+const state={active:false,weekId:null,account:null,prices:{},purchase:null,busy:false,separateFree:false,freePosition:null,positions:[],dashboardPrices:{}};
 function username(){return window.MDEAuth?.getUsername()||'';}
 function key(kind){return 'myd_iib_'+kind+'_'+username();}
 function message(text,error){el('message').textContent=text;el('message').className=error?'error':'ok';}
 function micro(value){
  if(typeof value!=='string'||!/^\d+$/.test(value))return '—';
- const n=BigInt(value);return (n/1000000n).toString()+'.'+(n%1000000n).toString().padStart(6,'0').replace(/0+$/,'').padEnd(1,'0');
+ const rounded=(BigInt(value)+500n)/1000n;return (rounded/1000n).toString()+'.'+(rounded%1000n).toString().padStart(3,'0').replace(/0+$/,'').padEnd(2,'0');
 }
+function exactMicro(n){return (n/1000000n).toString()+'.'+(n%1000000n).toString().padStart(6,'0');}
+function maxWithdraw(){const p=state.positions.find(p=>p.industry===el('industry').value),q=state.dashboardPrices[el('industry').value];return p&&q?BigInt(p.unitsMicro)*BigInt(q.priceMicro)/1000000n:0n;}
 async function api(path,options={}){
  const response=await fetch(base+path,{cache:'no-store',...options,headers:{Accept:'application/json',...(options.body?{'Content-Type':'application/json'}:{}),...(options.headers||{})}});
  const data=await response.json().catch(()=>({}));
@@ -33,6 +35,8 @@ function render(){
  el('enroll').disabled=!ready||!!state.account;
  el('buy').disabled=!ready||!state.account;
  el('sell').disabled=!ready||!state.account;
+ el('maxInvest').disabled=!ready||!state.account||BigInt(state.account.cashMicro||'0')===0n;
+ el('maxWithdraw').disabled=!ready||!state.account||maxWithdraw()===0n;
  el('investFree').disabled=!ready||!state.account||!state.separateFree||!!state.freePosition||String(state.account.freeGrantMicro)!=='1000000000';
  el('investFree').hidden=!state.separateFree;
  el('purchase').disabled=!ready||!state.purchase?.enabled||!!localStorage.getItem(key('payment'));
@@ -71,11 +75,11 @@ async function refresh(){
   el('week').textContent=market.week?'Week ends '+new Date(market.week.endsAt).toUTCString():'';
  }catch(e){state.active=false;state.prices={};el('status').textContent='Market data unavailable.';}
  try{state.purchase=await api('/purchase-options');}catch(e){state.purchase=null;}
- state.account=null;el('holdings').replaceChildren();
+ state.account=null;state.positions=[];state.dashboardPrices={};el('holdings').replaceChildren();
  el('liveProfit').hidden=true;el('liveProfit').textContent='';
  if(username()){
   try{
-   const data=await api('/dashboard');const d=data.dashboard;state.account=d?.account||null;state.separateFree=!!d?.separateFree;state.freePosition=d?.freePosition||null;
+   const data=await api('/dashboard');const d=data.dashboard;state.account=d?.account||null;state.separateFree=!!d?.separateFree;state.freePosition=d?.freePosition||null;state.positions=d?.positions||[];state.dashboardPrices=Object.fromEntries((d?.prices||[]).map(p=>[p.industry,p]));
    const freeBox=el('freePosition');freeBox.hidden=!state.separateFree;if(state.separateFree)freeBox.textContent=state.freePosition?'Free investment: '+(labels[state.freePosition.industry]||state.freePosition.industry)+' · '+micro(state.freePosition.valueMicro)+' IIC · '+micro(state.freePosition.rewardMicro)+' EMP estimated · locked until reset':'Free IIC: '+(state.account?.freeGrantMicro==='1000000000'?'1,000 available to invest in one industry':'not yet allocated');
    el('account').textContent=state.account?'Available: '+micro(String(state.account.cashMicro))+' IIC':'No IIB account for this week yet.';
    if(d?.active&&state.account&&Array.isArray(d.positions)&&Array.isArray(d.prices)){
@@ -134,6 +138,8 @@ async function refresh(){
  render();
 }
 async function run(fn){if(state.busy)return;state.busy=true;render();try{await fn();}catch(e){message(e.message||'Request failed.',true);}finally{state.busy=false;render();}}
+el('maxInvest').onclick=()=>{if(state.account)el('units').value=exactMicro(BigInt(state.account.cashMicro));};
+el('maxWithdraw').onclick=()=>{el('units').value=exactMicro(maxWithdraw());};
 el('refresh').onclick=()=>run(refresh);
 el('industry').onchange=render;
 el('enroll').onclick=()=>run(async()=>{await api('/enroll',{method:'POST',body:'{}'});message('Enrollment complete.');await refresh();});
