@@ -818,15 +818,16 @@ margin-right:auto;
   </div>
 `;
 
-  // Keep the existing dialog (and its open state) when operations refresh.
+  // Keep the dialog outside the refreshed section so its scroll position survives.
   const existingJackpotModal = document.getElementById("empire-operation-jackpot-modal");
   if (existingJackpotModal && area.contains(existingJackpotModal)) {
-    existingJackpotModal.remove();
+    document.body.appendChild(existingJackpotModal);
   }
   area.innerHTML = html;
-  if (existingJackpotModal) {
-    const newJackpotModal = area.querySelector("#empire-operation-jackpot-modal");
-    if (newJackpotModal) newJackpotModal.replaceWith(existingJackpotModal);
+  const newJackpotModal = area.querySelector("#empire-operation-jackpot-modal");
+  if (newJackpotModal) {
+    if (existingJackpotModal) newJackpotModal.remove();
+    else document.body.appendChild(newJackpotModal);
   }
 
   if (fulfillmentCooldown.active) {
@@ -1415,6 +1416,8 @@ async function loadEmpireOperationJackpotWinners() {
       ? data.milestoneRedemptions
       : [];
     const counts = data.operationCounts || {};
+    const scrollTop = content.scrollTop;
+    const tableScrollPositions = Array.from(content.querySelectorAll("div > table"), (table) => table.parentElement.scrollLeft);
     content.replaceChildren();
 
     const summary = document.createElement("div");
@@ -1471,6 +1474,10 @@ async function loadEmpireOperationJackpotWinners() {
     } else {
       appendEmptyMessage("No IA milestone redemptions have been recorded yet.");
     }
+    content.scrollTop = scrollTop;
+    content.querySelectorAll("div > table").forEach((table, index) => {
+      table.parentElement.scrollLeft = tableScrollPositions[index] || 0;
+    });
   } catch (err) {
     console.error("Failed to load operation rewards history:", err);
     content.innerHTML = '<p style="margin:0; padding:14px; border-radius:12px; background:#fef2f2; color:#b91c1c;">Operations history could not be loaded. Please try again.</p>';
