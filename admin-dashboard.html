@@ -1967,6 +1967,18 @@ forkyishere,529"
         </div>
 
         <div class="section">
+          <h2>🔄 Automatic Goods Cycles</h2>
+          <p class="sub">Cycles start on the 1st and 16th at 00:00 UTC. The pool below applies to the next cycle; the current cycle stays unchanged. An existing cycle finishes before a new one starts.</p>
+          <div class="row">
+            <label><input id="goods-auto-enabled" type="checkbox" /> Enable automatic cycles</label>
+            <input id="goods-auto-pool" type="number" min="0.0001" step="any" placeholder="EMP pool per cycle" />
+            <button class="primary" type="button" onclick="saveGoodsAutoSettings()">Save automatic settings</button>
+            <button type="button" onclick="loadGoodsAutoSettings()">Refresh</button>
+          </div>
+          <div id="goods-auto-status" class="status">Load the Goods tab to view settings.</div>
+        </div>
+
+        <div class="section">
           <h2>➕ Create Goods Redemption Cycle</h2>
 
           <div class="row">
@@ -8796,7 +8808,37 @@ Players snapshotted: ${data.players_snapshotted}
         }
       }
 
+      async function loadGoodsAutoSettings() {
+        const status = document.getElementById("goods-auto-status");
+        try {
+          const response = await fetch(`${API_BASE}/admin/goods-redemption/automatic`, { headers: { "x-admin-key": ADMIN_KEY } });
+          const data = await response.json();
+          if (!response.ok || !data.success) throw new Error(data.error || "Unable to load settings.");
+          document.getElementById("goods-auto-enabled").checked = data.settings.enabled;
+          document.getElementById("goods-auto-pool").value = Number(data.settings.emp_pool) || "";
+          status.textContent = data.settings.enabled ? "Automatic cycles enabled. Next pool: " + data.settings.emp_pool + " EMP." : "Automatic cycles are off.";
+        } catch (error) { status.textContent = error.message; }
+      }
+
+      async function saveGoodsAutoSettings() {
+        const status = document.getElementById("goods-auto-status");
+        try {
+          const enabled = document.getElementById("goods-auto-enabled").checked;
+          const emp_pool = Number(document.getElementById("goods-auto-pool").value);
+          if (!Number.isFinite(emp_pool) || emp_pool <= 0) throw new Error("Enter a positive EMP pool.");
+          const response = await fetch(`${API_BASE}/admin/goods-redemption/automatic`, {
+            method: "POST", headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY },
+            body: JSON.stringify({ enabled, emp_pool })
+          });
+          const data = await response.json();
+          if (!response.ok || !data.success) throw new Error(data.error || "Unable to save settings.");
+          await loadGoodsAutoSettings();
+          status.textContent += " Settings saved.";
+        } catch (error) { status.textContent = error.message; }
+      }
+
       async function loadGoodsRedemptionAdmin() {
+        loadGoodsAutoSettings();
         const statusEl = document.getElementById("goods-cycle-status");
         const nameEl = document.getElementById("goods-cycle-name");
         const poolEl = document.getElementById("goods-cycle-emp-pool");
