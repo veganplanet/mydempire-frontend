@@ -818,7 +818,16 @@ margin-right:auto;
   </div>
 `;
 
+  // Keep the existing dialog (and its open state) when operations refresh.
+  const existingJackpotModal = document.getElementById("empire-operation-jackpot-modal");
+  if (existingJackpotModal && area.contains(existingJackpotModal)) {
+    existingJackpotModal.remove();
+  }
   area.innerHTML = html;
+  if (existingJackpotModal) {
+    const newJackpotModal = area.querySelector("#empire-operation-jackpot-modal");
+    if (newJackpotModal) newJackpotModal.replaceWith(existingJackpotModal);
+  }
 
   if (fulfillmentCooldown.active) {
     const startButtons = area.querySelectorAll("button");
@@ -1478,11 +1487,11 @@ async function openEmpireOperationJackpotWinners() {
   modal.setAttribute("aria-hidden", "false");
   document.addEventListener("keydown", handleEmpireOperationWinnersKeydown);
 
-  await loadEmpireOperationJackpotWinners();
   clearInterval(empireOperationJackpotRefreshInterval);
   empireOperationJackpotRefreshInterval = setInterval(() => {
     if (modal.style.display === "flex") {
       loadEmpireOperationJackpotWinners();
     }
   }, 60000);
+  await loadEmpireOperationJackpotWinners();
 }
